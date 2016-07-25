@@ -1,0 +1,1 @@
+﻿<?xml version="1.0" encoding="utf-8" ?><info>	<infoitem key="UD_opp" value="name:idopp;datatype:int,name:idf;datatype:string" />	<infoitem key="UD_oc" value="name:idoc;datatype:int,name:idf;datatype:blob,name:nombre;datatype:blob" /></info>

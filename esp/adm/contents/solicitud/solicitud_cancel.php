@@ -1,0 +1,1607 @@
+<?php 
+require_once('../Connections/dspp.php'); 
+require_once('../Connections/mail.php');
+
+error_reporting(E_ALL ^ E_DEPRECATED);
+
+if (!isset($_SESSION)) {
+  session_start();
+  
+  $redireccion = "../index.php?ADM";
+
+  if(!$_SESSION["autentificado"]){
+    header("Location:".$redireccion);
+  }
+}
+if (!function_exists("GetSQLValueString")) {
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+{
+  if (PHP_VERSION < 6) {
+    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  }
+
+  $theValue = function_exissts("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+  switch ($theType) {
+    case "text":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;    
+    case "long":
+    case "int":
+      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+      break;
+    case "double":
+      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+      break;
+    case "date":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;
+    case "defined":
+      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+      break;
+  }
+  return $theValue;
+}
+}
+
+if(isset($_POST['opp_delete'])){
+  $query=sprintf("delete from opp where idopp = %s",GetSQLValueString($_POST['idopp'], "text"));
+  $ejecutar=mysql_query($query,$dspp) or die(mysql_error());
+}
+
+$currentPage = $_SERVER["PHP_SELF"];
+
+$maxRows_opp = 20;
+$pageNum_opp = 0;
+if (isset($_GET['pageNum_opp'])) {
+  $pageNum_opp = $_GET['pageNum_opp'];
+}
+$startRow_opp = $pageNum_opp * $maxRows_opp;
+
+mysql_select_db($database_dspp, $dspp);
+
+$query_limit_opp = sprintf("%s LIMIT %d, %d", $query_opp, $startRow_opp, $maxRows_opp);
+$opp = mysql_query($query_limit_opp,$dspp) or die(mysql_error());
+//$row_opp = mysql_fetch_assoc($opp);
+
+
+if(isset($_POST['comprobanteMembresia']) && $_POST['comprobanteMembresia'] == "2"){
+    $fecha_actual = time();
+    $fecha = date("d/m/Y", $_POST['fecha']);
+    $idsolicitud_certificacion = $_POST['idsolicitud'];
+    $statusInterno = 10;
+    $idmembresia = $_POST['idmembresia'];
+    $identificador = "MEMBRESIA";
+    $idcertificado = $_POST['idcertificado'];
+    $emailOPP1 = $_POST['emailOPP1'];
+    $emailOPP2 = $_POST['emailOPP2'];
+    $idopp = $_POST['idopp'];
+    $idoc = $_POST['idoc'];
+
+    $idexterno = $idsolicitud_certificacion;
+    
+
+  if(isset($_POST['aprobar'])){
+    $statusCertificado = 10;
+    $status = "APROBADO";
+  
+    $update = "UPDATE membresia SET estado = '$status' WHERE idmembresia = $idmembresia";
+    $actualizar = mysql_query($update,$dspp) or die(mysql_error());
+
+    $insertar = "INSERT INTO fecha (fecha, idexterno, idopp, idoc, idmembresia, identificador, status) VALUES ($fecha_actual, $idexterno, $idopp, $idoc, $idmembresia, '$identificador','$status')";
+    $ejecutar = mysql_query($insertar,$dspp) or die(mysql_error());
+
+    $actualizar = "UPDATE certificado SET status = $statusCertificado, statuspago = '$status', idopp = '$idopp' WHERE idcertificado = $idcertificado";
+    $ejecutar = mysql_query($actualizar,$dspp) or die(mysql_error());
+    //echo $insertar;
+    //echo "<br>".$actualizar; 
+    $update = "UPDATE solicitud_certificacion SET status = '$statusInterno' WHERE idsolicitud_certificacion = $idsolicitud_certificacion";
+    $actualizar = mysql_query($update,$dspp);
+
+    $estadoOPP = 10;
+
+    $update = "UPDATE opp SET estado = '$estadoOPP' WHERE idopp = $idopp";
+    $actualizar = mysql_query($update,$dspp);
+    
+    $query = "SELECT adjunto FROM certificado WHERE idcertificado = $idcertificado";
+    $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
+    $archivoCertificado = mysql_fetch_assoc($ejecutar);
+   
+    $destinatario = $emailOPP1.",";
+    $destinatario .= $emailOPP2;
+
+        $asunto = "D-SPP - Membresia Aprobada"; 
+
+    $mensaje = '
+      <html>
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+      
+        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+          <tbody>
+            <tr>
+              <th rowspan="3" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+              <th scope="col" align="left" width="280"><strong>Notificación de Estado / Status Notification ('.$fecha.')</strong></th>
+            </tr>
+
+            <tr>
+              <td><b>Felicidades!!!!, su membresia ha sido aprobada, ahora puede disponer de su certificado, para descargar su certificado por favor inicie sesión en su cuenta de OPP(<a href="http://www.d-spp.org/?OPP">www.d-spp.org/?OPP</a>) en la opción de "SOLICITUDES" dentro de la sección certificación.</b></td>
+            </tr>
+
+            <tr>
+              <td align="left" style="color:#ff738a;">Para cualquier duda o aclaración enviar un e-mail a: cert@spp.coop</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+
+      </body>
+      </html>
+    ';
+
+        $mail->AddAddress($emailOPP1);
+        $mail->AddAddress($emailOPP2);
+        $mail->AddAttachment($archivoCertificado['adjunto']);
+
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+        //para el envío en formato HTML 
+        /*$headers = "MIME-Version: 1.0\r\n"; 
+        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+
+        //dirección del remitente 
+        $headers .= "From: cert@spp.coop\r\n"; 
+
+        //dirección de respuesta, si queremos que sea distinta que la del remitente 
+        
+
+        //ruta del mensaje desde origen a destino 
+        //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
+
+        //direcciones que recibián copia 
+        //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
+
+        //direcciones que recibirán copia oculta 
+        $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
+        //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
+
+        mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);*/
+
+        $queryMensaje = "INSERT INTO mensajes(idopp, asunto, mensaje, destinatario, remitente, fecha) VALUES($idopp, '$asunto', '$mensaje', 'OPP', 'ADM', $fecha_actual)";
+        $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
+
+
+  }
+  if(isset($_POST['denegar'])){
+    $status = "DENEGADO";
+
+    $update = "UPDATE membresia SET estado = '$status' WHERE idmembresia = $idmembresia";
+    $actualizar = mysql_query($update,$dspp) or die(mysql_error());
+
+    $insertar = "INSERT INTO fecha (fecha,idexterno,idmembresia,identificador,status) VALUES ($fecha_actual,$idexterno,$idmembresia,'$identificador','$status')";
+    $ejecutar = mysql_query($insertar,$dspp) or die(mysql_error());
+    $actualizar = "UPDATE certificado SET statuspago = '$status' WHERE idcertificado = $idcertificado";
+    $ejecutar = mysql_query($actualizar,$dspp) or die(mysql_error());
+
+    //echo $insertar; 
+    //echo "<br>".$actualizar; 
+
+
+    $destinatario = $emailOPP1.",";
+    $destinatario .= $emailOPP2;
+
+        $asunto = "D-SPP - Comprobación pago de membresia"; 
+
+    $mensaje = '
+      <html>
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+      
+        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+          <tbody>
+            <tr>
+              <th rowspan="3" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+              <th scope="col" align="left" width="280"><strong>Notificación de Estado / Status Notification ('.$fecha.')</strong></th>
+            </tr>
+
+            <tr>
+              <td><b>Lo sentimos su comprobante no es el correcto, por favor asegúrese de que el comprobante seá el correcto. Para reenviar el comprobante siga los pasos anteriormente realizados (<a href="http://www.d-spp.org/?OPP">www.d-spp.org/?OPP</a>).</b></td>
+            </tr>
+
+            <tr>
+              <td align="left" style="color:#ff738a;">Para cualquier duda o aclaración enviar un e-mail a: cert@spp.coop</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+
+      </body>
+      </html>
+    ';
+
+        $mail->AddAddress($emailOPP1);
+        $mail->AddAddress($emailOPP2);
+
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+        //para el envío en formato HTML 
+        /*$headers = "MIME-Version: 1.0\r\n"; 
+        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+
+        //dirección del remitente 
+        $headers .= "From: cert@spp.coop\r\n"; 
+
+        //dirección de respuesta, si queremos que sea distinta que la del remitente 
+        
+
+        //ruta del mensaje desde origen a destino 
+        //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
+
+        //direcciones que recibián copia 
+        //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
+
+        //direcciones que recibirán copia oculta 
+        $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
+        //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
+
+        mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);*/
+
+        $queryMensaje = "INSERT INTO mensajes(idopp, asunto, mensaje, destinatario, remitente, fecha) VALUES($idopp, '$asunto', '$mensaje', 'OPP', 'ADM', $fecha_actual)";
+        $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
+
+
+  }
+}
+
+
+
+/**********************************************************************************************/
+/*****************************  INICIA INSERTAR OBJECIÓN  ********************************/
+/**********************************************************************************************/
+
+if (isset($_POST['insertarObjecion']) && $_POST['insertarObjecion'] == "periodoObjecion") {
+  $fecha_actual = time();
+  $fechaInicio = $_POST['fechaInicio'];
+  $fechaFin = $_POST['fechaFin'];
+  $status = $_POST['statusObjecion_hdn'];
+  $status_publico = $_POST['statusObjecion_hdn'];
+  $observacion = $_POST['observacion_txt'];
+  $idopp = $_POST['objecionIdOpp_hdn'];
+  $idoc = $_POST['objecionIdOc_hdn'];
+  $idsolicitud_certificacion = $_POST['idsolicitud'];
+  $idexterno = $idsolicitud_certificacion;
+  $identificador = "OBJECION";
+
+  $query = "INSERT INTO objecion (fechainicio, fechafin, status, observacion, idsolicitud) VALUES ('$fechaInicio', '$fechaFin', '$status', '$observacion', $idsolicitud_certificacion)";
+
+  $insertarQuery = mysql_query($query, $dspp) or die(mysql_error());
+
+  $idobjecion = mysql_insert_id($dspp);
+
+  $query = "UPDATE solicitud_certificacion SET status_publico = '$status_publico' WHERE idsolicitud_certificacion = $idsolicitud_certificacion";
+  $insertar = mysql_query($query,$dspp) or die(mysql_error());
+
+  //se insertan las fechas de la objecion  
+  $insertar = "INSERT INTO fecha (fecha, idexterno, idopp, idoc, idobjecion, identificador, status_publico) VALUES ($fecha_actual, $idexterno, $idopp, $idoc, $idobjecion, '$identificador', $status_publico)";
+  $ejecutar = mysql_query($insertar,$dspp) or die(mysql_error());
+
+
+  $query = "SELECT * FROM oc WHERE idoc = $idoc";
+  $ejecutar = mysql_query($query,$dspp);
+  $row_oc = mysql_fetch_assoc($ejecutar);
+
+  $fecha = date("d/m/Y", time());
+  $emailOPP1 = $_POST['emailOPP1'];
+  $emailOPP2 = $_POST['emailOPP2'];
+
+
+
+      $queryCorreo = "SELECT solicitud_certificacion.*, opp.idopp,opp.nombre, opp.pais, opp.abreviacion AS 'abreviacionOPP', oc.abreviacion AS 'abreviacionOC' FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion";
+      $ejecutar = mysql_query($queryCorreo,$dspp) or die(msql_error());
+      $datosCorreo = mysql_fetch_assoc($ejecutar);
+
+      $queryProductos = "SELECT producto FROM productos WHERE idsolicitud_certificacion = $idsolicitud_certificacion";
+      $ejecutar = mysql_query($queryProductos,$dspp) or die(mysql_error());
+      $productos = "";
+      while($datosProductos = mysql_fetch_assoc($ejecutar)){
+        $productos .= $datosProductos['producto']." - ";
+      }
+      $fecha_elaboracion = date("d/m/Y",$datosCorreo['fecha_elaboracion']);
+      $fecha = date("d/m/Y", time());
+
+
+      $nombreOPP = $datosCorreo['nombre'];
+      $abreviacionOPP = $datosCorreo['abreviacionOPP'];
+      $paisOPP = $datosCorreo['pais'];
+      $abreviacionOC = $datosCorreo['abreviacionOC'];
+      $alcance = $datosCorreo['op_resp4'];
+      /*****************************INICIO MAIL OC***************************************************/
+      /********************************************************************************/
+
+
+
+
+          $mensaje = '
+            <html>
+            <head>
+              <meta charset="utf-8">
+            </head>
+            <body>
+            
+                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+                <tbody>
+                  <tr>
+                    <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                    <th scope="col" align="left" width="280"><strong>Notificación de Intenciones / Notification of Intentions</strong></th>
+                  </tr>
+                  <tr>
+                    <td align="left" style="color:#ff738a;">Fecha: '.$fecha.'</td>
+                  </tr>
+
+                  <tr>
+                    <td colspan="2">
+                      <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+                        <tbody>
+                          <tr style="font-size: 8px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                            <td width="72px">Tipo / Type</td>
+                            <td width="72px">Nombre de la organización/Organization name</td>
+                            <td width="72px">Abreviación / Short name</td>
+                            <td width="72px">País / Country</td>
+                            <td width="72px">Organismo de Certificación / Certification Entity</td>
+                            <td width="72px">Alcance / Scope</td>
+                            <td width="72px">Productos / Products</td>
+                            <td width="72px">Tipo de solicitud / Kind of application</td>
+                            <td width="72px">Fecha de solicitud/Date of application</td>
+                          </tr>
+                          <tr style="font-size: 12px;">
+                            <td style="padding:10px;">
+                              OPP 
+                            </td>
+                            <td style="padding:10px;">
+                              '.$nombreOPP.'
+                            </td>
+                            <td style="padding:10px;">
+                              '.$abreviacionOPP.'
+                            </td>
+                            <td style="padding:10px;">
+                              '.$paisOPP.'
+                            </td>
+                            <td style="padding:10px;">
+                              '.$abreviacionOC.'
+                            </td>
+                            <td style="padding:10px;">
+                              '.$alcance.'
+                            </td>
+                            <td style="padding:10px;">
+                              '.$productos.'
+                            </td>
+                            <td style="padding:10px;">
+                              Certificación / Certification                   
+                            </td>
+                            <td style="padding:10px;">
+                              '.$fecha_elaboracion.'
+                            </td>
+                          </tr>
+
+                        </tbody>
+                      </table>        
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td style="text-align:justify;" colspan="2">
+                      FUNDEPPO publica y notifica las "Intenciones de Certificación, Registro o Autorización" basada en nuevas solicitudes de: 1) Certificación de Organizaciones de Pequeños Productores, 2) Registro de Compradores y otros actores y 3) Autorización de Organismos de Certificación, con el objetivo de informarles y recibir las eventuales objeciones contra la incorporación de los solicitantes.
+                      Estas eventuales objeciones presentadas deben estar sustentadas con información concreta y verificable con respecto a incumplimientos de la Normatividad del SPP y/o nuestro Código de Conducta (disponibles en <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a>, en el área de Funcionamiento). Las objeciones presentadas y enviadas a <strong>cert@spp.coop</strong> serán tomadas en cuenta en los procesos de certificación, registro o autorización.
+                      Estas notificaciones son enviadas por FUNDEPPO en un lapso menor a 24 horas a partir del momento en que le llegue la solicitud correspondiente. Si se presentan objeciones antes de que el solicitante se Certifique, Registre o Autorice su tratamiento por parte del Organismo de Certificación debe ser parte de la misma evaluación documental. Si la objeción se presenta cuando el Solicitante ya esta Certificado se aplica el Procedimiento de Inconformidades del Símbolo de Pequeños Productores. Las nuevas intenciones de Certificación, Registro o Autorización, se detallan al inicio de este documento.  
+                      <br><br>
+                      FUNDEPPO publishes and notifies the "Certification, Registration and Authorization Intentions" based on new applications submitted for: 1) Certification of Small Producers Organizations, 2) Registration of Buyers and other stakeholders, and 3) Authorization of Certification Entities, with the objective of keeping you informed and receiving any objections to the incorporation of any new applicants into the system.
+                      Any objections submitted must be supported with concrete, verifiable information regarding non-compliance with the Standards and/or Code of Conduct of the Small Producers Symbol (available at <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a> in the section on Operation). The objections submitted and sent to <strong>cert@spp.coop</strong> will be taken into consideration during certification, registration and authorization processes.
+                      These notifications are sent by FUNDEPPO in a period of less than 24 hours from the time a corresponding application is received. If objections are presented before getting the Certification, Registration or Authorization, the Certification Entity must incorporate them as part of the same evaluation-process. If the objection is presented when the applicant has already been certified, the SPP Dissents Procedure has to be applied. The new intentions for Certification, Registration and Authorization are detailed at the beginning (of this document.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              </table>
+
+            </body>
+            </html>
+          ';
+
+
+
+        $asunto = "D-SPP - Notificación de Intenciones / Notification of Intentions"; 
+
+        /*$mail = new PHPMailer();
+        $mail->IsSMTP();
+        //$mail->SMTPSecure = "ssl";
+        $mail->Host = "mail.d-spp.org";
+        $mail->Port = 25;
+        $mail->SMTPAuth = true;
+        $mail->Username = "soporte@d-spp.org";
+        $mail->Password = "/aung5l6tZ";
+        //$mail->SMTPDebug = 1;
+
+        $mail->From = "soporte@d-spp.org";
+        $mail->FromName = "CERT - DSPP";
+        $mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
+        $mail->AddReplyTo("cert@spp.coop");*/
+
+
+
+      $queryOC = "SELECT email FROM oc WHERE email !=''";
+      $ejecutar = mysql_query($queryOC,$dspp) or die(mysql_error());
+
+
+      while($emailOC = mysql_fetch_assoc($ejecutar)){
+        $mail->AddAddress($emailOC['email']);
+      }
+
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+
+/////////*************** ENVIO EMAIL DE OC *******************//////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////*************** ENVIO EMAIL DE OPP *******************//////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+          $queryOPP = "SELECT email FROM opp WHERE email !=''";
+          $ejecutar = mysql_query($queryOPP,$dspp) or die(mysql_error());
+
+
+          while($emailOPP = mysql_fetch_assoc($ejecutar)){
+            $mail->AddAddress($emailOPP['email']);
+          }
+
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+
+
+
+
+/////////*************** ENVIO EMAIL DE COM(EMPRESAS) *******************//////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+          $queryCOM = "SELECT email FROM com WHERE email !=''";
+          $ejecutar = mysql_query($queryCOM,$dspp) or die(mysql_error());
+
+
+          while($emailCOM = mysql_fetch_assoc($ejecutar)){
+              $mail->AddAddress($emailCOM['email']);
+          }
+
+
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+
+
+
+
+/////////*************** ENVIO EMAIL DE ADMINISTRADORES *******************//////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+        $query = "SELECT  email FROM adm";
+        $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
+
+        while($emailADM = mysql_fetch_assoc($ejecutar)){  
+          if($emailADM['email'] != "isc.jesusmartinez@gmail.com"){
+            $mail->AddAddress($emailADM['email']);
+          }
+        }
+
+
+
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        if($mail->Send()){
+          
+          echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+        }else{
+              echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
+     
+        }
+
+
+
+}
+/**********************************************************************************************/
+/*****************************  FIN INSERTAR OBJECIÓN  ********************************/
+/**********************************************************************************************/
+
+
+
+/**********************************************************************************************/
+/*****************************  INICIA RESOLUCION DE OBJECIÓN  ********************************/
+/**********************************************************************************************/
+
+if(isset($_POST['resolucionObjecion']) && $_POST['resolucionObjecion'] == "resolucionObjecion"){
+
+
+  $fecha = date("d/m/Y", time());
+  $fecha_actual = time();
+  $ruta = "../../archivos/admArchivos/resolucion/";
+  $idobjecion = $_POST['idobjecion'];
+  $idopp = $_POST['objecionIdOpp_hdn'];
+  $idoc = $_POST['objecionIdOc_hdn'];
+  $idsolicitud = $_POST['idsolicitud'];
+  $dictamen = $_POST['dictamen'];
+
+
+  if(!empty($_FILES['adjunto_fld']['name'])){
+    $_FILES['adjunto_fld']['name'];
+        move_uploaded_file($_FILES["adjunto_fld"]["tmp_name"], $ruta.$fecha_actual."_".$_FILES["adjunto_fld"]["name"]);
+        $objecionAdjunto = $ruta.basename($fecha_actual."_".$_FILES["adjunto_fld"]["name"]);
+  }else{
+    $objecionAdjunto = NULL;
+  }
+
+  $statusObjecion = $_POST['statusObjecion_hdn'];
+  $adjunto = $objecionAdjunto;
+  $statusInterno = $_POST['statusInterno'];
+  $identificador = "OBJECION";
+  $idexterno = $idsolicitud;
+  $status_publico = $statusObjecion;
+
+
+  $query = "UPDATE objecion SET status = '$statusObjecion', adjunto = '$adjunto', dictamen = '$dictamen' WHERE idobjecion = $idobjecion";
+  $insertarResolucion = mysql_query($query, $dspp) or die(mysql_error());
+
+  $query = "UPDATE solicitud_certificacion SET status = '$statusInterno', status_publico = '$statusObjecion' WHERE idsolicitud_certificacion = $idsolicitud";
+  $insertar = mysql_query($query,$dspp) or die(mysql_error());
+
+  //se insertan las fechas de la objecion  
+  $insertar = "INSERT INTO fecha (fecha, idexterno, idopp, idoc, idobjecion, identificador, status_publico) VALUES ($fecha_actual, $idexterno, $idopp, $idoc, $idobjecion, '$identificador', $status_publico)";
+  $ejecutar = mysql_query($insertar,$dspp) or die(mysql_error());
+
+  $query = "SELECT * FROM oc WHERE idoc = $idoc";
+  $ejecutar = mysql_query($query,$dspp);
+  $row_oc = mysql_fetch_assoc($ejecutar);
+
+
+        /************************  INICIAR MAIL OC  *******************************************/
+
+        $destinatario = $row_oc['email'];
+        $asunto = "D-SPP - Periodo de Objeción Finalizado"; 
+
+    $mensaje = '
+      <html>
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+      
+        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+          <tbody>
+            <tr>
+              <th rowspan="3" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+              <th scope="col" align="left" width="280"><strong>Notificación de Estado / Status Notification ('.$fecha.')</strong></th>
+            </tr>
+
+            <tr>
+              <td><b>Ha finalizado el período de objeción, ahora podra empezar el proceso de certificación. Por favor inicie sesión en su cuenta de OC en el siguiente enlace <a href="http://d-spp.org/?OC">www.d-spp.org/?OC</a> .</b></td>
+            </tr>
+
+            <tr>
+              <td align="left" style="color:#ff738a;">Email: cert@spp.coop</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+
+      </body>
+      </html>
+    ';
+
+        $mail->AddAddress($row_oc['email']);
+
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+
+        $queryMensaje = "INSERT INTO mensajes(idopp, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idopp, $idoc, '$asunto', '$mensaje', 'OC', 'ADM', $fecha_actual)";
+        $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
+
+
+
+
+      $emailOPP1 = $_POST['emailOPP1'];
+      $emailOPP2 = $_POST['emailOPP2'];
+
+      $destinatario = $emailOPP1.",";
+      $destinatario .= $emailOPP2;
+
+        $asunto = "D-SPP - Periodo de Objeción Finalizado"; 
+
+    $mensaje = '
+      <html>
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+      
+        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+          <tbody>
+            <tr>
+              <th rowspan="3" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+              <th scope="col" align="left" width="280"><strong>Notificación de Estado / Status Notification ('.$fecha.')</strong></th>
+            </tr>
+
+            <tr>
+              <td><b>Ha finalizado el período de objeción, así mismo se adjunta la misma dentro de este correo. Para descargar la resolución de objeción por favor entre en su cuenta de OPP en el siguiente enlace <a href="http://d-spp.org/?OPP">www.d-spp.org/?OPP</a> .</b></td>
+            </tr>
+
+            <tr>
+              <td align="left" style="color:#ff738a;">Email: cert@spp.coop</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+
+      </body>
+      </html>
+    ';
+
+        $mail->AddAddress($emailOPP1);
+        $mail->AddAddress($emailOPP2);
+        $mail->AddAttachment($objecionAdjunto);
+
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+        //para el envío en formato HTML 
+        /*$headers = "MIME-Version: 1.0\r\n"; 
+        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+
+        //dirección del remitente 
+        $headers .= "From: cert@spp.coop\r\n"; 
+
+        //dirección de respuesta, si queremos que sea distinta que la del remitente 
+        
+
+        //ruta del mensaje desde origen a destino 
+        //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
+
+        //direcciones que recibián copia 
+        //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
+
+        //direcciones que recibirán copia oculta 
+        $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
+        //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
+
+        mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);*/
+
+        $queryMensaje = "INSERT INTO mensajes(idopp, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idopp, $idoc, '$asunto', '$mensaje', 'OPP', 'ADM', $fecha_actual)";
+        $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
+
+
+        /************************  FIN MAIL OPP  *********************************************/
+
+
+
+}
+/*******************************************************************************************/
+/*****************************  FIN RESOLUCION DE OBJECIÓN  ********************************/
+/*******************************************************************************************/
+
+if(isset($_POST['contratoSPP']) && $_POST['contratoSPP']){
+  $estatusContrato = $_POST['estatusContrato'];
+  $fechaContrato = $_POST['fechaContrato'];
+
+  $update = "UPDATE contratos SET estatusContrato = '".$estatusContrato."' WHERE fecha = ".$fechaContrato."";
+  $ejecutar = mysql_query($update,$dspp) or die(mysql_error());
+}
+
+
+ if(isset($_POST['filtroPalabra']) && $_POST['filtroPalabra'] == "1" && $_POST['palabraClave']){
+  $palabraClave = $_POST['palabraClave'];
+
+        $query_buscar = "SELECT solicitud_certificacion.*, opp.idopp,opp.nombre, opp.pais, opp.estado, opp.abreviacion AS 'abreviacionOPP', oc.idoc, oc.nombre AS 'nombreOC', oc.abreviacion FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE (solicitud_certificacion.status = 14 OR solicitud_certificacion.status = 24)  AND (opp.nombre LIKE '%$palabraClave%') OR (solicitud_certificacion.p1_email LIKE '%$palabraClave%') OR (opp.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') ORDER BY solicitud_certificacion.fecha_elaboracion DESC";
+
+        $queryTotal = "SELECT COUNT(idsolicitud_certificacion) AS 'totalConsulta' FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE (solicitud_certificacion.status = 14 OR solicitud_certificacion.status = 24) AND (opp.nombre LIKE '%$palabraClave%') OR (solicitud_certificacion.p1_email LIKE '%$palabraClave%') OR (opp.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') ORDER BY solicitud_certificacion.fecha_elaboracion DESC";
+
+}else if(!isset($_POST['filtroPalabra']) || empty($_POST['palabraClave'])){
+        $query_buscar = "SELECT solicitud_certificacion.*, opp.idopp,opp.nombre, opp.pais, opp.estado,opp.abreviacion AS 'abreviacionOPP', oc.idoc, oc.nombre AS 'nombreOC', oc.abreviacion FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE (solicitud_certificacion.status = 14 OR solicitud_certificacion.status = 24) OR (solicitud_certificacion.status = 10) ORDER BY solicitud_certificacion.fecha_elaboracion DESC";
+        $queryTotal = "SELECT COUNT(idsolicitud_certificacion) AS 'totalSolicitudes' FROM solicitud_certificacion WHERE (status = 14) AND (status = 24) AND (status = 10)";
+
+}
+/*}else if(isset($_POST['filtroPais']) && $_POST['filtroPais'] == "2" && $_POST['busquedaPais'] != NULL){
+  $pais = $_POST['busquedaPais'];
+  $query_buscar = "SELECT * FROM opp WHERE pais LIKE '%$pais%'";
+}else{
+  $query_buscar = "SELECT * FROM opp ORDER BY nombre ASC";
+}*/
+      //$ejecutarTotal = mysql_query($queryTotal,$dspp) or die(mysql_error());
+      //$totalSolicitudes = mysql_num_rows($ejecutarTotal);
+
+
+      $ejecutar_busqueda = mysql_query($query_buscar, $dspp) or die(mysql_error());
+      $totalSolicitudes = mysql_num_rows($ejecutar_busqueda);
+
+if (isset($_GET['totalRows_opp'])) {
+  $totalRows_opp = $_GET['totalRows_opp'];
+} else {
+  $all_opp = mysql_query($query_opp);
+  $totalRows_opp = mysql_num_rows($all_opp);
+}
+$totalPages_opp = ceil($totalRows_opp/$maxRows_opp)-1;
+
+$queryString_opp = "";
+if (!empty($_SERVER['QUERY_STRING'])) {
+  $params = explode("&", $_SERVER['QUERY_STRING']);
+  $newParams = array();
+  foreach ($params as $param) {
+    if (stristr($param, "pageNum_opp") == false && 
+        stristr($param, "totalRows_opp") == false) {
+      array_push($newParams, $param);
+    }
+  }
+  if (count($newParams) != 0) {
+    $queryString_opp = "&" . htmlentities(implode("&", $newParams));
+  }
+}
+$queryString_opp = sprintf("&totalRows_opp=%d%s", $totalRows_opp, $queryString_opp);
+
+
+///////////////////////////////////// VARIABLES DE CONTROL ////////////////////////////////////////
+
+  //$validacionStatus = $registro_busqueda['status'] != 1 && $registro_busqueda['status'] != 2 && $registro_busqueda['status'] != 3 && $registro_busqueda['status'] != 14 && $registro_busqueda['status'] != 15;
+
+///////////////////////////////////// VARIABLES DE CONTROL ////////////////////////////////////////
+
+?>
+
+
+
+ <hr>
+  <div class="row">
+
+    <div class="col-xs-6">
+      <h5 class="alert alert-info" >Busqueda extendida(idf, nombre, abreviacion, sitio web, email, país, etc...). Sensible a acentos.</h5>
+
+      <form method="post" name="filtro" action="" enctype="application/x-www-form-urlencoded">
+        <div class="input-group">
+          <input type="text" class="form-control" name="palabraClave" placeholder="Palabra clave...">
+          <span class="input-group-btn">
+            <input type="hidden" name="filtroPalabra" value="1">
+            <button class="btn btn-default" type="submit">Buscar !</button>
+          </span>
+        </div><!-- /input-group -->        
+    </form>
+    </div><!-- /.col-lg-6 -->
+    <div class="col-xs-4">
+      <h4 class="well">
+        <?php 
+          echo 'Total Solicitudes: <span style="color:red">'.$totalSolicitudes.'</span>';
+         ?>
+        
+      </h4>
+    </div>
+
+  <!--<div class="col-xs-4">
+      <h5 class="alert alert-info" >Consultar OPPs por país. Sensible a acentos</h5>
+      <form method="post" name="filtro2" action="" enctype="application/x-www-form-urlencoded">      
+        <select class="form-control chosen-select-deselect" data-placeholder="Buscar por país" name="busquedaPais" id="" onchange="this.form.submit()">
+          <option value="">Selecciona un país</option>
+          <?php 
+            $query = "SELECT * FROM paises";
+            $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
+            while($row_paises = mysql_fetch_assoc($ejecutar)){
+          ?>
+            <option value="<?php echo utf8_encode($row_paises['nombre']);?>"><?php echo utf8_encode($row_paises['nombre']) ?></option>
+          <?php
+            }
+          ?>
+        </select>
+        <input type="hidden" name="filtroPais" value="2">
+      </form>
+    </div>-->
+  </div>
+
+<hr>
+
+
+  <table class="table table-condensed table-bordered table-hover" style="font-size:12px">
+    <thead>
+      <tr>
+         <a class="btn btn-sm btn-danger" href="?SOLICITUD&cancel">Solicitudes Canceladas</a>
+         <a class="btn btn-sm btn-success" href="?SOLICITUD&finalizado">Proceso Finalizado</a>
+      </tr>
+      <tr>
+        <th class="text-center">ID</th>
+        <th class="text-center">Solicitud</th>
+       <!-- <th class="text-center">Nombre</th>-->
+        <!--<th class="text-ceter">Certificadora</th>-->
+        <th class="text-center">Cotización</th>
+        <!--<th class="text-center">Sitio WEB</th>-->
+        <th class="text-center">Organización</th>
+        <!--<th class="text-center">País</th>-->
+        <th class="text-center" colspan="2">Información Estatus</th>
+        <!--<th class="text-center">Status <br>Interno</th>-->
+        <!--<th class="text-center">Propuesta</th>-->
+        <th class="text-center">Información de Objeción</th>
+        <th class="text-center">Membresía SPP / Certificado</th>
+        <th class="text-center">Observaciones</th>
+        <!--<th>OC</th>
+        <th>Razón social</th>
+        <th>Dirección fiscal</th>
+        <th>RFC</th>-->
+        <!--<th>Eliminar</th>-->
+      </tr>
+    </thead>
+    <tbody>
+      <?php mysql_select_db($database_dspp, $dspp); ?>
+
+
+      <?php $cont=0; while($registro_busqueda = mysql_fetch_assoc($ejecutar_busqueda)){ $cont++;?>
+        <tr <?php if($registro_busqueda['estado'] == 20){ echo "style='border-style:solid;border-color:#E74C3C'";}else if($registro_busqueda['estado'] == 10){echo "class='success'";} ?>>
+      <?php  $fecha = $registro_busqueda['fecha_elaboracion']; ?> 
+          <td><?php echo $registro_busqueda['idsolicitud_certificacion']; ?></td>
+
+  <!---------------------------------------- INICIA SECCION ULTIMA ACTUALIZACION -------------------------------------------------->
+          <td>
+            <a class="btn btn-primary btn-sm" style="width:100%" href="?OC&amp;detailBlock&amp;query=<?php echo $registro_busqueda['idoc']; ?>&amp;formato=<?php echo $registro_busqueda['idsolicitud_certificacion']; ?>">
+              <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> <?php echo  date("d/m/Y", $fecha); ?><br>Ver solicitud
+            </a>
+            <?php 
+            /******** ABREVIACION OC ******************/
+              if(isset($registro_busqueda['idoc'])){
+                $query = "SELECT idoc,nombre,abreviacion FROM oc WHERE idoc = $registro_busqueda[idoc]";
+                $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
+                $datosOC = mysql_fetch_assoc($ejecutar);
+                echo "<a href='?OC&detail&idoc=$datosOC[idoc]'>".$datosOC['abreviacion']."</a>";
+              }else{
+                echo "No Disponible";
+              } 
+            ?>            
+          </td>
+  <!---------------------------------------- TERMINA SECCION ULTIMA ACTUALIZACION -------------------------------------------------->
+
+
+
+  <!----------------------------------------- INICIA COTIZACION OPP ---------------------------------------------------------->
+          <td>  
+            <a href="<?echo $registro_busqueda['cotizacion_opp']?>" target="_blank" type="button" class="botonCotizacion btn <?php if(empty($registro_busqueda['cotizacion_opp'])){ echo 'btn-default btn-sm';}else{echo 'btn-success btn-sm';} ?>" aria-label="Left Align" <?php if(empty($registro_busqueda['cotizacion_opp'])){echo "disabled";}?>>
+              <span class="glyphicon glyphicon-download-alt"></span> OPP
+            </a> 
+            <?php 
+              if($registro_busqueda['status'] != 1 && $registro_busqueda['status'] != 2 && $registro_busqueda['status'] != 3 && $registro_busqueda['status'] != 14 && $registro_busqueda['status'] != 15 && $registro_busqueda['status'] != 17 && $registro_busqueda['status'] != 20 && $registro_busqueda['status'] != 24){
+            ?>
+              <p class="text-center alert alert-success" style="padding:7px;">Aceptada</p>
+            <?php 
+              }else if($registro_busqueda['status'] == 24 || $registro_busqueda['status'] == 14){
+            ?>
+              <p class="text-center alert alert-danger" style="padding:7px;">Rechazada</p>
+            <?php
+              }else{
+            ?>
+              <p class="text-center alert alert-warning" style="padding:7px;">Pendiente</p>
+            <?php 
+              }
+            ?>
+            <!--<h6>
+              <a href="http://d-spp.org/oc/<?echo $registro_busqueda['cotizacion_adm']?>" target="_blank" type="button" class="botonCotizacion btn <?php if(empty($registro_busqueda['cotizacion_adm'])){ echo 'btn-danger btn-sm';}else{echo 'btn-success btn-sm';} ?>" aria-label="Left Align" <?php if(empty($registro_busqueda['cotizacion_adm'])){echo "disabled";}?>>
+                <span class="glyphicon glyphicon-download-alt"></span> FUNDEPPO
+              </a> 
+            </h6>-->   
+
+          </td>
+  <!----------------------------------------- TERMINA COTIZACION OPP ---------------------------------------------------------->
+
+  <!---------------------------- INICIA SECCION NOMBRE OPP ---------------------------->
+          <td>
+            <?php 
+            /******** NOMBRE COMPLETO OPP ******************/
+              if(isset($registro_busqueda['nombre'])){
+                echo "<a href='?OPP&detail&idopp=$registro_busqueda[idopp]'>".$registro_busqueda['abreviacionOPP']."</a>";
+              }else{
+                echo "No Disponible";
+              } 
+            ?>
+          </td>
+  <!---------------------------- TERMINA SECCION NOMBRE OPP ---------------------------->
+
+
+  <!------------------------------------ INICIA SECCION STATUS PUBLICO ------------------------------------>
+          <td>
+            <?php 
+              $query_status = "SELECT * FROM status_publico WHERE idstatus_publico = $registro_busqueda[status_publico]";
+              $ejecutar = mysql_query($query_status,$dspp) or die(mysql_error());
+              $estatus_publico = mysql_fetch_assoc($ejecutar);
+             ?>
+            <?php 
+            /******** INFORMACION DEL STATUS PUBLICO ******************/
+              if($registro_busqueda['status'] == 10){
+                /*echo "<p class='alert alert-success'>";
+                echo '<a href="#" data-toggle="tooltip" title="'.$estatus_interno['descripcion_interna'].'">'.$estatus_interno['nombre'].'</a>';
+                echo "</p>";*/
+                echo "<p class='text-center alert alert-success' style='padding:7px;'><span class='estatus'>Estatus Publico:</span>  <b><u>Certificado</u></b></p>";
+              }else{
+                echo "<p class='text-center alert alert-warning' style='padding:7px;'>";
+                 echo '<span class="estatus">Estatus Publico: </span> <a href="#" data-toggle="tooltip" title="'.$estatus_publico['descripcion_publica'].'">'.$estatus_publico['nombre'].'</a>';
+                 //echo "<p class='text-center alert alert-warning informacion'><span class='estatus'>Estatus Publico:</span> ".$estatus_publico['nombre']."</p>"; 
+                echo "</p>";
+              }
+            ?>
+
+          </td>
+  <!------------------------------------ TERMINA SECCION STATUS PUBLICO ------------------------------------>
+  
+  <!------------------------------------ INICIA SECCION STATUS INTERNO ------------------------------------>
+          <td>
+            <?php 
+              /******** INFORMACION DEL STATUS INTERNO ******************/
+              $query_status = "SELECT * FROM status WHERE idstatus = $registro_busqueda[status]";
+              $ejecutar = mysql_query($query_status,$dspp) or die(mysql_error());
+              $estatus_interno = mysql_fetch_assoc($ejecutar);
+
+              if($registro_busqueda['status'] == 4 || $registro_busqueda['status'] == 11 || $registro_busqueda['status'] == 13 || $registro_busqueda['status'] == 14 || $registro_busqueda['status'] == 15 || $registro_busqueda['status'] == 24){
+                $colorEstado = "class='informacion text-center alert alert-danger'";
+              }else if($registro_busqueda['status'] == 10){
+                $colorEstado = "class='informacion text-center alert alert-success'";
+              }else{
+                $colorEstado = "class='informacion text-center alert alert-warning'";
+              }
+             ?>
+
+            <p <?echo $colorEstado;?> style="padding:7px;">
+              <?php echo "<span class='estatus'>Estatus Interno: </span> <a href='#' data-toggle='tooltip' title='".$estatus_interno['descripcion_interna']."'>".$estatus_interno['nombre']."</a>"; ?>
+            </p>
+
+            <button type="button" class="btn btn-success" style="height:25px;font-size:12px;width:100%;" data-toggle="modal" <?php echo "data-target='#detalle".$registro_busqueda['idsolicitud_certificacion']."'" ?>>
+              Historial Estatus
+            </button>
+
+            <?php 
+              $queryProcesoCertificacion = "SELECT proceso_certificacion.*, status.idstatus, status.nombre AS 'nombreEstatus' FROM proceso_certificacion LEFT JOIN status ON proceso_certificacion.idstatus = status.idstatus WHERE idsolicitud_certificacion = $registro_busqueda[idsolicitud_certificacion]";
+              $row_proceso = mysql_query($queryProcesoCertificacion,$dspp) or die(mysql_error());
+
+             ?>
+            <!-- Modal -->
+            <div class="modal fade" <?php echo "id='detalle".$registro_busqueda['idsolicitud_certificacion']."'" ?> id="detalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Detalle Estatus Interno</h4>
+                  </div>
+                  <div class="modal-body">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>FECHA</th>
+                          <th>ESTATUS</th>
+                          <th>DESCRIPCIÓN</th>
+                          <th>ARCHIVO</th>
+                          <th>NOMBRE</th>
+                        </tr>
+                      </thead>
+
+                      <?php 
+                      while($proceso_certificacion = mysql_fetch_assoc($row_proceso)){
+                      ?>
+                        <tbody>
+                          <tr>
+                            <td><?php echo date("d/m/Y", $proceso_certificacion['fecha']); ?></td>
+                            <td><?php echo $proceso_certificacion['nombreEstatus']; ?></td>
+                            <td><?php if(!empty($proceso_certificacion['registro'])){ echo $proceso_certificacion['registro']; }else{ echo "No Disponible"; } ?></td>
+                            <td><?php if(!empty($proceso_certificacion['archivo'])){ echo "<a href='$proceso_certificacion[archivo]' target='_blank'>Visualizar</a>";}else{ echo "No Disponible"; } ?></td>
+                            <td><?php echo $proceso_certificacion['nombre'];?></td>
+                          </tr>
+                        </tbody>
+                      <?php
+                      }
+                       ?>
+                    </table>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </td>
+  <!------------------------------------ TERMINA SECCION STATUS INTERNO ------------------------------------>
+
+              <!-- consulta sobre los datos de objecion -->
+              <?php 
+               // $queryObjecion = "SELECT * FROM objecion WHERE idopp = $registro_busqueda[idopp] AND idoc = $registro_busqueda[idoc]";
+                $queryObjecion = "SELECT * FROM objecion WHERE idsolicitud = $registro_busqueda[idsolicitud_certificacion]";
+                $resultado = mysql_query($queryObjecion,$dspp) or die(mysql_error());
+
+                $row_objecion = mysql_fetch_assoc($resultado);
+
+               ?>
+              <!-- consulta sobre los datos de objecion -->
+
+            <!--INICIA PERIODO OBJECIÓN-->
+          <?php if($registro_busqueda['status'] != 1 && $registro_busqueda['status'] != 2 && $registro_busqueda['status'] != 3 && $registro_busqueda['status'] != 14 && $registro_busqueda['status'] != 15 && $registro_busqueda['status'] != 17 && $registro_busqueda['status'] != 24 && $registro_busqueda['status'] != 10){ ?>
+
+ <!-----------------------------------    INICIA SECCION INFORMACIÓN ESTATUS ---------------------------------------------->
+          <td class="text-center">
+            <?php 
+
+            $consultaFecha = "SELECT idfecha FROM fecha WHERE idopp = '$registro_busqueda[idopp]' AND  status = 20";
+            $ejecutar = mysql_query($consultaFecha,$dspp) or die(mysql_error());
+            $total = mysql_num_rows($ejecutar);
+
+            if(empty($total)){ 
+              ?>
+              <button <?if(isset($row_objecion['idobjecion'])){echo "class='botonObjecion btn btn-success btn-sm'";}else{echo "class='btn btn-danger btn-sm'";}?> data-toggle="modal" <?php echo "data-target='#myModal".$registro_busqueda['idsolicitud_certificacion']."'"?> >
+                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Periodo Objeción
+              </button>
+            <?php }else{ ?>
+              <p class="informacion alert alert-success text-center" style="margin:7px">PROCESO DE RENOVACIÓN</p>
+            <?php } ?>
+
+            <?php 
+              $queryCertificado = "SELECT * FROM certificado WHERE idsolicitud = $registro_busqueda[idsolicitud_certificacion] AND idopp = $registro_busqueda[idopp]";
+              $ejecutarCertificado = mysql_query($queryCertificado,$dspp) or die(mysql_error());
+              $certificado = mysql_fetch_assoc($ejecutarCertificado);
+              $num = mysql_num_rows($ejecutarCertificado);
+
+              if($num != 0 && isset($certificado['statuspago'])){
+
+                //$queryMembresia = "SELECT membresia.*, fecha.*, MAX(fecha.fecha) AS 'ultimafecha' FROM membresia INNER JOIN fecha ON membresia.idmembresia = fecha.idexterno WHERE membresia.idopp = $registro_busqueda[idopp] AND fecha.identificador = 'MEMBRESIA'";
+                $queryMembresia = "SELECT membresia.*, fecha.*, MAX(fecha.fecha) AS 'ultimafecha' FROM membresia INNER JOIN fecha ON membresia.idmembresia = fecha.idmembresia WHERE membresia.idopp = $registro_busqueda[idopp] AND fecha.identificador = 'MEMBRESIA'";
+                $ejecutar = mysql_query($queryMembresia, $dspp) or die(mysql_error());
+
+             
+                  $membresia = mysql_fetch_assoc($ejecutar);
+
+                  if(isset($membresia['idmembresia'])){
+                    $queryStatus = "SELECT * FROM fecha WHERE fecha = $membresia[ultimafecha]";
+                    $eje = mysql_query($queryStatus,$dspp) or die(mysql_error());
+                    $registroStatus = mysql_fetch_assoc($eje);
+                  }
+              
+              }                           
+             ?>
+
+            <?php 
+
+            $consultaFecha = "SELECT idfecha FROM fecha WHERE idexterno = '$registro_busqueda[idopp]' AND identificador = 'OPP' AND status = 20";
+            $ejecutar = mysql_query($consultaFecha,$dspp) or die(mysql_error());
+            $total = mysql_num_rows($ejecutar);
+
+
+            if(empty($total)){
+              if(isset($row_objecion['status']) && $row_objecion['status'] == "6" || $row_objecion['status'] == "7"){ 
+
+            ?>
+              <button <?if(!empty($row_objecion['adjunto'])){echo "class='botonObjecion btn btn-success btn-sm'";}else{echo "class='botonObjecion btn btn-danger btn-sm'";}?> data-toggle="modal" <?php echo "data-target='#resolucion".$registro_busqueda['idsolicitud_certificacion']."'"?>>
+                <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Resolución <br>de Objeción
+              </button>
+            <?php }else{ ?>
+              <button class="botonObjecion btn btn-danger btn-sm" data-toggle="modal" <?php echo "data-target='#resolucion".$registro_busqueda['idsolicitud_certificacion']."'"?> disabled>
+                <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Resolución <br>de Objeción
+              </button>
+            <?php 
+              }
+            }
+            ?>
+
+            <!-- Modal -->
+            <form action="" method="post" id="periodoObjecion" enctype="application/x-www-form-urlencoded">
+              <div class="modal fade" <?php echo "id='myModal".$registro_busqueda['idsolicitud_certificacion']."'" ?> tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">Periodo de Objeción</h4>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <div class="col-xs-6 form-group has-success">
+                            <label class="control-label" for="inputSuccess1">Observaciones</label>
+                            <?php if(isset($row_objecion['observacion'])){ ?>
+                              <textarea name="observacion_txt" class="form-control" id="inputSuccess1" cols="7" rows="7" disabled><?php echo $row_objecion['observacion']; ?></textarea>
+                            <?php }else{ ?>
+                              <textarea name="observacion_txt" class="form-control" id="inputSuccess1" cols="7" rows="7"></textarea>
+                            <?php } ?>
+                            
+                          </div>
+                          <div class="col-xs-6">
+                            <label class="control-label" for="fechaInicio">Fecha de Inicio</label>
+                            <?php if(isset($row_objecion['fechainicio'])){ ?>
+                              <input class="form-control" name="fechaInicio" id="fechaInicio" type="date" placeholder="dd/mm/aaaa" value="<?echo $row_objecion['fechainicio'];?>" disabled>
+                            <?php }else{ ?>
+                              <input class="form-control" name="fechaInicio" id="fechaInicio" type="date" placeholder="dd/mm/aaaa" required>
+                            <?php } ?>
+                            <hr>
+                            <label class="control-label" for="fechaFin">Fecha Final</label>
+                            <?php if(isset($row_objecion['fechainicio'])){ ?>
+                              <input class="form-control" name="fechaFin" id="fechaFin" type="date" placeholder="dd/mm/aaaa" value="<?echo $row_objecion['fechafin'];?>" disabled>
+                            <?php }else{ ?>
+                              <input class="form-control" name="fechaFin" id="fechaFin" type="date" placeholder="dd/mm/aaaa" required>
+                            <?php } ?>                                                          
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                      <?php if(empty($row_objecion['fechainicio'])){ ?>
+                      <button type="submit" class="btn btn-primary">Guardar</button>
+                      <?php } ?>
+                      <input type="hidden" name="emailOPP1" value="<?php echo $registro_busqueda['p1_email'];?>">
+                      <input type="hidden" name="emailOPP2" value="<?php echo $registro_busqueda['p2_email'];?>"> 
+                      <input type="hidden" name="objecionIdOpp_hdn" value="<?php echo $registro_busqueda['idopp'];?>">
+                      <input type="hidden" name="objecionIdOc_hdn" value="<?php echo $registro_busqueda['idoc'];?>">
+                      <input type="hidden" name="statusObjecion_hdn" value="6">
+                      <input type="hidden" name="insertarObjecion" value="periodoObjecion">
+                      <input type="hidden" name="idsolicitud" value="<?echo $registro_busqueda['idsolicitud_certificacion'];?>">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!-- Modal -->
+          </td>
+
+            <!--<?php// } /******FIN ELSE SOLICITUD NO ESTA EN PROCESO DE RENOVACION*******/?> 
+
+  <!------------------------------- INICIA SECCION RESOLUCIÓN DE OBJECION ------------------------------>
+              <?php 
+                if(isset($row_objecion['idobjecion'])){
+               ?>    
+              <!-- Modal -->
+              <form action="" method="POST" enctype="multipart/form-data">
+                
+                <div class="modal fade" <?php echo "id='resolucion".$registro_busqueda['idsolicitud_certificacion']."'" ?> tabindex="-1" role="dialog" aria-labelledby="resolucionLabel">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="resolucionLabel">Resolución de Objeción</h4>
+                      </div>
+
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="col-xs-6">
+                              <h4 class="control-label" for="status">Estatus</h4>
+
+                              <?php 
+                                $query = "SELECT * FROM status_publico WHERE idstatus_publico = $row_objecion[status]";
+                                $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
+                                $statusResolucion = mysql_fetch_assoc($ejecutar);
+                              ?>
+                                <p name="status" class="alert alert-success">
+
+                                  <? echo $statusResolucion['nombre'];?>
+                                </p>
+                                <h4>Dictamen</h4>
+                                <?php 
+                                if(!empty($row_objecion['dictamen'])){
+                                 ?>
+                                  <p class="alert alert-info"><?php echo $row_objecion['dictamen']; ?></p>
+                                <?php
+                                }else{
+                                ?>
+                                  <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-success" style="width:100px;">
+                                      <input type="radio" name="dictamen" id="positivo" value="POSITIVO" autocomplete="off" required> Positivo
+                                    </label>
+                                    <label class="btn btn-success" style="width:100px;">
+                                      <input type="radio" name="dictamen" id="negativo" value="NEGATIVO" autocomplete="off" required> Negativo
+                                    </label>
+                                  </div>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                            <div class="col-xs-6">
+                              <?php if(!empty($row_objecion['adjunto'])){ ?>
+                                <h4 class="control-label" for="descarga">Descargar Resolución</h4>
+                                <br>
+                                <a class="col-xs-12 btn btn-info" target="_blank" style="margin-top:-10px;" role="button" name="descarga" href="<?echo $row_objecion['adjunto']?>"><span aria-hidden="true" class="glyphicon glyphicon-download-alt" ></span> Descargar</a>
+                              <?php }else{ ?>
+                                <h4 class="control-label" for="">Adjuntar archivo</h4>
+                                <input name="adjunto_fld" id="adjunto_fld" type="file" class="filestyle" data-buttonName="btn-info" data-buttonBefore="true" data-buttonText="Cargar Archivo" required> 
+                              <?php } ?>     
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        <?php if(empty($row_objecion['adjunto'])){ ?>
+                            <button type="submit" class="btn btn-primary">Finalizar</button>
+                        <?php } ?>
+                          <input type="hidden" name="emailOPP1" value="<?php echo $registro_busqueda['p1_email'];?>">
+                          <input type="hidden" name="emailOPP2" value="<?php echo $registro_busqueda['p2_email'];?>"> 
+                          <input type="hidden" name="objecionIdOpp_hdn" value="<?php echo $registro_busqueda['idopp'];?>">
+                          <input type="hidden" name="objecionIdOc_hdn" value="<?php echo $registro_busqueda['idoc'];?>">
+                          <input type="hidden" name="statusObjecion_hdn" value="7">
+                          <input type="hidden" name="statusInterno" value="19">
+                          <input type="hidden" name="idobjecion" value="<? echo $row_objecion['idobjecion'];?>">
+                          <input type="hidden" name="idsolicitud" value="<?echo $registro_busqueda['idsolicitud_certificacion'];?>">                       
+                          <input type="hidden" name="resolucionObjecion" value="resolucionObjecion">
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </form>
+              <!-- Modal -->
+              <?php 
+                } 
+              ?>
+
+  <!-------------------------------------- TERMINAR SECCION INFORMACIÓN ESTATUS ---------------------------------------------->
+
+
+            
+  <!--------------------------------------------------------INICIA SECCION ESTATUS CERTIFICACION---------------------------------------------------------->
+             <td class="text-center">
+              <div class="col-xs-12">
+                <button class="btn btn-warning btn-sm" data-toggle="modal" <?php echo "data-target='#certificado".$registro_busqueda['idsolicitud_certificacion']."'"?>>
+                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Estatus<br> Membresía SPP/ Certificado
+              </button>
+              </div>                              
+              <div class="col-xs-12">
+                <?php if(!empty($certificado['adjunto'])){ ?>
+                    <a class="btn  btn-success" href="<?echo $certificado['adjunto'];?>" target="_blank">Descargar Certificado</a>
+                <?php } ?>
+              </div>
+            </td>
+
+            <?php 
+              $query = "SELECT * FROM fecha";
+              $ejecutar1 = mysql_query($query,$dspp) or die(mysql_error());
+              $numero = mysql_num_rows($ejecutar1);
+
+              if($numero != 0 && isset($certificado['idcertificado'])){
+                $queryFecha = "SELECT fecha.*, MAX(fecha) AS 'ultimaFecha' FROM fecha WHERE idopp = $certificado[idopp] AND identificador = 'CERTIFICADO'";
+                $ejecutar = mysql_query($queryFecha,$dspp) or die(mysql_error());
+                $registroFecha = mysql_fetch_assoc($ejecutar);
+              }
+
+              $query = "SELECT * FROM contratos WHERE idsolicitud_certificacion = $registro_busqueda[idsolicitud_certificacion]";
+              $ejecutarContratos = mysql_query($query,$dspp) or die(mysql_error());
+              $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
+              $registroContratos = mysql_fetch_assoc($ejecutar);
+
+             ?>
+              <!-- Modal -->
+
+                
+                <div class="modal fade" <?php echo "id='certificado".$registro_busqueda['idsolicitud_certificacion']."'" ?> tabindex="-1" role="dialog" aria-labelledby="resolucionLabel">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="resolucionLabel">ESTATUS CERTIFICADO / MEMBRESIA SPP</h4>
+                      </div>
+
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-xs-12">
+
+                            <div class="col-xs-6">
+                              <?php if(empty($certificado['status'])){ ?>
+                                <?php if($registro_busqueda['status'] == 19 ){ ?>
+                                  <div class="col-xs-12 alert alert-warning" role="alert">
+                                    <div class="col-xs-12">
+                                      Se ha iniciado la certificación.
+                                    </div>        
+                                  </div> 
+                                <?php }else{ ?>
+                                  <div class="col-xs-12 alert alert-danger" role="alert">
+                                    <div class="col-xs-12">
+                                      No se ha iniciado la certificación.
+                                    </div>        
+                                  </div> 
+                                <?php } ?>
+                              <?php }else{ ?>
+                                <div class="col-xs-12 alert alert-success" role="alert">
+                                  <div class="col-xs-12">Estatus Certificado al día: <b><?echo date("d/m/Y", $registroFecha['ultimaFecha']) ?></b></div>
+                                  <hr>
+                                  <div class="col-xs-12 ">
+                                    <?
+                                      $query = "SELECT * FROM status WHERE idstatus = $certificado[status]";
+                                      $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
+                                      $estatus = mysql_fetch_assoc($ejecutar);
+                                    ?>
+                                    <h4><?php echo $estatus['nombre']; ?></h4>
+                                    <hr>
+                                    <?php 
+                                    if(!empty($certificado['adjunto'])){
+                                      echo "Su Certificado vence el día: ".$certificado['vigenciafin'];
+                                    }
+                                     ?>
+
+                                   
+                                  </div>        
+                                </div>                               
+                              <?php } ?>   
+                <form id="contrato_SPP" action="" method="POST" enctype="multipart/form-data">
+                            <div class="col-xs-12 alert alert-info">
+                              <h4 style="border-bottom:solid 1px;">Contratos</h4>
+                              <?php 
+                              if(isset($registroContratos['idcontrato'])){
+                                echo "<div class='col-xs-6'>";
+
+                                while($rowContrato = mysql_fetch_assoc($ejecutarContratos)){
+                                  echo "<a class='btn btn-default' href='".$rowContrato['archivo']."' target='_blank'>".$rowContrato['nombre']."</a><br>";
+                                }
+                                echo "</div>";
+                                ?>
+                                <div class="col-xs-6">
+                                  <?php 
+                                  if($registroContratos['estatusContrato'] == "AUTORIZADO"){
+                                    echo "<b><u>".$registroContratos['estatusContrato']."</u></b>";
+                                  }else if($registroContratos['estatusContrato'] == "DENEGADO"){
+                                    echo "<b><u>".$registroContratos['estatusContrato']."</u></b>";
+                                  }else{
+                                  ?>
+                                    <button class="btn btn-sm btn-success" name="estatusContrato" value="AUTORIZADO">Autorizar</button>
+                                    <button class="btn btn-sm btn-danger" name="estatusContrato" value="DENEGADO">Denegar</button>
+                                    <input type="hidden" name="fechaContrato" value="<?php echo $registroContratos['fecha'] ?>">
+                                    <input type="hidden" name="contratoSPP" value="1">
+                                  <?php
+                                  }
+                                   ?>
+                                </div>
+                              <?php
+                              }else{
+                                echo "No se ha cargado ningun contato aun.";
+                              }
+                               ?>
+                            </div>
+                </form>
+
+                            </div>                              
+
+
+                            <div class="col-xs-6">
+                              <?php if(empty($certificado['adjunto'])){ ?>
+                                <div class="col-xs-12 alert alert-danger">
+                                  <p style="text-align:justify"><strong>No se ha completado el proceso de certificación, una vez completado se iniciara el proceso de pago de membresia.</strong></p>
+                                </div>
+                              <?php }else{ ?>
+                                <?php if(empty($membresia['idmembresia'])){ ?>
+                                  <div class="col-xs-12 alert alert-warning">
+                                    <p><strong>No se ha realizado el pago correspondiente, intente revisar más tarde.</strong></p>
+                                  </div>
+                                <?php }else if(isset($membresia['adjunto'])){ ?>
+                                  <div class="col-xs-12 alert alert-info">
+                                    <h4 style="border-bottom:solid 1px;">Membresia</h4>
+                                    
+                                    <div class="col-xs-8 alert alert-success">
+                                      <div class="col-xs-12 text-center">
+                                        Fecha: <?echo date("d/m/Y",$membresia['ultimafecha']);?>
+                                      </div>
+                                      <hr>
+                                      <div class="col-xs-12">
+                                        <small>Membresia: <strong><?echo $registroStatus['status'];?></strong></small>
+                                      </div>
+                                     
+                                    </div>
+
+              <form action="" method="POST" enctype="multipart/form-data">
+                                    <div class="col-xs-4">
+                                      <strong>Comprobante</strong>
+                                      <a href="<?echo $membresia['adjunto']?>" class="btn btn-danger btn-sm" target="_blank">Descargar <br>Comprobante</a>
+                                      
+                                    </div>
+                                    <?php if($registroStatus['status'] != "APROBADO"){ ?>
+                                      <div class="col-xs-12">
+                     
+                                          <?php 
+                                          if($registroStatus['status'] == "DENEGADO"){
+                                          ?>
+                                            <p class="well">Se ha denegado el comprobante de pago, en espera de uno nuevo</p>
+                                          <?php
+                                          }else{
+                                          ?>
+                                            <button class="btn btn-success btn-sm" type="submit" name="aprobar" value="aprobado">Aprobar</button>
+                                            <button class="btn btn-danger btn-sm" type="submit" name="denegar" value="denegado">Denegar</button>
+                                          <?php
+                                          }
+                                           ?>
+                                          <input type="hidden" name="idmembresia" value="<?echo $membresia['idmembresia'];?>">
+                                          <input type="hidden" name="idopp" value="<?php echo $registro_busqueda['idopp'];?>">
+                                          <input type="hidden" name="idoc" value="<?php echo $registro_busqueda['idoc'];?>">
+                                          <input type="hidden" name="idcertificado" value="<?php echo $certificado['idcertificado'];?>">
+                                          <input type="hidden" name="emailOPP1" value="<?php echo $registro_busqueda['p1_email'];?>">
+                                          <input type="hidden" name="emailOPP2" value="<?php echo $registro_busqueda['p2_email'];?>">
+                                          <input type="hidden" name="statusInterno" value="10">
+                                          <input type="hidden" name="fecha" value="<?echo time()?>">
+                                          <input type="hidden" name="comprobanteMembresia" value="2">
+                                      </div>                                    
+                                    <?php } ?>
+                                  </div>                                
+                                <?php } ?>
+
+                              <?php } ?>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                      
+                          <input type="hidden" name="objecionIdOpp_hdn" value="<?php echo $registro_busqueda['idopp'];?>">
+                          <input type="hidden" name="objecionIdOc_hdn" value="<?php echo $registro_busqueda['idoc'];?>">
+                          <input type="hidden" name="statusObjecion_hdn" value="Inicia Periodo de Objeción">
+                          
+                          <input type="hidden" name="idobjecion" value="<? echo $row_objecion['idobjecion'];?>">
+                          <input type="hidden" name="idsolicitud" value="<?echo $registro_busqueda['idsolicitud_certificacion'];?>">                          
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </form>
+              <!-- Modal -->
+  <!--------------------------------------------------------INICIA SECCION ESTATUS CERTIFICACION---------------------------------------------------------->
+
+
+            <!---------------------------FIN STATUS CERTIFICACION---------------------------->
+          <?php }else{ ?>
+              <?php if($registro_busqueda['estado'] == 20){ ?>
+                <td class="text-center">
+                  <h6 class="informacion alert alert-success text-center">PROCESO DE RENOVACIÓN</h6>
+                </td>
+              <?php }else{ ?>
+                <td class="text-center">
+                  <!--<?php echo $registro_busqueda["idsolicitud_certificacion"]; ?>-->
+                  <button class="botonObjecion btn btn-sm btn-default" disabled>Periodo Objeción</button>
+
+                  <button class="botonObjecion btn btn-default btn-sm" data-toggle="modal" <?php echo "data-target='#resolucion".$registro_busqueda['idsolicitud_certificacion']."'"?> disabled>
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Resolución <br>de Objeción
+                  </button>
+                </td>
+              <?php } ?>
+           <!-- <td>
+                <h6>
+                  <button class="btn btn-default btn-sm" data-toggle="modal" <?php echo "data-target='#resolucion".$registro_busqueda['idsolicitud_certificacion']."'"?> disabled>
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Resolución <br>de Objeción
+                  </button>
+                </h6>
+            </td>-->
+            <!--FIN PERIODO OBJECIÓN--> 
+            
+            <!--INICIA CERTIFICACION-->
+             <td class="text-center">     
+              <button class="btn btn-default" disabled>
+                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Estatus<br> Membresía SPP/ Certificado
+              </button>    
+            </td>
+
+            <!--FIN CERTIFICACION-->          
+          <?php } ?>
+
+  <!--------------------------------------------------------INICIA SECCION OBSERVACIONES-------------------------------------------->
+          <td>
+            <?php if(empty($registro_busqueda['observaciones'])){ ?>
+              <button class="btn btn-default btn-sm" disabled>
+                <span class="glyphicon glyphicon-list-alt"></span> Consultar
+              </button>         
+            <?php }else{ ?>
+              <a class="btn btn-info btn-sm" href="?OC&amp;detailBlock&amp;query=<?php echo $registro_busqueda['idoc']; ?>&amp;formato=<?php echo $registro_busqueda['idsolicitud_certificacion']; ?>">
+                <span class="glyphicon glyphicon-list-alt"></span> Consultar
+              </a>
+            <?php } ?>
+          </td>
+  <!--------------------------------------------------------INICIA SECCION OBSERVACIONES------------------------------------------>
+        </tr>
+
+      <?php } ?>
+
+      <? if($cont==0){?>
+      <tr><td colspan="12" class="alert alert-info" role="alert">No se encontraron registros</td></tr>
+
+      <? }?>
+    </tbody>
+  </table>
+
+
+
+
+<table>
+  <tr>
+  <td width="20"><?php if ($pageNum_opp > 0) { // Show if not first page ?>
+  <a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, 0, $queryString_opp); ?>">
+  <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
+  </a>
+  <?php } // Show if not first page ?></td>
+  <td width="20"><?php if ($pageNum_opp > 0) { // Show if not first page ?>
+  <a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, max(0, $pageNum_opp - 1), $queryString_opp); ?>">
+  <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+  </a>
+  <?php } // Show if not first page ?></td>
+  <td width="20"><?php if ($pageNum_opp < $totalPages_opp) { // Show if not last page ?>
+  <a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, min($totalPages_opp, $pageNum_opp + 1), $queryString_opp); ?>">
+  <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+  </a>
+  <?php } // Show if not last page ?></td>
+  <td width="20"><?php if ($pageNum_opp < $totalPages_opp) { // Show if not last page ?>
+  <a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, $totalPages_opp, $queryString_opp); ?>">
+  <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
+  </a>
+  <?php } // Show if not last page ?></td>
+  </tr>
+</table>
+<?php
+mysql_free_result($opp);
+?>

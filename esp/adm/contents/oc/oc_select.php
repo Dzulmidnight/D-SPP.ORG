@@ -1,0 +1,176 @@
+<?php require_once('../Connections/dspp.php'); ?>
+<?php
+if (!function_exists("GetSQLValueString")) {
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+{
+  if (PHP_VERSION < 6) {
+    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  }
+
+  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+  switch ($theType) {
+    case "text":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;    
+    case "long":
+    case "int":
+      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+      break;
+    case "double":
+      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+      break;
+    case "date":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;
+    case "defined":
+      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+      break;
+  }
+  return $theValue;
+}
+}
+
+if(isset($_POST['oc_delete'])){
+  $query=sprintf("delete from oc where idoc = %s",GetSQLValueString($_POST['idoc'], "text"));
+  $ejecutar=mysql_query($query,$dspp) or die(mysql_error());
+}
+
+$maxRows_oc = 20;
+$pageNum_oc = 0;
+if (isset($_GET['pageNum_oc'])) {
+  $pageNum_oc = $_GET['pageNum_oc'];
+}
+$startRow_oc = $pageNum_oc * $maxRows_oc;
+
+mysql_select_db($database_dspp, $dspp);
+$query_oc = "SELECT * FROM oc ORDER BY nombre ASC";
+$query_limit_oc = sprintf("%s LIMIT %d, %d", $query_oc, $startRow_oc, $maxRows_oc);
+$oc = mysql_query($query_limit_oc, $dspp) or die(mysql_error());
+//$row_oc = mysql_fetch_assoc($oc);
+
+if (isset($_GET['totalRows_oc'])) {
+  $totalRows_oc = $_GET['totalRows_oc'];
+} else {
+  $all_oc = mysql_query($query_oc);
+  $totalRows_oc = mysql_num_rows($all_oc);
+}
+$totalPages_oc = ceil($totalRows_oc/$maxRows_oc)-1;
+
+
+?>
+<script language="JavaScript"> 
+function preguntar(){ 
+    if(!confirm('¿Estas seguro de eliminar el registro?')){ 
+       return false; } 
+} 
+</script>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Lista OC(s)</div>
+  <div class="panel-body">
+    <table class="table table-condensed table-bordered table-hover" style="font-size:12px;">
+    <thead>
+      <tr>
+        <th class="text-center">IDF</th>
+        <th class="text-center">Nombre</th>
+        <th class="text-center">Abreviación</th>
+        <th class="text-center">OPP's</th>
+        <!--<th class="text-center">Solicitudes</th>-->
+        <th class="text-center">País</th>
+        <th class="text-center">RFC</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <?php while ($row_oc = mysql_fetch_assoc($oc)){ ?>
+        <tr>
+        <!-------------------- INICIA SECCION IDF -------------------->      
+          <td>
+            <a class="btn btn-sm btn-primary" style="width:100%" href="?OC&amp;detail&amp;idoc=<?php echo $row_oc['idoc']; ?>&contact">Consultar<br>
+              <?php echo $row_oc['idf']; ?>
+            </a>
+          </td>
+        <!-------------------- TERMINAR SECCION IDF -------------------->
+
+              <!-------------------- INICIA SECCION NOMBRE -------------------->
+          <td>
+            <p class="alert alert-success" style="padding:7px;"><?php echo $row_oc['nombre']; ?></p>
+          </td>
+              <!-------------------- TERMINAR SECCION NOMBRE -------------------->
+
+              <!-------------------- INICIA SECCION ABREVIACIÓN -------------------->
+          <td>
+            <p class="alert alert-success" style="padding:7px;"><?php echo $row_oc['abreviacion']; ?></p>
+          </td>
+              <!-------------------- TERMINAR SECCION ABREVIACIÓN -------------------->
+
+              <!-------------------- INICIA SECCION OPPs -------------------->
+          <td align="right">
+            <?
+              $query_topp = "SELECT count(*) as total FROM opp where idoc='".$row_oc['idoc']."'";
+              $topp = mysql_query($query_topp, $dspp) or die(mysql_error());
+              $row_topp = mysql_fetch_assoc($topp);
+            ?>
+              <?php if($row_topp['total'] == 0){ ?>
+                <p class="alert alert-danger text-center">0</p>
+              <?php }else{   ?>
+                <a class="btn btn-sm btn-success" style="width:100%" href="?OPP&select&query=<? echo $row_oc['idoc'];?>">Consultar<br> 
+                <? echo $row_topp['total'];?>
+                </a>
+              <?php } ?>
+          </td>
+              <!-------------------- TERMINAR SECCION OPPs -------------------->
+
+              <!-------------------- INICIA SECCION SOLICITUDES -------------------->
+          <!--<td aling="right">
+            <?
+              $query_topp2 = "SELECT count(*) as total2 FROM solicitud_certificacion where idoc='".$row_oc['idoc']."'";
+              $topp2 = mysql_query($query_topp2, $dspp) or die(mysql_error());
+              $row_topp2 = mysql_fetch_assoc($topp2);
+            ?>
+            <?php if($row_topp2['total2'] == 0){ ?>
+              <p class="alert alert-danger text-center" style="padding:7px;">0</p>
+            <?php }else{   ?>
+              <a class="btn btn-sm btn-success" style="width:100%;pading:7px" href="?OC&solicitud&query=<? echo $row_oc['idoc'];?>">Consultar <br>
+                <? echo $row_topp2['total2'];?>
+              </a>   
+            <?php } ?>     
+          </td>-->
+              <!-------------------- TERMINAR SECCION SOLICITUDES -------------------->
+
+              <!-------------------- INICIA SECCION PAIS -------------------->
+          <td><p class="alert alert-success" style="padding:7px;"><?php echo $row_oc['pais']; ?></p></td>
+              <!-------------------- TERMINAR SECCION PAIS -------------------->
+
+              <!-------------------- INICIA SECCION RFC -------------------->
+          <td><p class="alert alert-success" style="padding:7px;"><?php echo $row_oc['razon_social']; ?></p></td>
+              <!-------------------- TERMINAR SECCION RFC -------------------->
+
+              <!-------------------- INICIA SECCION ELIMINAR -------------------->
+          <td>
+            <a href="?OC&amp;detail&amp;idoc=<?php echo $row_oc['idoc']; ?>&contact" class="btn btn-xs btn-info col-xs-6" data-toggle="tooltip" data-placement="top" title="Editar">
+              <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+            </a>
+
+            <form action="" method="post" name="formularioEliminar" ONSUBMIT="return preguntar();">
+              <button class="btn btn-xs btn-danger col-xs-6" type="subtmit" value="Eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+              </button>        
+              <input type="hidden" value="OC eliminado correctamente" name="mensaje" />
+              <input type="hidden" value="1" name="oc_delete" />
+              <input type="hidden" value="<?php echo $row_oc['idoc']; ?>" name="idoc" />
+            </form>
+          </td>
+              <!-------------------- TERMINAR SECCION ELIMINAR -------------------->
+
+        </tr>
+        <?php }  ?>
+        </tbody>
+    </table>
+  </div>
+</div>
+
+<?php
+mysql_free_result($oc);
+?>
