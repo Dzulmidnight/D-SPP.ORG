@@ -257,7 +257,7 @@ $totalRows_pais = mysql_num_rows($pais);
 ?>
 <div class="row-xs-12">
   
-  <div class="col-xs-4">
+  <div class="col-xs-5">
     
   <? if(isset($_POST['update'])){?>
   <p>
@@ -268,7 +268,7 @@ $totalRows_pais = mysql_num_rows($pais);
   <form class="form" action="<?php echo $editFormAction; ?>" method="post" name="form1" id="form1">
     <table class="table">
       <tr valign="baseline">
-        <th nowrap="nowrap" align="right">IDF</th>
+        <th nowrap="nowrap" align="right">#SPP</th>
         <input class="form-control" type="hidden" name="idf" value="<?php echo htmlentities($row_com['idf'], ENT_COMPAT, 'UTF-8'); ?>" size="32"/>
         <td>
           <?php echo $row_com['idf']; ?>   
@@ -363,7 +363,7 @@ $totalRows_pais = mysql_num_rows($pais);
     <input type="hidden" name="idcom" value="<?php echo $row_com['idcom']; ?>" />
   </form>
   </div>
-  <div class="col-xs-8">
+  <div class="col-xs-7">
     
   <ul class="nav nav-pills">
  

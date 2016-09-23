@@ -255,7 +255,7 @@ $totalRows_pais = mysql_num_rows($pais);
 ?>
 <div class="row-xs-12">
   
-  <div class="col-xs-4">
+  <div class="col-xs-5">
     
   <? if(isset($_POST['update'])){?>
   <p>
@@ -266,7 +266,7 @@ $totalRows_pais = mysql_num_rows($pais);
   <form class="form" action="<?php echo $editFormAction; ?>" method="post" name="form1" id="form1">
     <table class="table">
       <tr valign="baseline">
-        <th nowrap="nowrap" align="right">IDF</th>
+        <th nowrap="nowrap" align="right">#SPP</th>
         <td><input class="form-control" type="text" name="idf" value="<?php echo htmlentities($row_opp['idf'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
         </tr>
       <tr valign="baseline">
@@ -350,7 +350,7 @@ while ($row_oc = mysql_fetch_assoc($oc)) {
     <input type="hidden" name="idopp" value="<?php echo $row_opp['idopp']; ?>" />
   </form>
   </div>
-  <div class="col-xs-8">
+  <div class="col-xs-7">
     
   <ul class="nav nav-pills">
  
@@ -379,7 +379,7 @@ while ($row_oc = mysql_fetch_assoc($oc)) {
   
   <? if($_GET['contact']=="add"){?>
   <form class="col-xs-8" action="<?php echo $editFormAction; ?>" method="post" name="form2" id="form2">
-    <table class="table">
+    <table class="table table-condensed">
       <tr valign="baseline">
         <th nowrap="nowrap" align="right">Contacto</th>
         <td><input required="required" autofocus="autofocus" class="form-control"  type="text" name="contacto" value="" size="32" /></td>
@@ -423,7 +423,7 @@ while ($row_oc = mysql_fetch_assoc($oc)) {
   </form>
   <? }else if($_GET['contact']=="update"){?>
   <div class="col-xs-4">
-  <table class="table table-striped">
+  <table class="table table-striped table-condensed">
     <thead>
       <tr>
         <th>Lista de contactos</th>
@@ -489,7 +489,7 @@ while ($row_oc = mysql_fetch_assoc($oc)) {
 </form>
   </div>
   <? }else{?>
-  <table class="table table-striped">
+  <table class="table table-striped table-condensed">
     <thead>
       <tr>
         <th>Contacto</th>

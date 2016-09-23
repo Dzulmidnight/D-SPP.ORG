@@ -1,295 +1,105 @@
-<?php require_once('../Connections/dspp.php'); ?>
-<?php
+<?php 
+require_once('../../Connections/dspp.php'); 
+mysql_select_db($database_dspp, $dspp);
+
 if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+  {
+    if (PHP_VERSION < 6) {
+      $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+    }
+
+    $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+    switch ($theType) {
+      case "text":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;    
+      case "long":
+      case "int":
+        $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+        break;
+      case "double":
+        $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+        break;
+      case "date":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;
+      case "defined":
+        $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+        break;
+    }
+    return $theValue;
   }
-
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
-
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
 }
 
 
-$timeActual = time();
+$fecha = time();
+$idoc = $_SESSION['idoc'];
 
-if(isset($_POST['opp_delete'])){
-	$query=sprintf("delete from opp where idopp = %s",GetSQLValueString($_POST['idopp'], "text"));
-	$ejecutar=mysql_query($query,$dspp) or die(mysql_error());
-}
 
 $currentPage = $_SERVER["PHP_SELF"];
 
-$maxRows_opp = 20;
-$pageNum_opp = 0;
-if (isset($_GET['pageNum_opp'])) {
-  $pageNum_opp = $_GET['pageNum_opp'];
-}
-$startRow_opp = $pageNum_opp * $maxRows_opp;
 
-mysql_select_db($database_dspp, $dspp);
-if(isset($_GET['query'])){
+
+/*if(isset($_GET['query'])){
 	$query_opp = "SELECT *, opp.idopp AS 'idOPP', opp.nombre AS 'nombreOPP', opp.estado AS 'estadoOPP', status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM opp LEFT JOIN status ON opp.estado = status.idstatus  LEFT JOIN status_pagina ON opp.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON opp.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp where idoc='".$_SESSION['idoc']."' ORDER BY opp.nombre ASC";
 }else{
 	$query_opp = "SELECT *, opp.idopp AS 'idOPP', opp.nombre AS 'nombreOPP', opp.estado AS 'estadoOPP', status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM opp LEFT JOIN status ON opp.estado = status.idstatus LEFT JOIN status_pagina ON opp.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON opp.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp where idoc='".$_SESSION['idoc']."' ORDER BY opp.nombre ASC";
-}
+}*/
 
 
 
-//  $query_opp = "SELECT *, opp.idopp AS 'idOPP', opp.nombre AS 'nombreOPP', opp.estado AS 'estadoOPP', opp.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM opp LEFT JOIN status ON opp.estado = status.idstatus LEFT JOIN status_pagina ON opp.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON opp.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.estado IS NULL) OR (opp.estado != 'ARCHIVADO') ORDER BY opp.idopp ASC";
+$query = "SELECT opp.* FROM opp WHERE idoc = $idoc";
+$ejecutar = mysql_query($query,$dspp) or die(mysql_error());
 
 
-$query_limit_opp = sprintf("%s LIMIT %d, %d", $query_opp, $startRow_opp, $maxRows_opp);
-$opp = mysql_query($query_limit_opp, $dspp) or die(mysql_error());
-//$row_opp = mysql_fetch_assoc($opp);
+$total_opp = mysql_num_rows($ejecutar);
 
-if (isset($_GET['totalRows_opp'])) {
-  $totalRows_opp = $_GET['totalRows_opp'];
-} else {
-  $all_opp = mysql_query($query_opp);
-  $totalRows_opp = mysql_num_rows($all_opp);
-}
-$totalPages_opp = ceil($totalRows_opp/$maxRows_opp)-1;
 
-$queryString_opp = "";
-if (!empty($_SERVER['QUERY_STRING'])) {
-  $params = explode("&", $_SERVER['QUERY_STRING']);
-  $newParams = array();
-  foreach ($params as $param) {
-    if (stristr($param, "pageNum_opp") == false && 
-        stristr($param, "totalRows_opp") == false) {
-      array_push($newParams, $param);
-    }
-  }
-  if (count($newParams) != 0) {
-    $queryString_opp = "&" . htmlentities(implode("&", $newParams));
-  }
-}
-
-
-if(isset($_POST['actualizacionOPP']) && $_POST['actualizacionOPP'] == '1OC'){
-
-    $row_opp = mysql_query("SELECT * FROM opp",$dspp) or die(mysql_error());
-    $cont = 1;
-    $fecha = time();
-
-    while($datosOPP = mysql_fetch_assoc($row_opp)){
-      //$nombre = "estatusPagina"+$datosOPP['idopp']+"";
-
-      if(isset($_POST['estatusInterno'.$datosOPP['idopp']])){/*********************************** INICIA ESTATUS INTERNO DEL OPP ******************/
-        $estatusInterno = $_POST['estatusInterno'.$datosOPP['idopp']];
-
-        if(!empty($estatusInterno)){
-          /*
-          ESTATUS PAGINA = 
-          1.- EN REVISION
-          2.- CERTIFICADA
-          3.- REGISTRADA
-          4.- CANCELADA
-          */
-          $estatusPagina = "";
-          if($estatusInterno == 10){ //ESTATUS PAGINA = CERTIFICADO(REGISTRADO)
-            $estatusPagina = 2;
-          }else if($estatusInterno == 14 || $estatusInterno == 24){ // ESTATUS PAGINA = CANCELADO
-            $estatusPagina = 4;
-          }else{ // ESTATUS PAGINA = EN REVISION
-            $estatusPagina = 1;
-          }
-
-          $query = "UPDATE opp SET estatusInterno = $estatusInterno, estatusPagina = $estatusPagina WHERE idopp = $datosOPP[idopp]";
-          $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-          /*$queryPagina = "UPDATE opp SET estatusPagina = $estatusPagina WHERE idopp = $datosOPP[idOPP]";
-          $ejecutar = mysql_query($queryPagina,$dspp) or die(mysql_error());
-          //echo "cont: $cont | id($datosOPP[idopp]): $estatusInterno<br>";*/
-        }      
-
-
-
-      }/*********************************** TERMINA ESTATUS INTERNO DEL OPP ****************************************************/
-
-
-      if(isset($_POST['estatusPublico'.$datosOPP['idopp']])){/*********************************** INICIA ESTATUS PUBLICO DEL OPP ******************/
-        $estatusPublico = $_POST['estatusPublico'.$datosOPP['idopp']];
-
-        if(!empty($estatusPublico)){
-
-          $query = "UPDATE opp SET estatusPublico = $estatusPublico, estatusPublico = $estatusPublico WHERE idopp = $datosOPP[idopp]";
-          $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-          /*$queryPagina = "UPDATE opp SET estatusPagina = $estatusPagina WHERE idopp = $datosOPP[idOPP]";
-          $ejecutar = mysql_query($queryPagina,$dspp) or die(mysql_error());
-          //echo "cont: $cont | id($datosOPP[idopp]): $estatusInterno<br>";*/
-        }      
-
-
-
-      }/*********************************** TERMINA ESTATUS PUBLICO DEL OPP ****************************************************/
-
-
-
-      
-
-
-      if(isset($_POST['numero_socios'.$datosOPP['idopp']])){/*********************************** INICIA NUMERO DE SOCIOS DEL OPP ******************/
-        $numero_socios = $_POST['numero_socios'.$datosOPP['idopp']];
-
-        if(!empty($numero_socios)){
-          $consultar = mysql_query("SELECT idopp,socios, fecha_captura FROM numero_socios WHERE idopp = $datosOPP[idopp] ORDER BY fecha_captura DESC LIMIT 1",$dspp) or die(mysql_error());
-          $consultaNumeroSocios = mysql_fetch_assoc($consultar);
-
-          if($consultaNumeroSocios['socios'] != $numero_socios){
-
-            $query = "INSERT INTO numero_socios(idopp,socios,fecha_captura) VALUES($datosOPP[idopp], $numero_socios, $fecha)";
-            $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-          }
-
-        }      
-      }/*********************************** TERMINA NUMERO DE SOCIOS DEL OPP ****************************************************/
-
-
-      if(isset($_POST['idf'.$datosOPP['idopp']])){/*********************************** INICIA NUMERO #SPP DEL OPP ******************/
-        $idf = $_POST['idf'.$datosOPP['idopp']];
-
-        if(!empty($idf)){
-          $query = "UPDATE opp SET idf = '$idf' WHERE idopp = $datosOPP[idopp]";
-          $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-        }      
-      }/*********************************** TERMINA NUMERO #SPP DEL OPP ****************************************************/
-
-
-
-
-      if(isset($_POST['finCertificado'.$datosOPP['idopp']])){ /****************** INICIA VIGENCIA FIN DEL CERTIFICADO ******************/
-        $finCertificado = $_POST['finCertificado'.$datosOPP['idopp']];
-        $timeActual = time();
-
-        $timeVencimiento = strtotime($finCertificado);
-        $timeRestante = ($timeVencimiento - $timeActual);
-        $estatusCertificado = "";
-        $plazo = 60 *(24*60*60);
-        $plazoDespues = ($timeVencimiento - $plazo);
-        $prorroga = ($timeVencimiento + $plazo);
-            // Calculamos el número de segundos que tienen 60 días
-
-        if(!empty($finCertificado)){ // NO SE INGRESO NINGUNA FECHA
-
-          $row_certificado = mysql_query("SELECT * FROM certificado WHERE idopp = '$datosOPP[idopp]'", $dspp) or die(mysql_error()); // CONSULTO SI EL OPP CUENTA CON ALGUN REGISTRO DE CERTIFICADO
-          $totalCertificado = mysql_num_rows($row_certificado);
-          
-          if(!empty($totalCertificado)){ // SI CUENTA CON UN REGISTRO, ACTUALIZO EL MISMO
-            //$query = "UPDATE certificado SET vigenciafin = '$vigenciafin' WHERE idopp = $datosOPP[idopp]";
-            //$ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-
-            /*********************************** INICIA, CALCULAMOS FECHAS PARA ASIGNAR EL ESTATUS DEL CERTIFICADO Y DEL OPP ***********************************************/
-
-            if($timeActual <= $timeVencimiento){
-              if($timeRestante <= $plazo){
-                $estatusCertificado = 16; // AVISO DE RENOVACIÓN
-              }else{
-                $estatusCertificado = 10; // CERTIFICADO ACTIVO
-              }
-            }else{
-              if($prorroga >= $timeActual){
-                $estatusCertificado = 12; // CERTIFICADO POR EXPIRAR
-              }else{
-                $estatusCertificado = 11; // CERTIFICADO EXPIRADO
-              }
-            }
-
-              $actualizar = "UPDATE opp SET estado = '$estatusCertificado' WHERE idopp = '$datosOPP[idopp]'";
-              $ejecutar = mysql_query($actualizar,$dspp) or die(mysql_error());
-
-              $query = "UPDATE certificado SET status = '$estatusCertificado', vigenciafin = '$finCertificado' WHERE idopp = '$datosOPP[idopp]'";
-              $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-
-
-              //$actualizar = "UPDATE certificado SET status = '16' WHERE idcertificado = $datosOPP[idcertificado]";
-              //$ejecutar = mysql_query($actualizar,$dspp) or die(mysql_error());
-            
-            /*********************************** FIN, CALCULAMOS FECHAS PARA ASIGNAR EL ESTATUS DEL CERTIFICADO Y DEL OPP ***********************************************/
-
-          }else{ // SI NO CUENTA CON REGISTRO PREVIO, ENTONCES INSERTO UN NUEVO REGISTRO
-            //$query = "INSERT INTO certificado(vigenciafin,idopp) VALUES('$vigenciafin',$datosOPP[idopp])";
-            //$ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-            /*********************************** INICIA, CALCULAMOS FECHAS PARA ASIGNAR EL ESTATUS DEL CERTIFICADO Y DEL OPP ***********************************************/
-
-            if($timeActual <= $timeVencimiento){
-              if($timeRestante <= $plazo){
-                $estatusCertificado = 16; // AVISO DE RENOVACIÓN
-              }else{
-                $estatusCertificado = 10; // CERTIFICADO ACTIVO
-              }
-            }else{
-              if($prorroga >= $timeActual){
-                $estatusCertificado = 12; // CERTIFICADO POR EXPIRAR
-              }else{
-                $estatusCertificado = 11; // CERTIFICADO EXPIRADO
-              }
-            }
-
-
-              $actualizar = "UPDATE opp SET estado = '$estatusCertificado' WHERE idopp = '$datosOPP[idopp]'";
-              $ejecutar = mysql_query($actualizar,$dspp) or die(mysql_error());
-
-              $query = "INSERT INTO certificado(status, vigenciafin, idopp) VALUES('$estatusCertificado', '$finCertificado', '$datosOPP[idopp]'')";
-              $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-
-
-              //$actualizar = "UPDATE certificado SET status = '16' WHERE idcertificado = $datosOPP[idcertificado]";
-              //$ejecutar = mysql_query($actualizar,$dspp) or die(mysql_error());
-            
-            /*********************************** FIN, CALCULAMOS FECHAS PARA ASIGNAR EL ESTATUS DEL CERTIFICADO Y DEL OPP ***********************************************/
-
-
-          }
-
-          //echo "cont: $cont | VIGENCIA FIN($datosOPP[idopp]): $vigenciafin :TOTAL Certificado: $totalCertificado<br>";
-        }      
-      }/************************************ TERMINA VIGENCIA FIN DEL CERTIFICADO ***********************************/
-
-
-      if(isset($_POST['ocAsignado'.$datosOPP['idopp']])){ //********************************** INICIA LA ASIGNACION DE OC ***********************************/
-        $ocAsignado = $_POST['ocAsignado'.$datosOPP['idopp']];
-        if(!empty($ocAsignado)){
-          $update = "UPDATE opp SET idoc = '$ocAsignado' WHERE idopp = '$datosOPP[idopp]'";
-          $ejecutar = mysql_query($update,$dspp) or die(mysql_error());
-        }
-      } //********************************** TERMINA LA ASIGNACION DE OC ***********************************/
-
-      $cont++;
-    }
-    
-    echo '<script>location.href="?OPP&select";</script>';
-
-
-}
-
-
-$ejecutar = mysql_query($query_opp,$dspp) or die(mysql_error());
-$totalOPP = mysql_num_rows($ejecutar);
-
-$queryString_opp = sprintf("&totalRows_opp=%d%s", $totalRows_opp, $queryString_opp);
 ?>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <td><button class="btn btn-primary"></button></td>
+          <td>Total OPP(s): <?php echo $total_opp; ?></td>
+        </tr>
+        <tr>
+          <th class="text-center" style="width:100px;">#SPP</th>
+          <th class="text-center" style="width:100px;">Nombre</th>
+          <th class="text-center">Abreviación</th>
+          <th class="text-center">Estatus Interno<br>(proceso certificación)</th>
+          <th class="text-center">Estatus Certificado</th>
+          <th class="text-center">Vigencia Fin<br>(certificado)</th>
+          <!--<th class="text-center">Abreviación</th>-->
+          <th class="text-center">Nº de Socios</th>
+          <!--<th class="text-center">Email</th>
+          <th class="text-center">Teléfono Oficinas</th>
+          <th class="text-center">País</th>-->
+          <!--<th class="text-center">OC</th>-->
+          <!--<th class="text-center">Razón social</th>-->
+          <!--<th class="text-center">Dirección Oficinas</th>-->
+          <!--<th class="text-center">Dirección fiscal</th>-->
+          <!--<th class="text-center">RFC</th>-->
+          <th class="text-center">Acciones</th>
+        </tr>    
+      </thead>
+      <tbody>
+      <?php 
+      while($opp = mysql_fetch_assoc($ejecutar)){
+
+      }
+       ?>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
 <script language="JavaScript"> 
 function preguntar(){ 
     if(!confirm('¿Estas seguro de eliminar el registro?')){ 

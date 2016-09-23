@@ -16,8 +16,8 @@ require_once('../Connections/mail.php');
           $mail->AddAttachment($archivo);
     }
         $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($mensaje);
-        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Body = $mensaje;
+        $mail->MsgHTML($mensaje);
 
 
     foreach($_POST['enviarA'] as $enviarA){

@@ -267,7 +267,7 @@ $totalRows_pais = mysql_num_rows($pais);
   <form class="form" action="<?php echo $editFormAction; ?>" method="post" name="form1" id="form1">
     <table class="table">
       <tr valign="baseline">
-        <th nowrap="nowrap" align="right">IDF</th>
+        <th nowrap="nowrap" align="right">#SPP</th>
         <td><input class="form-control" type="text" name="idf" value="<?php echo htmlentities($row_opp['idf'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
         </tr>
       <tr valign="baseline">
@@ -311,7 +311,7 @@ while ($row_pais = mysql_fetch_assoc($pais)) {
         </tr>
       <tr> </tr>
       <tr valign="baseline">
-        <th nowrap="nowrap" align="right">IDF OC</th>
+        <th nowrap="nowrap" align="right">#SPP OC</th>
         <td>
            <input class="form-control" type="text" value="<?php echo htmlentities($row_oc['nombre'], ENT_COMPAT, 'UTF-8'); ?>" size="32" disabled/>
         </td>

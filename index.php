@@ -18,7 +18,7 @@
 
 
 
-    <title>FUNDEPPO | D-SPP</title>
+    <title>SSP GLOBAL | D-SPP</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -52,7 +52,7 @@
    ?>
 	<div class="container text-center">
 		<hr>  
-		<a href="http://spp.coop/"><img src="img/FUNDEPPO.jpg" alt="Simbolo de Pequeños Productores,  Small Producers’ Symbol"></a>
+		<a href="http://spp.coop/"><img src="img/FUNDEPPO.jpg" alt="Simbolo de Pequeños Productores,  Small Producers’ Symbol" alt="SPP GLOBAL"></a>
 		<h1 style="color:#4B610B;">D-SPP</h1>
 		<div class="col-xs-12">
 			<div class="col-xs-12">

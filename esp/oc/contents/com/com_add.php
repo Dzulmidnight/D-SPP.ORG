@@ -201,7 +201,7 @@ $totalRows_oc = mysql_num_rows($oc);
       <td><input required="required" class="form-control" type="text" name="password" value="" size="32"></td>
     </tr>-->
     <tr valign="baseline">
-      <th nowrap align="left">IDF ó #SPP <br>(En caso de contar con uno)</th>
+      <th nowrap align="left">#SPP <br>(En caso de contar con uno)</th>
       <td><input class="form-control" type="text" id="idf" name="idf" value="" size="32"></td>
     </tr>
 
@@ -271,7 +271,7 @@ $totalRows_oc = mysql_num_rows($oc);
     </tr>
     <tr valign="baseline">
       <td nowrap align="right">&nbsp;</td>
-      <td><input class="btn btn-primary" type="submit" value="Agregar COM"></td>
+      <td><input class="btn btn-primary" type="submit" value="Agregar Empresa"></td>
     </tr>
   </table>
   <input type="hidden" name="fecha_inclusion" value="<?php echo time();?>">

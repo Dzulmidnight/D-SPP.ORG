@@ -3,7 +3,7 @@
 # Type="MYSQL"
 # HTTP="true"
 $hostname_dspp = "localhost";
-$database_dspp = "fa000006_dspp";
+$database_dspp = "d-spp";
 $username_dspp = "root";
 $password_dspp = "";
 

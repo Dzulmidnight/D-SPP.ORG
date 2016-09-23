@@ -201,7 +201,7 @@ $totalRows_oc = mysql_num_rows($oc);
       <td><input required="required" class="form-control" type="text" name="password" value="" size="32"></td>
     </tr>-->
     <tr valign="baseline">
-      <th nowrap align="left">IDF ó #SPP <br>(En caso de contar con uno)</th>
+      <th nowrap align="left">#SPP <br>(En caso de contar con uno)</th>
       <td><input class="form-control" type="text" id="idf" name="idf" value="" size="32"></td>
     </tr>
 
@@ -244,7 +244,7 @@ do {
     </tr>
 
     <tr valign="baseline">
-      <th nowrap align="left">IDF OC</th>
+      <th nowrap align="left">#SPP OC</th>
       <td>
         <input required class="form-control" type="text" name="" value="<?php echo $row_oc['abreviacion']?>" size="32" disabled>
     </tr>
