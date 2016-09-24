@@ -339,7 +339,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             <b>TIPO DE SOLICITUD</b>
             <input type="text" class="form-control" value="<?php echo $solicitud['tipo_solicitud']; ?>"readonly>
             <button type="submit" class="btn btn-warning form-control" style="color:white" name="guardar_cambios" value="1">
-              Actualizar Solicitud
+              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>Actualizar Solicitud
             </button>
             <!--<input type="submit" style="color:white" class="btn btn-warning form-control" value="Actualizar Solicitud">
             <input type="hidden" name="guarda_cambios" value="1">-->

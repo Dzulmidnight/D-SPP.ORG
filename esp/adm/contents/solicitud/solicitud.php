@@ -35,6 +35,11 @@
 	<? }?>
 </ul>
 
+<ul class="nav nav-pills">
+	<li role="presentation" <?php if(isset($_GET['select'])){ echo "class='active'"; } ?>>
+	</li>
+</ul>
+
 <? if(isset($_GET['mensaje'])){?>
 <p>
 <div class="alert alert-success" role="alert"><? echo $_GET['mensaje']?></div>
