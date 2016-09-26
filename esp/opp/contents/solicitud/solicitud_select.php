@@ -180,20 +180,27 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
               <td>
                 <?php
                 $row_objecion = mysql_query("SELECT * FROM periodo_objecion WHERE idsolicitud_certificacion = $solicitud[idsolicitud_certificacion]", $dspp) or die(mysql_error());
-                while($objecion = mysql_fetch_assoc($row_objecion)){
-                  if($objecion['estatus_objecion'] == 'EN ESPERA'){ // no se muestra nada si esta en espera
-                    echo "No Disponible";
-                  }else{ // si se autorizo se muestra:
-                    if(empty($objecion['documento'])){ //si no se ha cargado un documento se muestra el estatus
-                      echo $proceso_certificacion['estatus_dspp'];
-                    }else{ // se muestra boton descargar resolución y dictamen del mismo
-                     ?>
-                     <a href='<?php echo $proceso_certificacion['documento']; ?>'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
-                     <p class="alert alert-info" style='padding:7px;'>Dictamen: <?php echo $proceso_certificacion['dictamen']; ?></p>
-                    <?php
-                    }
+                $objecion = mysql_fetch_assoc($row_objecion);
+
+                if($objecion['estatus_objecion'] == 'EN ESPERA'){ // no se muestra nada si esta en espera
+                  echo "No Disponible";
+                }else{ // si se autorizo se muestra:
+                  if(empty($objecion['documento'])){ //si no se ha cargado un documento se muestra el estatus
+                    echo $proceso_certificacion['estatus_dspp'];
+                  }else{ // se muestra boton descargar resolución y dictamen del mismo
+                   ?>
+
+                    <p class="alert alert-info" style="margin-bottom:0;padding:7px;">Inicio: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
+                    <p class="alert alert-danger" style="margin-bottom:0;padding:7px;">Fin: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
+
+                   <p class="alert alert-success" style="margin-bottom:0;padding:7px;">Dictamen: <?php echo $objecion['dictamen']; ?></p>
+
+
+                   <a class="btn btn-info" style="width:100%;" href='<?php echo $objecion['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
+
+                  <?php
                   }
-                }
+                }                
                 ?>
               </td>
               <td>
