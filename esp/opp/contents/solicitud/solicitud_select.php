@@ -182,7 +182,9 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                 $row_objecion = mysql_query("SELECT * FROM periodo_objecion WHERE idsolicitud_certificacion = $solicitud[idsolicitud_certificacion]", $dspp) or die(mysql_error());
                 $objecion = mysql_fetch_assoc($row_objecion);
 
-                if($objecion['estatus_objecion'] == 'EN ESPERA'){ // no se muestra nada si esta en espera
+                if(empty($objecion['idperiodo_objecion'])){
+                  echo "No Disponible";
+                }else if($objecion['estatus_objecion'] == 'EN ESPERA'){ // no se muestra nada si esta en espera
                   echo "No Disponible";
                 }else{ // si se autorizo se muestra:
                   if(empty($objecion['documento'])){ //si no se ha cargado un documento se muestra el estatus

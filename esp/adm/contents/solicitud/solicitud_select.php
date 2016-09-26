@@ -146,23 +146,24 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
               <td>
                 <?php 
                 // //CHECAMOS SI LA HORA ACTUAL ES IGUAL o MAYOR A LA FECHA_FINAL DEL PERIODO DE OBJECION
-                if($fecha > $solicitud['fecha_fin']){
-                  $estatus_dspp = 7; //TERMINA PERIODO DE OBJECIÓN
-                  $estatus_objecion = 'FINALIZADO';
-                  //INSERTARMOS PROCESO_CERTIFICACION
-                  $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
-                    GetSQLValueString($solicitud['idsolicitud'], "int"),
-                    GetSQLValueString($estatus_dspp, "int"),
-                    GetSQLValueString($fecha, "int"));
-                  $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
-                  //ACTUALIZAMOS EL PERIODO_OBJECION
-                  $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
-                    GetSQLValueString($estatus_objecion, "text"),
-                    GetSQLValueString($solicitud['idperiodo_objecion'], "int"));
-                  $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+                if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] == 'ACTIVO'){
+                  if($fecha > $solicitud['fecha_fin']){
+                    $estatus_dspp = 7; //TERMINA PERIODO DE OBJECIÓN
+                    $estatus_objecion = 'FINALIZADO';
+                    //INSERTARMOS PROCESO_CERTIFICACION
+                    $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
+                      GetSQLValueString($solicitud['idsolicitud'], "int"),
+                      GetSQLValueString($estatus_dspp, "int"),
+                      GetSQLValueString($fecha, "int"));
+                    $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+                    //ACTUALIZAMOS EL PERIODO_OBJECION
+                    $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
+                      GetSQLValueString($estatus_objecion, "text"),
+                      GetSQLValueString($solicitud['idperiodo_objecion'], "int"));
+                    $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
+                  }
                 }
-
                 if(isset($solicitud['idperiodo_objecion'])){
                 ?>
                   <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#objecion".$solicitud['idperiodo_objecion']; ?>">Consultar Proceso</button>

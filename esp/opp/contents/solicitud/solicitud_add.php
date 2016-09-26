@@ -263,11 +263,12 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 
 		/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
-		$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_publico, estatus_interno, estatus_dspp) VALUES (%s, %s, %s, %s)",
+		$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_publico, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
 			GetSQLValueString($idsolicitud_certificacion, "int"),
 			GetSQLValueString($estatus_publico, "int"),
 			GetSQLValueString($estatus_interno, "int"),
-			GetSQLValueString($estatus_dspp, "int"));
+			GetSQLValueString($estatus_dspp, "int"),
+			GetSQLValueString($fecha, "int"));
 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 		/*************************** TERMINA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
 

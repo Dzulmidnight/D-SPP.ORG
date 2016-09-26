@@ -74,8 +74,8 @@ if (isset($_GET['pageNum_opp'])) {
 }
 $startRow_opp = $pageNum_opp * $maxRows_opp;
 
-$query = "SELECT solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
-$consultar_solicitud = mysql_query($query,$dspp) or die(mysql_error());
+$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
+$row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
 ?>
 
@@ -108,11 +108,11 @@ $consultar_solicitud = mysql_query($query,$dspp) or die(mysql_error());
       </thead>
       <tbody>
       <?php 
-      while($solicitud = mysql_fetch_assoc($consultar_solicitud)){
+      while($solicitud = mysql_fetch_assoc($row_solicitud)){
       ?>
         <tr>
           <td>
-            <?php echo $solicitud['idsolicitud_certificacion']; ?>
+            <?php echo $solicitud['idsolicitud']; ?>
           </td>
           <td>
             <?php echo date('d/m/Y', $solicitud['fecha_registro']); ?>
@@ -148,7 +148,13 @@ $consultar_solicitud = mysql_query($query,$dspp) or die(mysql_error());
              ?>
           </td>
           <td>
-            <?php echo $solicitud['estatus_objecion']; ?>
+            <?php
+            if(isset($solicitud['idperiodo_objecion'])){
+              echo $solicitud['idperiodo_objecion'];
+            }else{
+              echo "No Disponible";
+            }
+            ?>
           </td>
 
           <td>
@@ -187,13 +193,13 @@ $consultar_solicitud = mysql_query($query,$dspp) or die(mysql_error());
              ?>
           </td>
           <td>
-            <a class="btn btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud_certificacion']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+            <a class="btn btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
           </td>
           <td>
             <form action="../../reportes/reporte.php" method="POST" target="_new">
               <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
-              <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
+              <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
               <input type="hidden" name="generar_formato" value="1">
             </form>
           </td>
