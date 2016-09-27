@@ -69,13 +69,47 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
   // 8 = DICTAMEN POSITIVO
   //9 = DICTAMEN NEGATIVO
   // INSERTAMOS EL REGISTRO DE PROCESO_CERTIFICACION
-  if($_POST['estatus_interno'] == 8){ //checamos si el estatus_interno es positvo
-
+  if(isset($_POST['nombre_archivo'])){
+    $nombre_archivo = $_POST['nombre_archivo'];
   }else{
-    $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s)",
+    $nombre_archivo = '';
+  }
+  if(isset($_POST['accion'])){
+    $accion = $_POST['accion'];
+  }else{
+    $accion = '';
+  }
+
+  $rutaArchivo = "../../archivos/ocArchivos/anexos/";
+
+  if(!empty($_FILES['archivo']['name'])){
+      $_FILES["archivo"]["name"];
+        move_uploaded_file($_FILES["archivo"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo"]["name"]);
+        $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo"]["name"]);
+  }else{
+    $archivo = NULL;
+  }
+
+
+
+  if($_POST['estatus_interno'] == 8){ //checamos si el estatus_interno es positvo
+    $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
       GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
       GetSQLValueString($_POST['estatus_interno'], "int"),
       GetSQLValueString($estatus_dspp, "int"),
+      GetSQLValueString($nombre_archivo, "text"),
+      GetSQLValueString($accion, "text"),
+      GetSQLValueString($archivo, "text"),
+      GetSQLValueString($fecha, "int"));
+    $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+  }else{
+    $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+      GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+      GetSQLValueString($_POST['estatus_interno'], "int"),
+      GetSQLValueString($estatus_dspp, "int"),
+      GetSQLValueString($nombre_archivo, "text"),
+      GetSQLValueString($accion, "text"),
+      GetSQLValueString($archivo, "text"),
       GetSQLValueString($fecha, "int"));
     $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
   }
@@ -92,13 +126,12 @@ if (isset($_GET['pageNum_opp'])) {
 }
 $startRow_opp = $pageNum_opp * $maxRows_opp;
 
-$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
+$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
 $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
 ?>
 
 <div class="row">
-  <div class="col-md-12">
   <?php 
   if(isset($mensaje)){
   ?>
@@ -110,6 +143,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
   }
   ?>
 
+  <div class="col-md-12">
     <table class="table table-condensed table-bordered" style="font-size:12px;">
       <thead>
         <tr class="success">
@@ -126,7 +160,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <th class="text-center" colspan="2">Certificado</th>
 
           <!--<th class="text-center">Propuesta</th>-->
-          <th class="text-center">Observaciones Solicitud</th>
+          <!--<th class="text-center">Observaciones Solicitud</th>-->
           <th class="text-center" colspan="2">Acciones</th>
           <!--<th>OC</th>
           <th>Razón social</th>
@@ -162,7 +196,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <td>
             <?php
             if(isset($solicitud['cotizacion_opp'])){
-               echo "<a class='btn btn-success form-control' style='color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
+               echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
                if($solicitud['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
                 echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$solicitud['nombre_dspp']."</p>"; 
                }else if($solicitud['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
@@ -178,12 +212,18 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           </td>
           <td>
             <?php
-            if(isset($solicitud['idperiodo_objecion'])){
+            if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] != 'EN ESPERA'){
             ?>
               <p class="alert alert-info" style="margin-bottom:0;padding:0px;">Inicio: <?php echo date('d/m/Y', $solicitud['fecha_inicio']); ?></p>
               <p class="alert alert-danger" style="margin-bottom:0;padding:0px;">Fin: <?php echo date('d/m/Y', $solicitud['fecha_fin']); ?></p>
-              <p class="alert alert-success" style="margin-bottom:0;padding:0px;">Dictamen: <?php echo $solicitud['dictamen']; ?></p>
-              <a class="btn btn-info" style="width:100%;height:30px;" href='<?php echo $solicitud['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
+              <?php 
+              if(isset($solicitud['documento'])){
+              ?>
+                <p class="alert alert-success" style="margin-bottom:0;padding:0px;">Dictamen: <?php echo $solicitud['dictamen']; ?></p>
+                <a class="btn btn-info" style="font-size:12px;width:100%;height:30px;" href='<?php echo $solicitud['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
+              <?php
+              }
+              ?>
             <?php
             }else{
               echo "No Disponible";
@@ -232,65 +272,70 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                             </select>                        
                           </div>
 
-                                            <div class="col-xs-12" id="divSelect" style="margin-top:10px;">
-                                              <div class="col-xs-6">
-                                                <input style="display:none" id="nombreArchivo" type='text' class='form-control' name='nombre_archivo' placeholder="Nombre del Archivo"/>
-                                              </div>
-                                              <div class="col-xs-6">
-                                                <input style="display:none" id="archivo_estatus" type='file' class='form-control' name='archivo_estatus' />
-                                              </div>
-                                              <textarea class="form-control" id="registroOculto" style="display:none" name="accion" cols="30" rows="10" value="" placeholder="Escribe aquí"></textarea>
-                                            </div>
+                              <div class="col-xs-12" id="divSelect" style="margin-top:10px;">
+                                <div class="col-xs-6">
+                                  <input style="display:none" id="nombreArchivo" type='text' class='form-control' name='nombre_archivo' placeholder="Nombre del Archivo"/>
+                                </div>
+                                <!-- INICIA CARGAR ARCHIVO ESTATUS -->
+                                <div class="col-xs-6">
+                                  <input style="display:none" id="archivo_estatus" type='file' class='form-control' name='archivo_estatus' />
+                                </div>
+                                <!-- TERMINA CARGAR ARCHIVO ESTATUS -->
 
-                                            <div id="tablaCorreo" style="display:none">
-                                              <div class="col-xs-12"  style="margin-top:10px;">
-                                                <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP</p>
-                                                <div class="col-xs-6">
-                                                  
-                                                  <div class="col-xs-12">
-                                                    <div class="col-xs-6"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></div>
-                                                    <div class="col-xs-6">
-                                                      <p>Enviado el: <?php echo date("d/m/Y", time()); ?></p>
-                                                      <p>Para: <span style="color:red"><?php echo $row_opp['nombre']; ?></span></p>
-                                                      <p>Correo(s): <?php echo $row_opp['p1_email']." ".$row_opp['p2_email']." ".$row_opp['email']; ?></p>
-                                                      <p>Asunto: <span style="color:red">Contrato de uso del Simbolo de Pequeños Productores - SPP</span></p>
-                                                      
-                                                    </div>
-                                                  </div>
-                                                  <div class="col-xs-12">
-                                                    <h5 class="alert alert-warning">MENSAJE OPP( <small>Cuerpo del mensaje en caso de ser requerido</small>)</h5>
-                                                    <textarea name="mensajeOPP" class="form-control" id="textareaMensaje" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé"></textarea>
+                                <!-- INICIA ACCION PROCESO CERTIFICACION -->
+                                <textarea class="form-control" id="registroOculto" style="display:none" name="accion" cols="30" rows="10" value="" placeholder="Escribe aquí"></textarea>
+                                <!-- TERMINA ACCION PROCESO CERTIFICACION -->
+                              </div>
 
-                                                  </div>
-                                                </div>
-                                                <div class="col-xs-6">
-                                                  <div class="col-xs-12">
-                                                    <h4>ARCHIVOS ADJUNTOS( <small>Archivos adjuntos dentro del email</small> )</h4>
-                                                    <?php 
-                                                    while($row_anexos = mysql_fetch_assoc($anexos)){
+                              <div id="tablaCorreo" style="display:none">
+                                <div class="col-xs-12"  style="margin-top:10px;">
+                                  <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP</p>
+                                  <div class="col-xs-6">
+                                    
+                                    <div class="col-xs-12">
+                                      <div class="col-xs-6"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></div>
+                                      <div class="col-xs-6">
+                                        <p>Enviado el: <?php echo date("d/m/Y", time()); ?></p>
+                                        <p>Para: <span style="color:red"><?php echo $solicitud['nombre_opp']; ?></span></p>
+                                        <p>Correo(s): <?php echo $solicitud['contacto1_email']." ".$solicitud['contacto2_email']." ".$solicitud['email']; ?></p>
+                                        <p>Asunto: <span style="color:red">Contrato de uso del Simbolo de Pequeños Productores - SPP</span></p>
+                                        
+                                      </div>
+                                    </div>
+                                    <div class="col-xs-12">
+                                      <h5 class="alert alert-warning">MENSAJE OPP( <small>Cuerpo del mensaje en caso de ser requerido</small>)</h5>
+                                      <textarea name="mensajeOPP" class="form-control" id="textareaMensaje" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé"></textarea>
 
-                                                      echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$row_anexos[archivo]' target='_blank'>$row_anexos[anexo]</a><br>";
-                                                    }
-                                                     ?>
-                                                    
-                                                  </div>
-                                                  <div class="col-xs-12">
-                                                    <h4>ARCHIVO EXTRA( <small>Anexar algun otro archivo en caso de ser requerido</small>)</h4>
-                                                    <div class="col-xs-12">
-                                                      <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
-                                                    </div>
-                                                    <div class="col-xs-12">
-                                                      <input type="file" class="form-control" name="archivoExtra">
-                                                    </div>
-                                                  </div>
-                                                  <div class="col-xs-12">
-                                                    <h5 class="alert alert-warning">MEMBRESÍA SPP( Indicar el monto total de la membresía )</h5>
-                                                    <p>Total Membresía: <input type="text" class="form-control" name="montoMembresia" placeholder="Total Membresía"></p>
-                                                  </div>
-                                                </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-xs-6">
+                                    <div class="col-xs-12">
+                                      <h4>ARCHIVOS ADJUNTOS( <small>Archivos adjuntos dentro del email</small> )</h4>
+                                      <?php 
+                                      while($row_anexos = mysql_fetch_assoc($anexos)){
 
-                                              </div>
-                                            </div>
+                                        echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$row_anexos[archivo]' target='_blank'>$row_anexos[anexo]</a><br>";
+                                      }
+                                       ?>
+                                      
+                                    </div>
+                                    <div class="col-xs-12">
+                                      <h4>ARCHIVO EXTRA( <small>Anexar algun otro archivo en caso de ser requerido</small>)</h4>
+                                      <div class="col-xs-12">
+                                        <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
+                                      </div>
+                                      <div class="col-xs-12">
+                                        <input type="file" class="form-control" name="archivoExtra">
+                                      </div>
+                                    </div>
+                                    <div class="col-xs-12">
+                                      <h5 class="alert alert-warning">MEMBRESÍA SPP( Indicar el monto total de la membresía )</h5>
+                                      <p>Total Membresía: <input type="text" class="form-control" name="montoMembresia" placeholder="Total Membresía"></p>
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
 
                         </div>
                       </div>
@@ -359,7 +404,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 echo "No Disponible";
               }
                ?>
-               <input type="text" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
+               <input type="text" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
             </form>
           </td>
           <!---- TERMINA PROCESO DE CERTIFICACIÓN ---->
@@ -380,7 +425,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <td>
             <?php echo "CERTIFICADO2"; ?>
           </td>
-          <td>
+          <!--<td>
             <?php 
             if(isset($solicitud['observaciones'])){
               echo $solicitud['observaciones'];
@@ -388,7 +433,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
               echo "No Disponible";
             }
              ?>
-          </td>
+          </td>-->
           <td>
             <a class="btn btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
           </td>

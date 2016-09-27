@@ -157,12 +157,12 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
               <td>
                 <?php
                 if(isset($solicitud['cotizacion_opp'])){
-                  echo "<a class='btn btn-info form-control' style='color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
+                  echo "<a class='btn btn-info form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
 
                    if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
-                    echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                    echo "<p class='alert alert-success' style='padding:2px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                    }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
-                    echo "<p class='alert alert-danger' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                    echo "<p class='alert alert-danger' style='padding:2px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                    }else{
                 ?>
                     <div class="text-center">
@@ -192,13 +192,13 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                   }else{ // se muestra boton descargar resolución y dictamen del mismo
                    ?>
 
-                    <p class="alert alert-info" style="margin-bottom:0;padding:7px;">Inicio: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
-                    <p class="alert alert-danger" style="margin-bottom:0;padding:7px;">Fin: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
+                    <p class="alert alert-info" style="margin-bottom:0;padding:2px;">Inicio: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
+                    <p class="alert alert-danger" style="margin-bottom:0;padding:2px;">Fin: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
 
-                   <p class="alert alert-success" style="margin-bottom:0;padding:7px;">Dictamen: <?php echo $objecion['dictamen']; ?></p>
+                   <p class="alert alert-success" style="margin-bottom:0;padding:2px;">Dictamen: <?php echo $objecion['dictamen']; ?></p>
 
 
-                   <a class="btn btn-info" style="width:100%;" href='<?php echo $objecion['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
+                   <a class="btn btn-info" style="font-size:12px;width:100%;" href='<?php echo $objecion['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
 
                   <?php
                   }

@@ -64,6 +64,8 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
     GetSQLValueString($idperiodo_objecion, "int"));
  $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
+ $mensaje = "Se ha iniciado el Periodo de Objeción";
+
 }
 //SE CARGA Y ENVIA LA RESOLUCIÓN DE OBJECIÓN
 if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
@@ -97,6 +99,17 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
 
 ?>
 <div class="row">
+  <?php 
+  if(isset($mensaje)){
+  ?>
+  <div class="col-md-12 alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 style="font-size:14px;" class="text-center"><?php echo $mensaje; ?><h4/>
+  </div>
+  <?php
+  }
+  ?>
+
   <div class="col-md-12">
     <table class="table table-bordered" style="font-size:12px">
       <thead>
@@ -108,6 +121,7 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
           <th class="text-center">Cotización</th>
           <th class="text-center">Proceso de Objeción</th>
           <th class="text-center">Proceso Certificación</th>
+          <th class="text-center">Membresia</th>
           <th class="text-center">Certificado</th>
           <!--<th class="text-center">Observaciones Solicitud</th>-->
           <th class="text-center">Acciones</th>
@@ -129,7 +143,7 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
               <td>
               <?php
               if(isset($solicitud['cotizacion_opp'])){
-                 echo "<a class='btn btn-success form-control' style='color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
+                 echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
                  if($solicitud['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
                   echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$solicitud['nombre_dspp']."</p>"; 
                  }else if($solicitud['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
@@ -256,7 +270,15 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
               </td>
               <!----- INICIA PROCESO CERTIFICACIÓN ---->
               <td>
+                <?php 
+                if(isset($solicitud['estatus_objecion']) && $solicitud['estatus_objecion'] == 'FINALIZADO' && isset($solicitud['documento'])){
+                ?>
                 <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
+                <?php
+                }else{
+                  echo "<button class='btn btn-sm btn-default' disabled>Proceso Certificación</button>";
+                }
+                ?>
               </td>
 
                 <!-- inicia modal proceo de certificación -->
@@ -295,8 +317,15 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
                 <!-- termina modal proceo de certificación -->
 
               <!----- TERMINA PROCESO CERTIFICACIÓN ---->
+
+              <!-- INICIA MEMBRESIA -->
+              <td>
+                membresia
+              </td>
+              <!-- TERMINA MEMBRESIA -->
+
               <td><?php echo "ID CERTIFICADO"; ?></td>
-              <!--<td><?php echo $solicitud['observaciones']; ?></td>-->
+
               <td>Acciones</td>
             </tr>
           <?php
