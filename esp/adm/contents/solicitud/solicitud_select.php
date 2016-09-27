@@ -166,7 +166,7 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
                 }
                 if(isset($solicitud['idperiodo_objecion'])){
                 ?>
-                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#objecion".$solicitud['idperiodo_objecion']; ?>">Consultar Proceso</button>
+                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#objecion".$solicitud['idperiodo_objecion']; ?>">Proceso Objeción</button>
                 <?php
                 }else{
                   echo "<button class='btn btn-sm btn-default' style='width:100%' disabled>Consultar Proceso</button>";
@@ -254,7 +254,47 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
                 <!-- TERMINA MODAL PROCESO DE OBJECIÓN -->
 
               </td>
-              <td><?php echo $solicitud['estatus_interno']; ?></td>
+              <!----- INICIA PROCESO CERTIFICACIÓN ---->
+              <td>
+                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
+              </td>
+
+                <!-- inicia modal proceo de certificación -->
+
+                <div id="<?php echo "certificacion".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Proceso de Certificación</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-md-12">
+                              Historial Estatus Certificación
+                            </div>
+                            <?php 
+                            $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE idsolicitud_certificacion = $solicitud[idsolicitud] AND estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
+                            while($historial_certificacion = mysql_fetch_assoc($row_proceso_certificacion)){
+                            echo "<div class='col-md-10'>Proceso: $historial_certificacion[nombre]</div>";
+                            echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$historial_certificacion['fecha_registro'])."</div>";
+                            }
+                             ?>
+
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <input type="text" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- termina modal proceo de certificación -->
+
+              <!----- TERMINA PROCESO CERTIFICACIÓN ---->
               <td><?php echo "ID CERTIFICADO"; ?></td>
               <!--<td><?php echo $solicitud['observaciones']; ?></td>-->
               <td>Acciones</td>
