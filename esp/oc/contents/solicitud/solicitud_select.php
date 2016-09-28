@@ -93,6 +93,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
   if($_POST['estatus_interno'] == 8){ //checamos si el estatus_interno es positvo
+    $estatus_dspp = 9; //Termina proceso de certificación
     //creamos la variable del archivo extra
     if(!empty($_FILES['archivo_extra']['name'])){
         $_FILES["archivo_extra"]["name"];
@@ -123,7 +124,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
     $idcomprobante_pago = mysql_insert_id($dspp);
 
     //creamos la membresia
-    $estatus_membresia = "EM ESPERA";
+    $estatus_membresia = "EN ESPERA";
     $insertSQL = sprintf("INSERT INTO membresia(estatus_membresia, idopp, idsolicitud_certificacion, idcomprobante_pago) VALUES (%s, %s, %s, %s)",
       GetSQLValueString($estatus_membresia, "text"),
       GetSQLValueString($_POST['idopp'], "int"),
@@ -155,7 +156,7 @@ if (isset($_GET['pageNum_opp'])) {
 }
 $startRow_opp = $pageNum_opp * $maxRows_opp;
 
-$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
+$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.*, membresia.idmembresia FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
 $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
 ?>
@@ -277,13 +278,14 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                       <div class="modal-body">
                         <div class="row">
                           <?php 
+
                           $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_certificacion = '$solicitud[idsolicitud_certificacion]' AND proceso_certificacion.estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
                           while($proceso_certificacion = mysql_fetch_assoc($row_proceso_certificacion)){
                             echo "<div class='col-md-10'>Proceso: $proceso_certificacion[nombre]</div>";
                             echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$proceso_certificacion['fecha_registro'])."</div>";
                           }
 
-                          if(isset($proceso_certificacion['idproceso_certificacion']) && $proceso_certificacion['estatus_interno'] != '8'){
+                          if(isset($solicitud['dictamen']) == 'POSITIVO'){
                           ?>
                           <div class="col-md-12">
                             <select class="form-control" name="estatus_interno" id="statusSelect" onchange="funcionSelect()" required>
@@ -383,7 +385,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="text" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         <?php 
-                        if(isset($proceso_certificacion['idproceso_certificacion']) && $proceso_certificacion['estatus_interno'] != '8'){
+                        if(empty($solicitud['idmembresia'])){
                         ?>
                         <button type="submit" class="btn btn-success" name="guardar_proceso" value="1">Guardar Proceso</button>
                         <?php

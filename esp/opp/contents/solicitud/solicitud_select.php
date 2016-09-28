@@ -93,15 +93,39 @@ if(isset($_POST['cotizacion']) ){
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
-
-
-
-
-
 }
 /// TERMINA SE ACEPTA O RECHAZA COTIZACIÓN
 
-$query = "SELECT solicitud_certificacion.*, oc.abreviacion AS 'abreviacionOC', periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion WHERE idopp = $idopp";
+if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
+  $estatus_dspp = 10; //membresia cargada
+  $estatus_comprobante = 'ENVIADO';
+  $rutaArchivo = "../../archivos/oppArchivos/membresia/";
+
+  if(!empty($_FILES['comprobante_pago']['name'])){
+      $_FILES["comprobante_pago"]["name"];
+        move_uploaded_file($_FILES["comprobante_pago"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["comprobante_pago"]["name"]);
+        $comprobante_pago = $rutaArchivo.basename(time()."_".$_FILES["comprobante_pago"]["name"]);
+  }else{
+    $comprobante_pago = NULL;
+  }
+
+  //creamos el proceso de certificacion
+  $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($fecha, "int"));
+  $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+
+  //actualizamos el comprobante de pago membresia
+  $updateSQL = sprintf("UPDATE comprobante_pago SET estatus_comprobante = %s, archivo = %s, fecha_registro = %s WHERE idcomprobante_pago = %s",
+    GetSQLValueString($estatus_comprobante, "text"),
+    GetSQLValueString($comprobante_pago, "text"),
+    GetSQLValueString($fecha, "int"),
+    GetSQLValueString($_POST['idcomprobante_pago'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+}
+
+$query = "SELECT solicitud_certificacion.*, oc.abreviacion AS 'abreviacionOC', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion WHERE solicitud_certificacion.idopp = $idopp";
 $row_solicitud_certificacion = mysql_query($query, $dspp) or die(mysql_error());
 $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
 
@@ -164,14 +188,15 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                    }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
                     echo "<p class='alert alert-danger' style='padding:2px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                    }else{
-                ?>
-                    <div class="text-center">
-                      <button class='btn btn-xs btn-success' type="submit" name="cotizacion" value="5" style='width:45%' data-toggle="tooltip" data-placement="bottom" title="Aceptar cotización"><span class='glyphicon glyphicon-ok'></span></button> 
-                      <button class='btn btn-xs btn-danger' style='width:45%' name="cotizacion" value="17" data-toggle="tooltip" data-placement="bottom" title="Rechazar cotización"><span class='glyphicon glyphicon-remove'></span></button>
-                    </div>
-                <?php
+                    if(empty($solicitud['idperiodo_objecion'])){ //si inicio el periodo de objecion quiere decir que se acepto la cotización
+                    ?>
+                      <div class="text-center">
+                        <button class='btn btn-xs btn-success' type="submit" name="cotizacion" value="5" style='width:45%' data-toggle="tooltip" data-placement="bottom" title="Aceptar cotización"><span class='glyphicon glyphicon-ok'></span></button> 
+                        <button class='btn btn-xs btn-danger' style='width:45%' name="cotizacion" value="17" data-toggle="tooltip" data-placement="bottom" title="Rechazar cotización"><span class='glyphicon glyphicon-remove'></span></button>
+                      </div>
+                    <?php //
                    }
-
+                  }
                 }else{
                   echo "COTIZACIÓN OPP";
                 }
@@ -205,25 +230,121 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                 }                
                 ?>
               </td>
+              <!----- INICIA PROCESO CERTIFICACIÓN ---->
               <td>
+                <?php 
+                if(isset($solicitud['estatus_objecion']) && $solicitud['estatus_objecion'] == 'FINALIZADO' && isset($solicitud['documento'])){
+                ?>
+                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
                 <?php
-                if(isset($_POST['nombre_dspp'])){
-                  echo $proceso_certificacion['nombre_interno'];
                 }else{
-                  echo "PROCESO CERTIFICACIÓN";
+                  echo "<button class='btn btn-sm btn-default' disabled>Proceso Certificación</button>";
                 }
                 ?>
               </td>
 
+                <!-- inicia modal proceo de certificación -->
+
+                <div id="<?php echo "certificacion".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Proceso de Certificación</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-md-12">
+                              Historial Estatus Certificación
+                            </div>
+                            <?php 
+                            $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE idsolicitud_certificacion = $solicitud[idsolicitud_certificacion] AND estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
+                            while($historial_certificacion = mysql_fetch_assoc($row_proceso_certificacion)){
+                            echo "<div class='col-md-10'>Proceso: $historial_certificacion[nombre]</div>";
+                            echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$historial_certificacion['fecha_registro'])."</div>";
+                            }
+                             ?>
+
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- termina modal proceo de certificación -->
+
+              <!----- TERMINA PROCESO CERTIFICACIÓN ---->
+
+              <!----- INICIA MEMBRESIA ------>
               <td>
                 <?php 
-                if(isset($proceso_certificacion['idmembresia'])){
-
+                if(isset($solicitud['idmembresia'])){
+                  $row_membresia = mysql_query("SELECT membresia.*, comprobante_pago.monto, comprobante_pago.estatus_comprobante, comprobante_pago.archivo FROM membresia LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE idmembresia = $solicitud[idmembresia]", $dspp) or die(mysql_error());
+                  $membresia = mysql_fetch_assoc($row_membresia);
+                ?>
+                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#membresia".$solicitud['idperiodo_objecion']; ?>">Estatus Membresia</button>
+                <?php
                 }else{
                   echo "MEMBRESIA";
                 }
                  ?>
+
+                <!-- inicia modal estatus membresia -->
+
+                <div id="<?php echo "membresia".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Proceso Membresía</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <p class="alert alert-info">Debe cargar el comprobante de pago de la membresia SPP por el monto de <b style="color:red;"><?php echo $membresia['monto'] ?></b>, una vez cargado debe dar clic en enviar. Sera notificado por correo una vez que sea aprobada su membresia</p>
+                            <p class="alert alert-warning">Estatus Actual: <?php echo $membresia['estatus_comprobante']; ?></p>
+                          </div>
+                          <div class="col-md-6">
+                            <?php 
+                            if(isset($membresia['archivo'] )){
+                              echo "SE HA CARGADO EL COMPRANTE POR FAVOR ESPERE";
+                            }else{
+                            ?>
+                              <p class="alert alert-info">
+                                Cargar Comprobante de pago
+                                <input type="file" class="form-control" name="comprobante_pago">
+                              </p>
+                            <?php
+                            }
+                            ?>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                        <input type="hidden" name="idcomprobante_pago" value="<?php echo $membresia['idcomprobante_pago']; ?>">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <?php 
+                        if($membresia['estatus_comprobante'] == 'RECHAZADO' || $membresia['estatus_comprobante'] == 'EN ESPERA'){
+                          echo '<button type="submit" class="btn btn-primary" name="enviar_comprobante" value="1">Enviar Comprobante</button>';
+                        }
+                         ?>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- termina modal estatus membresia -->
+
               </td>
+              <!----- TERMINA MEMBRESIA ------>
+
               <?php 
               $query_certificado = "SELECT * FROM certificado WHERE idopp = $idopp";
               $ejecutar = mysql_query($query_certificado,$dspp) or die(mysql_error());
@@ -242,11 +363,11 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                 <a class="btn btn-xs btn-primary" style="display:inline-block" href="?SOLICITUD&amp;detail&amp;idsolicitud=<?php echo $solicitud['idsolicitud_certificacion']; ?>" data-toggle="tooltip" title="Visualizar Solicitud" >
                   <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                 </a>
-                <form action="" method="POST"  style="display:inline-block">
+               <!-- <form action="" method="POST"  style="display:inline-block">-->
                   <button class="btn btn-xs btn-danger" name="eliminar_solicitud" value="1" data-toggle="tooltip" title="Eliminar Solicitud" type="submit" onclick="return confirm('¿Está seguro?, los datos se eliminaran permanentemente');">
                     <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
                   </button>         
-                </form>
+                <!--</form>-->
               </td>
 
             </tr>
