@@ -38,8 +38,8 @@ if (!function_exists("GetSQLValueString")) {
   <li <?php if(isset($_GET['ESTADISTICAS'])){echo "class='active'"; } ?>>
     <a href="?ESTADISTICAS&select">Estadisticas</a>
   </li>
-  <li <?php if(isset($_GET['ANEXOS'])){echo "class='active'"; } ?>>
-    <a href="?ANEXOS&select">Anexos</a>
+  <li <?php if(isset($_GET['DOCUMENTACION'])){echo "class='active'"; } ?>>
+    <a href="?DOCUMENTACION&select">Documentación</a>
   </li>
   <li <?php if(isset($_GET['CORREO'])){echo "class='active'"; } ?>>
     <a href="?CORREO&select">Correo</a>

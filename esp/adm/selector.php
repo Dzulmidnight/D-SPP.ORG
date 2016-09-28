@@ -5,8 +5,8 @@ if(isset($_GET['ESTADISTICAS'])){
 	include ("contents/solicitud/solicitud.php");
 }else if(isset($_GET['CORREO'])){
 	include ("contents/correo/correo.php");
-}else if(isset($_GET['ANEXOS'])){
-	include ("contents/anexos/anexos.php");
+}else if(isset($_GET['DOCUMENTACION'])){
+	include ("contents/documentacion/documentacion.php");
 }else if(isset($_GET['OPP'])){
 	include ("contents/opp/opp.php");
 }else if(isset($_GET['OC'])){

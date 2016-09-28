@@ -82,10 +82,10 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
   $rutaArchivo = "../../archivos/ocArchivos/anexos/";
 
-  if(!empty($_FILES['archivo']['name'])){
-      $_FILES["archivo"]["name"];
-        move_uploaded_file($_FILES["archivo"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo"]["name"]);
-        $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo"]["name"]);
+  if(!empty($_FILES['archivo_estatus']['name'])){
+      $_FILES["archivo_estatus"]["name"];
+        move_uploaded_file($_FILES["archivo_estatus"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_estatus"]["name"]);
+        $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_estatus"]["name"]);
   }else{
     $archivo = NULL;
   }
@@ -93,15 +93,44 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
   if($_POST['estatus_interno'] == 8){ //checamos si el estatus_interno es positvo
+    //creamos la variable del archivo extra
+    if(!empty($_FILES['archivo_extra']['name'])){
+        $_FILES["archivo_extra"]["name"];
+          move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_extra"]["name"]);
+          $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_extra"]["name"]);
+    }else{
+      $archivo = NULL;
+    }
     $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
       GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
       GetSQLValueString($_POST['estatus_interno'], "int"),
       GetSQLValueString($estatus_dspp, "int"),
-      GetSQLValueString($nombre_archivo, "text"),
+      GetSQLValueString($_POST['nombreArchivo'], "text"),
       GetSQLValueString($accion, "text"),
       GetSQLValueString($archivo, "text"),
       GetSQLValueString($fecha, "int"));
     $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+
+    //creamos el monto del comprobante de pago
+    $estatus_comprobante = "EN ESPERA";
+
+    $insertSQL = sprintf("INSERT INTO comprobante_pago(estatus_comprobante, monto) VALUES (%s, %s)",
+      GetSQLValueString($estatus_comprobante, "text"),
+      GetSQLValueString($_POST['monto_membresia'], "text"));
+    $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+    //capturamos el id del comprobante para vincularlo con la membresia
+    $idcomprobante_pago = mysql_insert_id($dspp);
+
+    //creamos la membresia
+    $estatus_membresia = "EM ESPERA";
+    $insertSQL = sprintf("INSERT INTO membresia(estatus_membresia, idopp, idsolicitud_certificacion, idcomprobante_pago) VALUES (%s, %s, %s, %s)",
+      GetSQLValueString($estatus_membresia, "text"),
+      GetSQLValueString($_POST['idopp'], "int"),
+      GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+      GetSQLValueString($idcomprobante_pago, "int"));
+    $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
   }else{
     $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
       GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
@@ -254,12 +283,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                             echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$proceso_certificacion['fecha_registro'])."</div>";
                           }
 
-                          if(isset($proceso_certificacion['idproceso_certificacion']) && $proceso_certificacion['estatus_interno'] == '8'){
-
-                          }
-
-                           ?>
-
+                          if(isset($proceso_certificacion['idproceso_certificacion']) && $proceso_certificacion['estatus_interno'] != '8'){
+                          ?>
                           <div class="col-md-12">
                             <select class="form-control" name="estatus_interno" id="statusSelect" onchange="funcionSelect()" required>
                               <option value="">Seleccione el proceso en el que se encuentra</option>
@@ -271,6 +296,9 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                ?>
                             </select>                        
                           </div>
+                          <?php
+                          }
+                          ?>
 
                               <div class="col-xs-12" id="divSelect" style="margin-top:10px;">
                                 <div class="col-xs-6">
@@ -312,12 +340,23 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                     <div class="col-xs-12">
                                       <h4>ARCHIVOS ADJUNTOS( <small>Archivos adjuntos dentro del email</small> )</h4>
                                       <?php 
-                                      while($row_anexos = mysql_fetch_assoc($anexos)){
+                                      $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8", $dspp) or die(mysql_error());
+                                      while($documetacion = mysql_fetch_assoc($row_documentacion)){
 
-                                        echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$row_anexos[archivo]' target='_blank'>$row_anexos[anexo]</a><br>";
+                                        echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$documetacion[archivo]' target='_blank'>$documetacion[nombre]</a><br>";
                                       }
                                        ?>
-                                      
+                                      <p class="alert alert-warning" style="padding:5px;">
+                                        Enviar archivos en:
+                                        <label class="checkbox-inline">
+                                          <input type="checkbox" id="inlineCheckbox1" name="espanol" value="1"> Español
+                                        </label>
+                                        <label class="checkbox-inline">
+                                          <input type="checkbox" id="inlineCheckbox2" name="ingles" value="1"> Ingles
+                                        </label>
+
+                                      </p>
+    
                                     </div>
                                     <div class="col-xs-12">
                                       <h4>ARCHIVO EXTRA( <small>Anexar algun otro archivo en caso de ser requerido</small>)</h4>
@@ -325,12 +364,12 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
                                       </div>
                                       <div class="col-xs-12">
-                                        <input type="file" class="form-control" name="archivoExtra">
+                                        <input type="file" class="form-control" name="archivo_extra">
                                       </div>
                                     </div>
                                     <div class="col-xs-12">
                                       <h5 class="alert alert-warning">MEMBRESÍA SPP( Indicar el monto total de la membresía )</h5>
-                                      <p>Total Membresía: <input type="text" class="form-control" name="montoMembresia" placeholder="Total Membresía"></p>
+                                      <p>Total Membresía: <input type="text" class="form-control" name="monto_membresia" placeholder="Total Membresía"></p>
                                     </div>
                                   </div>
 
@@ -341,8 +380,15 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                       </div>
                       <div class="modal-footer">
                         <input type="text" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                        <input type="text" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <?php 
+                        if(isset($proceso_certificacion['idproceso_certificacion']) && $proceso_certificacion['estatus_interno'] != '8'){
+                        ?>
                         <button type="submit" class="btn btn-success" name="guardar_proceso" value="1">Guardar Proceso</button>
+                        <?php
+                        }
+                         ?>
                         <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
                       </div>
                     </div>
