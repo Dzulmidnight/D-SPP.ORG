@@ -173,9 +173,25 @@ if(isset($_POST['rechazar_contrato']) && $_POST['rechazar_contrato'] == 2){
 
   $mensaje = "Se ha rechazado el \"Contrato de Uso\"";
 }
+//SE APRUEBA O RECHAZA EL INFORME Y DICTAMEN DE EVALUACION
+if(isset($_POST['informe_dictamen']) && $_POST['informe_dictamen'] == 1){
+  //actualizamos el informe de evaluacion
+  $updateSQL = sprintf("UPDATE informe_evaluacion SET estatus_informe = %s WHERE idinforme_evaluacion = %s",
+    GetSQLValueString($_POST['estatus_informe'], "text"),
+    GetSQLValueString($_POST['idinforme_evaluacion'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+  //actualizamos el dictamen de evaluacion
+  $updateSQL = sprintf("UPDATE dictamen_evaluacion SET estatus_dictamen = %s WHERE iddictamen_evaluacion = %s",
+    GetSQLValueString($_POST['estatus_dictamen'], "text"),
+    GetSQLValueString($_POST['iddictamen_evaluacion'], "int"));
+  $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+
+  $mensaje = "Se ha notificado al OC";
+}
 
 
-$row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.fecha_registro, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_dspp.nombre AS 'nombre_dspp', solicitud_certificacion.cotizacion_opp, periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = periodo_objecion.idsolicitud_certificacion LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1", $dspp) or die(mysql_error());
+$row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.fecha_registro, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_dspp.nombre AS 'nombre_dspp', solicitud_certificacion.cotizacion_opp, periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = periodo_objecion.idsolicitud_certificacion LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1", $dspp) or die(mysql_error());
 
 ?>
 <div class="row">
@@ -505,8 +521,8 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
                             <?php 
                             if(isset($solicitud['idcontrato'])){
                               $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
+                              $contrato = mysql_fetch_assoc($row_contrato);
 
-                              echo $contrato['estatus_contrato'];
                               if($contrato['estatus_contrato'] == "ACEPTADO"){
                                 echo "<p class='alert alert-success'>Se ha aceptado el Contrato de Uso</p>";
                                 echo "<a href=".$contrato['archivo']." target='_blank' class='btn btn-sm btn-success' style='width:100%'>Descargar Contrato</a>";
@@ -529,14 +545,63 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
                               echo "<p class='alert alert-warning'>Aun no se ha cargado el <span style='colore:red'>Contrato de Uso</span></p>";
                             }
                              ?>
-                          </div>
-                          <div class="col-md-6">
+
                             <h4>Informe y Dictamen de Evaluación</h4>
                             <?php 
-                            if(empty($informe['idcontrato']) && empty($dictamen_evaluacion['idcontrato'])){
-                              echo "<p class='alert alert-warning'>Aun no se ha cargado el \"Informe de Evaluación\" así como el \"Dictamen de Evaluación\"</p>";
+                            if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idinforme_evaluacion'])){
+                              $row_dictamen = mysql_query("SELECT * FROM dictamen_evaluacion WHERE iddictamen_evaluacion = $solicitud[iddictamen_evaluacion]", $dspp) or die(mysql_error());
+                              $dictamen = mysql_fetch_assoc($row_dictamen);
+                              $row_informe = mysql_query("SELECT * FROM informe_evaluacion WHERE idinforme_evaluacion = $solicitud[idinforme_evaluacion]", $dspp) or die(mysql_error());
+                              $informe = mysql_fetch_assoc($row_informe);
+                            ?>
+
+                                <div class="alert alert-warning">
+                                  <p>
+                                    Informe de Evaluación
+                                  </p>
+                                  <a href="<?php echo $informe['archivo']; ?>" class="btn btn-success" target="_new">Descargar Informe</a>
+                                  <label class="radio-inline">
+                                    <input type="radio" name="estatus_informe" id="" value="ACEPTADO"> ACEPTADO
+                                  </label>
+                                  <label class="radio-inline">
+                                    <input type="radio" name="estatus_informe" id="" value="RECHAZADO"> RECHAZADO
+                                  </label>
+
+                                </div>
+                                <div class="alert alert-info">
+                                  <p>Dictamen de Evaluación</p>
+                                  <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-success" target="_new">Descargar Dictamen</a>
+                                  <label class="radio-inline">
+                                    <input type="radio" name="estatus_dictamen" id="inlineRadio1" value="ACEPTADO"> ACEPTADO
+                                  </label>
+                                  <label class="radio-inline">
+                                    <input type="radio" name="estatus_dictamen" id="inlineRadio2" value="RECHAZADO"> RECHAZADO
+                                  </label>
+
+                                </div>
+                                <input type="text" name="iddictamen_evaluacion" value="<?php echo $dictamen['iddictamen_evaluacion']; ?>">
+                                <input type="text" name="idinforme_evaluacion" value="<?php echo $informe['idinforme_evaluacion']; ?>">
+                                <?php 
+                                if($dictamen['estatus_dictamen'] != "ACEPTADO" && $informe['estatus_informe'] != "ACEPTADO"){
+                                ?>
+                                  <button type="submit" class="btn btn-success" name="informe_dictamen" value="1" onclick="return validar()">Actualizar Documentos</button>
+                                <?php
+                                }
+                                 ?>
+                                
+                            <?php
                             }else{
-                              echo "asdf";
+                              echo "<p class='alert alert-warning'>Aun no se ha cargado el \"Informe de Evaluación\" así como el \"Dictamen de Evaluación\"</p>";
+                            }
+                             ?>
+                          </div>
+                          <div class="col-md-6">
+                            <h4>Certificado</h4>
+                            <?php 
+                            if(isset($solicitud['idcertificado'])){
+
+                            }else{
+                              echo "<p class='alert alert-danger'>Aun no se ha cargado el Certificado</p>";
                             }
                              ?>
                           </div>
@@ -563,3 +628,47 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
     </table>
   </div>
 </div>
+
+<script>
+  
+  function validar(){
+   /* valor = document.getElementById("cotizacion_opp").value;
+    if( valor == null || valor.length == 0 ) {
+      alert("No se ha cargado la cotización de el OPP");
+      return false;
+    }*/
+    
+    estatus_informe = document.getElementsByName("estatus_informe");
+     
+    var seleccionado = false;
+    for(var i=0; i<estatus_informe.length; i++) {    
+      if(estatus_informe[i].checked) {
+        seleccionado = true;
+        break;
+      }
+    }
+     
+    if(!seleccionado) {
+      alert("Debes de seleecionar \"ACEPTAR\" o \"DENEGAR\" el Informe de Evaluación");
+      return false;
+    }
+
+    estatus_dictamen = document.getElementsByName("estatus_dictamen");
+    var seleccionado2 = false;
+    for(var i=0; i<estatus_dictamen.length; i++) {    
+      if(estatus_dictamen[i].checked) {
+        seleccionado2 = true;
+        break;
+      }
+    }
+     
+    if(!seleccionado2) {
+      alert("Debes de seleecionar \"ACEPTAR\" o \"DENEGAR\" el Dictamen de Evaluación");
+      return false;
+    }
+
+
+    return true
+  }
+
+</script>

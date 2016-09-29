@@ -149,6 +149,75 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
   $mensaje = "Se ha actualizado el Proceso de Certificación";
 }
 
+if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
+  $rutaInforme = "../../archivos/ocArchivos/informes/";
+  $rutaDictamen = "../../archivos/ocArchivos/dictamen/";
+
+  $estatus_dictamen = "ENVIADO";
+  $estatus_informe = "ENVIADO";
+
+
+  if(!empty($_FILES['informe_evaluacion']['name'])){
+      $_FILES["informe_evaluacion"]["name"];
+        move_uploaded_file($_FILES["informe_evaluacion"]["tmp_name"], $rutaInforme.time()."_".$_FILES["informe_evaluacion"]["name"]);
+        $informe = $rutaInforme.basename(time()."_".$_FILES["informe_evaluacion"]["name"]);
+  }else{
+    $informe = NULL;
+  }
+
+  //insertamos informe_evaluacion
+  $insertSQL = sprintf("INSERT INTO informe_evaluacion (idopp, idsolicitud_certificacion, estatus_informe, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+    GetSQLValueString($_POST['idopp'], "int"),
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($estatus_informe, "text"),
+    GetSQLValueString($informe, "text"),
+    GetSQLValueString($fecha, "int"));
+  $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+
+  //insertamos el proceso_certificacion
+  $estatus_dspp = 20; //Informe de Evaluación Cargado
+  $nombre_archivo = "Informe de Evaluación";
+  $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_dspp, nombre_archivo, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($nombre_archivo, "text"),
+    GetSQLValueString($informe, "text"),
+    GetSQLValueString($fecha, "int"));
+  $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+  if(!empty($_FILES['dictamen_evaluacion']['name'])){
+      $_FILES["dictamen_evaluacion"]["name"];
+        move_uploaded_file($_FILES["dictamen_evaluacion"]["tmp_name"], $rutaDictamen.time()."_".$_FILES["dictamen_evaluacion"]["name"]);
+        $dictamen = $rutaDictamen.basename(time()."_".$_FILES["dictamen_evaluacion"]["name"]);
+  }else{
+    $dictamen = NULL;
+  }
+
+  //insertarmos el dictamen de evaluación
+  $insertSQL = sprintf("INSERT INTO dictamen_evaluacion(idopp, idsolicitud_certificacion, estatus_dictamen, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+    GetSQLValueString($_POST['idopp'], "int"),
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($estatus_dictamen, "text"),
+    GetSQLValueString($dictamen, "text"),
+    GetSQLValueString($fecha, "int"));
+  $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+  //se crear el proceso_certificacion
+  $estatus_dspp = 21; //Dictamen de Evaluación Cargado
+  $nombre_archivo = "Dictamen de Evaluación";
+  $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, nombre_archivo, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($nombre_archivo, "text"),
+    GetSQLValueString($dictamen, "text"),
+    GetSQLValueString($fecha, "int"));
+  $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+  $mensaje = "Se ha enviado el Dictamen de Evaluación y el Informe de Evaluación";
+
+}
+
+
 $currentPage = $_SERVER["PHP_SELF"];
 
 $maxRows_opp = 20;
@@ -158,7 +227,7 @@ if (isset($_GET['pageNum_opp'])) {
 }
 $startRow_opp = $pageNum_opp * $maxRows_opp;
 
-$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
+$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, dictamen_evaluacion.iddictamen_evaluacion, informe_evaluacion.idinforme_evaluacion FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
 $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
 ?>
@@ -461,6 +530,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- TERMINA PROCESO DE CERTIFICACIÓN ---->
 
           <!---- INICIA SECCION CERTIFICADO ------>
+          <form action="" method="POST" enctype="multipart/form-data">
           <td>
             <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Proceso Certificado</button>
           </td>
@@ -480,17 +550,33 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           <div class="col-md-6">
                             <?php 
                             if($solicitud['estatus_contrato'] == "ACEPTADO" && $solicitud['estatus_membresia'] == "APROBADA"){
-                            ?>
-                              <p class="alert alert-info">Por favor cargue los siguientes documentos</p>
-                              <p class="alert alert-info">
-                                Informe de Evaluación
-                                <input type="file" class="form-control" name="informe_evaluacion">
-                   
-                                Dictamen de Evaluación
-                                <input type="file" class="form-control" name="dictamen_evaluacion">
-                              </p>
-                              <button type="submit" class="btn btn-success" style="width:100%" name="cargar_documentos" value="1">Enviar Documentos</button>
-                            <?php
+                              if(isset($solicitud['idinforme_evaluacion']) && isset($solicitud['iddictamen_evaluacion'])){
+                                $row_informe = mysql_query("SELECT * FROM informe_evaluacion WHERE idinforme_evaluacion = $solicitud[idinforme_evaluacion]", $dspp) or die(mysql_error());
+                                $informe = mysql_fetch_assoc($row_informe);
+                                $row_dictamen = mysql_query("SELECT * FROM dictamen_evaluacion WHERE iddictamen_evaluacion = $solicitud[iddictamen_evaluacion]", $dspp) or die(mysql_error());
+                                $dictamen = mysql_fetch_assoc($row_dictamen);
+
+                              ?>
+                              <p>Estatus Dictamen de Evaluación: <?php echo $dictamen['estatus_dictamen']; ?></p>
+                              <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-success" target="_blank">Descargar Dictamen</a>
+                              <p>Estatus Informe de Evaluación: <?php echo $informe['estatus_informe']; ?></p>
+                              <a href="<?php echo $informe['archivo']; ?>" class="btn btn-success" target="_blank">Descargar Informe</a>
+
+                              <?php
+                              }else{
+                              ?>
+                                <p class="alert alert-info">Por favor cargue los siguientes documentos:</p>
+                                <p class="alert alert-info">
+                                  Informe de Evaluación
+                                  <input type="file" class="form-control" name="informe_evaluacion" required>
+                     
+                                  Dictamen de Evaluación
+                                  <input type="file" class="form-control" name="dictamen_evaluacion" required>
+                                </p>
+                                <button type="submit" class="btn btn-success" style="width:100%" name="cargar_documentos" value="1">Enviar Documentos</button>
+                              <?php
+                              }
+
                             }else{
                               echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" el \"Contrato de Uso\" ni se ha \"Aprobado\" la membresia</p>";
                             }
@@ -499,15 +585,27 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           
                           <div class="col-md-6">
                             <h4>Cargar Certificado</h4>
-                            <p class="alert alert-warning">
-                              Una vez aprobado el "Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
-                              <input type="file" class="form-control" disabled>
-                            </p>  
-                            
+                            <?php 
+                            if($dictamen['estatus_dictamen'] == "ACEPTADO" && $informe['estatus_informe'] == "ACEPTADO"){
+                            ?>
+                            <label for="certificado">Por favor seleccione el Certificado</label>
+                            <input type="file" name="certificado" id="certificado" class="form-control">
+                            <button type="submit" name="enviar_certificado" class="btn btn-success" style="width:100%">Enviar Certificado</button>
+                            <?php
+                            }else{
+                            ?>
+                              <p class="alert alert-warning">
+                                Una vez aprobado el "Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
+                              </p> 
+                            <?php
+                            }
+                             ?>
                           </div>
                         </div>
                       </div>
                       <div class="modal-footer">
+                        <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
+                        <input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                       </div>
                     </div>
@@ -516,7 +614,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 <!-- termina modal estatus_Certificado -->
 
           <!---- TERMINA SECCION CERTIFICADO ------>
-
+            </form>
           <td>
             <a class="btn btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
           </td>
