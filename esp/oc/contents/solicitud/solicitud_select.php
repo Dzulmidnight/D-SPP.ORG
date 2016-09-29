@@ -132,6 +132,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       GetSQLValueString($idcomprobante_pago, "int"));
     $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
+
+
   }else{
     $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
       GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
@@ -156,7 +158,7 @@ if (isset($_GET['pageNum_opp'])) {
 }
 $startRow_opp = $pageNum_opp * $maxRows_opp;
 
-$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.*, membresia.idmembresia FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
+$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
 $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
 ?>
@@ -187,7 +189,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!--<th class="text-center">País</th>-->
           <th class="text-center">Proceso de Objeción</th>
           <th class="text-center">Proceso <br>Certificación</th>
-          <th class="text-center" colspan="2">Certificado</th>
+          <th class="text-center">Certificado</th>
 
           <!--<th class="text-center">Propuesta</th>-->
           <!--<th class="text-center">Observaciones Solicitud</th>-->
@@ -266,7 +268,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
               <?php 
               if(isset($solicitud['dictamen']) && $solicitud['dictamen'] == 'POSITIVO'){
               ?>
-                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Consultar Proceso</button>
+                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
                 <!-- inicia modal proceso de certificación -->
                 <div id="<?php echo "certificacion".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
@@ -285,7 +287,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                             echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$proceso_certificacion['fecha_registro'])."</div>";
                           }
 
-                          if(isset($solicitud['dictamen']) == 'POSITIVO'){
+                          if(isset($solicitud['idcomprobante_pago'])){
                           ?>
                           <div class="col-md-12">
                             <select class="form-control" name="estatus_interno" id="statusSelect" onchange="funcionSelect()" required>
@@ -382,6 +384,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                       </div>
                       <div class="modal-footer">
                         <input type="text" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                        <input type="text" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
                         <input type="text" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         <?php 
@@ -456,32 +459,64 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             </form>
           </td>
           <!---- TERMINA PROCESO DE CERTIFICACIÓN ---->
-          <?php 
-          $query_certificado = "SELECT * FROM certificado WHERE idopp = $solicitud[idopp]";
-          $consultar = mysql_query($query_certificado,$dspp) or die(mysql_error());
-          $certificado = mysql_fetch_assoc($consultar);
-           ?>
+
+          <!---- INICIA SECCION CERTIFICADO ------>
           <td>
-            <?php 
-            if($certificado['idcertificado']){
-              echo $certificado['idcertificado'];
-            }else{
-              echo "No Disponible";
-            }
-             ?>
+            <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Proceso Certificado</button>
           </td>
-          <td>
-            <?php echo "CERTIFICADO2"; ?>
-          </td>
-          <!--<td>
-            <?php 
-            if(isset($solicitud['observaciones'])){
-              echo $solicitud['observaciones'];
-            }else{
-              echo "No Disponible";
-            }
-             ?>
-          </td>-->
+                <!-- inicia modal estatus_Certificado -->
+
+                <div id="<?php echo "certificado".$solicitud['idsolicitud_certificacion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Proceso Certificado</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <?php 
+                            if($solicitud['estatus_contrato'] == "ACEPTADO" && $solicitud['estatus_membresia'] == "APROBADA"){
+                            ?>
+                              <p class="alert alert-info">Por favor cargue los siguientes documentos</p>
+                              <p class="alert alert-info">
+                                Informe de Evaluación
+                                <input type="file" class="form-control" name="informe_evaluacion">
+                   
+                                Dictamen de Evaluación
+                                <input type="file" class="form-control" name="dictamen_evaluacion">
+                              </p>
+                              <button type="submit" class="btn btn-success" style="width:100%" name="cargar_documentos" value="1">Enviar Documentos</button>
+                            <?php
+                            }else{
+                              echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" el \"Contrato de Uso\" ni se ha \"Aprobado\" la membresia</p>";
+                            }
+                             ?>
+                          </div>
+                          
+                          <div class="col-md-6">
+                            <h4>Cargar Certificado</h4>
+                            <p class="alert alert-warning">
+                              Una vez aprobado el "Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
+                              <input type="file" class="form-control" disabled>
+                            </p>  
+                            
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- termina modal estatus_Certificado -->
+
+          <!---- TERMINA SECCION CERTIFICADO ------>
+
           <td>
             <a class="btn btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
           </td>

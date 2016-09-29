@@ -54,7 +54,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
   //INSERTAMOS EL PROCESO DE CERTIFICACIÓN
   $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_dspp, fecha_registro) VALUES (%s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
-    GetSQLValueString($estatus_dspp, "text"),
+    GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
@@ -93,9 +93,89 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   $mensaje = "Se ha enviado correctamente la resolucion de objeción";
 
 }
+//SE APRUEBA EL COMPROBANTE DE PAGO
+if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
+  $estatus_comprobante = "ACEPTADO"; //se acepta el comprobante
+  $estatus_membresia = "APROBADA"; //se acepta la membresia
+  $estatus_dspp = 18; //MEMBRESIA APROBADA
+  //actualizamos comprobante_pago
+  $updateSQL = sprintf("UPDATE comprobante_pago SET estatus_comprobante = %s WHERE idcomprobante_pago = %s",
+    GetSQLValueString($estatus_comprobante, "text"),
+    GetSQLValueString($_POST['idcomprobante_pago'], "int"));
+  $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+  //actualizamos la membresia
+  $updateSQL = sprintf("UPDATE membresia SET estatus_membresia = %s, fecha_registro = %s WHERE idmembresia = %s",
+    GetSQLValueString($estatus_membresia, "text"),
+    GetSQLValueString($fecha, "int"),
+    GetSQLValueString($_POST['idmembresia'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+  //insertarmos el proceso_certificacion
+  $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, fecha_registro) VALUES (%s, %s, %s)",
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($fecha, "int"));
+  $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+  $mensaje = "Se ha aprobado la membresia";
+
+}
+//SE RECHAZA EL COMPROBANTE DE PAGO
+if(isset($_POST['rechazar_comprobante']) && $_POST['rechazar_comprobante'] == 2){
+  $estatus_comprobante = "RECHAZADO"; //se rechaza el comprobante
+  $estatus_membresia = "RECHAZADO"; //se rechaza la membresia
+  //actualizamos comprobante_pago
+  $updateSQL = sprintf("UPDATE comprobante_pago SET estatus_comprobante = %s, observaciones = %s WHERE idcomprobante_pago = %s",
+    GetSQLValueString($estatus_comprobante, "text"),
+    GetSQLValueString($_POST['observaciones_comprobante'], "text"),
+    GetSQLValueString($_POST['idcomprobante_pago'], "int"));
+  $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+  //actualizamos la membresia
+  $updateSQL = sprintf("UPDATE membresia SET estatus_membresia = %s WHERE idmembresia = %s",
+    GetSQLValueString($estatus_membresia, "text"),
+    GetSQLValueString($_POST['idmembresia'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+  $mensaje = "Se ha rechaza la membresia y el OPP ha sido notificado";
+}
+
+//SE APRUEBA EL CONTRATO DE USO
+if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
+  $estatus_dspp = 19; //CONTRATO DE USO APROBADO
+  $estatus_contrato = "ACEPTADO";;
+  //actualizamos el contrato de uso
+  $updateSQL = sprintf("UPDATE contratos SET estatus_contrato = %s WHERE idcontrato = %s",
+    GetSQLValueString($estatus_contrato, "text"),
+    GetSQLValueString($_POST['idcontrato'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+  //creamos el proceso_certificacion
+  $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($fecha, "int"));
+  $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+  $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
+
+}
+
+//SE RECHAZA EL CONTRATO DE USO
+if(isset($_POST['rechazar_contrato']) && $_POST['rechazar_contrato'] == 2){
+  $estatus_dspp = 19; //CONTRATO DE USO APROBADO
+  $estatus_contrato = "RECHAZADO";;
+  //actualizamos el contrato de uso
+  $updateSQL = sprintf("UPDATE contratos SET estatus_contrato = %s, observaciones = %s WHERE idcontrato = %s",
+    GetSQLValueString($estatus_contrato, "text"),
+    GetSQLValueString($_POST['observaciones_contrato'], "text"),
+    GetSQLValueString($_POST['idcontrato'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+  $mensaje = "Se ha rechazado el \"Contrato de Uso\"";
+}
 
 
-$row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.fecha_registro, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_dspp.nombre AS 'nombre_dspp', solicitud_certificacion.cotizacion_opp, periodo_objecion.* FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = periodo_objecion.idsolicitud_certificacion LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1", $dspp) or die(mysql_error());
+$row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.fecha_registro, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_dspp.nombre AS 'nombre_dspp', solicitud_certificacion.cotizacion_opp, periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = periodo_objecion.idsolicitud_certificacion LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1", $dspp) or die(mysql_error());
 
 ?>
 <div class="row">
@@ -320,12 +400,159 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
 
               <!-- INICIA MEMBRESIA -->
               <td>
-                membresia
+                <?php 
+                if(isset($solicitud['idmembresia'])){
+                  $row_membresia = mysql_query("SELECT membresia.*, comprobante_pago.* FROM membresia LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE idmembresia = $solicitud[idmembresia]", $dspp) or die(mysql_error());
+                  $membresia = mysql_fetch_assoc($row_membresia);
+                ?>
+                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#membresia".$solicitud['idmembresia']; ?>">Estatus Membresía</button>
+                <?php
+                }
+                 ?>
               </td>
+
+                <!-- inicia modal estatus membresia -->
+
+                <div id="<?php echo "membresia".$solicitud['idmembresia']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Estatus Membresía</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <?php 
+                            if(isset($membresia['idcomprobante_pago'])){
+                              echo '<p class="alert alert-info">
+                              Estatus Comprobante: <span style="color:red">'.$membresia['estatus_comprobante'].'</span><br>
+                              Monto de la membresia: <span style="color:red">'.$membresia['monto'].'</span>
+                              </p>';
+                            }else{
+
+                            }
+                             ?>
+
+                            <p><b>Comprobante de Pago</b></p>
+                            <?php 
+                              if(!isset($membresia['archivo'])){
+                                echo "<p class='alert alert-warning'>Aun no se ha cargado el comprobante de pago</p>";
+                              }else{
+                                echo "<p class='alert alert-success'>Se ha cargado el comprobante de pago, ahora puede descargarlo. Una vez revisado debera de \"APROBAR\" o \"RECHAZAR\" el comprobante de pago de la membresia</p>";
+
+                              ?>
+                                <a href="<?php echo $membresia['archivo']; ?>" target="_blank" class="btn btn-info" style="width:100%">Descargar Comprobante</a>
+                                <hr>
+                                <?php 
+                                if($membresia['estatus_comprobante'] == 'ACEPTADO'){
+                                  echo "<p class='text-center alert alert-success'><b>La membresía se ha activado</b></p>";
+                                }else{
+                                ?>
+                                  <p class="alert alert-info">
+                                    Para aprobar la membresia debe de "APROBAR" el comprobante de pago, si se "RECHAZA" se le notificara al OPP para que pueda revisarlo y cargar nuevamente uno nuevo.
+                                  </p>
+                                    <div class="text-center">
+                                      <label for="observaciones">Observaciones(<span style="color:red">en caso de ser rechazado</span>)</label>
+                                      <textarea name="observaciones_comprobante" id="observaciones_comprobante" class="form-control" placeholder="Observaciones"></textarea>
+                                      <input type="hidden" name="idcomprobante_pago" value="<?php echo $membresia['idcomprobante_pago']; ?>">
+                                      <input type="hidden" name="idmembresia" value="<?php echo $solicitud['idmembresia']; ?>">
+                                      <button type="submit" class="btn btn-sm btn-success" style="width:45%" name="aprobar_comprobante" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar</button>
+                                      <button type="submit" class="btn btn-sm btn-danger" style="width:45%" name="rechazar_comprobante" value="2"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
+                                    </div>
+                                <?php
+                                }
+                                 ?>
+                              <?php
+                              }
+                             ?>
+                          </div>
+
+
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- termina modal estatus membresia -->
+
               <!-- TERMINA MEMBRESIA -->
+              
+              <!----- INICIA VENTANA CERTIFICADO ------>
+              <td>
+                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Consultar Certificado</button>
+              </td>
+              <?php
+              
+               ?>
+                <!-- inicia modal estatus membresia -->
 
-              <td><?php echo "ID CERTIFICADO"; ?></td>
+                <div id="<?php echo "certificado".$solicitud['idsolicitud_certificacion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Información Certificado</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <h4>Contrato de Uso</h4>
+                            <?php 
+                            if(isset($solicitud['idcontrato'])){
+                              $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
 
+                              echo $contrato['estatus_contrato'];
+                              if($contrato['estatus_contrato'] == "ACEPTADO"){
+                                echo "<p class='alert alert-success'>Se ha aceptado el Contrato de Uso</p>";
+                                echo "<a href=".$contrato['archivo']." target='_blank' class='btn btn-sm btn-success' style='width:100%'>Descargar Contrato</a>";
+
+                              }else{
+                              ?>
+                                <a href="<?php echo $contrato['archivo']; ?>" target="_blank" class="btn btn-sm btn-success" style="width:100%">Descargar Contrato</a>
+                                <label for="observaciones_contrato">Observaciones (<span style="color:red">en caso de ser rechazado</span>)</label>
+                                <textarea name="observaciones_contrato" id="observaciones_contrato" class="form-control" placeholder="Observaciones Contrato"></textarea>
+                                <div class="col-md-12">
+                                  <button class="btn btn-sm btn-success" name="aprobar_contrato" value="1" style="width:45%"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar</button>
+                                  <button class="btn btn-sm btn-danger" name="rechazar_contrato" value="2" style="width:45%"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Rechazar</button>
+                                </div>
+                              <?php
+                              }
+                            ?>
+
+                            <?php
+                            }else{
+                              echo "<p class='alert alert-warning'>Aun no se ha cargado el <span style='colore:red'>Contrato de Uso</span></p>";
+                            }
+                             ?>
+                          </div>
+                          <div class="col-md-6">
+                            <h4>Informe y Dictamen de Evaluación</h4>
+                            <?php 
+                            if(empty($informe['idcontrato']) && empty($dictamen_evaluacion['idcontrato'])){
+                              echo "<p class='alert alert-warning'>Aun no se ha cargado el \"Informe de Evaluación\" así como el \"Dictamen de Evaluación\"</p>";
+                            }else{
+                              echo "asdf";
+                            }
+                             ?>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <input type="text" name="idcontrato" value="<?php echo $solicitud['idcontrato']; ?>">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- termina modal estatus membresia -->
+
+              <!----- TERMINA VENTANA CERTIFICADO ------>
               <td>Acciones</td>
             </tr>
           <?php
