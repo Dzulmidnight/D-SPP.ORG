@@ -82,6 +82,8 @@ $charset='utf-8';
 $fecha = time();
 $idopp = $_SESSION['idopp'];
 $ruta_croquis = "../../archivos/oppArchivos/croquis/";
+$spp_global = "cert@spp.coop";
+$administrador = "yasser.midnight@gmail.com";
 /************ VARIABLES DE CONTROL ******************/
 
 
@@ -388,7 +390,101 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			}
 		}
 		/***************************** TERMINA INSERTAR PRODUCTOS ******************************/
- 		
+
+		///// INICIA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
+		$asunto = "D-SPP Solicitud de Certificación para Organizaciones de Pequeños Productores";
+		$row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
+		$oc = mysql_fetch_assoc($row_oc);
+
+		$cuerpo_correo = '
+			<html>
+			<head>
+				<meta charset="utf-8">
+			</head>
+			<body>
+			
+				<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+				  <tbody>
+		            <tr>
+		              <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+		              <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Application for Small Producers\' Organization Certification </strong></th>
+		            </tr>
+		            <tr>
+		              <td style="padding-top:10px;">
+		   
+		              Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+		              <br>
+		              To consult the application, please log in to your CE(Certification Entity) account, in the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+
+		         
+
+		              </td>
+		            </tr>
+				    <tr>
+				      <td align="left">Teléfono / phone Organización: '.$_POST['telefono'].'</td>
+				    </tr>
+
+				    <tr>
+				      <td align="left">'.$_POST['pais'].'</td>
+				    </tr>
+				    <tr>
+				      <td align="left" style="color:#ff738a;">Email: '.$_POST['email'].'</td>
+				    </tr>
+				    <tr>
+				      <td align="left" style="color:#ff738a;">Email: '.$_POST['contacto1_email'].'</td>
+				    </tr>
+
+				    <tr>
+				      <td colspan="2">
+				        <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+				          <tbody>
+				            <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+				              <td width="130px">Nombre de la organización/Organization name</td>
+				              <td width="130px">País / Country</td>
+				              <td width="130px">Organismo de Certificación / Certification Entity</td>
+				           
+				              <td width="130px">Fecha de solicitud/Date of application</td>
+				            </tr>
+				            <tr style="font-size: 12px;">
+				              <td style="padding:10px;">
+				              	'.$_POST['nombre'].'
+				              </td>
+				              <td style="padding:10px;">
+				                '.$_POST['pais'].'
+				              </td>
+				              <td style="padding:10px;">
+				                '.$oc['nombre'].'
+				              </td>
+				              <td style="padding:10px;">
+				              '.date('d/m/Y', $fecha).'
+				              </td>
+				            </tr>
+
+				          </tbody>
+				        </table>        
+				      </td>
+				    </tr>
+
+				  </tbody>
+				</table>
+
+			</body>
+			</html>
+		';
+		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
+		$destinatario = $oc['email1'];
+
+        $mail->AddAddress($destinatario);
+	    $mail->AddBCC($administrador);
+	    $mail->AddBCC($spp_global);
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_correo);
+        $mail->MsgHTML(utf8_decode($cuerpo_correo));
+        $mail->Send();
+        $mail->ClearAddresses();
+
  		$mensaje = "Se ha enviado la Solicitud de Certificacion al OC, en breve seras contactado";
 
 
@@ -491,8 +587,8 @@ $opp = mysql_fetch_assoc($row_opp);
 					 	 ?>
 					 </select>
 
-					<label for="direccion_fisica">DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES(CALLE, BARRIO, LUGAR, REGIÓN)</label>
-					<textarea name="direccion_fisica" id="direccion_fisica"  class="form-control"><?php echo $opp['direccion_oficina']; ?></textarea>
+					<label for="direccion_oficina">DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES(CALLE, BARRIO, LUGAR, REGIÓN)</label>
+					<textarea name="direccion_oficina" id="direccion_oficina"  class="form-control"><?php echo $opp['direccion_oficina']; ?></textarea>
 
 					<label for="email">CORREO ELECTRÓNICO:</label>
 					<input type="text" class="form-control" id="email" name="email" value="<?php echo $opp['email']; ?>">

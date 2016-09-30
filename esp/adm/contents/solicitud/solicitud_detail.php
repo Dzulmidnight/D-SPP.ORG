@@ -50,11 +50,8 @@ if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
 /*********** INICIAN VARIABLES GLOBALES ************/
-$idsolicitud_certificacion = $_GET['IDsolicitud'];
+$idsolicitud_certificacion = $_GET['idsolicitud'];
 $charset='utf-8';
-$administrador = "yasser.midnight@gmail.com";
-$spp_global = "cert@spp.coop";
-$fecha = time();
 /*********** TERMINAN VARIABLES GLOBALES ************/
 
 if(isset($_POST['guardar_cambios']) && $_POST['guardar_cambios'] == "1"){
@@ -72,12 +69,23 @@ if(isset($_POST['guardar_cambios']) && $_POST['guardar_cambios'] == "1"){
     $op_preg13 = "";
   }
 
-  //ACTUALIZAMOS EL NUMERO DE SOCIOS
-  $updateSQL = sprintf("UPDATE num_socios SET numero = %s WHERE fecha_registro = %s AND idopp = %s",
+
+
+  /*if(!empty($_FILES['op_preg15']['name'])){
+      $_FILES["op_preg15"]["name"];
+        move_uploaded_file($_FILES["op_preg15"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
+        $croquis = $ruta_croquis.basename(date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
+  }else{
+    $croquis = NULL;
+  }*/
+
+
+
+    $updateSQL = sprintf("UPDATE num_socios SET numero = %s WHERE fecha_registro = %s AND idopp = %s",
       GetSQLValueString($_POST['resp1'], "int"),
       GetSQLValueString($_POST['fecha_registro'], "int"),
       GetSQLValueString($_POST['idopp'], "int"));
-  $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+    $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
   if(!empty($_POST['produccion'])){
     $produccion = $_POST['produccion'];
@@ -253,8 +261,6 @@ if(isset($_POST['guardar_cambios']) && $_POST['guardar_cambios'] == "1"){
   $mensaje = "Datos Actualizados Correctamente";
 
 }
-
-//****** INICIA ENVIAR COTIZACION *******///
 if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $estatus_dspp = '4'; // COTIZACIÓN ENVIADA
   $estatus_publico = '1';
@@ -290,101 +296,9 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
     GetSQLValueString($estatus_dspp, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
-  //ASUNTO DEL CORREO
-  $row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
-  $oc = mysql_fetch_assoc($row_oc);
-
-  $asunto = "D-SPP Cotización (Solicitud de Certificación para Organizaciones de Pequeños Productores)";
-
-  $cuerpo_mensaje = '
-    <html>
-    <head>
-      <meta charset="utf-8">
-    </head>
-    <body>
-    
-      <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-        <tbody>
-          <tr>
-            <th rowspan="4" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-            <th scope="col" align="left" width="280" ><strong>Notificación de Cotización / Price Notification</strong></th>
-          </tr>
-          <tr>
-            <td align="left" style="color:#ff738a;">Email Organismo de Certificación / Certification Entity: '.$oc['email1'].'</td>
-          </tr>
-
-          <tr>
-            <td align="left">'.$oc['pais'].'</td>
-          </tr>
-          <tr>
-            <td aling="left" style="text-align:justify">
-            Se ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
-            <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
-
-            <br><br>
-            The quotation corresponding to the Certification Application for Small producers organizations has been sent.
-              <br><br>Please log in to the following link <a href="http://d-spp.org/?OPP">www.d-spp.org/</a> as OPP to access the quotation.
-
-            </td>
-          </tr>
-
-          <tr>
-            <td colspan="2">
-              <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-                <tbody>
-                  <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                    <td width="130px">Nombre de la organización/Organization name</td>
-                    <td width="130px">País / Country</td>
-                    <td width="130px">Organismo de Certificación / Certification Entity</td>
-                    <td width="130px">Fecha de envío / Shipping Date</td>
-                 
-                    
-                  </tr>
-                  <tr style="font-size: 12px; text-align:justify">
-                    <td style="padding:10px;">
-                      '.$_POST['nombre'].'
-                    </td>
-                    <td style="padding:10px;">
-                      '.$_POST['pais'].'
-                    </td>
-                    <td style="padding:10px;">
-                      '.$oc['nombre'].'
-                    </td>
-                    <td style="padding:10px;">
-                    '.date('d/m/Y', $fecha).'
-                    </td>
-                  </tr>
-
-                </tbody>
-              </table>        
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-    </body>
-    </html>
-  ';
-
-  $mail->AddAddress($_POST['email']);
-  $mail->AddAddress($_POST['contacto1_email']);
-  $mail->AddBCC($administrador);
-  $mail->AddBCC($spp_global);
-  //se adjunta la cotización
-  $mail->AddAttachment($cotizacion_opp);
-
-  //$mail->Username = "soporte@d-spp.org";
-  //$mail->Password = "/aung5l6tZ";
-  $mail->Subject = utf8_decode($asunto);
-  $mail->Body = utf8_decode($cuerpo_mensaje);
-  $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-  $mail->Send();
-  $mail->ClearAddresses();
-
-
   $mensaje = "Se ha enviado la cotizacion al OPP";
 }
-//****** TERMINA ENVIAR COTIZACION *******///
+
 
 
 $query = "SELECT solicitud_certificacion.*, opp.nombre, opp.spp AS 'spp_opp', opp.sitio_web, opp.email, opp.telefono, opp.pais, opp.ciudad, opp.razon_social, opp.direccion_oficina, opp.direccion_fiscal, opp.rfc, opp.ruc, oc.abreviacion AS 'abreviacionOC', porcentaje_productoVentas.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN porcentaje_productoVentas ON solicitud_certificacion.idsolicitud_certificacion = porcentaje_productoVentas.idsolicitud_certificacion WHERE solicitud_certificacion.idsolicitud_certificacion = $idsolicitud_certificacion";
@@ -424,7 +338,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
           <div class="col-xs-4">
             <b>TIPO DE SOLICITUD</b>
             <input type="text" class="form-control" value="<?php echo $solicitud['tipo_solicitud']; ?>"readonly>
-            <button type="submit" class="btn btn-warning form-control" style="color:white" name="guardar_cambios" value="1">
+            <!--29/09/2016 <button type="submit" class="btn btn-warning form-control" style="color:white" name="guardar_cambios" value="1">
               <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>Actualizar Solicitud
             </button>
             <!--<input type="submit" style="color:white" class="btn btn-warning form-control" value="Actualizar Solicitud">
@@ -436,8 +350,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             if(empty($solicitud['cotizacion_opp'])){
             ?>
               <b>CARGAR COTIZACIÓN</b>
-              <input type="file" class="form-control" id="cotizacion_opp" name="cotizacion_opp"> 
-              <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>"> 
+              <input type="file" class="form-control" id="cotizacion_opp" name="cotizacion_opp">  
               <button class="btn btn-sm btn-success form-control" style="color:white" id="enviar_cotizacion" name="enviar_cotizacion" type="submit" value="1" onclick="return validar()">
                 <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Enviar Cotización
               </button>
@@ -565,8 +478,8 @@ $solicitud = mysql_fetch_assoc($ejecutar);
           <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_cargo']; ?>" palceholder="Cargo Persona 2" readonly>
 
           <label for="email">CORREO ELECTRÓNICO</label>
-          <input type="email" class="form-control" name="contacto1_email" id="email" value="<?php echo $solicitud['contacto1_email']; ?>" placeholder="* Email Persona 1" readonly>
-          <input type="email" class="form-control" name="contacto2_email" id="" value="<?php echo $solicitud['contacto2_email']; ?>" placeholder="Email Persona 2" readonly>
+          <input type="email" class="form-control" id="email" value="<?php echo $solicitud['contacto1_email']; ?>" placeholder="* Email Persona 1" readonly>
+          <input type="email" class="form-control" id="" value="<?php echo $solicitud['contacto2_email']; ?>" placeholder="Email Persona 2" readonly>
 
           <label for="telefono">TELEFONO</label>
           <input type="text" class="form-control" id="telefono" value="<?php echo $solicitud['contacto1_telefono']; ?>" placeholder="* Telefono Persona 1" readonly>

@@ -52,7 +52,7 @@ if(isset($_GET['select'])){include ("solicitud_select.php");}
 else
 if(isset($_GET['add'])){include ("solicitud_add.php");}
 else
-if(isset($_GET['detail'])){include ("solicitud_detail.php");}
+if(isset($_GET['idsolicitud'])){include ("solicitud_detail.php");}
 else
 if(isset($_GET['cancel'])){include ("solicitud_cancel.php");}
 else 

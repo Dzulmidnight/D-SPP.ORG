@@ -171,6 +171,7 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
 
       $mail->AddAddress($destinatario);
       $mail->AddBCC('yasser.midnight@gmail.com');
+      $mail->AddBCC('cert@spp.coop');
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
       $mail->Subject = utf8_decode($asunto_usuario);
@@ -313,6 +314,9 @@ if ((isset($_POST["registro_com"])) && ($_POST["registro_com"] == "1")) {
   ';
 
     $mail->AddAddress($destinatario);
+    $mail->AddBCC('yasser.midnight@gmail.com');
+    $mail->AddBCC('cert@spp.coop');
+
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
     $mail->Subject = utf8_decode($asunto_usuario);

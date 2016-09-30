@@ -217,6 +217,56 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
 }
 
+if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
+  $estatus_dspp = 13; //CERTIFICADA
+  $rutaArchivo = "../../archivos/ocArchivos/certificados/";
+  if(!empty($_FILES['certificado']['name'])){
+      $_FILES["certificado"]["name"];
+        move_uploaded_file($_FILES["certificado"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["certificado"]["name"]);
+        $certificado = $rutaArchivo.basename(time()."_".$_FILES["certificado"]["name"]);
+  }else{
+    $certificado = NULL;
+  }
+  //insertamos el certificado
+  $insertSQL = sprintf("INSERT INTO certificado(idopp, idsolicitud_certificacion, entidad, estatus_certificado, vigencia_inicio, vigencia_fin, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+    GetSQLValueString($_POST['idopp'], "int"),
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($_POST['idoc'], "int"),
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['fecha_inicio'], "text"),
+    GetSQLValueString($_POST['fecha_fin'], "text"),
+    GetSQLValueString($certificado, "text"),
+    GetSQLValueString($fecha, "int"));
+  $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+  //insertamos el proceso de certificacion
+  $estatus_proceso = 12; //es el estatus_dspp (certificado emitido)
+  $nombre_archivo = "CERTIFICADO";
+  $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, nombre_archivo, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($estatus_proceso, "int"),
+    GetSQLValueString($nombre_archivo, "text"),
+    GetSQLValueString($certificado, "text"),
+    GetSQLValueString($fecha, "int"));
+  $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+  //ACTUALIZAMOS A LA OPP
+  $estatus_dspp = 13; //certificada
+  $estatus_interno = 8; //dictamen_positivo
+  $estatus_publico = 2; //certificado
+  $estatus_opp = "CERTITICADO";
+  $updateSQL = sprintf("UPDATE opp SET estatus_opp = %s, estatus_publico = %s, estatus_interno = %s, estatus_dspp = %s WHERE idopp = %s",
+    GetSQLValueString($estatus_opp, "text"),
+    GetSQLValueString($estatus_publico, "int"),
+    GetSQLValueString($estatus_interno, "int"),
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idopp'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+
+  $mensaje = "Se ha cargado el Certificado y se ha notificado a SPP GLOBAL y a la Organización de Pequeños Productores";
+}
+
 
 $currentPage = $_SERVER["PHP_SELF"];
 
@@ -452,9 +502,9 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <input type="text" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
-                        <input type="text" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
-                        <input type="text" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
+                        <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                        <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
+                        <input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         <?php 
                         if(empty($solicitud['idmembresia'])){
@@ -524,7 +574,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 echo "No Disponible";
               }
                ?>
-               <input type="text" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
+               <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
             </form>
           </td>
           <!---- TERMINA PROCESO DE CERTIFICACIÓN ---->
@@ -532,7 +582,17 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- INICIA SECCION CERTIFICADO ------>
           <form action="" method="POST" enctype="multipart/form-data">
           <td>
-            <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Proceso Certificado</button>
+            <?php 
+            if(isset($solicitud['iddictamen_evaluacion'])){
+            ?>
+            <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Cargar Certificado</button>
+            <?php
+            }else{
+            ?>
+            <button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Cargar Certificado</button>
+            <?php
+            }
+             ?>
           </td>
                 <!-- inicia modal estatus_Certificado -->
 
@@ -543,7 +603,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso Certificado</h4>
+                        <h4 class="modal-title" id="myModalLabel">Cargar Certificado</h4>
                       </div>
                       <div class="modal-body">
                         <div class="row">
@@ -557,10 +617,10 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 $dictamen = mysql_fetch_assoc($row_dictamen);
 
                               ?>
-                              <p>Estatus Dictamen de Evaluación: <?php echo $dictamen['estatus_dictamen']; ?></p>
-                              <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-success" target="_blank">Descargar Dictamen</a>
-                              <p>Estatus Informe de Evaluación: <?php echo $informe['estatus_informe']; ?></p>
-                              <a href="<?php echo $informe['archivo']; ?>" class="btn btn-success" target="_blank">Descargar Informe</a>
+                              <p>Estatus Dictamen de Evaluación: <span style="color:red"><?php echo $dictamen['estatus_dictamen']; ?></span></p>
+                              <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Descargar Dictamen</a>
+                              <p>Estatus Informe de Evaluación: <span style="color:red"><?php echo $informe['estatus_informe']; ?></span></p>
+                              <a href="<?php echo $informe['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Descargar Informe</a>
 
                               <?php
                               }else{
@@ -586,11 +646,34 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           <div class="col-md-6">
                             <h4>Cargar Certificado</h4>
                             <?php 
-                            if($dictamen['estatus_dictamen'] == "ACEPTADO" && $informe['estatus_informe'] == "ACEPTADO"){
+                            if(isset($dictamen['iddictamen_evaluacion']) && $dictamen['estatus_dictamen'] == "ACEPTADO" && $informe['estatus_informe'] == "ACEPTADO"){
+                              if(isset($solicitud['idcertificado'])){
+                                $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
+                                $certificado = mysql_fetch_assoc($row_certificado);
+                                $inicio = strtotime($certificado['vigencia_inicio']);
+                                $fin = strtotime($certificado['vigencia_fin']);
+                              ?>
+                                <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
+                                <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
+                              <?php
+                              }else{
+                              ?>
+                                <div class="col-md-6">
+                                  <label for="fecha_inicio">Fecha Inicio</label> 
+                                  <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd/mm/aaaa" required> 
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="fecha_fin">Fecha Fin</label>
+                                  <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd/mm/aaaa" required>
+                                </div>
+                                
+                                <label for="certificado">Por favor seleccione el Certificado</label>
+                                <input type="file" name="certificado" id="certificado" class="form-control" required>
+                                <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>
+
+                              <?php
+                              }
                             ?>
-                            <label for="certificado">Por favor seleccione el Certificado</label>
-                            <input type="file" name="certificado" id="certificado" class="form-control">
-                            <button type="submit" name="enviar_certificado" class="btn btn-success" style="width:100%">Enviar Certificado</button>
                             <?php
                             }else{
                             ?>
@@ -603,8 +686,10 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           </div>
                         </div>
                       </div>
+
                       <div class="modal-footer">
                         <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
+                        <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
                         <input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                       </div>
@@ -616,7 +701,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- TERMINA SECCION CERTIFICADO ------>
             </form>
           <td>
-            <a class="btn btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+            <a class="btn btn-primary" data-toggle="tooltip" title="Consultar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
           </td>
           <td>
             <form action="../../reportes/reporte.php" method="POST" target="_new">
