@@ -106,9 +106,9 @@ if(isset($_POST['cotizacion']) ){
 
             <tr>
               <td align="left" style="color:#ff738a;">
-              Felicidades se ha aceptado su cotización, sera informado una vez que inicie el período de objeción, después podra ponerse en contacto con:
+              Felicidades se ha aceptado su cotización, sera informado una vez que inicie el período de objeción:
               <br><br>
-              Congratulations! Your quotation has been accepted. You will be notified once the objection period begins. After that, you will be able to contact :
+              Congratulations! Your quotation has been accepted. You will be notified once the objection period begins:
 
               </td>
             </tr>
@@ -117,7 +117,7 @@ if(isset($_POST['cotizacion']) ){
               <td align="left">Teléfono / phone OPP: '.$detalle_opp['telefono'].'</td>
             </tr>
             <tr>
-              <td align="left">'.$detalle_opp['pais'].'</td>
+              <td align="left">País / Country: '.$detalle_opp['pais'].'</td>
             </tr>
             <tr>
               <td align="left" style="color:#ff738a;">Nombre: '.$detalle_opp['contacto1_nombre'].' | '.$detalle_opp['contacto1_email'].'</td>
@@ -142,7 +142,7 @@ if(isset($_POST['cotizacion']) ){
                         '.$detalle_opp['nombre_opp'].'
                       </td>
                       <td style="padding:10px;">
-                        '.$detalle_opp['abreviacion'].'
+                        '.$detalle_opp['abreviacion_opp'].'
                       </td>
                       <td style="padding:10px;">
                         '.$detalle_opp['pais'].'
@@ -206,6 +206,12 @@ if(isset($_POST['cotizacion']) ){
                       <tr>
                         <td colspan="2">Fecha Fin: <span style="color:red">'.date('d/m/Y', $fecha_fin).'</span></td>
                       </tr>
+                      <tr>
+                        <td colspan="2">
+                          <p style="font-size:14px;color:red">Para aprobar el Periodo de Objeción debe ingresar en su cuenta de Administrador</p>
+                        </td>
+                      </tr>
+
                       <tr style="width:100%">
                         <td colspan="2">
                           <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
@@ -233,11 +239,6 @@ if(isset($_POST['cotizacion']) ){
                             </tr>
                         </td>
                         </table>
-                      </tr>
-                      <tr>
-                        <td colspan="2">
-                          <p style="font-size:14px;color:red">Para aprobar el Periodo de Objeción debe ingresar en su cuenta de Administrador</p>
-                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -582,13 +583,13 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
               <!---- INICIA CONSULTAR CERTIFICADO ---->
               <td>
                 <?php 
-                if(isset($solicitud['dictamen']) && $solicitud['dictamen'] == "POSITIVO"){
+                if(isset($solicitud['idmembresia'])){
                 ?>
                   <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Consultar Certificado</button>
                 <?php
                 }else{
                 ?>
-                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" disabled>Consultar Certificado</button>
+                  <button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Consultar Certificado</button>
                 <?php
                 }
                  ?>
@@ -616,9 +617,16 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                               <?php
                               }else{
                               ?>
-                                <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
-                                <input type="file" name="contrato" class="form-control">
-                                <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato</button>
+                                <?php 
+                                if(isset($membresia['idcomprobante_pago'])){
+                                ?>
+                                  <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
+                                  <input type="file" name="contrato" class="form-control">
+                                  <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato</button>
+
+                                <?php
+                                }
+                                 ?>
                               <?php
                               }
                                ?>

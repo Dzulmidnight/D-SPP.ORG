@@ -406,7 +406,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                             echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$proceso_certificacion['fecha_registro'])."</div>";
                           }
 
-                          if(isset($solicitud['idcomprobante_pago'])){
+                          if(!isset($solicitud['idcomprobante_pago'])){
                           ?>
                           <div class="col-md-12">
                             <select class="form-control" name="estatus_interno" id="statusSelect" onchange="funcionSelect()" required>

@@ -92,7 +92,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
                   <img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" />
                 </th>
                 <th style="text-align:left">
-                  D-SPP | Aviso Notificación de Intenciones de Certificación / Intentions Notification of certification
+                  D-SPP | Aviso Notificación de Intenciones de Certificación / Intentions Certification
                 </th>
               </tr>
             </thead>
@@ -229,6 +229,14 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
 }
 //SE CARGA Y ENVIA LA RESOLUCIÓN DE OBJECIÓN
 if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
+  /// se consultan los datos de de solicitud, opp, oc para el mensaje
+  $row_opp = mysql_query("SELECT solicitud_certificacion.*, opp.idopp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.telefono, opp.email AS 'email_opp', opp.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc' FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $detalle_opp = mysql_fetch_assoc($row_opp);
+
+  $row_periodo = mysql_query("SELECT fecha_inicio, fecha_fin FROM periodo_objecion WHERE idperiodo_objecion = $_POST[idperiodo_objecion]",$dspp) or die(mysql_error());
+  $periodo = mysql_fetch_assoc($row_periodo);
+
+
   $ruta = "../../archivos/admArchivos/resolucion/";
 
   if(!empty($_FILES['cargar_resolucion']['name'])){
@@ -238,9 +246,8 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   }else{
     $resolucion = NULL;
   }
-  //ACTUALIZAMOS EL PERIODO DE OBJECIÓN
+  //actualizamos el periodo de objeción
   $estatus_objecion = 'FINALIZADO';
-
 
   $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s, observacion = %s, dictamen = %s, documento = %s WHERE idperiodo_objecion = %s",
     GetSQLValueString($estatus_objecion, "text"),
@@ -249,6 +256,196 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
     GetSQLValueString($resolucion, "text"),
     GetSQLValueString($_POST['idperiodo_objecion'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+
+  /// inicia envio correo "periodo de objeción finalizado" a OC
+  $asunto = "D-SPP | Periodo de Objeción Finalizado";
+
+  $mensaje_oc = '
+    <html>
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+      
+        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="700px">
+          <thead>
+            <tr>
+              <th>
+                <img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+              </th>
+              <th style="text-align:left">
+                D-SPP | Periodo de Objeción Finalizado / Objection Period Ended
+                
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="text-align:left">
+              <td colspan="2"><p><b>Ha finalizado el periodo de objeción con un dictamen: <span style="color:red;">'.$_POST['dictamen'].'</span></b></p></td>
+            </tr>
+            <tr> 
+              <td colspan="2">Fecha Inicio: <span style="color:red">'.date('d/m/Y', $periodo['fecha_inicio']).'</span></td>
+            </tr>
+            <tr>
+              <td colspan="2">Fecha Fin: <span style="color:red">'.date('d/m/Y', $periodo['fecha_fin']).'</span></td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                Ahora puede iniciar el proceso de certificación, por favor ponerse en contacto con:
+                
+                <p>Organización: <span style="color:red">'.$detalle_opp['nombre_opp'].'</span></p>
+                
+                <p>Telefono / phone: <span style="color:red">'.$detalle_opp['telefono'].'</span></p>
+                
+                <p>Email: <span style="color:red">'.$detalle_opp['email_opp'].'</span></p>
+              </td>
+            </tr>
+            <tr style="width:100%">
+              <td colspan="2">
+                <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+
+                  <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                    <td style="text-align:center">Tipo / Type</td>
+                    <td style="text-align:center">Nombre de la Empresa/Company name</td>
+                    <td style="text-align:center">Abreviación / Short name</td>
+                    <td style="text-align:center">País / Country</td>
+                    <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
+                    <td style="text-align:center">Tipo de solicitud / Kind of application</td>
+                    <td style="text-align:center">Fecha de solicitud/Date of application</td>
+                    <td style="text-align:center">Fin período de objeción/Objection period end</td>
+                  </tr>
+                  <tr style="font-size:12px;">
+                    <td>OPP</td>
+                    <td>'.$detalle_opp['nombre_opp'].'</td>
+                    <td>'.$detalle_opp['abreviacion_opp'].'</td>
+                    <td>'.$detalle_opp['pais'].'</td>
+                    <td>'.$detalle_opp['nombre_oc'].'</td>
+                    <td>Certificación</td>
+                    <td>'.date('d/m/Y', $periodo['fecha_inicio']).'</td>
+                    <td>'.date('d/m/Y', $periodo['fecha_fin']).'</td>
+                  </tr>
+              </td>
+              </table>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </body>
+    </html>
+  ';
+
+  $mail->AddAddress($detalle_opp['email_oc']);
+  $mail->AddBCC($spp_global);  
+  $mail->AddBCC($administrador);
+
+  $mail->AddAttachment($resolucion);
+
+  $mail->Subject = utf8_decode($asunto);
+  $mail->Body = utf8_decode($mensaje_oc);
+  $mail->MsgHTML(utf8_decode($mensaje_oc));
+  $mail->Send();
+  $mail->ClearAddresses();
+
+  /// termina envio correo "periodo de objeción finalizado" a OC
+
+  /// inicia envio correo "periodo de objeción finalizado" a OPP
+  $mensaje_opp = '
+    <html>
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+      
+        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="700px">
+          <thead>
+            <tr>
+              <th>
+                <img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+              </th>
+              <th style="text-align:left">
+                D-SPP | Periodo de Objeción Finalizado / Objection Period Ended
+                
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="text-align:left">
+              <td colspan="2"><p><b>Ha finalizado el periodo de objeción con un dictamen: <span style="color:red;">'.$_POST['dictamen'].'</span></b></p></td>
+            </tr>
+            <tr> 
+              <td colspan="2">Fecha Inicio: <span style="color:red">'.date('d/m/Y', $periodo['fecha_inicio']).'</span></td>
+            </tr>
+            <tr>
+              <td colspan="2">Fecha Fin: <span style="color:red">'.date('d/m/Y', $periodo['fecha_fin']).'</span></td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                Ha finalizado el periodo de objeción. Se ha iniciado el Proceso de Certificación, por favor ponerse en contacto con su Organismo de Certificación, para cualquier duda o aclaración por favor escribir a: cert@spp.coop
+                
+                <p>Organismo de Certificación: <span style="color:red">'.$detalle_opp['nombre_oc'].'</span></p>
+                
+                <p>Email: <span style="color:red">'.$detalle_opp['email_oc'].'</span></p>
+              </td>
+            </tr>
+            <tr style="width:100%">
+              <td colspan="2">
+                <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+
+                  <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                    <td style="text-align:center">Tipo / Type</td>
+                    <td style="text-align:center">Nombre de la Empresa/Company name</td>
+                    <td style="text-align:center">Abreviación / Short name</td>
+                    <td style="text-align:center">País / Country</td>
+                    <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
+                    <td style="text-align:center">Tipo de solicitud / Kind of application</td>
+                    <td style="text-align:center">Fecha de solicitud/Date of application</td>
+                    <td style="text-align:center">Fin período de objeción/Objection period end</td>
+                  </tr>
+                  <tr style="font-size:12px;">
+                    <td>OPP</td>
+                    <td>'.$detalle_opp['nombre_opp'].'</td>
+                    <td>'.$detalle_opp['abreviacion_opp'].'</td>
+                    <td>'.$detalle_opp['pais'].'</td>
+                    <td>'.$detalle_opp['nombre_oc'].'</td>
+                    <td>Certificación</td>
+                    <td>'.date('d/m/Y', $periodo['fecha_inicio']).'</td>
+                    <td>'.date('d/m/Y', $periodo['fecha_fin']).'</td>
+                  </tr>
+              </td>
+              </table>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </body>
+    </html>
+  ';
+
+  $mail->AddAddress($detalle_opp['email_opp']); 
+  if(!empty($detalle_opp['contacto1_email'])){
+    $mail->AddAddress($detalle_opp['contacto1_email']); 
+  }
+  if(!empty($detalle_opp['contacto2_email'])){
+    $mail->AddAddress($detalle_opp['contacto2_email']); 
+  }
+  if(!empty($detalle_opp['adm1_email'])){
+    $mail->AddAddress($detalle_opp['adm1_email']); 
+  }
+  $mail->AddBCC($administrador);
+
+  $mail->AddAttachment($resolucion);
+
+  $mail->Subject = utf8_decode($asunto);
+  $mail->Body = utf8_decode($mensaje_opp);
+  $mail->MsgHTML(utf8_decode($mensaje_opp));
+  $mail->Send();
+  $mail->ClearAddresses();
+
+  /// termina envio correo "periodo de objeción finalizado" a OPP
+
 
   $mensaje = "Se ha enviado correctamente la resolucion de objeción";
 
