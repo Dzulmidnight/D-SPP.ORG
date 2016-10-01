@@ -77,13 +77,15 @@ if(isset($_POST['cotizacion']) ){
     $fecha_inicio = time();
     $fecha_fin = $fecha + $periodo;
     $estatus_objecion = 'EN ESPERA';
+    $alertar1 = 1; //se envia la primera alerta para pedir autorización al adm de que inicie el periodo de objeción
 
     //INSERTAMOS EL PERIODO DE OBJECIÓN
-    $insertSQL = sprintf("INSERT INTO periodo_objecion (idsolicitud_certificacion, fecha_inicio, fecha_fin, estatus_objecion) VALUES (%s, %s, %s, %s)",
+    $insertSQL = sprintf("INSERT INTO periodo_objecion (idsolicitud_certificacion, fecha_inicio, fecha_fin, estatus_objecion, alerta1) VALUES (%s, %s, %s, %s, %s)",
       GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
       GetSQLValueString($fecha_inicio, "int"),
       GetSQLValueString($fecha_fin, "int"),
-      GetSQLValueString($estatus_objecion, "text"));
+      GetSQLValueString($estatus_objecion, "text"),
+      GetSQLValueString($alerta1, "int"));
     $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
     //////// INICIA ENVIAR CORREO AL OC SOBRE LA ACEPTACION DE LA COTIZACION
