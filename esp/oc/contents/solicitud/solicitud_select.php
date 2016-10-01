@@ -53,6 +53,8 @@ if (!function_exists("GetSQLValueString")) {
 /************ INICIA VARIABLES GLOBALES ***************/
 $fecha = time();
 $idoc = $_SESSION['idoc'];
+$spp_global = "cert@spp.coop";
+$administrador = "yasser.midnight@gmail.com";
 /**********  TERMINA VARIABLES GLOBALES *****************/
  
 if(isset($_POST['cancelar']) && $_POST['cancelar'] == "cancelar"){
@@ -64,6 +66,8 @@ if(isset($_POST['cancelar']) && $_POST['cancelar'] == "cancelar"){
 }
 
 if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
+  $query_opp = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, opp.nombre, opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE solicitud_certificacion.idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $detalle_opp = mysql_fetch_assoc($query_opp);
   $estatus_dspp = 8; //INICIA PROCESO DE CERTIFICACION
   //ESTATUS INTERNO
   // 8 = DICTAMEN POSITIVO
@@ -93,12 +97,17 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
   if($_POST['estatus_interno'] == 8){ //checamos si el estatus_interno es positvo
+    $documentacion_nombres = '';
     $estatus_dspp = 9; //Termina proceso de certificación
     //creamos la variable del archivo extra
     if(!empty($_FILES['archivo_extra']['name'])){
         $_FILES["archivo_extra"]["name"];
           move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_extra"]["name"]);
           $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_extra"]["name"]);
+
+          $documentacion_nombres .= "<li>".$_POST['nombre_archivo']."</li>";
+          $mail->AddAttachment($archivo);
+
     }else{
       $archivo = NULL;
     }
@@ -132,7 +141,100 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       GetSQLValueString($idcomprobante_pago, "int"));
     $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
+    ///inicia envio de mensaje dictamen positivo
 
+    $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]'", $dspp) or die(mysql_error());
+    while($documentacion = mysql_fetch_assoc($row_documentacion)){
+        $mail->AddAttachment($documentacion['archivo']);
+        $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+    }
+
+
+    $documentacion = mysql_fetch_assoc($row_documentacion);
+
+
+    $asunto = "D-SPP | Proceso de Certificación, Dictamen Positivo";
+
+    $cuerpo_mensaje = '
+          <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+              <tbody>
+                <tr>
+                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Contrato de uso del Simbolo de Pequeños Productores - SPP</span></p></th>
+
+                </tr>
+                <tr>
+                 <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
+                </tr>
+
+                <tr>
+                  <td colspan="2">
+                    <p>Reciban ustedes un cordial y atento saludo, así como el deseo de éxito en todas y cada una de sus actividades</p>
+                    <p>La presente tiene por objetivo hacerles llegar el documentro <strong>Contrato de Uso del Simbolo de Pequeños Productores y Acuse de Recibido</strong>; documentos que se requieren sean leidos y entendidos, una vez revisada la información de los documentos mencionados, por favor <span style="color:red">proceder a firmarlos y envíar por medio del sistema D-SPP, esto ingresando en su cuenta de OPP </span>en la siguiente dirección <a href="http://d-spp.org/">http://d-spp.org/</a>.</p>
+                    <p>El Contrato de Uso menciona como anexo el documento Manual del SPP y este Manual a su vez menciona como anexos los siguientes documentos.</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td><p><strong>Documentos Anexos</strong></p></td>
+                </tr>
+                <tr>
+                  <td>
+                    <ul>
+                      '.$documentacion_nombres.'
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
+                    <p>Asi mismo se anexan los datos bancarios para el respectivo pago de la membresía SPP</p>
+                    <p>El monto total de la membresía SPP es de: <span style="color:red;">'.$_POST['monto_membresia'].'</span></p>
+                    <p>Después de realizar el pago por favor cargue el comprobante en el sistema D-SPP</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </body>
+          </html>
+    ';
+        if(!empty($detalle_opp['contacto1_email'])){
+          $mail->AddAddress($detalle_opp['contacto1_email']);
+        }
+        if(!empty($detalle_opp['contacto2_email'])){
+          $mail->AddAddress($detalle_opp['contacto2_email']);
+        }
+        if(!empty($detalle_opp['adm1_email'])){
+          $mail->AddAddress($detalle_opp['adm1_email']);
+        }
+        if(!empty($detalle_opp['email'])){
+          $mail->AddAddress($detalle_opp['email']);
+        }
+        $mail->AddBCC($administrador);
+        $mail->AddBCC($spp_global);
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_mensaje);
+        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+
+        /*if($mail->Send()){
+          
+          echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+        }else{
+              echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+     
+        }*/
+        $mail->Send();
+        $mail->ClearAddresses();
+    ///termina envio de mensaje dictamen positivo
 
   }else{
     $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
@@ -471,13 +573,12 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                        ?>
                                       <p class="alert alert-warning" style="padding:5px;">
                                         Enviar archivos en:
-                                        <label class="checkbox-inline">
-                                          <input type="checkbox" id="inlineCheckbox1" name="espanol" value="1"> Español
+                                        <label class="radio-inline">
+                                          <input type="radio" name="idioma" id="inlineRadio1" value="ESP"> Español
                                         </label>
-                                        <label class="checkbox-inline">
-                                          <input type="checkbox" id="inlineCheckbox2" name="ingles" value="1"> Ingles
+                                        <label class="radio-inline">
+                                          <input type="radio" name="idioma" id="inlineRadio2" value="EN"> Ingles
                                         </label>
-
                                       </p>
     
                                     </div>

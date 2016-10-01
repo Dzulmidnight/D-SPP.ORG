@@ -291,7 +291,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
   }
 
   //creamos el proceso de certificacion
-  $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, nombre, archivo, fecha_registro) VALUES(%s, %s, %s)",
+  $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, nombre_archivo, archivo, fecha_registro) VALUES(%s, %s, %s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($nombre, "text"),
@@ -306,6 +306,57 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
     GetSQLValueString($fecha, "int"),
     GetSQLValueString($_POST['idcomprobante_pago'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+  //inicia correo enviar comprobante de pago
+  $row_informacion = mysql_query("SELECT membresia.idopp, membresia.idcomprobante_pago, opp.nombre, comprobante_pago.monto FROM membresia INNER JOIN opp ON membresia.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE membresia.idcomprobante_pago = $_POST[idcomprobante_pago]", $dspp) or die(mysql_error());
+  $informacion = mysql_fetch_assoc($row_informacion);
+
+  $asunto = "D-SPP | Aprobación Comprobante de Pago";
+
+  $cuerpo_mensaje = '
+    <html>
+    <head>
+      <meta charset="utf-8">
+    </head>
+    <body>
+      <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+        <tbody>
+          <tr>
+            <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+            <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Comprobante de pago </span></p></th>
+
+          </tr>
+          <tr>
+           <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+          </tr>
+
+          <tr>
+            <td colspan="2">
+             <p>La OPP: '.$informacion['nombre'].' ha cargado el Comprobante de Pago de la membresia SPP por un monto total de: '.$informacion['monto'].'.</p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <p>Después de revisa el comprobante <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el comprobante de pago</span> </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+    </html>
+  ';
+    $mail->AddAddress($spp_global);
+    $mail->AddBCC($administrador);
+    $mail->AddAttachment($comprobante_pago);
+    //$mail->Username = "soporte@d-spp.org";
+    //$mail->Password = "/aung5l6tZ";
+    $mail->Subject = utf8_decode($asunto);
+    $mail->Body = utf8_decode($cuerpo_mensaje);
+    $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+    $mail->Send();
+    $mail->ClearAddresses();
+
+  //termina correo enviar comprobante de pago
 
   $mensaje = "Se ha enviado el comprobante de pago, en breve seras notificado";
 }
@@ -342,6 +393,56 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
     GetSQLValueString($contrato, "text"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+
+  //inicia enviar mensaje contrato de uso
+  $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, opp.nombre FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $informacion = mysql_fetch_assoc($row_informacion);
+
+  $asunto = "D-SPP | Aprobación Contrato de Uso";
+
+  $cuerpo_mensaje = '
+          <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+              <tbody>
+                <tr>
+                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Aprobación Contrato de Uso </span></p></th>
+
+                </tr>
+                <tr>
+                 <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+                </tr>
+
+                <tr>
+                  <td colspan="2">
+                   <p>La OPP: '.$informacion['nombre'].' ha cargado el "Contrato de Uso".</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <p>Después de revisa el "Contrato de Uso" <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el mismo</span> </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </body>
+          </html>
+  ';
+    $mail->AddAddress($spp_global);
+    $mail->AddBCC($administrador);
+    $mail->AddAttachment($contrato);
+    //$mail->Username = "soporte@d-spp.org";
+    //$mail->Password = "/aung5l6tZ";
+    $mail->Subject = utf8_decode($asunto);
+    $mail->Body = utf8_decode($cuerpo_mensaje);
+    $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+    $mail->Send();
+    $mail->ClearAddresses();
+  //termina enviar mensaje contrato de uso
 
   $mensaje = "Se ha enviado el Contrato de Uso, en breve sera contactado";
 }
@@ -556,7 +657,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                             ?>
                               <p class="alert alert-info">
                                 Cargar Comprobante de pago
-                                <input type="file" class="form-control" name="comprobante_pago">
+                                <input type="file" class="form-control" name="comprobante_pago" required>
                               </p>
                             <?php
                             }

@@ -474,6 +474,60 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
+  //inicia enviar mensaje aprobacion membresia
+  $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, contacto1_email, opp.email, opp.nombre FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp", $dspp) or die(mysql_error());
+  $informacion = mysql_fetch_assoc($row_informacion);
+
+  $asunto = "D-SPP | Membresia SPP aprobada";
+
+  $cuerpo_mensaje = '
+          <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+              <tbody>
+                <tr>
+                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Membresías SPP aprobada</span></p></th>
+
+                </tr>
+                <tr>
+                 <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+                </tr>
+
+                <tr>
+                  <td colspan="2">
+                   <p>Felicidades!!! el pago de su membresía fue aprobado, su certificado estara disponible en breve por favor espere.</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </body>
+          </html>
+  ';
+
+  if(!empty($informacion['contacto1_email'])){
+    $mail->AddAddress($informacion['contacto1_email']); 
+  }
+  if(!empty($informacion['email'])){
+    $mail->AddAddress($informacion['email']); 
+  }
+
+  $mail->Subject = utf8_decode($asunto);
+  $mail->Body = utf8_decode($cuerpo_mensaje);
+  $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+  $mail->Send();
+  $mail->ClearAddresses();
+
+  //termina enviar mensaje aprobacion de membresia
+
   $mensaje = "Se ha aprobado la membresia";
 
 }
