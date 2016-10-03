@@ -185,7 +185,7 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
 /****************************** FIN FORMULARIO INSERTAR OPP **************************************************/
 
 /****************************** INICIA FORMULARIO INSERTAR COM **************************************************/
-if ((isset($_POST["registro_com"])) && ($_POST["registro_com"] == "1")) {
+if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) {
   mysql_select_db($database_dspp, $dspp);
 
   $pais = $_POST['pais'];
@@ -416,8 +416,8 @@ if (isset($_POST['SPP_EMPRESA'])) {
     $loginUsername=$_POST['SPP_EMPRESA'];
     $password=$_POST['password'];
     $MM_fldUserAuthorization = "clase";
-    $MM_redirectLoginSuccess = "com/main_menu.php";
-    $MM_redirectLoginFailed = "?COM";
+    $MM_redirectLoginSuccess = "empresa/main_menu.php";
+    $MM_redirectLoginFailed = "?EMPRESA";
     $MM_redirecttoReferrer = false;
     mysql_select_db($database_dspp, $dspp);
       
@@ -899,7 +899,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                         <input type="text" class="form-control" id="ruc" name="ruc">
                       </div>
                     </div>
-                    <input type="hidden" name="registro_com" value="1">
+                    <input type="hidden" name="registro_empresa" value="1">
                     <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Registrarse</button>
 
                   </div>

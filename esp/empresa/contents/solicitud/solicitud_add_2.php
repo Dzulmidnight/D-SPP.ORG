@@ -69,17 +69,17 @@ $row_pais = mysql_fetch_assoc($pais);
 $totalRows_pais = mysql_num_rows($pais);
 
 mysql_select_db($database_dspp, $dspp);
-$query_oc = "SELECT idoc, idf, abreviacion, pais FROM oc ORDER BY nombre ASC";
+$query_oc = "SELECT idoc, spp, abreviacion, pais FROM oc ORDER BY nombre ASC";
 $oc = mysql_query($query_oc, $dspp) or die(mysql_error());
 $row_oc = mysql_fetch_assoc($oc);
 $totalRows_oc = mysql_num_rows($oc);
 
 
-$query_com = "SELECT * FROM com WHERE idcom='$_SESSION[idcom]'";
-$com = mysql_query($query_com,$dspp) or die(mysql_error());
-$row_com = mysql_fetch_assoc($com);
+$query_empresa = "SELECT * FROM empresa WHERE idempresa='$_SESSION[idempresa]'";
+$empresa = mysql_query($query_empresa,$dspp) or die(mysql_error());
+$row_empresa = mysql_fetch_assoc($empresa);
 
-$query_contacto = "SELECT * FROM contacto WHERE idcom='$_SESSION[idcom]'";
+$query_contacto = "SELECT * FROM contacto WHERE idempresa='$_SESSION[idempresa]'";
 $contacto = mysql_query($query_contacto,$dspp) or die(mysql_error());
 $row_contacto = mysql_fetch_assoc($contacto);
 
@@ -124,12 +124,12 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
  mysql_select_db($database_dspp, $dspp);
 
  	$fecha_actual = time();
- 	$idcom = $_POST['idcom'];
+ 	$idempresa = $_POST['idempresa'];
     $array_resp5 = NULL;
     $array_tipo_empresa = NULL;
     $resp14_15 = NULL;
     $resp14_15_1 = NULL;
-    $idcom = $_POST['idcom'];
+    $idempresa = $_POST['idempresa'];
     $resp6 = NULL;
 
 
@@ -200,8 +200,8 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
 
 
 
-    		$insertSQL = sprintf("INSERT INTO solicitud_registro(idcom, idoc, p1_nombre, p2_nombre, p1_cargo, p2_cargo, p1_correo, p2_correo, p1_telefono, p2_telefono, adm1_nombre, adm2_nombre, adm1_correo, adm2_correo, adm1_telefono, adm2_telefono, tipo_empresa, resp1, resp2, resp3, resp4, resp5, resp6, resp7, resp8, resp9, resp10, resp12, resp13, resp14, resp14_15, resp16, responsable, fecha_elaboracion, status_interno, status_publico) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,	%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-			   GetSQLValueString($_POST['idcom'], "int"),
+    		$insertSQL = sprintf("INSERT INTO solicitud_registro(idempresa, idoc, p1_nombre, p2_nombre, p1_cargo, p2_cargo, p1_correo, p2_correo, p1_telefono, p2_telefono, adm1_nombre, adm2_nombre, adm1_correo, adm2_correo, adm1_telefono, adm2_telefono, tipo_empresa, resp1, resp2, resp3, resp4, resp5, resp6, resp7, resp8, resp9, resp10, resp12, resp13, resp14, resp14_15, resp16, responsable, fecha_elaboracion, status_interno, status_publico) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,	%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+			   GetSQLValueString($_POST['idempresa'], "int"),
                GetSQLValueString($infoOC['idoc'], "int"),
                GetSQLValueString($_POST['p1_nombre'], "text"),
                GetSQLValueString($_POST['p2_nombre'], "text"),
@@ -253,7 +253,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
 			//$queryFecha = "INSERT INTO fecha(fecha, idexterno, identificador, status) VALUES($fecha, $idexterno, '$identificador', $status)";
 			//$ejecutar = mysql_query($queryFecha,$dspp) or die(mysql_error());
 
-			$queryFecha = "INSERT INTO fecha(fecha, idexterno, idcom, identificador, status) VALUES($fecha_actual, $idexterno, $idcom, '$identificador', $status)";
+			$queryFecha = "INSERT INTO fecha(fecha, idexterno, idempresa, identificador, status) VALUES($fecha_actual, $idexterno, $idempresa, '$identificador', $status)";
 			$ejecutar = mysql_query($queryFecha,$dspp) or die(mysql_error());
 
 		    $mensaje = "Se ha enviado la Solicitud de Registro para Compradores, y otros Actores por parte de <b>$_SESSION[nombreCOM]</b>";
@@ -331,11 +331,11 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
 				for ($i=0;$i<count($resp6_empresa);$i++) { // INICIA FOR "SUB EMPRESAS"
 					if($resp6_empresa[$i] != NULL){
 
-					    $insertSQL = sprintf("INSERT INTO subEmpresas (idsolicitud_registro, nombre, servicio, idcom) VALUES (%s, %s, %s, %s)",
+					    $insertSQL = sprintf("INSERT INTO subEmpresas (idsolicitud_registro, nombre, servicio, idempresa) VALUES (%s, %s, %s, %s)",
 					          GetSQLValueString($idsolicitud_registro, "int"),
 					          GetSQLValueString($resp6_empresa[$i], "text"),
 					          GetSQLValueString($resp6_servicio[$i], "text"),
-					          GetSQLValueString($idcom, "int"));
+					          GetSQLValueString($idempresa, "int"));
 
 					  $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
 					}
@@ -353,8 +353,8 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
 			    $fecha_elaboracion = $_POST['fecha_elaboracion'];
 			    $producto = $_POST['producto'];
 			    $telefono1 = $_POST['p1_telefono'];
-			    $direccion = $row_com['direccion'];
-			    $ciudad = $row_com['ciudad'];
+			    $direccion = $row_empresa['direccion'];
+			    $ciudad = $row_empresa['ciudad'];
 			    $emailCOM1 = $_POST['p1_correo'];
 			    $emailCOM2 = $_POST['p2_correo'];
 			    $fecha = date("d/m/Y", $fecha_elaboracion);
@@ -463,10 +463,10 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
     }/*TERMINA IF DE INSERCION "TODOS LOS OC" */ 
     else if(isset($_POST['idocSelect'])){ /* INICIA INSERCION INDIVIDUAL DE SOLICITUD*/
     	$idoc = $_POST['idocSelect'];
-    	$idcom = $_POST['idcom'];
+    	$idempresa = $_POST['idempresa'];
 
-		$insertSQL = sprintf("INSERT INTO solicitud_registro(idcom, idoc, p1_nombre, p2_nombre, p1_cargo, p2_cargo, p1_correo, p2_correo, p1_telefono, p2_telefono, adm1_nombre, adm2_nombre, adm1_correo, adm2_correo, adm1_telefono, adm2_telefono, tipo_empresa, resp1, resp2, resp3, resp4, resp5, resp6, resp7, resp8, resp9, resp10, resp12, resp13, resp14, resp14_15, resp16, responsable, fecha_elaboracion, status_interno, status_publico) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-		   GetSQLValueString($_POST['idcom'], "int"),
+		$insertSQL = sprintf("INSERT INTO solicitud_registro(idempresa, idoc, p1_nombre, p2_nombre, p1_cargo, p2_cargo, p1_correo, p2_correo, p1_telefono, p2_telefono, adm1_nombre, adm2_nombre, adm1_correo, adm2_correo, adm1_telefono, adm2_telefono, tipo_empresa, resp1, resp2, resp3, resp4, resp5, resp6, resp7, resp8, resp9, resp10, resp12, resp13, resp14, resp14_15, resp16, responsable, fecha_elaboracion, status_interno, status_publico) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+		   GetSQLValueString($_POST['idempresa'], "int"),
 	       GetSQLValueString($_POST['idocSelect'], "int"),
 	       GetSQLValueString($_POST['p1_nombre'], "text"),
 	       GetSQLValueString($_POST['p2_nombre'], "text"),
@@ -516,7 +516,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
 			//$queryFecha = "INSERT INTO fecha(fecha, idexterno, identificador, status) VALUES($fecha, $idexterno, '$identificador', $status)";
 			//$ejecutar = mysql_query($queryFecha,$dspp) or die(mysql_error());
 
-			$queryFecha = "INSERT INTO fecha(fecha, idexterno, idcom, identificador, status) VALUES($fecha_actual, $idexterno, $idcom, '$identificador', $status)";
+			$queryFecha = "INSERT INTO fecha(fecha, idexterno, idempresa, identificador, status) VALUES($fecha_actual, $idexterno, $idempresa, '$identificador', $status)";
 			$ejecutar = mysql_query($queryFecha,$dspp) or die(mysql_error());
 
 		    $mensaje = "Se ha enviado la Solicitud de Registro para Compradores, y otros Actores por parte de <b>$_SESSION[nombreCOM]</b>";
@@ -592,11 +592,11 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
 				for ($i=0;$i<count($resp6_empresa);$i++) { // INICIA FOR "SUB EMPRESAS"
 					if($resp6_empresa[$i] != NULL){
 
-					    $insertSQL = sprintf("INSERT INTO subEmpresas (idsolicitud_registro, nombre, servicio, idcom) VALUES (%s, %s, %s, %s)",
+					    $insertSQL = sprintf("INSERT INTO subEmpresas (idsolicitud_registro, nombre, servicio, idempresa) VALUES (%s, %s, %s, %s)",
 					          GetSQLValueString($idsolicitud_registro, "int"),
 					          GetSQLValueString($resp6_empresa[$i], "text"),
 					          GetSQLValueString($resp6_servicio[$i], "text"),
-					          GetSQLValueString($_POST['idcom'], "int"));
+					          GetSQLValueString($_POST['idempresa'], "int"));
 
 					  $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
 					}
@@ -615,8 +615,8 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
 			    $fecha_elaboracion = $_POST['fecha_elaboracion'];
 			    $producto = $_POST['producto'];
 			    $telefono1 = $_POST['p1_telefono'];
-			    $direccion = $row_com['direccion'];
-			    $ciudad = $row_com['ciudad'];
+			    $direccion = $row_empresa['direccion'];
+			    $ciudad = $row_empresa['ciudad'];
 			    $emailCOM1 = $_POST['p1_correo'];
 			    $emailCOM2 = $_POST['p2_correo'];
 			    $fecha = date("d/m/Y", $fecha_elaboracion);
@@ -715,21 +715,21 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
 
 
 
-        		$queryMensaje = "INSERT INTO mensajes(idcom, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, $idoc, '$asunto', '$cuerpo', 'OC', 'COM', $fecha_actual)";
+        		$queryMensaje = "INSERT INTO mensajes(idempresa, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idempresa, $idoc, '$asunto', '$cuerpo', 'OC', 'COM', $fecha_actual)";
         		$ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
 
 
 	} //TERMINA INSERCION INDIVIDUAL DE SOLICITUD
 
     		//INSERTAMOS LOS DATOS DE CONTACTO DE LA SOLICITUD, DENTRO DE LOS CONTACTO DEL COM
-    		$idcom = $_POST['idcom'];
+    		$idempresa = $_POST['idempresa'];
     		if(!empty($_POST['p1_nombre'])){
     			$nombre = $_POST['p1_nombre'];
     			$cargo = $_POST['p1_cargo'];
     			$telefono = $_POST['p1_telefono'];
     			$email = $_POST['p1_telefono'];
 
-    			$query = "INSERT INTO contacto(idcom, contacto, cargo, telefono1, email1) VALUES($idcom ,'$nombre', '$cargo', '$telefono', '$email')";
+    			$query = "INSERT INTO contacto(idempresa, contacto, cargo, telefono1, email1) VALUES($idempresa ,'$nombre', '$cargo', '$telefono', '$email')";
     			$ejecutar = mysql_query($query,$dspp) or die(mysql_error());
     		}
     		if(!empty($_POST['p2_nombre'])){
@@ -738,7 +738,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
     			$telefono = $_POST['p2_telefono'];
     			$email = $_POST['p2_telefono'];
 
-    			$query = "INSERT INTO contacto(idcom, contacto, cargo, telefono1, email1) VALUES($idcom ,'$nombre', '$cargo', '$telefono', '$email')";
+    			$query = "INSERT INTO contacto(idempresa, contacto, cargo, telefono1, email1) VALUES($idempresa ,'$nombre', '$cargo', '$telefono', '$email')";
     			$ejecutar = mysql_query($query,$dspp) or die(mysql_error());
     		}
     		if (!empty($_POST['adm1_nom'])) {
@@ -747,7 +747,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
     			$telefono = $_POST['adm1_tel'];
     			$email = $_POST['adm1_correo'];
 
-    			$query = "INSERT INTO contacto(idcom, contacto, cargo, telefono1, email1) VALUES($idcom ,'$nombre', '$cargo', '$telefono', '$email')";
+    			$query = "INSERT INTO contacto(idempresa, contacto, cargo, telefono1, email1) VALUES($idempresa ,'$nombre', '$cargo', '$telefono', '$email')";
     			$ejecutar = mysql_query($query,$dspp) or die(mysql_error());
     		}
     		if (!empty($_POST['adm2_nom'])) {
@@ -756,7 +756,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
     			$telefono = $_POST['adm2_tel'];
     			$email = $_POST['adm2_correo'];
 
-    			$query = "INSERT INTO contacto(idcom, contacto, cargo, telefono1, email1) VALUES($idcom ,'$nombre', '$cargo', '$telefono', '$email')";
+    			$query = "INSERT INTO contacto(idempresa, contacto, cargo, telefono1, email1) VALUES($idempresa ,'$nombre', '$cargo', '$telefono', '$email')";
     			$ejecutar = mysql_query($query,$dspp) or die(mysql_error());
     		}
 
@@ -773,7 +773,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) { // INICI
 			rfc = '$_POST[rfc]',
 			ruc = '$_POST[ruc]',
 			ciudad = '$_POST[ciudadCOM]',
-			estado = $procedimiento WHERE idcom = $idcom";
+			estado = $procedimiento WHERE idempresa = $idempresa";
 
 
 			$actualizar = mysql_query($query,$dspp) or die(mysql_error());
@@ -902,7 +902,7 @@ echo "<script>window.location='main_menu.php?SOLICITUD&select&mensaje=Solicitud 
 				<p>NOMBRE DE LA EMPRESA</p>
 			</td>
 			<td>
-				<input type="text" class="form-control" name="nombreCOM" value="<?php echo $row_com['nombre']?>">
+				<input type="text" class="form-control" name="nombreCOM" value="<?php echo $row_empresa['nombre']?>">
 			</td>
 		</tr>
 		<tr>
@@ -910,47 +910,47 @@ echo "<script>window.location='main_menu.php?SOLICITUD&select&mensaje=Solicitud 
 				<p>DIRECCIÓN COMPLETA DE LAS OFICINAS CENTRALES (CALLE, BARRIO, LUGAR, REGIÓN)</p>
 			</td>
 			<td>
-				<input type="text" class="form-control" name="direccionCOM" value="<?php echo $row_com['direccion'];?>" placeholder="Dirección de las Oficinas">
+				<input type="text" class="form-control" name="direccionCOM" value="<?php echo $row_empresa['direccion'];?>" placeholder="Dirección de las Oficinas">
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<p>CORREO ELECTRÓNICO</p> 
-				<input type="text" class="form-control" name="correoCOM" value="<?php echo $row_com['email']?>">
+				<input type="text" class="form-control" name="correoCOM" value="<?php echo $row_empresa['email']?>">
 			</td>
 			<td>
 				<p>TELÉFONOS (CÓDIGO DE PAÍS+CÓDIGO DE ÁREA+NÚMERO)</p>	
-				<input type="text" class="form-control" name="telefonoCOM" value="<?php echo $row_com['telefono']?>">
+				<input type="text" class="form-control" name="telefonoCOM" value="<?php echo $row_empresa['telefono']?>">
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<p>PAÍS</p>
-				<input type="text" class="form-control" name="paisCOM" value="<?php echo $row_com['pais']?>">
+				<input type="text" class="form-control" name="paisCOM" value="<?php echo $row_empresa['pais']?>">
 			</td>
 			<td>
 				<p>SITIO WEB</p>
-				<input type="text" class="form-control" name="sitio_web" value="<?php echo $row_com['sitio_web']?>">
+				<input type="text" class="form-control" name="sitio_web" value="<?php echo $row_empresa['sitio_web']?>">
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<p>CIUDAD</p>
-				<input type="text" class="form-control" name="ciudadCOM" value="<?php echo $row_com['ciudad']?>">
+				<input type="text" class="form-control" name="ciudadCOM" value="<?php echo $row_empresa['ciudad']?>">
 			</td>
 			<td>
 				<p>DOMICILIO FISCAL</p>
-				<input type="text" class="form-control" name="direccionFiscalCOM" value="<?php echo $row_com['direccion_fiscal']?>">
+				<input type="text" class="form-control" name="direccionFiscalCOM" value="<?php echo $row_empresa['direccion_fiscal']?>">
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<p>RUC</p>
-				<input type="text" class="form-control" name="ruc" value="<?php echo $row_com['ruc']?>">
+				<input type="text" class="form-control" name="ruc" value="<?php echo $row_empresa['ruc']?>">
 			</td>
 			<td>
 				<p>RFC</p>
-				<input type="text" class="form-control" name="rfc" value="<?php echo $row_com['rfc']?>">
+				<input type="text" class="form-control" name="rfc" value="<?php echo $row_empresa['rfc']?>">
 			</td>
 		</tr>
 		<!------------------------------------------ INICIA DATOS DE CONTACTO ---------------------------------------->
@@ -1313,10 +1313,10 @@ echo "<script>window.location='main_menu.php?SOLICITUD&select&mensaje=Solicitud 
 					<input type="hidden" name="status_publico" value="<?php echo $estadoPublico;?>">
 					<input type="hidden" name="status_interno" value="<?php echo $estadoInterno;?>">
 					<input type="hidden" name="mensaje" value="Acción agregada correctamente" />
-					<input type="hidden" name="idcom" value="<?php echo $_SESSION['idcom']?>">
-					<input type="hidden" name="abreviacion" value="<?php echo $row_com['abreviacion'];?>">
-					<input type="hidden" name="nombreCOM" value="<?php echo $row_com['nombre']; ?>">
-					<input type="hidden" name="paisCOM" value="<?php echo $row_com['pais']; ?>">
+					<input type="hidden" name="idempresa" value="<?php echo $_SESSION['idempresa']?>">
+					<input type="hidden" name="abreviacion" value="<?php echo $row_empresa['abreviacion'];?>">
+					<input type="hidden" name="nombreCOM" value="<?php echo $row_empresa['nombre']; ?>">
+					<input type="hidden" name="paisCOM" value="<?php echo $row_empresa['pais']; ?>">
 				</div>
 
 			    <button style="width:200px;" class="btn btn-primary" type="submit" value="Enviar Solicitud" aria-label="Left Align" onclick="return validar()">
