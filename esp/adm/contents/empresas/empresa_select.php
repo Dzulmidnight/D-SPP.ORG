@@ -1,34 +1,35 @@
-<?php require_once('../Connections/dspp.php'); ?>
-<?php
+<?php 
+require_once('../Connections/dspp.php'); 
+
 if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
+  function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+  {
+    if (PHP_VERSION < 6) {
+      $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+    }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+    $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
+    switch ($theType) {
+      case "text":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;    
+      case "long":
+      case "int":
+        $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+        break;
+      case "double":
+        $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+        break;
+      case "date":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;
+      case "defined":
+        $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+        break;
+    }
+    return $theValue;
   }
-  return $theValue;
-}
 }
 $timeActual = time();
 
@@ -48,8 +49,8 @@ $startRow_com = $pageNum_com * $maxRows_com;
 
 mysql_select_db($database_dspp, $dspp);
 if(isset($_GET['query'])){
-  //$query_com = "SELECT * FROM com where idoc='".$_GET['query']."' ORDER BY nombre ASC";
- $query_com = "SELECT *, com.idcom AS 'idCOM', com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM', com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE idoc = $_GET[query] AND (com.estado IS NULL OR com.estado != 'ARCHIVADO') ORDER BY com.idcom ASC";
+  //$query_empresa = "SELECT * FROM com where idoc='".$_GET['query']."' ORDER BY nombre ASC";
+ $query_empresa = "SELECT *, com.idcom AS 'idCOM', com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM', com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE idoc = $_GET[query] AND (com.estado IS NULL OR com.estado != 'ARCHIVADO') ORDER BY com.idcom ASC";
 
    $queryExportar = "SELECT com.*, contacto.*  FROM com LEFT JOIN contacto ON com.idcom = contacto.idcom WHERE idoc = $_GET[query] AND (com.estado IS NULL OR com.estado != 'ARCHIVADO') ORDER BY com.idcom ASC";
 
@@ -57,16 +58,16 @@ if(isset($_GET['query'])){
   $palabraClave = $_POST['palabraClave'];
 
 
-  //$query_com = "SELECT * FROM com WHERE idf LIKE '%$palabraClave%' OR nombre LIKE '%$palabraClave%' OR abreviacion LIKE '%$palabraClave%' OR sitio_web LIKE '%$palabraClave%' OR email LIKE '%$palabraClave%' OR pais LIKE '%$palabraClave%' OR direccion_fiscal LIKE '%$palabraClave%' OR rfc LIKE '%$palabraClave%' ORDER BY idcom ASC";
+  //$query_empresa = "SELECT * FROM com WHERE idf LIKE '%$palabraClave%' OR nombre LIKE '%$palabraClave%' OR abreviacion LIKE '%$palabraClave%' OR sitio_web LIKE '%$palabraClave%' OR email LIKE '%$palabraClave%' OR pais LIKE '%$palabraClave%' OR direccion_fiscal LIKE '%$palabraClave%' OR rfc LIKE '%$palabraClave%' ORDER BY idcom ASC";
 
-  $query_com = "SELECT *, com.idcom AS 'idCOM' ,com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM' , com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE (com.estado != 'ARCHIVADO' OR com.estado IS NULL) AND ((idf LIKE '%$palabraClave%') OR (com.nombre LIKE '%$palabraClave%') OR (com.abreviacion LIKE '%$palabraClave%') OR (sitio_web LIKE '%$palabraClave%') OR (email LIKE '%$palabraClave%') OR (pais LIKE '%$palabraClave%') OR (direccion_fiscal LIKE '%$palabraClave%') OR (rfc LIKE '%$palabraClave%')) ORDER BY com.idcom ASC";
+  $query_empresa = "SELECT *, com.idcom AS 'idCOM' ,com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM' , com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE (com.estado != 'ARCHIVADO' OR com.estado IS NULL) AND ((idf LIKE '%$palabraClave%') OR (com.nombre LIKE '%$palabraClave%') OR (com.abreviacion LIKE '%$palabraClave%') OR (sitio_web LIKE '%$palabraClave%') OR (email LIKE '%$palabraClave%') OR (pais LIKE '%$palabraClave%') OR (direccion_fiscal LIKE '%$palabraClave%') OR (rfc LIKE '%$palabraClave%')) ORDER BY com.idcom ASC";
 
   $queryExportar = "SELECT com.*, contacto.*  FROM com LEFT JOIN contacto ON com.idcom = contacto.idcom WHERE (com.estado != 'ARCHIVADO' OR com.estado IS NULL) AND ((com.idf LIKE '%$palabraClave%') OR (com.nombre LIKE '%$palabraClave%') OR (com.abreviacion LIKE '%$palabraClave%') OR (sitio_web LIKE '%$palabraClave%') OR (email LIKE '%$palabraClave%') OR (pais LIKE '%$palabraClave%') OR (direccion_fiscal LIKE '%$palabraClave%') OR (rfc LIKE '%$palabraClave%')) ORDER BY com.idcom ASC";
 
 }else if(isset($_POST['busquedaPais']) && $_POST['busquedaPais'] == "1" && $_POST['busquedaPais'] != NULL){
   $pais = $_POST['pais'];
-  //$query_com = "SELECT * FROM com WHERE pais LIKE '%$pais%'";
-  $query_com = "SELECT *, com.idcom AS 'idCOM' ,com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM' , com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE com.pais = '$pais' ORDER BY com.idcom ASC";
+  //$query_empresa = "SELECT * FROM com WHERE pais LIKE '%$pais%'";
+  $query_empresa = "SELECT *, com.idcom AS 'idCOM' ,com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM' , com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE com.pais = '$pais' ORDER BY com.idcom ASC";
 
   $queryExportar = "SELECT com.*, contacto.*  FROM com LEFT JOIN contacto ON com.idcom = contacto.idcom WHERE com.pais = '$pais' ORDER BY com.idcom ASC";
 
@@ -74,7 +75,7 @@ if(isset($_GET['query'])){
 
   $idoc = $_POST['idoc'];
 
-    $query_com = "SELECT *, com.idcom AS 'idCOM' ,com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM' , com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE com.idoc = '$idoc' ORDER BY com.idcom ASC";
+    $query_empresa = "SELECT *, com.idcom AS 'idCOM' ,com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM' , com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE com.idoc = '$idoc' ORDER BY com.idcom ASC";
 
     $queryExportar = "SELECT com.*, contacto.*  FROM com LEFT JOIN contacto ON com.idcom = contacto.idcom WHERE com.idoc = '$idoc' ORDER BY com.idcom ASC";
   
@@ -82,24 +83,26 @@ if(isset($_GET['query'])){
 }else if(isset($_POST['busquedaEstatus']) && $_POST['busquedaEstatus'] == 1){
   $estatus = $_POST['estatus'];
 
-  $query_com = "SELECT *, com.idcom AS 'idCOM' ,com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM' , com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE com.estado = '$estatus' ORDER BY com.idcom ASC";
+  $query_empresa = "SELECT *, com.idcom AS 'idCOM' ,com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM' , com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE com.estado = '$estatus' ORDER BY com.idcom ASC";
 
   $queryExportar = "SELECT com.*, contacto.*  FROM com LEFT JOIN contacto ON com.idcom = contacto.idcom WHERE com.estado = '$estatus' ORDER BY com.idcom ASC";
 
 }else{
-  //$query_com = "SELECT com.* FROM com ORDER BY idcom ASC";
-  $query_com = "SELECT *, com.idcom AS 'idCOM', com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM', com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE (com.estado IS NULL) OR (com.estado != 'ARCHIVADO') ORDER BY com.idcom ASC";
+  //$query_empresa = "SELECT com.* FROM com ORDER BY idcom ASC";
+  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion, empresa.pais, empresa.estatus_publico, empresa.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_dspp.nombre AS 'nombre_dspp' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp";
+
+  //$query_empresa = "SELECT *, com.idcom AS 'idCOM', com.nombre AS 'nombreCOM', com.estado AS 'estadoCOM', com.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM com LEFT JOIN status ON com.estado = status.idstatus LEFT JOIN status_pagina ON com.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON com.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON com.idcom = certificado.idcom WHERE (com.estado IS NULL) OR (com.estado != 'ARCHIVADO') ORDER BY com.idcom ASC";
   $queryExportar = "SELECT com.*, contacto.*  FROM com LEFT JOIN contacto ON com.idcom = contacto.idcom WHERE (com.estado IS NULL) OR (com.estado != 'ARCHIVADO') ORDER BY com.idcom ASC";
 
 }
-$query_limit_com = sprintf("%s LIMIT %d, %d", $query_com, $startRow_com, $maxRows_com);
-$com = mysql_query($query_limit_com, $dspp) or die(mysql_error());
+$query_limit_empresa = sprintf("%s LIMIT %d, %d", $query_empresa, $startRow_com, $maxRows_com);
+$com = mysql_query($query_limit_empresa, $dspp) or die(mysql_error());
 //$row_com = mysql_fetch_assoc($com);
 
 if (isset($_GET['totalRows_com'])) {
   $totalRows_com = $_GET['totalRows_com'];
 } else {
-  $all_com = mysql_query($query_com);
+  $all_com = mysql_query($query_empresa);
   $totalRows_com = mysql_num_rows($all_com);
 }
 $totalPages_com = ceil($totalRows_com/$maxRows_com)-1;
@@ -155,7 +158,7 @@ if(isset($_POST['eliminar']) && $_POST['eliminar'] == 2){
 
 }
 
-if(isset($_POST['actualizacionCOM']) && $_POST['actualizacionCOM'] == 1){/* INICIA BOTON ACTUALIZAR LISTA OPP*/
+if(isset($_POST['actualizacionCOM']) && $_POST['actualizacionCOM'] == 1){/* INICIA BOTON ACTUALIZAR LISTA empresa*/
 
   $row_com = mysql_query("SELECT * FROM com",$dspp) or die(mysql_error());
   $cont = 1;
@@ -164,7 +167,7 @@ if(isset($_POST['actualizacionCOM']) && $_POST['actualizacionCOM'] == 1){/* INIC
   while($datosCOM = mysql_fetch_assoc($row_com)){
     //$nombre = "estatusPagina"+$datosCOM['idcom']+"";
 
-    if(isset($_POST['estatusPagina'.$datosCOM['idcom']])){/*********************************** INICIA ESTATUS PAGINA DEL OPP ******************/
+    if(isset($_POST['estatusPagina'.$datosCOM['idcom']])){/*********************************** INICIA ESTATUS PAGINA DEL empresa ******************/
       $estatusPagina = $_POST['estatusPagina'.$datosCOM['idcom']];
 
       if(!empty($estatusPagina)){
@@ -353,11 +356,11 @@ if(isset($_POST['actualizacionCOM']) && $_POST['actualizacionCOM'] == 1){/* INIC
   echo '<script>location.href="?COM&select";</script>';
 } /* TERMINA BOTON ACTUALIZAR LISTA OPP*/
 
-$rowCOM = mysql_query("SELECT * FROM com",$dspp) or die(mysql_error());
+$row_empresa = mysql_query("SELECT * FROM com",$dspp) or die(mysql_error());
   $estatusPagina = "";
 
 
-while ($actualizarCOM = mysql_fetch_assoc($rowCOM)) {
+while ($actualizarCOM = mysql_fetch_assoc($row_empresa)) {
 
   if($actualizarCOM['estatusInterno'] == 10){ //ESTATUS PAGINA = CERTIFICADO(REGISTRADO)
     $estatusPagina = 2;
@@ -435,7 +438,7 @@ function preguntar(){
       </div>
       <div class="col-xs-2 alert alert-warning">
         <?php
-        $ejecutar = mysql_query($query_com,$dspp) or die(mysql_error());
+        $ejecutar = mysql_query($query_empresa,$dspp) or die(mysql_error());
         $total = mysql_num_rows($ejecutar);
         echo "<h5>Total Empresas: <u style='color:red;'>".$total."</u></h5>";
         ?>

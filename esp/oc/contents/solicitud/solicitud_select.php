@@ -104,10 +104,6 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $_FILES["archivo_extra"]["name"];
           move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_extra"]["name"]);
           $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_extra"]["name"]);
-
-          $documentacion_nombres .= "<li>".$_POST['nombre_archivo']."</li>";
-          $mail->AddAttachment($archivo);
-
     }else{
       $archivo = NULL;
     }
@@ -149,6 +145,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
     }
 
+    $documentacion_nombres .= '<li>'.$_POST['nombreArchivo'].'</li>';
+    $mail->AddAttachment($archivo);
 
     $documentacion = mysql_fetch_assoc($row_documentacion);
 
@@ -225,14 +223,14 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
 
-        /*if($mail->Send()){
+        if($mail->Send()){
           
           echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
         }else{
               echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
      
-        }*/
-        $mail->Send();
+        }
+        //$mail->Send();
         $mail->ClearAddresses();
     ///termina envio de mensaje dictamen positivo
 
@@ -252,17 +250,43 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 }
 
 if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
-  $rutaInforme = "../../archivos/ocArchivos/informes/";
-  $rutaDictamen = "../../archivos/ocArchivos/dictamen/";
+  $ruta_evaluacion = "../../archivos/ocArchivos/documentos_evaluacion/";
 
+  $estatus_formato = "ENVIADO";
   $estatus_dictamen = "ENVIADO";
   $estatus_informe = "ENVIADO";
 
+  if(!empty($_FILES['formato_evaluacion']['name'])){
+      $_FILES["formato_evaluacion"]["name"];
+        move_uploaded_file($_FILES["formato_evaluacion"]["tmp_name"], $ruta_evaluacion.time()."_".$_FILES["formato_evaluacion"]["name"]);
+        $formato = $ruta_evaluacion.basename(time()."_".$_FILES["formato_evaluacion"]["name"]);
+  }else{
+    $formato = NULL;
+  }
+  //insertamos formato_evaluacion
+  $insertSQL = sprintf("INSERT INTO formato_evaluacion (idopp, idsolicitud_certificacion, estatus_formato, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+    GetSQLValueString($_POST['idopp'], "int"),
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($estatus_formato, "text"),
+    GetSQLValueString($formato, "text"),
+    GetSQLValueString($fecha, "int"));
+  $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+
+  //insertamos el proceso_certificacion
+  $estatus_dspp = 22; //Formato de Evaluación Cargado
+  $nombre_archivo = "Formato de Evaluación";
+  $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_dspp, nombre_archivo, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($nombre_archivo, "text"),
+    GetSQLValueString($formato, "text"),
+    GetSQLValueString($fecha, "int"));
+  $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
   if(!empty($_FILES['informe_evaluacion']['name'])){
       $_FILES["informe_evaluacion"]["name"];
-        move_uploaded_file($_FILES["informe_evaluacion"]["tmp_name"], $rutaInforme.time()."_".$_FILES["informe_evaluacion"]["name"]);
-        $informe = $rutaInforme.basename(time()."_".$_FILES["informe_evaluacion"]["name"]);
+        move_uploaded_file($_FILES["informe_evaluacion"]["tmp_name"], $ruta_evaluacion.time()."_".$_FILES["informe_evaluacion"]["name"]);
+        $informe = $ruta_evaluacion.basename(time()."_".$_FILES["informe_evaluacion"]["name"]);
   }else{
     $informe = NULL;
   }
@@ -289,8 +313,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
   if(!empty($_FILES['dictamen_evaluacion']['name'])){
       $_FILES["dictamen_evaluacion"]["name"];
-        move_uploaded_file($_FILES["dictamen_evaluacion"]["tmp_name"], $rutaDictamen.time()."_".$_FILES["dictamen_evaluacion"]["name"]);
-        $dictamen = $rutaDictamen.basename(time()."_".$_FILES["dictamen_evaluacion"]["name"]);
+        move_uploaded_file($_FILES["dictamen_evaluacion"]["tmp_name"], $ruta_evaluacion.time()."_".$_FILES["dictamen_evaluacion"]["name"]);
+        $dictamen = $ruta_evaluacion.basename(time()."_".$_FILES["dictamen_evaluacion"]["name"]);
   }else{
     $dictamen = NULL;
   }
@@ -315,7 +339,68 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
-  $mensaje = "Se ha enviado el Dictamen de Evaluación y el Informe de Evaluación";
+  //inicia enviar correo a ADM sobre documentacion de Evaluación
+  $row_informacion = mysql_query("SELECT solicitud_certificacion.idsolicitud_certificacion, opp.nombre AS 'nombre_opp', oc.nombre AS 'nombre_oc' FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $informacion = mysql_fetch_assoc($row_informacion);
+  $asunto = "D-SPP | Se ha cargado el Formato, Dictamen e Informe de Evaluación";
+
+  $cuerpo_mensaje = '
+    <html>
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+          <tbody>
+            <tr>
+              <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+              <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Revisión Formato, Dictamen e Informe de Evaluación</span></p></th>
+
+            </tr>
+            <tr>
+             <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_opp'].'</span></p></th>
+            </tr>
+
+            <tr>
+              <td colspan="2">
+               <p>El OC: <span style="color:red">'.$informacion['nombre_oc'].'</span> ha cargado la documentación de evaluación correspondiente al proceso de certificación de la OPP: '.$informacion['nombre_opp'].'
+               <p>
+                Por favor proceda a ingresar en su cuenta de ADMINISTRADOR dentro del sistema D-SPP para poder revisar los siguientes documento: 
+                   <ul style="color:red">
+                     <li>Formato de Evaluación</li>
+                     <li>Informe de Evaluación</li>
+                     <li>Dictamen de Evaluación</li>
+                   </ul>
+
+               </p>
+              </td>
+            </tr>
+            <tr>
+              <td coslpan="2">
+                <p><span style="color:red">En caso de que los documentos sean aprobados se notificara al OC para que puedar cargar y enviar el certificado.</span></p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </body>
+    </html>
+  ';
+    $mail->AddAddress($spp_global);
+    $mail->AddAttachment($formato);
+    $mail->AddAttachment($informe);
+    $mail->AddAttachment($dictamen);
+
+    //$mail->Username = "soporte@d-spp.org";
+    //$mail->Password = "/aung5l6tZ";
+    $mail->Subject = utf8_decode($asunto);
+    $mail->Body = utf8_decode($cuerpo_mensaje);
+    $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+    $mail->Send();
+    $mail->ClearAddresses();
+
+  //termina enviar correo a ADM sobre documentación de Evaluación
+
+  $mensaje = "Se ha enviado el Formato, Dictamen e Informe de Evaluación";
 
 }
 
@@ -365,6 +450,63 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     GetSQLValueString($_POST['idopp'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
+  //inicia correo envio de certificado
+  $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.contacto1_email, opp.nombre AS 'nombre_opp', opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp", $dspp) or die(mysql_error());
+  $informacion = mysql_fetch_assoc($row_informacion);
+  $inicio = strtotime($_POST['fecha_inicio']);
+  $fin = strtotime($_POST['fecha_fin']);
+  $asunto = "D-SPP | Certificado Disponible para Descargar";
+
+  $cuerpo_mensaje = '
+      <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Certificado Disponible para descargar</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_opp'].'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>
+                  Felicidades!!!, su Certificado ha sido liberado, ahora puede descargarlo.
+                 </p>
+                 <p>El Certificado tiene un vigencia del dia <span style="color:red">'.date('d/m/Y', $inicio).'</span> al dia: <span style="color:red">'.date('d/m/Y', $fin).'</span>, el cual se encuentra anexo a este correo.</p>
+                 
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </body>
+      </html>
+  ';
+    $mail->AddAddress($informacion['email']);
+    $mail->AddAddress($informacion['contacto1_email']);
+    $mail->AddBCC($spp_global);
+    $mail->AddAttachment($certificado);
+    //$mail->Username = "soporte@d-spp.org";
+    //$mail->Password = "/aung5l6tZ";
+    $mail->Subject = utf8_decode($asunto);
+    $mail->Body = utf8_decode($cuerpo_mensaje);
+    $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+    $mail->Send();
+    $mail->ClearAddresses();
+
+  //termina correo envio de certificado
 
   $mensaje = "Se ha cargado el Certificado y se ha notificado a SPP GLOBAL y a la Organización de Pequeños Productores";
 }
@@ -379,7 +521,7 @@ if (isset($_GET['pageNum_opp'])) {
 }
 $startRow_opp = $pageNum_opp * $maxRows_opp;
 
-$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, dictamen_evaluacion.iddictamen_evaluacion, informe_evaluacion.idinforme_evaluacion FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
+$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion, informe_evaluacion.idinforme_evaluacion FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
 $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
 ?>
@@ -683,7 +825,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- INICIA SECCION CERTIFICADO ------>
           <form action="" method="POST" enctype="multipart/form-data">
           <td>
-            <?php 
+            <?php /*
             if(isset($solicitud['iddictamen_evaluacion'])){
             ?>
             <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Cargar Certificado</button>
@@ -692,8 +834,10 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             ?>
             <button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Cargar Certificado</button>
             <?php
-            }
+            }*/
              ?>
+            <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Cargar Certificado</button>
+
           </td>
                 <!-- inicia modal estatus_Certificado -->
 
@@ -711,13 +855,19 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           <div class="col-md-6">
                             <?php 
                             if($solicitud['estatus_contrato'] == "ACEPTADO" && $solicitud['estatus_membresia'] == "APROBADA"){
-                              if(isset($solicitud['idinforme_evaluacion']) && isset($solicitud['iddictamen_evaluacion'])){
+                              if(isset($solicitud['idformato_evaluacion']) && isset($solicitud['idinforme_evaluacion']) && isset($solicitud['iddictamen_evaluacion'])){
+
+                                $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
+                                $formato = mysql_fetch_assoc($row_formato);
                                 $row_informe = mysql_query("SELECT * FROM informe_evaluacion WHERE idinforme_evaluacion = $solicitud[idinforme_evaluacion]", $dspp) or die(mysql_error());
                                 $informe = mysql_fetch_assoc($row_informe);
                                 $row_dictamen = mysql_query("SELECT * FROM dictamen_evaluacion WHERE iddictamen_evaluacion = $solicitud[iddictamen_evaluacion]", $dspp) or die(mysql_error());
                                 $dictamen = mysql_fetch_assoc($row_dictamen);
 
                               ?>
+                              <p>Estatus Formato de Evaluación: <span style="color:red"><?php echo $formato['estatus_formato']; ?></span></p>
+                              <a href="<?php echo $formato['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Descargar Formato de Evaluación</a>
+
                               <p>Estatus Dictamen de Evaluación: <span style="color:red"><?php echo $dictamen['estatus_dictamen']; ?></span></p>
                               <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Descargar Dictamen</a>
                               <p>Estatus Informe de Evaluación: <span style="color:red"><?php echo $informe['estatus_informe']; ?></span></p>
@@ -728,11 +878,16 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               ?>
                                 <p class="alert alert-info">Por favor cargue los siguientes documentos:</p>
                                 <p class="alert alert-info">
+
+                                  Formato de Evaluación
+                                  <input type="file" class="form-control" name="formato_evaluacion" required>
+
                                   Informe de Evaluación
                                   <input type="file" class="form-control" name="informe_evaluacion" required>
                      
                                   Dictamen de Evaluación
                                   <input type="file" class="form-control" name="dictamen_evaluacion" required>
+
                                 </p>
                                 <button type="submit" class="btn btn-success" style="width:100%" name="cargar_documentos" value="1">Enviar Documentos</button>
                               <?php
@@ -759,6 +914,9 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               <?php
                               }else{
                               ?>
+                                <div class="col-md-12">
+                                  <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
+                                </div>
                                 <div class="col-md-6">
                                   <label for="fecha_inicio">Fecha Inicio</label> 
                                   <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd/mm/aaaa" required> 

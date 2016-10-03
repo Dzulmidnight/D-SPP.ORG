@@ -1,31 +1,40 @@
 <ul class="nav nav-pills">
-<li role="presentation"
-<? if(isset($_GET['select']) || isset($_GET['filed'])){?> class="active" <? }?>><a href="?OPP&select">OPP</a></li>
-<li role="presentation"
-<? if(isset($_GET['add'])){?> class="active" <? }?>>
-	<a href="?OPP&add" aria-label="Left Align">
-		<span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> Nuevo OPP
-	</a>
-</li>
-
-<? if(isset($_GET['detail'])){?>
-<li role="presentation" 
- class="active" ><a href="#">
-	<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detalle 	
- </a>
-</li>
-<? }?>
-
-
-
+	<li role="presentation" <?php if(isset($_GET['select']) || isset($_GET['filed'])){ echo "class='active'"; } ?>>
+		<a href="?OPP%select">OPP</a>
+	</li>
+	<li role="presentation" <?php if(isset($_GET['add'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&add" aria-label="Left Align">
+			<span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> Nuevo OPP
+		</a>
+	</li>
+	<?php 
+	if(isset($_GET['detail'])){
+	?>
+		<li role="presentation" 
+		 class="active" ><a href="#">
+			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detalle 	
+		 </a>
+		</li>
+	<?php
+	}
+	 ?>
+	<li role="presentation">
+		
+	</li>
 
 </ul>
 
-<? if(isset($_GET['mensaje'])){?>
-<p>
-<div class="alert alert-success" role="alert"><? echo $_GET['mensaje']?></div>
-</p>
-<? }?>
+
+  <?php 
+  if(isset($mensaje)){
+  ?>
+  <div class="col-md-12 alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 style="font-size:14px;" class="text-center"><?php echo $mensaje; ?><h4/>
+  </div>
+  <?php
+  }
+  ?>
 
 
 <?

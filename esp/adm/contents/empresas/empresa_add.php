@@ -44,14 +44,13 @@ if (isset($_SERVER['QUERY_STRING'])) {
 
 /****************************** INICIA FORMULARIO INSERTAR OPP **************************************************/
 if ((isset($_POST["insertar"])) && ($_POST["insertar"] == "1")) {
-  mysql_select_db($database_dspp, $dspp);
+
 
   $pais = $_POST['pais'];
 
-  //$query = "SELECT idopp, spp, pais FROM opp WHERE pais = '$pais'";
-  //$ejecutar_spp = mysql_query($query) or die(mysql_error());
-  $row_opp = mysql_query("SELECT idopp, spp, pais FROM opp WHERE pais = '$pais'",$dspp) or die(mysql_error());
-  //$datos_opp = mysql_fetch_assoc($ejecutar);
+  $query = "SELECT idempresa, spp, pais FROM empresa WHERE pais = '$pais'";
+  $ejecutar_spp = mysql_query($query) or die(mysql_error());
+  //$datos_empresa = mysql_fetch_assoc($ejecutar);
   //$fecha = $_POST['fecha_inclusion'];
 
   setlocale(LC_ALL, 'en_US.UTF8');
@@ -70,55 +69,69 @@ if ((isset($_POST["insertar"])) && ($_POST["insertar"] == "1")) {
     $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
     //$numero =  strlen($contador);
 
-    $spp = "OPP-".$paisDigitos."-".$fechaDigitos."-".$contador;
+    $spp = "COM-".$paisDigitos."-".$fechaDigitos."-".$contador;
 
-    while($datos_opp = mysql_fetch_assoc($row_opp)) {
-      if($datos_opp['spp'] == $spp){
-        //echo "<b style='color:red'>es igual el OPP con id: $datos_opp[idf]</b><br>";
+    while ($datos_empresa = mysql_fetch_assoc($ejecutar_spp)) {
+      if($datos_empresa['spp'] == $spp){
+        //echo "<b style='color:red'>es igual el OPP con id: $datos_empresa[idf]</b><br>";
         $contador++;
         $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
-        $spp = "OPP-".$paisDigitos."-".$fechaDigitos."-".$contador;
+        $spp = "COM-".$paisDigitos."-".$fechaDigitos."-".$contador;
       }/*else{
-        echo "el id encontrado es: $datos_opp[idf]<br>";
+        echo "el id encontrado es: $datos_empresa[idf]<br>";
       }*/
       
     }
   }
-  //echo "se ha creado un nuevo idf de opp el cual es: <b>$spp</b>";
+  //echo "se ha creado un nuevo idf de opp el cual es: <b>$idfcom</b>";
 
   $logitud = 8;
   if(empty($_POST['password'])){
-$psswd = substr( md5(microtime()), 1, $logitud);
+    $psswd = substr( md5(microtime()), 1, $logitud);
   }else{
-$psswd = $_POST['password'];
+    $psswd = $_POST['password'];
   }
-  
 
-  /*$spp_oc = $_POST['spp_oc'];
-  $query = "SELECT idoc, spp FROM oc WHERE spp = '$spp_oc'";
-  $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-  $oc = mysql_fetch_assoc($ejecutar);
-*/
 
-  $insertSQL = sprintf("INSERT INTO opp (spp, idoc, nombre, abreviacion, password, sitio_web, email, telefono, pais, ciudad, razon_social, direccion_oficina, direccion_fiscal, rfc, ruc, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                      // GetSQLValueString($oc['idoc'], "text"),
-                       GetSQLValueString($spp, "text"),
-                       GetSQLValueString($_POST['idoc'], "int"),
-                       GetSQLValueString($_POST['nombre'], "text"),
-                       GetSQLValueString($_POST['abreviacion'], "text"),
-                       GetSQLValueString($psswd, "text"),
-                       GetSQLValueString($_POST['sitio_web'], "text"),
-                       GetSQLValueString($_POST['email'], "text"),
-                       GetSQLValueString($_POST['telefono'], "text"),
-                       GetSQLValueString($_POST['pais'], "text"),
-                       GetSQLValueString($_POST['ciudad'], "text"),
-                       GetSQLValueString($_POST['razon_social'], "text"),
-                       GetSQLValueString($_POST['direccion_oficina'], "text"),
-                       GetSQLValueString($_POST['direccion_fiscal'], "text"),
-                       GetSQLValueString($_POST['rfc'], "text"),
-                       GetSQLValueString($_POST['ruc'], "text"),
-                       GetSQLValueString($_POST['fecha_registro'], "int"));
+  if(isset($_POST['maquilador'])){
+    $maquilador = $_POST['maquilador'];
+  }else{
+    $maquilador = '';
+  }
+  if(isset($_POST['comprador'])){
+    $comprador = $_POST['comprador'];
+  }else{
+    $comprador = '';
+  }
+  if(isset($_POST['intermediario'])){
+    $intermediario = $_POST['intermediario'];
+  }else{
+    $intermediario = '';
+  }
 
+
+
+
+  $insertSQL = sprintf("INSERT INTO empresa (idoc, spp, maquilador, comprador, intermediario, nombre, abreviacion, password, sitio_web, email, telefono, pais, ciudad, razon_social, direccion_oficina, direccion_fiscal, rfc, ruc, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+     GetSQLValueString($_POST['idoc'], "int"),
+     GetSQLValueString($spp, "text"),
+     GetSQLValueString($maquilador, "int"),
+     GetSQLValueString($comprador, "int"),
+     GetSQLValueString($intermediario, "int"),
+     GetSQLValueString($_POST['nombre'], "text"),
+     GetSQLValueString($_POST['abreviacion'], "text"),
+     GetSQLValueString($psswd, "text"),
+     GetSQLValueString($_POST['sitio_web'], "text"),
+     GetSQLValueString($_POST['email'], "text"),
+     GetSQLValueString($_POST['telefono'], "text"),
+     GetSQLValueString($_POST['pais'], "text"),
+     GetSQLValueString($_POST['ciudad'], "text"),
+     GetSQLValueString($_POST['razon_social'], "text"),
+     GetSQLValueString($_POST['direccion_oficina'], "text"),
+     GetSQLValueString($_POST['direccion_fiscal'], "text"),
+     GetSQLValueString($_POST['rfc'], "text"),
+     GetSQLValueString($_POST['ruc'], "text"),
+     GetSQLValueString($_POST['fecha_registro'], "int"));
 
   $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
@@ -179,7 +192,7 @@ $psswd = $_POST['password'];
 }
 /****************************** FIN FORMULARIO INSERTAR OPP **************************************************/
 
-$query_opp = mysql_query("SELECT * FROM opp", $dspp) or die(mysql_error());
+$query_empresa = mysql_query("SELECT * FROM empresa", $dspp) or die(mysql_error());
 
 ?>
 <form action="" method="POST">
@@ -201,6 +214,32 @@ $query_opp = mysql_query("SELECT * FROM opp", $dspp) or die(mysql_error());
         <th>abreviacion</th>
         <th><input type="text" class="form-control" name="abreviacion"></th>
       </tr>
+      <tr>
+        <th colspan="2">
+                               <div class="form-group">
+                        <p class="col-sm-2 text-right"><strong>TIPO DE EMPRESA</strong></p>
+                        <div class="col-sm-10">
+                          <div class="checkbox">
+                            <label class="col-sm-4">
+                              <input type="checkbox"name="maquilador" value="1"> MAQUILADOR
+                            </label>
+                            <label class="col-sm-4">
+                              <input type="checkbox"name="comprador" value="1"> COMPRADOR
+                            </label>
+                            <label class="col-sm-4">
+                              <input type="checkbox"name="intermediario" value="1"> INTERMEDIARIO
+                            </label>
+
+
+                          </div>
+                        </div>
+                      </div>
+
+        </th>
+      </tr>
+
+
+
       <tr>
         <th>password</th>
         <th><input type="text" class="form-control" name="password"></th>
@@ -307,12 +346,12 @@ $query_opp = mysql_query("SELECT * FROM opp", $dspp) or die(mysql_error());
   <tbody>
     <?php 
     $contador = 1;
-    while($opp = mysql_fetch_array($query_opp)){
+    while($opp = mysql_fetch_array($query_empresa)){
     ?>
       <tr>
         <td><?php echo $contador; ?></td>
         <td><?php echo $opp['spp']; ?></td>
-        <td><?php echo $opp['idopp']; ?></td>
+        <td><?php echo $opp['idempresa']; ?></td>
         <td><?php echo $opp['idoc']; ?></td>
         <td><?php echo $opp['nombre']; ?></td>
         <td><?php echo $opp['abreviacion']; ?></td>

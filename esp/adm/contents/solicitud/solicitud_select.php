@@ -475,7 +475,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
   //inicia enviar mensaje aprobacion membresia
-  $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, contacto1_email, opp.email, opp.nombre FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp", $dspp) or die(mysql_error());
+  $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.contacto1_email, opp.email, opp.nombre, oc.email1 FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
 
   $asunto = "D-SPP | Membresia SPP aprobada";
@@ -525,10 +525,87 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
   $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
   $mail->Send();
   $mail->ClearAddresses();
-
   //termina enviar mensaje aprobacion de membresia
 
-  $mensaje = "Se ha aprobado la membresia";
+  //revisamos el el contrato de uso ya fue aprobado, esto para enviar la notificación al OC de que suba sus archivos
+  if(!empty($_POST['idcontrato'])){
+    $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $_POST[idcontrato]", $dspp) or die(mysql_error());
+    $contrato = mysql_fetch_assoc($row_contrato);
+    if($contrato['estatus_contrato'] == 'ACEPTADO'){ //si el contrato fue aceptado entonces enviamos el correo al OC
+      $asunto = "D-SPP | Formatos de Evaluación";
+
+      $cuerpo_mensaje = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p>
+                  Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documento: 
+                     <ul style="color:red">
+                       <li>Formato de Evaluación</li>
+                       <li>Informe de Evaluación</li>
+                       <li>Dictamen de Evaluación</li>
+                     </ul>
+
+                 </p>
+                </td>
+              </tr>
+              <tr>
+                <td coslpan="2">
+                  ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
+                  <ol>
+                    <li>Dar clic en la opción "SOLICITUDES"</li>
+                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
+                    <li>Se desplegara una ventan donde podra cargar la documentación</li>
+                  </ol>
+                  <p style="color:red">
+                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+        </html>
+      ';
+
+        $mail->AddAddress($informacion['email1']); 
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_mensaje);
+        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+        $mensaje = "Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
+
+    }else{
+      $mensaje = "Se ha aprobado la membresia";
+    }
+  }else{
+    $mensaje = "Se ha aprobado la membresia";
+  }
+
 
 }
 //SE RECHAZA EL COMPROBANTE DE PAGO
@@ -566,6 +643,83 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+  if(!empty($_POST['idmembresia'])){
+    $row_membresia = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, opp.nombre, oc.email1, membresia.idsolicitud_certificacion, membresia.estatus_membresia FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion WHERE membresia.idmembresia = $_POST[idmembresia]", $dspp) or die(mysql_error());
+    $membresia = mysql_fetch_assoc($row_membresia);
+    if ($membresia['estatus_membresia'] == 'APROBADA') {
+
+      $asunto = "D-SPP | Formatos de Evaluación";
+
+      $cuerpo_mensaje = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$membresia['nombre'].'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>SPP GLOBLA notifica que la OPP: '.$membresia['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p>
+                  Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documento: 
+                     <ul style="color:red">
+                       <li>Formato de Evaluación</li>
+                       <li>Informe de Evaluación</li>
+                       <li>Dictamen de Evaluación</li>
+                     </ul>
+
+                 </p>
+                </td>
+              </tr>
+              <tr>
+                <td coslpan="2">
+                  ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
+                  <ol>
+                    <li>Dar clic en la opción "SOLICITUDES"</li>
+                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
+                    <li>Se desplegara una ventan donde podra cargar la documentación</li>
+                  </ol>
+                  <p style="color:red">
+                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+        </html>
+      ';
+
+        $mail->AddAddress($membresia['email1']); 
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_mensaje);
+        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+
+        $mensaje = "Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
+
+    }else{
+      $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
+    } 
+  }
 
   $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
 
@@ -585,7 +739,13 @@ if(isset($_POST['rechazar_contrato']) && $_POST['rechazar_contrato'] == 2){
   $mensaje = "Se ha rechazado el \"Contrato de Uso\"";
 }
 //SE APRUEBA O RECHAZA EL INFORME Y DICTAMEN DE EVALUACION
-if(isset($_POST['informe_dictamen']) && $_POST['informe_dictamen'] == 1){
+if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 1){
+  //actualizamos el formato de evaluación
+  $updateSQL = sprintf("UPDATE formato_evaluacion SET estatus_formato = %s WHERE idformato_evaluacion = %s",
+    GetSQLValueString($_POST['estatus_formato'], "text"),
+    GetSQLValueString($_POST['idformato_evaluacion'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
   //actualizamos el informe de evaluacion
   $updateSQL = sprintf("UPDATE informe_evaluacion SET estatus_informe = %s WHERE idinforme_evaluacion = %s",
     GetSQLValueString($_POST['estatus_informe'], "text"),
@@ -598,11 +758,79 @@ if(isset($_POST['informe_dictamen']) && $_POST['informe_dictamen'] == 1){
     GetSQLValueString($_POST['iddictamen_evaluacion'], "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
+  //si toda la documentacion es aceptada se envia el correo al OC
+  if(($_POST['estatus_formato'] == 'ACEPTADO') && ($_POST['estatus_informe'] == 'ACEPTADO') && ($_POST['estatus_dictamen'] == 'ACEPTADO')){
+    $row_informacion = mysql_query("SELECT solicitud_certificacion.idoc, solicitud_certificacion.idopp, opp.nombre AS 'nombre_opp', oc.email1 FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE solicitud_certificacion.idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+    $informacion = mysql_fetch_assoc($row_informacion);
+
+    $asunto = "D-SPP | Notificación Certificado";
+
+    $cuerpo_mensaje = '
+      <html>
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+          <tbody>
+            <tr>
+              <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+              <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación Certificado</span></p></th>
+
+            </tr>
+            <tr>
+             <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_opp'].'</span></p></th>
+            </tr>
+
+            <tr>
+              <td colspan="2">
+               <p>
+                Se ha revisado y aprobado la siguiente documentación: 
+                   <ul style="color:red">
+                     <li>Formato de Evaluación</li>
+                     <li>Informe de Evaluación</li>
+                     <li>Dictamen de Evaluación</li>
+                   </ul>
+
+               </p>
+               <p><span style="color:red">Se encuentra autorizado para poder cargar el Certificado dentro del sistema D-SPP</span> (<a href="http://d-spp.org/">www.d-spp.org</a>)</p>
+               <p>
+                 Pasos que debe seguir para cargar el certificado:
+                 <ol>
+                   <li>Ingrese en su cuenta de OC.</li>
+                   <li>Seleccione la pestaña "Solicitudes" y de clic en la opción "Solicitudes OPP".</li>
+                   <li>Localice la solicitud de la Organización '.$informacion['nombre_opp'].'</li>
+                   <li>Debe posicionarse en la columna "Certificado" y dar clic en la opción "Cargar Certificado".</li>
+                 </ol>
+               </p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </body>
+      </html>
+    ';
+
+      $mail->AddAddress($informacion['email1']); 
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+
+  }
+
   $mensaje = "Se ha notificado al OC";
 }
 
 
-$row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.fecha_registro, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_dspp.nombre AS 'nombre_dspp', solicitud_certificacion.cotizacion_opp, periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = periodo_objecion.idsolicitud_certificacion LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1", $dspp) or die(mysql_error());
+$row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.fecha_registro, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_dspp.nombre AS 'nombre_dspp', solicitud_certificacion.cotizacion_opp, periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = periodo_objecion.idsolicitud_certificacion LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion  ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1", $dspp) or die(mysql_error());
 
 ?>
 <div class="row">
@@ -913,9 +1141,6 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
               <td>
                 <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Consultar Certificado</button>
               </td>
-              <?php
-              
-               ?>
                 <!-- inicia modal estatus membresia -->
 
                 <div id="<?php echo "certificado".$solicitud['idsolicitud_certificacion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -957,14 +1182,30 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
                             }
                              ?>
 
-                            <h4>Informe y Dictamen de Evaluación</h4>
+                            <h4>Formato, Dictamen e Informe de Evaluación</h4>
                             <?php 
                             if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idinforme_evaluacion'])){
+                              $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
+                              $formato = mysql_fetch_assoc($row_formato);
                               $row_dictamen = mysql_query("SELECT * FROM dictamen_evaluacion WHERE iddictamen_evaluacion = $solicitud[iddictamen_evaluacion]", $dspp) or die(mysql_error());
                               $dictamen = mysql_fetch_assoc($row_dictamen);
                               $row_informe = mysql_query("SELECT * FROM informe_evaluacion WHERE idinforme_evaluacion = $solicitud[idinforme_evaluacion]", $dspp) or die(mysql_error());
                               $informe = mysql_fetch_assoc($row_informe);
                             ?>
+
+                                <div class="alert alert-info">
+                                  <p>
+                                    Formato de Evaluación
+                                  </p>
+                                  <a href="<?php echo $formato['archivo']; ?>" class="btn btn-success" target="_new">Descargar Formato</a>
+                                  <label class="radio-inline">
+                                    <input type="radio" name="estatus_formato" id="" value="ACEPTADO" <?php if($formato['estatus_formato'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
+                                  </label>
+                                  <label class="radio-inline">
+                                    <input type="radio" name="estatus_formato" id="" value="RECHAZADO" <?php if($formato['estatus_formato'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
+                                  </label>
+
+                                </div>
 
                                 <div class="alert alert-warning">
                                   <p>
@@ -990,12 +1231,13 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
                                   </label>
 
                                 </div>
-                                <input type="text" name="iddictamen_evaluacion" value="<?php echo $dictamen['iddictamen_evaluacion']; ?>">
-                                <input type="text" name="idinforme_evaluacion" value="<?php echo $informe['idinforme_evaluacion']; ?>">
+                                <input type="hidden" name="idformato_evaluacion" value="<?php echo $formato['idformato_evaluacion']; ?>">
+                                <input type="hidden" name="iddictamen_evaluacion" value="<?php echo $dictamen['iddictamen_evaluacion']; ?>">
+                                <input type="hidden" name="idinforme_evaluacion" value="<?php echo $informe['idinforme_evaluacion']; ?>">
                                 <?php 
                                 if($dictamen['estatus_dictamen'] != "ACEPTADO" && $informe['estatus_informe'] != "ACEPTADO"){
                                 ?>
-                                  <button type="submit" class="btn btn-success" name="informe_dictamen" value="1" onclick="return validar()">Actualizar Documentos</button>
+                                  <button type="submit" class="btn btn-primary" name="documentos_evaluacion" value="1" onclick="return validar()">Actualizar Documentos</button>
                                 <?php
                                 }
                                  ?>
@@ -1027,6 +1269,8 @@ $row_solicitud = mysql_query("SELECT solicitud_certificacion.idsolicitud_certifi
                       </div>
                       <div class="modal-footer">
                         <input type="hidden" name="idcontrato" value="<?php echo $solicitud['idcontrato']; ?>">
+                        <input type="hidden" name="idmembresia" value="<?php echo $solicitud['idmembresia']; ?>">
+
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
                       </div>

@@ -11,8 +11,8 @@ if(isset($_GET['ESTADISTICAS'])){
 	include ("contents/opp/opp.php");
 }else if(isset($_GET['OC'])){
 	include ("contents/oc/oc.php");
-}else if(isset($_GET['COM'])){
-	include ("contents/com/com.php");
+}else if(isset($_GET['EMPRESAS'])){
+	include ("contents/empresas/empresa.php");
 }else{
 	include("contents/main.php");
 }
