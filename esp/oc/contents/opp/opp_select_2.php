@@ -405,7 +405,7 @@ function preguntar(){
               <?php 
                 $vigenciafin = date('d-m-Y', strtotime($row_opp['vigenciafin']));
                 $timeVencimiento = strtotime($row_opp['vigenciafin']);
-                $timeRestante = ($timeVencimiento - $timeActual);
+                //$timeRestante = ($timeVencimiento - $timeActual);
 
                 if(!empty($row_opp['vigenciafin'])){
                   if($timeVencimiento < $timeActual){
