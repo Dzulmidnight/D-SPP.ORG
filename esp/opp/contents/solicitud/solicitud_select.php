@@ -77,7 +77,7 @@ if(isset($_POST['cotizacion']) ){
     $fecha_inicio = time();
     $fecha_fin = $fecha + $periodo;
     $estatus_objecion = 'EN ESPERA';
-    $alertar1 = 1; //se envia la primera alerta para pedir autorización al adm de que inicie el periodo de objeción
+    $alerta1 = 1; //se envia la primera alerta para pedir autorización al adm de que inicie el periodo de objeción
 
     //INSERTAMOS EL PERIODO DE OBJECIÓN
     $insertSQL = sprintf("INSERT INTO periodo_objecion (idsolicitud_certificacion, fecha_inicio, fecha_fin, estatus_objecion, alerta1) VALUES (%s, %s, %s, %s, %s)",
@@ -657,7 +657,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                             ?>
                               <p class="alert alert-info">
                                 Cargar Comprobante de pago
-                                <input type="file" class="form-control" name="comprobante_pago" required>
+                                <input type="file" class="form-control" name="comprobante_pago">
                               </p>
                             <?php
                             }

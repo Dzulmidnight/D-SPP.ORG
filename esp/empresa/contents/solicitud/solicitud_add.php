@@ -7,7 +7,7 @@ mysql_select_db($database_dspp, $dspp);
 if (!isset($_SESSION)) {
   session_start();
 	
-	$redireccion = "../index.php?OPP";
+	$redireccion = "../index.php?EMPRESA";
 
 	if(!$_SESSION["autentificado"]){
 		header("Location:".$redireccion);
@@ -81,7 +81,7 @@ if (isset($_SERVER['QUERY_STRING'])) {
 $charset='utf-8';
 $fecha = time();
 $idempresa = $_SESSION['idempresa'];
-$ruta_croquis = "../../archivos/oppArchivos/croquis/";
+$ruta_croquis = "../../archivos/empresaArchivos/croquis/";
 $spp_global = "cert@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 /************ VARIABLES DE CONTROL ******************/
@@ -95,7 +95,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	$alcance_opp = "";
 
 
-	/* INICIA CAPTURA ALCANCE DEL OPP */
+	/* INICIA CAPTURA ALCANCE DE LA EMPRESA */
 	if(isset($_POST['produccion'])){
 		$produccion = $_POST['produccion'];
 	}else{
@@ -106,41 +106,68 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}else{
 		$procesamiento = '';
 	}
-	if(isset($_POST['exportacion'])){
-		$exportacion = $_POST['exportacion'];
+	if(isset($_POST['importacion'])){
+		$importacion = $_POST['importacion'];
 	}else{
-		$exportacion = '';
+		$importacion = '';
 	}
+
+    ///CAPTURAMOS EL TIPO DE EMPRESA
+    if(isset($_POST['comprador'])){
+    	$comprador = $_POST['comprador'];
+    }else{
+    	$comprador = '';
+    }
+    if(isset($_POST['intermediario'])){
+    	$intermediario = $_POST['intermediario'];
+    }else{
+    	$intermediario = '';
+    }
+    if(isset($_POST['maquilador'])){
+    	$maquilador = $_POST['maquilador'];
+    }else{
+    	$maquilador = '';
+    }
 
 	/* TERMINA CAPTURA ALCANCE DEL OPP */
 
-	if(isset($_POST['op_preg12'])){
-		$op_preg12 = $_POST['op_preg12'];
+
+	if(isset($_POST['preg6'])){
+		$preg6 = $_POST['preg6'];
 	}else{
-		$op_preg12 = "";
+		$preg6 = "";
+	}
+	if(isset($_POST['preg13'])){
+		$preg13 = $_POST['preg13'];
+	}else{
+		$preg13 = "";
+	}
+	if(isset($_POST['preg14'])){
+		$preg14 = $_POST['preg14'];
+	}else{
+		$preg14 = "";
 	}
 
-	if(isset($_POST['op_preg13'])){
-		$op_preg13 = $_POST['op_preg13'];
-	}else{
-		$op_preg13 = "";
-	}
 
 
 
-	if(!empty($_FILES['op_preg15']['name'])){
-	    $_FILES["op_preg15"]["name"];
-	      move_uploaded_file($_FILES["op_preg15"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
-	      $croquis = $ruta_croquis.basename(date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
+	if(!empty($_FILES['preg9']['name'])){
+	    $_FILES["preg9"]["name"];
+	      move_uploaded_file($_FILES["preg9"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["preg9"]["name"]);
+	      $croquis = $ruta_croquis.basename(date("Ymd H:i:s")."_".$_FILES["preg9"]["name"]);
 	}else{
 		$croquis = NULL;
 	}
 
 	// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
-	$insertSQL = sprintf("INSERT INTO solicitud_certificacion (tipo_solicitud, idopp, idoc, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, resp1, resp2, resp3, resp4, op_preg1, preg1_1, preg1_2, preg1_3, preg1_4, op_preg2, op_preg3, produccion, procesamiento, exportacion, op_preg5, op_preg6, op_preg7, op_preg8, op_preg10, op_preg12, op_preg13, op_preg14, op_preg15, responsable, fecha_registro ) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+
+	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro ) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 		   GetSQLValueString($_POST['tipo_solicitud'], "text"),
 		   GetSQLValueString($idempresa, "int"),
            GetSQLValueString($_POST['idoc'], "int"),
+           GetSQLValueString($comprador, "int"),
+           GetSQLValueString($intermediario, "int"),
+           GetSQLValueString($maquilador, "int"),
            GetSQLValueString($_POST['contacto1_nombre'], "text"),
            GetSQLValueString($_POST['contacto2_nombre'], "text"),
            GetSQLValueString($_POST['contacto1_cargo'], "text"),
@@ -155,49 +182,42 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
            GetSQLValueString($_POST['adm2_email'], "text"),
            GetSQLValueString($_POST['adm1_telefono'], "text"),
            GetSQLValueString($_POST['adm2_telefono'], "text"),
-           GetSQLValueString($_POST['resp1'], "text"),
-           GetSQLValueString($_POST['resp2'], "text"),
-           GetSQLValueString($_POST['resp3'], "text"),
-           GetSQLValueString($_POST['resp4'], "text"),
-           GetSQLValueString($_POST['op_preg1'], "text"),
-           GetSQLValueString($_POST['preg1_1'], "text"),
-           GetSQLValueString($_POST['preg1_2'], "text"),
-           GetSQLValueString($_POST['preg1_3'], "text"),
-           GetSQLValueString($_POST['preg1_4'], "text"),
-           GetSQLValueString($_POST['op_preg2'], "text"),
-           GetSQLValueString($_POST['op_preg3'], "text"),
+           GetSQLValueString($_POST['preg1'], "text"),
+           GetSQLValueString($_POST['preg2'], "text"),
+           GetSQLValueString($_POST['preg3'], "text"),
+           GetSQLValueString($_POST['preg4'], "text"),
            GetSQLValueString($produccion, "int"),
            GetSQLValueString($procesamiento, "int"),
-           GetSQLValueString($exportacion, "int"),
-           GetSQLValueString($_POST['op_preg5'], "text"),
-           GetSQLValueString($_POST['op_preg6'], "text"),
-           GetSQLValueString($_POST['op_preg7'], "text"),
-           GetSQLValueString($_POST['op_preg8'], "text"),
-           GetSQLValueString($_POST['op_preg10'], "text"),
-           GetSQLValueString($op_preg12, "text"),
-           GetSQLValueString($op_preg13, "text"),
-           GetSQLValueString($_POST['op_preg14'], "text"),
+           GetSQLValueString($importacion, "int"),
+           GetSQLValueString($preg6, "text"),
+           GetSQLValueString($_POST['preg7'], "text"),
+           GetSQLValueString($_POST['preg8'], "text"),
            GetSQLValueString($croquis, "text"),
+           GetSQLValueString($_POST['preg10'], "text"),
+           GetSQLValueString($_POST['preg12'], "text"),
+           GetSQLValueString($preg13, "text"),
+           GetSQLValueString($preg14, "text"),
+           GetSQLValueString($_POST['preg15'], "text"),
            GetSQLValueString($_POST['responsable'], "text"),
            GetSQLValueString($fecha, "int"));
 
 
 		  $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
 		 
-		 $idsolicitud_certificacion = mysql_insert_id($dspp); 
+		 $idsolicitud_registro = mysql_insert_id($dspp); 
 
 	///INGRESAMOS EL TIPO DE SOLICITUD A LA TABLA OPP y EL ALCANCE DE LA OPP
-	$updateSQL = sprintf("UPDATE OPP SET produccion = %s, procesamiento = %s, exportacion = %s, estatus_opp = %s WHERE idopp = %s",
-		GetSQLValueString($produccion, "int"),
-		GetSQLValueString($procesamiento, "int"),
-		GetSQLValueString($exportacion, "int"),
+	$updateSQL = sprintf("UPDATE empresa SET comprador = %s, intermediario = %s, maquilador = %s, estatus_empresa = %s WHERE idempresa = %s",
+		GetSQLValueString($comprador, "int"),
+		GetSQLValueString($intermediario, "int"),
+		GetSQLValueString($maquilador, "int"),
 		GetSQLValueString($_POST['tipo_solicitud'], "int"),
 		GetSQLValueString($idempresa, "int"));
 	$actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
 	// INGRESAMOS LOS CONTACTOS DE LA SOLICITUD A LA TABLA DE CONTACTOS
 	if(!empty($_POST['contacto1_nombre'])){
-		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
+		$insertSQL = sprintf("INSERT INTO contactos(idempresa, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
 			GetSQLValueString($idempresa, "int"),
 			GetSQLValueString($_POST['contacto1_nombre'], "text"),
 			GetSQLValueString($_POST['contacto1_cargo'], "text"),
@@ -207,7 +227,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	}
 	if(!empty($_POST['contacto2_nombre'])){
-		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
+		$insertSQL = sprintf("INSERT INTO contactos(idempresa, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
 			GetSQLValueString($idempresa, "int"),
 			GetSQLValueString($_POST['contacto2_nombre'], "text"),
 			GetSQLValueString($_POST['contacto2_cargo'], "text"),
@@ -217,7 +237,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	}
 	if(!empty($_POST['adm1_nombre'])){
-		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
+		$insertSQL = sprintf("INSERT INTO contactos(idempresa, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
 			GetSQLValueString($idempresa, "int"),
 			GetSQLValueString($_POST['adm1_nombre'], "text"),
 			GetSQLValueString('ADMINISTRATIVO', "text"),
@@ -227,7 +247,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	}
 	if(!empty($_POST['contacto2_nombre'])){
-		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
+		$insertSQL = sprintf("INSERT INTO contactos(idempresa, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
 			GetSQLValueString($idempresa, "int"),
 			GetSQLValueString($_POST['contacto2_nombre'], "text"),
 			GetSQLValueString('ADMINISTRATIVO', "text"),
@@ -238,26 +258,15 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 
-
-	// INGRESAMOS EL NUMERO DE SOCIOS A LA TABLA NUM_SOCIOS
-	if(isset($_POST['resp1'])){
-		$insertSQL = sprintf("INSERT INTO num_socios (idopp, numero, fecha_registro) VALUES (%s, %s, %s)",
-			GetSQLValueString($idempresa, "int"),
-			GetSQLValueString($_POST['resp1'], "text"),
-			GetSQLValueString($fecha, "int"));
-		$ejecutar = mysql_query($insertSQL,$dspp) or die(mysql_error());
-	}
-
-
 		 // INGRESAMOS EL PORCENTAJE DE VENTA DE LOS PRODUCTOS
-		 if(isset($op_preg12) && $op_preg12 == "SI"){
+		 if(isset($preg13) && $preg13 == "SI"){
 		 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
-		 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_certificacion, idopp) VALUES (%s, %s, %s, %s, %s, %s)",
+		 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_registro, idempresa) VALUES (%s, %s, %s, %s, %s, %s)",
 		 			GetSQLValueString($_POST['organico'], "text"),
 		 			GetSQLValueString($_POST['comercio_justo'], "text"),
 		 			GetSQLValueString($_POST['spp'], "text"),
 		 			GetSQLValueString($_POST['sin_certificado'], "text"),
-		 			GetSQLValueString($idsolicitud_certificacion, "int"),
+		 			GetSQLValueString($idsolicitud_registro, "int"),
 		 			GetSQLValueString($idempresa, "int"));
 		 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 		 	}
@@ -265,8 +274,8 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 
 		/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
-		$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_publico, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
-			GetSQLValueString($idsolicitud_certificacion, "int"),
+		$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_publico, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+			GetSQLValueString($idsolicitud_registro, "int"),
 			GetSQLValueString($estatus_publico, "int"),
 			GetSQLValueString($estatus_interno, "int"),
 			GetSQLValueString($estatus_dspp, "int"),
@@ -305,8 +314,8 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			for($i=0;$i<count($certificacion);$i++){
 				if($certificacion[$i] != NULL){
 					#for($i=0;$i<count($certificacion);$i++){
-					$insertSQL = sprintf("INSERT INTO certificaciones (idsolicitud_certificacion, certificacion, certificadora, ano_inicial, interrumpida) VALUES (%s, %s, %s, %s, %s)",
-					    GetSQLValueString($idsolicitud_certificacion, "int"),
+					$insertSQL = sprintf("INSERT INTO certificaciones (idsolicitud_registro, certificacion, certificadora, ano_inicial, interrumpida) VALUES (%s, %s, %s, %s, %s)",
+					    GetSQLValueString($idsolicitud_registro, "int"),
 					    GetSQLValueString(strtoupper($certificacion[$i]), "text"),
 					    GetSQLValueString(strtoupper($certificadora[$i]), "text"),
 					    GetSQLValueString($ano_inicial[$i], "text"),
@@ -323,9 +332,12 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 		/*************************** INICIA INSERTAR PRODUCTOS ***************************/
 		$producto = $_POST['producto'];
-		$volumen = $_POST['volumen'];
-		$materia = $_POST['materia'];
+		$volumen_estimado = $_POST['volumen_estimado'];
+		$volumen_terminado = $_POST['volumen_terminado'];
+		$volumen_materia = $_POST['volumen_materia'];
 		$destino = $_POST['destino'];
+		$origen = $_POST['origen'];
+
 		/*$marca_propia = $_POST['marca_propia'];
 		$marca_cliente = $_POST['marca_cliente'];
 		$sin_cliente = $_POST['sin_cliente'];*/
@@ -333,31 +345,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		for ($i=0;$i<count($producto);$i++) { 
 			if($producto[$i] != NULL){
 
-					$array1[$i] = "terminado".$i; 
-					$array2[$i] = "marca_propia".$i;
-					$array3[$i] = "marca_cliente".$i;
-					$array4[$i] = "sin_cliente".$i;
-
-					if(isset($_POST[$array1[$i]])){
-						$terminado = $_POST[$array1[$i]];
-					}else{
-						$terminado = null;
-					}
-					if(isset($_POST[$array2[$i]])){
-						$marca_propia = $_POST[$array2[$i]];
-					}else{
-						$marca_propia = null;
-					}
-					if(isset($_POST[$array3[$i]])){
-						$marca_cliente = $_POST[$array3[$i]];
-					}else{
-						$marca_cliente = null;
-					}
-					if(isset($_POST[$array4[$i]])){
-						$sin_cliente = $_POST[$array4[$i]];
-					}else{
-						$sin_cliente = null;
-					}
 
 					//$terminado = $_POST[$array1[$i]];
 					//$marca_propia = $_POST[$array2[$i]];
@@ -370,29 +357,45 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 					$str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
 					$destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
-					$str = iconv($charset, 'ASCII//TRANSLIT', $materia[$i]);
-					$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+					$str = iconv($charset, 'ASCII//TRANSLIT', $origen[$i]);
+					$origen[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
 
-				    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+				    $insertSQL = sprintf("INSERT INTO productos (idempresa, idsolicitud_registro, producto, volumen_estimado, volumen_terminado, volumen_materia, origen, destino) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
 				    	GetSQLValueString($idempresa, "int"),
-				          GetSQLValueString($idsolicitud_certificacion, "int"),
+				          GetSQLValueString($idsolicitud_registro, "int"),
 				          GetSQLValueString($producto[$i], "text"),
-				          GetSQLValueString($volumen[$i], "text"),
-				          GetSQLValueString($terminado[$i], "text"),
-				          GetSQLValueString($materia[$i], "text"),
-				          GetSQLValueString($destino[$i], "text"),
-				          GetSQLValueString($marca_propia[$i], "text"),
-				          GetSQLValueString($marca_cliente[$i], "text"),                    
-				          GetSQLValueString($sin_cliente[$i], "text"));
+				          GetSQLValueString($volumen_estimado[$i], "text"),
+				          GetSQLValueString($volumen_terminado[$i], "text"),
+				          GetSQLValueString($volumen_materia[$i], "text"),
+				          GetSQLValueString($origen[$i], "text"),
+				          GetSQLValueString($destino[$i], "text"));
 
 				  $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
 			}
 		}
 		/***************************** TERMINA INSERTAR PRODUCTOS ******************************/
 
+		/************************** INICIA INSERTAR SUB EMPRESAS **************************/
+		$subempresa = $_POST['subempresa'];
+		$servicio = $_POST['servicio'];
+
+
+		for ($i=0;$i<count($subempresa);$i++) { 
+			if($subempresa[$i] != NULL){
+			    $insertSQL = sprintf("INSERT INTO sub_empresas (idsolicitud_registro, nombre, servicio, idempresa) VALUES (%s, %s, %s, %s)",
+			          GetSQLValueString($idsolicitud_registro, "int"),
+			          GetSQLValueString($subempresa[$i], "text"),
+			          GetSQLValueString($servicio[$i], "text"),
+			          GetSQLValueString($idempresa, "int"));
+			  	$Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+			}
+		}
+
+		/************************** TERMINA INSERTAR SUB EMPRESAS **************************/
+
 		///// INICIA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
-		$asunto = "D-SPP Solicitud de Certificación para Organizaciones de Pequeños Productores";
+		$asunto = "D-SPP | Solicitud de Registro para Compradores y otros Actores ";
 		$row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
 		$oc = mysql_fetch_assoc($row_oc);
 
@@ -407,7 +410,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 				  <tbody>
 		            <tr>
 		              <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-		              <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Application for Small Producers\' Organization Certification </strong></th>
+		              <th scope="col" align="left" width="280"><strong>Solicitud de Registro para Compradores y otro Actores / Application for Buyers’, Registration </strong></th>
 		            </tr>
 		            <tr>
 		              <td style="padding-top:10px;">
@@ -421,7 +424,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		              </td>
 		            </tr>
 				    <tr>
-				      <td align="left">Teléfono / phone Organización: '.$_POST['telefono'].'</td>
+				      <td align="left">Teléfono / Company phone: '.$_POST['telefono'].'</td>
 				    </tr>
 
 				    <tr>
@@ -439,7 +442,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 				        <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
 				          <tbody>
 				            <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-				              <td width="130px">Nombre de la organización/Organization name</td>
+				              <td width="130px">Nombre de la Empresa/Company name</td>
 				              <td width="130px">País / Country</td>
 				              <td width="130px">Organismo de Certificación / Certification Entity</td>
 				           
@@ -485,24 +488,22 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
         $mail->Send();
         $mail->ClearAddresses();
 
- 		$mensaje = "Se ha enviado la Solicitud de Certificacion al OC, en breve seras contactado";
+ 		$mensaje = "Se ha enviado la Solicitud de Registro al OC, en breve seras contactado";
 
 
 }
 
   //$insertGoTo = "main_menu.php?SOLICITUD&add&mensaje=Solicitud agregada correctamente, se ha notificado al OC por email.";
-$query = "SELECT * FROM opp WHERE idopp = $idempresa";
-$row_opp = mysql_query($query,$dspp) or die(mysql_error());
-$opp = mysql_fetch_assoc($row_opp);
+$query = "SELECT * FROM empresa WHERE idempresa = $idempresa";
+$row_empresa = mysql_query($query,$dspp) or die(mysql_error());
+$empresa = mysql_fetch_assoc($row_empresa);
 
 ?>
-
-<div class="row" style="font-size:12px;">
 
 	<?php 
 	if(isset($mensaje)){
 	?>
-	<div class="col-md-12 alert alert-success alert-dismissible" role="alert">
+	<div class="col-lg-12 alert alert-success alert-dismissible" role="alert">
 	  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	  <?php echo $mensaje; ?>
 	</div>
@@ -510,6 +511,8 @@ $opp = mysql_fetch_assoc($row_opp);
 	}
 	?>
 
+
+<div class="row" style="font-size:12px;">
 	<form action="" name="" method="POST" enctype="multipart/form-data">
 		<fieldset>
 			<div class="col-md-12 alert alert-primary" style="padding:7px;">
@@ -521,10 +524,10 @@ $opp = mysql_fetch_assoc($row_opp);
 
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
 				<div class="col-md-6">
-					<div class="col-xs-12">
+					<div class="col-md-12">
 						<b>ENVAR AL OC (selecciona el OC al que deseas enviar la solicitud):</b>
 					</div>
-					<div class="col-xs-12">
+					<div class="col-md-12">
 						<select class="form-control" name="idoc" id="" required>
 							<option value="">Seleccione un OC</option>
 							<?php 
@@ -533,7 +536,7 @@ $opp = mysql_fetch_assoc($row_opp);
 
 							while($oc = mysql_fetch_assoc($row_oc)){
 							?>
-							<option value="<?php echo $oc['idoc']; ?>" <?php if($opp['idoc'] == $oc['idoc']){ echo "selected"; } ?>><?php echo $oc['abreviacion']; ?></option>
+							<option value="<?php echo $oc['idoc']; ?>" <?php if($empresa['idoc'] == $oc['idoc']){ echo "selected"; } ?>><?php echo $oc['abreviacion']; ?></option>
 							<?php
 							}
 							 ?>
@@ -542,15 +545,15 @@ $opp = mysql_fetch_assoc($row_opp);
 					</div>
 				</div>
 				<div class="col-md-6">
-					<div class="col-xs-12">
+					<div class="col-md-12">
 						<p class="text-center"><strong>SELECCIONE EL TIPO DE SOLICITUD</strong></p>
 					</div>
-					<div class="col-xs-6">
+					<div class="col-md-6">
 						<label for="nueva">1º SOLICITUD</label>
 						<input type="radio" class="form-control" id="nueva" name="tipo_solicitud" value="NUEVA">
 					</div>
-					<div class="col-xs-6">
-						<label for="renovacion">RENOVACIÓN DE CERTIFICADO</label>
+					<div class="col-md-6">
+						<label for="renovacion">RENOVACIÓN DE REGISTRO</label>
 						<input type="radio" class="form-control" id="renovacion" name="tipo_solicitud" value="RENOVACION">
 					</div>
 				</div>
@@ -564,10 +567,10 @@ $opp = mysql_fetch_assoc($row_opp);
 					<input type="text" class="form-control" id="fecha_elaboracion" name="fecha_elaboracion" value="<?php echo date('Y-m-d', time()); ?>" readonly>	
 
 					<label for="spp">CODIGO DE IDENTIFICACIÓN SPP(#SPP): </label>
-					<input type="text" class="form-control" id="spp" name="spp" value="<?php echo $opp['spp']; ?>">
+					<input type="text" class="form-control" id="spp" name="spp" value="<?php echo $empresa['spp']; ?>">
 
 					<label for="nombre">NOMBRE COMPLETO DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES: </label>
-					<textarea name="nombre" id="nombre" class="form-control"><?php echo $opp['nombre']; ?></textarea>
+					<textarea name="nombre" id="nombre" class="form-control"><?php echo $empresa['nombre']; ?></textarea>
 
 
 					<label for="pais">PAÍS:</label>
@@ -578,7 +581,7 @@ $opp = mysql_fetch_assoc($row_opp);
 					 	<option value="">Selecciona un País</option>
 					 	<?php 
 					 	while($pais = mysql_fetch_assoc($row_pais)){
-					 		if(utf8_encode($pais['nombre']) == $opp['pais']){
+					 		if(utf8_encode($pais['nombre']) == $empresa['pais']){
 					 			echo "<option value='".utf8_encode($pais['nombre'])."' selected>".utf8_encode($pais['nombre'])."</option>";
 					 		}else{
 					 			echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
@@ -588,16 +591,16 @@ $opp = mysql_fetch_assoc($row_opp);
 					 </select>
 
 					<label for="direccion_oficina">DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES(CALLE, BARRIO, LUGAR, REGIÓN)</label>
-					<textarea name="direccion_oficina" id="direccion_oficina"  class="form-control"><?php echo $opp['direccion_oficina']; ?></textarea>
+					<textarea name="direccion_oficina" id="direccion_oficina"  class="form-control"><?php echo $empresa['direccion_oficina']; ?></textarea>
 
 					<label for="email">CORREO ELECTRÓNICO:</label>
-					<input type="text" class="form-control" id="email" name="email" value="<?php echo $opp['email']; ?>">
+					<input type="text" class="form-control" id="email" name="email" value="<?php echo $empresa['email']; ?>">
 
 					<label for="email">TELÉFONOS (CODIGO DE PAÍS + CÓDIGO DE ÁREA + NÚMERO):</label>
-					<input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $opp['telefono']; ?>">	
+					<input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $empresa['telefono']; ?>">	
 
 					<label for="sitio_web">SITIO WEB:</label>
-					<input type="text" class="form-control" id="sitio_web" name="sitio_web" value="<?php echo $opp['sitio_web']; ?>">
+					<input type="text" class="form-control" id="sitio_web" name="sitio_web" value="<?php echo $empresa['sitio_web']; ?>">
 
 				</div>
 
@@ -605,16 +608,16 @@ $opp = mysql_fetch_assoc($row_opp);
 					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">DATOS FISCALES PARA FACTURACIÓN</div>
 
 					<label for="razon_social">RAZÓN SOCIAL</label>
-					<input type="text" class="form-control" id="razon_social" name="razon_social" value="<?php echo $opp['razon_social']; ?>">
+					<input type="text" class="form-control" id="razon_social" name="razon_social" value="<?php echo $empresa['razon_social']; ?>">
 
 					<label for="direccion_fiscal">DIRECCIÓN FISCAL</label>
-					<textarea class="form-control" name="direccion_fiscal" id="direccion_fiscal"><?php echo $opp['direccion_fiscal']; ?></textarea>
+					<textarea class="form-control" name="direccion_fiscal" id="direccion_fiscal"><?php echo $empresa['direccion_fiscal']; ?></textarea>
 
 					<label for="rfc">RFC</label>
-					<input type="text" class="form-control" id="rfc" name="rfc" value="<?php echo $opp['rfc']; ?>">
+					<input type="text" class="form-control" id="rfc" name="rfc" value="<?php echo $empresa['rfc']; ?>">
 
 					<label for="ruc">RUC</label>
-					<input type="text" class="form-control" id="ruc" name="ruc" value="<?php echo $opp['ruc']; ?>">
+					<input type="text" class="form-control" id="ruc" name="ruc" value="<?php echo $empresa['ruc']; ?>">
 				</div>
 			</div>
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
@@ -666,110 +669,126 @@ $opp = mysql_fetch_assoc($row_opp);
 			<!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
 
 
-			<div class="col-lg-12">
-				<div class="col-md-12">
-					<label for="resp1">NÚMERO DE SOCIOS PRODUCTORES</label>
-					<input type="text" class="form-control" id="resp1" name="resp1" >
 
-					<label for="resp2">NÚMERO DE SOCIOS PRODUCTORES DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACION:</label>
-					<input type="text" class="form-control" id="resp2" name="resp2" >
-
-					<label for="resp3">VOLUMEN(ES) DE PRODUCCIÓN TOTAL POR PRODUCTO (UNIDAD DE MEDIDA):</label>
-					<input type="text" class="form-control" id="resp3" name="resp3" >
-					
-					<label for="resp4">TAMAÑO MÁXIMO DE LA UNIDAD DE PRODUCCIÓN POR PRODUCTOR DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACIÓN:</label>
-					<input type="text" class="form-control" id="resp4" name="resp4" >
-
-
-
+			<div class="col-md-12 alert alert-info">
+				<div>
+					<label for="alcance_opp">
+						SELECCIONE EL TIPO DE EMPRESA SPP PARA EL CUAL SE SOLICITA EL REGISTRO. UN INTERMEDIARIO NO PUEDE REGISTRARSE SPP SI NO CUENTA CON UN COMPRADOR FINAL REGISTRADO SPP O EN PROCESO DE REGISTRO. 
+					</label>
 				</div>
+
+                  <div class="checkbox">
+                    <label class="col-sm-4">
+                      <input type="checkbox"name="comprador" <?php if($empresa['comprador']){echo "checked"; } ?> value="1"> COMPRADOR-FINAL
+                    </label>
+                    <label class="col-sm-4">
+                      <input type="checkbox"name="intermediario" <?php if($empresa['intermediario']){echo "checked"; } ?> value="1"> INTERMEDIARIO
+                    </label>
+                    <label class="col-sm-4">
+                      <input type="checkbox"name="maquilador" <?php if($empresa['maquilador']){echo "checked"; } ?> value="1"> MAQUILADOR
+                    </label>
+                  </div>
 			</div>
+
 
 			<div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE OPERACIÓN</div>
 
 			<div class="col-lg-12">
 				<div class="col-md-12">
-					<label for="op_preg1">
-						1. EXPLIQUE SI SE TRATA DE UNA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES DE 1ER, 2DO, 3ER O 4TO GRADO, ASÍ COMO EL NÚMERO DE OPP DE 3ER, 2DO O 1ER GRADO, Y EL NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO, EN SU CASO, CON LAS QUE CUENTA:
+					<label for="preg1">
+						1.	¿CUÁLES SON LAS ORGANIZACIONES DE PEQUEÑOS PRODUCTORES A LAS QUE LES COMPRA O PRETENDE COMPRAR BAJO EL ESQUEMA DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?
 					</label>
-					<input type="text" class="form-control" id="op_preg1" name="op_preg1" >
-
-					<div class="col-xs-3">
-						<label for="preg1_1">
-							1_1. NÚMERO DE OPP DE 3ER GRADO:
-						</label>
-						<input type="text" class="form-control" id="preg1_1" name="preg1_1" >
-					</div>
-					<div class="col-xs-3">
-						<label for="preg1_2">
-							1_2. NÚMERO DE OPP DE 2DO GRADO:
-						</label>
-						<input type="text" class="form-control" id="preg1_2" name="preg1_2" >
-					</div>
-					<div class="col-xs-3">
-						<label for="preg1_3">
-							1_3. NÚMERO DE OPP DE 1ER GRADO:
-						</label>
-						<input type="text" class="form-control" id="preg1_3" name="preg1_3" >
-					</div>
-					<div class="col-xs-3">
-						<label for="preg1_4">
-							1_4. NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO:
-						</label>
-						<input type="text" class="form-control" id="preg1_4" name="preg1_4" >
-					</div>
+					<textarea name="preg1" id="preg1" class="form-control"></textarea>
 
 
-					<label for="op_preg2">
-						2. ESPECIFIQUE QUÉ PRODUCTO(S) QUIERE INCLUIR EN EL CERTIFICADO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES PARA LOS CUALES EL ORGANISMO DE CERTIFICACIÓN REALIZARÁ LA EVALUACIÓN.
+					<label for="preg2">
+						2.	¿QUIÉN O QUIÉNES SON LOS PROPIETARIOS DE LA EMPRESA?
 					</label>
-					<textarea name="op_preg2" id="op_preg2" class="form-control"></textarea>
+					<textarea name="preg2" id="preg2" class="form-control"></textarea>
 
-					<label for="op_preg3">
-						3. MENCIONE SI SU ORGANIZACIÓN QUIERE INCLUIR ALGÚN CALIFICATIVO ADICIONAL PARA USO COMPLEMENTARIO CON EL DISEÑO GRÁFICO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES.<sup>4</sup>
+					<label for="preg3">
+						3. ESPECIFIQUE QUÉ PRODUCTO(S) QUIERE INCLUIR EN EL CERTIFICADO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES PARA LOS CUALES EL ORGNISMO DE CERTIFICACIÓN REALIZARÁ LA EVALUACIÓN.<sup>4</sup>
 					</label>
-					<input type="text" class="form-control" id="op_preg3" name="op_preg3">
+					<input type="text" class="form-control" id="preg3" name="preg3">
+
+					<label for="preg4">
+						4. SI SU EMPRESA ES UN COMPRADOR FINAL, MENCIONE SI QUIEREN INCLUIR ALGÚN CALIFICATIVO ADICIONAL PARA USO COMPLEMENTARIO CON EL DISEÑO GRÁFICO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
+					</label>
+					<textarea name="preg4" id="preg4" class="form-control"></textarea>
 
 					<div >
 						<label for="alcance_opp">
-							4. SELECCIONE EL ALCANCE QUE TIENE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES:
+							5. SELECCIONE EL ALCANCE QUE TIENE LA EMPRESA:
 						</label>
 					</div>
-					<div class="col-xs-4">
+					<div class="col-md-4">
 						<label>PRODUCCIÓN</label>
 						<input type="checkbox" name="produccion" class="form-control" value="1">
 					</div>
-					<div class="col-xs-4">
+					<div class="col-md-4">
 						<label>PROCESAMIENTO</label>
 						<input type="checkbox" name="procesamiento" class="form-control" value="1">
 					</div>
-					<div class="col-xs-4">
-						<label>EXPORTACIÓN</label>
-						<input type="checkbox" name="exportacion" class="form-control" value="1">
+					<div class="col-md-4">
+						<label>IMPORTACIÓN</label>
+						<input type="checkbox" name="importacion" class="form-control" value="1">
 					</div>
 
-					<label for="op_preg5">
-						5. ESPECIFIQUE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA.
-					</label>
-					<textarea name="op_preg5" id="op_preg5" class="form-control"></textarea>
 
-					<label for="op_preg6">
-						6. SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, INDIQUE SI ESTAS EMPRESAS VAN A REALIZAR EL REGISTRO BAJO EL PROGRAMA DEL SPP O SERÁN CONTROLADAS A TRAVÉS DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES. <sup>5</sup>
+				<p><b>6.	SELECCIONE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN</b></p>
+				<div class="col-md-6">
+					SI <input type="radio" class="form-control" name="preg6" onclick="mostrar_empresas()" id="preg6" value="SI">
+				</div>
+				<div class="col-md-6">
+					NO <input type="radio" class="form-control" name="preg6" onclick="ocultar_empresas()" id="preg6" value="NO">
+				</div>
+
+
+
+				<p>SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA</p>
+				<div id="contenedor_tablaEmpresas" class="col-md-12" style="display:none">
+					<table class="table table-bordered" id="tablaEmpresas">
+						<tr>
+							<td>NOMBRE DE LA EMPRESA</td>
+							<td>SERVICIO QUE REALIZA</td>
+							<td>
+								<button type="button" onclick="tablaEmpresas()" class="btn btn-primary" aria-label="Left Align">
+								  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								</button>
+								
+							</td>
+						</tr>
+						<tr class="text-center">
+							<td><input type="text" class="form-control" name="subempresa[0]" id="exampleInputEmail1" placeholder="EMPRESA"></td>
+							<td><input type="text" class="form-control" name="servicio[0]" id="exampleInputEmail1" placeholder="SERVICIO"></td>
+						</tr>
+					</table>	
+				</div>		
+
+
+					<label for="preg7">
+						7.	SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, INDIQUE SI ESTAS ESTAN REGISTRADAS O VAN A REALIZAR EL REGISTRO BAJO EL PROGRAMA DEL SPP O SERÁN CONTROLADAS A TRAVÉS DE SU EMPRESA <sup>5</sup>
 						<br>
 						<small><sup>5</sup> Revisar el documento de 'Directrices Generales del Sistema SPP' en su última versión.</small>
 					</label>
-					<textarea name="op_preg6" id="op_preg6" class="form-control"></textarea>
+					<textarea name="preg7" id="preg7" class="form-control"></textarea>
 
-					<label for="op_preg7">
-						7. ADICIONAL A SUS OFICINAS CENTRALES, ESPECIFIQUE CUÁNTOS CENTROS DE ACOPIO, ÁREAS DE PROCESAMIENTO U OFICINAS ADICIONALES TIENE.
+					<label for="preg8">
+						8. ADICIONAL A SUS OFICINAS CENTRALES, ESPECIFIQUE CUÁNTOS CENTROS DE ACOPIO, ÁREAS DE PROCESAMIENTO U OFICINAS ADICIONALES TIENE.
 					</label>
-					<textarea name="op_preg7" id="op_preg7" class="form-control"></textarea>
+					<textarea name="preg8" id="preg8" class="form-control"></textarea>
 
-					<label for="op_preg8">
-						8. ¿CUENTA CON UN SISTEMA DE CONTROL INTERNO PARA DAR CUMPLIMIENTO A LOS CRITERIOS DE LA NORMA GENERAL DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?, EN SU CASO, EXPLIQUE.
+					<label for="preg9">
+						9. EN CASO DE TENER CENTROS DE ACOPIO, ÁREAS DE PROCESAMIENTO U OFICINAS ADICIONALES,  ANEXAR UN CROQUIS GENERAL MOSTRANDO SU UBICACIÓN.
 					</label>
-					<textarea name="op_preg8" id="op_preg8" class="form-control"></textarea>
-					<p class="alert alert-info">9. LLENAR LA TABLA DE ACUERDO A LAS CERTIFICACIONES QUE TIENE, (EJEMPLO: EU, NOP, JASS, FLO, etc).</p>
+					<input type="file" id="preg9" name="preg9" class="form-control">
+
+					<label for="preg10">
+						10. ¿CUENTA CON UN SISTEMA DE CONTROL INTERNO PARA DAR CUMPLIMIENTO A LOS CRITERIOS DE LA NORMA GENERAL DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?, EN SU CASO, EXPLIQUE.
+					</label>
+					<textarea name="preg10" id="preg10" class="form-control"></textarea>
+
+					<p class="alert alert-info">11. LLENAR LA TABLA DE ACUERDO A LAS CERTIFICACIONES QUE TIENE, (EJEMPLO: EU, NOP, JASS, FLO, etc).</p>
 
 					<table class="table table-bordered" id="tablaCertificaciones">
 						<tr>
@@ -790,67 +809,66 @@ $opp = mysql_fetch_assoc($row_opp);
 							<td><input type="text" class="form-control" name="ano_inicial[0]" id="exampleInputEmail1" placeholder="AÑO INICIAL"></td>
 							<!--<td><input type="text" class="form-control" name="interrumpida[0]" id="exampleInputEmail1" placeholder="¿HA SIDO INTERRUMPIDA?"></td>-->
 							<td>
-								<div class="col-xs-6">SI<input type="radio" class="form-control" name="interrumpida[0]" value="SI"></div>
-								<div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida[0]" value="NO"></div>
+								<div class="col-md-6">SI<input type="radio" class="form-control" name="interrumpida[0]" value="SI"></div>
+								<div class="col-md-6">NO<input type="radio" class="form-control" name="interrumpida[0]" value="NO"></div>
 							</td>
 						</tr>
 					</table>	
 
-					<label for="op_preg10">
-						10.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
-					<textarea name="op_preg10" id="op_preg10" class="form-control"></textarea>
+					<label for="preg12">
+						12.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
+					<textarea name="preg12" id="preg12" class="form-control"></textarea>
 
 
 
 
-					<p><b>12. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
-						<div class="col-xs-6">
-							SI <input type="radio" class="form-control" name="op_preg12" onclick="mostrar_ventas()" id="op_preg12" value="SI">
+					<p><b>13. TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
+						<div class="col-md-6">
+							SI <input type="radio" class="form-control" name="preg13" onclick="mostrar_ventas()" id="preg13" value="SI">
 						</div>
-						<div class="col-xs-6">
-							NO <input type="radio" class="form-control" name="op_preg12" onclick="ocultar_ventas()" id="op_preg12" value="NO">
+						<div class="col-md-6">
+							NO <input type="radio" class="form-control" name="preg13" onclick="ocultar_ventas()" id="preg13" value="NO">
 						</div>			
-
 					<p>
-						<b>13. SI SU RESPUESTA FUE POSITIVA, FAVOR DE INIDICAR CON UNA 'X' EL RANGO DEL VALOR TOTAL DE SUS VENTAS SPP DEL CICLO ANTERIOR DE ACUERDO A LA SIGUIENTE TABLA:</b>
+						<b>14. SI SU RESPUESTA FUE POSITIVA FAVOR DE SELECCIONAR EL RANGO DEL VALOR TOTAL DE SUS COMPRAS SPP DEL CICLO ANTERIOR DE ACUERDO A LA SIGUIENTE TABLA 
 					</p>
 
-					<div class="well col-xs-12 " id="tablaVentas" style="display:none;">
-						<div class="col-xs-6"><p>Hasta $3,000 USD</p></div>
-						<div class="col-xs-6 "><input type="radio" name="op_preg13" class="form-control" id="ver" onclick="ocultar()" value="HASTA $3,000 USD"></div>
+					<div class="well col-md-12 " id="tablaVentas" style="display:none;">
+						<div class="col-md-6"><p>Hasta $3,000 USD</p></div>
+						<div class="col-md-6 "><input type="radio" name="preg14" class="form-control" id="ver" onclick="ocultar()" value="HASTA $3,000 USD"></div>
 					
 					
-						<div class="col-xs-6"><p>Entre $3,000 y $10,000 USD</p></div>
-						<div class="col-xs-6"><input type="radio" name="op_preg13" class="form-control" id="ver" onclick="ocultar()" value="ENTRE $3,000 Y $10,000 USD"></div>
+						<div class="col-md-6"><p>Entre $3,000 y $10,000 USD</p></div>
+						<div class="col-md-6"><input type="radio" name="preg14" class="form-control" id="ver" onclick="ocultar()" value="ENTRE $3,000 Y $10,000 USD"></div>
 					
 					
-						<div class="col-xs-6"><p>Entre $10,000 a $25,000 USD</p></div>
-						<div class="col-xs-6"><input type="radio" name="op_preg13" class="form-control"  id="ver" onclick="ocultar()" value="ENTRE $10,000 A $25,000 USD"></div>
+						<div class="col-md-6"><p>Entre $10,000 a $25,000 USD</p></div>
+						<div class="col-md-6"><input type="radio" name="preg14" class="form-control"  id="ver" onclick="ocultar()" value="ENTRE $10,000 A $25,000 USD"></div>
 					
-						<div class="col-xs-6"><p>Más de $25,000 USD <sup>*</sup><br><h6><sup>*</sup>Especifique la cantidad.</h6></p></div>
-						<div class="col-xs-6"><input type="radio" name="op_preg13" class="form-control" id="exampleInputEmail1" onclick="mostrar()" value="mayor">
-							<input type="text" name="op_resp13_1" class="form-control" id="oculto" style='display:none;' placeholder="Especifique la Cantidad">
+						<div class="col-md-6"><p>Más de $25,000 USD <sup>*</sup><br><h6><sup>*</sup>Especifique la cantidad.</h6></p></div>
+						<div class="col-md-6"><input type="radio" name="preg14" class="form-control" id="exampleInputEmail1" onclick="mostrar()" value="mayor">
+							<input type="text" name="preg14_1" class="form-control" id="oculto" style='display:none;' placeholder="Especifique la Cantidad">
 						</div>
 
-						<div class="col-xs-12">
+						<div class="col-md-12">
 							<p for="op_preg11">
-								<b>13_1.DEL TOTAL DE SUS VENTAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
+								<b>14_1.DEL TOTAL DE SUS COMPRAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
 							</p>
 							<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-								<div class="col-xs-3">
+								<div class="col-md-3">
 									<label for="organico">% ORGÁNICO</label>
 									<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
 								</div>
-								<div class="col-xs-3">
+								<div class="col-md-3">
 									<label for="comercio_justo">% COMERCIO JUSTO</label>
 									<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
 								</div>
-								<div class="col-xs-3">
+								<div class="col-md-3">
 									<label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
 									<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
 									
 								</div>
-								<div class="col-xs-3">
+								<div class="col-md-3">
 									<label for="otro">SIN CERTIFICADO</label>
 									<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
 									
@@ -858,15 +876,12 @@ $opp = mysql_fetch_assoc($row_opp);
 						</div>
 					</div>
 							
-					<label for="op_preg14">
-						14. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
+					<label for="preg15">
+						15. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
 					</label>
-					<input type="text" class="form-control" id="op_preg14" name="op_preg14">
+					<input type="text" class="form-control" id="preg15" name="preg15">
 
-					<label for="op_preg15">
-						15. ANEXAR EL CROQUIS GENERAL DE SU OPP, INDICANDO LAS ZONAS EN DONDE CUENTA CON SOCIOS.
-					</label>
-					<input type="file" class="form-control" id="op_preg15" name="op_preg15">
+
 				</div>
 			</div>
 
@@ -878,12 +893,10 @@ $opp = mysql_fetch_assoc($row_opp);
 					<tr>
 						<td>Producto</td>
 						<td>Volumen Total Estimado a Comercializar</td>
-						<td>Producto Terminado</td>
-						<td>Materia Prima</td>
-						<td>País(es) de Destino</td>
-						<td>Marca Propia</td>
-						<td>Marca de un Cliente</td>
-						<td>Sin cliente aún</td>
+						<td>Volumen como Producto Terminado</td>
+						<td>Volumen como Materia Prima</td>
+						<td>País(es) de Origen</td>
+						<td>País(es) Destino</td>
 						<td>
 							<button type="button" onclick="tablaProductos()" class="btn btn-primary" aria-label="Left Align">
 							  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -896,34 +909,27 @@ $opp = mysql_fetch_assoc($row_opp);
 							<input type="text" class="form-control" name="producto[0]" id="exampleInputEmail1" placeholder="Producto">
 						</td>
 						<td>
-							<input type="text" class="form-control" name="volumen[0]" id="exampleInputEmail1" placeholder="Volumen">
+							<input type="text" class="form-control" name="volumen_estimado[0]" id="exampleInputEmail1" placeholder="Volumen Estimado">
 						</td>
 						<td>
-							SI <input type="radio"  name="terminado[0]" id="" value="SI"><br>
-							NO <input type="radio"  name="terminado[0]" id="" value="NO" >
+							<input type="text" class="form-control" name="volumen_terminado[0]" id="exampleInputEmail1" placeholder="Volumen Terminado">
+						</td>
+
+						<td>
+							<input type="text" class="form-control" name="volumen_materia[0]" id="exampleInputEmail1" placeholder="Volumen Materia">
 						</td>
 						<td>
-							<input type="text" class="form-control" name="materia[0]" id="exampleInputEmail1" placeholder="Materia">
+							<input type="text" class="form-control" name="origen[0]" id="exampleInputEmail1" placeholder="Origen">
 						</td>
 						<td>
 							<input type="text" class="form-control" name="destino[0]" id="exampleInputEmail1" placeholder="Destino">
 						</td>
-						<td>
-							SI <input type="radio"  name="marca_propia[0]" id="" value="SI"><br>
-							NO <input type="radio"  name="marca_propia[0]" id="" value="NO" >
-						</td>
-						<td>
-							SI <input type="radio"  name="marca_cliente[0]" id="" value="SI"><br>
-							NO <input type="radio"  name="marca_cliente[0]" id="" value="NO">
-						</td>
-						<td>
-							SI <input type="radio"  name="sin_cliente[0]" id="" value="SI"><br>
-							NO <input type="radio"  name="sin_cliente[0]" id="" value="NO">
-						</td>
+
+
 					</tr>				
 					<tr>
-						<td colspan="8">
-							<h6><sup>6</sup> La información proporcionada en esta sección será tratada con plena confidencialidad. Favor de insertar filas adicionales de ser necesario.</h6>
+						<td colspan="6">
+							<h6><sup>6</sup> La información proporcionada en esta sección será tratada con plena confidencialidad. Favor de insertar filas adicionales de ser necesario.</h6>
 						</td>
 					</tr>
 				</table>
@@ -949,7 +955,7 @@ $opp = mysql_fetch_assoc($row_opp);
 				</label>
 				<input type="text" class="form-control" id="nombre_oc" name="nombre_oc">-->
 			</div>
-			<div class="col-xs-12">
+			<div class="col-md-12">
 				<hr>
 				<input type="hidden" name="insertar_solicitud" value="1">
 				<input type="submit" class="btn btn-primary form-control" value="Enviar Solicitud" onclick="return validar()">
@@ -1000,9 +1006,34 @@ var contador=0;
 	  cell1.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICACIÓN">';
 	  cell2.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICADORA">';
 	  cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="AÑO INICIAL">';
-	  cell4.innerHTML = '<div class="col-xs-6">SI<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
+	  cell4.innerHTML = '<div class="col-md-6">SI<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-md-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
 	  }
 	}	
+
+	function tablaEmpresas()
+	{
+		contador++;
+	var table = document.getElementById("tablaEmpresas");
+	  {
+	  var row = table.insertRow(2);
+	  var cell1 = row.insertCell(0);
+	  var cell2 = row.insertCell(1);
+
+
+	  cell1.innerHTML = '<input type="text" class="form-control" name="subempresa['+contador+']" id="exampleInputEmail1" placeholder="EMPRESA">';
+	  cell2.innerHTML = '<input type="text" class="form-control" name="servicio['+contador+']" id="exampleInputEmail1" placeholder="SERVICIO">';
+
+	  }
+	}	
+	function mostrar_empresas(){
+		document.getElementById('contenedor_tablaEmpresas').style.display = 'block';
+	}
+	function ocultar_empresas()
+	{
+		document.getElementById('contenedor_tablaEmpresas').style.display = 'none';
+	}	
+
+
 
 	function mostrar(){
 		document.getElementById('oculto').style.display = 'block';
@@ -1034,27 +1065,20 @@ var contador=0;
 	  var cell3 = row.insertCell(2);
 	  var cell4 = row.insertCell(3);
 	  var cell5 = row.insertCell(4);
-	  var cell6 = row.insertCell(5);
-	  var cell7 = row.insertCell(6); 
-	  var cell8 = row.insertCell(7); 	   	  
-
-	  
-
+	  var cell6 = row.insertCell(5);	   	  
+	 
 	  cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Producto">';
 	  
-	  cell2.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volumen">';
+	  cell2.innerHTML = '<input type="text" class="form-control" name="volumen_estimado['+cont+']" id="exampleInputEmail1" placeholder="Volumen Estimado">';
 	  
-	  cell3.innerHTML = 'SI <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
+	  cell3.innerHTML = '<input type="text" class="form-control" name="volumen_terminado['+cont+']" id="exampleInputEmail1" placeholder="Volumen Terminado">';
 	  
-	  cell4.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Materia">';
+	  cell4.innerHTML = '<input type="text" class="form-control" name="volumen_materia['+cont+']" id="exampleInputEmail1" placeholder="Volumen Materia">';
 	  
-	  cell5.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destino">';
+	  cell5.innerHTML = '<input type="text" class="form-control" name="origen['+cont+']" id="exampleInputEmail1" placeholder="Origen">';
 	  
-	  cell6.innerHTML = 'SI <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
-	  
-	  cell7.innerHTML = 'SI <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
-	  
-	  cell8.innerHTML = 'SI <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';	  
+	  cell6.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destino">';
+	   
 
 	  }
 

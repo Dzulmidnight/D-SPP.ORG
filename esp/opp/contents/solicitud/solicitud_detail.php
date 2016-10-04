@@ -158,17 +158,16 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 	  GetSQLValueString($_POST['idopp'], "int"));
 	$actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
-
+	////ACTUALIZAMOS LOS PORCENTAJES DE VENTAS
     if(isset($op_preg12) && $op_preg12 == "SI"){
       if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
-        $insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_certificacion, idopp) VALUES (%s, %s, %s, %s, %s, %s)",
-          GetSQLValueString($_POST['organico'], "text"),
-          GetSQLValueString($_POST['comercio_justo'], "text"),
-          GetSQLValueString($_POST['spp'], "text"),
-          GetSQLValueString($_POST['sin_certificado'], "text"),
-          GetSQLValueString($idsolicitud_certificacion, "int"),
-          GetSQLValueString($idopp, "int"));
-        $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+      	$updateSQL = sprintf("UPDATE porcentaje_productoVentas SET organico = %s, comercio_justo = %s, spp = %s, sin_certificado = %s WHERE idsolicitud_certificacion = %s",
+      		GetSQLValueString($_POST['organico'], "text"),
+      		GetSQLValueString($_POST['comercio_justo'], "text"),
+      		GetSQLValueString($_POST['spp'], "text"),
+      		GetSQLValueString($_POST['sin_certificado'], "text"),
+      		GetSQLValueString($idsolicitud_certificacion, "int"));
+      	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
       }
     }  
 
@@ -289,7 +288,7 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 }
  
 
-$query = "SELECT solicitud_certificacion.*, opp.nombre, opp.spp AS 'spp_opp', opp.sitio_web, opp.email, opp.telefono, opp.pais, opp.ciudad, opp.razon_social, opp.direccion_oficina, opp.direccion_fiscal, opp.rfc, opp.ruc, oc.abreviacion AS 'abreviacionOC', porcentaje_productoVentas.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN porcentaje_productoVentas ON solicitud_certificacion.idsolicitud_certificacion = porcentaje_productoVentas.idsolicitud_certificacion WHERE solicitud_certificacion.idsolicitud_certificacion = $idsolicitud_certificacion";
+$query = "SELECT solicitud_certificacion.*, opp.nombre, opp.spp AS 'spp_opp', opp.sitio_web, opp.email, opp.telefono, opp.pais, opp.ciudad, opp.razon_social, opp.direccion_oficina, opp.direccion_fiscal, opp.rfc, opp.ruc, oc.abreviacion AS 'abreviacionOC', porcentaje_productoVentas.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN porcentaje_productoVentas ON solicitud_certificacion.idsolicitud_certificacion = porcentaje_productoVentas.idsolicitud_certificacion WHERE solicitud_certificacion.idsolicitud_certificacion = $idsolicitud_certificacion";
 $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
 $solicitud = mysql_fetch_assoc($ejecutar);
 
