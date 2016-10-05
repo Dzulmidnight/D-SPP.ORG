@@ -51,7 +51,7 @@ if (isset($_SERVER['QUERY_STRING'])) {
 }
 
 $fecha = time();
-$idsolicitud_registro = $_GET['IDsolicitud_empresa'];
+$idsolicitud_registro = $_GET['idsolicitud_empresa'];
 $charset='utf-8'; 
 $ruta_croquis = "../../archivos/empresaArchivos/croquis/";
 $spp_global = "cert@spp.coop";

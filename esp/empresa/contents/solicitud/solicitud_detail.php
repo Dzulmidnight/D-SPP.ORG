@@ -130,17 +130,17 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
     $importacion = '';
   }
 
-  if(!empty($_FILES['preg9']['name'])){
+  /*if(!empty($_FILES['preg9']['name'])){
       $_FILES["preg9"]["name"];
         move_uploaded_file($_FILES["preg9"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["preg9"]["name"]);
         $preg9 = $ruta_croquis.basename(date("Ymd H:i:s")."_".$_FILES["preg9"]["name"]);
   }else{
     $preg9 = $_POST['preg9'];
-  }
+  }*/
 
 
   // ACTUALIZAMOS LA INFORMACION DE LA SOLICITUD
-  $updateSQL = sprintf("UPDATE solicitud_registro SET comprador_final = %s, intermediario = %s, maquilador = %s, preg1 = %s, preg2 = %s, preg3 = %s, preg4 = %s, produccion = %s, procesamiento = %s, importacion = %s, preg6 = %s, preg7 = %s, preg8 = %s, preg9 = %s, preg10 = %s, preg12 = %s, preg13 = %s, preg14 = %s, preg15 = %s WHERE idsolicitud_registro = %s",
+  $updateSQL = sprintf("UPDATE solicitud_registro SET comprador_final = %s, intermediario = %s, maquilador = %s, preg1 = %s, preg2 = %s, preg3 = %s, preg4 = %s, produccion = %s, procesamiento = %s, importacion = %s, preg6 = %s, preg7 = %s, preg8 = %s, preg10 = %s, preg12 = %s, preg14 = %s, preg15 = %s WHERE idsolicitud_registro = %s",
         GetSQLValueString($comprador, "int"),
         GetSQLValueString($intermediario, "int"),
         GetSQLValueString($maquilador, "int"),
@@ -154,12 +154,12 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
          GetSQLValueString($preg6, "text"),
          GetSQLValueString($_POST['preg7'], "text"),
          GetSQLValueString($_POST['preg8'], "text"),
-         GetSQLValueString($preg9, "text"),
+
          GetSQLValueString($_POST['preg10'], "text"),
          //GetSQLValueString($op_preg12, "text"),
          //GetSQLValueString($op_preg13, "text"),
          GetSQLValueString($_POST['preg12'], "text"),
-         GetSQLValueString($preg13, "text"),
+         //GetSQLValueString($preg13, "text"),
          GetSQLValueString($preg14, "text"),
          GetSQLValueString($_POST['preg15'], "text"),
          GetSQLValueString($idsolicitud_registro, "int"));
@@ -291,15 +291,14 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 }
  
 
-$query = "SELECT solicitud_registro.*, empresa.nombre, empresa.spp AS 'spp_empresa', empresa.sitio_web, empresa.email, empresa.telefono, empresa.pais, empresa.ciudad, empresa.razon_social, empresa.direccion_oficina, empresa.direccion_fiscal, empresa.rfc, empresa.ruc, oc.abreviacion AS 'abreviacionOC' FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE solicitud_registro.idsolicitud_registro = $idsolicitud_registro";
+$query = "SELECT solicitud_registro.*, empresa.nombre, empresa.spp AS 'spp_empresa', empresa.sitio_web, empresa.email, empresa.telefono, empresa.pais, empresa.ciudad, empresa.razon_social, empresa.direccion_oficina, empresa.direccion_fiscal, empresa.rfc, empresa.ruc, oc.abreviacion AS 'abreviacionOC', porcentaje_productoVentas.* FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc LEFT JOIN porcentaje_productoVentas ON solicitud_registro.idsolicitud_registro = porcentaje_productoVentas.idsolicitud_registro WHERE solicitud_registro.idsolicitud_registro = $idsolicitud_registro";
 $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
 $solicitud = mysql_fetch_assoc($ejecutar);
 
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 ?>
 
-<div class="row" style="font-size:12px;">
-
+<div class="row">
   <?php 
   if(isset($mensaje)){
   ?>
@@ -310,6 +309,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
   <?php
   }
   ?>
+</div>
+
+<div class="row" style="font-size:12px;">
 
   <form action="" name="" method="POST" enctype="multipart/form-data">
     <fieldset>
@@ -753,10 +755,10 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         <b>COMPROMISOS</b>
       </div>
       <div class="col-lg-12 text-justify">
-        <p>1. Con el envío de esta solicitud se manifiesta el interés de recibir una propuesta de Certificación.</p>
-        <p>2. El proceso de Certificación comenzará en el momento que se confirme la recepción del pago correspondiente.</p>
-        <p>3. La entrega y recepción de esta solicitud no garantiza que el proceso de Certificación será positivo.</p>
-        <p>4. Conocer y dar cumplimiento a todos los requisitos de la Norma General del Símbolo de Pequeños Productores que le apliquen como Organización de Pequeños Productores, tanto Críticos como Mínimos, independientemente del tipo de evaluación que se realice.</p>
+        <p>1. Con el envío de esta solicitud se manifiesta el interés de recibir una propuesta de Registro.</p>
+        <p>2. El proceso de Registro comenzará en el momento que se confirme la recepción del pago correspondiente.</p>
+        <p>3. La entrega y recepción de esta solicitud no garantiza que el proceso de Registro será positivo.</p>
+        <p>4. Conocer y dar cumplimiento a todos los requisitos de la Norma General del Símbolo de Pequeños Productores que le apliquen como Compradores, Comercializadoras Colectiva de Organizaciones de Pequeños Productores, Intermediarios y Maquiladores, tanto Críticos como Mínimos, independientemente del tipo de evaluación que se realice.</p>
       </div>
       <div class="col-lg-12">
 

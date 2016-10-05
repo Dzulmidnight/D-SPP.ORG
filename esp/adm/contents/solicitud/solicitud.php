@@ -10,8 +10,8 @@
 	</li>
 	<li role="presentation"
 
-	<? if(isset($_GET['selectCOM'])){?> class="active" <? }?>>
-		<a href="?SOLICITUD&selectCOM" aria-label="Left Align">
+	<? if(isset($_GET['select_empresa'])){?> class="active" <? }?>>
+		<a href="?SOLICITUD&select_empresa" aria-label="Left Align">
 			<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitudes Empresas
 		</a>
 	
@@ -60,9 +60,9 @@ if(isset($_GET['finalizado'])){include ("proceso_finalizado.php");}
 else 
 if(isset($_GET['detailBlock'])){include ("solicitud_detailBlock.php");}
 else
-if(isset($_GET['detailCOM'])){include ("com/solicitud_detail.php");}
+if(isset($_GET['idsolicitud_empresa'])){include ("empresa/solicitud_detail.php");}
 else
-if(isset($_GET['selectCOM'])){include ("com/solicitud_select.php");}
+if(isset($_GET['select_empresa'])){include ("empresa/solicitud_select.php");}
 else
 if(isset($_GET['cancelCOM'])){include ("com/solicitud_cancel.php");}
 else

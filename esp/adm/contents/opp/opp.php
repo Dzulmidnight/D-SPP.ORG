@@ -1,6 +1,6 @@
 <ul class="nav nav-pills">
 	<li role="presentation" <?php if(isset($_GET['select']) || isset($_GET['filed'])){ echo "class='active'"; } ?>>
-		<a href="?OPP%select">OPP</a>
+		<a href="?OPP&select">OPP</a>
 	</li>
 	<li role="presentation" <?php if(isset($_GET['add'])){ echo "class='active'"; } ?>>
 		<a href="?OPP&add" aria-label="Left Align">

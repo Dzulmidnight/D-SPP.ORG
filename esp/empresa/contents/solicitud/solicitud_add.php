@@ -500,6 +500,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 
 ?>
 
+<div class="row">
 	<?php 
 	if(isset($mensaje)){
 	?>
@@ -510,6 +511,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 	<?php
 	}
 	?>
+</div>
 
 
 <div class="row" style="font-size:12px;">
@@ -939,10 +941,10 @@ $empresa = mysql_fetch_assoc($row_empresa);
 				<b>COMPROMISOS</b>
 			</div>
 			<div class="col-lg-12 text-justify">
-				<p>1. Con el envío de esta solicitud se manifiesta el interés de recibir una propuesta de Certificación. </p>
-				<p>2. El proceso de Certificación comenzará en el momento que se confirme la recepción del pago correspondiente.</p>
-				<p>3. La entrega y recepción de esta solicitud no garantiza que el proceso de Certificación será positivo.</p>
-				<p>4. Conocer y dar cumplimiento a todos los requisitos de la Norma General del Símbolo de Pequeños Productores que le apliquen como Organización de Pequeños Productores, tanto Críticos como Mínimos, independientemente del tipo de evaluación que se realice.</p>
+				<p>1. Con el envío de esta solicitud se manifiesta el interés de recibir una propuesta de Registro.</p>
+				<p>2. El proceso de Registro comenzará en el momento que se confirme la recepción del pago correspondiente.</p>
+				<p>3. La entrega y recepción de esta solicitud no garantiza que el proceso de Registro será positivo.</p>
+				<p>4. Conocer y dar cumplimiento a todos los requisitos de la Norma General del Símbolo de Pequeños Productores que le apliquen como Compradores, Comercializadoras Colectiva de Organizaciones de Pequeños Productores, Intermediarios y Maquiladores, tanto Críticos como Mínimos, independientemente del tipo de evaluación que se realice.</p>
 			</div>
 			<div class="col-lg-12">
 				<p style="font-size:14px;">
