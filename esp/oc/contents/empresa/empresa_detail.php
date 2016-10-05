@@ -37,10 +37,11 @@ $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
+$idempresa = $_GET['idempresa'];
 
 if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form2")) {
-  $insertSQL = sprintf("INSERT INTO contacto (idoc, contacto, cargo, tipo, telefono1, telefono2, email1, email2) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                       GetSQLValueString($_POST['idoc'], "int"),
+  $insertSQL = sprintf("INSERT INTO contacto (idempresa, contacto, cargo, tipo, telefono1, telefono2, email1, email2) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                       GetSQLValueString($_POST['idempresa'], "int"),
                        GetSQLValueString($_POST['contacto'], "text"),
                        GetSQLValueString($_POST['cargo'], "text"),
                        GetSQLValueString($_POST['tipo'], "text"),
@@ -54,8 +55,8 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form2")) {
 }
 
 if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form3")) {
-  $updateSQL = sprintf("UPDATE contacto SET idoc=%s, contacto=%s, cargo=%s, tipo=%s, telefono1=%s, telefono2=%s, email1=%s, email2=%s WHERE idcontacto=%s",
-                       GetSQLValueString($_POST['idoc'], "int"),
+  $updateSQL = sprintf("UPDATE contacto SET idempresa=%s, contacto=%s, cargo=%s, tipo=%s, telefono1=%s, telefono2=%s, email1=%s, email2=%s WHERE idcontacto=%s",
+                       GetSQLValueString($_POST['idempresa'], "int"),
                        GetSQLValueString($_POST['contacto'], "text"),
                        GetSQLValueString($_POST['cargo'], "text"),
                        GetSQLValueString($_POST['tipo'], "text"),
@@ -70,8 +71,8 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form3")) {
 }
 
 if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form5")) {
-  $updateSQL = sprintf("UPDATE cta_bn SET idoc=%s, banco=%s, sucursal=%s, cuenta=%s, clabe=%s, propietario=%s WHERE idcta_bn=%s",
-                       GetSQLValueString($_POST['idoc'], "int"),
+  $updateSQL = sprintf("UPDATE cta_bn SET idempresa=%s, banco=%s, sucursal=%s, cuenta=%s, clabe=%s, propietario=%s WHERE idcta_bn=%s",
+                       GetSQLValueString($_POST['idempresa'], "int"),
                        GetSQLValueString($_POST['banco'], "text"),
                        GetSQLValueString($_POST['sucursal'], "text"),
                        GetSQLValueString($_POST['cuenta'], "text"),
@@ -96,8 +97,8 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form7")) {
 }
 
 if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form6")) {
-  $insertSQL = sprintf("INSERT INTO ultima_accion (idoc, ultima_accion, persona, fecha, observacion) VALUES (%s, %s, %s, %s, %s)",
-                       GetSQLValueString($_POST['idoc'], "int"),
+  $insertSQL = sprintf("INSERT INTO ultima_accion (idempresa, ultima_accion, persona, fecha, observacion) VALUES (%s, %s, %s, %s, %s)",
+                       GetSQLValueString($_POST['idempresa'], "int"),
                        GetSQLValueString($_POST['ultima_accion'], "text"),
                        GetSQLValueString($_POST['persona'], "text"),
                        GetSQLValueString($_POST['fecha'], "text"),
@@ -108,8 +109,8 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form6")) {
 }
 
 if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form4")) {
-  $insertSQL = sprintf("INSERT INTO cta_bn (idoc, banco, sucursal, cuenta, clabe, propietario) VALUES (%s, %s, %s, %s, %s, %s)",
-                       GetSQLValueString($_POST['idoc'], "int"),
+  $insertSQL = sprintf("INSERT INTO cta_bn (idempresa, banco, sucursal, cuenta, clabe, propietario) VALUES (%s, %s, %s, %s, %s, %s)",
+                       GetSQLValueString($_POST['idempresa'], "int"),
                        GetSQLValueString($_POST['banco'], "text"),
                        GetSQLValueString($_POST['sucursal'], "text"),
                        GetSQLValueString($_POST['cuenta'], "text"),
@@ -135,30 +136,33 @@ if(isset($_POST['action_delete'])){
   $ejecutar=mysql_query($query,$dspp) or die(mysql_error());
 }
 
-if(isset($_POST['actualizar_oc']) && $_POST['actualizar_oc'] == 1){
-
-  $updateSQL = sprintf("UPDATE oc SET nombre = %s , abreviacion = %s, password = %s, sitio_web = %s, email1 = %s, email2 = %s, telefono = %s, razon_social = %s, direccion_oficina = %s, direccion_fiscal  = %s, rfc  = %s, ruc  = %s WHERE idoc = %s",
+if(isset($_POST['actualizar_empresa']) && $_POST['actualizar_empresa'] == 1){
+  if(isset($_POST['ver_password'])){
+    $ver_password = $_POST['ver_password'];
+  }else{
+    $ver_password = '';
+  }
+  $insertar = sprintf("UPDATE empresa SET nombre = %s , abreviacion = %s, sitio_web = %s, email = %s, telefono = %s, ciudad  = %s, razon_social = %s, direccion_oficina = %s, direccion_fiscal  = %s, rfc  = %s, ruc  = %s WHERE idempresa = %s",
       GetSQLValueString($_POST['nombre'], "text"),
       GetSQLValueString($_POST['abreviacion'], "text"),
-      GetSQLValueString($_POST['password'], "text"),
       GetSQLValueString($_POST['sitio_web'], "text"),
-      GetSQLValueString($_POST['email1'], "text"),
-      GetSQLValueString($_POST['email2'], "text"),
+      GetSQLValueString($_POST['email'], "text"),
       GetSQLValueString($_POST['telefono'], "text"),
+      GetSQLValueString($_POST['ciudad'], "text"),
       GetSQLValueString($_POST['razon_social'], "text"),
       GetSQLValueString($_POST['direccion_oficina'], "text"),
       GetSQLValueString($_POST['direccion_fiscal'], "text"),
       GetSQLValueString($_POST['rfc'], "text"),
       GetSQLValueString($_POST['ruc'], "text"),
-      GetSQLValueString($_SESSION['idoc'], "int"));
-  $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+      GetSQLValueString($idempresa, "int"));
+  $actualizar = mysql_query($insertar,$dspp) or die(mysql_error());
 
   $mensaje = "Datos Actualizados Correctamente";
 }
 
-$query = "SELECT * FROM oc WHERE idoc = $_SESSION[idoc]";
-$row_oc = mysql_query($query,$dspp) or die(mysql_error());
-$oc = mysql_fetch_assoc($row_oc);
+$query = "SELECT * FROM empresa WHERE idempresa = $idempresa";
+$row_empresa = mysql_query($query,$dspp) or die(mysql_error());
+$empresa = mysql_fetch_assoc($row_empresa);
 
 ?>
 
@@ -181,62 +185,67 @@ $oc = mysql_fetch_assoc($row_oc);
         <tr>
           <td>#SPP</td>
           <td>
-            <?php echo $oc['spp']; ?>
+            <?php echo $empresa['spp']; ?>
           </td>
         </tr>
         <tr>
           <td>Nombre</td>
           <td>
-            <input class="form-control" id="" name="nombre" value="<?php echo $oc['nombre']; ?>">
+            <input class="form-control" id="" name="nombre" value="<?php echo $empresa['nombre']; ?>">
           </td>
         </tr>
         <tr>
           <td>Abreviación</td>
           <td>
-            <input class="form-control" id="" name="abreviacion" value="<?php echo $oc['abreviacion']; ?>">
+            <input class="form-control" id="" name="abreviacion" value="<?php echo $empresa['abreviacion']; ?>">
           </td>
         </tr>
         <tr>
           <td>Password</td>
           <td>
-            <input class="form-control" id="" name="password" value="<?php echo $oc['password']; ?>">
+            <?php 
+            if($empresa['ver_password']){
+              echo $empresa['password'];
+            }else{
+              echo "<p class='alert alert-warning' style='padding:7px;'>Información no Disponible</p>";
+            }
+             ?>
           </td>
         </tr>
         <tr>
           <td>Sitio Web</td>
           <td>
-            <input class="form-control" id="" name="sitio_web" value="<?php echo $oc['sitio_web']; ?>">
+            <input class="form-control" id="" name="sitio_web" value="<?php echo $empresa['sitio_web']; ?>">
           </td>
         </tr>
         <tr>
-          <td style="width:300px;">Email 1<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
+          <td style="width:300px;">Email<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
           <td>
-            <input class="form-control" id="" name="email1" value="<?php echo $oc['email1']; ?>">
+            <input class="form-control" id="" name="email" value="<?php echo $empresa['email']; ?>">
           </td>
         </tr>
-        <tr>
-          <td style="width:300px;">Email 2<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
-          <td>
-            <input class="form-control" id="" name="email2" value="<?php echo $oc['email2']; ?>">
-          </td>
-        </tr>
-
         <tr>
           <td>Teléfono</td>
           <td>
-            <input class="form-control" id="" name="telefono" value="<?php echo $oc['telefono']; ?>">
+            <input class="form-control" id="" name="telefono" value="<?php echo $empresa['telefono']; ?>">
           </td>
         </tr>
         <tr>
           <td>País</td>
           <td>
-            <?php echo $oc['pais']; ?>
+            <?php echo $empresa['pais']; ?>
+          </td>
+        </tr>
+        <tr>
+          <td>Ciudad</td>
+          <td>
+            <input class="form-control" id="" name="ciudad" value="<?php echo $empresa['ciudad']; ?>">
           </td>
         </tr>
         <tr>
           <td>Dirección Oficina</td>
           <td>
-            <input class="form-control" id="" name="direccion_oficina" value="<?php echo $oc['direccion_oficina']; ?>">
+            <input class="form-control" id="" name="direccion_oficina" value="<?php echo $empresa['direccion_oficina']; ?>">
           </td>
         </tr>
 
@@ -246,32 +255,39 @@ $oc = mysql_fetch_assoc($row_oc);
         <tr>
           <td>Razón Social</td>
           <td>
-            <input class="form-control" id="" name="razon_social" value="<?php echo $oc['razon_social']; ?>">
+            <input class="form-control" id="" name="razon_social" value="<?php echo $empresa['razon_social']; ?>">
           </td>
         </tr>
         <tr>
           <td>Dirección Fiscal</td>
           <td>
-            <input class="form-control" id="" name="direccion_fiscal" value="<?php echo $oc['direccion_fiscal']; ?>">
+            <input class="form-control" id="" name="direccion_fiscal" value="<?php echo $empresa['direccion_fiscal']; ?>">
           </td>
         </tr>
 
         <tr>
           <td>RFC</td>
           <td>
-            <input class="form-control" id="" name="rfc" value="<?php echo $oc['rfc']; ?>">
+            <input class="form-control" id="" name="rfc" value="<?php echo $empresa['rfc']; ?>">
           </td>
         </tr>
         <tr>
           <td>RUC</td>
           <td>
-            <input class="form-control" id="" name="ruc" value="<?php echo $oc['ruc']; ?>">
+            <input class="form-control" id="" name="ruc" value="<?php echo $empresa['ruc']; ?>">
           </td>
         </tr>
         <tr>
           <td colspan="2">
-            <input class="btn btn-success" type="submit" value="Actualizar Información">
-            <input type="hidden" name="actualizar_oc" value="1">
+            <?php 
+            if($empresa['ver_password']){
+            ?>
+              <input class="btn btn-success" type="submit" value="Actualizar Información">
+              <input type="hidden" name="actualizar_empresa" value="1">
+            <?php
+            }
+             ?>
+
           </td>
         </tr>
       </table>

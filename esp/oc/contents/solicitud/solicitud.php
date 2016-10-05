@@ -4,8 +4,8 @@
       <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitudes OPP
     </a>
   </li>
-  <li role="presentation" <?php if(isset($_GET['selectEmpresa'])){ echo "class='active'";} ?>>
-    <a href="?SOLICITUD&selectCOM" aria-label="Left Align">
+  <li role="presentation" <?php if(isset($_GET['select_empresa'])){ echo "class='active'";} ?>>
+    <a href="?SOLICITUD&select_empresa" aria-label="Left Align">
       <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitudes Empresas
     </a>
   </li>
@@ -18,7 +18,7 @@
         </button>
         <ul class="dropdown-menu">
           <li><a href="?SOLICITUD&add"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitud OPP</a></li>
-          <li><a href="?SOLICITUD&addCOM"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitud Empresa</a></li>
+          <li><a href="?SOLICITUD&add_empresa"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitud Empresa</a></li>
         </ul>
       </div>
     </div>
@@ -54,7 +54,7 @@ if(isset($_GET['select'])){
 else if(isset($_GET['add'])){
   include ("solicitud_add.php");
 }
-else if(isset($_GET['addEmpresa'])){
+else if(isset($_GET['add_empresa'])){
   include ("empresas/solicitud_add.php");
 }
 else if(isset($_GET['IDsolicitud'])){
@@ -63,10 +63,10 @@ else if(isset($_GET['IDsolicitud'])){
 else  if(isset($_GET['asdf'])){
   include ("solicitud_detailBlock.php");
 }
-else if(isset($_GET['detailCOM'])){
-  include ("com/solicitud_detail.php");
+else if(isset($_GET['IDsolicitud_empresa'])){
+  include ("empresas/solicitud_detail.php");
 }
-else if(isset($_GET['selectCOM'])){
-  include ("com/solicitud_select.php");
+else if(isset($_GET['select_empresa'])){
+  include ("empresas/solicitud_select.php");
 }
 ?>

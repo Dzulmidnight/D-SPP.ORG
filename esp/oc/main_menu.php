@@ -188,9 +188,9 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $_SESSION['MM_Usern
 
 
     <!------------------- bootstrap-switch -------------->
-    <script>
+    <!--<script>
       $("[name='tipo_solicitud']").bootstrapSwitch();
-    </script>
+    </script>-->
     <script>
       $("[name='procedimiento']").bootstrapSwitch();
     </script>

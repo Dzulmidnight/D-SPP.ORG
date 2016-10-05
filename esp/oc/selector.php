@@ -6,7 +6,7 @@ if(isset($_GET['SOLICITUD'])){
 }else if(isset($_GET['OC'])){
 	include ("contents/oc/oc.php");
 }else if(isset($_GET['EMPRESAS'])){
-	include ("contents/empresas/empresas.php");
+	include ("contents/empresa/empresa.php");
 }else{
 	include("contents/main.php");
 }
