@@ -851,7 +851,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
   <div class="col-md-12">
     <table class="table table-bordered" style="font-size:12px">
       <thead>
-        <tr>
+        <tr class="info">
           <th class="text-center">ID</th>
           <th class="text-center">Fecha Solicitud</th>
           <th class="text-center">OC</th>

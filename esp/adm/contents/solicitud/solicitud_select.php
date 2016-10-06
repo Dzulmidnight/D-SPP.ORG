@@ -854,7 +854,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
   <div class="col-md-12">
     <table class="table table-bordered" style="font-size:12px">
       <thead>
-        <tr>
+        <tr class="info">
           <th class="text-center">ID</th>
           <th class="text-center">Fecha Solicitud</th>
           <th class="text-center">OC</th>
@@ -1270,7 +1270,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                           <div class="col-md-6">
                             <h4>Certificado</h4>
                             <?php 
-                            if(isset($solicitud['idcertificado'])){
+                            if(isset($solicitud['idcertificado']) && isset($solicitud['archivo'])){
                                 $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                                 $certificado = mysql_fetch_assoc($row_certificado);
                                 $inicio = strtotime($certificado['vigencia_inicio']);
