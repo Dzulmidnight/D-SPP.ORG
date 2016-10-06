@@ -523,7 +523,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
       <div class="col-md-12">
         <ul class="nav nav-pills">
           <li role="presentation" style="margin:0px;padding:0px;"><a href="index.php"><img src="../img/FUNDEPPO.png" alt=""></a></li>
-          <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP">OPP</a></li>
+          <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP" >OPP</a></li>
           <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC">OC</a></li>
           <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM">EMPRESAS</a></li>
           <li role="presentation" <? if(isset($_GET['ADM'])){?> class="active" <? }?>><a href="?ADM">ADM</a></li>
@@ -539,7 +539,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
 
             <div>
-              <h3 class="alert alert-success">Ingreso OPP</h3>
+              <h4 class="alert alert-success">Inicio de Sesión para Organización de Pequeños Productores</h4>
             </div>
             <div class="panel-body panel-success">
               <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="opp">
@@ -560,7 +560,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
 
             <div>
-              <h3 class="alert alert-info">Ingreso OC</h3>
+              <h4 class="alert alert-info">Inicio de Sesión Organismo de Certificación</h4>
             </div>
             <div class="panel-body">
               <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="oc">
@@ -582,7 +582,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
 
             <div >
-              <h3 class="alert alert-success">Ingreso EMPRESAS</h3>
+              <h4 class="alert alert-success">Inicio de Sesión para EMPRESAS</h4>
             </div>
             <div class="panel-body">
               <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="empresa">
@@ -624,10 +624,10 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
             </div>
             <div class="panel-body">
               <p>Selecciona un tipo de usuario</p>
-              <ul class="nav nav-pills">
-              <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP">OPP</a></li>
-              <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC">OC</a></li>
-              <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM">COM</a></li>
+              <ul class="nav">
+              <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP" data-toggle="tooltip" title="Proceso de Certificación en el que se encuentra la OPP">(OPP) Organización de Pequeños Productores</a></li>
+              <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC">(OC) Organismo de Certificacion</a></li>
+              <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM">EMPRESAS</a></li>
               </ul>
             </div>
           </div>
@@ -662,7 +662,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
               <form action="" method="POST" class="form-horizontal">
                 <div class="panel panel-info">
                   <div class="panel-heading">
-                    <h3 class="panel-title">Formulario de Registro para OPP</h3>
+                    <h3 class="panel-title">Formulario de Registro para Organización de Pequeños Productores</h3>
                   </div>
                   <div class="panel-body" style="font-size:12px;">
                     <p class="alert alert-warning" style="padding:7px;">El #SPP y la contraseña son proporcionados por D-SPP, dichos datos son enviados por email al OPP</p>
@@ -969,6 +969,14 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
 
     </div>
   </div>
+
+    <script>
+      $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+    </script>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="../bootstrap/js/bootstrap.min.js"></script>
 

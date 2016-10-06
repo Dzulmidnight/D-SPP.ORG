@@ -475,20 +475,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             </div>
             <div class="col-md-8">
               <?php 
-              if(empty($solicitud['cotizacion_empresa'])){
-              ?>
-                <b>CARGAR COTIZACIÓN</b>
-                <input type="file" class="form-control" id="cotizacion_empresa" name="cotizacion_empresa"> 
-                <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>"> 
-                <button class="btn btn-sm btn-success form-control" style="color:white" id="enviar_cotizacion" name="enviar_cotizacion" type="submit" value="1" onclick="return validar()">
-                  <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Enviar Cotización
-                </button>
-                <!--<button type="submit" class="btn btn-success form-control" style="color:white" name="enviar_cotizacion" value="Enviar"><span class="glyphicon glyphicon-envelope" aria-hidden="true" onclick="return validar()"></span> Enviar Cotización</button>-->
-
-              <?php 
-              }else{
-                echo "<b style='font-size:14px;'>Ya se ha enviado la cotización</b>";
-              }
+              echo "<p class='alert alert-warning'><b>Enviado a: $solicitud[abreviacionOC]</b></p>";
                ?>
             </div>
 

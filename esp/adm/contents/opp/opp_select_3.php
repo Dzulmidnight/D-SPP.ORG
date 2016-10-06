@@ -67,6 +67,8 @@ if(isset($_GET['query'])){
 }else if(isset($_POST['busquedaPais']) && $_POST['busquedaPais'] == 1){
   $pais = $_POST['nombrePais'];
 
+  //$query_opp = "SELECT *, opp.idopp AS 'idOPP' ,opp.nombre AS 'nombreOPP', opp.estado AS 'estadoOPP' , opp.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM opp LEFT JOIN status ON opp.estado = status.idstatus LEFT JOIN status_pagina ON opp.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON opp.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.pais = '$pais' ORDER BY opp.idopp ASC";
+
   $query_opp = "SELECT opp.idopp, opp.idoc, opp.spp AS 'spp_opp', opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.pais, opp.estatus_publico, opp.estatus_interno, opp.estatus_dspp, oc.idoc, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', num_socios.numero, certificado.idcertificado, certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.pais = '$pais' ORDER BY opp.idopp DESC";
 
 
@@ -75,6 +77,7 @@ if(isset($_GET['query'])){
 }else if(isset($_POST['busquedaOC']) && $_POST['busquedaOC'] == 1){
   $idoc = $_POST['idoc'];
   if($idoc == "sinOC"){
+    //$query_opp = "SELECT *, opp.idopp AS 'idOPP' ,opp.nombre AS 'nombreOPP', opp.estado AS 'estadoOPP' , opp.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM opp LEFT JOIN status ON opp.estado = status.idstatus LEFT JOIN status_pagina ON opp.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON opp.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.idoc IS NULL || opp.idoc = '' ORDER BY opp.idopp ASC";
 
     $query_opp = "SELECT opp.idopp, opp.idoc, opp.spp AS 'spp_opp', opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.pais, opp.estatus_publico, opp.estatus_interno, opp.estatus_dspp, oc.idoc, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', num_socios.numero, certificado.idcertificado, certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.idoc IS NULL || opp.idoc = '' ORDER BY opp.idopp DESC";
 
@@ -82,6 +85,7 @@ if(isset($_GET['query'])){
     $queryExportar = "SELECT opp.*, contacto.*  FROM opp LEFT JOIN contacto ON opp.idopp = contacto.idopp WHERE opp.idoc IS NULL || opp.idoc = '' ORDER BY opp.idopp ASC";
 
   }else{
+    //$query_opp = "SELECT *, opp.idopp AS 'idOPP' ,opp.nombre AS 'nombreOPP', opp.estado AS 'estadoOPP' , opp.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM opp LEFT JOIN status ON opp.estado = status.idstatus LEFT JOIN status_pagina ON opp.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON opp.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.idoc = '$idoc' ORDER BY opp.idopp ASC";
 
     $query_opp = "SELECT opp.idopp, opp.idoc, opp.spp AS 'spp_opp', opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.pais, opp.estatus_publico, opp.estatus_interno, opp.estatus_dspp, oc.idoc, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', num_socios.numero, certificado.idcertificado, certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.idoc = '$idoc' ORDER BY opp.idopp DESC";
 
@@ -92,6 +96,8 @@ if(isset($_GET['query'])){
 }else if(isset($_POST['busquedaEstatus']) && $_POST['busquedaEstatus'] == 1){
   $estatus = $_POST['estatus'];
 
+  //$query_opp = "SELECT *, opp.idopp AS 'idOPP' ,opp.nombre AS 'nombreOPP', opp.estado AS 'estadoOPP' , opp.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM opp LEFT JOIN status ON opp.estado = status.idstatus LEFT JOIN status_pagina ON opp.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON opp.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estado = '$estatus' ORDER BY opp.idopp ASC";
+
   $query_opp = "SELECT opp.idopp, opp.idoc, opp.spp AS 'spp_opp', opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.pais, opp.estatus_publico, opp.estatus_interno, opp.estatus_dspp, oc.idoc, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', num_socios.numero, certificado.idcertificado, certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp = '$estatus' ORDER BY opp.idopp DESC";
 
 
@@ -100,7 +106,10 @@ if(isset($_GET['query'])){
 }else{
   $query_opp = "SELECT opp.idopp, opp.idoc, opp.spp AS 'spp_opp', opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.pais, opp.estatus_publico, opp.estatus_interno, opp.estatus_dspp, oc.idoc, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', num_socios.numero, certificado.idcertificado, certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN certificado ON opp.idopp = certificado.idopp ORDER BY opp.idopp DESC";
 
+  //$query_opp = "SELECT opp.idopp, opp.idoc, opp.spp AS 'spp_opp', opp.nombre, opp.abreviacion, opp.pais, opp.estatus_publico, opp.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_dspp.nombre AS 'nombre_dspp' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp";
 
+
+  //$query_opp = "SELECT *, opp.idopp AS 'idOPP', opp.nombre AS 'nombreOPP', opp.estado AS 'estadoOPP', opp.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM opp LEFT JOIN status ON opp.estado = status.idstatus LEFT JOIN status_pagina ON opp.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON opp.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.estado IS NULL) OR (opp.estado != 'ARCHIVADO') ORDER BY opp.idopp ASC";
   $queryExportar = "SELECT opp.*, contacto.*  FROM opp LEFT JOIN contacto ON opp.idopp = contacto.idopp WHERE (opp.estado IS NULL) OR (opp.estado != 'ARCHIVADO') ORDER BY opp.idopp ASC";
 
 }
@@ -161,13 +170,8 @@ $timeActual = time();
 
      while ($token !== false) 
      {
-
-        $deteleSQL = sprintf("DELETE FROM opp WHERE idopp = %s", 
-          GetSQLValueString($token, "int"));
-        $eliminar = mysql_query($deteleSQL, $dspp) or die(mysql_error());
-
-        //$query = "DELETE FROM opp WHERE idopp = $token";
-        //$ejecutar = mysql_query($query,$dspp) or die(mysql_error());
+        $query = "DELETE FROM opp WHERE idopp = $token";
+        $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
         //echo "$token<br>";
         $token = strtok(",");
      }
@@ -208,20 +212,17 @@ $timeActual = time();
           3.- REGISTRADA
           4.- CANCELADA
           */
-          $estatus_publico = "";
+          $estatus_pagina = "";
           if($estatus_interno == 10){ //ESTATUS PAGINA = CERTIFICADO(REGISTRADO)
-            $estatus_publico = 2;
+            $estatus_pagina = 2;
           }else if($estatus_interno == 14 || $estatus_interno == 24){ // ESTATUS PAGINA = CANCELADO
-            $estatus_publico = 4;
+            $estatus_pagina = 4;
           }else{ // ESTATUS PAGINA = EN REVISION
-            $estatus_publico = 1;
+            $estatus_pagina = 1;
           }
 
-          $updateSQL = sprintf("UPDATE opp SET estatus_interno = %s, estatus_publico = %s WHERE idopp = %s",
-            GetSQLValueString($estatus_interno, "int"),
-            GetSQLValueString($estatus_publico, "int"),
-            GetSQLValueString($datos_opp['idopp'], "int"));
-          $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+          $query = "UPDATE opp SET estatus_interno = $estatus_interno, estatus_pagina = $estatus_pagina WHERE idopp = $datos_opp[idopp]";
+          $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
           /*$queryPagina = "UPDATE opp SET estatusPagina = $estatusPagina WHERE idopp = $datos_opp[idOPP]";
           $ejecutar = mysql_query($queryPagina,$dspp) or die(mysql_error());
           //echo "cont: $cont | id($datos_opp[idopp]): $estatusInterno<br>";*/
@@ -444,20 +445,20 @@ $timeActual = time();
 
   <hr>
   <div class="row">
-    <div class="col-xs-4">
-      <p class="alert alert-info" style="padding:7px;">Busqueda extendida(idf, nombre, abreviacion, sitio web, email, país, etc...). Sensible a acentos.</p>
+    <div class="col-xs-6">
+      <p class="alert alert-info" >Busqueda extendida(idf, nombre, abreviacion, sitio web, email, país, etc...). Sensible a acentos.</p>
 
       <form method="post" name="filtro" action="" enctype="application/x-www-form-urlencoded">
         <div class="input-group">
-          <input type="text" class="form-control" name="palabraClave" placeholder="Palabra clave..." disabled>
+          <input type="text" class="form-control" name="palabraClave" placeholder="Palabra clave...">
           <span class="input-group-btn">
             <input type="hidden" name="filtroPalabra" value="1">
-            <button class="btn btn-default" type="submit" disabled>Buscar !</button>
+            <button class="btn btn-default" type="submit">Buscar !</button>
           </span>
         </div><!-- /input-group -->        
       </form>
     </div><!-- /.col-lg-6 -->
-    <div class="col-xs-8">
+    <div class="col-xs-6">
       <div class="alert alert-warning col-xs-12">
         Consulta OPP  | 
         <span> 
@@ -489,10 +490,23 @@ $timeActual = time();
       </div>
 
       <div class="col-lg-6 col-md-12 col-xs-6">
-        <div class="col-md-4">
-          
-        </div>
-
+        <form action="" name="formularioOC" method="POST" enctype="application/x-www-form-urlencoded">
+          <?php 
+          $row_oc = mysql_query("SELECT * FROM oc",$dspp) or die(mysql_error());
+           ?>
+          <select name="idoc" id="" onchange="document.formularioOC.submit()">
+            <option value="">Buscar OC</option>
+            <option value="sinOC">SIN OC</option>
+            <?php 
+            while($datosOC = mysql_fetch_assoc($row_oc)){
+            ?>
+            <option class="form-control" value="<?php echo $datosOC['idoc'];?>" ><?php echo $datosOC['abreviacion'];?></option>
+            <?php
+            }
+             ?>
+          </select>
+          <input type="hidden" name="busquedaOC" value="1">
+        </form>
       </div>
 
       <div class="col-lg-6 col-md-12 col-xs-6">
@@ -526,8 +540,8 @@ $timeActual = time();
     </div>
     <div style="display:inline;margin-right:10em;">
       Exportar Contactos
-      <!--<a href="#" onclick="document.formulario1.submit()"><img src="../../img/pdf.png"></a>
-      <a href="#" onclick="document.formulario2.submit()"><img src="../../img/excel.png"></a>-->
+      <a href="#" onclick="document.formulario1.submit()"><img src="../../img/pdf.png"></a>
+      <a href="#" onclick="document.formulario2.submit()"><img src="../../img/excel.png"></a>
     </div>
  
   <!--</div>-->
@@ -685,7 +699,7 @@ $timeActual = time();
               <td class="text-center">
 
                 <div name="formulario">
-                  <input type="checkbox" name="idoppCheckbox" id="<?php echo "idopp".$contador; ?>" value="<?php echo $opp['idopp']; ?>" onclick="addCheckbox()">
+                  <input type="checkbox" name="idoppCheckbox" id="<?php echo "idopp".$contador; ?>" value="<?php echo $row_opp['idOPP'] ?>" onclick="addCheckbox()">
                 </div>
               </td>
           </tr>
