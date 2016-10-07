@@ -1,6 +1,19 @@
 <?php
 require_once("dompdf/dompdf_config.inc.php");
-require_once('Connections/dspp.php');
+
+# FileName="Connection_php_mysql.htm"
+# Type="MYSQL"
+# HTTP="true"
+$hostname_dspp = "localhost";
+$database_dspp = "dspporg_dspp";
+//$username_dspp = "root";
+//$password_dspp = "";
+
+$username_dspp = "dspporg_user";
+$password_dspp = "]ng@XX(4R6iM";
+$dspp = mysql_connect($hostname_dspp, $username_dspp, $password_dspp) or trigger_error(mysql_error(),E_USER_ERROR); 
+
+
 mysql_select_db($database_dspp, $dspp);
 set_time_limit(300);
 

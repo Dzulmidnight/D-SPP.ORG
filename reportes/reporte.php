@@ -1,6 +1,6 @@
 <?php 
 	require_once('mpdf/mpdf.php');
-	require_once('../Connections/dspp.php');
+	require_once('../en/Connections/dspp.php');
 	  mysql_select_db($database_dspp, $dspp);
 
 	$idsolicitud_certificacion = $_POST['idsolicitud_certificacion'];

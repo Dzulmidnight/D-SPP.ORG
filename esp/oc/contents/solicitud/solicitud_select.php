@@ -546,6 +546,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
       <thead>
         <tr class="success">
           <th class="text-center">ID</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Tipo de Solicitud"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Tipo</a></th>
           <th class="text-center">Fecha Solicitud</th>
           <th class="text-center">OC</th>
           <th class="text-center">Organización</th>
@@ -581,6 +582,9 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <?php echo $solicitud['idsolicitud_certificacion']; ?>
             <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
           </td>
+          <td <?php if($solicitud['tipo_solicitud'] == 'NUEVA'){ echo "class='success'"; }else{ echo "class='warning'"; } ?>class="warning">
+            <?php echo $solicitud['tipo_solicitud']; ?>
+          </td>
           <td>
             <?php echo date('d/m/Y', $solicitud['fecha_registro']); ?>
           </td>
@@ -605,7 +609,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             if(isset($solicitud['cotizacion_opp'])){
                echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
                if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
-                echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$solicitud['nombre_dspp']."</p>"; 
+                echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
                 echo "<p class='alert alert-danger' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }else{
