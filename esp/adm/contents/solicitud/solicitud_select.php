@@ -888,13 +888,16 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
               <td <?php if($solicitud['tipo_solicitud'] == 'NUEVA'){ echo "class='success'"; }else{ echo "class='warning'"; } ?>class="warning">
                 <?php echo $solicitud['tipo_solicitud']; ?>
               </td>
-              <td><?php echo date('d/m/Y',$solicitud['fecha_registro']); ?></td>
+              <td>
+                <?php echo date('d/m/Y',$solicitud['fecha_registro']); ?>
+                <a class="btn btn-xs btn-primary" href="?SOLICITUD&idsolicitud=<?php echo $solicitud['idsolicitud']; ?>">consultar</a>
+              </td>
               <td>
                 <?php
-                  $row_oc = mysql_query("SELECT abreviacion FROM oc WHERE idoc = $solicitud[idoc]",$dspp) or die(mysql_error()); 
+                  $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc WHERE idoc = $solicitud[idoc]",$dspp) or die(mysql_error()); 
                   $oc = mysql_fetch_assoc($row_oc);
-                  echo $oc['abreviacion']; 
                 ?>
+                <a href="?OC&detail&idoc=<?php echo $oc['idoc']; ?>"><?php echo $oc['abreviacion']; ?></a>
               </td>
               <td><a href="?OPP&detail&idopp=<?php echo $solicitud['idopp']; ?>"><?php echo $solicitud['abreviacion_opp']; ?></a></td>
               <td><?php echo $proceso_certificacion['nombre_dspp']; ?></td>
@@ -903,11 +906,11 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
               if(isset($solicitud['cotizacion_opp'])){
                  echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
                  if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
-                  echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                  echo "<p class='alert alert-success' style='padding:5px;margin-bottom:5px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                  }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
-                  echo "<p class='alert alert-danger' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                  echo "<p class='alert alert-danger' style='padding:5px;margin-bottom:5px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                  }else{
-                  echo "<p class='alert alert-info' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                  echo "<p class='alert alert-info' style='padding:5px;margin-bottom:5px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                  }
 
               }else{ // INICIA CARGAR COTIZACIÓN
@@ -1304,7 +1307,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
 
               <!----- TERMINA VENTANA CERTIFICADO ------>
               <td>
-                <a class="btn btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&idsolicitud=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+                <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&idsolicitud=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
               </td>
             </tr>
           <?php

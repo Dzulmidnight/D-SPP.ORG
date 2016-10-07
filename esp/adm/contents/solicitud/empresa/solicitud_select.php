@@ -51,13 +51,22 @@ $administrador = "yasser.midnight@gmail.com";
 if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
   $estatus_dspp = 6; //INICIA PERIODO DE OBJECIÓN
   $idperiodo_objecion = $_POST['idperiodo_objecion'];
-  $estatus_objecion = "ACTIVO";
+  $estatus_objecion = 'ACTIVO';
   
 
   /// se consultan los datos de de solicitud, empresa, oc para el mensaje
-  $row_empresa = mysql_query("SELECT solicitud_registro.*, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.telefono, empresa.email, empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+  $row_empresa = mysql_query("SELECT solicitud_registro.*, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.telefono, empresa.email, empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE solicitud_registro.idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $detalle_empresa = mysql_fetch_assoc($row_empresa);
 
+
+  //ACTUALIZAMOS EL PERIODO DE OBJECIÓN
+  $query = "UPDATE periodo_objecion SET estatus_objecion = 'ACTIVO' WHERE idperiodo_objecion = $idperiodo_objecion";
+  $actualizar = mysql_query($query, $dspp) or die(mysql_error());
+
+  /*$updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
+    GetSQLValueString($estatus_objecion, "text"),
+    GetSQLValueString($_POST['idperiodo_objecion_2'], "int"));
+ $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());*/
 
   //INSERTAMOS EL PROCESO DE CERTIFICACIÓN
   $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_dspp, fecha_registro) VALUES (%s, %s, %s)",
@@ -65,12 +74,6 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
-
-  //ACTUALIZAMOS EL PERIODO DE OBJECIÓN
-  $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
-    GetSQLValueString($estatus_objecion, "text"),
-    GetSQLValueString($idperiodo_objecion, "int"));
- $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
  ///INICIA ENVIAR MENSAJE PERIODO DE OBJECIÓN
   $row_periodo = mysql_query("SELECT fecha_inicio, fecha_fin FROM periodo_objecion WHERE idperiodo_objecion = $idperiodo_objecion",$dspp) or die(mysql_error());
@@ -212,13 +215,14 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        if($mail->Send()){
+        $mail->Send();
+        /*if($mail->Send()){
           
           echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
         }else{
               echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
      
-        }
+        }*/
     //// termina envio a correo ADM
 
 
@@ -878,32 +882,38 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
           ?>
             <tr>
               <td>
-                <?php echo $solicitud['idsolicitud']; ?>
-                <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud']; ?>">
+                <?php echo $solicitud['idsolicitud_registro']; ?>
               </td>
               <td <?php if($solicitud['tipo_solicitud'] == 'NUEVA'){ echo "class='success'"; }else{ echo "class='warning'"; } ?>class="warning">
                 <?php echo $solicitud['tipo_solicitud']; ?>
               </td>
-              <td><?php echo date('d/m/Y',$solicitud['fecha_registro']); ?></td>
+              <td>
+                <?php echo date('d/m/Y',$solicitud['fecha_registro']); ?>
+                <a class="btn btn-xs btn-primary" href="?SOLICITUD&idsolicitud_empresa=<?php echo $solicitud['idsolicitud_registro']; ?>">consultar</a>
+              </td>
               <td>
                 <?php 
-                $row_oc = mysql_query("SELECT abreviacion FROM oc WHERE idoc = $solicitud[idoc]", $dspp) or die(mysql_error());
-                $oc = mysql_fetch_assoc($row_oc);
-                echo $oc['abreviacion'];
-                 ?>
+                  $row_oc = mysql_query("SELECT abreviacion FROM oc WHERE idoc = $solicitud[idoc]", $dspp) or die(mysql_error());
+                  $oc = mysql_fetch_assoc($row_oc);
+                ?>
+                <a href="?OC&detail&idoc=<?php echo $oc['idoc']; ?>"><?php echo $oc['abreviacion']; ?></a>
               </td>
-              <td><?php echo $solicitud['abreviacion_empresa']; ?></td>
-              <td><?php echo $proceso_certificacion['nombre_dspp']; ?></td>
+              <td>
+                <a href="?EMPRESAS&detail&idempresa=<?php echo $solicitud['idempresa']; ?>"><?php echo $solicitud['abreviacion_empresa']; ?></a>
+              </td>
+              <td>
+                <?php echo $proceso_certificacion['nombre_dspp']; ?>
+              </td>
               <td>
               <?php
               if(isset($solicitud['cotizacion_empresa'])){
                  echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_empresa']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
                  if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
-                  echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                  echo "<p class='alert alert-success' style='padding:5px;margin-bottom:5px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                  }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
-                  echo "<p class='alert alert-danger' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                  echo "<p class='alert alert-danger' style='padding:5px;margin-bottom:5px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                  }else{
-                  echo "<p class='alert alert-info' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                  echo "<p class='alert alert-info' style='padding:5px;margin-bottom:5px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                  }
 
               }else{ // INICIA CARGAR COTIZACIÓN
@@ -914,13 +924,13 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
               <td>
                 <?php 
                 // //CHECAMOS SI LA HORA ACTUAL ES IGUAL o MAYOR A LA FECHA_FINAL DEL PERIODO DE OBJECION
-                if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] == 'ACTIVO'){
+                if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] == 'ACTIVO' && $solicitud['estatus_objecion'] != 'FINALIZADO'){
                   if($fecha > $solicitud['fecha_fin']){
                     $estatus_dspp = 7; //TERMINA PERIODO DE OBJECIÓN
                     $estatus_objecion = 'FINALIZADO';
                     //INSERTARMOS PROCESO_CERTIFICACION
                     $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
-                      GetSQLValueString($solicitud['idsolicitud'], "int"),
+                      GetSQLValueString($solicitud['idsolicitud_registro'], "int"),
                       GetSQLValueString($estatus_dspp, "int"),
                       GetSQLValueString($fecha, "int"));
                     $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
@@ -957,7 +967,9 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                             <p class="alert alert-danger" style="padding:7px;">Fin: <?php echo date('d/m/Y',$solicitud['fecha_fin']); ?></p>
                             <?php 
                             if($solicitud['estatus_objecion'] == 'EN ESPERA'){
-                              echo '<button type="submit" class="btn btn-success" name="aprobar_periodo" value="1">Aprobar Periodo</button>';
+                            ?>
+                              <button type="submit" class="btn btn-success" name="aprobar_periodo" value="1">Aprobar Periodo</button>
+                            <?php
                             }
                             ?>
                           </div>
@@ -1012,7 +1024,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                        <input type="text" name="idperiodo_objecion_2" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
                       </div>
@@ -1300,8 +1312,10 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
 
               <!----- TERMINA VENTANA CERTIFICADO ------>
               <td>
-                <a class="btn btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&idsolicitud_empresa=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+                <a class="btn btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&idsolicitud_empresa=<?php echo $solicitud['idsolicitud_registro']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
               </td>
+              <input type="text" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
+
             </tr>
           <?php
           }
