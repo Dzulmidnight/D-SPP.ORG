@@ -150,7 +150,7 @@ if(isset($_POST['actualizar_oc']) && $_POST['actualizar_oc'] == 1){
       GetSQLValueString($_POST['direccion_fiscal'], "text"),
       GetSQLValueString($_POST['rfc'], "text"),
       GetSQLValueString($_POST['ruc'], "text"),
-      GetSQLValueString($_SESSION['idoc'], "int"));
+      GetSQLValueString($_GET['idoc'], "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
   $mensaje = "Datos Actualizados Correctamente";

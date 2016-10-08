@@ -32,6 +32,7 @@ if (!function_exists("GetSQLValueString")) {
   }
 }
 
+mysql_select_db($database_dspp, $dspp);
 if(isset($_POST['oc_delete'])){
   $query=sprintf("delete from oc where idoc = %s",GetSQLValueString($_POST['idoc'], "text"));
   $ejecutar=mysql_query($query,$dspp) or die(mysql_error());
@@ -44,7 +45,6 @@ if (isset($_GET['pageNum_oc'])) {
 }
 $startdetalle_oc = $pageNum_oc * $maxRows_oc;
 
-mysql_select_db($database_dspp, $dspp);
 $query_oc = "SELECT * FROM oc ORDER BY nombre ASC";
 $query_limit_oc = sprintf("%s LIMIT %d, %d", $query_oc, $startdetalle_oc, $maxRows_oc);
 $oc = mysql_query($query_limit_oc, $dspp) or die(mysql_error());

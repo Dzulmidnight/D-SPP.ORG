@@ -79,7 +79,6 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
   }
 
 
-
   /*if(!empty($_FILES['op_preg15']['name'])){
       $_FILES["op_preg15"]["name"];
         move_uploaded_file($_FILES["op_preg15"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
@@ -90,17 +89,17 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
   if(!empty($_POST['produccion'])){
   	$produccion = $_POST['produccion'];
   }else{
-  	$produccion = '';
+  	$produccion = 0;
   }
   if(!empty($_POST['procesamiento'])){
   	$procesamiento = $_POST['procesamiento'];
   }else{
-  	$procesamiento = '';
+  	$procesamiento = 0;
   }
   if(!empty($_POST['exportacion'])){
   	$exportacion = $_POST['exportacion'];
   }else{
-  	$exportacion = '';
+  	$exportacion = 0;
   }
 
 
@@ -134,7 +133,7 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 
 
   // ACTUALIZAMOS LA INFORMACION DE LA OPP
-	$updateSQL = sprintf("UPDATE opp SET nombre = %s, pais = %s, direccion_oficina = %s, email = %s, telefono = %s, sitio_web = %s, razon_social = %s, direccion_fiscal = %s, rfc = %s, ruc = %s, produccion = %s, procesamiento = %s, exportacion = %s WHERE idopp = $_POST[idopp]",
+	$updateSQL = sprintf("UPDATE opp SET nombre = %s, pais = %s, direccion_oficina = %s, email = %s, telefono = %s, sitio_web = %s, razon_social = %s, direccion_fiscal = %s, rfc = %s, ruc = %s, produccion = %s, procesamiento = %s, exportacion = %s WHERE idopp = %s",
 		GetSQLValueString($_POST['nombre'], "text"),
 		GetSQLValueString($_POST['pais'], "text"),
 		GetSQLValueString($_POST['direccion_oficina'], "text"),
@@ -174,6 +173,9 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 
     // SE ACTUALIZAN LAS CERTIFICACIONES
 
+
+    if(isset($_POST['idcertificacion'])){
+	    $idcertificacion = $_POST['idcertificacion'];
 			if(isset($_POST['certificacion'])){
 				$certificacion = $_POST['certificacion'];
 			}else{
@@ -198,90 +200,112 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 			}else{
 				$interrumpida = NULL;
 			}
-    $idcertificacion = $_POST['idcertificacion'];
 
-    for($i=0;$i<count($certificacion);$i++){
-      if($certificacion[$i] != NULL){
-        #for($i=0;$i<count($certificacion);$i++){
 
-      	$updateSQL = sprintf("UPDATE certificaciones SET certificacion = %s, certificadora = %s, ano_inicial = %s, interrumpida = %s WHERE idcertificacion = %s",
-      		GetSQLValueString(strtoupper($certificacion[$i]), "text"),
-      		GetSQLValueString(strtoupper($certificadora[$i]), "text"),
-      		GetSQLValueString($ano_inicial[$i], "text"),
-      		GetSQLValueString($interrumpida[$i], "text"),
-      		GetSQLValueString($idcertificacion[$i], "int"));
+	    for($i=0;$i<count($certificacion);$i++){
+	      if($certificacion[$i] != NULL){
+	        #for($i=0;$i<count($certificacion);$i++){
 
-        //$updateSQL = "UPDATE certificaciones SET certificacion= '".$certificacion[$i]."', certificadora='".$certificadora[$i]."', ano_inicial= '".$ano_inicial[$i]."', interrumpida= '".$interrumpida[$i]."' WHERE idcertificacion= '".$idcertificacion[$i]."'";
+	      	$updateSQL = sprintf("UPDATE certificaciones SET certificacion = %s, certificadora = %s, ano_inicial = %s, interrumpida = %s WHERE idcertificacion = %s",
+	      		GetSQLValueString(strtoupper($certificacion[$i]), "text"),
+	      		GetSQLValueString(strtoupper($certificadora[$i]), "text"),
+	      		GetSQLValueString($ano_inicial[$i], "text"),
+	      		GetSQLValueString($interrumpida[$i], "text"),
+	      		GetSQLValueString($idcertificacion[$i], "int"));
 
-        $Result1 = mysql_query($updateSQL, $dspp) or die(mysql_error());
-        }
+	        //$updateSQL = "UPDATE certificaciones SET certificacion= '".$certificacion[$i]."', certificadora='".$certificadora[$i]."', ano_inicial= '".$ano_inicial[$i]."', interrumpida= '".$interrumpida[$i]."' WHERE idcertificacion= '".$idcertificacion[$i]."'";
+
+	        $Result1 = mysql_query($updateSQL, $dspp) or die(mysql_error());
+	        }
+	    }
     }
+
 
     // SE ACTUALIZAN LOS PRODUCTOS
-      $producto = $_POST['producto'];
-      $volumen = $_POST['volumen'];
-      $materia = $_POST['materia'];
-      $destino = $_POST['destino'];
-      $idproducto = $_POST['idproducto'];
-      /*$marca_propia = $_POST['marca_propia'];
-      $marca_cliente = $_POST['marca_cliente'];
-      $sin_cliente = $_POST['sin_cliente'];*/
+  	if(isset($_POST['producto'])){
+  		$producto = $_POST['producto'];
+  	}else{
+  		$producto = '';
+  	}
+  	if(isset($_POST['volumen'])){
+  		$volumen = $_POST['volumen'];
+  	}else{
+  		$volumen = '';
+  	}
+  	if(isset($_POST['materia'])){
+  		$materia = $_POST['materia'];
+  	}else{
+  		$materia = '';
+  	}
+  	if(isset($_POST['destino'])){
+  		$destino = $_POST['destino'];
+  	}else{
+  		$destino = '';
+  	}
 
-    for ($i=0;$i<count($producto);$i++) { 
-      if($producto[$i] != NULL){
+  	if(isset($_POST['idproducto'])){
+  		$idproducto = $_POST['idproducto'];
+  	}else{
+  		$idproducto = '';
+  	}
 
-      $array1 = "terminado".$i; 
-      $array2 = "marca_propia".$i;
-      $array3 = "marca_cliente".$i;
-      $array4 = "sin_cliente".$i;
+  	if(isset($_POST['idproducto'])){
+	    for ($i=0;$i<count($producto);$i++) { 
+	      if($producto[$i] != NULL){
 
-
-      if(isset($_POST[$array1])){
-      	$terminado = $_POST[$array1];
-      }else{
-      	$terminado = '';
-      }
-      if(isset($_POST[$array2])){
-      	$marca_propia = $_POST[$array2];
-      }else{
-      	$marca_propia = '';
-      }
-      if(isset($_POST[$array3])){
-      	$marca_cliente = $_POST[$array3];
-      }else{
-      	$marca_cliente = '';
-      }
-      if(isset($_POST[$array4])){
-      	$sin_cliente = $_POST[$array4];
-      }else{
-      	$sin_cliente = '';
-      }
-
-					$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
-					$producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
-
-					$str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
-					$destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
-
-					$str = iconv($charset, 'ASCII//TRANSLIT', $materia[$i]);
-					$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+	      $array1 = "terminado".$i; 
+	      $array2 = "marca_propia".$i;
+	      $array3 = "marca_cliente".$i;
+	      $array4 = "sin_cliente".$i;
 
 
-      $updateSQL = sprintf("UPDATE productos SET producto = %s, volumen = %s, terminado = %s, materia = %s, destino = %s, marca_propia = %s, marca_cliente = %s, sin_cliente = %s WHERE idproducto = %s",
-      	GetSQLValueString($producto[$i], "text"),
-      	GetSQLValueString($volumen[$i], "text"),
-      	GetSQLValueString($terminado, "text"),
-      	GetSQLValueString($materia[$i], "text"),
-      	GetSQLValueString($destino[$i], "text"),
-      	GetSQLValueString($marca_propia, "text"),
-      	GetSQLValueString($marca_cliente, "text"),
-      	GetSQLValueString($sin_cliente, "text"),
-      	GetSQLValueString($idproducto[$i], "int"));
-      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+	      if(isset($_POST[$array1])){
+	      	$terminado = $_POST[$array1];
+	      }else{
+	      	$terminado = '';
+	      }
+	      if(isset($_POST[$array2])){
+	      	$marca_propia = $_POST[$array2];
+	      }else{
+	      	$marca_propia = '';
+	      }
+	      if(isset($_POST[$array3])){
+	      	$marca_cliente = $_POST[$array3];
+	      }else{
+	      	$marca_cliente = '';
+	      }
+	      if(isset($_POST[$array4])){
+	      	$sin_cliente = $_POST[$array4];
+	      }else{
+	      	$sin_cliente = '';
+	      }
+
+						$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
+						$producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+						$str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
+						$destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+						$str = iconv($charset, 'ASCII//TRANSLIT', $materia[$i]);
+						$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
 
-      }
-    }
+	      $updateSQL = sprintf("UPDATE productos SET producto = %s, volumen = %s, terminado = %s, materia = %s, destino = %s, marca_propia = %s, marca_cliente = %s, sin_cliente = %s WHERE idproducto = %s",
+	      	GetSQLValueString($producto[$i], "text"),
+	      	GetSQLValueString($volumen[$i], "text"),
+	      	GetSQLValueString($terminado, "text"),
+	      	GetSQLValueString($materia[$i], "text"),
+	      	GetSQLValueString($destino[$i], "text"),
+	      	GetSQLValueString($marca_propia, "text"),
+	      	GetSQLValueString($marca_cliente, "text"),
+	      	GetSQLValueString($sin_cliente, "text"),
+	      	GetSQLValueString($idproducto[$i], "int"));
+	      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+
+	      }
+	    }
+  	}
 
 
   $mensaje = "Datos Actualizados Correctamente";

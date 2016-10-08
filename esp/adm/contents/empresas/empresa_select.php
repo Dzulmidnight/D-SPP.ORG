@@ -104,7 +104,7 @@ if(isset($_GET['query'])){
   $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE empresa.estado = '$estatus' ORDER BY empresa.idempresa ASC";
 
 }else{
-  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa ORDER BY empresa.idempresa DESC";
+  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa ORDER BY empresa.idempresa DESC";
 
   //$query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion, empresa.pais, empresa.estatus_publico, empresa.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_dspp.nombre AS 'nombre_dspp' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp";
 
@@ -275,6 +275,46 @@ $timeActual = time();
       }/*********************************** TERMINA NUMERO #SPP DEL empresa ****************************************************/
 
 
+      if(isset($_POST['maquilador'.$datos_empresa['idempresa']]) || isset($_POST['comprador'.$datos_empresa['idempresa']])  ||  isset($_POST['intermediario'.$datos_empresa['idempresa']])    ){ //********************************** INICIA LA ASIGNACION DE OC ***********************************/
+
+
+        if(!empty($_POST['maquilador'.$datos_empresa['idempresa']])){
+          $maquilador = 1;
+        }else{
+          $maquilador = 0;
+        }
+        if(!empty($_POST['comprador'.$datos_empresa['idempresa']])){
+          $comprador = 1;
+        }else{
+          $comprador = 0;
+        }
+        if(!empty($_POST['intermediario'.$datos_empresa['idempresa']])){
+          $intermediario = 1;
+        }else{
+          $intermediario = 0;
+        }
+
+
+        $updateSQL = sprintf("UPDATE empresa SET maquilador = %s, comprador = %s, intermediario = %s WHERE idempresa = %s",
+          GetSQLValueString($maquilador, "int"),
+          GetSQLValueString($comprador, "int"),
+          GetSQLValueString($intermediario, "int"),
+          GetSQLValueString($datos_empresa['idempresa'], "int"));
+        $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+       
+       /* if(!empty($maquilador)){
+          $updateSQL = sprintf("UPDATE empresa SET maquilador = %s WHERE idempresa = %s",
+            GetSQLValueString($maquilador, "int"),
+            GetSQLValueString($datos_empresa['idempresa'], "int"));
+          $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+        }*/
+
+      } //********************************** TERMINA LA ASIGNACION DE OC ***********************************/
+
+
+
+
 
 
       if(isset($_POST['vigencia_fin'.$datos_empresa['idempresa']])){ /****************** INICIA VIGENCIA FIN DEL CERTIFICADO ******************/
@@ -385,7 +425,7 @@ $timeActual = time();
 
           //echo "cont: $cont | VIGENCIA FIN($datos_empresa[idempresa]): $vigenciafin :TOTAL Certificado: $totalCertificado<br>";
         }      
-      }/************************************ TERMINA VIGENCIA FIN DEL CERTIFICADO
+      }/********************* TERMINA VIGENCIA FIN DEL CERTIFICADO ****/
 
 
       if(isset($_POST['idoc'.$datos_empresa['idempresa']])){ //********************************** INICIA LA ASIGNACION DE OC ***********************************/
@@ -397,9 +437,9 @@ $timeActual = time();
       } //********************************** TERMINA LA ASIGNACION DE OC ***********************************/
 
       $cont++;
+    }
     
-    
-    echo '<script>location.href="?EMPRESAS&select";</script>';
+    //echo '<script>location.href="?EMPRESAS&select";</script>';
   } /* TERMINA BOTON ACTUALIZAR LISTA empresa*/
 
   $rowempresa = mysql_query("SELECT * FROM empresa",$dspp) or die(mysql_error());
@@ -547,6 +587,7 @@ $timeActual = time();
         <th class="text-center">#SPP</th>
         <th class="text-center">Nombre</th>
         <th class="text-center">Abreviación</th>
+        <th class="text-center">Tipo Empresa</th>
         <th class="text-center"><a href="#" data-toggle="tooltip" title="Puede ser definido por la fecha de certificado ó El Proceso de Certificación"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Estatus Publico</a></th>
         <th class="text-center"><a href="#" data-toggle="tooltip" title="Proceso de Certificación en el que se encuentra la empresa"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Proceso certificación</a></th>
         <th class="text-center">
@@ -593,6 +634,23 @@ $timeActual = time();
               echo $empresa['abreviacion_empresa'];
                ?>
             </td>
+            <td>
+              <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="maquilador<?php echo $empresa['idempresa']; ?>" value="1" <?php if($empresa['maquilador']){echo "checked"; } ?>> MAQUILADOR
+                  </label>
+
+                  <label>
+                    <input type="checkbox" name="comprador<?php echo $empresa['idempresa']; ?>" value="1" <?php if($empresa['comprador']){echo "checked"; } ?>> COMPRADOR
+                  </label>
+
+
+                  <label>
+                    <input type="checkbox" name="intermediario<?php echo $empresa['idempresa']; ?>" value="1" <?php if($empresa['intermediario']){echo "checked"; } ?>> INTERMEDIARIO
+                  </label>
+
+                </div>
+            </td>  
             <td>
               <?php 
                 echo $empresa['nombre_publico']; 

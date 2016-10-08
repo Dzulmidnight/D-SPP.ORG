@@ -486,7 +486,6 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
         </tr>
       </thead>
       <tbody>
-      <form action="" method="POST" enctype="multipart/form-data">
         <?php 
         if($total_solicitudes != 0){
           while($solicitud = mysql_fetch_assoc($row_solicitud_certificacion)){
@@ -494,6 +493,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
           $ejecutar = mysql_query($query_proceso,$dspp) or die(mysql_error());
           $proceso_certificacion = mysql_fetch_assoc($ejecutar);
           ?>
+          <form action="" method="POST" enctype="multipart/form-data">
             <tr>
               <td>
                 <?php echo $solicitud['idsolicitud_certificacion']; ?>
@@ -796,8 +796,8 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                   </button>         
                 <!--</form>-->
               </td>
-
             </tr>
+          </form>
           <?php
           }
         }else{
@@ -808,7 +808,6 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
         <?php
         }
          ?>
-      </form>
       </tbody>
     </table>
   </div>

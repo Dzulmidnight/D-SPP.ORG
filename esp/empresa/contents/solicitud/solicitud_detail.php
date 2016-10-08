@@ -168,7 +168,7 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 
 
   // ACTUALIZAMOS LA INFORMACION DE LA empresa
-  $updateSQL = sprintf("UPDATE empresa SET nombre = %s, pais = %s, direccion_oficina = %s, email = %s, telefono = %s, sitio_web = %s, razon_social = %s, direccion_fiscal = %s, rfc = %s, ruc = %s, comprador = %s, intermediario = %s, maquilador = %s WHERE idempresa = $_POST[idempresa]",
+  $updateSQL = sprintf("UPDATE empresa SET nombre = %s, pais = %s, direccion_oficina = %s, email = %s, telefono = %s, sitio_web = %s, razon_social = %s, direccion_fiscal = %s, rfc = %s, ruc = %s, comprador = %s, intermediario = %s, maquilador = %s WHERE idempresa = %s",
     GetSQLValueString($_POST['nombre'], "text"),
     GetSQLValueString($_POST['pais'], "text"),
     GetSQLValueString($_POST['direccion_oficina'], "text"),
