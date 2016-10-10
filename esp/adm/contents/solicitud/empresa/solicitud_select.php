@@ -985,7 +985,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                             if($solicitud['estatus_objecion'] == 'EN ESPERA'){
                             ?>
                               <button type="submit" class="btn btn-success" name="aprobar_periodo" value="1">Aprobar Periodo</button>
-                              <input type="text" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                              <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
                             <?php
                             }
                             ?>
@@ -1035,14 +1035,14 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                             <?php
                             }else{
                               echo "<p class='alert alert-warning'><strong>Una vez finalizado el Periodo de Objeción podra cargar la resolución del mismo</strong></p>";
-                              echo "<input type='text' name='idperiodo_objecion' value='$solicitud[idperiodo_objecion]'>";
+                              echo "<input type='hidden' name='idperiodo_objecion' value='$solicitud[idperiodo_objecion]'>";
                             }
                              ?>
                           </div>
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <input type="text" name="idperiodo_objecion_2" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                        <input type="hidden" name="idperiodo_objecion_2" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
                       </div>
@@ -1332,7 +1332,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
               <td>
                 <a class="btn btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&idsolicitud_empresa=<?php echo $solicitud['idsolicitud_registro']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
               </td>
-              <input type="text" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
+              <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
 
             </tr>
           <?php

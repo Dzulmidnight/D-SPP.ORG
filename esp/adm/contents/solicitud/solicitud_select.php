@@ -251,7 +251,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   }
 
 
-  $row_opp = mysql_query("SELECT solicitud_certificacion.idoc, solicitud_certificacion.idopp, opp.idopp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.telefono, opp.email AS 'email_opp', opp.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc' FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $row_opp = mysql_query("SELECT solicitud_certificacion.idoc, solicitud_certificacion.idopp, opp.idopp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', solicitud_certificacion.produccion, solicitud_certificacion.procesamiento, solicitud_certificacion.exportacion, opp.telefono, opp.email AS 'email_opp', opp.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc' FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $detalle_opp = mysql_fetch_assoc($row_opp);
 
   $row_periodo = mysql_query("SELECT fecha_inicio, fecha_fin FROM periodo_objecion WHERE idperiodo_objecion = $_POST[idperiodo_objecion]",$dspp) or die(mysql_error());
@@ -268,6 +268,23 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
     GetSQLValueString($_POST['idperiodo_objecion'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
+
+
+    $row_productos = mysql_query("SELECT producto FROM productos WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+    $nombre_productos = '';
+    while($producto = mysql_fetch_assoc($row_productos)){
+      $nombre_productos .= $producto['producto']."<br>"; 
+    } 
+    $alcance = '';
+    if(isset($detalle_opp['produccion'])){
+      $alcance .= 'PRODUCCION - PRODUCTION.<br>';
+    }
+    if(isset($detalle_opp['procesamiento'])){
+      $alcance .= 'PROCESAMIENTO - PROCESSING.<br>';
+    }
+    if(isset($detalle_opp['exportacion'])){
+      $alcance .= 'EXPORTACIÓN - TRAIDING.<br>';
+    }
 
   /// inicia envio correo "periodo de objeción finalizado" a OC
   $asunto = "D-SPP | Periodo de Objeción Finalizado";
@@ -293,7 +310,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
           </thead>
           <tbody>
             <tr style="text-align:left">
-              <td colspan="2"><p><b>Ha finalizado el periodo de objeción con un dictamen: <span style="color:red;">'.$_POST['dictamen'].'</span></b></p></td>
+              <td colspan="2"><p><b>Ha finalizado el periodo de objeción con una resolución: <span style="color:red;">'.$_POST['dictamen'].'</span></b></p></td>
             </tr>
             <tr> 
               <td colspan="2">Fecha Inicio: <span style="color:red">'.date('d/m/Y', $periodo['fecha_inicio']).'</span></td>
@@ -318,10 +335,12 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
 
                   <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
                     <td style="text-align:center">Tipo / Type</td>
-                    <td style="text-align:center">Nombre de la Empresa/Company name</td>
+                    <td style="text-align:center">Nombre de la organización/Organization name</td>
                     <td style="text-align:center">Abreviación / Short name</td>
                     <td style="text-align:center">País / Country</td>
                     <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
+                    <td width="72px">Alcance / Scope</td>
+                    <td width="72px">Productos / Products</td>
                     <td style="text-align:center">Tipo de solicitud / Kind of application</td>
                     <td style="text-align:center">Fecha de solicitud/Date of application</td>
                     <td style="text-align:center">Fin período de objeción/Objection period end</td>
@@ -332,6 +351,8 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
                     <td>'.$detalle_opp['abreviacion_opp'].'</td>
                     <td>'.$detalle_opp['pais'].'</td>
                     <td>'.$detalle_opp['nombre_oc'].'</td>
+                    <td>'.$alcance.'</td>
+                    <td>'.$nombre_productos.'</td>
                     <td>Certificación</td>
                     <td>'.date('d/m/Y', $periodo['fecha_inicio']).'</td>
                     <td>'.date('d/m/Y', $periodo['fecha_fin']).'</td>
@@ -383,7 +404,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
           </thead>
           <tbody>
             <tr style="text-align:left">
-              <td colspan="2"><p><b>Ha finalizado el periodo de objeción con un dictamen: <span style="color:red;">'.$_POST['dictamen'].'</span></b></p></td>
+              <td colspan="2"><p><b>Ha finalizado el periodo de objeción con una resolución: <span style="color:red;">'.$_POST['dictamen'].'</span></b></p></td>
             </tr>
             <tr> 
               <td colspan="2">Fecha Inicio: <span style="color:red">'.date('d/m/Y', $periodo['fecha_inicio']).'</span></td>
@@ -406,10 +427,12 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
 
                   <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
                     <td style="text-align:center">Tipo / Type</td>
-                    <td style="text-align:center">Nombre de la Empresa/Company name</td>
+                    <td style="text-align:center">Nombre de la Organización/Organization name</td>
                     <td style="text-align:center">Abreviación / Short name</td>
                     <td style="text-align:center">País / Country</td>
                     <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
+                    <td width="72px">Alcance / Scope</td>
+                    <td width="72px">Productos / Products</td>
                     <td style="text-align:center">Tipo de solicitud / Kind of application</td>
                     <td style="text-align:center">Fecha de solicitud/Date of application</td>
                     <td style="text-align:center">Fin período de objeción/Objection period end</td>
@@ -420,6 +443,8 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
                     <td>'.$detalle_opp['abreviacion_opp'].'</td>
                     <td>'.$detalle_opp['pais'].'</td>
                     <td>'.$detalle_opp['nombre_oc'].'</td>
+                    <td>'.$alcance.'</td>
+                    <td>'.$nombre_productos.'</td>
                     <td>Certificación</td>
                     <td>'.date('d/m/Y', $periodo['fecha_inicio']).'</td>
                     <td>'.date('d/m/Y', $periodo['fecha_fin']).'</td>
@@ -699,7 +724,7 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
                     <li>Dar clic en la opción "SOLICITUDES"</li>
                     <li>Seleccionar "Solicitudes OPP"</li>
                     <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
-                    <li>Se desplegara una ventan donde podra cargar la documentación</li>
+                    <li>Se desplegara una ventana donde podran cargar la documentación</li>
                   </ol>
                   <p style="color:red">
                     Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
@@ -847,7 +872,7 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 
 //$query = "SELECT solicitud_certificacion.idsolicitud_certificacion, oc.abreviacion AS 'abreviacionOC', opp.abreviacion AS 'abreviacion_opp', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idinforme_evaluacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
 
-$query = "SELECT solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.fecha_registro, solicitud_certificacion.idoc, oc.abreviacion AS 'abreviacionOC', opp.abreviacion AS 'abreviacion_opp', periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idinforme_evaluacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
+$query = "SELECT solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.fecha_registro, solicitud_certificacion.idoc, oc.abreviacion AS 'abreviacionOC', opp.abreviacion AS 'abreviacion_opp', periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
 
 
 $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
@@ -974,7 +999,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                   if($fecha > $periodo_objecion['fecha_fin']){
                     $estatus_dspp = 7; //TERMINA PERIODO DE OBJECIÓN
                     $estatus_objecion = 'FINALIZADO';
-                    echo "<script>alerrt('paso 1');</script>";
+
 
                     //INSERTARMOS PROCESO_CERTIFICACION
                     $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
@@ -982,13 +1007,13 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                       GetSQLValueString($estatus_dspp, "int"),
                       GetSQLValueString($fecha, "int"));
                     $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
-                    echo "<script>alerrt('paso 2');</script>";
+       
                     //ACTUALIZAMOS EL PERIODO_OBJECION
                     $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
                       GetSQLValueString($estatus_objecion, "text"),
                       GetSQLValueString($periodo_objecion['idperiodo_objecion'], "int"));
                     $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
-                    echo "<script>alerrt('paso 3');</script>";
+  
                   }
                 }
 
@@ -1018,7 +1043,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                             if($periodo_objecion['estatus_objecion'] == 'EN ESPERA'){
                             ?>
                               <button type="submit" class="btn btn-success" name="aprobar_periodo" value="1">Aprobar Periodo</button>
-                              <input type="text" name="idperiodo_objecion2" value="<?php echo $periodo_objecion['idperiodo_objecion']; ?>">
+                              <input type="hidden" name="idperiodo_objecion2" value="<?php echo $periodo_objecion['idperiodo_objecion']; ?>">
                             <?php
                             }
                             ?>
@@ -1054,7 +1079,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                                 echo "<p style='color:#c0392b'>".$periodo_objecion['observacion']."</p>";
                               }
 
-                              if(empty($solicitud['documento'])){
+                              if(empty($periodo_objecion['documento'])){
                               ?>
                                 <label for="cargar_resolucion">Cargar Resolución</label>
                                 <input type="file" class="form-control" id="cargar_resolucion" name="cargar_resolucion" >
@@ -1088,7 +1113,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
               <td>
                 <?php 
                 if(isset($solicitud['idperiodo_objecion'])){
-                  echo $periodo_objecion['estatus_objecion'];
+   
                   if(isset($periodo_objecion['estatus_objecion']) && $periodo_objecion['estatus_objecion'] == 'FINALIZADO'){
                   ?>
                     <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$periodo_objecion['idperiodo_objecion']; ?>">Proceso Certificación</button>
@@ -1146,7 +1171,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                   <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#membresia".$solicitud['idmembresia']; ?>">Estatus Membresía</button>
                 <?php
                 }else{
-                  echo "NO HAY";
+                  echo "NO DISPONIBLE";
                 }
                  ?>
                 <!-- inicia modal estatus membresia -->
@@ -1262,7 +1287,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
 
                             <h4>Formato, Dictamen e Informe de Evaluación</h4>
                             <?php 
-                            if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idinforme_evaluacion'])){
+                            if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idinforme_evaluacion']) && isset($solicitud['idformato_evaluacion'])){
                               $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
                               $formato = mysql_fetch_assoc($row_formato);
                               $row_dictamen = mysql_query("SELECT * FROM dictamen_evaluacion WHERE iddictamen_evaluacion = $solicitud[iddictamen_evaluacion]", $dspp) or die(mysql_error());
@@ -1363,9 +1388,8 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
 
               <!---- inicia CONSULTAR SOLICITUD ---->
               <td>
-                <input type="text" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">periodo
-                <br>
-                <input type="text" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">certificacion
+                <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
 
                 <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&idsolicitud=<?php echo $solicitud['idsolicitud_certificacion']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
               </td>

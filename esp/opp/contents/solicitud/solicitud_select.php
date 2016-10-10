@@ -89,7 +89,23 @@ if(isset($_POST['cotizacion']) ){
     $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
     //////// INICIA ENVIAR CORREO AL OC SOBRE LA ACEPTACION DE LA COTIZACION
-  
+    $row_productos = mysql_query("SELECT producto FROM productos WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+    $nombre_productos = '';
+    while($producto = mysql_fetch_assoc($row_productos)){
+      $nombre_productos .= $producto['producto']."<br>"; 
+    } 
+    $alcance = '';
+    if(isset($detalle_opp['produccion'])){
+      $alcance .= 'PRODUCCION - PRODUCTION.<br>';
+    }
+    if(isset($detalle_opp['procesamiento'])){
+      $alcance .= 'PROCESAMIENTO - PROCESSING.<br>';
+    }
+    if(isset($detalle_opp['exportacion'])){
+      $alcance .= 'EXPORTACIÓN - TRAIDING.<br>';
+    }
+
+
     $asunto_oc = "D-SPP Cotización de Solicitud Aceptada";
     
     $mensaje_oc = '
@@ -224,7 +240,8 @@ if(isset($_POST['cotizacion']) ){
                               <td style="text-align:center">Abreviación / Short name</td>
                               <td style="text-align:center">País / Country</td>
                               <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
-
+                              <td width="72px">Alcance / Scope</td>
+                              <td width="72px">Productos / Products</td>
                               <td style="text-align:center">Tipo de solicitud / Kind of application</td>
                               <td style="text-align:center">Fecha de solicitud/Date of application</td>
                               <td style="text-align:center">Fin período de objeción/Objection period end</td>
@@ -235,6 +252,8 @@ if(isset($_POST['cotizacion']) ){
                               <td>'.$detalle_opp['abreviacion_opp'].'</td>
                               <td>'.$detalle_opp['pais'].'</td>
                               <td>'.$detalle_opp['nombre_oc'].'</td>
+                              <td>'.$alcance.'</td>
+                              <td>'.$nombre_productos.'</td>
                               <td>Certificación</td>
                               <td>'.date('d/m/Y', $fecha_inicio).'</td>
                               <td>'.date('d/m/Y', $fecha_fin).'</td>
