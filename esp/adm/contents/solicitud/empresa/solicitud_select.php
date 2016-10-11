@@ -54,9 +54,6 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
   $estatus_objecion = 'ACTIVO';
   
 
-
-
-
   //ACTUALIZAMOS EL PERIODO DE OBJECIÓN
   $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
     GetSQLValueString($estatus_objecion, "text"),
@@ -247,10 +244,12 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   $row_empresa = mysql_query("SELECT solicitud_registro.*, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.telefono, empresa.email AS 'email_empresa', empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $detalle_empresa = mysql_fetch_assoc($row_empresa);
 
+  echo "<script>alert('paso 1')</script>";
+
   $row_periodo = mysql_query("SELECT fecha_inicio, fecha_fin FROM periodo_objecion WHERE idperiodo_objecion = $_POST[idperiodo_objecion]",$dspp) or die(mysql_error());
   $periodo = mysql_fetch_assoc($row_periodo);
 
-
+  echo "<script>alert('paso 2')</script>";
   $ruta = "../../archivos/admArchivos/resolucion/";
 
   if(!empty($_FILES['cargar_resolucion']['name'])){
@@ -270,7 +269,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
     GetSQLValueString($resolucion, "text"),
     GetSQLValueString($_POST['idperiodo_objecion'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
-
+  echo "<script>alert('paso 3')</script>";
 
   /// inicia envio correo "periodo de objeción finalizado" a OC
   $asunto = "D-SPP | Periodo de Objeción Finalizado";
@@ -296,7 +295,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
           </thead>
           <tbody>
             <tr style="text-align:left">
-              <td colspan="2"><p><b>Ha finalizado el periodo de objeción con un dictamen: <span style="color:red;">'.$_POST['dictamen'].'</span></b></p></td>
+              <td colspan="2"><p><b>Ha finalizado el periodo de objeción con una resolución: <span style="color:red;">'.$_POST['dictamen'].'</span></b></p></td>
             </tr>
             <tr> 
               <td colspan="2">Fecha Inicio: <span style="color:red">'.date('d/m/Y', $periodo['fecha_inicio']).'</span></td>
@@ -335,7 +334,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
                     <td>'.$detalle_empresa['abreviacion_empresa'].'</td>
                     <td>'.$detalle_empresa['pais'].'</td>
                     <td>'.$detalle_empresa['nombre_oc'].'</td>
-                    <td>Certificación</td>
+                    <td>Registro</td>
                     <td>'.date('d/m/Y', $periodo['fecha_inicio']).'</td>
                     <td>'.date('d/m/Y', $periodo['fecha_fin']).'</td>
                   </tr>
@@ -364,99 +363,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
 
   /// termina envio correo "periodo de objeción finalizado" a OC
 
-  /// inicia envio correo "periodo de objeción finalizado" a empresa
-  $mensaje_empresa = '
-    <html>
-      <head>
-        <meta charset="utf-8">
-      </head>
-      <body>
-      
-        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="700px">
-          <thead>
-            <tr>
-              <th>
-                <img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" />
-              </th>
-              <th style="text-align:left">
-                D-SPP | Periodo de Objeción Finalizado / Objection Period Ended
-                
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="text-align:left">
-              <td colspan="2"><p><b>Ha finalizado el periodo de objeción con un dictamen: <span style="color:red;">'.$_POST['dictamen'].'</span></b></p></td>
-            </tr>
-            <tr> 
-              <td colspan="2">Fecha Inicio: <span style="color:red">'.date('d/m/Y', $periodo['fecha_inicio']).'</span></td>
-            </tr>
-            <tr>
-              <td colspan="2">Fecha Fin: <span style="color:red">'.date('d/m/Y', $periodo['fecha_fin']).'</span></td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                Ha finalizado el periodo de objeción. Se ha iniciado el Proceso de Certificación, por favor ponerse en contacto con su Organismo de Certificación, para cualquier duda o aclaración por favor escribir a: cert@spp.coop
-                
-                <p>Organismo de Certificación: <span style="color:red">'.$detalle_empresa['nombre_oc'].'</span></p>
-                
-                <p>Email: <span style="color:red">'.$detalle_empresa['email_oc'].'</span></p>
-              </td>
-            </tr>
-            <tr style="width:100%">
-              <td colspan="2">
-                <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-
-                  <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                    <td style="text-align:center">Tipo / Type</td>
-                    <td style="text-align:center">Nombre de la Empresa/Company name</td>
-                    <td style="text-align:center">Abreviación / Short name</td>
-                    <td style="text-align:center">País / Country</td>
-                    <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
-                    <td style="text-align:center">Tipo de solicitud / Kind of application</td>
-                    <td style="text-align:center">Fecha de solicitud/Date of application</td>
-                    <td style="text-align:center">Fin período de objeción/Objection period end</td>
-                  </tr>
-                  <tr style="font-size:12px;">
-                    <td>empresa</td>
-                    <td>'.$detalle_empresa['nombre_empresa'].'</td>
-                    <td>'.$detalle_empresa['abreviacion_empresa'].'</td>
-                    <td>'.$detalle_empresa['pais'].'</td>
-                    <td>'.$detalle_empresa['nombre_oc'].'</td>
-                    <td>Certificación</td>
-                    <td>'.date('d/m/Y', $periodo['fecha_inicio']).'</td>
-                    <td>'.date('d/m/Y', $periodo['fecha_fin']).'</td>
-                  </tr>
-              </td>
-              </table>
-            </tr>
-
-          </tbody>
-        </table>
-
-      </body>
-    </html>
-  ';
-
-  $mail->AddAddress($detalle_empresa['email_empresa']); 
-  if(!empty($detalle_empresa['contacto1_email'])){
-    $mail->AddAddress($detalle_empresa['contacto1_email']); 
-  }
-  if(!empty($detalle_empresa['contacto2_email'])){
-    $mail->AddAddress($detalle_empresa['contacto2_email']); 
-  }
-  if(!empty($detalle_empresa['adm1_email'])){
-    $mail->AddAddress($detalle_empresa['adm1_email']); 
-  }
-  $mail->AddBCC($administrador);
-
-  $mail->AddAttachment($resolucion);
-
-  $mail->Subject = utf8_decode($asunto);
-  $mail->Body = utf8_decode($mensaje_empresa);
-  $mail->MsgHTML(utf8_decode($mensaje_empresa));
-  $mail->Send();
-  $mail->ClearAddresses();
+  echo "<script>alert('paso 4')</script>";
 
   /// termina envio correo "periodo de objeción finalizado" a empresa
 
@@ -846,7 +753,7 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 
 //$row_solicitud = mysql_query("SELECT solicitud_registro.idsolicitud_registro AS 'idsolicitud', solicitud_registro.fecha_registro, solicitud_registro.idoc, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_dspp.nombre AS 'nombre_dspp', solicitud_registro.cotizacion_empresa, periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN proceso_certificacion ON solicitud_registro.idsolicitud_registro = proceso_certificacion.idsolicitud_registro LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro = periodo_objecion.idsolicitud_registro LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idsolicitud_registro = certificado.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro  ORDER BY proceso_certificacion.idproceso_certificacion DESC", $dspp) or die(mysql_error());
 
-$query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idinforme_evaluacion LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro ORDER BY solicitud_registro.fecha_registro DESC";
+$query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro ORDER BY solicitud_registro.fecha_registro DESC";
 
 
 //$query = "SELECT solicitud_registro.idsolicitud_registro, oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', periodo_objecion  "
@@ -878,14 +785,13 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
           <th class="text-center">Cotización</th>
           <th class="text-center">Proceso de Objeción</th>
           <th class="text-center">Proceso Certificación</th>
-          <th class="text-center">Membresia</th>
+
           <th class="text-center">Certificado</th>
           <!--<th class="text-center">Observaciones Solicitud</th>-->
           <th class="text-center">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <form action="" method="POST" enctype="multipart/form-data">
           <?php 
           while($solicitud = mysql_fetch_assoc($row_solicitud)){
           $query_proceso = "SELECT proceso_certificacion.*, proceso_certificacion.idsolicitud_registro, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', membresia.idmembresia, membresia.estatus_membresia, membresia.idcomprobante_pago, membresia.fecha_registro FROM proceso_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON proceso_certificacion.idsolicitud_registro = membresia.idsolicitud_registro WHERE proceso_certificacion.idsolicitud_registro = $solicitud[idsolicitud] ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
@@ -893,6 +799,8 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
           $proceso_certificacion = mysql_fetch_assoc($ejecutar);
 
           ?>
+        <form action="" method="POST" enctype="multipart/form-data">
+
             <tr>
               <td>
                 <?php echo $solicitud['idsolicitud_registro']; ?>
@@ -906,7 +814,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
               </td>
               <td>
                 <?php 
-                  $row_oc = mysql_query("SELECT abreviacion FROM oc WHERE idoc = $solicitud[idoc]", $dspp) or die(mysql_error());
+                  $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc WHERE idoc = $solicitud[id_oc]", $dspp) or die(mysql_error());
                   $oc = mysql_fetch_assoc($row_oc);
                 ?>
                 <a href="?OC&detail&idoc=<?php echo $oc['idoc']; ?>"><?php echo $oc['abreviacion']; ?></a>
@@ -935,127 +843,136 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                ?>
               </td>
               <td>
-                <?php 
-                // //CHECAMOS SI LA HORA ACTUAL ES IGUAL o MAYOR A LA FECHA_FINAL DEL PERIODO DE OBJECION
-                if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] == 'ACTIVO'){
-                  if($fecha > $solicitud['fecha_fin']){
-                    $estatus_dspp = 7; //TERMINA PERIODO DE OBJECIÓN
-                    $estatus_objecion = 'FINALIZADO';
-                    echo "<script>alerrt('paso 1');</script>";
-
-                    //INSERTARMOS PROCESO_CERTIFICACION
-                    $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
-                      GetSQLValueString($solicitud['idsolicitud'], "int"),
-                      GetSQLValueString($estatus_dspp, "int"),
-                      GetSQLValueString($fecha, "int"));
-                    $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
-                    echo "<script>alerrt('paso 2');</script>";
-                    //ACTUALIZAMOS EL PERIODO_OBJECION
-                    $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
-                      GetSQLValueString($estatus_objecion, "text"),
-                      GetSQLValueString($solicitud['idperiodo_objecion'], "int"));
-                    $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
-                    echo "<script>alerrt('paso 3');</script>";
-                  }
-                }
-                if(isset($solicitud['idperiodo_objecion'])){
+                <?php
+                if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                 ?>
-                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#objecion".$solicitud['idperiodo_objecion']; ?>">Proceso Objeción</button>
+                  <a href="#" data-toggle="tooltip" title="Esta solicitud se encuentra en Proceso de Renovación del Registro por lo tanto no aplica el periodo de objeción" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>SOLICITUD EN RENOVACIÓN</a>
                 <?php
                 }else{
-                  echo "<button class='btn btn-sm btn-default' style='width:100%' disabled>Consultar Proceso</button>";
-                }
-                 ?>
-                <!-- INICIA MODAL PROCESO DE OBJECIÓN -->
+                    // //CHECAMOS SI LA HORA ACTUAL ES IGUAL o MAYOR A LA FECHA_FINAL DEL PERIODO DE OBJECION
+                    if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] == 'ACTIVO'){
+                      if($fecha > $solicitud['fecha_fin']){
+                        $estatus_dspp = 7; //TERMINA PERIODO DE OBJECIÓN
+                        $estatus_objecion = 'FINALIZADO';
+                        echo "<script>alerrt('paso 1');</script>";
 
-                <div id="<?php echo "objecion".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                  <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso de Objeción</h4>
-                      </div>
-                      <div class="modal-body">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <h4>Periodo de Objeción <small>(<?php echo $solicitud['estatus_objecion']; ?>)</small></h4>
-                            <p class="alert alert-info" style="padding:7px;">Inicio: <?php echo date('d/m/Y',$solicitud['fecha_inicio']); ?></p>
-                            <p class="alert alert-danger" style="padding:7px;">Fin: <?php echo date('d/m/Y',$solicitud['fecha_fin']); ?></p>
-                            <?php 
-                            if($solicitud['estatus_objecion'] == 'EN ESPERA'){
-                            ?>
-                              <button type="submit" class="btn btn-success" name="aprobar_periodo" value="1">Aprobar Periodo</button>
-                              <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
-                            <?php
-                            }
-                            ?>
+                        //INSERTARMOS PROCESO_CERTIFICACION
+                        $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
+                          GetSQLValueString($solicitud['idsolicitud'], "int"),
+                          GetSQLValueString($estatus_dspp, "int"),
+                          GetSQLValueString($fecha, "int"));
+                        $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+                        echo "<script>alerrt('paso 2');</script>";
+                        //ACTUALIZAMOS EL PERIODO_OBJECION
+                        $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
+                          GetSQLValueString($estatus_objecion, "text"),
+                          GetSQLValueString($solicitud['idperiodo_objecion'], "int"));
+                        $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+                        echo "<script>alerrt('paso 3');</script>";
+                      }
+                    }
+
+                    if(isset($solicitud['idperiodo_objecion'])){
+                    ?>
+                      <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#objecion".$solicitud['idperiodo_objecion']; ?>">Proceso Objeción</button>
+                    <?php
+                    }else{
+                      echo "<button class='btn btn-sm btn-default' style='width:100%' disabled>Consultar Proceso</button>";
+                    }
+                     ?>
+                    <!-- INICIA MODAL PROCESO DE OBJECIÓN -->
+
+                    <div id="<?php echo "objecion".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Proceso de Objeción</h4>
                           </div>
-
-                          <div class="col-md-6">
-                            <?php 
-                            if($solicitud['estatus_objecion'] == 'FINALIZADO'){
-                            ?>
-                              <h4>Resolución de Objeción</h4>
-                              <p class="alert alert-info" style="padding:7px;">
-                                <b style="margin-right:10px;">Dictamen:</b>
+                          <div class="modal-body">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <h4>Periodo de Objeción <small>(<?php echo $solicitud['estatus_objecion']; ?>)</small></h4>
+                                <p class="alert alert-info" style="padding:7px;">Inicio: <?php echo date('d/m/Y',$solicitud['fecha_inicio']); ?></p>
+                                <p class="alert alert-danger" style="padding:7px;">Fin: <?php echo date('d/m/Y',$solicitud['fecha_fin']); ?></p>
                                 <?php 
-                                if(empty($solicitud['dictamen'])){
+                                if($solicitud['estatus_objecion'] == 'EN ESPERA'){
                                 ?>
-                                  <label class="radio-inline">
-                                    <input type="radio" name="dictamen" id="positivo" value="POSITIVO"> Positivo
-                                  </label>
-                                  <label class="radio-inline">
-                                    <input type="radio" name="dictamen" id="negativo" value="NEGATIVO"> Negativo
-                                  </label>
+                                  <button type="submit" class="btn btn-success" name="aprobar_periodo" value="1">Aprobar Periodo</button>
+                                  <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                                <?php
+                                }
+                                ?>
+                              </div>
+
+                              <div class="col-md-6">
+                                <?php 
+                                if($solicitud['estatus_objecion'] == 'FINALIZADO'){
+                                ?>
+                                  <h4>Resolución de Objeción</h4>
+                                  <p class="alert alert-info" style="padding:7px;">
+                                    <b style="margin-right:10px;">Dictamen:</b>
+                                    <?php 
+                                    if(empty($solicitud['dictamen'])){
+                                    ?>
+                                      <label class="radio-inline">
+                                        <input type="radio" name="dictamen" id="positivo" value="POSITIVO"> Positivo
+                                      </label>
+                                      <label class="radio-inline">
+                                        <input type="radio" name="dictamen" id="negativo" value="NEGATIVO"> Negativo
+                                      </label>
+                                    <?php
+                                    }else{
+                                      echo "<span style='color:#c0392b'>".$solicitud['dictamen']."</span>";
+                                    }
+                                     ?>
+                                  </p>
+                                  <label for="observacion">Observaciones</label>
+                                  <?php 
+                                  if(empty($solicitud['observacion'])){
+                                    echo '<textarea name="observacion" id="observacion" class="form-control"></textarea>';
+                                  }else{
+                                    echo "<p style='color:#c0392b'>".$solicitud['observacion']."</p>";
+                                  }
+
+                                  if(empty($solicitud['documento'])){
+                                  ?>
+                                    <label for="cargar_resolucion">Cargar Resolución</label>
+                                    <input type="file" class="form-control" id="cargar_resolucion" name="cargar_resolucion" >
+                                    <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+
+                                    <button type="submit" class="btn btn-success" style="width:100%" name="enviar_resolucion" value="1">Enviar Resolución</button>
+                                  <?php
+                                  }else{
+                                    echo "<a href='".$solicitud['documento']."' class='btn btn-info' style='width:100%' target='_blank'>Descargar Resolución</a>";
+                                  }
+                                   ?>
                                 <?php
                                 }else{
-                                  echo "<span style='color:#c0392b'>".$solicitud['dictamen']."</span>";
+                                  echo "<p class='alert alert-warning'><strong>Una vez finalizado el Periodo de Objeción podra cargar la resolución del mismo</strong></p>";
+                                  echo "<input type='hidden' name='idperiodo_objecion' value='$solicitud[idperiodo_objecion]'>";
                                 }
                                  ?>
-                              </p>
-                              <label for="observacion">Observaciones</label>
-                              <?php 
-                              if(empty($solicitud['observacion'])){
-                                echo '<textarea name="observacion" id="observacion" class="form-control"></textarea>';
-                              }else{
-                                echo "<p style='color:#c0392b'>".$solicitud['observacion']."</p>";
-                              }
-
-                              if(empty($solicitud['documento'])){
-                              ?>
-                                <label for="cargar_resolucion">Cargar Resolución</label>
-                                <input type="file" class="form-control" id="cargar_resolucion" name="cargar_resolucion" >
-
-                                <button type="submit" class="btn btn-success" style="width:100%" name="enviar_resolucion" value="1">Enviar Resolución</button>
-                              <?php
-                              }else{
-                                echo "<a href='".$solicitud['documento']."' class='btn btn-info' style='width:100%' target='_blank'>Descargar Resolución</a>";
-                              }
-                               ?>
-                            <?php
-                            }else{
-                              echo "<p class='alert alert-warning'><strong>Una vez finalizado el Periodo de Objeción podra cargar la resolución del mismo</strong></p>";
-                              echo "<input type='hidden' name='idperiodo_objecion' value='$solicitud[idperiodo_objecion]'>";
-                            }
-                             ?>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <input type="hidden" name="idperiodo_objecion_2" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
                           </div>
                         </div>
                       </div>
-                      <div class="modal-footer">
-                        <input type="hidden" name="idperiodo_objecion_2" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
-                      </div>
                     </div>
-                  </div>
-                </div>
-                <!-- TERMINA MODAL PROCESO DE OBJECIÓN -->
-
+                    <!-- TERMINA MODAL PROCESO DE OBJECIÓN -->
+                <?php
+                }
+                ?>
               </td>
               <!----- INICIA PROCESO CERTIFICACIÓN ---->
               <td>
                 <?php 
-                if(isset($solicitud['estatus_objecion']) && $solicitud['estatus_objecion'] == 'FINALIZADO' && isset($solicitud['documento'])){
+                if((isset($solicitud['estatus_objecion']) && $solicitud['estatus_objecion'] == 'FINALIZADO' && isset($solicitud['documento'])) || ($solicitud['tipo_solicitud'] == 'RENOVACION' && !empty($solicitud['fecha_aceptacion']))){
                 ?>
                 <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
                 <?php
@@ -1103,87 +1020,6 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
               <!----- TERMINA PROCESO CERTIFICACIÓN ---->
 
               <!-- INICIA MEMBRESIA -->
-              <td>
-                <?php 
-                if(isset($solicitud['idmembresia'])){
-                  $row_membresia = mysql_query("SELECT membresia.*, comprobante_pago.* FROM membresia LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE idmembresia = $solicitud[idmembresia]", $dspp) or die(mysql_error());
-                  $membresia = mysql_fetch_assoc($row_membresia);
-                ?>
-                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#membresia".$solicitud['idmembresia']; ?>">Estatus Membresía</button>
-                <?php
-                }
-                 ?>
-              </td>
-
-                <!-- inicia modal estatus membresia -->
-
-                <div id="<?php echo "membresia".$solicitud['idmembresia']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                  <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Estatus Membresía</h4>
-                      </div>
-                      <div class="modal-body">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <?php 
-                            if(isset($membresia['idcomprobante_pago'])){
-                              echo '<p class="alert alert-info">
-                              Estatus Comprobante: <span style="color:red">'.$membresia['estatus_comprobante'].'</span><br>
-                              Monto de la membresia: <span style="color:red">'.$membresia['monto'].'</span>
-                              </p>';
-                            }else{
-
-                            }
-                             ?>
-
-                            <p><b>Comprobante de Pago</b></p>
-                            <?php 
-                              if(!isset($membresia['archivo'])){
-                                echo "<p class='alert alert-warning'>Aun no se ha cargado el comprobante de pago</p>";
-                              }else{
-                                echo "<p class='alert alert-success'>Se ha cargado el comprobante de pago, ahora puede descargarlo. Una vez revisado debera de \"APROBAR\" o \"RECHAZAR\" el comprobante de pago de la membresia</p>";
-
-                              ?>
-                                <a href="<?php echo $membresia['archivo']; ?>" target="_blank" class="btn btn-info" style="width:100%">Descargar Comprobante</a>
-                                <hr>
-                                <?php 
-                                if($membresia['estatus_comprobante'] == 'ACEPTADO'){
-                                  echo "<p class='text-center alert alert-success'><b>La membresía se ha activado</b></p>";
-                                }else{
-                                ?>
-                                  <p class="alert alert-info">
-                                    Para aprobar la membresia debe de "APROBAR" el comprobante de pago, si se "RECHAZA" se le notificara al empresa para que pueda revisarlo y cargar nuevamente uno nuevo.
-                                  </p>
-                                    <div class="text-center">
-                                      <label for="observaciones">Observaciones(<span style="color:red">en caso de ser rechazado</span>)</label>
-                                      <textarea name="observaciones_comprobante" id="observaciones_comprobante" class="form-control" placeholder="Observaciones"></textarea>
-                                      <input type="hidden" name="idcomprobante_pago" value="<?php echo $membresia['idcomprobante_pago']; ?>">
-                                      <input type="hidden" name="idmembresia" value="<?php echo $solicitud['idmembresia']; ?>">
-                                      <button type="submit" class="btn btn-sm btn-success" style="width:45%" name="aprobar_comprobante" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar</button>
-                                      <button type="submit" class="btn btn-sm btn-danger" style="width:45%" name="rechazar_comprobante" value="2"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
-                                    </div>
-                                <?php
-                                }
-                                 ?>
-                              <?php
-                              }
-                             ?>
-                          </div>
-
-
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- termina modal estatus membresia -->
-
               <!-- TERMINA MEMBRESIA -->
               
               <!----- INICIA VENTANA CERTIFICADO ------>
@@ -1201,102 +1037,188 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                       </div>
                       <div class="modal-body">
                         <div class="row">
-                          <div class="col-md-6">
-                            <h4>Contrato de Uso</h4>
-                            <?php 
-                            if(isset($solicitud['idcontrato'])){
-                              $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
-                              $contrato = mysql_fetch_assoc($row_contrato);
+                          <!-- INICIA SECCIÓN PARA CARGAR EL CERTIFICADO -->
+                          <?php 
+                          if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+                          ?>
+                            <div class="col-md-6">
+                              <h4>Contrato de Uso</h4>
+                              <p class="alert alert-warning">Renovación del Registro</p>
 
-                              if($contrato['estatus_contrato'] == "ACEPTADO"){
-                                echo "<p class='alert alert-success'>Se ha aceptado el Contrato de Uso</p>";
-                                echo "<a href=".$contrato['archivo']." target='_blank' class='btn btn-sm btn-success' style='width:100%'>Descargar Contrato</a>";
+                              <h4>Formato, Dictamen e Informe de Evaluación</h4>
+                              <?php 
+                              if(!empty($solicitud['iddictamen_evaluacion']) && !empty($solicitud['idinforme_evaluacion']) && !empty($solicitud['idformato_evaluacion'])){
 
-                              }else{
+                                $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
+                                $formato = mysql_fetch_assoc($row_formato);
+                                $row_dictamen = mysql_query("SELECT * FROM dictamen_evaluacion WHERE iddictamen_evaluacion = $solicitud[iddictamen_evaluacion]", $dspp) or die(mysql_error());
+                                $dictamen = mysql_fetch_assoc($row_dictamen);
+                                $row_informe = mysql_query("SELECT * FROM informe_evaluacion WHERE idinforme_evaluacion = $solicitud[idinforme_evaluacion]", $dspp) or die(mysql_error());
+                                $informe = mysql_fetch_assoc($row_informe);
                               ?>
-                                <a href="<?php echo $contrato['archivo']; ?>" target="_blank" class="btn btn-sm btn-success" style="width:100%">Descargar Contrato</a>
-                                <label for="observaciones_contrato">Observaciones (<span style="color:red">en caso de ser rechazado</span>)</label>
-                                <textarea name="observaciones_contrato" id="observaciones_contrato" class="form-control" placeholder="Observaciones Contrato"></textarea>
-                                <div class="col-md-12">
-                                  <button class="btn btn-sm btn-success" name="aprobar_contrato" value="1" style="width:45%"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar</button>
-                                  <button class="btn btn-sm btn-danger" name="rechazar_contrato" value="2" style="width:45%"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Rechazar</button>
-                                </div>
+
+                                  <div class="alert alert-info">
+                                    <p>
+                                      Formato de Evaluación
+                                    </p>
+                                    <a href="<?php echo $formato['archivo']; ?>" class="btn btn-success" target="_new">Descargar Formato</a>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_formato" id="" value="ACEPTADO" <?php if($formato['estatus_formato'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
+                                    </label>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_formato" id="" value="RECHAZADO" <?php if($formato['estatus_formato'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
+                                    </label>
+
+                                  </div>
+
+                                  <div class="alert alert-warning">
+                                    <p>
+                                      Informe de Evaluación
+                                    </p>
+                                    <a href="<?php echo $informe['archivo']; ?>" class="btn btn-success" target="_new">Descargar Informe</a>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_informe" id="" value="ACEPTADO" <?php if($informe['estatus_informe'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
+                                    </label>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_informe" id="" value="RECHAZADO" <?php if($informe['estatus_informe'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
+                                    </label>
+
+                                  </div>
+                                  <div class="alert alert-info">
+                                    <p>Dictamen de Evaluación</p>
+                                    <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-success" target="_new">Descargar Dictamen</a>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_dictamen" id="inlineRadio1" value="ACEPTADO" <?php if($dictamen['estatus_dictamen'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
+                                    </label>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_dictamen" id="inlineRadio2" value="RECHAZADO" <?php if($dictamen['estatus_dictamen'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
+                                    </label>
+
+                                  </div>
+                                  <input type="hidden" name="idformato_evaluacion" value="<?php echo $formato['idformato_evaluacion']; ?>">
+                                  <input type="hidden" name="iddictamen_evaluacion" value="<?php echo $dictamen['iddictamen_evaluacion']; ?>">
+                                  <input type="hidden" name="idinforme_evaluacion" value="<?php echo $informe['idinforme_evaluacion']; ?>">
+                                  <?php 
+                                  if($dictamen['estatus_dictamen'] != "ACEPTADO" && $informe['estatus_informe'] != "ACEPTADO"){
+                                  ?>
+                                    <button type="submit" class="btn btn-primary" name="documentos_evaluacion" value="1" onclick="return validar()">Actualizar Documentos</button>
+                                  <?php
+                                  }
+                                   ?>
+                                  
                               <?php
+                              }else{
+                                echo "<p class='alert alert-warning'>Aun no se ha cargado el \"Informe de Evaluación\" así como el \"Dictamen de Evaluación\"</p>";
                               }
-                            ?>
+                               ?>
+                            </div>
 
-                            <?php
-                            }else{
-                              echo "<p class='alert alert-warning'>Aun no se ha cargado el <span style='colore:red'>Contrato de Uso</span></p>";
-                            }
-                             ?>
+                          <?php
+                          }else{
+                          ?>
+                            <div class="col-md-6">
+                              <h4>Contrato de Uso</h4>
+                              <?php 
+                              if(isset($solicitud['idcontrato'])){
+                                $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
+                                $contrato = mysql_fetch_assoc($row_contrato);
 
-                            <h4>Formato, Dictamen e Informe de Evaluación</h4>
-                            <?php 
-                            if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idinforme_evaluacion'])){
-                              $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
-                              $formato = mysql_fetch_assoc($row_formato);
-                              $row_dictamen = mysql_query("SELECT * FROM dictamen_evaluacion WHERE iddictamen_evaluacion = $solicitud[iddictamen_evaluacion]", $dspp) or die(mysql_error());
-                              $dictamen = mysql_fetch_assoc($row_dictamen);
-                              $row_informe = mysql_query("SELECT * FROM informe_evaluacion WHERE idinforme_evaluacion = $solicitud[idinforme_evaluacion]", $dspp) or die(mysql_error());
-                              $informe = mysql_fetch_assoc($row_informe);
-                            ?>
+                                if($contrato['estatus_contrato'] == "ACEPTADO"){
+                                  echo "<p class='alert alert-success'>Se ha aceptado el Contrato de Uso</p>";
+                                  echo "<a href=".$contrato['archivo']." target='_blank' class='btn btn-sm btn-success' style='width:100%'>Descargar Contrato</a>";
 
-                                <div class="alert alert-info">
-                                  <p>
-                                    Formato de Evaluación
-                                  </p>
-                                  <a href="<?php echo $formato['archivo']; ?>" class="btn btn-success" target="_new">Descargar Formato</a>
-                                  <label class="radio-inline">
-                                    <input type="radio" name="estatus_formato" id="" value="ACEPTADO" <?php if($formato['estatus_formato'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
-                                  </label>
-                                  <label class="radio-inline">
-                                    <input type="radio" name="estatus_formato" id="" value="RECHAZADO" <?php if($formato['estatus_formato'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
-                                  </label>
-
-                                </div>
-
-                                <div class="alert alert-warning">
-                                  <p>
-                                    Informe de Evaluación
-                                  </p>
-                                  <a href="<?php echo $informe['archivo']; ?>" class="btn btn-success" target="_new">Descargar Informe</a>
-                                  <label class="radio-inline">
-                                    <input type="radio" name="estatus_informe" id="" value="ACEPTADO" <?php if($informe['estatus_informe'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
-                                  </label>
-                                  <label class="radio-inline">
-                                    <input type="radio" name="estatus_informe" id="" value="RECHAZADO" <?php if($informe['estatus_informe'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
-                                  </label>
-
-                                </div>
-                                <div class="alert alert-info">
-                                  <p>Dictamen de Evaluación</p>
-                                  <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-success" target="_new">Descargar Dictamen</a>
-                                  <label class="radio-inline">
-                                    <input type="radio" name="estatus_dictamen" id="inlineRadio1" value="ACEPTADO" <?php if($dictamen['estatus_dictamen'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
-                                  </label>
-                                  <label class="radio-inline">
-                                    <input type="radio" name="estatus_dictamen" id="inlineRadio2" value="RECHAZADO" <?php if($dictamen['estatus_dictamen'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
-                                  </label>
-
-                                </div>
-                                <input type="hidden" name="idformato_evaluacion" value="<?php echo $formato['idformato_evaluacion']; ?>">
-                                <input type="hidden" name="iddictamen_evaluacion" value="<?php echo $dictamen['iddictamen_evaluacion']; ?>">
-                                <input type="hidden" name="idinforme_evaluacion" value="<?php echo $informe['idinforme_evaluacion']; ?>">
-                                <?php 
-                                if($dictamen['estatus_dictamen'] != "ACEPTADO" && $informe['estatus_informe'] != "ACEPTADO"){
+                                }else{
                                 ?>
-                                  <button type="submit" class="btn btn-primary" name="documentos_evaluacion" value="1" onclick="return validar()">Actualizar Documentos</button>
+                                  <a href="<?php echo $contrato['archivo']; ?>" target="_blank" class="btn btn-sm btn-success" style="width:100%">Descargar Contrato</a>
+                                  <label for="observaciones_contrato">Observaciones (<span style="color:red">en caso de ser rechazado</span>)</label>
+                                  <textarea name="observaciones_contrato" id="observaciones_contrato" class="form-control" placeholder="Observaciones Contrato"></textarea>
+                                  <div class="col-md-12">
+                                    <button class="btn btn-sm btn-success" name="aprobar_contrato" value="1" style="width:45%"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar</button>
+                                    <button class="btn btn-sm btn-danger" name="rechazar_contrato" value="2" style="width:45%"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Rechazar</button>
+                                  </div>
                                 <?php
                                 }
-                                 ?>
-                                
-                            <?php
-                            }else{
-                              echo "<p class='alert alert-warning'>Aun no se ha cargado el \"Informe de Evaluación\" así como el \"Dictamen de Evaluación\"</p>";
-                            }
-                             ?>
-                          </div>
+                              ?>
+
+                              <?php
+                              }else{
+                                echo "<p class='alert alert-warning'>Aun no se ha cargado el <span style='colore:red'>Contrato de Uso</span></p>";
+                              }
+                               ?>
+
+                              <h4>Formato, Dictamen e Informe de Evaluación</h4>
+                              <?php 
+                              if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idinforme_evaluacion'])){
+                                $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
+                                $formato = mysql_fetch_assoc($row_formato);
+                                $row_dictamen = mysql_query("SELECT * FROM dictamen_evaluacion WHERE iddictamen_evaluacion = $solicitud[iddictamen_evaluacion]", $dspp) or die(mysql_error());
+                                $dictamen = mysql_fetch_assoc($row_dictamen);
+                                $row_informe = mysql_query("SELECT * FROM informe_evaluacion WHERE idinforme_evaluacion = $solicitud[idinforme_evaluacion]", $dspp) or die(mysql_error());
+                                $informe = mysql_fetch_assoc($row_informe);
+                              ?>
+
+                                  <div class="alert alert-info">
+                                    <p>
+                                      Formato de Evaluación
+                                    </p>
+                                    <a href="<?php echo $formato['archivo']; ?>" class="btn btn-success" target="_new">Descargar Formato</a>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_formato" id="" value="ACEPTADO" <?php if($formato['estatus_formato'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
+                                    </label>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_formato" id="" value="RECHAZADO" <?php if($formato['estatus_formato'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
+                                    </label>
+
+                                  </div>
+
+                                  <div class="alert alert-warning">
+                                    <p>
+                                      Informe de Evaluación
+                                    </p>
+                                    <a href="<?php echo $informe['archivo']; ?>" class="btn btn-success" target="_new">Descargar Informe</a>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_informe" id="" value="ACEPTADO" <?php if($informe['estatus_informe'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
+                                    </label>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_informe" id="" value="RECHAZADO" <?php if($informe['estatus_informe'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
+                                    </label>
+
+                                  </div>
+                                  <div class="alert alert-info">
+                                    <p>Dictamen de Evaluación</p>
+                                    <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-success" target="_new">Descargar Dictamen</a>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_dictamen" id="inlineRadio1" value="ACEPTADO" <?php if($dictamen['estatus_dictamen'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
+                                    </label>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="estatus_dictamen" id="inlineRadio2" value="RECHAZADO" <?php if($dictamen['estatus_dictamen'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
+                                    </label>
+
+                                  </div>
+                                  <input type="hidden" name="idformato_evaluacion" value="<?php echo $formato['idformato_evaluacion']; ?>">
+                                  <input type="hidden" name="iddictamen_evaluacion" value="<?php echo $dictamen['iddictamen_evaluacion']; ?>">
+                                  <input type="hidden" name="idinforme_evaluacion" value="<?php echo $informe['idinforme_evaluacion']; ?>">
+                                  <?php 
+                                  if($dictamen['estatus_dictamen'] != "ACEPTADO" && $informe['estatus_informe'] != "ACEPTADO"){
+                                  ?>
+                                    <button type="submit" class="btn btn-primary" name="documentos_evaluacion" value="1" onclick="return validar()">Actualizar Documentos</button>
+                                  <?php
+                                  }
+                                   ?>
+                                  
+                              <?php
+                              }else{
+                                echo "<p class='alert alert-warning'>Aun no se ha cargado el \"Informe de Evaluación\" así como el \"Dictamen de Evaluación\"</p>";
+                              }
+                               ?>
+                            </div>
+                          <?php
+                          }
+                           ?>
+
+                          <!-- TERMINA SECCIÓN PARA VERIFICAR DOCUMENTACIÓN -->
+
+                          <!-- INICIA SECCIÓN PARA CARGAR EL CERTIFICADO -->
                           <div class="col-md-6">
                             <h4>Certificado</h4>
                             <?php 
@@ -1314,6 +1236,7 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
                             }
                              ?>
                           </div>
+                          <!-- TERMINA SECCIÓN PARA CARGAR EL CERTIFICADO -->
                         </div>
                       </div>
                       <div class="modal-footer">
@@ -1335,10 +1258,11 @@ $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
               <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
 
             </tr>
+          </form>
+
           <?php
           }
            ?>
-        </form>
       </tbody>
     </table>
   </div>

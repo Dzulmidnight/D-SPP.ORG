@@ -553,7 +553,6 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <th class="text-center">Proceso de Objeción</th>
           <th class="text-center">Proceso <br>Certificación</th>
           <th class="text-center">Certificado</th>
-
           <!--<th class="text-center">Propuesta</th>-->
           <!--<th class="text-center">Observaciones Solicitud</th>-->
           <th class="text-center" colspan="2">Acciones</th>
@@ -618,21 +617,27 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           </td>
           <td>
             <?php
-            if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] != 'EN ESPERA'){
+            if($solicitud['tipo_solicitud'] == 'RENOVACION'){
             ?>
-              <p class="alert alert-info" style="margin-bottom:0;padding:0px;">Inicio: <?php echo date('d/m/Y', $solicitud['fecha_inicio']); ?></p>
-              <p class="alert alert-danger" style="margin-bottom:0;padding:0px;">Fin: <?php echo date('d/m/Y', $solicitud['fecha_fin']); ?></p>
-              <?php 
-              if(isset($solicitud['documento'])){
-              ?>
-                <p class="alert alert-success" style="margin-bottom:0;padding:0px;">Dictamen: <?php echo $solicitud['dictamen']; ?></p>
-                <a class="btn btn-info" style="font-size:12px;width:100%;height:30px;" href='<?php echo $solicitud['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
-              <?php
-              }
-              ?>
+              <a href="#" data-toggle="tooltip" title="Esta solicitud se encuentra en Proceso de Renovación del Registro por lo tanto no aplica el periodo de objeción" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>SOLICITUD EN RENOVACIÓN</a>
             <?php
             }else{
-              echo "No Disponible";
+              if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] != 'EN ESPERA'){
+              ?>
+                <p class="alert alert-info" style="margin-bottom:0;padding:0px;">Inicio: <?php echo date('d/m/Y', $solicitud['fecha_inicio']); ?></p>
+                <p class="alert alert-danger" style="margin-bottom:0;padding:0px;">Fin: <?php echo date('d/m/Y', $solicitud['fecha_fin']); ?></p>
+                <?php 
+                if(isset($solicitud['documento'])){
+                ?>
+                  <p class="alert alert-success" style="margin-bottom:0;padding:0px;">Dictamen: <?php echo $solicitud['dictamen']; ?></p>
+                  <a class="btn btn-info" style="font-size:12px;width:100%;height:30px;" href='<?php echo $solicitud['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
+                <?php
+                }
+                ?>
+              <?php
+              }else{
+                echo "No Disponible";
+              }
             }
             ?>
           </td>
