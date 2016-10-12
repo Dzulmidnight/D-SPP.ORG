@@ -8,6 +8,8 @@ mysql_select_db($database_dspp, $dspp);
 $row_opp = mysql_query("SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'", $dspp) or die(mysql_error());
 $total_opp = mysql_num_rows($row_opp);
 
+$row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
+$row_oc = mysql_query("SELECT * FROM oc", $dspp) or die(mysql_error());
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -57,27 +59,57 @@ $total_opp = mysql_num_rows($row_opp);
         <p class="alert alert-default" style="padding:9px;"><a href="lista_empresas.php"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Revisar Lista de Compradores y otros Actores</a></p>
       </div>
       <div class="col-md-12">
-        <table class="table table-bordered table-hover">
+        <div class="col-md-3">
+          Palabra
+          <input type="text" class="form-control">
+        </div>
+        <div class="col-md-3">
+          Organismo de Certificación
+          <select class="form-control">
+            <option>Selecciona un organismo de certificación</option>
+            <?php 
+            while($oc = mysql_fetch_assoc($row_oc)){
+              echo "<option value='$oc[abreviacion]'>$oc[abreviacion]</option>";
+            }
+             ?>
+          </select>
+        </div>
+        <div class="col-md-3">
+          País
+          <select class="form-control">
+            <option>Selecciona un país</option>
+            <?php 
+            while($pais = mysql_fetch_assoc($row_pais)){
+              echo "<option value='$pais[abreviacion]'>$pais[abreviacion]</option>";
+            }
+             ?>
+          </select>
+        </div>
+        <div class="col-md-3"><button type="button" class="btn btn-success">Buscar</button></div>
+
+
+
+        <table class="table table-bordered table-condensed table-striped">
           <thead>
             <tr>
               <th class="text-center warning" colspan="12">Lista de Organizaciones de Pequeños Productores (Total: <?php echo $total_opp; ?>)</th>
             </tr>
-            <tr style="font-size:12px;">
-              <th clas="text-center">Nº</th>
-              <th clas="text-center">NOMBRE DE LA ORGANIZACIÓN / ORGANIZATION´S NAME</th>
-              <th clas="text-center">ABREVIACIÓN/ SHORT NAME</th>
-              <th clas="text-center">PAÍS</th>
-              <th clas="text-center">PRODUCTO(S) CERTIFICADO/ CERTIFIED PRODUCTS</th>
-              <th clas="text-center">FECHA SIGUIENTE EVALUACIÓN/ NEXT EVALUATION DATE</th>
-              <th clas="text-center">ESTATUS/STATUS</th>
-              <th clas="text-center">ENTIDAD QUE OTORGÓ EL CERTIFICADO/ENTITY THAT GRANTED CERTIFICATE</th>
-              <th clas="text-center">#SPP</th>
-              <th clas="text-center">EMAIL</th>
-              <th clas="text-center">SITIO WEB / WEB SITE</th>
-              <th clas="text-center">TELÉFONO/TELEPHONE</th>
+            <tr style="font-size:11px;">
+              <th class="text-center">Nº</th>
+              <th class="text-center">NOMBRE DE LA ORGANIZACIÓN / ORGANIZATION´S NAME</th>
+              <th class="text-center">ABREVIACIÓN/ SHORT NAME</th>
+              <th class="text-center">PAÍS</th>
+              <th class="text-center">PRODUCTO(S) CERTIFICADO/ CERTIFIED PRODUCTS</th>
+              <th class="text-center">FECHA SIGUIENTE EVALUACIÓN/ NEXT EVALUATION DATE</th>
+              <th class="text-center">ESTATUS/STATUS</th>
+              <th class="text-center">ENTIDAD QUE OTORGÓ EL CERTIFICADO/ENTITY THAT GRANTED CERTIFICATE</th>
+              <th class="text-center">#SPP</th>
+              <th class="text-center">EMAIL</th>
+              <th class="text-center">SITIO WEB / WEB SITE</th>
+              <th class="text-center">TELÉFONO/TELEPHONE</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody style="font-size:11px;">
             <?php 
             if($total_opp == 0){
               echo "<tr><td class='info' colspan='12'>No se encontraron registros</td></tr>";
@@ -90,7 +122,26 @@ $total_opp = mysql_num_rows($row_opp);
                   <td><?php echo $opp['nombre']; ?></td>
                   <td><?php echo $opp['abreviacion']; ?></td>
                   <td><?php echo $opp['pais']; ?></td>
-                  <td><?php echo "PRODUCTOS"; ?></td>
+                  <td>
+                    <?php 
+                    $row_productos = mysql_query("SELECT producto FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
+                    $total_producto = mysql_num_rows($row_productos);
+                    $cont = 1;
+                    while($producto = mysql_fetch_assoc($row_productos)){
+                      if($total_producto == 1){
+                        echo $producto['producto'];
+                      }else{
+                        echo $producto['producto'];
+                        if($cont < $total_producto){
+                          echo "<span style='color:red'>, </span>";
+                        }else{
+                          echo ".";
+                        }
+                      }
+                      $cont++;
+                    }
+                     ?>
+                  </td>
                   <td><?php echo $opp['vigencia_fin']; ?></td>
                   <td><?php echo $opp['nombre_publico']; ?></td>
                   <td><?php echo $opp['abreviacion_oc']; ?></td>
