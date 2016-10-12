@@ -60,7 +60,8 @@ if(isset($_GET['query'])){
 
   //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.estado != 'ARCHIVADO' OR empresa.estado IS NULL) AND ((idf LIKE '%$palabraClave%') OR (empresa.nombre LIKE '%$palabraClave%') OR (empresa.abreviacion LIKE '%$palabraClave%') OR (sitio_web LIKE '%$palabraClave%') OR (email LIKE '%$palabraClave%') OR (pais LIKE '%$palabraClave%') OR (razon_social LIKE '%$palabraClave%') OR (direccion_fiscal LIKE '%$palabraClave%') OR (rfc LIKE '%$palabraClave%')) ORDER BY empresa.idempresa ASC";
 
-  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.spp LIKE '%$palabraClave%' OR empresa.nombre LIKE '%$palabraClave%' OR empresa.abreviacion LIKE '%$palabraClave%' ORDER BY empresa.idempresa DESC";
+  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.spp LIKE '%$palabraClave%' OR empresa.nombre LIKE '%$palabraClave%' OR empresa.abreviacion LIKE '%$palabraClave%' ORDER BY empresa.idempresa DESC";
+
 
   $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE (empresa.estado != 'ARCHIVADO' OR empresa.estado IS NULL) AND ((empresa.idf LIKE '%$palabraClave%') OR (empresa.nombre LIKE '%$palabraClave%') OR (empresa.abreviacion LIKE '%$palabraClave%') OR (sitio_web LIKE '%$palabraClave%') OR (email LIKE '%$palabraClave%') OR (pais LIKE '%$palabraClave%') OR (razon_social LIKE '%$palabraClave%') OR (direccion_fiscal LIKE '%$palabraClave%') OR (rfc LIKE '%$palabraClave%')) ORDER BY empresa.idempresa ASC";
 
@@ -71,7 +72,9 @@ if(isset($_GET['query'])){
 
   //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais' ORDER BY empresa.idempresa ASC";
 
-  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais' ORDER BY empresa.idempresa DESC";
+
+  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais' ORDER BY empresa.idempresa DESC";
+
 
   $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE empresa.pais = '$pais' ORDER BY empresa.idempresa ASC";
 
@@ -80,15 +83,16 @@ if(isset($_GET['query'])){
   if($idoc == "sinOC"){
     //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc IS NULL || empresa.idoc = '' ORDER BY empresa.idempresa ASC";
 
-    $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc IS NULL || empresa.idoc = '' ORDER BY empresa.idempresa DESC";
+
+  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc IS NULL || empresa.idoc = '' ORDER BY empresa.idempresa DESC";
 
 
-    $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE empresa.idoc IS NULL || empresa.idoc = '' ORDER BY empresa.idempresa ASC";
+  $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE empresa.idoc IS NULL || empresa.idoc = '' ORDER BY empresa.idempresa ASC";
 
   }else{
     //query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = '$idoc' ORDER BY empresa.idempresa ASC";
 
-    $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = '$idoc' ORDER BY empresa.idempresa DESC";
+  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = '$idoc' ORDER BY empresa.idempresa DESC";
 
 
     $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE empresa.idoc = '$idoc' ORDER BY empresa.idempresa ASC";
@@ -98,8 +102,9 @@ if(isset($_GET['query'])){
   $estatus = $_POST['estatus'];
 
   //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estado = '$estatus' ORDER BY empresa.idempresa ASC";
+  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa = '$estatus' ORDER BY empresa.idempresa DESC";
 
-  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa = '$estatus' ORDER BY empresa.idempresa DESC";
+
 
   $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE empresa.estado = '$estatus' ORDER BY empresa.idempresa ASC";
 
@@ -408,9 +413,8 @@ $timeActual = time();
                 GetSQLValueString($datos_empresa['idempresa'], "int"));
               $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
-              $insertSQL = sprintf("INSERT INTO certificado (idempresa, entidad, estatus_certificado, vigencia_fin) VALUES (%s, %s, %s, %s)",
+              $insertSQL = sprintf("INSERT INTO certificado (idempresa, estatus_certificado, vigencia_fin) VALUES (%s, %s, %s, %s)",
                 GetSQLValueString($datos_empresa['idempresa'], "int"),
-                GetSQLValueString($idoc, "int"),
                 GetSQLValueString($estatus_certificado, "int"),
                 GetSQLValueString($vigencia_fin, "text"));
               $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -715,6 +719,9 @@ $timeActual = time();
               <?php 
               $row_productos = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
               $total_productos = mysql_num_rows($row_productos);
+              ?>
+              <a style="font-size:14px;" href="../../agregar_producto.php?idempresa=<?php echo $empresa['idempresa']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></a>
+              <?php
               if($total_productos == 0){
                 echo "No Disponible";
               }
@@ -794,7 +801,14 @@ $timeActual = time();
     </tr>
   </table>
 
-
+<script type="text/javascript">
+<!--
+function ventanaNueva(documento,ancho,alto,nombreVentana){
+    window.open(documento, nombreVentana,'width=' + ancho + ', height=' + alto);
+}
+     
+//-->
+</script>
 
 <script language="JavaScript"> 
 

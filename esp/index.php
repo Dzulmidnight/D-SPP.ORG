@@ -928,14 +928,14 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                 Desde el lanzamiento a nivel global en el año 2011, muchas Organizaciones de Pequeños Productores se acercaron para obtener la certificación. Desde esa fecha ya hay muchas Organizaciones que confían en el Símbolo de Pequeños Productores.
               </p>
               <p class="text-justify alert alert-success" style="padding:5.5px;">
-                <a href="?listaOPP">Revisa la lista de Organizaciones de Pequeños Productores certificadas con el SPP aquí.</a>
+                <a href="lista_opp.php">Revisa la lista de Organizaciones de Pequeños Productores certificadas con el SPP aquí.</a>
               </p>
               <h5 class="text-justify" style="color:#27ae60">¿Quiénes son los Compradores?</h5>
               <p class="text-justify">
                 Existen muchas empresas comprometidas con la misión y visión del SPP y apoyan íntegramente al desarrollo de las Organizaciones de Pequeños Productores.
               </p>
               <p class="text-justify alert alert-success" style="padding:5.5px;">
-                <a href="?listaCOM">Revisa la lista de Empresas registradas con el SPP aquí.</a>
+                <a href="lista_empresas.php">Revisa la lista de Empresas registradas con el SPP aquí.</a>
               </p>
             </div>
 
