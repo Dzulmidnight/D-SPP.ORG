@@ -713,7 +713,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           </td>
           <td>
             <?php
-            if($solicitud['tipo_solicitud']){
+            if($solicitud['tipo_solicitud'] == 'RENOVACION'){
             ?>
               <a href="#" data-toggle="tooltip" title="Esta solicitud se encuentra en Proceso de Renovación del Registro por lo tanto no aplica el periodo de objeción" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>SOLICITUD EN RENOVACIÓN</a>
             <?php

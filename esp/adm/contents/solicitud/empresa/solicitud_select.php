@@ -244,12 +244,9 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   $row_empresa = mysql_query("SELECT solicitud_registro.*, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.telefono, empresa.email AS 'email_empresa', empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $detalle_empresa = mysql_fetch_assoc($row_empresa);
 
-  echo "<script>alert('paso 1')</script>";
-
   $row_periodo = mysql_query("SELECT fecha_inicio, fecha_fin FROM periodo_objecion WHERE idperiodo_objecion = $_POST[idperiodo_objecion]",$dspp) or die(mysql_error());
   $periodo = mysql_fetch_assoc($row_periodo);
 
-  echo "<script>alert('paso 2')</script>";
   $ruta = "../../archivos/admArchivos/resolucion/";
 
   if(!empty($_FILES['cargar_resolucion']['name'])){
@@ -269,7 +266,6 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
     GetSQLValueString($resolucion, "text"),
     GetSQLValueString($_POST['idperiodo_objecion'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
-  echo "<script>alert('paso 3')</script>";
 
   /// inicia envio correo "periodo de objeción finalizado" a OC
   $asunto = "D-SPP | Periodo de Objeción Finalizado";

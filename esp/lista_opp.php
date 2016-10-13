@@ -5,11 +5,83 @@ mysql_select_db($database_dspp, $dspp);
         //$asunto = "Nuevo Registro - D-SPP( Datos de Acceso )";
 //SELECT opp.idopp, opp.idf, opp.nombre, opp.abreviacion, opp.idoc, opp.pais, opp.sitio_web, opp.email, opp.telefono, opp.estatusPagina, opp.estado, oc.abreviacion AS 'abreviacion_oc', status_pagina.nombre AS 'nombre_estatus', certificado.vigenciafin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN status_pagina ON opp.estatusPagina = status_pagina.idEstatusPagina INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estado  IS NOT NULL AND opp.estado != 'ARCHIVADO' AND opp.situacion != 'CANCELADO' AND opp.situacion != 'NUEVA' ORDER BY certificado.vigenciafin
 
-$row_opp = mysql_query("SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'", $dspp) or die(mysql_error());
+if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
+  $palabra = $_POST['palabra'];
+
+  $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.spp LIKE '%$palabra%' OR opp.nombre LIKE '%$palabra%' OR opp.abreviacion LIKE '%$palabra%' OR opp.pais LIKE '%$palabra%' OR oc.abreviacion LIKE '%$palabra%' OR opp.email LIKE '%$palabra%' OR opp.telefono LIKE '%$palabra%') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'";
+}else if(isset($_POST['busqueda_filtros']) && $_POST['busqueda_filtros'] == 1){
+  $idoc = $_POST['idoc'];
+  $pais = $_POST['pais'];
+  $producto = $_POST['nombre_producto'];
+  $idopp_producto = '';
+
+  if(!empty($pais) && !empty($idoc) && !empty($producto)){ /// BUSQUEDA DE PAIS, OC Y PRODUCTOS
+
+    //$query_productos = mysql_query("SELECT idopp FROM productos WHERE producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
+    $query_productos = mysql_query("SELECT opp.idopp, productos.producto FROM opp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE idoc = $idoc AND pais = '$pais' AND producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
+    $total_idopp = mysql_num_rows($query_productos);
+    $cont_idopp = 1;
+    while($producto_opp = mysql_fetch_assoc($query_productos)){
+      $idopp_producto .= "opp.idopp = '$producto_opp[idopp]'";
+      if($cont_idopp < $total_idopp){
+        $idopp_producto .= " OR ";
+      }
+      $cont_idopp++;
+    }
+
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin, productos.idproducto, productos.producto FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE (opp.idoc = '$idoc' AND opp.pais = '$pais' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
+
+  }else if(!empty($pais) && !empty($idoc) && empty($producto)){ ///BUSQUEDA DE PAIS Y OC
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.idoc = '$idoc' AND opp.pais = '$pais') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'";
+  }else if(empty($pais) && !empty($idoc) && empty($producto)){ ///BUSQUEDA DE OC
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.idoc = '$idoc') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'";
+  }else if(!empty($pais) && empty($idoc) && empty($producto)){///BUSQUEDA DE PAIS
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.pais = '$pais') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'";
+  }else if(!empty($pais) && !empty($producto) && empty($idoc)){///BUSQUEDA PAIS Y PRODUCTO
+    //$query_productos = mysql_query("SELECT idopp FROM productos WHERE producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
+    $query_productos = mysql_query("SELECT opp.idopp, productos.producto FROM opp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE pais = '$pais' AND producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
+    $total_idopp = mysql_num_rows($query_productos);
+    $cont_idopp = 1;
+    while($producto_opp = mysql_fetch_assoc($query_productos)){
+      $idopp_producto .= "opp.idopp = '$producto_opp[idopp]'";
+      if($cont_idopp < $total_idopp){
+        $idopp_producto .= " OR ";
+      }
+      $cont_idopp++;
+    }
+
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin, productos.idproducto, productos.producto FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE ( opp.pais = '$pais' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
+  }else if(!empty($producto) && empty($idoc) && empty($pais)){///BUSQUEDA DE PRODUCTO
+    $query_productos = mysql_query("SELECT idopp FROM productos WHERE producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
+    $total_idopp = mysql_num_rows($query_productos);
+    $cont_idopp = 1;
+    while($producto_opp = mysql_fetch_assoc($query_productos)){
+      $idopp_producto .= "opp.idopp = '$producto_opp[idopp]'";
+      if($cont_idopp < $total_idopp){
+        $idopp_producto .= " OR ";
+      }
+      $cont_idopp++;
+    }
+
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE ($idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'";
+
+  }else{
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'";
+  }
+
+
+}else{
+  $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'";
+}
+
+$row_opp = mysql_query($query_opp, $dspp) or die(mysql_error());
+//$row_opp = mysql_query("SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'", $dspp) or die(mysql_error());
 $total_opp = mysql_num_rows($row_opp);
 
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT * FROM oc", $dspp) or die(mysql_error());
+$query_productos = mysql_query("SELECT * FROM productos GROUP BY producto",$dspp) or die(mysql_error());
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -59,33 +131,64 @@ $row_oc = mysql_query("SELECT * FROM oc", $dspp) or die(mysql_error());
         <p class="alert alert-default" style="padding:9px;"><a href="lista_empresas.php"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Revisar Lista de Compradores y otros Actores</a></p>
       </div>
       <div class="col-md-12">
-        <div class="col-md-3">
-          Palabra
-          <input type="text" class="form-control">
+        <div class="row">
+          <form action="" method="POST">
+            <div class="col-md-3">
+              <div class="input-group">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" name="busqueda_palabra" value="1" type="submit">Buscar</button>
+                </span>
+                <input type="text" class="form-control" name="palabra" placeholder="Buscar por palabra">
+              </div><!-- /input-group -->
+            </div>
+          </form>
+          <form action="" method="POST">
+            <div class="col-md-9 alert alert-info">
+              <div class="text-center col-md-12">
+                <b style="color:#d35400">Seleccione los parametros de los cuales desea realizar la busqueda</b>
+              </div> 
+              <div class="row">
+                <div class="col-xs-4">
+                  Organismo de Certificación
+                  <select name="idoc" class="form-control">
+                    <option value=''>Selecciona un organismo de certificación</option>
+                    <?php 
+                    while($oc = mysql_fetch_assoc($row_oc)){
+                      echo "<option value='$oc[idoc]'>$oc[abreviacion]</option>";
+                    }
+                     ?>
+                  </select>
+                </div>
+                <div class="col-xs-3">
+                  País
+                  <select name="pais" class="form-control">
+                    <option value=''>Selecciona un país</option>
+                    <?php 
+                    while($pais = mysql_fetch_assoc($row_pais)){
+                      echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
+                    }
+                     ?>
+                  </select>
+                </div>
+                <div class="col-xs-3">
+                  Producto
+                  <select class="form-control" name="nombre_producto" id="">
+                    <option value=''>Seleccione un producto</option>
+                    <?php 
+                    while($lista_productos = mysql_fetch_assoc($query_productos)){
+                      echo "<option value='$lista_productos[producto]'>$lista_productos[producto]</option>";
+                    }
+                     ?>
+                  </select>
+                </div>
+                <div class="col-xs-2">
+                  <button type="submit" class="btn btn-success" name="busqueda_filtros" value="1">Buscar</button>
+                </div>
+              </div>
+            </div>
+          </form>
+
         </div>
-        <div class="col-md-3">
-          Organismo de Certificación
-          <select class="form-control">
-            <option>Selecciona un organismo de certificación</option>
-            <?php 
-            while($oc = mysql_fetch_assoc($row_oc)){
-              echo "<option value='$oc[abreviacion]'>$oc[abreviacion]</option>";
-            }
-             ?>
-          </select>
-        </div>
-        <div class="col-md-3">
-          País
-          <select class="form-control">
-            <option>Selecciona un país</option>
-            <?php 
-            while($pais = mysql_fetch_assoc($row_pais)){
-              echo "<option value='$pais[abreviacion]'>$pais[abreviacion]</option>";
-            }
-             ?>
-          </select>
-        </div>
-        <div class="col-md-3"><button type="button" class="btn btn-success">Buscar</button></div>
 
 
 

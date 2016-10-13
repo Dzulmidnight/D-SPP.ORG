@@ -935,7 +935,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                 Existen muchas empresas comprometidas con la misión y visión del SPP y apoyan íntegramente al desarrollo de las Organizaciones de Pequeños Productores.
               </p>
               <p class="text-justify alert alert-success" style="padding:5.5px;">
-                <a href="lista_empresas.php">Revisa la lista de Empresas registradas con el SPP aquí.</a>
+                <a href="#">Revisa la lista de Empresas registradas con el SPP aquí.</a>
               </p>
             </div>
 
