@@ -1652,6 +1652,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 			</td>
 
 		</tr>
+    
 		<tr>
 			<th class="success" colspan="4">
 				COMPROMISOS

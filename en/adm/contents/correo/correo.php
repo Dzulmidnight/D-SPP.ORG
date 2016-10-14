@@ -6,13 +6,17 @@
           Menú
         </span>
         <a href="?CORREO&add" class="list-group-item <?php if(isset($_GET['add'])){echo "active";} ?>"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Enviar Correo</a>
-        <a href="#" class="list-group-item">Lista de Correos</a>
+        <a href="?CORREO&list" class="list-group-item <?php if(isset($_GET['list'])){echo "active";} ?>" ><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> Consultar Correos</a>
         <!--<a href="#" class="list-group-item">Porta ac consectetur ac</a>
         <a href="#" class="list-group-item">Vestibulum at eros</a>-->
       </div>
+      <div class="alert alert-info">
+        El envío de correos masivos puede tardar un momento.
+      </div>
+
     </div>
 
-    <div class="col-xs-9">
+    <div class="col-xs-12">
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Panel Correo</h3>
@@ -29,6 +33,9 @@
           if(isset($_GET['add'])){include ("correo_add.php");}
           else
           if(isset($_GET['detail'])){include ("opp_detail.php");}
+          else
+          if(isset($_GET['list'])){include ("correo_list.php");}
+
           ?>
 
         </div>

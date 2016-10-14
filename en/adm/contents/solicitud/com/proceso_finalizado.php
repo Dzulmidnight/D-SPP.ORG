@@ -1033,12 +1033,12 @@ if(isset($_POST['resolucionObjecion']) && $_POST['resolucionObjecion'] == "resol
  if(isset($_POST['filtroPalabra']) && $_POST['filtroPalabra'] == "1" && $_POST['palabraClave']){
   $palabraClave = $_POST['palabraClave'];
 
-        $query_buscar = "SELECT solicitud_registro.*, com.idcom,com.nombre, com.pais, com.estado, com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE (com.nombre LIKE '%$palabraClave%') OR (solicitud_registro.p1_correo LIKE '%$palabraClave%') OR (com.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') AND (solicitud_registro.status_interno = 10) ORDER BY solicitud_registro.fecha_elaboracion DESC";
+        $query_buscar = "SELECT solicitud_registro.*, com.idcom,com.nombre AS 'nombreCOM', com.pais, com.estado, com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE (solicitud_registro.status_interno = 10) AND (com.nombre LIKE '%$palabraClave%') OR (solicitud_registro.p1_correo LIKE '%$palabraClave%') OR (com.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') ORDER BY solicitud_registro.fecha_elaboracion DESC";
 
-        $queryTotal = "SELECT COUNT(idsolicitud_registro) AS 'totalConsulta' FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE (com.nombre LIKE '%$palabraClave%') OR (solicitud_registro.p1_correo LIKE '%$palabraClave%') OR (com.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') AND (solicitud_registro.status_interno = 10) ORDER BY solicitud_registro.fecha_elaboracion DESC";
+        $queryTotal = "SELECT COUNT(idsolicitud_registro) AS 'totalConsulta' FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE (solicitud_registro.status_interno = 10) AND (com.nombre LIKE '%$palabraClave%') OR (solicitud_registro.p1_correo LIKE '%$palabraClave%') OR (com.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') ORDER BY solicitud_registro.fecha_elaboracion DESC";
 
 }else if(!isset($_POST['filtroPalabra']) || empty($_POST['palabraClave'])){
-        $query_buscar = "SELECT solicitud_registro.*, com.idcom,com.nombre, com.pais, com.estado,com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc  = oc.idoc WHERE solicitud_registro.status_interno = 10 ORDER BY solicitud_registro.fecha_elaboracion DESC";
+        $query_buscar = "SELECT solicitud_registro.*, com.idcom,com.nombre AS 'nombreCOM', com.pais, com.estado,com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc  = oc.idoc WHERE solicitud_registro.status_interno = 10 ORDER BY solicitud_registro.fecha_elaboracion DESC";
 
         $queryTotal = "SELECT COUNT(idsolicitud_registro) AS 'totalSolicitudes' FROM solicitud_registro WHERE solicitud_registro.status_interno = 10";
 }
@@ -1220,11 +1220,13 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
               <p class="alert alert-success informacion" >
               <?php 
               /******** NOMBRE COMPLETO COM ******************/
-                if(isset($registro_busqueda['nombre'])){
-                  echo $registro_busqueda['nombre']." , <u><a href='?COM&detail&idcom=$registro_busqueda[idcom]'>".$registro_busqueda['abreviacionCOM']."</a></u>";
+                if(isset($registro_busqueda['abreviacionCOM'])){
+                  echo "<u><a href='?COM&detail&idcom=$registro_busqueda[idcom]'>".$registro_busqueda['abreviacionCOM']."</a></u>";
+                }else if(isset($registro_busqueda['nombreCOM'])){
+                  echo "<u><a href='?COM&detail&idcom=$registro_busqueda[idcom]'>".$registro_busqueda['nombreCOM']."</a></u>";
                 }else{
                   echo "No Disponible";
-                } 
+                }
               ?>
               </p>
             </td>

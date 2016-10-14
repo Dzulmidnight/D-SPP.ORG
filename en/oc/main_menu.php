@@ -158,25 +158,39 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $_SESSION['MM_Usern
 
 
 
-    <div class="container-fluid">
+    <!--<div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
         
-          <? include("contents/menu.php");?>
+          <? // include("contents/menu.php");?>
           
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="padding:10px;">
         
-        <? include("selector.php");?>
+        <? // include("selector.php");?>
 
+        </div>
+      </div>
+    </div>-->
+
+
+
+    <div class="container-fluid" >
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <? include("contents/menu.php");?>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="padding:10px;">
+          <? include("selector.php");?>
         </div>
       </div>
     </div>
 
+
     <!------------------- bootstrap-switch -------------->
-    <script>
+    <!--<script>
       $("[name='tipo_solicitud']").bootstrapSwitch();
-    </script>
+    </script>-->
     <script>
       $("[name='procedimiento']").bootstrapSwitch();
     </script>

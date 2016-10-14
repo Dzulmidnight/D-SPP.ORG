@@ -1,24 +1,9 @@
-<?php require_once('../Connections/dspp.php');
-      include_once("../../PHPMailer/class.phpmailer.php");
-      include_once("../../PHPMailer/class.smtp.php");
+<?php 
+require_once('../Connections/dspp.php');
+require_once('../Connections/mail.php');
 
-        $mail = new PHPMailer();
 
-        $mail->IsSMTP();
-        //$mail->SMTPSecure = "ssl";
-        $mail->Host = "mail.d-spp.org";
-        $mail->Port = 25;
-        $mail->SMTPAuth = true;
-        $mail->Username = "soporte@d-spp.org";
-        $mail->Password = "/aung5l6tZ";
-        //$mail->SMTPDebug = 1;
 
-        $mail->From = "soporte@d-spp.org";
-        $mail->FromName = "CERT - DSPP";
-        $mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
-        $mail->AddReplyTo("cert@spp.coop");
- ?>
-<?php
 if (!isset($_SESSION)) {
   session_start();
   
@@ -76,13 +61,13 @@ $startRow_com = $pageNum_com * $maxRows_com;
 
 mysql_select_db($database_dspp, $dspp);
 if(isset($_GET['query'])){
-  $query_com = "SELECT com.* ,solicitud_registro.* FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom WHERE solicitud_registro.idoc = $_SESSION[idoc] ORDER BY solicitud_registro.fecha_elaboracion DESC";
+  $query_com = "SELECT com.* ,solicitud_registro.* FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom WHERE solicitud_registro.idoc = $_SESSION[idoc] AND solicitud_registro.status_interno != 24 ORDER BY solicitud_registro.fecha_elaboracion DESC";
 
 	#$query_com = "SELECT * FROM solicitud_registro where idsolicitud_registro ='".$_GET['query']."' ORDER BY fecha DESC";
 }else{
   #SELECT solicitud_registro.* FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom WHERE com.idcom = 15
 
-  $query_com = "SELECT com.* ,solicitud_registro.* FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom WHERE solicitud_registro.idoc = $_SESSION[idoc] ORDER BY solicitud_registro.fecha_elaboracion DESC"; 
+  $query_com = "SELECT com.* ,solicitud_registro.* FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom WHERE solicitud_registro.idoc = $_SESSION[idoc] AND solicitud_registro.status_interno != 24 ORDER BY solicitud_registro.fecha_elaboracion DESC"; 
 
   #$query_com = "SELECT com.* ,solicitud_registro.* FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom ORDER BY solicitud_registro.fecha_elaboracion ASC";  
 
@@ -114,6 +99,17 @@ if(isset($_POST['statusCertificado']) && $_POST['statusCertificado'] == "statusC
   $nombreArchivoEstatus = $_POST['nombreArchivoEstatus'];
     $archivoDictamen = '';
     $archivoExtra = '';
+
+    if(isset($_POST['montoMembresia'])){
+      $montoMembresia = $_POST['montoMembresia'];
+    }else{
+      $montoMembresia = NULL;
+    }
+
+    $mensajeOPP = $_POST['mensajeOPP'];
+    $archivoDictamen = '';
+    $archivoExtra = '';
+
 
     if(!empty($_POST['nombreArchivoEstatus'])){
       $nombreArchivo = $_POST['nombreArchivoEstatus'];
@@ -148,21 +144,122 @@ if(isset($_POST['statusCertificado']) && $_POST['statusCertificado'] == "statusC
       $query = "INSERT INTO proceso_certificacion(idstatus,idcom,idoc,idsolicitud_registro,registro,archivo,nombre,fecha) VALUES($status,$idcom,$idoc,$idsolicitud_registro,'$registro1','$adjuntoEstatus','$nombreArchivo',$fecha_actual)";
       $proceso_certificacion = mysql_query($query,$dspp) or die(mysql_error());
 
-/*    if(!empty($archivoDictamen)){
-      $query = "INSERT INTO proceso_certificacion(idstatus,idcom,idoc,idsolicitud_registro,registro,archivo,nombre,fecha) VALUES($status,$idcom,$idoc,$idsolicitud_registro,'$registro1','$archivoDictamen','$nombreArchivoEstatus',$fecha_actual)";
-      $proceso_certificacion = mysql_query($query,$dspp) or die(mysql_error());
-    }
-    if(!empty($archivoExtra)){
-      $query = "INSERT INTO proceso_certificacion(idstatus,idcom,idoc,idsolicitud_registro,registro,archivo,nombre,fecha) VALUES($status,$idcom,$idoc,$idsolicitud_registro,'$registro1','$archivoExtra','$nombreArchivoEstatus',$fecha_actual)";
-      $proceso_certificacion = mysql_query($query,$dspp) or die(mysql_error());
-    }
-*/
 
   $queryFecha = "INSERT INTO fecha (fecha, idexterno, idcom, idoc, idcertificado, identificador, status) VALUES($fecha_actual, $idexterno, $idcom, $idoc, $idcertificado, '$identificador', '$status')"; 
   $insertarFecha = mysql_query($queryFecha, $dspp) or die(mysql_error());
 
   $query = "UPDATE solicitud_registro SET status_interno = '$status' WHERE idsolicitud_registro = $idsolicitud_registro";
   $actualizar = mysql_query($query,$dspp) or die(mysql_error());
+
+  if($status == 8){// INICIA IF $status == 8 *********************/
+    $asunto = "Contrato de Uso del Simbolo de Pequeños Productores - SPP";
+    
+    $querySolicitud = "SELECT solicitud_registro.idcom,solicitud_registro.p1_correo, solicitud_registro.p2_correo,com.idcom, com.email FROM solicitud_registro LEFT JOIN com ON solicitud_registro.idcom = com.idcom WHERE idsolicitud_registro = $idsolicitud_registro";
+
+        $rowSolicitud = mysql_query($querySolicitud,$dspp) or die(mysql_error());
+        $datosSolicitud = mysql_fetch_assoc($rowSolicitud);
+
+/*        $destinatarios .= $datosSolicitud['p1_email'];
+        $destinatarios .= $datosSolicitud['p2_email'];
+        $destinatarios .= $datosSolicitud['email'];
+  */    
+        $mail->AddAddress($datosSolicitud['p1_correo']);
+        $mail->AddAddress($datosSolicitud['p2_correo']);
+        $mail->AddAddress($datosSolicitud['email']);
+
+
+      $anexoNombres = "";
+      $query_anexos = "SELECT * FROM anexos WHERE idstatus_interno = 8";
+      $row_anexos = mysql_query($query_anexos,$dspp) or die(mysql_error());
+
+      while($datos_anexos = mysql_fetch_assoc($row_anexos)){
+        $mail->AddAttachment($datos_anexos['archivo']);
+        $anexoNombres .= "<li>".$datos_anexos['anexo']."</li>";
+      }
+
+      $queryProceso_certificacion = "SELECT * FROM proceso_certificacion WHERE idstatus = $status AND idoc = $idoc";
+      $row_proceso_certificacion = mysql_query($queryProceso_certificacion,$dspp) or die(mysql_error());
+
+     while($archivoProceso = mysql_fetch_assoc($row_proceso_certificacion)){
+        $mail->AddAttachment($archivoProceso['archivo']);
+        $anexoNombres .= "<li>".utf8_decode($archivoProceso['nombre'])."</li>";
+      }
+
+      $mensajeDefault = "";
+      if(!empty($mensajeCOM)){
+        $mensajeDefault = $mensajeCOM;
+      }else{
+        $mensajeDefault = "<p>Reciban ustedes un cordial y atento saludo, así como el deseo de éxito en todas y cada una de sus actividades</p>
+                    <p>La presente tiene por objetivo hacerles llegar el documentro <strong>Contrato de Uso del Simbolo de Pequeños Productores y Acuse de Recibido</strong>; documentos que se requieren sean leidos y entendidos, una vez revisada la información de los documentos mencionados, por favor proceder a firmarlos y envíar los mismos por este medio.</p>
+                    <p>El Contrato de Uso menciona como anexo el documento Manual del SPP y este Manual a su vez menciona como anexos los siguientes documentos.</p>";
+      }
+
+        $mensaje = '
+          <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+              <tbody>
+                <tr>
+                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Contrato de uso del Simbolo de Pequeños Productores - SPP</span></p></th>
+
+                </tr>
+                <tr>
+                 <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$_POST['nombreOPP'].'</span></p></th>
+                </tr>
+
+                <tr>
+                  <td colspan="2">
+                    '.$mensajeDefault.'
+                  </td>
+                </tr>
+                <tr>
+                  <td><p><strong>Documentos Anexos</strong></p></td>
+                </tr>
+                <tr>
+                  <td>
+                    <ul>
+                      '.$anexoNombres.'
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p><strong>Memresía SPP</strong></p>
+                    <p>Asi mismo se anexan los datos bancarios para el respectivo pago de la membresía SPP</p>
+                    <p>El monto total de la membresía SPP es de: <span style="color:red;">'.$montoMembresia.'</span></p>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </body>
+          </html>
+        ';
+
+
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+
+        
+
+        if($mail->Send()){
+          
+          echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+        }else{
+              echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
+     
+        }
+        $mail->ClearAddresses();
+
+  }// TERMINA IF $status == 8  *********************/
+
 }
 
   if (isset($_POST['actualizarStatus']) && $_POST['actualizarStatus'] == "actualizarStatus") {
@@ -172,9 +269,10 @@ if(isset($_POST['statusCertificado']) && $_POST['statusCertificado'] == "statusC
     $idoc = $_POST['idoc'];
     $idsolicitud_registro = $_POST['idsolicitud_registro'];
     $idcertificado = $_POST['idcertificado'];
-    $status = $_POST['status'];    
+    $status = $_POST['statusOption'];    
     $identificador = "CERTIFICADO";
     $idexterno = $idsolicitud_registro;
+
     $query = "UPDATE certificado SET status = '$status' WHERE idcertificado = $idcertificado";
     $actualizar = mysql_query($query, $dspp) or die(mysql_error());
 
@@ -234,55 +332,29 @@ if(isset($_POST['statusCertificado']) && $_POST['statusCertificado'] == "statusC
       $query = "INSERT INTO proceso_certificacion(idstatus,idcom,idoc,idsolicitud_registro,registro,archivo,nombre,fecha) VALUES($status,$idcom,$idoc,$idsolicitud_registro,'$registro1','$adjuntoEstatus','$nombreArchivo',$fecha_actual)";
       $proceso_certificacion = mysql_query($query,$dspp) or die(mysql_error());
 
-    /*$idexterno = $idsolicitud;
+    $idexterno = $idsolicitud_registro;
     $identificador = "CERTIFICADO";
 
     $queryFecha = "INSERT INTO fecha (fecha, idexterno, idcom, idoc, idcertificado, identificador, status) VALUES($fecha_actual, $idexterno, $idcom, $idoc, $idcertificado, '$identificador', '$status')";
     $insertarFecha = mysql_query($queryFecha, $dspp) or die(mysql_error());
 
-    $query = "UPDATE solicitud_registro SET status = '$status' WHERE idsolicitud_registro = $idsolicitud";
-    $actualizar = mysql_query($query,$dspp) or die(mysql_error());3
-
-
-
-
-
-    $queryFecha = "INSERT INTO fecha (fecha, idexterno, idcom, idoc, idcertificado, identificador, status) VALUES($fecha_actual, $idexterno, $idcom, $idoc, $idcertificado, '$identificador', '$status')";
-    $insertarFecha = mysql_query($queryFecha, $dspp) or die(mysql_error());
-
     $query = "UPDATE solicitud_registro SET status_interno = '$status' WHERE idsolicitud_registro = $idsolicitud_registro";
-    $actualizar = mysql_query($query,$dspp) or die(mysql_error());*/
+    $actualizar = mysql_query($query,$dspp) or die(mysql_error());
+
+
 
     if($status == 8){
 
-      include_once("../../PHPMailer/class.phpmailer.php");
-      include_once("../../PHPMailer/class.smtp.php");
-
-
-
-/*    //AL NOMBRE DEL ARCHIVO(FORMATO) LE CONCATENO EL TIME
-    if(!empty($_FILES['archivoExtra']['name'])){
-        $_FILES["archivoExtra"]["name"];
-          move_uploaded_file($_FILES["archivoExtra"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivoExtra"]["name"]);
-          $archivoExtra = $rutaArchivo.basename(time()."_".$_FILES["archivoExtra"]["name"]);
-    }else{
-      $archivoExtra = NULL;
-    }
-
-*/
-
-      //AL NOMBRE DEL ARCHIVO(FORMATO) LE CONCATENO EL TIME
-       /* $rutaArchivo = "formatos/anexos/";
-        if(!empty($_FILES['archivoAdjunto']['name'])){
-            $_FILES["archivoAdjunto"]["name"];
-              move_uploaded_file($_FILES["archivoAdjunto"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivoAdjunto"]["name"]);
-              $archivoAdjunto = $rutaArchivo.basename(time()."_".$_FILES["archivoAdjunto"]["name"]);
-        }else{
-          $archivoAdjunto = NULL;
-        }*/
 
         $asunto = "Contrato de uso del Simbolo de Pequeños Productores - SPP";
 
+        $querySolicitud = "SELECT solicitud_registro.idcom,solicitud_registro.p1_correo, solicitud_registro.p2_correo,com.idcom, com.email FROM solicitud_registro LEFT JOIN com ON solicitud_registro.idcom = com.idcom WHERE idsolicitud_registro = $idsolicitud_registro";
+        $rowSolicitud = mysql_query($querySolicitud,$dspp) or die(mysql_error());
+        $datosSolicitud = mysql_fetch_assoc($rowSolicitud);
+
+        $mail->AddAddress($datosSolicitud['p1_correo']);
+        $mail->AddAddress($datosSolicitud['p2_correo']);
+        $mail->AddAddress($datosSolicitud['email']);
 
 
       $anexoNombres = "";
@@ -361,19 +433,6 @@ if(isset($_POST['statusCertificado']) && $_POST['statusCertificado'] == "statusC
         ';
 
 
-        $querySolicitud = "SELECT solicitud_registro.idcom,solicitud_registro.p1_correo, solicitud_registro.p2_correo,com.idcom, com.email FROM solicitud_registro LEFT JOIN com ON solicitud_registro.idcom = com.idcom WHERE idsolicitud_registro = $idsolicitud_registro";
-        $rowSolicitud = mysql_query($querySolicitud,$dspp) or die(mysql_error());
-        $datosSolicitud = mysql_fetch_assoc($rowSolicitud);
-
-/*        $destinatarios .= $datosSolicitud['p1_email'];
-        $destinatarios .= $datosSolicitud['p2_email'];
-        $destinatarios .= $datosSolicitud['email'];
-  */    
-        $mail->AddAddress($datosSolicitud['p1_correo']);
-        $mail->AddAddress($datosSolicitud['p2_correo']);
-        $mail->AddAddress($datosSolicitud['email']);
-        //$mail->Username = "soporte@d-spp.org";
-        //$mail->Password = "/aung5l6tZ";
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($mensaje);
         $mail->MsgHTML(utf8_decode($mensaje));
@@ -390,130 +449,6 @@ if(isset($_POST['statusCertificado']) && $_POST['statusCertificado'] == "statusC
 
     }
 
-
-
-    /*if($status == 8){
-
-            $destinatario = "cert@spp.coop";
-            $asunto = "D-SPP - Proceso de certificación finalizado"; 
-
-            $cuerpo = '
-              <html>
-              <head>
-                <meta charset="utf-8">
-              </head>
-              <body>
-              
-                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-                  <tbody>
-                    <tr>
-                      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                      <th scope="col" align="left" width="280"><strong>Notificación de Estado / Status Notification ('.$fecha.')</strong></th>
-                    </tr>
-
-                    <tr>
-                      <td><b>Ha finalizado el proceso de certificación con un Dictamen positivo, dentro de poco estará disponible el certificado para ser descargado.</b></td>
-                    </tr>
-
-
-
-                  </tbody>
-                </table>
-
-              </body>
-              </html>
-            ';
-
-
-                //para el envío en formato HTML 
-                $headers = "MIME-Version: 1.0\r\n"; 
-                $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
-
-                //dirección del remitente 
-                $headers .= "From: cert@spp.coop\r\n"; 
-
-                //dirección de respuesta, si queremos que sea distinta que la del remitente 
-                
-
-                //ruta del mensaje desde origen a destino 
-                //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-                //direcciones que recibián copia 
-                //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-                //direcciones que recibirán copia oculta 
-                $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-                //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-                mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);
-
-
-        $queryMensaje = "INSERT INTO mensajes(idcom, idoc,asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, $idoc, '$asunto', '$cuerpo', 'ADM', 'OC', $fecha_actual)";
-        $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
-                /************************  FIN MAIL FUNDEPPO  *********************************************/
-
-
-                /************************  INICIA MAIL com  *******************************************/
-     /*       $emailcom1 = $_POST['emailcom1'];
-            $emailcom2 = $_POST['emailcom2'];
-
-            $destinatario = $emailcom1.",";
-            $destinatario .= $emailcom2;
-
-            $asunto = "D-SPP - Registro para Compradores y otros Actores"; 
-
-            $cuerpo = '
-              <html>
-              <head>
-                <meta charset="utf-8">
-              </head>
-              <body>
-              
-                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-                  <tbody>
-                    <tr>
-                      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                      <th scope="col" align="left" width="280"><strong>Notificación de Estado / Status Notification ('.$fecha.')</strong></th>
-                    </tr>
-                    <tr>
-                      <td><b>Ha finalizado el proceso de certificación con un Dictamen positivo, dentro de poco estará disponible el certificado para ser descargado.</b></td>
-                    </tr>
-
-                  </tbody>
-                </table>
-
-              </body>
-              </html>
-            ';
-
-
-                //para el envío en formato HTML 
-                $headers = "MIME-Version: 1.0\r\n"; 
-                $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
-
-                //dirección del remitente 
-                $headers .= "From: cert@spp.coop\r\n"; 
-
-                //dirección de respuesta, si queremos que sea distinta que la del remitente 
-                
-
-                //ruta del mensaje desde origen a destino 
-                //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-                //direcciones que recibián copia 
-                //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-                //direcciones que recibirán copia oculta 
-                $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-                //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-                mail($destinatario,$asunto,utf8_decode($cuerpo),$headers) ;
-
-                $queryMensaje = "INSERT INTO mensajes(idcom, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, $idoc, '$asunto', '$cuerpo', 'COM', 'OC', $fecha_actual)";
-                $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
-
-
-    }*/
 
   }
 
@@ -738,10 +673,12 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
   <!----------------------------------------- INICIA SECCION ORGANIZACION ---------------------------------------------->
                 <td>
                   <?php 
-                    if(isset($row_com['nombre'])){
+                    if(isset($row_com['abreviacion'])){
                       echo "<a href='?COM&detail&idcom=$row_com[idcom]'>".$row_com['abreviacion']."</a>";
+                    }else if($row_com['nombre']){
+                      echo "<a href='?COM&detail&idcom=$row_com[idcom]'>".$row_com['nombre']."</a>";
                     }else{
-                      echo "<p>No Disponible</p>";
+                      echo "No Disponible";
                     } 
                   ?>
                 </td>
@@ -767,7 +704,7 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
               <!----------------------------------------- PROPUESTA ---------------------------------------------->
 
                   <?php 
-                    if($row_com['status_interno'] != 1 && $row_com['status_interno'] != 2 && $row_com['status_interno'] != 3 && $row_com['status_interno'] != 14 && $row_com['status_interno'] != 15 && $row_com['status_interno'] != 17 && $row_com['status_interno'] != 20){
+                    if($row_com['status_interno'] != 1 && $row_com['status_interno'] != 2 && $row_com['status_interno'] != 3 && $row_com['status_interno'] != 14 && $row_com['status_interno'] != 15 && $row_com['status_interno'] != 17 && $row_com['status_interno'] != 20 && $row_com['status_interno'] != 24){
                   ?>
                     <span class="alert alert-success" style="padding:7px;">Aceptada</span>       
                   <?php 
@@ -835,7 +772,7 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
                     $ejecutar = mysql_query($query_status,$dspp) or die(mysql_error());
                     $estatus_interno = mysql_fetch_assoc($ejecutar);
 
-                    if($row_com['status_interno'] == 4 || $row_com['status_interno'] == 11 || $row_com['status_interno'] == 13 || $row_com['status_interno'] == 14 || $row_com['status_interno'] == 15){
+                    if($row_com['status_interno'] == 4 || $row_com['status_interno'] == 11 || $row_com['status_interno'] == 13 || $row_com['status_interno'] == 14 || $row_com['status_interno'] == 15 || $row_com['status_interno'] == 24){
                       $colorEstado = "class='text-center alert alert-danger'";
                     }else if($row_com['status_interno'] == 10){
                       $colorEstado = "class='text-center alert alert-success'";
@@ -871,7 +808,7 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
 
   <!----------------------------------------- INICIA SECCIÓN STATUS CERTIFICADO ---------------------------------------------->
               <td>     
-                <?php if($row_com['status_interno'] != 1 && $row_com['status_interno'] != 2 && $row_com['status_interno'] != 3 && $row_com['status_interno'] != 14 && $row_com['status_interno'] != 15 && $row_com['status_interno'] != 17 && $row_com['status_interno'] != 20){ ?>
+                <?php if($row_com['status_interno'] != 1 && $row_com['status_interno'] != 2 && $row_com['status_interno'] != 3 && $row_com['status_interno'] != 14 && $row_com['status_interno'] != 15 && $row_com['status_interno'] != 17 && $row_com['status_interno'] != 20 && $row_com['status_interno'] != 24){ ?>
                   <?php if(isset($registroObjecion['idobjecion'])){ ?>
                     <button class="btn btn-success btn-sm" data-toggle="modal" <?php echo "data-target='#status".$row_com['idsolicitud_registro']."'"?>  >
                     <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Consultar<br>Status
@@ -957,9 +894,9 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
                                             if($row_com['estado'] != 10){
                                             ?>
                                               <div class="col-xs-12">
-                                                <select name="status" class="form-control" id="statusSelect" onchange="funcionSelect()" required>
+                                                <select name="statusOption" class="form-control" id="statusSelect" onchange="funcionSelect()" required>
                                                   <option class="form-control" value="">Seleccione un estado</option>
-                                                  <?php while($row_status = mysql_fetch_assoc($ejecutarStatus)){ ?>
+                                                  <?php /*while($row_status = mysql_fetch_assoc($ejecutarStatus)){ ?>
                                                     <?php 
                                                       if($row_status['idstatus'] != 1 && $row_status['idstatus'] != 2 && $row_status['idstatus'] != 3 && $row_status['idstatus'] != 10 && $row_status['idstatus'] != 17 && $row_status['idstatus'] != 18 && $row_status['idstatus'] != 19 ){
                                                     ?>
@@ -968,7 +905,8 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
                                                       }
                                                     ?>
 
-                                                  <?php } ?>
+                                                  <?php } */ ?>
+                                                  <?php require_once("../option_estados.php"); ?>
                                                 </select>
                                               </div>
                                             <?php
@@ -1034,15 +972,12 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
 
                                     </div>
                                   </div>
-
-
-
                                         <?php }else{ ?>
                                           <label class="control-label" for="status">Estatus Certificación</label>
                                           <div class="col-xs-12">
-                                            <select name="status" class="form-control" id="statusSelect" onchange="funcionSelect()" required>
+                                            <select name="statusOption" class="form-control" id="statusSelect" onchange="funcionSelect()" required>
                                               <option class="form-control" value="">Seleccione un estado</option>
-                                              <?php while($row_status = mysql_fetch_assoc($ejecutarStatus)){ ?>
+                                              <?php /*while($row_status = mysql_fetch_assoc($ejecutarStatus)){ ?>
                                                 <?php
                                                   if($row_status['idstatus'] != 1 && $row_status['idstatus'] != 2 && $row_status['idstatus'] != 3 && $row_status['idstatus'] != 10 && $row_status['idstatus'] != 17 && $row_status['idstatus'] != 18 && $row_status['idstatus'] != 19){
                                                 ?>
@@ -1050,7 +985,8 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
                                                 <?php
                                                   }
                                                 ?>
-                                              <?php } ?>
+                                              <?php } */ ?>
+                                              <?php require_once("../option_estados.php"); ?>
                                             </select>
                                           </div>
 
@@ -1142,9 +1078,17 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
                               <?php }else{ ?>
                                 <?php if(!empty($registroObjecion['adjunto']) || $row_com['status_publico'] == 8){ ?>
                                   <button type="submit" class="btn btn-primary">Guardar</button>
+
+                                <input type="hidden" name="emailOPP1" value="<?php echo $row_opp['p1_email'];?>">
+                                <input type="hidden" name="emailOPP2" value="<?php echo $row_opp['p2_email'];?>">
+                                <input type="hidden" name="idopp" value="<?php echo $row_opp['idopp'];?>">
+                                <input type="hidden" name="idoc" value="<?php echo $row_opp['idoc'];?>">
+                                <input type="hidden" name="nombreOPP" value="<?php echo $row_opp['nombre'];?>">
                                 <?php } ?>
+
                                 <input type="hidden" name="statusCertificado" value="statusCertificado">
                               <?php } ?>
+
                                 <input type="hidden" name="idcom" value="<?php echo $row_com['idcom'];?>">
                                 <input type="hidden" name="nombreCOM" value="<?php echo $row_com['nombre']; ?>">
                                 <input type="hidden" name="idoc" value="<?php echo $row_com['idoc'];?>">
@@ -1263,7 +1207,7 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
                                       <a class="btn btn-info" target="_blank" href="<?echo $registroCertificado['adjunto'];?>"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Descargar Certificado</a>
                                     <?php }else{ ?>
                                       <label class="control-label" for="certificado_fld">Cargar Certificado</label>
-                                      <input name="certificado_fld" id="certificado_fld" type="file" class="filestyle" data-buttonName="btn-success" data-buttonBefore="true" data-buttonText="Cargar Certificado"> 
+                                      <input name="certificado_fld" id="certificado_fld" type="file" class="filestyle" data-buttonName="btn-success" data-buttonBefore="true" data-buttonText="Cargar Certificado" required> 
 
 
                                     <?php } ?>

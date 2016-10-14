@@ -37,21 +37,25 @@ $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
+mysql_select_db($database_dspp, $dspp);
+$idoc = $_SESSION['idoc'];
+$fecha = time();
+$asunto_usuario = "D-SPP Datos de Usuario / User Data";
 
-if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
-
+if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
   $pais = $_POST['pais'];
-  $query = "SELECT * FROM opp WHERE pais = '$pais'";
-  $ejecutar = mysql_query($query) or die(mysql_error());
-  $datos_opp = mysql_fetch_assoc($ejecutar);
-  $fecha = time();
 
+  //$query = "SELECT idopp, spp, pais FROM opp WHERE pais = '$pais'";
+  //$ejecutar_spp = mysql_query($query) or die(mysql_error());
+  $row_opp = mysql_query("SELECT idopp, spp, pais FROM opp WHERE pais = '$pais'",$dspp) or die(mysql_error());
+  //$datos_opp = mysql_fetch_assoc($ejecutar);
+  //$fecha = $_POST['fecha_inclusion'];
 
-
-  if(!empty($_POST['idf'])){
-    $idfopp = $_POST['idf'];
-  }else{
   setlocale(LC_ALL, 'en_US.UTF8');
+
+  if(!empty($_POST['spp'])){
+    $spp = $_POST['spp'];
+  }else{
     $charset='utf-8'; // o 'UTF-8'
     $str = iconv($charset, 'ASCII//TRANSLIT', $pais);
     $pais = preg_replace("/[^a-zA-Z0-9]/", '', $str);
@@ -63,55 +67,55 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
     $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
     //$numero =  strlen($contador);
 
-    $idfopp = "OPP-".$paisDigitos."-".$fechaDigitos."-".$contador;
+    $spp = "OPP-".$paisDigitos."-".$fechaDigitos."-".$contador;
 
-    while ($datos_opp = mysql_fetch_assoc($ejecutar)) {
-      if($datos_opp['idf'] == $idfopp){
+    while($datos_opp = mysql_fetch_assoc($row_opp)) {
+      if($datos_opp['spp'] == $spp){
         //echo "<b style='color:red'>es igual el OPP con id: $datos_opp[idf]</b><br>";
         $contador++;
         $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
-        $idfopp = "OPP-".$paisDigitos."-".$fechaDigitos."-".$contador;
+        $spp = "OPP-".$paisDigitos."-".$fechaDigitos."-".$contador;
       }/*else{
         echo "el id encontrado es: $datos_opp[idf]<br>";
       }*/
       
     }
-    //echo "se ha creado un nuevo idf de opp el cual es: <b>$idfopp</b>";
-
   }
+  //echo "se ha creado un nuevo idf de opp el cual es: <b>$spp</b>";
 
   $logitud = 8;
   $psswd = substr( md5(microtime()), 1, $logitud);
 
-  /*$idfoc = $_POST['idfoc'];
-  $query = "SELECT idoc,idf FROM oc WHERE idf = '$idfoc'";
+  /*$spp_oc = $_POST['spp_oc'];
+  $query = "SELECT idoc, spp FROM oc WHERE spp = '$spp_oc'";
   $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
   $oc = mysql_fetch_assoc($ejecutar);
 */
 
-  $insertSQL = sprintf("INSERT INTO opp(idf, password, nombre, abreviacion, sitio_web, email, telefono, pais, idoc, razon_social, direccion, direccion_fiscal, rfc, fecha_inclusion) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                       GetSQLValueString($idfopp, "text"),
-                       GetSQLValueString($psswd, "text"),
+  $insertSQL = sprintf("INSERT INTO opp (idoc, spp, nombre, abreviacion, password, sitio_web, email, telefono, pais, ciudad, razon_social, direccion_oficina, direccion_fiscal, rfc, ruc, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                      // GetSQLValueString($oc['idoc'], "text"),
+                       GetSQLValueString($idoc, "int"),
+                       GetSQLValueString($spp, "text"),
                        GetSQLValueString($_POST['nombre'], "text"),
                        GetSQLValueString($_POST['abreviacion'], "text"),
+                       GetSQLValueString($psswd, "text"),
                        GetSQLValueString($_POST['sitio_web'], "text"),
                        GetSQLValueString($_POST['email'], "text"),
                        GetSQLValueString($_POST['telefono'], "text"),
                        GetSQLValueString($_POST['pais'], "text"),
-                       GetSQLValueString($_POST['idoc'], "int"),
+                       GetSQLValueString($_POST['ciudad'], "text"),
                        GetSQLValueString($_POST['razon_social'], "text"),
-                       GetSQLValueString($_POST['direccion_oficinas'], "text"),
+                       GetSQLValueString($_POST['direccion_oficina'], "text"),
                        GetSQLValueString($_POST['direccion_fiscal'], "text"),
                        GetSQLValueString($_POST['rfc'], "text"),
+                       GetSQLValueString($_POST['ruc'], "text"),
                        GetSQLValueString($fecha, "int"));
-
   $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
+  $destinatario = $_POST['email'];
+        //$asunto = "D-SPP Datos de Usuario / User Data"; 
 
-        $destinatario = $_POST['email'];
-        $asunto = "D-SPP Datos de Usuario"; 
-
-    $mensaje = '
+  $cuerpo = '
       <html>
       <head>
         <meta charset="utf-8">
@@ -134,7 +138,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
               <td align="left"><br><b>Nombre / Name:</b> <span style="color:#27ae60;">'.$_POST['nombre'].'</span></td>
             </tr>
             <tr>
-              <td align="left"><br><b>#SPP:</b> <span style="color:#27ae60;">'.$idfopp.'</span></td>
+              <td align="left"><br><b>#SPP:</b> <span style="color:#27ae60;">'.$spp.'</span></td>
             </tr>
             <tr>
               <td align="left"><b>Contraseña / Password:</b> <span style="color:#27ae60;">'.$psswd.'</span></td>
@@ -145,138 +149,155 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
           </tbody>
         </table>
 
+
       </body>
       </html>
     ';
 
       $mail->AddAddress($destinatario);
-
+      $mail->AddBCC('yasser.midnight@gmail.com');
+      $mail->AddBCC('cert@spp.coop');
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
-      $mail->Subject = utf8_decode($asunto);
-      $mail->Body = utf8_decode($mensaje);
-      $mail->MsgHTML(utf8_decode($mensaje));
-
-        if($mail->Send()){
-          echo "<script>location.href='main_menu.php?OPP&add&mensaje=OPP agregado correctamente';</script>";
-        }else{
-          echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
-        }
-
+      $mail->Subject = utf8_decode($asunto_usuario);
+      $mail->Body = utf8_decode($cuerpo);
+      $mail->MsgHTML(utf8_decode($cuerpo));
+      $mail->Send();
       $mail->ClearAddresses();
+      $mensaje = "<strong>Datos Registrados Correctamente, por favor revisa tu bandeja de correo electronico, si no encuentras tus datos revisa tu bandeja de spam</strong>";
 
-
-  /*$insertGoTo = "main_menu.php?OPP&add&mensaje=OPP agregado correctamente";
-  if (isset($_SERVER['QUERY_STRING'])) {
-    $insertGoTo .= (strpos($insertGoTo, '?')) ? "&" : "?";
-    $insertGoTo .= $_SERVER['QUERY_STRING'];
-  }
-header(sprintf("Location: %s", $insertGoTo));*/
 }
 
+$row_pais = mysql_query("SELECT * FROM paises");
 
 
 mysql_select_db($database_dspp, $dspp);
-$query_pais = "SELECT nombre FROM paises ORDER BY nombre ASC";
-$pais = mysql_query($query_pais, $dspp) or die(mysql_error());
-$row_pais = mysql_fetch_assoc($pais);
-$totalRows_pais = mysql_num_rows($pais);
-
-mysql_select_db($database_dspp, $dspp);
-$query_oc = "SELECT idoc, idf, abreviacion, pais FROM oc where idoc = $_SESSION[idoc] ORDER BY nombre ASC";
+$query_oc = "SELECT idoc, spp, abreviacion, pais FROM oc where idoc = $_SESSION[idoc] ORDER BY nombre ASC";
 $oc = mysql_query($query_oc, $dspp) or die(mysql_error());
 $row_oc = mysql_fetch_assoc($oc);
 $totalRows_oc = mysql_num_rows($oc);
 
 
 ?>
-<br>
-<form class="" method="post" name="form1" action="<?php echo $editFormAction; ?>">
-  <table class="table col-xs-8">
-    <tr valign="baseline">
-      <th colspan="2" class="alert alert-warning">El #OPP y la contraseña son proporcionados por D-SPP, dichos datos son enviados por email al OPP</th>
-    </tr>
-    <!--<tr valign="baseline">
-      <th nowrap align="left">Password</th>
-      <td><input required="required" class="form-control" type="text" name="password" value="" size="32"></td>
-    </tr>-->
-    <tr valign="baseline">
-      <th nowrap align="left">IDF ó #SPP <br>(En caso de contar con uno)</th>
-      <td><input class="form-control" type="text" id="idf" name="idf" value="" size="32"></td>
-    </tr>
 
-    <tr valign="baseline">
-      <th nowrap align="left">Nombre</th>
-      <td><input required="required" class="form-control" type="text" name="nombre" value="" size="32"></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap align="left">Abreviacion</th>
-      <td><input class="form-control" type="text" name="abreviacion" value="" size="32" required></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap align="left">Sitio_web</th>
-      <td><input class="form-control" type="text" name="sitio_web" value="" size="32"></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap align="left">Teléfono Oficinas</th>
-      <td><input class="form-control" type="text" name="telefono" value="" size="32"></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap align="left">Email</th>
-      <td><input class="form-control" type="email" name="email" value="" size="32" required></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap align="left">Pais</th>
-      <td>
-        <select required class="form-control" name="pais">
-      <option value="">Selecciona</option>
-<?php 
-do {  
-?>
-<option class="form-control" value="<?php echo utf8_encode($row_pais['nombre']);?>">
-  <?php echo utf8_encode($row_pais['nombre']);?>
-</option>
-<?php
-} while ($row_pais = mysql_fetch_assoc($pais));
-?>
-      </select>
-      </td>
-    </tr>
+<div class="row">
+  <div class="col-md-12">
+  <?php 
+  if(isset($mensaje)){
+  ?>
+    <div class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <?php echo $mensaje; ?>
+    </div>
+  <?php
+  }
+  ?>
+  </div>
+</div>
 
-    <tr valign="baseline">
-      <th nowrap align="left">IDF OC</th>
-      <td>
-        <input required class="form-control" type="text" name="" value="<?php echo $row_oc['abreviacion']?>" size="32" disabled>
-    </tr>
 
-    <tr valign="baseline">
-      <th nowrap align="left">Razon_social</th>
-      <td><input class="form-control" type="text" name="razon_social" value="" size="32"></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap align="left">Direccion_Oficinas</th>
-      <td><input class="form-control" type="text" name="direccion_oficinas" value="" size="32"></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap align="left">Direccion_fiscal</th>
-      <td><input class="form-control" type="text" name="direccion_fiscal" value="" size="32"></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap align="left">RFC</th>
-      <td><input class="form-control" type="text" name="rfc" value="" size="32"></td>
-    </tr>
-    <tr valign="baseline">
-      <td nowrap align="right">&nbsp;</td>
-      <td><input class="btn btn-primary" type="submit" value="Agregar OPP"></td>
-    </tr>
-  </table>
+<div class="row">
+  <div class="col-md-12">
+    <form action="" method="POST" class="form-horizontal">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Formulario de Registro para OPP</h3>
+        </div>
+        <div class="panel-body" style="font-size:12px;">
+          <p class="alert alert-warning" style="padding:7px;">El #SPP y la contraseña son proporcionados por D-SPP, dichos datos son enviados por email al OPP</p>
 
-  <input type="hidden" name="idoc" value="<?php echo $_SESSION['idoc'];?>">
-  <input type="hidden" name="MM_insert" value="form1">
-</form>
+          <div class="form-group">
+            <label for="spp" class="col-sm-2 control-label">#SPP (En caso de contar con uno)</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="spp" name="spp" placeholder="En caso de contar con uno">
+            </div>
+          </div>
 
-<?
-mysql_free_result($pais);
+          <div class="form-group">
+            <label for="nombre" class="col-sm-2 control-label">* Nombre de la OPP</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escriba el nombre" autofocus required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="abreviacion" class="col-sm-2 control-label">Abreviación de la OPP</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="abreviacion" placeholder="Escriba la abreviación" name="abreviacion">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="sitio_web" class="col-sm-2 control-label">Sitio Web</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="sitio_web" name="sitio_web">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email" class="col-sm-2 control-label">* Correo Electronico</label>
+            <div class="col-sm-10">
+              <input type="email" class="form-control" id="email" name="email" placeholder="Escriba el correo electronico" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="telefono" class="col-sm-2 control-label">* Teléfono de Oficina</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Escriba el teléfono de oficina" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="pais" class="col-sm-2 control-label">País</label>
+            <div class="col-sm-10">
+              <select name="pais" id="pais" class="form-control" required>
+                <option value="">Selecciona un País</option>
+                <?php 
+                while($pais = mysql_fetch_assoc($row_pais)){
+                  echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
+                }
+                 ?>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ciudad" class="col-sm-2 control-label">Ciudad</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="ciudad" name="ciudad">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="direccion_oficina" class="col-sm-2 control-label">Dirección de las Oficinas</label>
+            <div class="col-sm-10">
+              <input type="text" id="direccion_oficina" class="form-control" name="direccion_oficina" placeholder="Dirección de las Oficinas">
+            </div>
+          </div>
+          <p class="alert alert-warning text-center" style="padding:7px;">Datos Fiscales (Opcionales)</p>
+          <div class="form-group">
+            <label for="razon_social" class="col-sm-2 control-label">Razón Social</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="razon_social" name="razon_social">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="direccion_fiscal" class="col-sm-2 control-label">Dirección Fiscal</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="direccion_fiscal" name="direccion_fiscal">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="rfc" class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="rfc" name="rfc">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ruc" class="col-sm-2 control-label">RUC</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="ruc" name="ruc">
+            </div>
+          </div>
+          <input type="hidden" name="registro_opp" value="1">
+          <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Registrarse</button>
 
-mysql_free_result($oc);
-?>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,27 +1,24 @@
 <ul class="nav nav-pills">
+	<li role="presentation" <?php if(isset($_GET['detail'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&detail"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Mi Cuenta</a>
+	</li>
 
-<? if(isset($_GET['detail'])){?>
-<li role="presentation" 
- class="active" >
- <a href="#">
- 	<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detail
- </a>
-</li>
-<? }?>
-
+	<li role="presentation" <?php if(isset($_GET['contacts'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&contacts"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Mis Contactos</a>
+	</li>
 </ul>
 
-<? if(isset($_GET['mensaje'])){?>
-<p>
-<div class="alert alert-success" role="alert"><? echo $_GET['mensaje']?></div>
-</p>
-<? }?>
+<?php 
 
-
-<?
-if(isset($_GET['select'])){include ("opp_select.php");}
-else
-if(isset($_GET['add'])){include ("opp_add.php");}
-else
-if(isset($_GET['detail'])){include ("opp_detail.php");}
+if(isset($_GET['select'])){
+	include ("opp_select.php");
+}
+else if(isset($_GET['add'])){
+	include ("opp_add.php");
+}
+else if(isset($_GET['detail'])){
+	include ("opp_detail.php");
+}else if(isset($_GET['contacts'])){
+	include("opp_contacts.php");
+}
 ?>

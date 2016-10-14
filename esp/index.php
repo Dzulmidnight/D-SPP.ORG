@@ -47,6 +47,7 @@ if (isset($_GET['accesscheck'])) {
 }
 
 
+
 /***  VARIABLE GENERALES  ****/
 $fecha = time();
 $asunto_usuario = "D-SPP Datos de Usuario / User Data";
@@ -352,6 +353,7 @@ if (isset($_POST['username'])) {
     
 	if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
     //declare two session variables and assign them
+    $_SESSION['idioma'] = "ESP";
     $_SESSION['MM_Username'] = $loginUsername;
     $_SESSION['MM_UserGroup'] = $loginStrGroup;	      
 
@@ -391,6 +393,7 @@ if (isset($_POST['SPP_OPP'])) {
       
     if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
       //declare two session variables and assign them
+      $_SESSION['idioma'] = "ESP";
       $_SESSION['MM_Username'] = $loginUsername;
       $_SESSION['MM_UserGroup'] = $loginStrGroup['nombre'];       
       $_SESSION["autentificado"] = true;
@@ -433,6 +436,7 @@ if (isset($_POST['SPP_EMPRESA'])) {
       
     if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
       //declare two session variables and assign them
+      $_SESSION['idioma'] = "ESP";
       $_SESSION['MM_Username'] = $loginUsername;       
       $_SESSION["autentificado"] = true;
       $_SESSION["nombreEmpresa"] = $loginStrGroup['nombreEmpresa'];
@@ -472,6 +476,7 @@ if (isset($_POST['SPP_OC'])) {
     
   if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
     //declare two session variables and assign them
+    $_SESSION['idioma'] = "ESP";
     $_SESSION['MM_Username'] = $loginUsername;      
     $_SESSION["autentificado"] = true;
     $_SESSION["nombreOC"] = $loginStrGroup['nombreOC'];
@@ -935,7 +940,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                 Existen muchas empresas comprometidas con la misión y visión del SPP y apoyan íntegramente al desarrollo de las Organizaciones de Pequeños Productores.
               </p>
               <p class="text-justify alert alert-success" style="padding:5.5px;">
-                <a href="#">Revisa la lista de Empresas registradas con el SPP aquí.</a>
+                <a href="lista_empresas.php">Revisa la lista de Empresas registradas con el SPP aquí.</a>
               </p>
             </div>
 

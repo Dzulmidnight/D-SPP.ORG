@@ -1,24 +1,7 @@
-<?php require_once('../Connections/dspp.php'); 
-      include_once("../../PHPMailer/class.phpmailer.php");
-      include_once("../../PHPMailer/class.smtp.php");
+<?php 
+require_once('../Connections/dspp.php'); 
+require_once('../Connections/mail.php'); 
 
-        $mail = new PHPMailer();
-
-        $mail->IsSMTP();
-        //$mail->SMTPSecure = "ssl";
-        $mail->Host = "mail.d-spp.org";
-        $mail->Port = 25;
-        $mail->SMTPAuth = true;
-        $mail->Username = "soporte@d-spp.org";
-        $mail->Password = "/aung5l6tZ";
-        //$mail->SMTPDebug = 1;
-
-        $mail->From = "soporte@d-spp.org";
-        $mail->FromName = "CERT - DSPP";
-        $mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
-        $mail->AddReplyTo("cert@spp.coop");
-?>
-<?php
 mysql_select_db($database_dspp, $dspp);
 
 if (!function_exists("GetSQLValueString")) {

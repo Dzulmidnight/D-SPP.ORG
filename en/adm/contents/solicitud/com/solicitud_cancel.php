@@ -1,4 +1,8 @@
-<?php require_once('../Connections/dspp.php'); ?>
+<?php 
+require_once('../Connections/dspp.php');
+require_once('../Connections/mail.php');
+error_reporting(E_ALL ^ E_DEPRECATED);
+ ?>
 <?php
   error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 
@@ -137,28 +141,17 @@ if(isset($_POST['comprobanteMembresia']) && $_POST['comprobanteMembresia'] == "2
       </html>
     ';
 
+        $mail->AddAddress($emailCOM1);
+        $mail->AddAddress($emailCOM2);
 
-        //para el envío en formato HTML 
-        $headers = "MIME-Version: 1.0\r\n"; 
-        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
 
-        //dirección del remitente 
-        $headers .= "From: cert@spp.coop\r\n"; 
-
-        //dirección de respuesta, si queremos que sea distinta que la del remitente 
-        
-
-        //ruta del mensaje desde origen a destino 
-        //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibián copia 
-        //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibirán copia oculta 
-        $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-        //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-        mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo);
+        $mail->MsgHTML(utf8_decode($cuerpo));
+        $mail->Send();
+        $mail->ClearAddresses();
 
         $queryMensaje = "INSERT INTO mensajes(idcom, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, '$asunto', '$cuerpo', 'COM', 'ADM', $fecha_actual)";
         $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
@@ -212,27 +205,18 @@ if(isset($_POST['comprobanteMembresia']) && $_POST['comprobanteMembresia'] == "2
     ';
 
 
-        //para el envío en formato HTML 
-        $headers = "MIME-Version: 1.0\r\n"; 
-        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+        $mail->AddAddress($emailCOM1);
+        $mail->AddAddress($emailCOM2);
 
-        //dirección del remitente 
-        $headers .= "From: cert@spp.coop\r\n"; 
 
-        //dirección de respuesta, si queremos que sea distinta que la del remitente 
-        
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo);
+        $mail->MsgHTML(utf8_decode($cuerpo));
+        $mail->Send();
+        $mail->ClearAddresses();
 
-        //ruta del mensaje desde origen a destino 
-        //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibián copia 
-        //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibirán copia oculta 
-        $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-        //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-        mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);
 
         $queryMensaje = "INSERT INTO mensajes(idcom, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, '$asunto', '$cuerpo', 'COM', 'ADM', $fecha_actual)";
         $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
@@ -309,24 +293,9 @@ if (isset($_POST['insertarObjecion']) && $_POST['insertarObjecion'] == "periodoO
 
 /////////*************** ENVIO EMAIL DE OC *******************//////////////////
 ////////////////////////////////////////////////////////////////////////////////
+          $asunto = "D-SPP - Notificación de Intenciones / Notification of Intentions"; 
 
-
-      $queryOC = "SELECT email FROM oc WHERE email !=''";
-      $ejecutar = mysql_query($queryOC,$dspp) or die(mysql_error());
-
-      $destinatarioOC = "";
-      while($emailOC = mysql_fetch_assoc($ejecutar)){
-          $destinatarioOC .= $emailOC['email'].',';
-      }
-
-
-              //$destinatario = $emailOC['email'];
-              //$headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-              //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-              $asunto = "D-SPP - Notificación de Intenciones / Notification of Intentions"; 
-
-          $cuerpo = '
+          $mensaje = '
 
 
             <html>
@@ -415,27 +384,29 @@ if (isset($_POST['insertarObjecion']) && $_POST['insertarObjecion'] == "periodoO
           ';
 
 
-              //para el envío en formato HTML 
-              $headers = "MIME-Version: 1.0\r\n"; 
-              $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
 
-              //dirección del remitente 
-              $headers .= "From: cert@spp.coop\r\n"; 
 
-              //dirección de respuesta, si queremos que sea distinta que la del remitente 
-              
+      $queryOC = "SELECT email FROM oc WHERE email !=''";
+      $ejecutar = mysql_query($queryOC,$dspp) or die(mysql_error());
 
-              //ruta del mensaje desde origen a destino 
-              //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
 
-              //direcciones que recibián copia 
-              //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
+      while($emailOC = mysql_fetch_assoc($ejecutar)){
+        $mail->AddAddress($emailOC['email']);
+      }
 
-              //direcciones que recibirán copia oculta 
-              $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+              //$destinatario = $emailOC['email'];
+              //$headers .= "Bcc: yasser.midnight@gmail.com\r\n";
               //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
 
-              mail($destinatarioOC,$asunto,utf8_decode($cuerpo),$headers);
+
 
 
         $queryMensaje = "INSERT INTO mensajes(idcom, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, $idoc, '$asunto', '$cuerpo', 'OC', 'ADM', $fecha_actual)";
@@ -449,125 +420,19 @@ if (isset($_POST['insertarObjecion']) && $_POST['insertarObjecion'] == "periodoO
           $queryOPP = "SELECT email FROM opp WHERE email !=''";
           $ejecutar = mysql_query($queryOPP,$dspp) or die(mysql_error());
 
-          $destinatarioOPP = "";
           while($emailOPP = mysql_fetch_assoc($ejecutar)){
-              $destinatarioOPP .= $emailOPP['email'].',';
+              $mail->AddAddress($emailOPP['email']);
           }
 
 
-              //$destinatario = $emailOC['email'];
-              //$headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-              //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
 
-              $asunto = "D-SPP - Notificación de Intenciones / Notification of Intentions"; 
-
-          $cuerpo = '
-            <html>
-            <head>
-              <meta charset="utf-8">
-            </head>
-            <body>
-            
-                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-                <tbody>
-                  <tr>
-                    <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                    <th scope="col" align="left" width="280"><strong>Notificación de Intenciones / Notification of Intentions</strong></th>
-                  </tr>
-                  <tr>
-                    <td align="left" style="color:#ff738a;">Fecha: '.$fecha.'</td>
-                  </tr>
-
-                  <tr>
-                    <td colspan="2">
-                      <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-                        <tbody>
-                          <tr style="font-size: 8px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                            <td width="72px">Tipo / Type</td>
-                            <td width="72px">Nombre de la Empresa/Company name</td>
-                            <td width="72px">Abreviación / Short name</td>
-                            <td width="72px">País / Country</td>
-                            <td width="72px">Organismo de Certificación / Certification Entity</td>
-                            <td width="72px">Alcance / Scope</td>
-                            <td width="72px">Productos / Products</td>
-                            <td width="72px">Tipo de solicitud / Kind of application</td>
-                            <td width="72px">Fecha de solicitud/Date of application</td>
-                          </tr>
-                          <tr style="font-size: 12px;">
-                            <td style="padding:10px;">
-                              OPP 
-                            </td>
-                            <td style="padding:10px;">
-                              '.$nombreCOM.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$abreviacionCOM.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$paisCOM.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$abreviacionOC.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$alcance.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$productos.'
-                            </td>
-                            <td style="padding:10px;">
-                              Registro / Registration                   
-                            </td>
-                            <td style="padding:10px;">
-                              '.$fecha_elaboracion.'
-                            </td>
-                          </tr>
-
-                        </tbody>
-                      </table>        
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td style="text-align:justify;" colspan="2">
-                      FUNDEPPO publica y notifica las “Intenciones de Certificación, Registro o Autorización” basada en nuevas solicitudes de: 1) Certificación de Organizaciones de Pequeños Productores, 2) Registro de Compradores y otros actores y 3) Autorización de Organismos de Certificación, con el objetivo de informarles y recibir las eventuales objeciones contra la incorporación de los solicitantes.
-                      Estas eventuales objeciones presentadas deben estar sustentadas con información concreta y verificable con respecto a incumplimientos de la Normatividad del SPP y/o nuestro Código de Conducta (disponibles en <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a>, en el área de Funcionamiento). Las objeciones presentadas y enviadas a <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> serán tomadas en cuenta en los procesos de certificación, registro o autorización.
-                      Estas notificaciones son enviadas por FUNDEPPO en un lapso menor a 24 horas a partir del momento en que le llegue la solicitud correspondiente. Si se presentan objeciones antes de que el solicitante se Certifique, Registre o Autorice su tratamiento por parte del Organismo de Certificación debe ser parte de la misma evaluación documental. Si la objeción se presenta cuando el Solicitante ya esta Certificado se aplica el Procedimiento de Inconformidades del Símbolo de Pequeños Productores. Las nuevas intenciones de Certificación, Registro o Autorización, se detallan al inicio de este documento.  
-                      <br><br>
-                      FUNDEPPO publishes and notifies the “Certification, Registration and Authorization Intentions” based on new applications submitted for: 1) Certification of Small Producers’ Organizations, 2) Registration of Buyers and other stakeholders, and 3) Authorization of Certification Entities, with the objective of keeping you informed and receiving any objections to the incorporation of any new applicants into the system.
-                      Any objections submitted must be supported with concrete, verifiable information regarding non-compliance with the Standards and/or Code of Conduct of the Small Producers’ Symbol (available at <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a> in the section on Operation). The objections submitted and sent to <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> will be taken into consideration during certification, registration and authorization processes.
-                      These notifications are sent by FUNDEPPO in a period of less than 24 hours from the time a corresponding application is received. If objections are presented before getting the Certification, Registration or Authorization, the Certification Entity must incorporate them as part of the same evaluation-process. If the objection is presented when the applicant has already been certified, the SPP Dissents Procedure has to be applied. The new intentions for Certification, Registration and Authorization are detailed at the beginning (of this document.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              </table>
-
-            </body>
-            </html>
-          ';
-
-              //para el envío en formato HTML 
-              $headers = "MIME-Version: 1.0\r\n"; 
-              $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
-
-              //dirección del remitente 
-              $headers .= "From: cert@spp.coop\r\n"; 
-
-              //dirección de respuesta, si queremos que sea distinta que la del remitente 
-              
-
-              //ruta del mensaje desde origen a destino 
-              //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-              //direcciones que recibián copia 
-              //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-              //direcciones que recibirán copia oculta 
-              $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-              //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-              mail($destinatarioOPP,$asunto,utf8_decode($cuerpo),$headers);
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
 
         $queryMensaje = "INSERT INTO mensajes(idcom, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, $idoc, '$asunto', '$cuerpo', 'OPP', 'ADM', $fecha_actual)";
         $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
@@ -582,123 +447,18 @@ if (isset($_POST['insertarObjecion']) && $_POST['insertarObjecion'] == "periodoO
 
           $destinatarioCOM = "";
           while($emailCOM = mysql_fetch_assoc($ejecutar)){
-              $destinatarioCOM .= $emailCOM['email'].',';
+              $mail->AddAddress($emailCOM['email']);
           }
 
 
-              //$destinatario = $emailOC['email'];
-              //$headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-              //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
 
-              $asunto = "D-SPP - Notificación de Intenciones / Notification of Intentions"; 
-
-          $cuerpo = '
-            <html>
-            <head>
-              <meta charset="utf-8">
-            </head>
-            <body>
-            
-                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-                <tbody>
-                  <tr>
-                    <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                    <th scope="col" align="left" width="280"><strong>Notificación de Intenciones / Notification of Intentions</strong></th>
-                  </tr>
-                  <tr>
-                    <td align="left" style="color:#ff738a;">Fecha: '.$fecha.'</td>
-                  </tr>
-
-                  <tr>
-                    <td colspan="2">
-                      <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-                        <tbody>
-                          <tr style="font-size: 8px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                            <td width="72px">Tipo / Type</td>
-                            <td width="72px">Nombre de la Empresa/Company name</td>
-                            <td width="72px">Abreviación / Short name</td>
-                            <td width="72px">País / Country</td>
-                            <td width="72px">Organismo de Certificación / Certification Entity</td>
-                            <td width="72px">Alcance / Scope</td>
-                            <td width="72px">Productos / Products</td>
-                            <td width="72px">Tipo de solicitud / Kind of application</td>
-                            <td width="72px">Fecha de solicitud/Date of application</td>
-                          </tr>
-                          <tr style="font-size: 12px;">
-                            <td style="padding:10px;">
-                              OPP 
-                            </td>
-                            <td style="padding:10px;">
-                              '.$nombreCOM.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$abreviacionCOM.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$paisCOM.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$abreviacionOC.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$alcance.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$productos.'
-                            </td>
-                            <td style="padding:10px;">
-                              Registro / Registration                   
-                            </td>
-                            <td style="padding:10px;">
-                              '.$fecha_elaboracion.'
-                            </td>
-                          </tr>
-
-                        </tbody>
-                      </table>        
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td style="text-align:justify;" colspan="2">
-                      FUNDEPPO publica y notifica las “Intenciones de Certificación, Registro o Autorización” basada en nuevas solicitudes de: 1) Certificación de Organizaciones de Pequeños Productores, 2) Registro de Compradores y otros actores y 3) Autorización de Organismos de Certificación, con el objetivo de informarles y recibir las eventuales objeciones contra la incorporación de los solicitantes.
-                      Estas eventuales objeciones presentadas deben estar sustentadas con información concreta y verificable con respecto a incumplimientos de la Normatividad del SPP y/o nuestro Código de Conducta (disponibles en <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a>, en el área de Funcionamiento). Las objeciones presentadas y enviadas a <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> serán tomadas en cuenta en los procesos de certificación, registro o autorización.
-                      Estas notificaciones son enviadas por FUNDEPPO en un lapso menor a 24 horas a partir del momento en que le llegue la solicitud correspondiente. Si se presentan objeciones antes de que el solicitante se Certifique, Registre o Autorice su tratamiento por parte del Organismo de Certificación debe ser parte de la misma evaluación documental. Si la objeción se presenta cuando el Solicitante ya esta Certificado se aplica el Procedimiento de Inconformidades del Símbolo de Pequeños Productores. Las nuevas intenciones de Certificación, Registro o Autorización, se detallan al inicio de este documento.  
-                      <br><br>
-                      FUNDEPPO publishes and notifies the “Certification, Registration and Authorization Intentions” based on new applications submitted for: 1) Certification of Small Producers’ Organizations, 2) Registration of Buyers and other stakeholders, and 3) Authorization of Certification Entities, with the objective of keeping you informed and receiving any objections to the incorporation of any new applicants into the system.
-                      Any objections submitted must be supported with concrete, verifiable information regarding non-compliance with the Standards and/or Code of Conduct of the Small Producers’ Symbol (available at <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a> in the section on Operation). The objections submitted and sent to <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> will be taken into consideration during certification, registration and authorization processes.
-                      These notifications are sent by FUNDEPPO in a period of less than 24 hours from the time a corresponding application is received. If objections are presented before getting the Certification, Registration or Authorization, the Certification Entity must incorporate them as part of the same evaluation-process. If the objection is presented when the applicant has already been certified, the SPP Dissents Procedure has to be applied. The new intentions for Certification, Registration and Authorization are detailed at the beginning (of this document.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              </table>
-
-            </body>
-            </html>
-          ';
-
-              //para el envío en formato HTML 
-              $headers = "MIME-Version: 1.0\r\n"; 
-              $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
-
-              //dirección del remitente 
-              $headers .= "From: cert@spp.coop\r\n"; 
-
-              //dirección de respuesta, si queremos que sea distinta que la del remitente 
-              
-
-              //ruta del mensaje desde origen a destino 
-              //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-              //direcciones que recibián copia 
-              //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-              //direcciones que recibirán copia oculta 
-              $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-              //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-              mail($destinatarioCOM,$asunto,utf8_decode($cuerpo),$headers);
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
 
         $queryMensaje = "INSERT INTO mensajes(idcom, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, $idoc, '$asunto', '$cuerpo', 'COM', 'ADM', $fecha_actual)";
         $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
@@ -715,126 +475,18 @@ if (isset($_POST['insertarObjecion']) && $_POST['insertarObjecion'] == "periodoO
 
         while($emailADM = mysql_fetch_assoc($ejecutar)){  
           if($emailADM['email'] != "isc.jesusmartinez@gmail.com"){
-            $destinatarioADM .= $emailADM['email'].',';
+            $mail->AddAddress($emailADM['email']);
           }
         }
 
- 
-              //$headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-              //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
 
-              $asunto = "D-SPP - Notificación de Intenciones / Notification of Intentions"; 
-
-          $cuerpo = '
-
-
-            <html>
-            <head>
-              <meta charset="utf-8">
-            </head>
-            <body>
-            
-                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-                <tbody>
-                  <tr>
-                    <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                    <th scope="col" align="left" width="280"><strong>Notificación de Intenciones / Notification of Intentions</strong></th>
-                  </tr>
-                  <tr>
-                    <td align="left" style="color:#ff738a;">Fecha: '.$fecha.'</td>
-                  </tr>
-
-                  <tr>
-                    <td colspan="2">
-                      <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-                        <tbody>
-                          <tr style="font-size: 8px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                            <td width="72px">Tipo / Type</td>
-                            <td width="72px">Nombre de la Empresa/Company name</td>
-                            <td width="72px">Abreviación / Short name</td>
-                            <td width="72px">País / Country</td>
-                            <td width="72px">Organismo de Certificación / Certification Entity</td>
-                            <td width="72px">Alcance / Scope</td>
-                            <td width="72px">Productos / Products</td>
-                            <td width="72px">Tipo de solicitud / Kind of application</td>
-                            <td width="72px">Fecha de solicitud/Date of application</td>
-                          </tr>
-                          <tr style="font-size: 12px;">
-                            <td style="padding:10px;">
-                              OPP 
-                            </td>
-                            <td style="padding:10px;">
-                              '.$nombreCOM.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$abreviacionCOM.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$paisCOM.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$abreviacionOC.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$alcance.'
-                            </td>
-                            <td style="padding:10px;">
-                              '.$productos.'
-                            </td>
-                            <td style="padding:10px;">
-                              Registro / Registration                   
-                            </td>
-                            <td style="padding:10px;">
-                              '.$fecha_elaboracion.'
-                            </td>
-                          </tr>
-
-                        </tbody>
-                      </table>        
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td style="text-align:justify;" colspan="2">
-                      FUNDEPPO publica y notifica las “Intenciones de Certificación, Registro o Autorización” basada en nuevas solicitudes de: 1) Certificación de Organizaciones de Pequeños Productores, 2) Registro de Compradores y otros actores y 3) Autorización de Organismos de Certificación, con el objetivo de informarles y recibir las eventuales objeciones contra la incorporación de los solicitantes.
-                      Estas eventuales objeciones presentadas deben estar sustentadas con información concreta y verificable con respecto a incumplimientos de la Normatividad del SPP y/o nuestro Código de Conducta (disponibles en <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a>, en el área de Funcionamiento). Las objeciones presentadas y enviadas a <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> serán tomadas en cuenta en los procesos de certificación, registro o autorización.
-                      Estas notificaciones son enviadas por FUNDEPPO en un lapso menor a 24 horas a partir del momento en que le llegue la solicitud correspondiente. Si se presentan objeciones antes de que el solicitante se Certifique, Registre o Autorice su tratamiento por parte del Organismo de Certificación debe ser parte de la misma evaluación documental. Si la objeción se presenta cuando el Solicitante ya esta Certificado se aplica el Procedimiento de Inconformidades del Símbolo de Pequeños Productores. Las nuevas intenciones de Certificación, Registro o Autorización, se detallan al inicio de este documento.  
-                      <br><br>
-                      FUNDEPPO publishes and notifies the “Certification, Registration and Authorization Intentions” based on new applications submitted for: 1) Certification of Small Producers’ Organizations, 2) Registration of Buyers and other stakeholders, and 3) Authorization of Certification Entities, with the objective of keeping you informed and receiving any objections to the incorporation of any new applicants into the system.
-                      Any objections submitted must be supported with concrete, verifiable information regarding non-compliance with the Standards and/or Code of Conduct of the Small Producers’ Symbol (available at <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a> in the section on Operation). The objections submitted and sent to <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> will be taken into consideration during certification, registration and authorization processes.
-                      These notifications are sent by FUNDEPPO in a period of less than 24 hours from the time a corresponding application is received. If objections are presented before getting the Certification, Registration or Authorization, the Certification Entity must incorporate them as part of the same evaluation-process. If the objection is presented when the applicant has already been certified, the SPP Dissents Procedure has to be applied. The new intentions for Certification, Registration and Authorization are detailed at the beginning (of this document.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              </table>
-
-            </body>
-            </html>
-          ';
-
-
-              //para el envío en formato HTML 
-              $headers = "MIME-Version: 1.0\r\n"; 
-              $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
-
-              //dirección del remitente 
-              $headers .= "From: cert@spp.coop\r\n"; 
-
-              //dirección de respuesta, si queremos que sea distinta que la del remitente 
-              
-
-              //ruta del mensaje desde origen a destino 
-              //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-              //direcciones que recibián copia 
-              //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-              //direcciones que recibirán copia oculta 
-              $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-              //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-              mail($destinatarioADM,$asunto,utf8_decode($cuerpo),$headers);
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($mensaje);
+        $mail->MsgHTML(utf8_decode($mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
 
 
         $queryMensaje = "INSERT INTO mensajes(idcom, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, $idoc, '$asunto', '$cuerpo', 'ADM', 'ADM', $fecha_actual)";
@@ -926,28 +578,18 @@ if(isset($_POST['resolucionObjecion']) && $_POST['resolucionObjecion'] == "resol
       </html>
     ';
 
+        $mail->AddAddress($row_oc['email']);
+        $mail->AddAttachment($adjunto);
 
-        //para el envío en formato HTML 
-        $headers = "MIME-Version: 1.0\r\n"; 
-        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo);
+        $mail->MsgHTML(utf8_decode($cuerpo));
+        $mail->Send();
+        $mail->ClearAddresses();
 
-        //dirección del remitente 
-        $headers .= "From: cert@spp.coop\r\n"; 
 
-        //dirección de respuesta, si queremos que sea distinta que la del remitente 
-        
-
-        //ruta del mensaje desde origen a destino 
-        //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibián copia 
-        //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibirán copia oculta 
-        $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-        //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-        mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);
 
         $queryMensaje = "INSERT INTO mensajes(idcom, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, $idoc, '$asunto', '$cuerpo', 'OC', 'ADM', $fecha_actual)";
         $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
@@ -995,28 +637,19 @@ if(isset($_POST['resolucionObjecion']) && $_POST['resolucionObjecion'] == "resol
       </html>
     ';
 
+        $mail->AddAddress($emailCOM1);
+        $mail->AddAddress($emailCOM2);
+        $mail->AddAttachment($adjunto);
 
-        //para el envío en formato HTML 
-        $headers = "MIME-Version: 1.0\r\n"; 
-        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo);
+        $mail->MsgHTML(utf8_decode($cuerpo));
+        $mail->Send();
+        $mail->ClearAddresses();
 
-        //dirección del remitente 
-        $headers .= "From: cert@spp.coop\r\n"; 
 
-        //dirección de respuesta, si queremos que sea distinta que la del remitente 
-        
-
-        //ruta del mensaje desde origen a destino 
-        //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibián copia 
-        //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibirán copia oculta 
-        $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-        //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-        mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);
 
         $queryMensaje = "INSERT INTO mensajes(idcom, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, $idoc, '$asunto', '$cuerpo', 'COM', 'ADM', $fecha_actual)";
         $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
@@ -1033,14 +666,14 @@ if(isset($_POST['resolucionObjecion']) && $_POST['resolucionObjecion'] == "resol
  if(isset($_POST['filtroPalabra']) && $_POST['filtroPalabra'] == "1" && $_POST['palabraClave']){
   $palabraClave = $_POST['palabraClave'];
 
-        $query_buscar = "SELECT solicitud_registro.*, com.idcom,com.nombre, com.pais, com.estado, com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE (com.nombre LIKE '%$palabraClave%') OR (solicitud_registro.p1_correo LIKE '%$palabraClave%') OR (com.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') AND (solicitud_registro.status_interno = 14 OR solicitud_registro.status_interno = 24) ORDER BY solicitud_registro.fecha_elaboracion DESC";
+        $query_buscar = "SELECT solicitud_registro.*, com.idcom,com.nombre AS 'nombreCOM', com.pais, com.estado, com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE (com.nombre LIKE '%$palabraClave%') OR (solicitud_registro.p1_correo LIKE '%$palabraClave%') OR (com.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') AND (solicitud_registro.status_interno = 14 AND solicitud_registro.status_interno = 24) ORDER BY solicitud_registro.fecha_elaboracion DESC";
 
         $queryTotal = "SELECT COUNT(idsolicitud_registro) AS 'totalConsulta' FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE (com.nombre LIKE '%$palabraClave%') OR (solicitud_registro.p1_correo LIKE '%$palabraClave%') OR (com.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') AND (solicitud_registro.status_interno = 14 OR solicitud_registro.status_interno = 24) ORDER BY solicitud_registro.fecha_elaboracion DESC";
 
 }else if(!isset($_POST['filtroPalabra']) || empty($_POST['palabraClave'])){
-        $query_buscar = "SELECT solicitud_registro.*, com.idcom,com.nombre, com.pais, com.estado,com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc  = oc.idoc WHERE (solicitud_registro.status_interno = 14 OR solicitud_registro.status_interno = 24) ORDER BY solicitud_registro.fecha_elaboracion DESC";
+        $query_buscar = "SELECT solicitud_registro.*,  com.idcom,com.nombre AS 'nombreCOM', com.pais, com.estado,com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc  = oc.idoc WHERE solicitud_registro.status_interno = 14 OR solicitud_registro.status_interno = 24 ORDER BY solicitud_registro.fecha_elaboracion DESC";
 
-        $queryTotal = "SELECT COUNT(idsolicitud_registro) AS 'totalSolicitudes' FROM solicitud_registro WHERE (status_interno = 14) OR (status_interno = 24)";
+        $queryTotal = "SELECT COUNT(idsolicitud_registro) AS 'totalSolicitudes' FROM solicitud_registro WHERE (solicitud_registro.status_interno = 14 OR solicitud_registro.status_interno = 24)";
 }
 /*}else if(isset($_POST['filtroPais']) && $_POST['filtroPais'] == "2" && $_POST['busquedaPais'] != NULL){
   $pais = $_POST['busquedaPais'];
@@ -1198,13 +831,13 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
             </a> -->
  
             <?php 
-              if($registro_busqueda['status_interno'] != 1 && $registro_busqueda['status_interno'] != 2 && $registro_busqueda['status_interno'] != 3 && $registro_busqueda['status_interno'] != 14 && $registro_busqueda['status_interno'] != 15 && $registro_busqueda['status_interno'] != 17 && $registro_busqueda['status_interno'] != 20){
+              if($registro_busqueda['status_interno'] != 1 && $registro_busqueda['status_interno'] != 2 && $registro_busqueda['status_interno'] != 3 && $registro_busqueda['status_interno'] != 14 && $registro_busqueda['status_interno'] != 15 && $registro_busqueda['status_interno'] != 17 && $registro_busqueda['status_interno'] != 20 && $registro_busqueda['status_interno'] != 24){
             ?>
               <p class="alert alert-success text-center informacion" style="padding:7px;"><span class="estatus"></span> Aceptada</p>
               <?php 
                 }else if($registro_busqueda['status_interno'] == 24){
               ?>
-              <p class="alert alert-danger text-center informacion" style="padding:7px;"><span class="estatus"></span> Rechazada</p>
+                <p class="alert alert-danger text-center informacion" style="padding:7px;"><span class="estatus"></span> Rechazada</p>
               <?php
                 }else{
               ?>
@@ -1220,11 +853,13 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
               <p class="alert alert-success informacion" >
               <?php 
               /******** NOMBRE COMPLETO COM ******************/
-                if(isset($registro_busqueda['nombre'])){
-                  echo $registro_busqueda['nombre']." , <u><a href='?COM&detail&idcom=$registro_busqueda[idcom]'>".$registro_busqueda['abreviacionCOM']."</a></u>";
+                if(isset($registro_busqueda['abreviacionCOM'])){
+                  echo "<u><a href='?COM&detail&idcom=$registro_busqueda[idcom]'>".$registro_busqueda['abreviacionCOM']."</a></u>";
+                }else if(isset($registro_busqueda['nombreCOM'])){
+                  echo "<u><a href='?COM&detail&idcom=$registro_busqueda[idcom]'>".$registro_busqueda['nombreCOM']."</a></u>";
                 }else{
                   echo "No Disponible";
-                } 
+                }
               ?>
               </p>
             </td>
@@ -1335,7 +970,7 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
                 <!-- consulta sobre los datos de objecion -->
 
               <!--INICIA PERIODO OBJECIÓN-->
-            <?php if($registro_busqueda['status_interno'] != 1 && $registro_busqueda['status_interno'] != 2 && $registro_busqueda['status_interno'] != 3 && $registro_busqueda['status_interno'] != 14 && $registro_busqueda['status_interno'] != 15 && $registro_busqueda['status_interno'] != 17 ){ ?>
+            <?php if($registro_busqueda['status_interno'] != 1 && $registro_busqueda['status_interno'] != 2 && $registro_busqueda['status_interno'] != 3 && $registro_busqueda['status_interno'] != 14 && $registro_busqueda['status_interno'] != 15 && $registro_busqueda['status_interno'] != 17 && $registro_busqueda['status_interno'] != 24 ){ ?>
 
   <!------------------------------------ INICIA SECCION INFORMACION DE OBJECION ------------------------------------------------>
               <?php //if($registro_busqueda['estado'] == 20){ /***** SI LA SOLICITUD ESTA EN PROCESOS DE RENOVACION*********/?>

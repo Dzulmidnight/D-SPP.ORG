@@ -1,45 +1,46 @@
-<?php require_once('../Connections/dspp.php'); ?>
-<?php
+<?php 
+require_once('../Connections/dspp.php'); 
 mysql_select_db($database_dspp, $dspp);
 
 if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
+  function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+  {
+    if (PHP_VERSION < 6) {
+      $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+    }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+    $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
+    switch ($theType) {
+      case "text":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;    
+      case "long":
+      case "int":
+        $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+        break;
+      case "double":
+        $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+        break;
+      case "date":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;
+      case "defined":
+        $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+        break;
+    }
+    return $theValue;
   }
-  return $theValue;
-}
 }
 
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
+$idopp = $_GET['idopp'];
 
 if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form2")) {
-  $insertSQL = sprintf("INSERT INTO contacto (idopp, contacto, cargo, tipo, telefono1, telefono2, email1, emaril2) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+  $insertSQL = sprintf("INSERT INTO contacto (idopp, contacto, cargo, tipo, telefono1, telefono2, email1, email2) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                        GetSQLValueString($_POST['idopp'], "int"),
                        GetSQLValueString($_POST['contacto'], "text"),
                        GetSQLValueString($_POST['cargo'], "text"),
@@ -47,14 +48,14 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form2")) {
                        GetSQLValueString($_POST['telefono1'], "text"),
                        GetSQLValueString($_POST['telefono2'], "text"),
                        GetSQLValueString($_POST['email1'], "text"),
-                       GetSQLValueString($_POST['emaril2'], "text"));
+                       GetSQLValueString($_POST['email2'], "text"));
 
   mysql_select_db($database_dspp, $dspp);
   $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
 }
 
 if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form3")) {
-  $updateSQL = sprintf("UPDATE contacto SET idopp=%s, contacto=%s, cargo=%s, tipo=%s, telefono1=%s, telefono2=%s, email1=%s, emaril2=%s WHERE idcontacto=%s",
+  $updateSQL = sprintf("UPDATE contacto SET idopp=%s, contacto=%s, cargo=%s, tipo=%s, telefono1=%s, telefono2=%s, email1=%s, email2=%s WHERE idcontacto=%s",
                        GetSQLValueString($_POST['idopp'], "int"),
                        GetSQLValueString($_POST['contacto'], "text"),
                        GetSQLValueString($_POST['cargo'], "text"),
@@ -62,7 +63,7 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form3")) {
                        GetSQLValueString($_POST['telefono1'], "text"),
                        GetSQLValueString($_POST['telefono2'], "text"),
                        GetSQLValueString($_POST['email1'], "text"),
-                       GetSQLValueString($_POST['emaril2'], "text"),
+                       GetSQLValueString($_POST['email2'], "text"),
                        GetSQLValueString($_POST['idcontacto'], "int"));
 
   mysql_select_db($database_dspp, $dspp);
@@ -121,260 +122,176 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form4")) {
 }
 
 if(isset($_POST['contacto_delete'])){
-	$query=sprintf("delete from contacto where idcontacto = %s",GetSQLValueString($_POST['idcontacto'], "text"));
-	$ejecutar=mysql_query($query,$dspp) or die(mysql_error());
+  $query=sprintf("delete from contacto where idcontacto = %s",GetSQLValueString($_POST['idcontacto'], "text"));
+  $ejecutar=mysql_query($query,$dspp) or die(mysql_error());
 }
 
 if(isset($_POST['cta_bn_delete'])){
-	$query=sprintf("delete from cta_bn where idcta_bn = %s",GetSQLValueString($_POST['idcta_bn'], "text"));
-	$ejecutar=mysql_query($query,$dspp) or die(mysql_error());
+  $query=sprintf("delete from cta_bn where idcta_bn = %s",GetSQLValueString($_POST['idcta_bn'], "text"));
+  $ejecutar=mysql_query($query,$dspp) or die(mysql_error());
 }
 
 if(isset($_POST['action_delete'])){
-	$query=sprintf("delete from ultima_accion where idultima_accion = %s",GetSQLValueString($_POST['idultima_accion'], "text"));
-	$ejecutar=mysql_query($query,$dspp) or die(mysql_error());
+  $query=sprintf("delete from ultima_accion where idultima_accion = %s",GetSQLValueString($_POST['idultima_accion'], "text"));
+  $ejecutar=mysql_query($query,$dspp) or die(mysql_error());
 }
 
+if(isset($_POST['actualizar_opp']) && $_POST['actualizar_opp'] == 1){
+  if(isset($_POST['ver_password'])){
+    $ver_password = $_POST['ver_password'];
+  }else{
+    $ver_password = '';
+  }
+  $insertar = sprintf("UPDATE opp SET nombre = %s , abreviacion = %s, sitio_web = %s, email = %s, telefono = %s, ciudad  = %s, razon_social = %s, direccion_oficina = %s, direccion_fiscal  = %s, rfc  = %s, ruc  = %s WHERE idopp = %s",
+      GetSQLValueString($_POST['nombre'], "text"),
+      GetSQLValueString($_POST['abreviacion'], "text"),
+      GetSQLValueString($_POST['sitio_web'], "text"),
+      GetSQLValueString($_POST['email'], "text"),
+      GetSQLValueString($_POST['telefono'], "text"),
+      GetSQLValueString($_POST['ciudad'], "text"),
+      GetSQLValueString($_POST['razon_social'], "text"),
+      GetSQLValueString($_POST['direccion_oficina'], "text"),
+      GetSQLValueString($_POST['direccion_fiscal'], "text"),
+      GetSQLValueString($_POST['rfc'], "text"),
+      GetSQLValueString($_POST['ruc'], "text"),
+      GetSQLValueString($idopp, "int"));
+  $actualizar = mysql_query($insertar,$dspp) or die(mysql_error());
 
-$colname_contacto_detail = "-1";
-if (isset($_GET['idcontacto'])) {
-  $colname_contacto_detail = $_GET['idcontacto'];
-}
-mysql_select_db($database_dspp, $dspp);
-$query_contacto_detail = sprintf("SELECT * FROM contacto WHERE idcontacto = %s", GetSQLValueString($colname_contacto_detail, "int"));
-$contacto_detail = mysql_query($query_contacto_detail, $dspp) or die(mysql_error());
-$row_contacto_detail = mysql_fetch_assoc($contacto_detail);
-$totalRows_contacto_detail = mysql_num_rows($contacto_detail);
-
-$colname_cta_bn_detail = "-1";
-if (isset($_GET['idcta_bn'])) {
-  $colname_cta_bn_detail = $_GET['idcta_bn'];
-}
-mysql_select_db($database_dspp, $dspp);
-$query_cta_bn_detail = sprintf("SELECT * FROM cta_bn WHERE idcta_bn = %s", GetSQLValueString($colname_cta_bn_detail, "int"));
-$cta_bn_detail = mysql_query($query_cta_bn_detail, $dspp) or die(mysql_error());
-$row_cta_bn_detail = mysql_fetch_assoc($cta_bn_detail);
-$totalRows_cta_bn_detail = mysql_num_rows($cta_bn_detail);
-
-$maxRows_accion_detalle = 20;
-$pageNum_accion_detalle = 0;
-if (isset($_GET['pageNum_accion_detalle'])) {
-  $pageNum_accion_detalle = $_GET['pageNum_accion_detalle'];
-}
-$startRow_accion_detalle = $pageNum_accion_detalle * $maxRows_accion_detalle;
-
-$colname_accion_detalle = "-1";
-if (isset($_GET['idopp'])) {
-  $colname_accion_detalle = $_GET['idopp'];
-}
-mysql_select_db($database_dspp, $dspp);
-$query_accion_detalle = sprintf("SELECT * FROM ultima_accion WHERE idopp = %s", GetSQLValueString($colname_accion_detalle, "int"));
-$query_limit_accion_detalle = sprintf("%s LIMIT %d, %d", $query_accion_detalle, $startRow_accion_detalle, $maxRows_accion_detalle);
-$accion_detalle = mysql_query($query_limit_accion_detalle, $dspp) or die(mysql_error());
-//$row_accion_detalle = mysql_fetch_assoc($accion_detalle);
-
-if (isset($_GET['totalRows_accion_detalle'])) {
-  $totalRows_accion_detalle = $_GET['totalRows_accion_detalle'];
-} else {
-  $all_accion_detalle = mysql_query($query_accion_detalle);
-  $totalRows_accion_detalle = mysql_num_rows($all_accion_detalle);
-}
-$totalPages_accion_detalle = ceil($totalRows_accion_detalle/$maxRows_accion_detalle)-1;
-
-$colname_accion_detail = "-1";
-if (isset($_GET['idultima_accion'])) {
-  $colname_accion_detail = $_GET['idultima_accion'];
-}
-mysql_select_db($database_dspp, $dspp);
-$query_accion_detail = sprintf("SELECT * FROM ultima_accion WHERE idultima_accion = %s", GetSQLValueString($colname_accion_detail, "int"));
-$accion_detail = mysql_query($query_accion_detail, $dspp) or die(mysql_error());
-$row_accion_detail = mysql_fetch_assoc($accion_detail);
-$totalRows_accion_detail = mysql_num_rows($accion_detail);
-
-mysql_select_db($database_dspp, $dspp);
-$query_accion_lateral = "SELECT idultima_accion, idopp, ultima_accion FROM ultima_accion ORDER BY fecha DESC";
-$accion_lateral = mysql_query($query_accion_lateral, $dspp) or die(mysql_error());
-$row_accion_lateral = mysql_fetch_assoc($accion_lateral);
-$totalRows_accion_lateral = mysql_num_rows($accion_lateral);
-
-if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
-  $updateSQL = sprintf("UPDATE opp SET idf=%s, password=%s, nombre=%s, abreviacion=%s, sitio_web=%s, telefono=%s, email=%s, pais=%s, idoc=%s, razon_social=%s, direccion=%s, direccion_fiscal=%s, rfc=%s WHERE idopp=%s",
-                       GetSQLValueString($_POST['idf'], "text"),
-                       GetSQLValueString($_POST['password'], "text"),
-                       GetSQLValueString($_POST['nombre'], "text"),
-                       GetSQLValueString($_POST['abreviacion'], "text"),
-                       GetSQLValueString($_POST['sitio_web'], "text"),
-                       GetSQLValueString($_POST['telefono'], "text"),
-                       GetSQLValueString($_POST['email'], "text"),
-                       GetSQLValueString($_POST['pais'], "text"),
-                       GetSQLValueString($_POST['idoc'], "int"),
-                       GetSQLValueString($_POST['razon_social'], "text"),
-                       GetSQLValueString($_POST['direccion_oficinas'], "text"),
-                       GetSQLValueString($_POST['direccion_fiscal'], "text"),
-                       GetSQLValueString($_POST['rfc'], "text"),
-                       GetSQLValueString($_POST['idopp'], "int"));
-
-  $Result1 = mysql_query($updateSQL, $dspp) or die(mysql_error());
+  $mensaje = "Datos Actualizados Correctamente";
 }
 
-$colname_opp = "-1";
-if (isset($_GET['idopp'])) {
-  $colname_opp = $_GET['idopp'];
-}
-$query_opp = sprintf("SELECT * FROM opp WHERE idopp = %s", GetSQLValueString($colname_opp, "int"));
-$opp = mysql_query($query_opp, $dspp) or die(mysql_error());
-$row_opp = mysql_fetch_assoc($opp);
-$totalRows_opp = mysql_num_rows($opp);
+$query = "SELECT * FROM opp WHERE idopp = $idopp";
+$row_opp = mysql_query($query,$dspp) or die(mysql_error());
+$opp = mysql_fetch_assoc($row_opp);
 
-$colname_cta_bn = "-1";
-if (isset($_GET['idopp'])) {
-  $colname_cta_bn = $_GET['idopp'];
-}
-$query_cta_bn = sprintf("SELECT * FROM cta_bn WHERE idopp = %s", GetSQLValueString($colname_cta_bn, "int"));
-$cta_bn = mysql_query($query_cta_bn, $dspp) or die(mysql_error());
-//$row_cta_bn = mysql_fetch_assoc($cta_bn);
-$totalRows_cta_bn = mysql_num_rows($cta_bn);
-
-$colname_contacto = "-1";
-if (isset($_GET['idopp'])) {
-  $colname_contacto = $_GET['idopp'];
-}
-$query_contacto = sprintf("SELECT * FROM contacto WHERE idopp = %s ORDER BY tipo ASC, contacto asc", GetSQLValueString($colname_contacto, "int"));
-$contacto = mysql_query($query_contacto, $dspp) or die(mysql_error());
-//$row_contacto = mysql_fetch_assoc($contacto);
-$totalRows_contacto = mysql_num_rows($contacto);
-
-$query_oc = "SELECT * FROM oc WHERE idoc = $_SESSION[idoc] ORDER BY nombre ASC";
-$oc = mysql_query($query_oc, $dspp) or die(mysql_error());
-$row_oc = mysql_fetch_assoc($oc);
-$totalRows_oc = mysql_num_rows($oc);
-
-$query_pais = "SELECT * FROM paises ORDER BY nombre ASC";
-$pais = mysql_query($query_pais, $dspp) or die(mysql_error());
-//$row_pais = mysql_fetch_assoc($pais);
-$totalRows_pais = mysql_num_rows($pais);
 ?>
-<div class="row-xs-12">
-  
-  <div class="col-xs-12">
-    
-  <? if(isset($_POST['update'])){?>
-  <p>
-  <div class="alert alert-success" role="alert"><? echo $_POST['update'];?></div>
-  </p>
-  <? }?>
-    
-  <form class="form" action="<?php echo $editFormAction; ?>" method="post" name="form1" id="form1">
-    <table class="table">
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">IDF</th>
-        <td><input class="form-control" type="text" name="idf" value="<?php echo htmlentities($row_opp['idf'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Password</th>
-        <td><input class="form-control" type="text" name="password" value="<?php echo htmlentities($row_opp['password'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Nombre</th>
-        <td><input class="form-control" type="text" name="nombre" value="<?php echo htmlentities($row_opp['nombre'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Abreviación</th>
-        <td><input class="form-control" type="text" name="abreviacion" value="<?php echo htmlentities($row_opp['abreviacion'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Sitio_web</th>
-        <td><input class="form-control" type="text" name="sitio_web" value="<?php echo htmlentities($row_opp['sitio_web'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Teléfono Oficinas</th>
-        <td><input class="form-control" type="text" name="telefono" value="<?php echo htmlentities($row_opp['telefono'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Email</th>
-        <td><input class="form-control" type="text" name="email" value="<?php echo htmlentities($row_opp['email'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">País</th>
-        <td>
-  <select class="form-control" name="pais">
-  <option value="">Selecciona</option>
+
+
+<div class="row">
+  <div class="col-md-12">
   <?php 
-while ($row_pais = mysql_fetch_assoc($pais)) {  
-?>
-  <option value="<?php echo utf8_encode($row_pais['nombre']);?>" <?php if(utf8_encode($row_pais['nombre'])==$row_opp['pais']){echo "SELECTED";} ?>><?php echo utf8_encode($row_pais['nombre']);?></option>
+  if(isset($mensaje)){
+  ?>
+    <div class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <?php echo $mensaje; ?>
+    </div>
   <?php
-} 
-?>
-  </select>
-  </td>
+  }
+  ?>
+    <h3>Mis Datos </h3>
+    <form action="" method="POST">
+      <table class="table table-condensed">
+        <tr>
+          <td>#SPP</td>
+          <td>
+            <?php echo $opp['spp']; ?>
+          </td>
         </tr>
-      <tr> </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">IDF OC</th>
-        <td>
-           <input class="form-control" type="text" value="<?php echo htmlentities($row_oc['nombre'], ENT_COMPAT, 'UTF-8'); ?>" size="32" disabled/>
-        </td>
-      </tr>
-      <tr> </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Razon_social</th>
-        <td><input class="form-control" type="text" name="razon_social" value="<?php echo htmlentities($row_opp['razon_social'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
+        <tr>
+          <td>Nombre</td>
+          <td>
+            <input class="form-control" id="" name="nombre" value="<?php echo $opp['nombre']; ?>">
+          </td>
         </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Direccion_Oficinas</th>
-        <td><input class="form-control" type="text" name="direccion_oficinas" value="<?php echo htmlentities($row_opp['direccion'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
+        <tr>
+          <td>Abreviación</td>
+          <td>
+            <input class="form-control" id="" name="abreviacion" value="<?php echo $opp['abreviacion']; ?>">
+          </td>
         </tr>
-      <tr valign="baseline">
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Direccion_fiscal</th>
-        <td><input class="form-control" type="text" name="direccion_fiscal" value="<?php echo htmlentities($row_opp['direccion_fiscal'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
+        <tr>
+          <td>Password</td>
+          <td>
+            <?php 
+            if($opp['ver_password']){
+              echo $opp['password'];
+            }else{
+              echo "<p class='alert alert-warning' style='padding:7px;'>Información no Disponible</p>";
+            }
+             ?>
+          </td>
         </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">RFC</th>
-        <td><input class="form-control" type="text" name="rfc" value="<?php echo htmlentities($row_opp['rfc'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
+        <tr>
+          <td>Sitio Web</td>
+          <td>
+            <input class="form-control" id="" name="sitio_web" value="<?php echo $opp['sitio_web']; ?>">
+          </td>
         </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">&nbsp;</th>
-        <td>
-          <button class="btn btn-primary" type="submit" value="Actualizar datos">
-            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Actualizar Datos
-          </button>  
-        </td>
+        <tr>
+          <td style="width:300px;">Email<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
+          <td>
+            <input class="form-control" id="" name="email" value="<?php echo $opp['email']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td>Teléfono</td>
+          <td>
+            <input class="form-control" id="" name="telefono" value="<?php echo $opp['telefono']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td>País</td>
+          <td>
+            <?php echo $opp['pais']; ?>
+          </td>
+        </tr>
+        <tr>
+          <td>Ciudad</td>
+          <td>
+            <input class="form-control" id="" name="ciudad" value="<?php echo $opp['ciudad']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td>Dirección Oficina</td>
+          <td>
+            <input class="form-control" id="" name="direccion_oficina" value="<?php echo $opp['direccion_oficina']; ?>">
+          </td>
+        </tr>
+
+        <tr class="warning">
+          <td colspan="2" class="text-center"><strong>Datos Fiscales</strong></td>
+        </tr>
+        <tr>
+          <td>Razón Social</td>
+          <td>
+            <input class="form-control" id="" name="razon_social" value="<?php echo $opp['razon_social']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td>Dirección Fiscal</td>
+          <td>
+            <input class="form-control" id="" name="direccion_fiscal" value="<?php echo $opp['direccion_fiscal']; ?>">
+          </td>
+        </tr>
+
+        <tr>
+          <td>RFC</td>
+          <td>
+            <input class="form-control" id="" name="rfc" value="<?php echo $opp['rfc']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td>RUC</td>
+          <td>
+            <input class="form-control" id="" name="ruc" value="<?php echo $opp['ruc']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <?php 
+            if($opp['ver_password']){
+            ?>
+              <input class="btn btn-success" type="submit" value="Actualizar Información">
+              <input type="hidden" name="actualizar_opp" value="1">
+            <?php
+            }
+             ?>
+
+          </td>
         </tr>
       </table>
-    <input type="hidden" name="idopp" value="<?php echo $row_opp['idopp']; ?>" />
-    <input type="hidden" name="idoc" value="<?php echo $row_oc['idoc']?>">
-    <input type="hidden" name="update" value="OPP actualizado correctamente" />
-    <input type="hidden" name="MM_update" value="form1" />
-    <input type="hidden" name="idopp" value="<?php echo $row_opp['idopp']; ?>" />
-  </form>
+    </form>
   </div>
-
-
-
-
-
-
 </div>
-<?php
-mysql_free_result($opp);
 
-mysql_free_result($cta_bn);
-
-mysql_free_result($contacto);
-
-mysql_free_result($oc);
-
-mysql_free_result($pais);
-
-mysql_free_result($contacto_detail);
-
-mysql_free_result($cta_bn_detail);
-
-mysql_free_result($accion_detalle);
-
-mysql_free_result($accion_detail);
-
-mysql_free_result($accion_lateral);
-?>

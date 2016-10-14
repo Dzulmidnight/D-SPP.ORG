@@ -1,8 +1,7 @@
 <?php 
   require_once('../Connections/dspp.php');
   require_once('../Connections/mail.php');
- ?>
-<?php
+
 mysql_select_db($database_dspp, $dspp);
 
 if (!function_exists("GetSQLValueString")) {
@@ -303,7 +302,7 @@ $totalRows_pais = mysql_num_rows($pais);
 
 	<table class="table table-bordered table-striped col-xs-8">
 		<tr>
-			<th colspan="4" class="text-center"><h3>Application for Small Producers´Organization Certification</h3></th>
+			<th colspan="4" class="text-center"><h3>Solicitud de Certificación para Organizaciones de Pequeños Productores</h3></th>
 		</tr>	
     <?php
       $procedimiento = $row_solicitud['procedimiento'];
@@ -313,13 +312,13 @@ $totalRows_pais = mysql_num_rows($pais);
         
                 <div class="col-xs-12 text-center">
                   <div class="row">
-                <h4>Certification Procedure: <br><small>(by OC)</small></h4>
+                <h4>Procedimiento de Certificación <br><small>(realizado por OC)</small></h4>
                   </div>
                 </div>
                 <div class="col-xs-3 text-center">
                   <div class="row">
                     <div class="col-xs-12">
-                      <p style="font-size:10px;"><b>SHORTENED  DOCUMENT</b></p> 
+                      <p style="font-size:10px;"><b>DOCUMENTAL "ACORTADO"</b></p> 
                     </div>       
                     <div class="col-xs-12">
                       <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='DOCUMENTAL "ACORTADO"' <?php if($procedimiento == 'DOCUMENTAL "ACORTADO"'){echo "checked";}else{echo "readonly";} ?> >
@@ -330,7 +329,7 @@ $totalRows_pais = mysql_num_rows($pais);
                 <div class="col-xs-3 text-center">
                   <div class="row">
                     <div class="col-xs-12">
-                      <p style="font-size:10px;"><b>NORMAL DOCUMENT</b></p> 
+                      <p style="font-size:10px;"><b>DOCUMENTAL "NORMAL"</b></p> 
                     </div>
                     <div class="col-xs-12">
                       <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='DOCUMENTAL "NORMAL"' <?php if($procedimiento == 'DOCUMENTAL "NORMAL"'){echo "checked";}else{echo "readonly";} ?> >
@@ -341,7 +340,7 @@ $totalRows_pais = mysql_num_rows($pais);
                 <div class="col-xs-3 text-center">
                   <div class="row">
                     <div class="col-xs-12">
-                      <p style="font-size:10px;"><b>COMPLETE ON-SITE</b></p>  
+                      <p style="font-size:10px;"><b>COMPLETO "IN SITU"</b></p>  
                     </div>
                     <div class="col-xs-12">
                       <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='COMPLETO "IN SITU"' <?php if($procedimiento == 'COMPLETO "IN SITU"'){echo "checked";}else{echo "readonly";} ?> >
@@ -352,7 +351,7 @@ $totalRows_pais = mysql_num_rows($pais);
                 <div class="col-xs-3 text-center">
                   <div class="row">
                     <div class="col-xs-12">
-                      <p style="font-size:10px;"><b>COMPLETE REMOTE</b></p>  
+                      <p style="font-size:10px;"><b>COMPLETO "A DISTANCIA"</b></p>  
                     </div>
                     <div class="col-xs-12">
                       <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='COMPLETO "A DISTANCIA"' <?php if($procedimiento == 'COMPLETO "A DISTANCIA"'){echo "checked";}else{echo "readonly";} ?> >
@@ -365,14 +364,14 @@ $totalRows_pais = mysql_num_rows($pais);
 
 
 		<tr class="success">
-			<th colspan="4" class="text-center">GENERAL INFORMATION</th>
+			<th colspan="4" class="text-center">DATOS GENERALES</th>
 		</tr>
 		<tr>
 			<td colspan="2">
-				NAME OF SMALL PRODUCER ORGANIZATION
+				NOMBRE COMPLETO DE LA ORGANIZACIÓN DE PEQUEÑOS PRODCUTORES
 			</td>
 			<td colspan="2">
-				<input type="text" autofocus="autofocus" class="form-control" id="exampleInputEmail1" size="70" placeholder="Name of Organization" value="<?php echo $row_opp['nombre']?>" readonly>
+				<input type="text" autofocus="autofocus" class="form-control" id="exampleInputEmail1" size="70" placeholder="Nombre Organización" value="<?php echo $row_opp['nombre']?>" readonly>
 			</td>
 		</tr>
 		<tr>
@@ -383,7 +382,7 @@ $totalRows_pais = mysql_num_rows($pais);
 						echo "<input type='text' class='form-control' id='exampleInputEmail1' placeholder='RFC' value='$row_opp[rfc]' readonly>";
 
 					}else{
-						echo "<input type='text' class='form-control' id='exampleInputEmail1' placeholder='Not Available' readonly>";
+						echo "<input type='text' class='form-control' id='exampleInputEmail1' placeholder='NO DISPONIBLE' readonly>";
 
 					}
 				 ?>
@@ -391,33 +390,33 @@ $totalRows_pais = mysql_num_rows($pais);
 		</tr>
 		<tr>
 			<td colspan="3">
-				COMPLETE ADDRESS FOR ORGANIZATION’S LOCATION (STREET, DISTRICT, TOWN/CITY, REGION)<br>
+				DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES(CALLE, BARRIO, LUGAR, REGIÓN)<br>
 				<?php 
 					if(isset($row_opp['direccion_fiscal'])){
 						echo "<input type='text' class='form-control' name='direccion_opp' id='exampleInputEmail1' value='$row_opp[direccion_fiscal]' readonly>";
 					}else{
-						echo "<input type='text' class='form-control' name='direccion_opp' id='exampleInputEmail1' placeholder='Not Available' readonly>";
+						echo "<input type='text' class='form-control' name='direccion_opp' id='exampleInputEmail1' placeholder='No Disponible' readonly>";
 					}
 				 ?>
 
 			</td>
 			<td colspan="1">
-				COUNTRY<br>
+				PAÍS<br>
 				<?php if(isset($row_opp['pais'])){
-						echo "<input type='text' class='form-control' name='direccion' id='exampleInputEmail1' placeholder='' value='$row_opp[pais]' readonly>";}
+						echo "<input type='text' class='form-control' name='direccion' id='exampleInputEmail1' placeholder='Dirección de Oficinas' value='$row_opp[pais]' readonly>";}
 					else{ ?>
-					Not Available				
+					No Disponible				
 		      <?php } ?>
 			</td>
 		</tr>	
 		<tr>
-			<td colspan="2">ORGANIZATION’S EMAIL ADDRESS</td>
+			<td colspan="2">CORREO ELECTRONICO</td>
 			<td colspan="2">
 				<?php 
 					if(isset($row_opp['email'])){
 						echo "<input type='email' class='form-control' name='email_opp' id='exampleInputEmail1' value='$row_opp[email]' readonly>";
 					}else{
-						echo "<input type='email' class='form-control' name='email_opp' id='exampleInputEmail1' placeholder='Not Available' readonly>";
+						echo "<input type='email' class='form-control' name='email_opp' id='exampleInputEmail1' placeholder='No Disponible' readonly>";
 					}
 				 ?>
 
@@ -425,23 +424,23 @@ $totalRows_pais = mysql_num_rows($pais);
 		</tr>
 		<tr>
 			<td colspan="3">
-				WEB SITE<br>
+				SITIO WEB<br>
 				<?php 
 					if(isset($row_opp['sitio_web'])){
 						echo "<input type='text' class='form-control' name='web_opp' id='exampleInputEmail1' value='$row_opp[sitio_web]' readonly>";
 					}else{
-						echo "<input type='text' class='form-control' name='web_opp' id='exampleInputEmail1' placeholder='Not Available' readonly>";
+						echo "<input type='text' class='form-control' name='web_opp' id='exampleInputEmail1' placeholder='No Disponible' readonly>";
 					}
 				 ?>
 				
 			</td>
 			<td colspan="1">
-				ORGANIZATION’S TELEPHONES(COUNTRY CODE+AREA CODE+NUMBER)<br>
+				TELEFONO<br>
 				<?php 
 					if(isset($row_opp['telefono1'])){
 						echo "<input type='text' class='form-control' name='telefono' id='exampleInputEmail1' value='$row_opp[telefono1]' readonly>";
 					}else{
-						echo "<input type='text' class='form-control' name='telefono' id='exampleInputEmail1' placeholder='Not Available' readonly>";
+						echo "<input type='text' class='form-control' name='telefono' id='exampleInputEmail1' placeholder='No Disponible' readonly>";
 					}
 				 ?>
 				
@@ -449,85 +448,85 @@ $totalRows_pais = mysql_num_rows($pais);
 		</tr>		
 		<tr>
 			<td class="text-center" colspan="4">
-				DATA FOR INVOICING (ADDRES, COUNTRY, ETC.)<br>
+				DATOS FISCALES(PARA FACTURACIÓN COMO DOMICILIO, RFC, RUC, CIUDAD, PAÍS, ETC)<br>
 			</td>
 		</tr>
 		<tr>
 			<?php 
 				if(isset($row_solicitud['direccion_fiscal'])){
-					echo "<td class='col-xs-3'>ADDRES: <input type='text' class='form-control' name='f_domicilio' id='exampleInputEmail1' value='$row_solicitud[direccion_fiscal]' readonly></td>";
+					echo "<td class='col-xs-3'>DOMICILIO: <input type='text' class='form-control' name='f_domicilio' id='exampleInputEmail1' value='$row_solicitud[direccion_fiscal]' readonly></td>";
 				}else{
-					echo "<td class='col-xs-3'>ADDRES: <input type='text' class='form-control' name='f_domicilio' id='exampleInputEmail1' placeholder='Not Available' readonly></td>";
+					echo "<td class='col-xs-3'>DOMICILIO: <input type='text' class='form-control' name='f_domicilio' id='exampleInputEmail1' placeholder='No Disponible' readonly></td>";
 				}
 				if(isset($row_solicitud['rfc'])){
 					echo "<td class='col-xs-3'>RFC: <input type='text' class='form-control' name='f_rfc' id='exampleInputEmail1' value='$row_solicitud[rfc]' readonly></td>";
 				}else{
-					echo "<td class='col-xs-3'>RFC: <input type='text' class='form-control' name='f_rfc' id='exampleInputEmail1' placeholder='Not Available' readonly></td>";
+					echo "<td class='col-xs-3'>RFC: <input type='text' class='form-control' name='f_rfc' id='exampleInputEmail1' placeholder='No Disponible' readonly></td>";
 				}
 			 ?>		
 			<td class="col-xs-3">RUC: <input type="text" class="form-control" name="ruc" id="exampleInputEmail1" placeholder="RUC" value="<?php echo $row_solicitud['ruc']?>" readonly></td>
 			
-			<td class="col-xs-3">CITY: <input type="text" class="form-control" name="ciudad" id="exampleInputEmail1" placeholder="City" value="<?php echo $row_solicitud['ciudad']?>" readonly></td>
+			<td class="col-xs-3">CIUDAD: <input type="text" class="form-control" name="ciudad" id="exampleInputEmail1" placeholder="Ciudad" value="<?php echo $row_solicitud['ciudad']?>" readonly></td>
 		</tr>
 		<tr class="text-center warning">
-			<td colspan="4">CONTACT PERSON(S) OF APPLICATION</td>
+			<td colspan="4">PERSONA(S) DE CONTACTO</td>
 		</tr>
 		<tr>
 			<td colspan="2">
-				CONTACT NAME APPLICATION<br>
-				<input type="text" class="form-control" name="p1_nombre" id="exampleInputEmail1" placeholder="Contact Name 1" value="<?php echo $row_solicitud['p1_nombre']?>" readonly><br>
-				<input type="text" class="form-control" name="p2_nombre" id="exampleInputEmail1" placeholder="Contact Name 2" value="<?php echo $row_solicitud['p2_nombre']?>" readonly><br>
-				EMAIL  ADDRESS FROM THE CONTACT PERSON(S)
-				<input type="email" class="form-control" name="p1_email" id="exampleInputEmail1" placeholder="Email 1" value="<?php echo $row_solicitud['p1_email']?>" readonly><br>
-				<input type="email" class="form-control" name="p2_email" id="exampleInputEmail1" placeholder="Email 2" value="<?php echo $row_solicitud['p2_email']?>" readonly><br>
+				NOMBRE DE CONTACTO SOLICITUD<br>
+				<input type="text" class="form-control" name="p1_nombre" id="exampleInputEmail1" placeholder="Contacto Solicitud 1" value="<?php echo $row_solicitud['p1_nombre']?>" readonly><br>
+				<input type="text" class="form-control" name="p2_nombre" id="exampleInputEmail1" placeholder="Contacto Solicitud 2" value="<?php echo $row_solicitud['p2_nombre']?>" readonly><br>
+				CORREO ELECTRÓNICO DE CONTACTO
+				<input type="email" class="form-control" name="p1_email" id="exampleInputEmail1" placeholder="Correo Electrónico 1" value="<?php echo $row_solicitud['p1_email']?>" readonly><br>
+				<input type="email" class="form-control" name="p2_email" id="exampleInputEmail1" placeholder="Correo Electrónico 2" value="<?php echo $row_solicitud['p2_email']?>" readonly><br>
 			</td>
 			<td colspan="2">
-				POSITION(S)<br>
-				<input type="text" class="form-control" name="p1_cargo" id="exampleInputEmail1" placeholder="Position 1" value="<?php echo $row_solicitud['p1_cargo']?>" readonly><br>
-				<input type="text" class="form-control" name="p2_cargo" id="exampleInputEmail1" placeholder="Position 2" value="<?php echo $row_solicitud['p2_cargo']?>" readonly><br>
-				TELEPHONE(S)<br>
-				<input type="text" class="form-control" name="p1_telefono" id="exampleInputtext1" placeholder="Telephone 1" value="<?php echo $row_solicitud['p1_telefono']?>" readonly><br>
-				<input type="text" class="form-control" name="p2_telefono" id="exampleInputEmail1" placeholder="Telephone 2" value="<?php echo $row_solicitud['p2_telefono']?>" readonly><br>
+				CARGO<br>
+				<input type="text" class="form-control" name="p1_cargo" id="exampleInputEmail1" placeholder="Cargo 1" value="<?php echo $row_solicitud['p1_cargo']?>" readonly><br>
+				<input type="text" class="form-control" name="p2_cargo" id="exampleInputEmail1" placeholder="Cargo 2" value="<?php echo $row_solicitud['p2_cargo']?>" readonly><br>
+				TELÉFONO<br>
+				<input type="text" class="form-control" name="p1_telefono" id="exampleInputtext1" placeholder="Telefono 1" value="<?php echo $row_solicitud['p1_telefono']?>" readonly><br>
+				<input type="text" class="form-control" name="p2_telefono" id="exampleInputEmail1" placeholder="Telefono 2" value="<?php echo $row_solicitud['p2_telefono']?>" readonly><br>
 			</td>
 		</tr>
 		<tr class="text-center warning">
-			<td colspan="4">PERSON(S) OF THE ADMINISTRATIVE AREA</td>
+			<td colspan="4">PERSONA DEL ÁREA ADMINISTRATIVA</td>
 		</tr>
 
 		<tr>
 			<td colspan="2">
-				PERSON OF THE ADMINISTRATIVE AREA<br>
-				<input type="text" class="form-control" name="adm_nom1" id="exampleInputEmail1" placeholder="Name 1" value="<?php echo $row_solicitud['adm_nom1']?>" readonly><br>
-				<input type="text" class="form-control" name="adm_nom2" id="exampleInputEmail1" placeholder="Name 2" value="<?php echo $row_solicitud['adm_nom2']?>" readonly><br>
-				EMAIL ADDRESS(ES) FOR CONTACT ADMINISTRATIVE AREA:
-				<input type="email" class="form-control" name="adm_email1" id="exampleInputEmail1" placeholder="Email 1" value="<?php echo $row_solicitud['adm_email1']?>" readonly><br>
-				<input type="email" class="form-control" name="adm_email2" id="exampleInputEmail1" placeholder="Email 2" value="<?php echo $row_solicitud['adm_email2']?>" readonly>
+				PERSONA DEL ÁREA ADMINISTRATIVA<br>
+				<input type="text" class="form-control" name="adm_nom1" id="exampleInputEmail1" placeholder="Persona del Área Administrativa 1" value="<?php echo $row_solicitud['adm_nom1']?>" readonly><br>
+				<input type="text" class="form-control" name="adm_nom2" id="exampleInputEmail1" placeholder="Persona del Área Administrativa 2" value="<?php echo $row_solicitud['adm_nom2']?>" readonly><br>
+				CORREO ELECTRÓNICO DEL ÁREA ADMINISTRATIVA
+				<input type="email" class="form-control" name="adm_email1" id="exampleInputEmail1" placeholder="Correo Electrónico 1" value="<?php echo $row_solicitud['adm_email1']?>" readonly><br>
+				<input type="email" class="form-control" name="adm_email2" id="exampleInputEmail1" placeholder="Correo Electrónico 2" value="<?php echo $row_solicitud['adm_email2']?>" readonly>
 			</td>
 			<td colspan="2">
-				TELEPHONE(S)  PERSON(S) ADMINISTRATIVE AREA<br>
-				<input type="text" class="form-control" name="adm_tel1" id="exampleInputEmail1" placeholder="Telephone 1" value="<?php echo $row_solicitud['adm_tel1']?>" readonly><br>
-				<input type="text" class="form-control" name="adm_tel2" id="exampleInputEmail1" placeholder="Telephone 2" value="<?php echo $row_solicitud['adm_tel2']?>" readonly>
+				TELÉFONO PERSONA DEL ÁREA ADMINISTRATIVA<br>
+				<input type="text" class="form-control" name="adm_tel1" id="exampleInputEmail1" placeholder="Teléfono Área Adminsitrativa 1" value="<?php echo $row_solicitud['adm_tel1']?>" readonly><br>
+				<input type="text" class="form-control" name="adm_tel2" id="exampleInputEmail1" placeholder="Teléfono Área Administrativa 2" value="<?php echo $row_solicitud['adm_tel2']?>" readonly>
 			</td>
 		</tr>	
 		<tr >
-			<td>NUMBER OF PRODUCERS MEMBERS</td>
-			<td><input type="text" class="form-control" name="resp1" id="exampleInputEmail1" placeholder="Number of Producers" value="<?php echo $row_solicitud['resp1']?>" readonly></td>
-			<td>NUMBER OF PRODUCERS MEMBERS OF THE  PRODUCT(S) TO BE INCLUDED IN THE CERTIFICATION</td>
-			<td><input type="text" class="form-control" name="resp2" id="exampleInputEmail1" placeholder="Number of Producers" value="<?php echo $row_solicitud['resp2']?>" readonly></td>
+			<td>NÚMERO DE SOCIOS PRODUCTORES</td>
+			<td><input type="text" class="form-control" name="resp1" id="exampleInputEmail1" placeholder="Número de socios" value="<?php echo $row_solicitud['resp1']?>" readonly></td>
+			<td>NÚMERO DE SOCIOS PRODUCTORES DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACION</td>
+			<td><input type="text" class="form-control" name="resp2" id="exampleInputEmail1" placeholder="Número de socios" value="<?php echo $row_solicitud['resp2']?>" readonly></td>
 		</tr>
 
 		<tr >
-			<td>TOTAL PRODUCTION VOLUME(S) BY PRODUCT (UNITE OF MEASURE)</td>
-			<td><input type="text" class="form-control" name="resp3" id="exampleInputEmail1" placeholder="Total Production" value="<?php echo $row_solicitud['resp3']?>" readonly></td>
-			<td>MAXIMUM SIZE OF THE UNIT OF PRODUCTION BY THE PRODUCER OF THE PRODUCT(S) TO INCLUDE IN THE CERTIFICATION</td>
-			<td><input type="text" class="form-control" name="resp4" id="exampleInputEmail1" placeholder="Maximum Size" value="<?php echo $row_solicitud['resp4']?>" readonly></td>
+			<td>NÚMERO DE SOCIOS PRODUCTORES</td>
+			<td><input type="text" class="form-control" name="resp3" id="exampleInputEmail1" placeholder="Número de socios" value="<?php echo $row_solicitud['resp3']?>" readonly></td>
+			<td>NÚMERO DE SOCIOS PRODUCTORES DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACION</td>
+			<td><input type="text" class="form-control" name="resp4" id="exampleInputEmail1" placeholder="Número de socios" value="<?php echo $row_solicitud['resp4']?>" readonly></td>
 		</tr>
 		<tr class="success">
-			<th colspan="4" class="text-center">INFORMATION ON OPERATIONS</th>
+			<th colspan="4" class="text-center">DATOS DE OPERACIÓN</th>
 		</tr>
 		<tr>
 			<td colspan="4">
-				1. EXPLAIN IF THE SMALL PRODUCERS’ ORGANIZATION (SPO) IS AT THE 1st, 2nd, 3rd or 4th LEVEL, AS WELL AS EXPLAIN THE NUMBER OF ORGANIZATIONS OF THE 3rd,2nd or 1st LEVEL, AND THE NUMBER OF COMMUNITIES, AREAS OR GROUPS OF WORK, IN HIS OR HER CASE, THAT ACCOUNT
+				1. EXPLIQUE SI SE TRATA DE UNA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES DE 1ER, 2DO, 3ER O 4TO GRADO, ASÍ COMO EL NÚMERO DE OPP DE 3ER, 2DO O 1ER GRADO, Y EL NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO, EN SU CASO, CON LAS QUE CUENTA:
 				<br>
 				<textarea class="form-control" name="op_resp1" id="" rows="3" readonly><?php echo $row_solicitud['op_resp1']?></textarea>
 				
@@ -535,27 +534,27 @@ $totalRows_pais = mysql_num_rows($pais);
 		</tr>
 		<tr>
 			<td>
-				<h5 class="col-xs-12">NUMBER OF SPO 3rd  LEVEL:</h5>
+				<h5 class="col-xs-12">NÚMERO DE OPP DE 3ER GRADO:</h5>
 				<textarea class="col-xs-12 form-control" name="op_area1" id="" cols="10" rows="5" readonly><?php echo $row_solicitud['op_area1']?></textarea>
 				
 			</td>
 			<td>
-				<h5 class="col-xs-12">NUMBER OF SPO 2nd  LEVEL:</h5>	
+				<h5 class="col-xs-12">NÚMERO DE OPP DE 2DO GRADO:</h5>	
 				<textarea class="col-xs-12 form-control" name="op_area2" id="" cols="10" rows="5" readonly><?php echo $row_solicitud['op_area2']?></textarea>	
 			</td>
 			<td>
-				<h5 class="col-xs-12">NUMBER OF SPO 1st  LEVEL:</h5>
+				<h5 class="col-xs-12">NÚMERO DE OPP DE 1ER GRADO:</h5>
 				<textarea class="col-xs-12 form-control" name="op_area3" id="" cols="10" rows="5" readonly><?php echo $row_solicitud['op_area3']?></textarea>
 			</td>
 			<td>
-				<h5 class="col-xs-12">NUMBER OF COMMUNITIES, AREAS OR GROUPS OF WORK:</h5>
+				<h5 class="col-xs-12">NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO:</h5>
 				<textarea class="col-xs-12 form-control" name="op_area4" id="" cols="10" rows="5" readonly><?php echo $row_solicitud['op_area4']?></textarea>
 				
 			</td>
 		</tr>
 		<tr>
 			<td colspan="4">
-				2.  SPECIFY WHICH PRODUCT (S) YOU WANT TO INCLUDE IN THE CERTIFICATE OF THE SYMBOL OF SMALL PRODUCERS FOR WHICH THE CERTIFICATION ENTITY WILL CONDUCT THE ASSESSMENT.
+				2. ESPECIFIQUE QUÉ PRODUCTO(S) QUIERE INCLUIR EN EL CERTIFICADO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES PARA LOS CUALES EL ORGANISMO DE CERTIFICACIÓN REALIZARÁ LA EVALUACIÓN.
 			</td>
 		</tr>
 		<tr>
@@ -565,9 +564,9 @@ $totalRows_pais = mysql_num_rows($pais);
 		</tr>
 		<tr>
 			<td colspan="4">
-				3.  MENTION IF YOUR ORGANIZATION WOULD LIKE TO INCLUDE SOME ADDITIONAL DESCRIPTOR FOR COMPLEMENTARY USE WITH THE GRAPHIC DESIGN OF THE SMALL PRODUCERS’ SYMBOL<sup>4</sup>
+				3. MENCIONE SI SU ORGANIZACIÓN QUIERE INCLUIR ALGÚN CALIFICATIVO ADICIONAL PARA USO COMPLEMENTARIO CON EL DISEÑO GRÁFICO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES.<sup>4</sup>
 				<br>
-        <h6><sup>4</sup> Review the Regulations on Graphics and the list of Optional Complementary Descriptors.</h6>
+				<h6><sup>4</sup> Revisar el Reglamento Gráfico y la lista de Calificativos Complementarios opcionales vigentes.</h6>
 			</td>
 		</tr>
 		<tr>
@@ -577,7 +576,7 @@ $totalRows_pais = mysql_num_rows($pais);
 		</tr>
 		<tr>
 			<td colspan="4">
-				4. SELECT THE SCOPE OF THE SMALL PRODUCERS’ ORGANIZATION:
+				4. SELECCIONE EL ALCANCE QUE TIENE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES:
 			</td>
 		</tr>
 		<tr>
@@ -592,9 +591,9 @@ $cadena_buscada   = 'PRODUCCION';
 $posicion_coincidencia = strpos($texto, $cadena_buscada);
 
             if($posicion_coincidencia === false){
-              echo "PRODUCTION <input name='op_resp4[]' type='checkbox' value='PRODUCCION' readonly>";
+              echo "PRODUCCIÓN <input name='op_resp4[]' type='checkbox' value='PRODUCCION' readonly>";
             }else{
-              echo "PRODUCTION <input name='op_resp4[]' type='checkbox' value='PRODUCCION' checked readonly>";
+              echo "PRODUCCIÓN <input name='op_resp4[]' type='checkbox' value='PRODUCCION' checked readonly>";
             } 
           ?>
           
@@ -605,9 +604,9 @@ $cadena_buscada   = 'PROCESAMIENTO';
 $posicion_coincidencia = strpos($texto, $cadena_buscada);
 
             if($posicion_coincidencia === false){
-              echo "PROCESSING <input name='op_resp4[]' type='checkbox' value='PROCESAMIENTO' readonly>";
+              echo "PROCESAMIENTO <input name='op_resp4[]' type='checkbox' value='PROCESAMIENTO' readonly>";
             }else{
-              echo "PROCESSING <input name='op_resp4[]' type='checkbox' value='PROCESAMIENTO' checked readonly>";
+              echo "PROCESAMIENTO <input name='op_resp4[]' type='checkbox' value='PROCESAMIENTO' checked readonly>";
             } 
           ?>
         </div>
@@ -617,9 +616,9 @@ $cadena_buscada   = 'EXPORTACION';
 $posicion_coincidencia = strpos($texto, $cadena_buscada);
 
             if($posicion_coincidencia === false){
-              echo "TRADING <input name='op_resp4[]' type='checkbox' value='EXPORTACION' readonly>";
+              echo "EXPORTACIÓN <input name='op_resp4[]' type='checkbox' value='EXPORTACION' readonly>";
             }else{
-              echo "TRADING <input name='op_resp4[]' type='checkbox' value='EXPORTACION' checked readonly>";
+              echo "EXPORTACIÓN <input name='op_resp4[]' type='checkbox' value='EXPORTACION' checked readonly>";
             } 
           ?>          
         </div>
@@ -627,7 +626,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 		</tr>
 		<tr>
 			<td colspan="4">
-				5.  SPECIFY IF YOU SUBCONTRACT THE SERVICES OF PROCESSING PLANTS, TRADING COMPANIES OR COMPANIES THAT CARRY OUT THE IMPORT OR EXPORT, IF THE ANSWER IS AFFIRMATIVE, MENTION THE NAME AND THE SERVICE THAT PERFORMS.
+				5. ESPECIFIQUE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA.
 			</td>
 		</tr>
 		<tr>
@@ -637,9 +636,9 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 		</tr>
 		<tr>
 			<td colspan="4">
-				6.  IF YOU SUBCONTRACT THE SERVICES OF PROCESSING PLANTS, TRADING COMPANIES OR COMPANIES THAT CARRY OUT THE IMPORT OR EXPORT, INDICATE WHETHER THESE COMPANIES ARE GOING TO APPLY FOR THE REGISTRATION UNDER SPP CERTIFICATION PROGRAM.<sup>5</sup>
-        <br>
-        <h6><sup>5</sup> Review the General Application Guidelines to the SPP System.</h6>
+				6. SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, INDIQUE SI ESTAS EMPRESAS VAN A REALIZAR EL REGISTRO BAJO EL PROGRAMA DEL SPP O SERÁN CONTROLADAS A TRAVÉS DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES.<sup>5</sup>
+				<br>
+				<h6><sup>5</sup> Revisar el documento de 'Directrices Generales del Sistema SPP' en su última versión.</h6>
 			</td>
 		</tr>
 		<tr>
@@ -649,7 +648,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 		</tr>		
 		<tr>
 			<td colspan="4">
-				7.  IN ADDITION TO YOUR MAIN OFFICES, PLEASE SPECIFY HOW MANY COLLECTION CENTERS, PROCESSING AREAS AND ADDITIONAL OFFICES YOU HAVE.
+				7. ADICIONAL A SUS OFICINAS CENTRALES, ESPECIFIQUE CUÁNTOS CENTROS DE ACOPIO, ÁREAS DE PROCESAMIENTO U OFICINAS ADICIONALES TIENE.
 			</td>
 		</tr>
 		<tr>
@@ -659,7 +658,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 		</tr>
 		<tr>
 			<td colspan="4">
-				8.  IF THE ORGANIZATION HAS AN INTERNAL CONTROL SYSTEM FOR COMPLYING WITH THE CRITERIA IN THE GENERAL STANDARD OF THE SMALL PRODUCERS’ SYMBOL, PLEASE EXPLAIN HOW IT WORKS.
+				8. ¿CUENTA CON UN SISTEMA DE CONTROL INTERNO PARA DAR CUMPLIMIENTO A LOS CRITERIOS DE LA NORMA GENERAL DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?, EN SU CASO, EXPLIQUE.
 			</td>
 		</tr>
 		<tr>
@@ -669,7 +668,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 		</tr>	
 		<tr>
 			<td colspan="4">
-				9.  FILL OUT THE TABLE ACCORDING YOUR CERTIFICATIONS, (example: EU, NOP, JASS, FLO, etc).
+				9. LLENAR LA TABLA DE ACUERDO A LAS CERTIFICACIONES QUE TIENE, (EJEMPLO: EU, NOP, JASS, FLO, etc).
 			</td>
 		</tr>
 		<tr>
@@ -678,10 +677,10 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 			<td colspan="4">
 				<table class="table table-bordered" id="tablaCertificaciones">
 					<tr>
-						<td>CERTIFICATION</td>
-						<td>CERTIFICATION ENTITY</td>
-						<td>INITIAL YEAR OF CERTIFICATION.</td>
-						<td>HAS BEEN INTERRUPTED?</td>	
+						<td>CERTIFICACIÓN</td>
+						<td>CERTIFICADORA</td>
+						<td>AÑO INICIAL DE CERTIFICACIÓN?</td>
+						<td>¿HA SIDO INTERRUMPIDA?</td>	
 						<!--<td>
 							<button type="button" onclick="tablaCertificaciones()" class="btn btn-primary" aria-label="Left Align">
 							  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -697,10 +696,10 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
           while($row_certificacion = mysql_fetch_assoc($certificacion_detalle)){
             ?>
             <tr class="text-center">
-              <td><input type="text" class="form-control" name="certificacion[$contador]" id="exampleInputEmail1" placeholder="CERTIFICATION" value="<?echo $row_certificacion['certificacion']?>" readonly></td>
-              <td><input type="text" class="form-control" name="certificadora[$contador]" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY" value="<?echo $row_certificacion['certificadora']?>" readonly></td>
-              <td><input type="date" class="form-control" name="ano_inicial[$contador]" id="exampleInputEmail1" placeholder="YEAR OF CERTIFICATION" value="<?echo $row_certificacion['ano_inicial']?>" readonly></td>
-              <td><input type="text" class="form-control" name="interrumpida[$contador]" id="exampleInputEmail1" placeholder=">HAS BEEN INTERRUPTED?" value="<?echo $row_certificacion['interrumpida']?>" readonly></td>
+              <td><input type="text" class="form-control" name="certificacion[$contador]" id="exampleInputEmail1" placeholder="CERTIFICACIÓN" value="<?echo $row_certificacion['certificacion']?>" readonly></td>
+              <td><input type="text" class="form-control" name="certificadora[$contador]" id="exampleInputEmail1" placeholder="CERTIFICADORA" value="<?echo $row_certificacion['certificadora']?>" readonly></td>
+              <td><input type="date" class="form-control" name="ano_inicial[$contador]" id="exampleInputEmail1" placeholder="AÑO INICIAL" value="<?echo $row_certificacion['ano_inicial']?>" readonly></td>
+              <td><input type="text" class="form-control" name="interrumpida[$contador]" id="exampleInputEmail1" placeholder="¿HA SIDO INTERRUMPIDA?" value="<?echo $row_certificacion['interrumpida']?>" readonly></td>
             </tr>
           <?php $contador++; } ?> 
           
@@ -710,7 +709,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 		</tr>
 		<tr>
 			<td colspan="4">
-				10. ACCORDING THE CERTIFICATIONS, IN ITS MOST RECENT INTERNAL AND EXTERNAL EVALUATIONS, HOW MANY CASES OF NON COMPLIANCE WERE IDENTIFIED? PLEASE EXPLAIN IF THEY HAVE BEEN RESOLVED OR WHAT THEIR STATUS IS?
+				10.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?
 			</td>
 		</tr>
 		<tr>
@@ -720,7 +719,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 		</tr>	
 		<tr>
 			<td colspan="4">
-				11. OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?
+				11.DEL TOTAL DE SUS VENTAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?
 			</td>
 		</tr>	
 		<tr>
@@ -730,7 +729,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 		</tr>	
 		<tr>
 			<td colspan="4">
-				12. DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?
+				12. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?
 			</td>
 		</tr>
 		<tr>
@@ -745,25 +744,25 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
             echo "</div>";*/
         ?>
           <div class="col-xs-6">
-            <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> YES</p>
+            <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> SI</p>
           </div>
           <div class="col-xs-6">
             <?php 
               if(empty($row_solicitud['op_resp13'])){
              ?>
-              <p class="alert alert-danger">No response was provided.</p>
+              <p class="alert alert-danger">No se proporciono ninguna respuesta.</p>
             <?php 
               }else if($row_solicitud['op_resp13'] == "HASTA $3,000 USD"){
              ?>
-              <p class="alert alert-info">LESS THAN $3,000 USD</p>
+              <p class="alert alert-info">HASTA $3,000 USD</p>
             <?php 
               }else if($row_solicitud['op_resp13'] == "ENTRE $3,000 Y $10,000 USD"){
              ?>
-             <p class="alert alert-info">BETWEENN $3,000 AND $10,000 USD</p>
+             <p class="alert alert-info">ENTRE $3,000 Y $10,000 USD</p>
             <?php 
               }else if($row_solicitud['op_resp13'] == "ENTRE $10,000 A $25,000 USD"){
              ?>
-             <p class="alert alert-info">BEETWENN $10,000 AND $25,000 USD</p>
+             <p class="alert alert-info">ENTRE $10,000 A $25,000 USD</p>
             <?php 
               }else if($row_solicitud['op_resp13'] != "HASTA $3,000 USD" && $row_solicitud['op_resp13'] != "ENTRE $3,000 Y $10,000 USD" && $row_solicitud['op_resp13'] != "ENTRE $10,000 A $25,000 USD"){
              ?>
@@ -789,7 +788,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
   
 		<tr>
 			<td colspan="4">
-				14. ESTIMATED DATE FOR BEGINNING TO USE THE SMALL PRODUCERS’ SYMBOL:
+				14. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
 			</td>
 		</tr>	
 		<tr>
@@ -799,7 +798,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 		</tr>	
 		<tr>
 			<td colspan="4">
-				15. PLEASE ATTACH A GENERAL MAP OF THE AREA WHERE YOUR SPO OPERATES, INDICATING THE ZONES WHERE MEMBERS ARE LOCATED.
+				15. ANEXAR EL CROQUIS GENERAL DE SU OPP, INDICANDO LAS ZONAS EN DONDE CUENTA CON SOCIOS.
 			</td>
 		</tr>	
 		<tr>
@@ -807,19 +806,19 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
       <?php if(strlen($row_solicitud["op_resp15"])<=$sizeRuta){ ?>
         <td colspan="4">
           
-         <p class="alert alert-danger">Not Available</p>
+         <p class="alert alert-danger">No Disponible</p>
           
         </td>
       <?php }else{ ?>
         <td colspan="4">
    
-          <a class="btn btn-success" href="<?echo $row_solicitud['op_resp15']?>"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download map</a>
+          <a class="btn btn-success" href="<?echo $row_solicitud['op_resp15']?>"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Descargar Croquis</a>
       
         </td>
       <?php } ?>
 		</tr>	
 		<tr class="success">
-			<th colspan="4" class="text-center">INFORMATION ON PRODUCTS FOR WHICH APPLICANT WISHES TO USE SYMBOL<sup>6</sup></th>
+			<th colspan="4" class="text-center">DATOS DE PRODUCTOS PARA LOS CUALES QUIERE UTILIZAR EL SÍMBOLO<sup>6</sup></th>
 		</tr>
 
 
@@ -828,14 +827,14 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 			<td colspan="4">
 				<table class="table table-bordered" id="tablaProductos">
 					<tr>
-            <td>Product</td>
-            <td>Total Estimated Volume to be Traded</td>
-            <td>Finished Product?</td>
-            <td>Raw material</td>
-            <td>Destination Countries</td>
-            <td>Own brand?</td>
-            <td>Client’s brand?</td>
-            <td>Still without client?</td>
+						<td>Producto</td>
+						<td>Volumen Total Estimado a Comercializar</td>
+						<td>Producto Terminado</td>
+						<td>Materia Prima</td>
+						<td>País(es) de Destino</td>
+						<td>Marca Propia</td>
+						<td>Marca de un Cliente</td>
+						<td>Sin cliente aún</td>
 						<!--<td>
 							<button type="button" onclick="tablaProductos()" class="btn btn-primary" aria-label="Left Align">
 							  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -853,16 +852,15 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 
 					<tr>
 						<td>
-            <td>Still without client?</td>
 							<input type="text" class="form-control" name="producto[$contador]" id="exampleInputEmail1" placeholder="Producto" value="<?echo $row_producto['producto']?>" readonly>
 						</td>
 						<td>
-							<input type="text" class="form-control" name="volumen[$contador]" id="exampleInputEmail1" placeholder="Volume" value="<?echo $row_producto['volumen']?>" readonly>
+							<input type="text" class="form-control" name="volumen[$contador]" id="exampleInputEmail1" placeholder="Volumen" value="<?echo $row_producto['volumen']?>" readonly>
 						</td>
 						<td>
               <?php 
                 if($row_producto['terminado'] == 'SI'){
-                  echo "YES <input type='radio'  name='terminado".$contador."[$contador]' id=' value='SI' checked readonly><br>";
+                  echo "SI <input type='radio'  name='terminado".$contador."[$contador]' id=' value='SI' checked readonly><br>";
                 }else if($row_producto['terminado'] == 'NO'){
                   echo "NO <input type='radio'  name='terminado".$contador."[$contador]' id=' value='NO' checked readonly>";
                 }
@@ -870,15 +868,15 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
             </td>          
 						<td>
 
-							<textarea cols="30" rows="5" type="text" class="form-control" name="materia[$contador]" id="exampleInputEmail1" placeholder="Material" readonly><?echo $row_producto['materia']?></textarea>
+							<textarea cols="30" rows="5" type="text" class="form-control" name="materia[$contador]" id="exampleInputEmail1" placeholder="Materia" readonly><?echo $row_producto['materia']?></textarea>
 						</td>
 						<td>
-							<textarea cols="30" rows="5" type="text" class="form-control" name="destino[$contador]" id="exampleInputEmail1" placeholder="Destination" readonly><?echo $row_producto['destino']?></textarea>
+							<textarea cols="30" rows="5" type="text" class="form-control" name="destino[$contador]" id="exampleInputEmail1" placeholder="Destino" readonly><?echo $row_producto['destino']?></textarea>
 						</td>
 						<td>
               <?php 
                 if($row_producto['marca_propia'] == 'SI'){
-                  echo "YES <input type='radio'  name='marca_propia".$contador."[0]' id=' value='SI' checked readonly><br>";
+                  echo "SI <input type='radio'  name='marca_propia".$contador."[0]' id=' value='SI' checked readonly><br>";
                 }else if($row_producto['marca_propia'] == 'NO'){
                   echo "NO <input type='radio'  name='marca_propia".$contador."[0]' id=' value='NO' checked readonly>";
                 }
@@ -887,7 +885,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 						<td>
               <?php 
                 if($row_producto['marca_cliente'] == 'SI'){
-                  echo "YES <input type='radio'  name='marca_cliente".$contador."[0]' id=' value='SI' checked readonly><br>";
+                  echo "SI <input type='radio'  name='marca_cliente".$contador."[0]' id=' value='SI' checked readonly><br>";
                 }else if($row_producto['marca_cliente'] == 'NO'){
                   echo "NO <input type='radio'  name='marca_cliente".$contador."[0]' id=' value='NO' checked readonly>";
                 }
@@ -896,7 +894,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 						<td>
               <?php 
                 if($row_producto['sin_cliente'] == 'SI'){
-                  echo "YES <input type='radio'  name='sin_cliente".$contador."[0]' id=' value='SI' checked readonly><br>";
+                  echo "SI <input type='radio'  name='sin_cliente".$contador."[0]' id=' value='SI' checked readonly><br>";
                 }else if($row_producto['sin_cliente'] == 'NO'){
                   echo "NO <input type='radio'  name='sin_cliente".$contador."[0]' id=' value='NO' checked readonly>";
                 }
@@ -907,7 +905,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
           <?php $contador++; }?>				
 					<tr>
 						<td colspan="8">
-              <h6><sup>6</sup> Information provided in this section will be handled with complete confidentiality. Please insert additional lines if necessary.</h6>
+							<h6><sup>6</sup> La información proporcionada en esta sección será tratada con plena confidencialidad. Favor de insertar filas adicionales de ser necesario.</h6>
 						</td>
 					</tr>
 				</table>
@@ -916,32 +914,32 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 		</tr>
 		<tr>
 			<th class="success" colspan="4">
-				COMMITMENTS
+				COMPROMISOS
 			</th>
 		</tr>
 		<tr class="text-justify">
 			<td colspan="4">
-        1.  By sending in this document, the applicant expresses its interest in receiving a proposal for certification with the Small Producers’ Symbol.<br>
-        2.  The certification process will begin when it is confirmed that the payment corresponding to the proposal has been received.<br>
-        3.  The fact that this application is delivered and received does not guarantee that the results of the certification process will be positive.<br>
-        4.  The applicant will become familiar with and comply with all the applicable requirements in the General Standard of the Small Producers’ Symbol for a Small Producers’ Organization, including both Critical and Minimum Criteria, and independently of the type of evaluation conducted.
+				1. Con el envío de esta solicitud se manifiesta el interés de recibir una propuesta de Certificación.<br>
+				2. El proceso de Certificación comenzará en el momento que se confirme la recepción del pago correspondiente.<br>
+				3. La entrega y recepción de esta solicitud no garantiza que el proceso de Certificación será positivo.<br>
+				4. Conocer y dar cumplimiento a todos los requisitos de la Norma General del Símbolo de Pequeños Productores que le apliquen como Organización de Pequeños Productores, tanto Críticos como Mínimos, independientemente del tipo de evaluación que se realice.
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
-				Name of the Certification Entity personnel who receives the application:
+				Nombre de la persona que se responsabiliza de la veracidad de la información del formato y que le dará seguimiento a la solicitud de parte del solicitante:
 			</td>
 			<td colspan="2">
 				<?php if(isset($row_solicitud['responsable'])){ ?>
 				<input type="text" class="form-control" name="responsable" value="<?php echo $row_solicitud['responsable']?>" readonly>
 				<?}else{?>
-				In process
+				En Proceso
 				<?}?>
 			</td>
 		</tr>
     <tr>
       <td colspan="2">
-        OC who receives the application:
+        OC que recibe la solicitud:
       </td>
       <td colspan="2">
         <input type="text" class="form-control" name="personal_oc" value="<?echo $row_solicitud['nombreOC']?>" readonly>
@@ -951,7 +949,7 @@ $posicion_coincidencia = strpos($texto, $cadena_buscada);
 	</table>
 	<input type="hidden" name="MM_insert" value="form1">
 	<input type="hidden" name="fecha_elaboracion" value="<?php echo time()?>">
-	<input type="hidden" name="mensaje" value="Action added correctly" />
+	<input type="hidden" name="mensaje" value="Acción agregada correctamente" />
 	<input type="hidden" name="idopp" value="<?php echo $_SESSION['idopp']?>">
 	<!--<input class="btn btn-primary" type="submit" value="Enviar Solicitud">-->
 

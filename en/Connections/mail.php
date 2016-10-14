@@ -19,8 +19,8 @@ $mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
 
 $correoCert = "cert@spp.coop";
 
-/*
 
+/*
 $mail = new PHPMailer();
 $mail->IsSMTP();
 //$mail->SMTPSecure = "ssl";

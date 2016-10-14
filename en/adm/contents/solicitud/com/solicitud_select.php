@@ -1,26 +1,10 @@
-<?php require_once('../Connections/dspp.php');
-      include_once("../../PHPMailer/class.phpmailer.php");
-      include_once("../../PHPMailer/class.smtp.php");
-
-        $mail = new PHPMailer();
-        $mail->IsSMTP();
-        //$mail->SMTPSecure = "ssl";
-        $mail->Host = "mail.d-spp.org";
-        $mail->Port = 25;
-        $mail->SMTPAuth = true;
-        $mail->Username = "soporte@d-spp.org";
-        $mail->Password = "/aung5l6tZ";
-        //$mail->SMTPDebug = 1;
-
-        $mail->From = "soporte@d-spp.org";
-        $mail->FromName = "CERT - DSPP";
-        $mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
-        $mail->AddReplyTo("cert@spp.coop");
-
+<?php 
+require_once('../Connections/dspp.php');
+require_once('../Connections/mail.php');
 
  ?>
 <?php
-  error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+  error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);
 
 if (!isset($_SESSION)) {
   session_start();
@@ -157,28 +141,17 @@ if(isset($_POST['comprobanteMembresia']) && $_POST['comprobanteMembresia'] == "2
       </html>
     ';
 
+        $mail->AddAddress($emailCOM1);
+        $mail->AddAddress($emailCOM2);
 
-        //para el envío en formato HTML 
-        $headers = "MIME-Version: 1.0\r\n"; 
-        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
 
-        //dirección del remitente 
-        $headers .= "From: cert@spp.coop\r\n"; 
-
-        //dirección de respuesta, si queremos que sea distinta que la del remitente 
-        
-
-        //ruta del mensaje desde origen a destino 
-        //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibián copia 
-        //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibirán copia oculta 
-        $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-        //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-        mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo);
+        $mail->MsgHTML(utf8_decode($cuerpo));
+        $mail->Send();
+        $mail->ClearAddresses();
 
         $queryMensaje = "INSERT INTO mensajes(idcom, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, '$asunto', '$cuerpo', 'COM', 'ADM', $fecha_actual)";
         $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
@@ -232,27 +205,18 @@ if(isset($_POST['comprobanteMembresia']) && $_POST['comprobanteMembresia'] == "2
     ';
 
 
-        //para el envío en formato HTML 
-        $headers = "MIME-Version: 1.0\r\n"; 
-        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+        $mail->AddAddress($emailCOM1);
+        $mail->AddAddress($emailCOM2);
 
-        //dirección del remitente 
-        $headers .= "From: cert@spp.coop\r\n"; 
 
-        //dirección de respuesta, si queremos que sea distinta que la del remitente 
-        
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo);
+        $mail->MsgHTML(utf8_decode($cuerpo));
+        $mail->Send();
+        $mail->ClearAddresses();
 
-        //ruta del mensaje desde origen a destino 
-        //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibián copia 
-        //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibirán copia oculta 
-        $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-        //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-        mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);
 
         $queryMensaje = "INSERT INTO mensajes(idcom, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, '$asunto', '$cuerpo', 'COM', 'ADM', $fecha_actual)";
         $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
@@ -322,7 +286,7 @@ if (isset($_POST['insertarObjecion']) && $_POST['insertarObjecion'] == "periodoO
       $abreviacionCOM = $datosCorreo['abreviacionCOM'];
       $paisCOM = $datosCorreo['pais'];
       $abreviacionOC = $datosCorreo['abreviacionOC'];
-      $alcance = $datosCorreo['op_resp4'];
+      $alcance = $datosCorreo['resp5'];
       /*****************************INICIO MAIL OC***************************************************/
       /********************************************************************************/
 
@@ -367,7 +331,7 @@ if (isset($_POST['insertarObjecion']) && $_POST['insertarObjecion'] == "periodoO
                           </tr>
                           <tr style="font-size: 12px;">
                             <td style="padding:10px;">
-                              OPP 
+                              COM 
                             </td>
                             <td style="padding:10px;">
                               '.$nombreCOM.'
@@ -615,27 +579,19 @@ if(isset($_POST['resolucionObjecion']) && $_POST['resolucionObjecion'] == "resol
     ';
 
 
-        //para el envío en formato HTML 
-        $headers = "MIME-Version: 1.0\r\n"; 
-        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+        $mail->AddAddress($row_oc['email']);
 
-        //dirección del remitente 
-        $headers .= "From: cert@spp.coop\r\n"; 
+        $mail->AddAttachment($adjunto);
 
-        //dirección de respuesta, si queremos que sea distinta que la del remitente 
-        
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo);
+        $mail->MsgHTML(utf8_decode($cuerpo));
+        $mail->Send();
+        $mail->ClearAddresses();
 
-        //ruta del mensaje desde origen a destino 
-        //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
 
-        //direcciones que recibián copia 
-        //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibirán copia oculta 
-        $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-        //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-        mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);
 
         $queryMensaje = "INSERT INTO mensajes(idcom, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, $idoc, '$asunto', '$cuerpo', 'OC', 'ADM', $fecha_actual)";
         $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
@@ -683,28 +639,19 @@ if(isset($_POST['resolucionObjecion']) && $_POST['resolucionObjecion'] == "resol
       </html>
     ';
 
+        $mail->AddAddress($emailCOM1);
+        $mail->AddAddress($emailCOM2);
 
-        //para el envío en formato HTML 
-        $headers = "MIME-Version: 1.0\r\n"; 
-        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+        $mail->AddAttachment($adjunto);
 
-        //dirección del remitente 
-        $headers .= "From: cert@spp.coop\r\n"; 
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo);
+        $mail->MsgHTML(utf8_decode($cuerpo));
+        $mail->Send();
+        $mail->ClearAddresses();
 
-        //dirección de respuesta, si queremos que sea distinta que la del remitente 
-        
-
-        //ruta del mensaje desde origen a destino 
-        //$headers .= "Return-path: holahola@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibián copia 
-        //$headers .= "Cc: maria@desarrolloweb.org\r\n"; 
-
-        //direcciones que recibirán copia oculta 
-        $headers .= "Bcc: yasser.midnight@gmail.com\r\n";
-        //$headers .= "Bcc: isc.jesusmartinez@gmail.com  \r\n"; 
-
-        mail($destinatario,$asunto,utf8_decode($cuerpo),$headers);
 
         $queryMensaje = "INSERT INTO mensajes(idcom, idoc, asunto, mensaje, destinatario, remitente, fecha) VALUES($idcom, $idoc, '$asunto', '$cuerpo', 'COM', 'ADM', $fecha_actual)";
         $ejecutar = mysql_query($queryMensaje,$dspp) or die(mysql_error());
@@ -721,14 +668,14 @@ if(isset($_POST['resolucionObjecion']) && $_POST['resolucionObjecion'] == "resol
  if(isset($_POST['filtroPalabra']) && $_POST['filtroPalabra'] == "1" && $_POST['palabraClave']){
   $palabraClave = $_POST['palabraClave'];
 
-        $query_buscar = "SELECT solicitud_registro.*, com.idcom,com.nombre, com.pais, com.estado, com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE (com.nombre LIKE '%$palabraClave%') OR (solicitud_registro.p1_correo LIKE '%$palabraClave%') OR (com.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') ORDER BY solicitud_registro.fecha_elaboracion DESC";
+        $query_buscar = "SELECT solicitud_registro.*, com.idcom,com.nombre AS 'nombreCOM', com.pais, com.estado, com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE (com.nombre LIKE '%$palabraClave%') OR (solicitud_registro.p1_correo LIKE '%$palabraClave%') OR (com.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') AND (solicitud_registro.status_interno != 10 AND solicitud_registro.status_interno != 14 AND solicitud_registro.status_interno != 24) ORDER BY solicitud_registro.fecha_elaboracion DESC";
 
-        $queryTotal = "SELECT COUNT(idsolicitud_registro) AS 'totalConsulta' FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE (com.nombre LIKE '%$palabraClave%') OR (solicitud_registro.p1_correo LIKE '%$palabraClave%') OR (com.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') ORDER BY solicitud_registro.fecha_elaboracion DESC";
+        $queryTotal = "SELECT COUNT(idsolicitud_registro) AS 'totalConsulta' FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE (com.nombre LIKE '%$palabraClave%') OR (solicitud_registro.p1_correo LIKE '%$palabraClave%') OR (com.pais LIKE '%$palabraClave%') OR (oc.nombre LIKE '%$palabraClave%') OR (oc.abreviacion LIKE '%$palabraClave%') AND (solicitud_registro.status_interno != 10 AND solicitud_registro.status_interno != 14 AND solicitud_registro.status_interno != 24) ORDER BY solicitud_registro.fecha_elaboracion DESC";
 
 }else if(!isset($_POST['filtroPalabra']) || empty($_POST['palabraClave'])){
-        $query_buscar = "SELECT solicitud_registro.*, com.idcom,com.nombre, com.pais, com.estado,com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc  = oc.idoc ORDER BY solicitud_registro.fecha_elaboracion DESC";
+        $query_buscar = "SELECT solicitud_registro.*,  com.idcom,com.nombre AS 'nombreCOM', com.pais, com.estado,com.abreviacion AS 'abreviacionCOM', oc.idoc, oc.nombre, oc.abreviacion FROM solicitud_registro INNER JOIN com ON solicitud_registro.idcom = com.idcom INNER JOIN oc ON solicitud_registro.idoc  = oc.idoc WHERE solicitud_registro.status_interno != 10 AND solicitud_registro.status_interno != 14 AND solicitud_registro.status_interno != 24 ORDER BY solicitud_registro.fecha_elaboracion DESC";
 
-        $queryTotal = "SELECT COUNT(idsolicitud_registro) AS 'totalSolicitudes' FROM solicitud_registro";
+        $queryTotal = "SELECT COUNT(idsolicitud_registro) AS 'totalSolicitudes' FROM solicitud_registro WHERE (solicitud_registro.status_interno != 10 AND solicitud_registro.status_interno != 14 AND solicitud_registro.status_interno != 24)";
 }
 /*}else if(isset($_POST['filtroPais']) && $_POST['filtroPais'] == "2" && $_POST['busquedaPais'] != NULL){
   $pais = $_POST['busquedaPais'];
@@ -886,13 +833,13 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
             </a> -->
  
             <?php 
-              if($registro_busqueda['status_interno'] != 1 && $registro_busqueda['status_interno'] != 2 && $registro_busqueda['status_interno'] != 3 && $registro_busqueda['status_interno'] != 14 && $registro_busqueda['status_interno'] != 15 && $registro_busqueda['status_interno'] != 17 && $registro_busqueda['status_interno'] != 20){
+              if($registro_busqueda['status_interno'] != 1 && $registro_busqueda['status_interno'] != 2 && $registro_busqueda['status_interno'] != 3 && $registro_busqueda['status_interno'] != 14 && $registro_busqueda['status_interno'] != 15 && $registro_busqueda['status_interno'] != 17 && $registro_busqueda['status_interno'] != 20 && $registro_busqueda['status_interno'] != 24){
             ?>
               <p class="alert alert-success text-center informacion" style="padding:7px;"><span class="estatus"></span> Aceptada</p>
               <?php 
                 }else if($registro_busqueda['status_interno'] == 24){
               ?>
-              <p class="alert alert-danger text-center informacion" style="padding:7px;"><span class="estatus"></span> Rechazada</p>
+                <p class="alert alert-danger text-center informacion" style="padding:7px;"><span class="estatus"></span> Rechazada</p>
               <?php
                 }else{
               ?>
@@ -908,11 +855,13 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
               <p class="alert alert-success informacion" >
               <?php 
               /******** NOMBRE COMPLETO COM ******************/
-                if(isset($registro_busqueda['nombre'])){
+                if(isset($registro_busqueda['abreviacionCOM'])){
                   echo "<u><a href='?COM&detail&idcom=$registro_busqueda[idcom]'>".$registro_busqueda['abreviacionCOM']."</a></u>";
+                }else if(isset($registro_busqueda['nombreCOM'])){
+                  echo "<u><a href='?COM&detail&idcom=$registro_busqueda[idcom]'>".$registro_busqueda['nombreCOM']."</a></u>";
                 }else{
                   echo "No Disponible";
-                } 
+                }
               ?>
               </p>
             </td>
@@ -1023,7 +972,7 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
                 <!-- consulta sobre los datos de objecion -->
 
               <!--INICIA PERIODO OBJECIÓN-->
-            <?php if($registro_busqueda['status_interno'] != 1 && $registro_busqueda['status_interno'] != 2 && $registro_busqueda['status_interno'] != 3 && $registro_busqueda['status_interno'] != 14 && $registro_busqueda['status_interno'] != 15 && $registro_busqueda['status_interno'] != 17 ){ ?>
+            <?php if($registro_busqueda['status_interno'] != 1 && $registro_busqueda['status_interno'] != 2 && $registro_busqueda['status_interno'] != 3 && $registro_busqueda['status_interno'] != 14 && $registro_busqueda['status_interno'] != 15 && $registro_busqueda['status_interno'] != 17 && $registro_busqueda['status_interno'] != 24 ){ ?>
 
   <!------------------------------------ INICIA SECCION INFORMACION DE OBJECION ------------------------------------------------>
               <?php //if($registro_busqueda['estado'] == 20){ /***** SI LA SOLICITUD ESTA EN PROCESOS DE RENOVACION*********/?>
@@ -1200,7 +1149,7 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
                                   <a class="col-xs-12 btn btn-info" style="margin-top:-10px;" role="button" name="descarga" href="<?echo $resultado2['adjunto']?>" target="_blank"><span aria-hidden="true" class="glyphicon glyphicon-download-alt"></span> Descargar</a>
                                 <?php }else{ ?>
                                   <h4 class="control-label" for="">Adjuntar archivo</h4>
-                                  <input name="adjunto_fld" id="adjunto_fld" type="file" class="filestyle" data-buttonName="btn-info" data-buttonBefore="true" data-buttonText="Cargar Archivo" required> 
+                                  <input name="adjunto_fld" id="adjunto_fld" type="file"  required> 
                                 <?php } ?>     
                               </div>
                             </div>

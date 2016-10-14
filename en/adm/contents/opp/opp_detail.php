@@ -1,36 +1,36 @@
-<?php require_once('../Connections/dspp.php'); ?>
-<?php
+<?php 
+require_once('../Connections/dspp.php'); 
 mysql_select_db($database_dspp, $dspp);
 
 if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
+  function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+  {
+    if (PHP_VERSION < 6) {
+      $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+    }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+    $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
+    switch ($theType) {
+      case "text":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;    
+      case "long":
+      case "int":
+        $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+        break;
+      case "double":
+        $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+        break;
+      case "date":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;
+      case "defined":
+        $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+        break;
+    }
+    return $theValue;
   }
-  return $theValue;
-}
 }
 
 $editFormAction = $_SERVER['PHP_SELF'];
@@ -121,699 +121,167 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form4")) {
 }
 
 if(isset($_POST['contacto_delete'])){
-	$query=sprintf("delete from contacto where idcontacto = %s",GetSQLValueString($_POST['idcontacto'], "text"));
-	$ejecutar=mysql_query($query,$dspp) or die(mysql_error());
+  $query=sprintf("delete from contacto where idcontacto = %s",GetSQLValueString($_POST['idcontacto'], "text"));
+  $ejecutar=mysql_query($query,$dspp) or die(mysql_error());
 }
 
 if(isset($_POST['cta_bn_delete'])){
-	$query=sprintf("delete from cta_bn where idcta_bn = %s",GetSQLValueString($_POST['idcta_bn'], "text"));
-	$ejecutar=mysql_query($query,$dspp) or die(mysql_error());
+  $query=sprintf("delete from cta_bn where idcta_bn = %s",GetSQLValueString($_POST['idcta_bn'], "text"));
+  $ejecutar=mysql_query($query,$dspp) or die(mysql_error());
 }
 
 if(isset($_POST['action_delete'])){
-	$query=sprintf("delete from ultima_accion where idultima_accion = %s",GetSQLValueString($_POST['idultima_accion'], "text"));
-	$ejecutar=mysql_query($query,$dspp) or die(mysql_error());
+  $query=sprintf("delete from ultima_accion where idultima_accion = %s",GetSQLValueString($_POST['idultima_accion'], "text"));
+  $ejecutar=mysql_query($query,$dspp) or die(mysql_error());
 }
 
+if(isset($_POST['actualizar_opp']) && $_POST['actualizar_opp'] == 1){
+  if(isset($_POST['ver_password'])){
+    $ver_password = $_POST['ver_password'];
+  }else{
+    $ver_password = '';
+  }
+  $insertar = sprintf("UPDATE opp SET nombre = %s , abreviacion = %s, password = %s, sitio_web = %s, email = %s, telefono = %s, ciudad  = %s, razon_social = %s, direccion_oficina = %s, direccion_fiscal  = %s, rfc  = %s, ruc  = %s, ver_password = %s WHERE idopp = %s",
+      GetSQLValueString($_POST['nombre'], "text"),
+      GetSQLValueString($_POST['abreviacion'], "text"),
+      GetSQLValueString($_POST['password'], "text"),
+      GetSQLValueString($_POST['sitio_web'], "text"),
+      GetSQLValueString($_POST['email'], "text"),
+      GetSQLValueString($_POST['telefono'], "text"),
+      GetSQLValueString($_POST['ciudad'], "text"),
+      GetSQLValueString($_POST['razon_social'], "text"),
+      GetSQLValueString($_POST['direccion_oficina'], "text"),
+      GetSQLValueString($_POST['direccion_fiscal'], "text"),
+      GetSQLValueString($_POST['rfc'], "text"),
+      GetSQLValueString($_POST['ruc'], "text"),
+      GetSQLValueString($ver_password, "int"),
+      GetSQLValueString($_GET['idopp'], "int"));
+  $actualizar = mysql_query($insertar,$dspp) or die(mysql_error());
 
-$colname_contacto_detail = "-1";
-if (isset($_GET['idcontacto'])) {
-  $colname_contacto_detail = $_GET['idcontacto'];
-}
-mysql_select_db($database_dspp, $dspp);
-$query_contacto_detail = sprintf("SELECT * FROM contacto WHERE idcontacto = %s", GetSQLValueString($colname_contacto_detail, "int"));
-$contacto_detail = mysql_query($query_contacto_detail, $dspp) or die(mysql_error());
-$row_contacto_detail = mysql_fetch_assoc($contacto_detail);
-$totalRows_contacto_detail = mysql_num_rows($contacto_detail);
-
-$colname_cta_bn_detail = "-1";
-if (isset($_GET['idcta_bn'])) {
-  $colname_cta_bn_detail = $_GET['idcta_bn'];
-}
-mysql_select_db($database_dspp, $dspp);
-$query_cta_bn_detail = sprintf("SELECT * FROM cta_bn WHERE idcta_bn = %s", GetSQLValueString($colname_cta_bn_detail, "int"));
-$cta_bn_detail = mysql_query($query_cta_bn_detail, $dspp) or die(mysql_error());
-$row_cta_bn_detail = mysql_fetch_assoc($cta_bn_detail);
-$totalRows_cta_bn_detail = mysql_num_rows($cta_bn_detail);
-
-$maxRows_accion_detalle = 20;
-$pageNum_accion_detalle = 0;
-if (isset($_GET['pageNum_accion_detalle'])) {
-  $pageNum_accion_detalle = $_GET['pageNum_accion_detalle'];
-}
-$startRow_accion_detalle = $pageNum_accion_detalle * $maxRows_accion_detalle;
-
-$colname_accion_detalle = "-1";
-if (isset($_GET['idopp'])) {
-  $colname_accion_detalle = $_GET['idopp'];
-}
-mysql_select_db($database_dspp, $dspp);
-$query_accion_detalle = sprintf("SELECT * FROM ultima_accion WHERE idopp = %s", GetSQLValueString($colname_accion_detalle, "int"));
-$query_limit_accion_detalle = sprintf("%s LIMIT %d, %d", $query_accion_detalle, $startRow_accion_detalle, $maxRows_accion_detalle);
-$accion_detalle = mysql_query($query_limit_accion_detalle, $dspp) or die(mysql_error());
-//$row_accion_detalle = mysql_fetch_assoc($accion_detalle);
-
-if (isset($_GET['totalRows_accion_detalle'])) {
-  $totalRows_accion_detalle = $_GET['totalRows_accion_detalle'];
-} else {
-  $all_accion_detalle = mysql_query($query_accion_detalle);
-  $totalRows_accion_detalle = mysql_num_rows($all_accion_detalle);
-}
-$totalPages_accion_detalle = ceil($totalRows_accion_detalle/$maxRows_accion_detalle)-1;
-
-$colname_accion_detail = "-1";
-if (isset($_GET['idultima_accion'])) {
-  $colname_accion_detail = $_GET['idultima_accion'];
-}
-mysql_select_db($database_dspp, $dspp);
-$query_accion_detail = sprintf("SELECT * FROM ultima_accion WHERE idultima_accion = %s", GetSQLValueString($colname_accion_detail, "int"));
-$accion_detail = mysql_query($query_accion_detail, $dspp) or die(mysql_error());
-$row_accion_detail = mysql_fetch_assoc($accion_detail);
-$totalRows_accion_detail = mysql_num_rows($accion_detail);
-
-mysql_select_db($database_dspp, $dspp);
-$query_accion_lateral = "SELECT idultima_accion, idopp, ultima_accion FROM ultima_accion ORDER BY fecha DESC";
-$accion_lateral = mysql_query($query_accion_lateral, $dspp) or die(mysql_error());
-$row_accion_lateral = mysql_fetch_assoc($accion_lateral);
-$totalRows_accion_lateral = mysql_num_rows($accion_lateral);
-
-if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
-  $updateSQL = sprintf("UPDATE opp SET idf=%s, password=%s, nombre=%s, abreviacion=%s, sitio_web=%s, telefono=%s, email=%s, pais=%s, idoc=%s, razon_social=%s, direccion_fiscal=%s, rfc=%s WHERE idopp=%s",
-                       GetSQLValueString($_POST['idf'], "text"),
-                       GetSQLValueString($_POST['password'], "text"),
-                       GetSQLValueString($_POST['nombre'], "text"),
-                       GetSQLValueString($_POST['abreviacion'], "text"),
-                       GetSQLValueString($_POST['sitio_web'], "text"),
-                       GetSQLValueString($_POST['telefono'], "text"),
-                       GetSQLValueString($_POST['email'], "text"),
-                       GetSQLValueString($_POST['pais'], "text"),
-                       GetSQLValueString($_POST['idoc'], "int"),
-                       GetSQLValueString($_POST['razon_social'], "text"),
-                       GetSQLValueString($_POST['direccion_fiscal'], "text"),
-                       GetSQLValueString($_POST['rfc'], "text"),
-                       GetSQLValueString($_POST['idopp'], "int"));
-
-  $Result1 = mysql_query($updateSQL, $dspp) or die(mysql_error());
+  $mensaje = "Datos Actualizados Correctamente";
 }
 
-$colname_opp = "-1";
-if (isset($_GET['idopp'])) {
-  $colname_opp = $_GET['idopp'];
-}
-$query_opp = sprintf("SELECT * FROM opp WHERE idopp = %s", GetSQLValueString($colname_opp, "int"));
-$opp = mysql_query($query_opp, $dspp) or die(mysql_error());
-$row_opp = mysql_fetch_assoc($opp);
-$totalRows_opp = mysql_num_rows($opp);
+$query = "SELECT * FROM opp WHERE idopp = $_GET[idopp]";
+$row_opp = mysql_query($query,$dspp) or die(mysql_error());
+$opp = mysql_fetch_assoc($row_opp);
 
-$colname_cta_bn = "-1";
-if (isset($_GET['idopp'])) {
-  $colname_cta_bn = $_GET['idopp'];
-}
-$query_cta_bn = sprintf("SELECT * FROM cta_bn WHERE idopp = %s", GetSQLValueString($colname_cta_bn, "int"));
-$cta_bn = mysql_query($query_cta_bn, $dspp) or die(mysql_error());
-//$row_cta_bn = mysql_fetch_assoc($cta_bn);
-$totalRows_cta_bn = mysql_num_rows($cta_bn);
-
-$colname_contacto = "-1";
-if (isset($_GET['idopp'])) {
-  $colname_contacto = $_GET['idopp'];
-}
-$query_contacto = sprintf("SELECT * FROM contacto WHERE idopp = %s ORDER BY tipo ASC, contacto asc", GetSQLValueString($colname_contacto, "int"));
-$contacto = mysql_query($query_contacto, $dspp) or die(mysql_error());
-//$row_contacto = mysql_fetch_assoc($contacto);
-$totalRows_contacto = mysql_num_rows($contacto);
-
-$query_oc = "SELECT * FROM oc ORDER BY nombre ASC";
-$oc = mysql_query($query_oc, $dspp) or die(mysql_error());
-//$row_oc = mysql_fetch_assoc($oc);
-$totalRows_oc = mysql_num_rows($oc);
-
-$query_pais = "SELECT * FROM paises ORDER BY nombre ASC";
-$pais = mysql_query($query_pais, $dspp) or die(mysql_error());
-//$row_pais = mysql_fetch_assoc($pais);
-$totalRows_pais = mysql_num_rows($pais);
 ?>
-<div class="row-xs-12">
-  
-  <div class="col-xs-4">
-    
-  <? if(isset($_POST['update'])){?>
-  <p>
-  <div class="alert alert-success" role="alert"><? echo $_POST['update'];?></div>
-  </p>
-  <? }?>
-    
-  <form class="form" action="<?php echo $editFormAction; ?>" method="post" name="form1" id="form1">
-    <table class="table">
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">IDF</th>
-        <td><input class="form-control" type="text" name="idf" value="<?php echo htmlentities($row_opp['idf'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Password</th>
-        <td><input class="form-control" type="text" name="password" value="<?php echo htmlentities($row_opp['password'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Nombre</th>
-        <td><input class="form-control" type="text" name="nombre" value="<?php echo htmlentities($row_opp['nombre'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Abreviación</th>
-        <td><input class="form-control" type="text" name="abreviacion" value="<?php echo htmlentities($row_opp['abreviacion'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Sitio_web</th>
-        <td><input class="form-control" type="text" name="sitio_web" value="<?php echo htmlentities($row_opp['sitio_web'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Teléfono Oficinas</th>
-        <td><input class="form-control" type="text" name="telefono" value="<?php echo htmlentities($row_opp['telefono'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Email</th>
-        <td><input class="form-control" type="text" name="email" value="<?php echo htmlentities($row_opp['email'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">País</th>
-        <td>
-  <select class="form-control" name="pais">
-  <option value="">Selecciona</option>
+
+<div class="row">
+  <div class="col-md-12">
   <?php 
-while ($row_pais = mysql_fetch_assoc($pais)) {  
-?>
-  <option value="<?php echo utf8_encode($row_pais['nombre']);?>" <?php if(utf8_encode($row_pais['nombre'])==$row_opp['pais']){echo "SELECTED";} ?>><?php echo utf8_encode($row_pais['nombre']);?></option>
+  if(isset($mensaje)){
+  ?>
+    <div class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <?php echo $mensaje; ?>
+    </div>
   <?php
-} 
-?>
-  </select>
-  </td>
+  }
+  ?>
+    <h3>Datos de: <span style="color:red"><?php echo $opp['nombre']; ?></span> </h3>
+    <form action="" method="POST">
+      <table class="table table-condensed">
+        <tr>
+          <td>#SPP</td>
+          <td>
+            <?php echo $opp['spp']; ?>
+          </td>
         </tr>
-      <tr> </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">IDF OC</th>
-        <td><select  class="form-control" name="idoc">
-          <option value="">Selecciona</option>
-          <?php 
-while ($row_oc = mysql_fetch_assoc($oc)) {  
-?>
-          <option value="<?php echo $row_oc['idoc']?>" <?php if (!(strcmp($row_oc['idoc'], htmlentities($row_opp['idoc'], ENT_COMPAT, 'UTF-8')))) {echo "SELECTED";} ?>><?php echo $row_oc['nombre']?></option>
-          <?php
-} 
-?>
-          </select></td>
+        <tr>
+          <td>Nombre</td>
+          <td>
+            <input class="form-control" id="" name="nombre" value="<?php echo $opp['nombre']; ?>">
+          </td>
         </tr>
-      <tr> </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Razon_social</th>
-        <td><input class="form-control" type="text" name="razon_social" value="<?php echo htmlentities($row_opp['razon_social'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
+        <tr>
+          <td>Abreviación</td>
+          <td>
+            <input class="form-control" id="" name="abreviacion" value="<?php echo $opp['abreviacion']; ?>">
+          </td>
         </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Direccion_fiscal</th>
-        <td><input class="form-control" type="text" name="direccion_fiscal" value="<?php echo htmlentities($row_opp['direccion_fiscal'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
+        <tr>
+          <td>Password</td>
+          <td>
+            <input class="form-control" id="" name="password" value="<?php echo $opp['password']; ?>">
+            <label>
+              <input type="checkbox" name="ver_password" value="1" <?php if(isset($opp['ver_password'])){ echo 'checked'; } ?>> ocultar mi contraseña al OC
+            </label>
+          </td>
         </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">RFC</th>
-        <td><input class="form-control" type="text" name="rfc" value="<?php echo htmlentities($row_opp['rfc'], ENT_COMPAT, 'UTF-8'); ?>" size="32" /></td>
+        <tr>
+          <td>Sitio Web</td>
+          <td>
+            <input class="form-control" id="" name="sitio_web" value="<?php echo $opp['sitio_web']; ?>">
+          </td>
         </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">&nbsp;</th>
-        <td>
-          <button class="btn btn-primary" type="submit" value="Actualizar datos">
-            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Actualizar Datos
-          </button>  
-        </td>
+        <tr>
+          <td style="width:300px;">Email<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
+          <td>
+            <input class="form-control" id="" name="email" value="<?php echo $opp['email']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td>Teléfono</td>
+          <td>
+            <input class="form-control" id="" name="telefono" value="<?php echo $opp['telefono']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td>País</td>
+          <td>
+            <?php echo $opp['pais']; ?>
+          </td>
+        </tr>
+        <tr>
+          <td>Ciudad</td>
+          <td>
+            <input class="form-control" id="" name="ciudad" value="<?php echo $opp['ciudad']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td>Dirección Oficina</td>
+          <td>
+            <input class="form-control" id="" name="direccion_oficina" value="<?php echo $opp['direccion_oficina']; ?>">
+          </td>
+        </tr>
+
+        <tr class="warning">
+          <td colspan="2" class="text-center"><strong>Datos Fiscales</strong></td>
+        </tr>
+        <tr>
+          <td>Razón Social</td>
+          <td>
+            <input class="form-control" id="" name="razon_social" value="<?php echo $opp['razon_social']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td>Dirección Fiscal</td>
+          <td>
+            <input class="form-control" id="" name="direccion_fiscal" value="<?php echo $opp['direccion_fiscal']; ?>">
+          </td>
+        </tr>
+
+        <tr>
+          <td>RFC</td>
+          <td>
+            <input class="form-control" id="" name="rfc" value="<?php echo $opp['rfc']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td>RUC</td>
+          <td>
+            <input class="form-control" id="" name="ruc" value="<?php echo $opp['ruc']; ?>">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <input class="btn btn-success" type="submit" value="Actualizar Información">
+            <input type="hidden" name="actualizar_opp" value="1">
+          </td>
         </tr>
       </table>
-    <input type="hidden" name="idopp" value="<?php echo $row_opp['idopp']; ?>" />
-    <input type="hidden" name="update" value="OPP actualizado correctamente" />
-    <input type="hidden" name="MM_update" value="form1" />
-    <input type="hidden" name="idopp" value="<?php echo $row_opp['idopp']; ?>" />
-  </form>
-  </div>
-  <div class="col-xs-8">
-    
-  <ul class="nav nav-pills">
- 
-  <li role="presentation"
-<? if(isset($_GET['contact'])){?> class="active" <? }?>><a href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&contact">Contactos</a></li>
-  
-  <li role="presentation"
-<? if(isset($_GET['cta'])){?> class="active" <? }?>><a href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&cta">Cuentas bancarias</a></li>
-
- <li role="presentation"
-<? if(isset($_GET['action'])){?> class="active" <? }?>><a href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&action">Ultimas acciones</a></li>
-    
-    
-  </ul>
-  <hr />
-    
-    
-  <? if(isset($_GET['contact'])){?>
-  <h4><a class="btn btn-success" href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&contact=add">Agregar</a> <a class="btn btn-default" href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&contact">Contactos</a></h4>
-  
-  <? if(isset($_POST['mensaje'])){?>
-  <p>
-  <div class="alert alert-success" role="alert"><? echo $_POST['mensaje'];?></div>
-  </p>
-  <? }?>
-  
-  <? if($_GET['contact']=="add"){?>
-  <form class="col-xs-8" action="<?php echo $editFormAction; ?>" method="post" name="form2" id="form2">
-    <table class="table">
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Contacto</th>
-        <td><input required="required" autofocus="autofocus" class="form-control"  type="text" name="contacto" value="" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Cargo</th>
-        <td><input  class="form-control" type="text" name="cargo" value="" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Tipo</th>
-        <td><select required  class="form-control"  name="tipo">
-          <option value="" >Selecciona</option>
-          <option value="ADMINISTRACION" <?php if (!(strcmp("ADMINISTRACION", ""))) {echo "SELECTED";} ?>>ADMINISTRACION</option>
-          <option value="CERTIFICACION" <?php if (!(strcmp("CERTIFICACION", ""))) {echo "SELECTED";} ?>>CERTIFICACION</option>
-          </select></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Teléfono 1</th>
-        <td><input  class="form-control" type="text" name="telefono1" value="" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Teléfono 2</th>
-        <td><input  class="form-control" type="text" name="telefono2" value="" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Email 1</th>
-        <td><input  class="form-control" type="email" name="email1" value="" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Emaril 2</th>
-        <td><input  class="form-control" type="email" name="email2" value="" size="32" /></td>
-        </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">&nbsp;</th>
-        <td><input class="btn btn-primary" type="submit" value="Agregar contacto" /></td>
-        </tr>
-      </table>
-      <input type="hidden" name="mensaje" value="Contacto agregado correctamente" />
-    <input type="hidden" name="idopp" value="<? echo $_GET['idopp'];?>" />
-    <input type="hidden" name="MM_insert" value="form2" />
-  </form>
-  <? }else if($_GET['contact']=="update"){?>
-  <div class="col-xs-4">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Lista de contactos</th>
-        </tr>
-      </thead>
-    <?php  while ($row_contacto = mysql_fetch_assoc($contacto)){ ?>
-    <tr>
-      <td><a class="btn btn-<? if($_GET['idcontacto']==$row_contacto['idcontacto']){echo "danger";}else{echo "default";}?>" href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&contact=update&idcontacto=<?php echo $row_contacto['idcontacto']; ?>" style="width:100%"><?php echo $row_contacto['contacto']; ?></a></td>
-      </tr>
-    <?php } ?>
-  </table>
-  </div>
-  <div class="col-xs-8">
-  <form action="<?php echo $editFormAction; ?>" method="post" name="form3" id="form3">
-  <table class="table">
-  <thead>
-      <tr>
-        <th colspan="2">Actualizar contacto</th>
-        </tr>
-      </thead>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Contacto</th>
-      <td><input  class="form-control" type="text" name="contacto" value="<?php echo htmlentities($row_contacto_detail['contacto'], ENT_COMPAT, ''); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Cargo</th>
-      <td><input  class="form-control" type="text" name="cargo" value="<?php echo htmlentities($row_contacto_detail['cargo'], ENT_COMPAT, ''); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Tipo</th>
-      <td><select  class="form-control" name="tipo">
-        <option value="" >Selecciona</option>
-        <option value="ADMINISTRACION" <?php if (!(strcmp("ADMINISTRACION", htmlentities($row_contacto_detail['tipo'], ENT_COMPAT, '')))) {echo "SELECTED";} ?>>ADMINSITRACION</option>
-        <option value="CERTIFICACION" <?php if (!(strcmp("CERTIFICACION", htmlentities($row_contacto_detail['tipo'], ENT_COMPAT, '')))) {echo "SELECTED";} ?>>CERTIFICACION</option>
-      </select></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Teléfono 1</th>
-      <td><input  class="form-control" type="text" name="telefono1" value="<?php echo htmlentities($row_contacto_detail['telefono1'], ENT_COMPAT, ''); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Teléfono 2</th>
-      <td><input  class="form-control" type="text" name="telefono2" value="<?php echo htmlentities($row_contacto_detail['telefono2'], ENT_COMPAT, ''); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Email 1</th>
-      <td><input  class="form-control" type="email" name="email1" value="<?php echo htmlentities($row_contacto_detail['email1'], ENT_COMPAT, ''); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Emaril 2</th>
-      <td><input  class="form-control" type="email" name="email2" value="<?php echo htmlentities($row_contacto_detail['email2'], ENT_COMPAT, ''); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">&nbsp;</th>
-      <td><input class="btn btn-primary" type="submit" value="Actualizar datos" /></td>
-    </tr>
-  </table>
-  <input type="hidden" name="mensaje" value="Contacto actualizado correctamente" />
-  <input type="hidden" name="idcontacto" value="<?php echo $row_contacto_detail['idcontacto']; ?>" />
-  <input type="hidden" name="idopp" value="<?php echo htmlentities($row_contacto_detail['idopp'], ENT_COMPAT, ''); ?>" />
-  <input type="hidden" name="MM_update" value="form3" />
-  <input type="hidden" name="idcontacto" value="<?php echo $row_contacto_detail['idcontacto']; ?>" />
-</form>
-  </div>
-  <? }else{?>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Contacto</th>
-        <th>Cargo</th>
-        <th>Tipo</th>
-        <th>Teléfonos</th>
-        <th>Email</th>
-        <th>Eliminar</th>
-        </tr>
-      </thead>
-    <?php  $cont=0; while ($row_contacto = mysql_fetch_assoc($contacto)){ $cont++;?>
-    <tr>
-      <td><a class="btn btn-default" href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&contact=update&idcontacto=<?php echo $row_contacto['idcontacto']; ?>" style="width:100%"><?php echo $row_contacto['contacto']; ?></a></td>
-      <td><?php echo $row_contacto['cargo']; ?></td>
-      <td><?php echo $row_contacto['tipo']; ?></td>
-      <td><?php echo $row_contacto['telefono1']; ?><br /><?php echo $row_contacto['telefono2']; ?></td>
-      <td><?php echo $row_contacto['email1']; ?><br /><?php echo $row_contacto['email2']; ?></td>
-      <td>
-      <form action="" method="post">
-      <input class="btn btn-danger" type="submit" value="Eliminar" />
-      <input type="hidden" value="Contacto eliminado correctamente" name="mensaje" />
-      <input type="hidden" value="1" name="contacto_delete" />
-      <input type="hidden" value="<?php echo $row_contacto['idcontacto']; ?>" name="idcontacto" />
-      </form>
-      </td>
-      </tr>
-    <?php } ?>
-    <? if($cont==0){?>
-    <tr><td colspan="7" class="alert alert-info" role="alert">No se encontraron registros</td></tr>
-    <? }?>
-  </table>
-  <? }?>
-    
-  <? }?>
-  <? if(isset($_GET['cta'])){?>
-  
-  <h4><a class="btn btn-success" href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&cta=add">Agregar</a> <a class="btn btn-default" href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&cta">Cuentas bancarias</a></h4>
-  
-  <? if(isset($_POST['mensaje'])){?>
-  <p>
-  <div class="alert alert-success" role="alert"><? echo $_POST['mensaje'];?></div>
-  </p>
-  <? }?>
-  
-  <? if($_GET['cta']=="add"){?>
-  <form class="col-xs-8" action="<?php echo $editFormAction; ?>" method="post" name="form4" id="form4">
-  <table class="table">
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Banco</th>
-      <td><input autofocus="autofocus"  class="form-control" type="text" name="banco" value="" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Sucursal</th>
-      <td><input  class="form-control" type="text" name="sucursal" value="" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Cuenta</th>
-      <td><input  class="form-control" type="text" name="cuenta" value="" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">CLABE</th>
-      <td><input  class="form-control" type="text" name="clabe" value="" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Propietario</th>
-      <td><input  class="form-control" type="text" name="propietario" value="" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <td nowrap="nowrap" align="right">&nbsp;</td>
-      <td><input class="btn btn-primary" type="submit" value="Agregar cuenta" /></td>
-    </tr>
-  </table>
-  <input type="hidden" name="mensaje" value="Cuenta agregada correctamente" />
-  <input type="hidden" name="idopp" value="<? echo $_GET['idopp'];?>" />
-  <input  type="hidden" name="MM_insert" value="form4" />
-</form>
-<? }else if($_GET['cta']=="update"){?>
-<div class="col-xs-4">
-<table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Banco</th>
-        </tr>
-      </thead>
-    <tbody>
-      <?php $cont=0; while ($row_cta_bn = mysql_fetch_assoc($cta_bn)){ $cont++;?>
-      <tr>
-        <td><a class="btn btn-<? if($_GET['idcta_bn']==$row_cta_bn['idcta_bn']){echo "danger";}else{echo "default";}?>" href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&cta=update&idcta_bn=<?php echo $row_cta_bn['idcta_bn']; ?>" style="width:100%"><?php echo $row_cta_bn['banco']; ?></a></td>
-        </tr>
-      <?php }  ?>
-      <? if($cont==0){?>
-    <tr><td colspan="5" class="alert alert-info" role="alert">No se encontraron registros</td></tr>
-    <? }?>
-      </tbody>
-  </table>
-</div>
-<div class="col-xs-8">
-
-<form action="<?php echo $editFormAction; ?>" method="post" name="form5" id="form5">
-  <table class="table">
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Banco</th>
-      <td><input class="form-control" type="text" name="banco" value="<?php echo htmlentities($row_cta_bn_detail['banco'], ENT_COMPAT, ''); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Sucursal</th>
-      <td><input class="form-control" type="text" name="sucursal" value="<?php echo htmlentities($row_cta_bn_detail['sucursal'], ENT_COMPAT, ''); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Cuenta</th>
-      <td><input class="form-control" type="text" name="cuenta" value="<?php echo htmlentities($row_cta_bn_detail['cuenta'], ENT_COMPAT, ''); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">CLABE</th>
-      <td><input class="form-control" type="text" name="clabe" value="<?php echo htmlentities($row_cta_bn_detail['clabe'], ENT_COMPAT, ''); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Propietario</th>
-      <td><input class="form-control" type="text" name="propietario" value="<?php echo htmlentities($row_cta_bn_detail['propietario'], ENT_COMPAT, ''); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">&nbsp;</th>
-      <td><input class="form-control" type="submit" value="Actualizar datos" /></td>
-    </tr>
-  </table>
-  <input type="hidden" name="mensaje" value="Cuenta actualizada correctamente" />
-  <input type="hidden" name="idcta_bn" value="<?php echo $row_cta_bn_detail['idcta_bn']; ?>" />
-  <input type="hidden" name="idopp" value="<?php echo htmlentities($row_cta_bn_detail['idopp'], ENT_COMPAT, ''); ?>" />
-  <input type="hidden" name="MM_update" value="form5" />
-  <input type="hidden" name="idcta_bn" value="<?php echo $row_cta_bn_detail['idcta_bn']; ?>" />
-</form>
-</div>
-<? }else{?>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Banco</th>
-        <th>Sucursal</th>
-        <th>Cuenta</th>
-        <th>CLABE</th>
-        <th>Propietario</th>
-        <th>Eliminar</th>
-        </tr>
-      </thead>
-    <tbody>
-      <?php $cont=0; while ($row_cta_bn = mysql_fetch_assoc($cta_bn)){ $cont++;?>
-      <tr>
-        <td><a class="btn btn-default" href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&cta=update&idcta_bn=<?php echo $row_cta_bn['idcta_bn']; ?>" style="width:100%"><?php echo $row_cta_bn['banco']; ?></a></td>
-        <td><?php echo $row_cta_bn['sucursal']; ?></td>
-        <td><?php echo $row_cta_bn['cuenta']; ?></td>
-        <td><?php echo $row_cta_bn['clabe']; ?></td>
-        <td><?php echo $row_cta_bn['propietario']; ?></td>
-        <td>
-      <form action="" method="post">
-      <input class="btn btn-danger" type="submit" value="Eliminar" />
-      <input type="hidden" value="Cuenta eliminada correctamente" name="mensaje" />
-      <input type="hidden" value="1" name="cta_bn_delete" />
-      <input type="hidden" value="<?php echo $row_cta_bn['idcta_bn']; ?>" name="idcta_bn" />
-      </form>
-      </td>
-        </tr>
-      <?php }  ?>
-      <? if($cont==0){?>
-    <tr><td colspan="6" class="alert alert-info" role="alert">No se encontraron registros</td></tr>
-    <? }?>
-      </tbody>
-  </table>
-  <? }?>
-    
-  <? }?>
-  
-  <? if(isset($_GET['action'])){?>
-  
-  <h4><a class="btn btn-success" href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&action=add">Agregar</a> <a class="btn btn-default" href="?OPP&detail&idopp=<? echo $_GET['idopp'];?>&action">Ultimas acciones</a></h4>
-  
-  <? if(isset($_POST['mensaje'])){?>
-  <p>
-  <div class="alert alert-success" role="alert"><? echo $_POST['mensaje'];?></div>
-  </p>
-  <? }?>
-  
-  <? if($_GET['action']=="add"){?>
-  <form class="col-xs-8" action="<?php echo $editFormAction; ?>" method="post" name="form6" id="form6">
-  <table class="table">
-  
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Ultima acción</th>
-      <td><input required="required" autofocus="autofocus"  class="form-control" type="text" name="ultima_accion" value="" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Persona</th>
-      <td><input required="required" class="form-control"  type="text" name="persona" value="" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Fecha</th>
-      <td><input required="required" class="form-control"  type="date" name="fecha" value="" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">Observación</th>
-      <td><input  class="form-control" type="text" name="observacion" value="" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <th nowrap="nowrap" align="right">&nbsp;</th>
-      <td><input class="btn btn-primary" type="submit" value="Agregar accion" /></td>
-    </tr>
-  </table>
-  <input type="hidden" name="mensaje" value="Acción agregada correctamente" />
-  <input type="hidden" name="idopp" value="<? echo $_GET['idopp'];?>" />
-  <input type="hidden" name="MM_insert" value="form6" />
-</form>
-<p>&nbsp;</p>
-<? }else if($_GET['action']=="update"){?>
-<div class="col-xs-4">
-  <table class="table table-striped">
-   <thead>
-    <tr>
-      <th colspan="2">Ultima Acción</th>
-    </tr>
-      </thead>  
-    <?php do { ?>
-      <tr>
-        <td><a href="?OPP&detail&idopp=<? echo $_GET['idopp']?>&action=update&idultima_accion=<? echo $row_accion_lateral['idultima_accion'];?>" class="btn btn-<? if($_GET['idultima_accion']==$row_accion_lateral['idultima_accion']){echo "danger";}else{echo "default";}?>" style="width:100%"><?php echo $row_accion_lateral['ultima_accion']; ?></a></td>
-      </tr>
-      <?php } while ($row_accion_lateral = mysql_fetch_assoc($accion_lateral)); ?>
-  </table>
-</div>
-<div class="col-xs-8">
-
-  <form action="<?php echo $editFormAction; ?>" method="post" name="form7" id="form7">
-    <table class="table">  <thead>
-      <tr>
-        <th colspan="2">Actualizar Acción</th>
-        </tr>
-      </thead>
-    	
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Ultima acción</th>
-        <td><input type="text" class="form-control" name="ultima_accion" value="<?php echo htmlentities($row_accion_detail['ultima_accion'], ENT_COMPAT, ''); ?>" size="32" /></td>
-      </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Persona</th>
-        <td><input type="text" class="form-control" name="persona" value="<?php echo htmlentities($row_accion_detail['persona'], ENT_COMPAT, ''); ?>" size="32" /></td>
-      </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Fecha</th>
-        <td><input type="date" class="form-control" name="fecha" value="<?php echo htmlentities($row_accion_detail['fecha'], ENT_COMPAT, ''); ?>" size="32" /></td>
-      </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">Observación</th>
-        <td><input type="text" class="form-control" name="observacion" value="<?php echo htmlentities($row_accion_detail['observacion'], ENT_COMPAT, ''); ?>" size="32" /></td>
-      </tr>
-      <tr valign="baseline">
-        <th nowrap="nowrap" align="right">&nbsp;</th>
-        <td><input type="submit" class="btn btn-primary" value="Actualizar datos" /></td>
-      </tr>
-    </table>
-    <input type="hidden" name="mensaje" value="Acción actualizada correctamente" />
-    <input type="hidden" name="MM_update" value="form7" />
-    <input type="hidden" name="idultima_accion" value="<?php echo $row_accion_detail['idultima_accion']; ?>" />
-  </form>
-  <p>&nbsp;</p>
-</div>
-<? }else{?>
-<table class="table table-striped">
-<thead>
-  <tr>
-    <th>ultima acción</th>
-    <th>Persona</th>
-    <th>Fecha</th>
-    <th>Observación</th>
-    <th>Eliminar</th>
-  </tr>
-</thead>
-<tbody>
-  <?php $cont=0; while ($row_accion_detalle = mysql_fetch_assoc($accion_detalle)){ $cont++; ?>
-    <tr>
-      <td><a href="?OPP&detail&idopp=<? echo $_GET['idopp']?>&action=update&idultima_accion=<? echo $row_accion_detalle['idultima_accion'];?>" class="btn btn-default" style="width:100%"><?php echo $row_accion_detalle['ultima_accion']; ?></a></td>
-      <td><?php echo $row_accion_detalle['persona']; ?></td>
-      <td><?php echo $row_accion_detalle['fecha']; ?></td>
-      <td><?php echo $row_accion_detalle['observacion']; ?></td>
-      <td>
-      <form action="" method="post">
-      <input class="btn btn-danger" type="submit" value="Eliminar" />
-      <input type="hidden" value="Acción eliminada correctamente" name="mensaje" />
-      <input type="hidden" value="1" name="action_delete" />
-      <input type="hidden" value="<?php echo $row_accion_detalle['idultima_accion']; ?>" name="idultima_accion" />
-      </form>
-      </td>
-    </tr>
-    <?php }  ?>
-    <? if($cont==0){?>
-    <tr><td colspan="5" class="alert alert-info" role="alert">No se encontraron registros</td></tr>
-    <? }?>
-    </tbody>
-</table>
-<? }?>
-  
-  
-  
-  <? }?>
-    
-    
-    
-    
+    </form>
   </div>
 </div>
-<?php
-mysql_free_result($opp);
 
-mysql_free_result($cta_bn);
-
-mysql_free_result($contacto);
-
-mysql_free_result($oc);
-
-mysql_free_result($pais);
-
-mysql_free_result($contacto_detail);
-
-mysql_free_result($cta_bn_detail);
-
-mysql_free_result($accion_detalle);
-
-mysql_free_result($accion_detail);
-
-mysql_free_result($accion_lateral);
-?>
