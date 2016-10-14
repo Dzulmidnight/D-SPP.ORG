@@ -498,7 +498,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
 
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -625,10 +625,10 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
           <div class="panel panel-primary">
             <div class="panel-heading">
-              <h3 class="panel-title">Inicio de sesión</h3>
+              <h3 class="panel-title">Sign in</h3>
             </div>
             <div class="panel-body">
-              <p>Selecciona un tipo de usuario</p>
+              <p>Select a user type</p>
               <ul class="nav">
               <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP">(SPO) Small Producers' Organization</a></li>
               <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC">(CE) Certification Entity</a></li>

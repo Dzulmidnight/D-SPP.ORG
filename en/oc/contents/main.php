@@ -3,13 +3,14 @@
 	$ejecutar = mysql_query($query,$dspp) or die(mysql_error());
 	$oc = mysql_fetch_assoc($ejecutar);
 
-	$notificacion = "Ahora puedes dar de alta nuevas solicitudes desde tu menú de OC, esta opción esta disponible en la sección de SOLICITUDES en el botón \"Nueva Solicitud\"";
+	$notificacion = "Now you can put up new applications from your menu CE, this option is available in the APPLICATIONS section in the \"New Application\" button";
+
  ?>
 
-<h4>Menú principal OC</h4>
+<h4>Main menu CE</h4>
 
 <?php if(!empty($notificacion)){ ?>
-	<div class="col-xs-12 alert alert-info text-center"><h3>Actualización:<br><?php echo $notificacion; ?></h3></div>
+	<div class="col-xs-12 alert alert-info text-center"><h3>Update: <br><?php echo $notificacion; ?></h3></div>
 <?php } ?>
 
 <?php if(!isset($oc['email1'])){ ?>

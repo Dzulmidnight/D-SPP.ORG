@@ -1,24 +1,24 @@
 <ul class="nav nav-pills">
   <li role="presentation" <?php if(isset($_GET['select'])){ echo "class='active'";} ?>>
     <a href="?SOLICITUD&select">
-      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitudes OPP
+      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> SPO applications
     </a>
   </li>
   <li role="presentation" <?php if(isset($_GET['select_empresa'])){ echo "class='active'";} ?>>
     <a href="?SOLICITUD&select_empresa" aria-label="Left Align">
-      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitudes Empresas
+      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Companies applications
     </a>
   </li>
   <li role="presentation" <?php if(isset($_GET['add'])){ echo "class='active'";} ?>>
     <div class="btn-group" role="group" aria-label="...">
       <div class="btn-group" role="group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Nueva Solicitud
+          New Application
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-          <li><a href="?SOLICITUD&add"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitud OPP</a></li>
-          <li><a href="?SOLICITUD&add_empresa"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitud Empresa</a></li>
+          <li><a href="?SOLICITUD&add"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> SPO Application</a></li>
+          <li><a href="?SOLICITUD&add_empresa"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Company Application</a></li>
         </ul>
       </div>
     </div>
@@ -27,7 +27,7 @@
   if(isset($_GET['detail'])){
   ?>
     <li role="presentation" class="active">
-      <a href="#">Detalle</a>
+      <a href="#">Detail</a>
     </li>
   <?php
   }

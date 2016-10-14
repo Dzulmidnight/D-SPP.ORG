@@ -541,21 +541,21 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
       <thead>
         <tr class="success">
           <th class="text-center">ID</th>
-          <th class="text-center"><a href="#" data-toggle="tooltip" title="Tipo de Solicitud"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Tipo</a></th>
-          <th class="text-center">Fecha Solicitud</th>
-          <th class="text-center">OC</th>
-          <th class="text-center">Organización</th>
-          <th class="text-center">Estatus Solicitud</th>
-          <th class="text-center">Cotización <br>(Descargable)</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Type of application"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Type</a></th>
+          <th class="text-center">Application date</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Certification Entity"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>CE</a></th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Small Producers´Organization"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> SPO</a></th>
+          <th class="text-center">Application status</th>
+          <th class="text-center">Quotation<br>(downloadable)</th>
           <!--<th class="text-center">Sitio WEB</th>-->
           <!--<th class="text-center">Contacto</th>-->
           <!--<th class="text-center">País</th>-->
-          <th class="text-center">Proceso de Objeción</th>
-          <th class="text-center">Proceso <br>Certificación</th>
-          <th class="text-center">Certificado</th>
+          <th class="text-center">Objection Process</th>
+          <th class="text-center">Certification Process</th>
+          <th class="text-center">Certificate</th>
           <!--<th class="text-center">Propuesta</th>-->
           <!--<th class="text-center">Observaciones Solicitud</th>-->
-          <th class="text-center" colspan="2">Acciones</th>
+          <th class="text-center" colspan="2">Actions</th>
           <!--<th>OC</th>
           <th>Razón social</th>
           <th>Dirección fiscal</th>
@@ -566,7 +566,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
       <tbody>
       <?php 
       while($solicitud = mysql_fetch_assoc($row_solicitud)){
-          $query_proceso = "SELECT proceso_certificacion.*, proceso_certificacion.idsolicitud_certificacion, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', membresia.idmembresia, membresia.estatus_membresia, membresia.idcomprobante_pago, membresia.fecha_registro FROM proceso_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion WHERE proceso_certificacion.idsolicitud_certificacion =  $solicitud[idsolicitud_certificacion] ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
+          $query_proceso = "SELECT proceso_certificacion.*, proceso_certificacion.idsolicitud_certificacion, estatus_publico.nombre_ingles AS 'nombre_publico', estatus_interno.nombre_ingles AS 'nombre_interno', estatus_dspp.nombre_ingles AS 'nombre_dspp', membresia.idmembresia, membresia.estatus_membresia, membresia.idcomprobante_pago, membresia.fecha_registro FROM proceso_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion WHERE proceso_certificacion.idsolicitud_certificacion =  $solicitud[idsolicitud_certificacion] ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
           $ejecutar = mysql_query($query_proceso,$dspp) or die(mysql_error());
           $proceso_certificacion = mysql_fetch_assoc($ejecutar);
 
@@ -601,7 +601,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <td>
             <?php
             if(isset($solicitud['cotizacion_opp'])){
-               echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
+               echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Download Quotation</a>";
                if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
                 echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
