@@ -353,7 +353,7 @@ if (isset($_POST['username'])) {
     
 	if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
     //declare two session variables and assign them
-    $_SESSION['idioma'] = "ESP";
+    $_SESSION['idioma'] = "EN";
     $_SESSION['MM_Username'] = $loginUsername;
     $_SESSION['MM_UserGroup'] = $loginStrGroup;	      
 
@@ -393,7 +393,7 @@ if (isset($_POST['SPP_OPP'])) {
       
     if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
       //declare two session variables and assign them
-      $_SESSION['idioma'] = "ESP";
+      $_SESSION['idioma'] = "EN";
       $_SESSION['MM_Username'] = $loginUsername;
       $_SESSION['MM_UserGroup'] = $loginStrGroup['nombre'];       
       $_SESSION["autentificado"] = true;
@@ -436,7 +436,7 @@ if (isset($_POST['SPP_EMPRESA'])) {
       
     if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
       //declare two session variables and assign them
-      $_SESSION['idioma'] = "ESP";
+      $_SESSION['idioma'] = "EN";
       $_SESSION['MM_Username'] = $loginUsername;       
       $_SESSION["autentificado"] = true;
       $_SESSION["nombreEmpresa"] = $loginStrGroup['nombreEmpresa'];
@@ -476,7 +476,7 @@ if (isset($_POST['SPP_OC'])) {
     
   if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
     //declare two session variables and assign them
-    $_SESSION['idioma'] = "ESP";
+    $_SESSION['idioma'] = "EN";
     $_SESSION['MM_Username'] = $loginUsername;      
     $_SESSION["autentificado"] = true;
     $_SESSION["nombreOC"] = $loginStrGroup['nombreOC'];
@@ -528,11 +528,11 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
       <div class="col-md-12">
         <ul class="nav nav-pills">
           <li role="presentation" style="margin:0px;padding:0px;"><a href="index.php"><img src="../img/FUNDEPPO.png" alt=""></a></li>
-          <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar sesión">Organización de Pequeños Productores</a></li>
-          <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar Sesión">Organismo de Certificación</a></li>
-          <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar sesión">EMPRESAS</a></li>
+          <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP" data-toggle="tooltip" data-placement="bottom" title="Click to login">Small Producers' Organization</a></li>
+          <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC" data-toggle="tooltip" data-placement="bottom" title="Click to login">Certification Entity</a></li>
+          <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM" data-toggle="tooltip" data-placement="bottom" title="Click to login">COMPANIES</a></li>
           <li role="presentation" <? if(isset($_GET['ADM'])){?> class="active" <? }?>><a href="?ADM">ADM</a></li>
-          <li role="presentation" <? if(isset($_GET['RECURSOS'])){?> class="active" <? }?>><a href="#">RECURSOS</a></li>
+          <li role="presentation" <? if(isset($_GET['RECURSOS'])){?> class="active" <? }?>><a href="#">RESOURCES</a></li>
         </ul>
         <hr>
       </div>
@@ -544,7 +544,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
 
             <div>
-              <h4 class="alert alert-success">Iniciar de Sesión como Organización de Pequeños Productores</h4>
+              <h4 class="alert alert-success">Login as Small Producers' Organization</h4>
             </div>
             <div class="panel-body panel-success">
               <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="opp">
@@ -553,10 +553,10 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                 <br>
                 <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
                 <br>
-                <a href="#">¿Olvidaste tu contraseña?</a>
+                <a href="#">Forgot my password</a>
                 <br>
-                <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
-                <a class="btn btn-danger btn-block" type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroOPP'";} ?>>Registrarse</a>
+                <button class="btn btn-primary btn-block" type="submit">Sing In</button>
+                <a class="btn btn-danger btn-block" type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroOPP'";} ?>>No account? Create one!</a>
               </form>
             </div>
          
@@ -565,7 +565,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
 
             <div>
-              <h4 class="alert alert-info">Iniciar Sesión como Organismo de Certificación</h4>
+              <h4 class="alert alert-info">Login as a Certification Entity</h4>
             </div>
             <div class="panel-body">
               <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="oc">
@@ -574,9 +574,9 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                 <br>
                 <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
                 <br>
-                <a href="#">¿Olvidaste tu contraseña?</a>
+                <a href="#">Forgot my password</a>
                 <br>
-                <button class="btn btn-primary form-control"  type="submit">Ingresar</button>
+                <button class="btn btn-primary form-control"  type="submit">Sing In</button>
 
               </form>
             </div>
@@ -587,7 +587,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
 
             <div >
-              <h4 class="alert alert-success">Iniciar Sesión como EMPRESAS</h4>
+              <h4 class="alert alert-success">Login as COMPANY</h4>
             </div>
             <div class="panel-body">
               <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="empresa">
@@ -595,10 +595,10 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                 <br>
                 <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
                 <br>
-                <a href="#">¿Olvidaste tu contraseña?</a>
+                <a href="#">Forgot my password</a>
                 <br>
-                <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
-                <a class="btn btn-danger btn-block"  type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroCOM'";} ?>>Registrarse</a>
+                <button class="btn btn-primary btn-block" type="submit">Sing In</button>
+                <a class="btn btn-danger btn-block"  type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroCOM'";} ?>>No account? Create one!</a>
               </form>
             </div>
    
@@ -612,12 +612,12 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
             </div>
             <div class="panel-body">
             <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="adm">
-              <h2 class="form-signin-heading">Datos de ingreso</h2>
+              <h2 class="form-signin-heading">Use your administrator account.</h2>
               <label for="inputEmail" class="sr-only">Email address</label>
               <input type="text" id="" name="username" class="form-control" placeholder="Username" required autofocus>
               <label for="inputPassword" class="sr-only">Password</label>
               <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
-              <button class="btn btn-lg btn-primary btn-block" type="submit">Ingresar</button>
+              <button class="btn btn-lg btn-primary btn-block" type="submit">Sing In</button>
             </form>
             </div>
         <?php
@@ -630,9 +630,9 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
             <div class="panel-body">
               <p>Selecciona un tipo de usuario</p>
               <ul class="nav">
-              <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP">(OPP) Organización de Pequeños Productores</a></li>
-              <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC">(OC) Organismo de Certificacion</a></li>
-              <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM">EMPRESAS</a></li>
+              <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP">(SPO) Small Producers' Organization</a></li>
+              <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC">(CE) Certification Entity</a></li>
+              <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM">COMPANIES</a></li>
               </ul>
             </div>
           </div>
@@ -667,53 +667,53 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
               <form action="" method="POST" class="form-horizontal">
                 <div class="panel panel-info">
                   <div class="panel-heading">
-                    <h3 class="panel-title">Formulario de Registro para Organización de Pequeños Productores</h3>
+                    <h3 class="panel-title">Registration Form for Small Producers' Organization</h3>
                   </div>
                   <div class="panel-body" style="font-size:12px;">
-                    <p class="alert alert-warning" style="padding:7px;">El #SPP y la contraseña son proporcionados por D-SPP, dichos datos son enviados por email al OPP</p>
+                    <p class="alert alert-warning" style="padding:7px;">The #SPP and password are provided by D-SPP, these data are sent by email to SPO(Small Producers' Organization)</p>
 
                     <div class="form-group">
-                      <label for="spp" class="col-sm-2 control-label">#SPP (En caso de contar con uno)</label>
+                      <label for="spp" class="col-sm-2 control-label">#SPP (If you have one)</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="spp" name="spp" placeholder="En caso de contar con uno">
+                        <input type="text" class="form-control" id="spp" name="spp" placeholder="If you have one">
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label for="nombre" class="col-sm-2 control-label">* Nombre de la OPP</label>
+                      <label for="nombre" class="col-sm-2 control-label">* Name of the Small Producers' Organization</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escriba el nombre" autofocus required>
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Enter the name" autofocus required>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="abreviacion" class="col-sm-2 control-label">Abreviación de la OPP</label>
+                      <label for="abreviacion" class="col-sm-2 control-label">Short Name</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="abreviacion" placeholder="Escriba la abreviación" name="abreviacion">
+                        <input type="text" class="form-control" id="abreviacion" placeholder="Enter the short name" name="abreviacion">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="sitio_web" class="col-sm-2 control-label">Sitio Web</label>
+                      <label for="sitio_web" class="col-sm-2 control-label">Website</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="sitio_web" name="sitio_web">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="email" class="col-sm-2 control-label">* Correo Electronico</label>
+                      <label for="email" class="col-sm-2 control-label">* Email</label>
                       <div class="col-sm-10">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Escriba el correo electronico" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter the email" required>
                       </div>
                     </div>
                     <div class="form-group">
                       <label for="telefono" class="col-sm-2 control-label">* Teléfono de Oficina</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Escriba el teléfono de oficina" required>
+                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Enter the office phone" required>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="pais" class="col-sm-2 control-label">País</label>
+                      <label for="pais" class="col-sm-2 control-label">Country</label>
                       <div class="col-sm-10">
                         <select name="pais" id="pais" class="form-control" required>
-                          <option value="">Selecciona un País</option>
+                          <option value="">Select a countrys</option>
                           <?php 
                           while($pais = mysql_fetch_assoc($row_pais)){
                             echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
@@ -723,26 +723,26 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="ciudad" class="col-sm-2 control-label">Ciudad</label>
+                      <label for="ciudad" class="col-sm-2 control-label">City</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="ciudad" name="ciudad">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="direccion_oficina" class="col-sm-2 control-label">Dirección de las Oficinas</label>
+                      <label for="direccion_oficina" class="col-sm-2 control-label">Office address</label>
                       <div class="col-sm-10">
-                        <input type="text" id="direccion_oficina" class="form-control" name="direccion_oficina" placeholder="Dirección de las Oficinas">
+                        <input type="text" id="direccion_oficina" class="form-control" name="direccion_oficina" placeholder="Office address">
                       </div>
                     </div>
-                    <p class="alert alert-warning text-center" style="padding:7px;">Datos Fiscales (Opcionales)</p>
+                    <p class="alert alert-warning text-center" style="padding:7px;">Fiscal data (Optional)</p>
                     <div class="form-group">
-                      <label for="razon_social" class="col-sm-2 control-label">Razón Social</label>
+                      <label for="razon_social" class="col-sm-2 control-label">Business name</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="razon_social" name="razon_social">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="direccion_fiscal" class="col-sm-2 control-label">Dirección Fiscal</label>
+                      <label for="direccion_fiscal" class="col-sm-2 control-label">Fiscal address</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="direccion_fiscal" name="direccion_fiscal">
                       </div>
@@ -760,7 +760,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                       </div>
                     </div>
                     <input type="hidden" name="registro_opp" value="1">
-                    <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Registrarse</button>
+                    <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Create account</button>
 
                   </div>
                 </div>
@@ -777,43 +777,43 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
               <form action="" method="POST" class="form-horizontal">
                 <div class="panel panel-info">
                   <div class="panel-heading">
-                    <h3 class="panel-title">Formulario de Registro para Empresas</h3>
+                    <h3 class="panel-title">Company Registration Form</h3>
                   </div>
                   <div class="panel-body" style="font-size:12px;">
-                    <p class="alert alert-warning" style="padding:7px;">El #SPP y la contraseña son proporcionados por D-SPP, dichos datos son enviados por email</p>
+                    <p class="alert alert-warning" style="padding:7px;">The #SPP and password are provided by D-SPP, these data are sent by email to the company</p>
 
                     <div class="form-group">
-                      <label for="spp" class="col-sm-2 control-label">#SPP (En caso de contar con uno)</label>
+                      <label for="spp" class="col-sm-2 control-label">#SPP (If you have one)</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="spp" name="spp" placeholder="En caso de contar con uno">
+                        <input type="text" class="form-control" id="spp" name="spp" placeholder="If you have one">
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label for="nombre" class="col-sm-2 control-label">* Nombre de la Empresa</label>
+                      <label for="nombre" class="col-sm-2 control-label">* Company name</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escriba el nombre" autofocus required>
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Enter the name" autofocus required>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="abreviacion" class="col-sm-2 control-label">Abreviación de la Empresa</label>
+                      <label for="abreviacion" class="col-sm-2 control-label">Short name</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="abreviacion" placeholder="Escriba la abreviación" name="abreviacion">
+                        <input type="text" class="form-control" id="abreviacion" placeholder="Enter the short name" name="abreviacion">
                       </div>
                     </div>
 
                      <div class="form-group">
-                        <p class="col-sm-2 text-right"><strong>TIPO DE EMPRESA</strong></p>
+                        <p class="col-sm-2 text-right"><strong>TYPE OF COMPANY</strong></p>
                         <div class="col-sm-10">
                           <div class="checkbox">
                             <label class="col-sm-4">
-                              <input type="checkbox"name="maquilador" value="1"> MAQUILADOR
+                              <input type="checkbox"name="maquilador" value="1"> Maquila Company
                             </label>
                             <label class="col-sm-4">
-                              <input type="checkbox"name="comprador" value="1"> COMPRADOR
+                              <input type="checkbox"name="comprador" value="1"> Final Buyer
                             </label>
                             <label class="col-sm-4">
-                              <input type="checkbox"name="intermediario" value="1"> INTERMEDIARIO
+                              <input type="checkbox"name="intermediario" value="1"> Intermediary
                             </label>
 
 
@@ -823,10 +823,10 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
 
 
                     <div class="form-group">
-                      <label for="sitio_web" class="col-sm-2 control-label">Certificadora (si utiliza los servicios de alguna certificadora)</label>
+                      <label for="sitio_web" class="col-sm-2 control-label">Certification Entity (if you use the services of a certification entity)</label>
                       <div class="col-sm-10">
                         <select class="form-control" name="idoc" id="idoc">
-                          <option value="">Seleccionar</option>
+                          <option value="">Choose one</option>
                           <?php 
                           while($oc = mysql_fetch_assoc($row_oc)){
                             echo "<option value='".$oc['idoc']."'>".$oc['abreviacion']."</option>";
@@ -836,29 +836,29 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="sitio_web" class="col-sm-2 control-label">Sitio Web</label>
+                      <label for="sitio_web" class="col-sm-2 control-label">Website</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="sitio_web" name="sitio_web">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="telefono" class="col-sm-2 control-label">* Teléfono de Oficina</label>
+                      <label for="telefono" class="col-sm-2 control-label">* Office Phone</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Escriba el teléfono de oficina" required>
+                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Enter the office phone" required>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="email" class="col-sm-2 control-label">* Correo Electronico</label>
+                      <label for="email" class="col-sm-2 control-label">* Email</label>
                       <div class="col-sm-10">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Escriba el correo electronico" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter the email" required>
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label for="pais" class="col-sm-2 control-label">País</label>
+                      <label for="pais" class="col-sm-2 control-label">Country</label>
                       <div class="col-sm-10">
                         <select name="pais" id="pais" class="form-control" required>
-                          <option value="">Selecciona un País</option>
+                          <option value="">Select Country</option>
                           <?php 
                           while($pais = mysql_fetch_assoc($row_pais)){
                             echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
@@ -868,26 +868,26 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="ciudad" class="col-sm-2 control-label">Ciudad</label>
+                      <label for="ciudad" class="col-sm-2 control-label">City</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="ciudad" name="ciudad">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="direccion_oficina" class="col-sm-2 control-label">Dirección de las Oficinas</label>
+                      <label for="direccion_oficina" class="col-sm-2 control-label">Office address</label>
                       <div class="col-sm-10">
-                        <input type="text" id="direccion_oficina" class="form-control" name="direccion_oficina" placeholder="Dirección de las Oficinas">
+                        <input type="text" id="direccion_oficina" class="form-control" name="direccion_oficina" placeholder="Office address">
                       </div>
                     </div>
-                    <p class="alert alert-warning text-center" style="padding:7px;">Datos Fiscales (Opcionales)</p>
+                    <p class="alert alert-warning text-center" style="padding:7px;">Fiscal data (Optional)</p>
                     <div class="form-group">
-                      <label for="razon_social" class="col-sm-2 control-label">Razón Social</label>
+                      <label for="razon_social" class="col-sm-2 control-label">Business name</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="razon_social" name="razon_social">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="direccion_fiscal" class="col-sm-2 control-label">Dirección Fiscal</label>
+                      <label for="direccion_fiscal" class="col-sm-2 control-label">Fiscal address</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="direccion_fiscal" name="direccion_fiscal">
                       </div>
@@ -905,7 +905,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                       </div>
                     </div>
                     <input type="hidden" name="registro_empresa" value="1">
-                    <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Registrarse</button>
+                    <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Create account</button>
 
                   </div>
                 </div>
@@ -919,7 +919,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
           <div class="row">
             <div class="col-md-12">
-              <p class="alert alert-warning">Para tener un mejor desempeño dentro de D-SPP.ORG le recomendamos usar los siguientes navegadores: <a href="https://www.google.com.mx/chrome/browser/desktop/" target="_new">Google Chrome</a>, <a href="https://www.mozilla.org/es-MX/firefox/new/" target="_new">Mozilla Firefox</a>, dar click sobre el nombre en caso de no contar con el mismo.</p>
+              <p class="alert alert-warning">To have better performance within D-SPP.ORG we recommend using the following browsers: <a href="https://www.google.com.mx/chrome/browser/desktop/" target="_new">Google Chrome</a>, <a href="https://www.mozilla.org/es-MX/firefox/new/" target="_new">Mozilla Firefox</a>, to click on the name in case of not having it.</p>
             </div> 
 
             <div class="col-md-4">
@@ -927,20 +927,20 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
             </div>
             <div class="col-md-8">
               <h5 class="text-justify" style="color:#27ae60">
-                ¿Quiénes son las Organizaciones de Pequeños Produtores certificadas con el SPP?
+                Who are the Small Producers' Organizations certified with the SPP?
               </h5>
               <p class="text-justify">
-                Desde el lanzamiento a nivel global en el año 2011, muchas Organizaciones de Pequeños Productores se acercaron para obtener la certificación. Desde esa fecha ya hay muchas Organizaciones que confían en el Símbolo de Pequeños Productores.
+                Since the launch globally in 2011, many organizations approached for certification. Since that date there are already many organizations that rely on the Small Producers' Symbol.
               </p>
               <p class="text-justify alert alert-success" style="padding:5.5px;">
-                <a href="lista_opp.php">Revisa la lista de Organizaciones de Pequeños Productores certificadas con el SPP aquí.</a>
+                <a href="lista_opp.php">Check the list of Small Producers' Organizations certified with the SPP here.</a>
               </p>
-              <h5 class="text-justify" style="color:#27ae60">¿Quiénes son los Compradores?</h5>
+              <h5 class="text-justify" style="color:#27ae60">Who are the companies?</h5>
               <p class="text-justify">
-                Existen muchas empresas comprometidas con la misión y visión del SPP y apoyan íntegramente al desarrollo de las Organizaciones de Pequeños Productores.
+                There are many companies committed to the mission and vision of SPP and fully support the development of Small Producers' Organizations.
               </p>
               <p class="text-justify alert alert-success" style="padding:5.5px;">
-                <a href="lista_empresas.php">Revisa la lista de Empresas registradas con el SPP aquí.</a>
+                <a href="lista_empresas.php">Check the list of companies registered with the SPP here.</a>
               </p>
             </div>
 
@@ -949,18 +949,18 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
             <hr>
               <div class="panel panel-success">
                 <div class="panel-heading">
-                  <h3 class="panel-title">¿QUÉ ES EL SPP?</h3>
+                  <h3 class="panel-title">WHAT IS THE SPP?</h3>
                 </div>
                 <div class="panel-body text-justify">
                   <p>
-                    El Símbolo de Pequeños Productores, SPP, es un sello que representa una alianza entre pequeños productores organizados para construir un mercado local y global que valoriza la identidad y las aportaciones económicas, sociales, culturales y ecológicas de las Organizaciones de Pequeños Productores y sus productos. Esta alianza se basa en una relación de colaboración, confianza y corresponsabilidad entre mujeres y hombres pequeños productores, compradores y consumidores. El SPP está respaldado por un sistema de certificación independiente.
+                    The Small Producers’ Symbol, SPP, is a label that represents an alliance among organized small producers to build a local and global market that values the identity and the economic, social, cultural and ecological contributions of products from Small Producers’ Organizations. This alliance is based on a relationship of collaboration, trust and co-responsibility among women and men who are small producers, with buyers and consumers. The SPP is backed by an independent certification system.
                   </p>
                   <p>
-                    El SPP está respaldado por un sistema de certificación independiente para garantizar al consumidor que los productos son provenientes de auténticas organizaciones democráticas y autogestionarias de pequeños productores, producidos bajo criterios de sustentabilidad económica, social, cultural y ecológica, y comercializados bajo condiciones justas.
+                    The SPP is backed by an independent certification system, guaranteeing consumers that products come from authentic, democratic, self-managing organizations of small producers, and that they have been produced in line with criteria for economic, social, cultural and ecological sustainability, and commercialized under fair conditions.
                   </p>
                   <!--El Símbolo de Pequeños Productores es una iniciativa lanzada en el año 2006 por la CLAC (Coordinadora Latinoamericana y del Caribe de Pequeños Productores de Comercio Justo) con el apoyo del movimiento de Comercio Justo y Economía Solidaria de varios continentes. Para garantizar el adecuado uso de este Símbolo, las organizaciones de pequeños productores crearon la FUNDEPPO (Fundación de Pequeños Productores Organizados), la cual permite asegurar que este Símbolo realmente beneficie a los pequeños productores, las comunidades y los consumidores. FUNDEPPO trabaja con organismos y profesionales calificados para certificar de manera independiente y confiable el cumplimiento de las normas del Símbolo.-->
                   <hr>
-                  <a class="" href="http://spp.coop/" target="_blank">Ir al Sitio Web</a>
+                  <a class="" href="http://spp.coop/" target="_blank">Go to Web Site</a>
                 </div>
               </div>
             </div>
