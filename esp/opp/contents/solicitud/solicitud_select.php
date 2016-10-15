@@ -807,7 +807,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
 
               <td>
                 <a class="btn btn-xs btn-primary" style="display:inline-block" href="?SOLICITUD&amp;detail&amp;idsolicitud=<?php echo $solicitud['idsolicitud_certificacion']; ?>" data-toggle="tooltip" title="Visualizar Solicitud" >
-                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                  Consultar
                 </a>
                <!-- <form action="" method="POST"  style="display:inline-block">-->
                   <button class="btn btn-xs btn-danger" name="eliminar_solicitud" value="1" data-toggle="tooltip" title="Eliminar Solicitud" type="submit" onclick="return confirm('¿Está seguro?, los datos se eliminaran permanentemente');">

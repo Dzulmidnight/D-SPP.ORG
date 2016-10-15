@@ -39,7 +39,7 @@ if (!function_exists("GetSQLValueString")) {
     <a href="?SOLICITUD&select">Solicitudes</a>
   </li>
   <li <? if(isset($_GET['OPP'])){?> class="active" <?}?>>
-    <a href="?OPP&detail">Información OPP</a>
+    <a href="?OPP&detail">Mi Cuenta</a>
   </li>
   <li <? if(isset($_GET['.'])){?> class="active" <? }?>>
     <a href="#">---</a>

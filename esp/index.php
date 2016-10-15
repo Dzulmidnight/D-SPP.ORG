@@ -78,8 +78,8 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
     $paisDigitos = strtoupper(substr($pais, 0, 3));
     $formatoFecha = date("d/m/Y", $fecha);
     $fechaDigitos = substr($formatoFecha, -2);
-    $contador = 1;
-    $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
+    $contador_num = 1;
+    $contador = str_pad($contador_num, 3, "0", STR_PAD_LEFT);
     //$numero =  strlen($contador);
 
     $spp = "OPP-".$paisDigitos."-".$fechaDigitos."-".$contador;
@@ -87,8 +87,8 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
     while($datos_opp = mysql_fetch_assoc($row_opp)) {
       if($datos_opp['spp'] == $spp){
         //echo "<b style='color:red'>es igual el OPP con id: $datos_opp[idf]</b><br>";
-        $contador++;
-        $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
+        $contador_num++;
+        $contador = str_pad($contador_num, 3, "0", STR_PAD_LEFT);
         $spp = "OPP-".$paisDigitos."-".$fechaDigitos."-".$contador;
       }/*else{
         echo "el id encontrado es: $datos_opp[idf]<br>";
@@ -106,8 +106,13 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
   $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
   $oc = mysql_fetch_assoc($ejecutar);
 */
+  if(empty($_POST['idoc'])){
+    $idoc = NULL;
+  }else{
+    $idoc = $_POST['idoc'];
+  }
 
-  $insertSQL = sprintf("INSERT INTO opp (spp, nombre, abreviacion, password, sitio_web, email, telefono, pais, ciudad, razon_social, direccion_oficina, direccion_fiscal, rfc, ruc, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+  $insertSQL = sprintf("INSERT INTO opp (spp, nombre, abreviacion, password, sitio_web, email, telefono, idoc, pais, ciudad, razon_social, direccion_oficina, direccion_fiscal, rfc, ruc, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                       // GetSQLValueString($oc['idoc'], "text"),
                        GetSQLValueString($spp, "text"),
                        GetSQLValueString($_POST['nombre'], "text"),
@@ -116,6 +121,7 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
                        GetSQLValueString($_POST['sitio_web'], "text"),
                        GetSQLValueString($_POST['email'], "text"),
                        GetSQLValueString($_POST['telefono'], "text"),
+                       GetSQLValueString($_POST['idoc'], "int"),
                        GetSQLValueString($_POST['pais'], "text"),
                        GetSQLValueString($_POST['ciudad'], "text"),
                        GetSQLValueString($_POST['razon_social'], "text"),
@@ -145,13 +151,18 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
                   <th scope="col" align="left" width="280"><strong style="color:#27ae60;">Nuevo Registro / New Register</strong></th>
                 </tr>
                 <tr>
-                  <td style="text-align:justify;padding-top:10px;"><i>Felicidades, se han registrado sus datos correctamente. A continuación se muestra su <b>#SPP y su contraseña, necesarios para poder inicia sesión</b>: <a href="http://d-spp.org/?OPP" target="_new">www.d-spp.org/?OPP</a></i>, una vez que haya iniciado sesión se le recomienda cambiar su contraseña en la sección Información OPP, en dicha sección se encuentran sus datos los cuales pueden ser modificados en caso de ser necesario.</td>
+                  <td style="text-align:justify;padding-top:10px;"><i>Felicidades, se han registrado sus datos correctamente. A continuación se muestra su <b>#SPP y su contraseña, necesarios para poder iniciar sesión</b>: <a href="http://d-spp.org/?OPP" target="_new">www.d-spp.org/?OPP</a></i>, una vez que haya iniciado sesión se le recomienda cambiar su contraseña en la sección Información OPP, en dicha sección se encuentran sus datos los cuales pueden ser modificados en caso de ser necesario.</td>
                 </tr>
                 <tr>
                   <td style="text-align:justify;padding-top:10px;"><i>Congratulations , your data have been recorded correctly. Below is your <b>#SPP and password needed to log in </b>: <a href="http://d-spp.org/?OPP" target="_new">www.d-spp.org/?OPP</a></i>, once you have logged you are advised to change your password on the Information OPP section, in that section are data which can be modified if be necessary.</td>
                 </tr>
+
             <tr>
-              <td align="left"><br><b>Nombre / Name:</b> <span style="color:#27ae60;">'.$_POST['nombre'].'</span></td>
+              <td align="left">
+              <br>
+              <b style="color:red">Para poder ingresar en el sistema D-SPP debes seleccionar "Organización de Pequeños Productores(OPP)" / To join the system you must select "Small Producers\' Organization (SPO)"</b>
+              <br>
+              <b>Nombre / Name:</b> <span style="color:#27ae60;">'.$_POST['nombre'].'</span></td>
             </tr>
             <tr>
               <td align="left"><br><b>#SPP:</b> <span style="color:#27ae60;">'.$spp.'</span></td>
@@ -291,7 +302,7 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
                 <th scope="col" align="left" width="280"><strong style="color:#27ae60;">Nuevo Registro / New Register</strong></th>
               </tr>
               <tr>
-                <td style="text-align:justify;padding-top:10px;"><i>Felicidades, se han registrado sus datos correctamente. A continuación se muestra su <b>#SPP y su contraseña, necesarios para poder inicia sesión</b>: <a href="http://d-spp.org/?COM" target="_new">www.d-spp.org/?COM</a></i>, una vez que haya iniciado sesión se le recomienda cambiar su contraseña en la sección Información COM, en dicha sección se encuentran sus datos los cuales pueden ser modificados en caso de ser necesario.</td>
+                <td style="text-align:justify;padding-top:10px;"><i>Felicidades, se han registrado sus datos correctamente. A continuación se muestra su <b>#SPP y su contraseña, necesarios para poder iniciar sesión</b>: <a href="http://d-spp.org/?COM" target="_new">www.d-spp.org/?COM</a></i>, una vez que haya iniciado sesión se le recomienda cambiar su contraseña en la sección Información COM, en dicha sección se encuentran sus datos los cuales pueden ser modificados en caso de ser necesario.</td>
               </tr>
               <tr>
                 <td style="text-align:justify;padding-top:10px;"><i>Congratulations , your data have been recorded correctly. Below is your <b>#SPP and password needed to log in </b>: <a href="http://d-spp.org/?COM" target="_new">www.d-spp.org/?COM</a></i>, once you have logged you are advised to change your password on the Information COM section, in that section are data which can be modified if be necessary.</td>
@@ -556,7 +567,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                 <a href="#">¿Olvidaste tu contraseña?</a>
                 <br>
                 <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
-                <a class="btn btn-danger btn-block" type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroOPP'";} ?>>Registrarse</a>
+                <a class="btn btn-danger btn-block" type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroOPP'";} ?>>Crear Nuevo Usuario</a>
               </form>
             </div>
          
@@ -598,7 +609,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                 <a href="#">¿Olvidaste tu contraseña?</a>
                 <br>
                 <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
-                <a class="btn btn-danger btn-block"  type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroCOM'";} ?>>Registrarse</a>
+                <a class="btn btn-danger btn-block"  type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroCOM'";} ?>>Crear Nuevo Usuario</a>
               </form>
             </div>
    
@@ -709,6 +720,21 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                         <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Escriba el teléfono de oficina" required>
                       </div>
                     </div>
+
+                    <div class="form-group">
+                      <label for="sitio_web" class="col-sm-2 control-label">Certificadora (si utiliza los servicios de alguna certificadora)</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="idoc" id="idoc">
+                          <option value="">Seleccionar</option>
+                          <?php 
+                          while($oc = mysql_fetch_assoc($row_oc)){
+                            echo "<option value='".$oc['idoc']."'>".$oc['abreviacion']."</option>";
+                          }
+                           ?>
+                        </select>
+                      </div>
+                    </div>
+
                     <div class="form-group">
                       <label for="pais" class="col-sm-2 control-label">País</label>
                       <div class="col-sm-10">

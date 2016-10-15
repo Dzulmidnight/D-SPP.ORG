@@ -403,67 +403,75 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			</head>
 			<body>
 			
-				<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-				  <tbody>
+		        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+		          <tbody>
+		                <tr>
+		                  <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+		                  <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Application for Small Producers\' Organization Certification </strong></th>
+		                </tr>
+		                <tr>
+		                  <td style="padding-top:10px;">
+		       
+		                    Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+		                  <br>
+		                    To consult the application, please log in to your CE(Certification Entity) account, in the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+		                  </td>
+		                </tr>
 		            <tr>
-		              <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-		              <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Application for Small Producers\' Organization Certification </strong></th>
+		              <td align="left">Teléfono / phone Organización: '.$_POST['telefono'].'</td>
+		            </tr>
+
+		            <tr>
+		              <td align="left">'.$_POST['pais'].'</td>
 		            </tr>
 		            <tr>
-		              <td style="padding-top:10px;">
-		   
-		              Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
-		              <br>
-		              To consult the application, please log in to your CE(Certification Entity) account, in the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+		              <td align="left" style="color:#ff738a;">Email: '.$_POST['email'].'</td>
+		            </tr>
+		            <tr>
+		              <td align="left" style="color:#ff738a;">Email: '.$_POST['contacto1_email'].'</td>
+		            </tr>
 
-		         
+		            <tr>
+		              <td colspan="2">
+		                <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+		                  <tbody>
+		                    <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+		                      <td width="130px">Nombre de la organización/Organization name</td>
+		                      <td width="130px">País / Country</td>
+		                      <td width="130px">Organismo de Certificación / Certification Entity</td>
+		                   
+		                      <td width="130px">Fecha de solicitud/Date of application</td>
+		                    </tr>
+		                    <tr style="font-size: 12px;">
+		                      <td style="padding:10px;">
+		                        '.$_POST['nombre'].'
+		                      </td>
+		                      <td style="padding:10px;">
+		                        '.$_POST['pais'].'
+		                      </td>
+		                      <td style="padding:10px;">
+		                        '.$oc['nombre'].'
+		                      </td>
+		                      <td style="padding:10px;">
+		                      '.date('d/m/Y', $fecha).'
+		                      </td>
+		                    </tr>
 
+		                  </tbody>
+		                </table>  
 		              </td>
 		            </tr>
-				    <tr>
-				      <td align="left">Teléfono / phone Organización: '.$_POST['telefono'].'</td>
-				    </tr>
-
-				    <tr>
-				      <td align="left">'.$_POST['pais'].'</td>
-				    </tr>
-				    <tr>
-				      <td align="left" style="color:#ff738a;">Email: '.$_POST['email'].'</td>
-				    </tr>
-				    <tr>
-				      <td align="left" style="color:#ff738a;">Email: '.$_POST['contacto1_email'].'</td>
-				    </tr>
-
-				    <tr>
-				      <td colspan="2">
-				        <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-				          <tbody>
-				            <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-				              <td width="130px">Nombre de la organización/Organization name</td>
-				              <td width="130px">País / Country</td>
-				              <td width="130px">Organismo de Certificación / Certification Entity</td>
-				           
-				              <td width="130px">Fecha de solicitud/Date of application</td>
-				            </tr>
-				            <tr style="font-size: 12px;">
-				              <td style="padding:10px;">
-				              	'.$_POST['nombre'].'
-				              </td>
-				              <td style="padding:10px;">
-				                '.$_POST['pais'].'
-				              </td>
-				              <td style="padding:10px;">
-				                '.$oc['nombre'].'
-				              </td>
-				              <td style="padding:10px;">
-				              '.date('d/m/Y', $fecha).'
-				              </td>
-				            </tr>
-
-				          </tbody>
-				        </table>        
-				      </td>
-				    </tr>
+		            <tr>
+		              <td colspan="2">
+		                <span style="color:red">¿Qué es lo de debo realizar ahora?. Debes revisar la solicitud y cargar una cotización</span>
+		                <ol>
+		                  <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organismo de Certificación(OC).</li>
+		                  <li>Dentro de tu cuenta debes seleccionar Solicitudes > Solicitudes OPP.</li>
+		                  <li>Dentro de la tabla solicitudes debes localizar la columna "Acciones" Y seleccionar el boton Azul Consultar</li>
+		                  <li>Para poder enviar la cotización debes seleccionar el "Procedimiento de Certificación" y cargar la cotización</li>
+		                </ol>
+		              </td>
+		            </tr> 
 
 				  </tbody>
 				</table>
@@ -520,6 +528,15 @@ $opp = mysql_fetch_assoc($row_opp);
 			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
 
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
+
+					<div class="col-md-12 alert alert-warning" style="padding:5px;">
+						<ul>
+							<li><b>SI CONTARON CON CERTITICACION DE SPP ANTERIORMENTE (CON EL ORGANISMO DE CERTIFICACIÓN ACTUAL ó CON OTRO ORGANISMO DE CERTIFICACIÓN)DEBEN ELEGIR <span style="color:red">"RENOVACION DEL CERTIFICADO"</span></b></li>
+							<li><b>SI ES LA PRIMERA VEZ QUE SE CERTIFICAN DEBEN ELEGIR <span style="color:red">"PRIMERA VEZ"</span></b></li>
+						</ul>
+						 
+					</div>
+
 				<div class="col-md-6">
 					<div class="col-xs-12">
 						<b>ENVAR AL OC (selecciona el OC al que deseas enviar la solicitud):</b>
@@ -542,14 +559,14 @@ $opp = mysql_fetch_assoc($row_opp);
 					</div>
 				</div>
 				<div class="col-md-6">
-					<div class="col-xs-12">
+					<div class="col-md-12">
 						<p class="text-center"><strong>SELECCIONE EL TIPO DE SOLICITUD</strong></p>
 					</div>
-					<div class="col-xs-6">
-						<label for="nueva">1º SOLICITUD</label>
+					<div class="col-md-6">
+						<label for="nueva">PRIMERA VEZ</label>
 						<input type="radio" class="form-control" id="nueva" name="tipo_solicitud" value="NUEVA">
 					</div>
-					<div class="col-xs-6">
+					<div class="col-md-6">
 						<label for="renovacion">RENOVACIÓN DE CERTIFICADO</label>
 						<input type="radio" class="form-control" id="renovacion" name="tipo_solicitud" value="RENOVACION">
 					</div>

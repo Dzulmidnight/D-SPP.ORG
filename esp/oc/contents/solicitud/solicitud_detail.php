@@ -359,6 +359,20 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
               </table>        
             </td>
           </tr>
+                <tr>
+                  <td colspan="2">
+                    <span style="color:red">¿Qué es lo de debo realizar ahora?. Debes "Aceptar" o "Rechazar" la cotización</span>
+                    <ol>
+                      <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organización de Pequeños Productores(OPP).</li>
+                      <li>Dentro de tu cuenta debes seleccionar Solicitudes > Listado Solicitudes.</li>
+                      <li>Dentro de la tabla solicitudes debes localizar la columna "Cotización" Y seleccionar el botón Verde (aceptar cotización) ó el botón Rojo (rechazar cotización)</li>
+                      <li>En caso de aceptar la cotización debes esperar a que finalice el "Periodo de Objeción"</li>
+                    </ol>
+                  </td>
+                </tr> 
+                <tr>
+                  <td coslpan="2">Para cualquier duda o aclaración por favor contactar a: soporte@d-spp.org</td>
+                </tr>
         </tbody>
       </table>
 

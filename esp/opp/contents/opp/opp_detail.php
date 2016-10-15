@@ -184,9 +184,27 @@ $opp = mysql_fetch_assoc($row_opp);
     <form action="" method="POST">
       <table class="table table-condensed">
         <tr>
+          <td colspan="2">
+            <p class="alert alert-info"><b>La información mostrada a continuación puede ser modificada, una vez realizados los cambios por favor de clic en "Actualizar Información"</b></p>
+          </td>
+        </tr>
+        <tr>
           <td>#SPP</td>
           <td>
             <?php echo $opp['spp']; ?>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="radio-inline">
+              <input type="radio" name="ver_password" id="inlineRadio1" <?php if(isset($opp['ver_password']) && $opp['ver_password'] == 1){ echo 'checked'; } ?> value="1"> SI
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="ver_password" id="inlineRadio2" <?php if(isset($opp['ver_password']) && $opp['ver_password'] == 0){ echo 'checked'; } ?> value="0"> NO
+            </label>
+          </td>
+          <td>
+               ¿AUTORIZA QUE EL ORGANISMO DE CERTIFICACION INGRESE A SU CUENTA?, ELIJA ESTA OPCIÓN Y MODIFIQUEN SU CONTRASEÑA
           </td>
         </tr>
         <tr>
@@ -205,9 +223,6 @@ $opp = mysql_fetch_assoc($row_opp);
           <td>Password</td>
           <td>
             <input class="form-control" id="" name="password" value="<?php echo $opp['password']; ?>">
-            <label>
-              <input type="checkbox" name="ver_password" value="1" <?php if(isset($opp['ver_password'])){ echo 'checked'; } ?>> ocultar mi contraseña al OC
-            </label>
           </td>
         </tr>
         <tr>

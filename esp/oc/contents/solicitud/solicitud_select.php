@@ -66,10 +66,10 @@ if(isset($_POST['cancelar']) && $_POST['cancelar'] == "cancelar"){
 }
 
 if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
-  echo "<script>alert('paso 1');</script>";
+
   $query_opp = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, opp.nombre, opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE solicitud_certificacion.idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $detalle_opp = mysql_fetch_assoc($query_opp);
-  echo "<script>alert('paso 2');</script>";
+
 
   $estatus_dspp = 8; //INICIA PROCESO DE CERTIFICACION
   //ESTATUS INTERNO
@@ -551,7 +551,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!--<th class="text-center">Contacto</th>-->
           <!--<th class="text-center">País</th>-->
           <th class="text-center">Proceso de Objeción</th>
-          <th class="text-center">Proceso <br>Certificación</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="El OC debe actualizar el estatus del proceso eligiendo una de las opciones que se despliega en esta sección"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Proceso<br>Certificación</a></th>
           <th class="text-center">Certificado</th>
           <!--<th class="text-center">Propuesta</th>-->
           <!--<th class="text-center">Observaciones Solicitud</th>-->
@@ -709,12 +709,12 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         <p>Enviado el: <?php echo date("d/m/Y", time()); ?></p>
                                         <p>Para: <span style="color:red"><?php echo $solicitud['nombre_opp']; ?></span></p>
                                         <p>Correo(s): <?php echo $solicitud['contacto1_email']." ".$solicitud['contacto2_email']." ".$solicitud['email']; ?></p>
-                                        <p>Asunto: <span style="color:red">Contrato de uso del Simbolo de Pequeños Productores - SPP</span></p>
+                                        <p>Asunto: <span style="color:red">Notificación del Dictamen - SPP</span></p>
                                         
                                       </div>
                                     </div>
                                     <div class="col-xs-12">
-                                      <h5 class="alert alert-warning">MENSAJE OPP( <small>Cuerpo del mensaje en caso de ser requerido</small>)</h5>
+                                      <h4 class="alert alert-warning">MENSAJE OPP( <small>EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado</span></small>)</h4>
                                       <textarea name="mensajeOPP" class="form-control" id="textareaMensaje" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé" readonly></textarea>
 
                                     </div>
@@ -976,7 +976,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- TERMINA SECCION CERTIFICADO ------>
             </form>
           <td>
-            <a class="btn btn-primary" data-toggle="tooltip" title="Consultar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud_certificacion']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consultar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud_certificacion']; ?>">Consultar</a>
           </td>
           <td>
             <form action="../../reportes/reporte.php" method="POST" target="_new">
