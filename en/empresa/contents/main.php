@@ -1,1 +1,1 @@
-<h4>Menú principal Empresa</h4>
+<h4>Company main menu</h4>

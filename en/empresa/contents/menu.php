@@ -36,13 +36,13 @@ if (!function_exists("GetSQLValueString")) {
 
 <ul class="nav nav-sidebar">
   <li <? if(isset($_GET['SOLICITUD'])){?> class="active" <? }?>>
-    <a href="?SOLICITUD&select">Solicitudes</a>
+    <a href="?SOLICITUD&select">Applications</a>
   </li>
   <li <? if(isset($_GET['EMPRESA'])){?> class="active" <?}?>>
-    <a href="?EMPRESA&detail">Información Empresa</a>
+    <a href="?EMPRESA&detail">My Account</a>
   </li>
   <li <? if(isset($_GET['.'])){?> class="active" <? }?>>
     <a href="#">---</a>
   </li>
-  <li><a href="<?php echo $logoutAction ?>">Cerrar Sesión</a></li>
+  <li><a href="<?php echo $logoutAction ?>">Logout</a></li>
 </ul>

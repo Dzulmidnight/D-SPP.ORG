@@ -493,15 +493,15 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
       <thead>
         <tr class="success">
           <th class="text-center">ID</th>
-          <th class="text-center">Fecha</th>
-          <th class="text-center">OC</th>
-          <th class="text-center">Estatus Solicitud</th>
-          <th class="text-center">Cotización</th>
-          <th class="text-center">Proceso de Objecion</th>
-          <th class="text-center">Proceso Certificación</th>
-          <th class="text-center">Membresía SPP</th>
-          <th class="text-center">Certificado</th>
-          <th class="text-center">Acciones</th>
+          <th class="text-center">Date</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Certification Entity">CE</a></th>
+          <th class="text-center">Application status</th>
+          <th class="text-center">Quotation</th>
+          <th class="text-center">Objection process</th>
+          <th class="text-center">Process of certification</th>
+          <th class="text-center">SPO membership</th>
+          <th class="text-center">Certificate</th>
+          <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>

@@ -544,7 +544,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
 
             <div>
-              <h4 class="alert alert-success">Login as Small Producers' Organization</h4>
+              <h4 class="alert alert-success">Login as Small Producers' Organization (SPO)</h4>
             </div>
             <div class="panel-body panel-success">
               <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="opp">
@@ -667,7 +667,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
               <form action="" method="POST" class="form-horizontal">
                 <div class="panel panel-info">
                   <div class="panel-heading">
-                    <h3 class="panel-title">Registration Form for Small Producers' Organization</h3>
+                    <h3 class="panel-title">Registration Form for Small Producers' Organization (SPO)</h3>
                   </div>
                   <div class="panel-body" style="font-size:12px;">
                     <p class="alert alert-warning" style="padding:7px;">The #SPP and password are provided by D-SPP, these data are sent by email to SPO(Small Producers' Organization)</p>

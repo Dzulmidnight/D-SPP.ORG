@@ -82,8 +82,8 @@ $queryString_com = sprintf("&totalRows_com=%d%s", $totalRows_com, $queryString_c
 <h4>Consulta com</h4>
 <table class="table table-bordered">
   <tr>
-    <th>IDF</th>
-    <th>Nombre</th>
+    <th>#SP</th>
+    <th>ASDF</th>
     <th>Abreviación</th>
     <th>Sitio WEB</th>
     <th>Email</th>

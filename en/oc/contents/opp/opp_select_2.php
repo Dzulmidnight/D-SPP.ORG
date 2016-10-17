@@ -312,7 +312,7 @@ function preguntar(){
       <thead>
         <tr>
           <th class="text-center" style="width:100px;">#SPP</th>
-          <th class="text-center">Estatus Interno<br>(proceso certificación)</th>
+          <th class="text-center">Internal status<br>(proceso certificación)</th>
           <th class="text-center">Estatus Certificado</th>
           <th class="text-center">Fecha Final<br>(certificado)</th>
           <th class="text-center" style="width:100px;">Nombre</th>

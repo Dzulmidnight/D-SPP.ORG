@@ -561,15 +561,15 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
       <thead>
         <tr class="success">
           <th class="text-center">ID</th>
-          <th class="text-center"><a href="#" data-toggle="tooltip" title="Tipo de Solicitud"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Tipo</a></th>
-          <th class="text-center">Fecha</th>
-          <th class="text-center">OC</th>
-          <th class="text-center">Estatus Solicitud</th>
-          <th class="text-center">Cotización</th>
-          <th class="text-center">Proceso de Objecion</th>
-          <th class="text-center">Proceso Certificación</th>
-          <th class="text-center">Certificado</th>
-          <th class="text-center">Acciones</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Type of application"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Type</a></th>
+          <th class="text-center">Date</th>
+          <th class="text-center">CE</th>
+          <th class="text-center">Application status</th>
+          <th class="text-center">Quotation</th>
+          <th class="text-center">Objection process</th>
+          <th class="text-center">Certification process</th>
+          <th class="text-center">Certificate</th>
+          <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>

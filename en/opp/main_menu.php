@@ -37,7 +37,7 @@ if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
 
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

@@ -1,10 +1,10 @@
 <ul class="nav nav-pills">
 	<li role="presentation" <?php if(isset($_GET['select'])){echo "class='active'"; } ?>>
-		<a href="?OPP&select">OPP</a>
+		<a href="?OPP&select">SPO</a>
 	</li>
 	<li role="presentation" <?php if(isset($_GET['add'])){echo "class='active'"; } ?>>
 		<a href="?OPP&add" aria-label="Left Align">
-			<span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> Nuevo OPP
+			<span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> New SPO
 		</a>
 	</li>
 	<?php 
@@ -12,7 +12,7 @@
 	?>
 	<li class="active">
 		<a href="#">
-			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detalle 	
+			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detail 	
 		 </a>
 	</li>
 	<?php
