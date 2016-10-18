@@ -409,11 +409,11 @@ $solicitud = mysql_fetch_assoc($ejecutar);
   <form action="" name="" method="POST" enctype="multipart/form-data">
     <fieldset>
       <div class="col-md-12 alert alert-primary" style="padding:7px;">
-        <h3 class="text-center">Solicitud de Certificación para Organizaciones de Pequeños Productores</h3>
+        <h3 class="text-center">Application for Small Producers´Organization Certification</h3>
       </div>
 
 
-      <div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
+      <div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>GENERAL INFORMATION</b></div>
 
       <div class="col-lg-12 alert alert-info" style="padding:7px;">
         <div class="col-md-12">
@@ -422,10 +422,10 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             <input type="text" class="form-control" value="<?php echo $solicitud['abreviacionOC']; ?>" readonly>
           </div>-->
           <div class="col-xs-4">
-            <b>TIPO DE SOLICITUD</b>
+            <b>TYPE OF APPLICATION</b>
             <input type="text" class="form-control" value="<?php echo $solicitud['tipo_solicitud']; ?>"readonly>
             <button type="submit" class="btn btn-warning form-control" style="color:white" name="guardar_cambios" value="1">
-              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>Actualizar Solicitud
+              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>Update Application
             </button>
             <!--<input type="submit" style="color:white" class="btn btn-warning form-control" value="Actualizar Solicitud">
             <input type="hidden" name="guarda_cambios" value="1">-->
@@ -435,17 +435,17 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             <?php 
             if(empty($solicitud['cotizacion_opp'])){
             ?>
-              <b>CARGAR COTIZACIÓN</b>
+              <b>LOAD QUOTATION</b>
               <input type="file" class="form-control" id="cotizacion_opp" name="cotizacion_opp"> 
               <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>"> 
               <button class="btn btn-sm btn-success form-control" style="color:white" id="enviar_cotizacion" name="enviar_cotizacion" type="submit" value="1" onclick="return validar()">
-                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Enviar Cotización
+                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Send Quotation
               </button>
               <!--<button type="submit" class="btn btn-success form-control" style="color:white" name="enviar_cotizacion" value="Enviar"><span class="glyphicon glyphicon-envelope" aria-hidden="true" onclick="return validar()"></span> Enviar Cotización</button>-->
 
             <?php 
             }else{
-              echo "<b style='font-size:14px;'>Ya se ha enviado la cotización</b>";
+              echo "<b style='font-size:14px;'>Quotation sent</b>";
             }
              ?>
           </div>
@@ -454,13 +454,13 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       </div>
       <div class="col-xs-12 text-center">
         <div class="row">
-      <h4>Procedimiento de Certificación <br><small>(realizado por OC)</small></h4>
+      <h4>Certification Procedure <br><small>(by Certification Entity)</small></h4>
         </div>
       </div>
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>DOCUMENTAL "ACORTADO"</b></p> 
+            <p style="font-size:10px;"><b>DOCUMENTARY "SHORTENED"</b></p> 
           </div>       
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='DOCUMENTAL "ACORTADO"' <?php if($solicitud['tipo_procedimiento'] == 'DOCUMENTAL "ACORTADO"'){ echo "checked"; } ?>>
@@ -471,7 +471,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>DOCUMENTAL "NORMAL"</b></p> 
+            <p style="font-size:10px;"><b>DOCUMENTARY "NORMAL"</b></p> 
           </div>
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='DOCUMENTAL "NORMAL"' <?php if($solicitud['tipo_procedimiento'] == 'DOCUMENTAL "NORMAL"'){ echo "checked"; } ?>>
@@ -482,7 +482,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>COMPLETO "IN SITU"</b></p>  
+            <p style="font-size:10px;"><b>COMPLETE "IN SITU"</b></p>  
           </div>
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='COMPLETO "IN SITU"' <?php if($solicitud['tipo_procedimiento'] == 'COMPLETO "IN SITU"'){ echo "checked"; } ?>>
@@ -493,7 +493,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>COMPLETO "A DISTANCIA"</b></p>  
+            <p style="font-size:10px;"><b>COMPLETE "FROM DISTANCE"</b></p>  
           </div>
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='COMPLETO "A DISTANCIA"' <?php if($solicitud['tipo_procedimiento'] == 'COMPLETO "A DISTANCIA"'){ echo "checked"; } ?>>
@@ -505,40 +505,40 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
       <div class="col-lg-12">
         <div class="col-md-6">
-          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMACION GENERAL</div>
-          <label for="fecha_elaboracion">FECHA ELABORACIÓN</label>
+          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">GENERAL INFORMATION</div>
+          <label for="fecha_elaboracion">DATE OF ELABORATION</label>
           <input type="text" class="form-control" id="fecha_elaboracion" name="fecha_elaboracion" value="<?php echo date('Y-m-d', time()); ?>" readonly>  
 
-          <label for="spp">CODIGO DE IDENTIFICACIÓN SPP(#SPP): </label>
+          <label for="spp">SPP IDENTIFICATION CODE(#SPP): </label>
           <input type="text" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp_opp']; ?>" readonly>
 
-          <label for="nombre">NOMBRE COMPLETO DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES: </label>
+          <label for="nombre">NAME OF SMALL PRODUCER ORGANIZATION: </label>
           <textarea name="nombre" id="nombre" class="form-control" readonly><?php echo $solicitud['nombre']; ?></textarea>
 
-          <label for="pais">PAÍS:</label>
+          <label for="pais">COUNTRY:</label>
           <input type="text" class="form-control" id="pais" name="pais" value="<?php echo $solicitud['pais']; ?>" readonly>
 
-          <label for="direccion_fisica">DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES(CALLE, BARRIO, LUGAR, REGIÓN)</label>
+          <label for="direccion_fisica">COMPLETE ADDRESS FOR ORGANIZATION’S LOCATION (STREET, DISTRICT, TOWN/CITY, REGION):</label>
           <textarea name="direccion_fisica" id="direccion_fisica"  class="form-control" readonly><?php echo $solicitud['direccion_oficina']; ?></textarea>
 
-          <label for="email">CORREO ELECTRÓNICO:</label>
+          <label for="email">EMAIL:</label>
           <input type="text" class="form-control" id="email" name="email" value="<?php echo $solicitud['email']; ?>" readonly>
 
-          <label for="email">TELÉFONOS (CODIGO DE PAÍS + CÓDIGO DE ÁREA + NÚMERO):</label>
+          <label for="email">ORGANIZATION’S TELEPHONES(COUNTRY CODE+AREA CODE+NUMBER)</label>
           <input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $solicitud['telefono']; ?>" readonly>  
 
-          <label for="sitio_web">SITIO WEB:</label>
+          <label for="sitio_web">Website:</label>
           <input type="text" class="form-control" id="sitio_web" name="sitio_web" value="<?php echo $solicitud['sitio_web']; ?>" readonly>
 
         </div>
 
         <div class="col-md-6">
-          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">DATOS FISCALES PARA FACTURACIÓN</div>
+          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">FISCAL DATA</div>
 
-          <label for="razon_social">RAZÓN SOCIAL</label>
+          <label for="razon_social">BUSINESS NAME</label>
           <input type="text" class="form-control" id="razon_social" name="razon_social" value="<?php echo $solicitud['razon_social']; ?>" readonly>
 
-          <label for="direccion_fiscal">DIRECCIÓN FISCAL</label>
+          <label for="direccion_fiscal">FISCAL ADDRESS</label>
           <textarea class="form-control" name="direccion_fiscal" id="direccion_fiscal" readonly><?php echo $solicitud['direccion_fiscal']; ?></textarea>
 
           <label for="rfc">RFC</label>
@@ -554,40 +554,40 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <!------ INICIA INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
       <div class="col-lg-12">
         <div class="col-md-6">
-          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONA(S) DE CONTACTO</div>
+          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">CONTACT PERSON(S) OF APPLICATION</div>
 
-          <label for="persona1">PERSONA(S) DE CONTACTO</label>
+          <label for="persona1">CONTACT PERSON(S)</label>
           <input type="text" class="form-control" id="persona1" value="<?php echo $solicitud['contacto1_nombre']; ?>"  readonly>
-          <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_nombre']; ?>" placeholder="Nombre Persona 2" readonly> 
+          <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_nombre']; ?>" placeholder="Person Name 2" readonly> 
 
-          <label for="cargo">CARGO</label>
-          <input type="text" class="form-control" id="cargo" value="<?php echo $solicitud['contacto1_cargo']; ?>" placeholder="* Cargo Persona 1" readonly>
-          <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_cargo']; ?>" palceholder="Cargo Persona 2" readonly>
+          <label for="cargo">POSITION(S)</label>
+          <input type="text" class="form-control" id="cargo" value="<?php echo $solicitud['contacto1_cargo']; ?>" placeholder="* Position Persona 1" readonly>
+          <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_cargo']; ?>" palceholder="Position Persona 2" readonly>
 
-          <label for="email">CORREO ELECTRÓNICO</label>
+          <label for="email">EMAIL</label>
           <input type="email" class="form-control" name="contacto1_email" id="email" value="<?php echo $solicitud['contacto1_email']; ?>" placeholder="* Email Persona 1" readonly>
           <input type="email" class="form-control" name="contacto2_email" id="" value="<?php echo $solicitud['contacto2_email']; ?>" placeholder="Email Persona 2" readonly>
 
-          <label for="telefono">TELEFONO</label>
-          <input type="text" class="form-control" id="telefono" value="<?php echo $solicitud['contacto1_telefono']; ?>" placeholder="* Telefono Persona 1" readonly>
-          <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_telefono']; ?>" placeholder="Telefono Persona 2" readonly>
+          <label for="telefono">TELEPHONE(S) FOR CONTAC PERSON(S):</label>
+          <input type="text" class="form-control" id="telefono" value="<?php echo $solicitud['contacto1_telefono']; ?>" placeholder="* Telephone Person 1" readonly>
+          <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_telefono']; ?>" placeholder="Telephone Person 2" readonly>
 
         </div>
 
         <div class="col-md-6">
-          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONA(S) ÁREA ADMINISTRATIVA</div>
+          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSON(S) OF THE ADMINISTRATIVE AREA:</div>
 
-          <label for="persona_adm">PERSONA(S) DEL ÁREA ADMINSITRATIVA</label>
-          <input type="text" class="form-control" id="persona_adm" value="<?php echo $solicitud['adm1_nombre']; ?>" placeholder="Nombre Persona 1" readonly>
-          <input type="text" class="form-control" id="" value="<?php echo $solicitud['adm2_nombre']; ?>" placeholder="Nombre Persona 2" readonly>
+          <label for="persona_adm">PERSON(S) OF THE ADMINISTRATIVE AREA</label>
+          <input type="text" class="form-control" id="persona_adm" value="<?php echo $solicitud['adm1_nombre']; ?>" placeholder="Person Name 1" readonly>
+          <input type="text" class="form-control" id="" value="<?php echo $solicitud['adm2_nombre']; ?>" placeholder="Person Name 2" readonly>
 
-          <label for="email_adm">CORREO ELECTRÓNICO</label>
+          <label for="email_adm">EMAIL</label>
           <input type="email" class="form-control" id="email_adm" value="<?php echo $solicitud['adm1_email']; ?>" placeholder="Email Persona 1" readonly>
           <input type="email" class="form-control" id="" value="<?php echo $solicitud['adm2_email']; ?>" placeholder="Email Persona 2" readonly>
 
-          <label for="telefono_adm">TELÉFONO</label>
-          <input type="text" class="form-control" id="telefono_adm" value="<?php echo $solicitud['adm1_telefono']; ?>" placeholder="Telefono Persona 1" readonly>
-          <input type="text" class="form-control" id="" value="<?php echo $solicitud['adm2_telefono']; ?>" placeholder="Telefono Persona 2" readonly>
+          <label for="telefono_adm">TELEPHONE</label>
+          <input type="text" class="form-control" id="telefono_adm" value="<?php echo $solicitud['adm1_telefono']; ?>" placeholder="Telephone Person 1" readonly>
+          <input type="text" class="form-control" id="" value="<?php echo $solicitud['adm2_telefono']; ?>" placeholder="Telephone Person 2" readonly>
         </div>
       </div>
       <!------ FIN INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
@@ -599,16 +599,16 @@ $solicitud = mysql_fetch_assoc($ejecutar);
 
       <div class="col-lg-12">
         <div class="col-md-12">
-          <label for="resp1">NÚMERO DE SOCIOS PRODUCTORES</label>
+          <label for="resp1">NUMBER OF PRODUCERS MEMBERS:</label>
           <input type="number" step="any" class="form-control" id="resp1" name="resp1" value="<?php echo $solicitud['resp1']; ?>" >
 
-          <label for="resp2">NÚMERO DE SOCIOS PRODUCTORES DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACION:</label>
+          <label for="resp2">NUMBER OF PRODUCERS MEMBERS OF THE  PRODUCT (S) TO BE INCLUDED IN THE CERTIFICATION:</label>
           <input type="text" class="form-control" id="resp2" name="resp2" value="<?php echo $solicitud['resp2']; ?>" >
 
-          <label for="resp3">VOLUMEN(ES) DE PRODUCCIÓN TOTAL POR PRODUCTO (UNIDAD DE MEDIDA):</label>
+          <label for="resp3">TOTAL PRODUCTION VOLUME(S) BY PRODUCT (UNITE OF MEASURE):</label>
           <input type="text" class="form-control" id="resp3" name="resp3" value="<?php echo $solicitud['resp3']; ?>" >
           
-          <label for="resp4">TAMAÑO MÁXIMO DE LA UNIDAD DE PRODUCCIÓN POR PRODUCTOR DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACIÓN:</label>
+          <label for="resp4">MAXIMUM SIZE OF THE UNIT OF PRODUCTION BY THE PRODUCER OF THE PRODUCT(S) TO INCLUDE IN THE CERTIFICATION:</label>
           <input type="text" class="form-control" id="resp4" name="resp4" value="<?php echo $solicitud['resp4']; ?>" >
 
 
@@ -616,100 +616,100 @@ $solicitud = mysql_fetch_assoc($ejecutar);
         </div>
       </div>
 
-      <div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE OPERACIÓN</div>
+      <div class="col-md-12 text-center alert alert-success" style="padding:7px;">INFORMATION ON OPERATIONS</div>
 
       <div class="col-lg-12">
         <div class="col-md-12">
           <label for="op_preg1">
-            1. EXPLIQUE SI SE TRATA DE UNA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES DE 1ER, 2DO, 3ER O 4TO GRADO, ASÍ COMO EL NÚMERO DE OPP DE 3ER, 2DO O 1ER GRADO, Y EL NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO, EN SU CASO, CON LAS QUE CUENTA:
+            1. EXPLAIN IF THE SMALL PRODUCERS’ ORGANIZATION (SPO) IS AT THE 1st, 2nd, 3rd or 4th LEVEL, AS WELL AS EXPLAIN THE NUMBER OF ORGANIZATIONS OF THE 3rd,2nd or 1st LEVEL, AND THE NUMBER OF COMMUNITIES, AREAS OR GROUPS OF WORK, IN HIS OR HER CASE, THAT ACCOUNT:
           </label>
           <input type="text" class="form-control" id="op_preg1" name="op_preg1" value="<?php echo $solicitud['op_preg1']; ?>" >
 
           <div class="col-xs-3">
             <label for="preg1_1">
-              1_1. NÚMERO DE OPP DE 3ER GRADO:
+              1.1 NUMBER OF SPO 3rd  LEVEL:
             </label>
             <input type="text" class="form-control" id="preg1_1" name="preg1_1" value="<?php echo $solicitud['preg1_1']; ?>" >
           </div>
           <div class="col-xs-3">
             <label for="preg1_2">
-              1_2. NÚMERO DE OPP DE 2DO GRADO:
+              1.2 NUMBER OF SPO 2nd  LEVEL::
             </label>
             <input type="text" class="form-control" id="preg1_2" name="preg1_2" value="<?php echo $solicitud['preg1_2']; ?>" >
           </div>
           <div class="col-xs-3">
             <label for="preg1_3">
-              1_3. NÚMERO DE OPP DE 1ER GRADO:
+              1.3 NUMBER OF SPO 1st  LEVEL:
             </label>
             <input type="text" class="form-control" id="preg1_3" name="preg1_3" value="<?php echo $solicitud['preg1_3']; ?>" >
           </div>
           <div class="col-xs-3">
             <label for="preg1_4">
-              1_4. NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO:
+              1.4 NUMBER OF COMMUNITIES, AREAS OR GROUPS OF WORK:
             </label>
             <input type="text" class="form-control" id="preg1_4" name="preg1_4" value="<?php echo $solicitud['preg1_4']; ?>" >
           </div>
 
 
           <label for="op_preg2">
-            2. ESPECIFIQUE QUÉ PRODUCTO(S) QUIERE INCLUIR EN EL CERTIFICADO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES PARA LOS CUALES EL ORGANISMO DE CERTIFICACIÓN REALIZARÁ LA EVALUACIÓN.
+            2.  SPECIFY WHICH PRODUCT (S) YOU WANT TO INCLUDE IN THE CERTIFICATE OF THE SYMBOL OF SMALL PRODUCERS FOR WHICH THE CERTIFICATION ENTITY WILL CONDUCT THE ASSESSMENT.
           </label>
           <textarea name="op_preg2" id="op_preg2" class="form-control"><?php echo $solicitud['op_preg2']; ?></textarea>
 
           <label for="op_preg3">
-            3. MENCIONE SI SU ORGANIZACIÓN QUIERE INCLUIR ALGÚN CALIFICATIVO ADICIONAL PARA USO COMPLEMENTARIO CON EL DISEÑO GRÁFICO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES.<sup>4</sup>
+            3.  MENTION IF YOUR ORGANIZATION WOULD LIKE TO INCLUDE SOME ADDITIONAL DESCRIPTOR FOR COMPLEMENTARY USE WITH THE GRAPHIC DESIGN OF THE SMALL PRODUCERS’ SYMBOL.<sup>4</sup>
           </label>
           <input type="text" class="form-control" id="op_preg3" name="op_preg3" value="<?php echo $solicitud['op_preg3']; ?>">
 
           <div >
             <label for="alcance_opp">
-              4. SELECCIONE EL ALCANCE QUE TIENE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES:
+              4. SELECT THE SCOPE OF THE SMALL PRODUCERS’ ORGANIZATION:
             </label>
           </div>
           
           <div class="col-xs-4">
-            <label>PRODUCCIÓN</label>
+            <label>PRODUCTION</label>
             <input type="checkbox" name="produccion" class="form-control" value="1" <?php if($solicitud['produccion']){ echo 'checked';} ?>>
           </div>
           <div class="col-xs-4">
-            <label>PROCESAMIENTO</label>
+            <label>PROCESSING</label>
             <input type="checkbox" name="procesamiento" class="form-control" value="1" <?php if($solicitud['procesamiento']){ echo 'checked';} ?>>
           </div>
           <div class="col-xs-4">
-            <label>EXPORTACIÓN</label>
+            <label>TRADING</label>
             <input type="checkbox" name="exportacion" class="form-control" value="1" <?php if($solicitud['exportacion']){ echo 'checked';} ?>>
           </div>
 
 
           <label for="op_preg5">
-            5. ESPECIFIQUE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA.
+            5.  SPECIFY IF YOU SUBCONTRACT THE SERVICES OF PROCESSING PLANTS, TRADING COMPANIES OR COMPANIES THAT CARRY OUT THE IMPORT OR EXPORT, IF THE ANSWER IS AFFIRMATIVE, MENTION THE NAME AND THE SERVICE THAT PERFORMS.
           </label>
           <textarea name="op_preg5" id="op_preg5" class="form-control"><?php echo $solicitud['op_preg5']; ?></textarea>
 
           <label for="op_preg6">
-            6. SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, INDIQUE SI ESTAS EMPRESAS VAN A REALIZAR EL REGISTRO BAJO EL PROGRAMA DEL SPP O SERÁN CONTROLADAS A TRAVÉS DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES. <sup>5</sup>
+            6.  IF YOU SUBCONTRACT THE SERVICES OF PROCESSING PLANTS, TRADING COMPANIES OR COMPANIES THAT CARRY OUT THE IMPORT OR EXPORT, INDICATE WHETHER THESE COMPANIES ARE GOING TO APPLY FOR THE REGISTRATION UNDER SPP CERTIFICATION PROGRAM. <sup>5</sup>
             <br>
-            <small><sup>5</sup> Revisar el documento de 'Directrices Generales del Sistema SPP' en su última versión.</small>
+            <small><sup>5</sup> Review the General Application Guidelines to the SPP System.</small>
           </label>
           <textarea name="op_preg6" id="op_preg6" class="form-control"><?php echo $solicitud['op_preg6']; ?></textarea>
 
           <label for="op_preg7">
-            7. ADICIONAL A SUS OFICINAS CENTRALES, ESPECIFIQUE CUÁNTOS CENTROS DE ACOPIO, ÁREAS DE PROCESAMIENTO U OFICINAS ADICIONALES TIENE.
+            7.  IN ADDITION TO YOUR MAIN OFFICES, PLEASE SPECIFY HOW MANY COLLECTION CENTERS, PROCESSING AREAS AND ADDITIONAL OFFICES YOU HAVE.
           </label>
           <textarea name="op_preg7" id="op_preg7" class="form-control"><?php echo $solicitud['op_preg7']; ?></textarea>
 
           <label for="op_preg8">
-            8. ¿CUENTA CON UN SISTEMA DE CONTROL INTERNO PARA DAR CUMPLIMIENTO A LOS CRITERIOS DE LA NORMA GENERAL DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?, EN SU CASO, EXPLIQUE.
+            8.  IF THE ORGANIZATION HAS AN INTERNAL CONTROL SYSTEM FOR COMPLYING WITH THE CRITERIA IN THE GENERAL STANDARD OF THE SMALL PRODUCERS’ SYMBOL, PLEASE EXPLAIN HOW IT WORKS.
           </label>
           <textarea name="op_preg8" id="op_preg8" class="form-control"><?php echo $solicitud['op_preg8']; ?></textarea>
-          <p class="alert alert-info">9. LLENAR LA TABLA DE ACUERDO A LAS CERTIFICACIONES QUE TIENE, (EJEMPLO: EU, NOP, JASS, FLO, etc).</p>
+          <p class="alert alert-info">9.  FILL OUT THE TABLE ACCORDING YOUR CERTIFICATIONS, (example: EU, NOP, JASS, FLO, etc)</p>
 
           <table class="table table-bordered" id="tablaCertificaciones">
             <tr>
-              <td>CERTIFICACIÓN</td>
-              <td>CERTIFICADORA</td>
-              <td>AÑO INICIAL DE CERTIFICACIÓN?</td>
-              <td>¿HA SIDO INTERRUMPIDA?</td>
+              <td>CERTIFICATION</td>
+              <td>CERTIFICATION ENTITY</td>
+              <td>INITIAL YEAR OF CERTIFICATION</td>
+              <td>HAS BEEN INTERRUPTED?</td>
             </tr>
             <?php 
             $query_certificacion_detalle = "SELECT * FROM certificaciones WHERE idsolicitud_certificacion = $idsolicitud_certificacion";
@@ -718,10 +718,13 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             while($row_certificacion = mysql_fetch_assoc($certificacion_detalle)){
             ?>
               <tr class="text-center">
-                <td><input type="text" class="form-control" name="certificacion[]" id="exampleInputEmail1" placeholder="CERTIFICACIÓN" value="<?echo $row_certificacion['certificacion']?>"></td>
-                <td><input type="text" class="form-control" name="certificadora[]" id="exampleInputEmail1" placeholder="CERTIFICADORA" value="<?echo $row_certificacion['certificadora']?>"></td>
-                <td><input type="text" class="form-control" name="ano_inicial[]" id="exampleInputEmail1" placeholder="AÑO INICIAL" value="<?echo $row_certificacion['ano_inicial']?>"></td>
-                <td><input type="text" class="form-control" name="interrumpida[]" id="exampleInputEmail1" placeholder="¿HA SIDO INTERRUMPIDA?" value="<?echo $row_certificacion['interrumpida']?>"></td>
+                <td><input type="text" class="form-control" name="certificacion[]" id="exampleInputEmail1" placeholder="CERTIFICATION" value="<?echo $row_certificacion['certificacion']?>"></td>
+                <td><input type="text" class="form-control" name="certificadora[]" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY" value="<?echo $row_certificacion['certificadora']?>"></td>
+                <td><input type="text" class="form-control" name="ano_inicial[]" id="exampleInputEmail1" placeholder="INITIAL YEAR" value="<?echo $row_certificacion['ano_inicial']?>"></td>
+                <td>
+                  <div class="col-xs-6">YES<input type="radio" class="form-control" name="interrumpida[0]" value="SI"></div>
+                  <div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida[0]" value="NO"></div>
+                </td>
                 <input type="hidden" name="idcertificacion[]" value="<?echo $row_certificacion['idcertificacion']?>">
               </tr>
             <?php 
@@ -731,11 +734,35 @@ $solicitud = mysql_fetch_assoc($ejecutar);
           </table>  
 
           <label for="op_preg10">
-            10.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
+            10. ACCORDING THE CERTIFICATIONS, IN ITS MOST RECENT INTERNAL AND EXTERNAL EVALUATIONS, HOW MANY CASES OF NON COMPLIANCE WERE IDENTIFIED? PLEASE EXPLAIN IF THEY HAVE BEEN RESOLVED OR WHAT THEIR STATUS IS?</label>
           <textarea name="op_preg10" id="op_preg10" class="form-control"><?php echo $solicitud['op_preg10']; ?></textarea>
 
+          <div class="col-xs-12">
+            <p for="op_preg11">
+              <b>11.  OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+            </p>
+            <p><i>(* Enter percentage)</i></p>
+              <div class="col-xs-3">
+                <label for="organico">% ORGANIC</label>
+                <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0" readonly>
+              </div>
+              <div class="col-xs-3">
+                <label for="comercio_justo">% FAIR TRADE</label>
+                <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0" readonly>
+              </div>
+              <div class="col-xs-3">
+                <label for="spp">SMALL PRODUCERS´SYMBOL</label>
+                <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0" readonly>
+                
+              </div>
+              <div class="col-xs-3">
+                <label for="otro">OTHER</label>
+                <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0" readonly>
+                
+              </div>            
+          </div>
 
-          <p><b>12. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
+          <p><b>12. DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
           <div class="col-xs-12 ">
                 <?php
                   if($solicitud['op_preg12'] == 'SI'){
@@ -747,25 +774,25 @@ $solicitud = mysql_fetch_assoc($ejecutar);
                     echo "</div>";*/
                 ?>
                   <div class="col-xs-6">
-                    <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> SI</p>
+                    <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> YES</p>
                   </div>
                   <div class="col-xs-6">
                     <?php 
                       if(empty($solicitud['op_preg13'])){
                      ?>
-                      <p class="alert alert-danger">No se proporciono ninguna respuesta.</p>
+                      <p class="alert alert-danger">No response was provided.</p>
                     <?php 
                       }else if($solicitud['op_preg13'] == "HASTA $3,000 USD"){
                      ?>
-                      <p class="alert alert-info">HASTA $3,000 USD</p>
+                      <p class="alert alert-info">LESS THAN $3,000 USD</p>
                     <?php 
                       }else if($solicitud['op_preg13'] == "ENTRE $3,000 Y $10,000 USD"){
                      ?>
-                     <p class="alert alert-info">ENTRE $3,000 Y $10,000 USD</p>
+                     <p class="alert alert-info">BETWEENN $3,000 AND $10,000 USD</p>
                     <?php 
                       }else if($solicitud['op_preg13'] == "ENTRE $10,000 A $25,000 USD"){
                      ?>
-                     <p class="alert alert-info">ENTRE $10,000 A $25,000 USD</p>
+                     <p class="alert alert-info">BEETWENN $10,000 AND $25,000 USD</p>
                     <?php 
                       }else if($solicitud['op_preg13'] != "HASTA $3,000 USD" && $solicitud['op_preg13'] != "ENTRE $3,000 Y $10,000 USD" && $solicitud['op_preg13'] != "ENTRE $10,000 A $25,000 USD"){
                      ?>
@@ -775,30 +802,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
                       }
                      ?>
                   </div>
-              <div class="col-xs-12">
-                <p for="op_preg11">
-                  <b>13_1.DEL TOTAL DE SUS VENTAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
-                </p>
-                <p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-                  <div class="col-xs-3">
-                    <label for="organico">% ORGÁNICO</label>
-                    <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0" readonly>
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="comercio_justo">% COMERCIO JUSTO</label>
-                    <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0" readonly>
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
-                    <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0" readonly>
-                    
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="otro">SIN CERTIFICADO</label>
-                    <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0" readonly>
-                    
-                  </div>            
-              </div>
+
                 <?php
                   }else if($solicitud['op_preg12'] == 'NO'){
                 ?>
@@ -812,19 +816,19 @@ $solicitud = mysql_fetch_assoc($ejecutar);
           </div>
               
           <label for="op_preg14">
-            14. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
+            14. ESTIMATED DATE FOR BEGINNING TO USE THE SMALL PRODUCERS’ SYMBOL:
           </label>
           <input type="text" class="form-control" id="op_preg14" name="op_preg14" value="<?php echo $solicitud['op_preg14']; ?>">
 
           <p>
-            <b>15. ANEXAR EL CROQUIS GENERAL DE SU OPP, INDICANDO LAS ZONAS EN DONDE CUENTA CON SOCIOS.</b>
+            <b>15.  PLEASE ATTACH A GENERAL MAP OF THE AREA WHERE YOUR SPO OPERATES, INDICATING THE ZONES WHERE MEMBERS ARE LOCATED.</b>
           </p>
           <?php 
           if(empty($solicitud['op_preg15'])){
             echo "<p class='alert alert-danger' style='padding:7px;'>No Disponible</p>";
           }else{
           ?>
-            <a class="btn btn-success" href="<?echo $solicitud['op_preg15']?>" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Descargar Croquis</a>  
+            <a class="btn btn-success" href="<?echo $solicitud['op_preg15']?>" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download the sketch</a>  
           <?php
           }
            ?>
@@ -834,18 +838,18 @@ $solicitud = mysql_fetch_assoc($ejecutar);
 
       <!------ FIN INFORMACION DATOS DE OPERACIÓN ------>
 
-      <div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE PRODUCTOS PARA LOS CUALES QUIERE UTILIZAR EL SÍMBOLO<sup>6</sup></div>
+      <div class="col-md-12 text-center alert alert-success" style="padding:7px;">INFORMATION ON PRODUCTS FOR WHICH APPLICANT WISHES TO USE SYMBOL<sup>6</sup></div>
       <div class="col-lg-12">
         <table class="table table-bordered" id="tablaProductos">
           <tr>
-            <td>Producto</td>
-            <td>Volumen Total Estimado a Comercializar</td>
-            <td>Producto Terminado</td>
-            <td>Materia Prima</td>
-            <td>País(es) de Destino</td>
-            <td>Marca Propia</td>
-            <td>Marca de un Cliente</td>
-            <td>Sin cliente aún</td>          
+            <td>Product</td>
+            <td>Total Estimated Volume to be Traded</td>
+            <td>Finished Product</td>
+            <td>Raw material</td>
+            <td>Destination Countries</td>
+            <td>Own brand</td>
+            <td>Client’s brand</td>
+            <td>Still without client</td>          
           </tr>
           <?php 
           $query_producto_detalle = "SELECT * FROM productos WHERE idsolicitud_certificacion = $idsolicitud_certificacion";
@@ -855,10 +859,10 @@ $solicitud = mysql_fetch_assoc($ejecutar);
           ?>
             <tr>
               <td>
-                <input type="text" class="form-control" name="producto[]" id="exampleInputEmail1" placeholder="Producto" value="<?echo $row_producto['producto']?>">
+                <input type="text" class="form-control" name="producto[]" id="exampleInputEmail1" placeholder="Product" value="<?echo $row_producto['producto']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="volumen[]" id="exampleInputEmail1" placeholder="Volumen" value="<?echo $row_producto['volumen']?>">
+                <input type="text" class="form-control" name="volumen[]" id="exampleInputEmail1" placeholder="Volume" value="<?echo $row_producto['volumen']?>">
               </td>
               <td>
                 <?php 
@@ -875,17 +879,17 @@ $solicitud = mysql_fetch_assoc($ejecutar);
                  ?>
               </td>          
               <td>
-                <input type="text" class="form-control" name="materia[]" id="exampleInputEmail1" placeholder="Materia" value="<?echo $row_producto['materia']?>">
+                <input type="text" class="form-control" name="materia[]" id="exampleInputEmail1" placeholder="Material" value="<?echo $row_producto['materia']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="destino[]" id="exampleInputEmail1" placeholder="Destino" value="<?echo $row_producto['destino']?>">
+                <input type="text" class="form-control" name="destino[]" id="exampleInputEmail1" placeholder="Destination" value="<?echo $row_producto['destino']?>">
               </td>
               <td>
                 <?php 
                   if($row_producto['marca_propia'] == 'SI'){
-                    echo "SI <input type='radio'  name='marca_propia".$contador."' value='SI' checked><br>";
+                    echo "YES <input type='radio'  name='marca_propia".$contador."' value='SI' checked><br>";
                   }else{
-                    echo "SI <input type='radio'  name='marca_propia".$contador."' value='SI'><br>";
+                    echo "YES <input type='radio'  name='marca_propia".$contador."' value='SI'><br>";
                   } 
                   if($row_producto['marca_propia'] == 'NO'){
                     echo "NO <input type='radio'  name='marca_propia".$contador."' value='NO' checked>";
@@ -897,9 +901,9 @@ $solicitud = mysql_fetch_assoc($ejecutar);
               <td>
                 <?php 
                   if($row_producto['marca_cliente'] == 'SI'){
-                    echo "SI <input type='radio'  name='marca_cliente".$contador."' value='SI' checked><br>";
+                    echo "YES <input type='radio'  name='marca_cliente".$contador."' value='SI' checked><br>";
                   }else{
-                    echo "SI <input type='radio'  name='marca_cliente".$contador."' value='SI'><br>";
+                    echo "YES <input type='radio'  name='marca_cliente".$contador."' value='SI'><br>";
                   } 
                   if($row_producto['marca_cliente'] == 'NO'){
                     echo "NO <input type='radio'  name='marca_cliente".$contador."' value='NO' checked>";
@@ -911,9 +915,9 @@ $solicitud = mysql_fetch_assoc($ejecutar);
               <td>
                 <?php 
                   if($row_producto['sin_cliente'] == 'SI'){
-                    echo "SI <input type='radio'  name='sin_cliente".$contador."' value='SI' checked><br>";
+                    echo "YES <input type='radio'  name='sin_cliente".$contador."' value='SI' checked><br>";
                   }else{
-                    echo "SI <input type='radio'  name='sin_cliente".$contador."' value='SI'><br>";
+                    echo "YES <input type='radio'  name='sin_cliente".$contador."' value='SI'><br>";
                   }
                   if($row_producto['sin_cliente'] == 'NO'){
                     echo "NO <input type='radio'  name='sin_cliente".$contador."' value='NO' checked>";
@@ -930,31 +934,31 @@ $solicitud = mysql_fetch_assoc($ejecutar);
           ?>        
           <tr>
             <td colspan="8">
-              <h6><sup>6</sup> La información proporcionada en esta sección será tratada con plena confidencialidad. Favor de insertar filas adicionales de ser necesario.</h6>
+              <h6><sup>6</sup> Information provided in this section will be handled with complete confidentiality. Please insert additional lines if necessary.</h6>
             </td>
           </tr>
         </table>
       </div>
 
       <div class="col-lg-12 text-center alert alert-success" style="padding:7px;">
-        <b>COMPROMISOS</b>
+        <b>COMMITMENTS</b>
       </div>
       <div class="col-lg-12 text-justify">
-        <p>1. Con el envío de esta solicitud se manifiesta el interés de recibir una propuesta de Certificación.</p> 
-        <p>2. El proceso de Certificación comenzará en el momento que se confirme la recepción del pago correspondiente.</p>
-        <p>3. La entrega y recepción de esta solicitud no garantiza que el proceso de Certificación será positivo.</p>
-        <p>4. Conocer y dar cumplimiento a todos los requisitos de la Norma General del Símbolo de Pequeños Productores que le apliquen como Organización de Pequeños Productores, tanto Críticos como Mínimos, independientemente del tipo de evaluación que se realice.</p>
+        <p>1. By sending in this document, the applicant expresses its interest in receiving a proposal for certification with the Small Producers’ Symbol.</p>
+        <p>2. The certification process will begin when it is confirmed that the payment corresponding to the proposal has been received.</p>
+        <p>3. The fact that this application is delivered and received does not guarantee that the results of the certification process will be positive</p>
+        <p>4. The applicant will become familiar with and comply with all the applicable requirements in the General Standard of the Small Producers’ Symbol for a Small Producers’ Organization, including both Critical and Minimum Criteria, and independently of the type of evaluation conducted. </p>
       </div>
       <div class="col-lg-12">
         <label for="responsable">
-          <p style="font-size:14px;"><strong>Nombre de la persona que se responsabiliza de la veracidad de la información del formato y que le dará seguimiento a la solicitud de parte del solicitante:</strong></p>
+          <p style="font-size:14px;"><strong>Name of the person who is responsible for the accuracy of the information on this form, and who, on behalf of the Applicant, will follow up on the application</strong></p>
         </label>
         <input type="text" class="form-control" id="responsable" value="<?php echo $solicitud['responsable']; ?>" > 
         <input type="hidden" name="fecha_registro" value="<?php echo $solicitud['fecha_registro'] ?>">
         <input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
 
         <p>
-          <b>OC que recibe la solicitud:</b>
+          <b>Certification Entity who receives the application:</b>
         </p>
         <p class="alert alert-info" style="padding:7px;">
           <strong><?php echo $solicitud['abreviacionOC']; ?></strong>
@@ -991,7 +995,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
     }
      
     if(!seleccionado) {
-      alert("Debes de seleecionar un Procedimiento de Certificación");
+      alert("You must select a certification procedure");
       return false;
     }
 
@@ -1013,9 +1017,9 @@ var contador=0;
     var cell3 = row.insertCell(2);
     var cell4 = row.insertCell(3);
 
-    cell1.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICACIÓN">';
-    cell2.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICADORA">';
-    cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="AÑO INICIAL">';
+    cell1.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION">';
+    cell2.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY">';
+    cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="INITIAL YEAR">';
     cell4.innerHTML = '<div class="col-xs-6">SI<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
     }
   } 
@@ -1056,15 +1060,15 @@ var contador=0;
 
     
 
-    cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Producto">';
+    cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Product">';
     
-    cell2.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volumen">';
+    cell2.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volume">';
     
     cell3.innerHTML = 'SI <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
     
-    cell4.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Materia">';
+    cell4.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Material">';
     
-    cell5.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destino">';
+    cell5.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destination">';
     
     cell6.innerHTML = 'SI <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
     

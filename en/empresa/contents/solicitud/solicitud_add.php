@@ -689,7 +689,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 			<div class="col-md-12 alert alert-info">
 				<div>
 					<label for="alcance_opp">
-						SELECT TYPE OF COMPANY SPP FOR WHICH REGISTRATION IS SOUGHT. INTERMEDIARY MAY NOT SIGN SPP IF NOT HAVE A BUYER OR FINAL SPP REGISTERED REGISTRATION PROCESS. 
+						SELECT TYPE OF COMPANY SPP FOR WHICH REGISTRATION IS SOUGHT. INTERMEDIARY MAY NOT SIGN SPP IF NOT HAVE A BUYER OR FINAL SPP REGISTERED REGISTRATION PROCESS.
 					</label>
 				</div>
 
@@ -790,7 +790,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 					<textarea name="preg7" id="preg7" class="form-control"></textarea>
 
 					<label for="preg8">
-						8.	IN ADDITION TO YOUR MAIN OFFICES, PLEASE SPECIFY HOW MANY COLLECTION CENTERS, PROCESSING AREAS AND ADDITIONAL OFFICES YOU HAVE.      
+						8.	IN ADDITION TO YOUR MAIN OFFICES, PLEASE SPECIFY HOW MANY COLLECTION CENTERS, PROCESSING AREAS AND ADDITIONAL OFFICES YOU HAVE.   
 					</label>
 					<textarea name="preg8" id="preg8" class="form-control"></textarea>
 
@@ -886,7 +886,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 					
 						<div class="col-md-6"><p>MORE THAT $25,000 USD* <sup>*</sup><br><h6><sup>*</sup>SPECIFY THE QUANTITY.</h6></p></div>
 						<div class="col-md-6"><input type="radio" name="preg14" class="form-control" id="exampleInputEmail1" onclick="mostrar()" value="mayor">
-							<input type="text" name="preg14_1" class="form-control" id="oculto" style='display:none;' placeholder="Especifique la Cantidad">
+							<input type="text" name="preg14_1" class="form-control" id="oculto" style='display:none;' placeholder="SPECIFY THE QUANTITY">
 						</div>
 
 

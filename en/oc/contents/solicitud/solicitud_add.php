@@ -521,7 +521,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 	<form action="" name="" method="POST" enctype="multipart/form-data">
 		<fieldset>
 			<div class="col-md-12 alert alert-primary" style="padding:7px;">
-				<h3 class="text-center">Application for Small Producers´Organization Certification </h3>
+				<h3 class="text-center">Application for Small Producers´Organization Certification</h3>
 			</div>
 
 
@@ -691,7 +691,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					<label for="resp1">NUMBER OF PRODUCERS MEMBERS:</label>
 					<input type="text" class="form-control" id="resp1" name="resp1" >
 
-					<label for="resp2">NUMBER OF PRODUCERS MEMBERS OF THE  PRODUCT (S) TO BE INCLUDED IN THE CERTIFICATION::</label>
+					<label for="resp2">NUMBER OF PRODUCERS MEMBERS OF THE  PRODUCT (S) TO BE INCLUDED IN THE CERTIFICATION:</label>
 					<input type="text" class="form-control" id="resp2" name="resp2" >
 
 					<label for="resp3">TOTAL PRODUCTION VOLUME(S) BY PRODUCT (UNITE OF MEASURE):</label>
@@ -722,7 +722,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					</div>
 					<div class="col-xs-3">
 						<label for="preg1_2">
-							1.2 NUMBER OF SPO 2nd  LEVEL::
+							1.2 NUMBER OF SPO 2nd  LEVEL:
 						</label>
 						<input type="text" class="form-control" id="preg1_2" name="preg1_2" >
 					</div>
@@ -734,7 +734,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					</div>
 					<div class="col-xs-3">
 						<label for="preg1_4">
-							1.4 NUMBER OF COMMUNITIES, AREAS OR GROUPS OF WORK::
+							1.4 NUMBER OF COMMUNITIES, AREAS OR GROUPS OF WORK:
 						</label>
 						<input type="text" class="form-control" id="preg1_4" name="preg1_4" >
 					</div>
@@ -746,7 +746,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					<textarea name="op_preg2" id="op_preg2" class="form-control"></textarea>
 
 					<label for="op_preg3">
-						3.	MENTION IF YOUR ORGANIZATION WOULD LIKE TO INCLUDE SOME ADDITIONAL DESCRIPTOR FOR COMPLEMENTARY USE WITH THE GRAPHIC DESIGN OF THE SMALL PRODUCERS’ SYMBOL <sup>4</sup>
+						3.	MENTION IF YOUR ORGANIZATION WOULD LIKE TO INCLUDE SOME ADDITIONAL DESCRIPTOR FOR COMPLEMENTARY USE WITH THE GRAPHIC DESIGN OF THE SMALL PRODUCERS’ SYMBOL. <sup>4</sup>
 					</label>
 					<input type="text" class="form-control" id="op_preg3" name="op_preg3">
 
@@ -824,7 +824,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 							<p for="op_preg11">
 								<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
 							</p>
-							<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
+							<p><i>(* Enter percentage)</i></p>
 								<div class="col-xs-3">
 									<label for="organico">% ORGANIC</label>
 									<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
@@ -994,7 +994,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
     }
      
     if(!seleccionado) {
-      alert("Debes de seleecionar un Tipo de Solicitud");
+      alert("You must select a type of Application");
       return false;
     }
 
