@@ -316,16 +316,16 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
   <form action="" name="" method="POST" enctype="multipart/form-data">
     <fieldset>
       <div class="col-md-12 alert alert-primary" style="padding:7px;">
-        <h3 class="text-center">Solicitud de Registro para Compradores y otros Actores</h3>
+        <h3 class="text-center">Application for Buyers´, Registration</h3>
       </div>
 
 
-      <div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
+      <div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>GENERAL INFORMATION</b></div>
 
       <div class="col-lg-12 alert alert-info" style="padding:7px;">
         <div class="col-md-4">
           <div class="col-xs-12">
-            <b>ENVAR AL OC (selecciona el OC al que deseas enviar la solicitud):</b>
+            <b>Send to Certification Entity:</b>
           </div>
           <div class="col-xs-12">
             <input type="text" class="form-control" value="<?php echo $solicitud['abreviacionOC']; ?>" readonly>
@@ -333,7 +333,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         </div>
         <div class="col-md-4">
           <div class="col-xs-12">
-            <b>TIPO DE SOLICITUD</b>
+            <b>TYPE OF APPLICATION</b>
           </div>
           <div class="col-xs-6">
             <input type="text" class="form-control" value="<?php echo $solicitud['tipo_solicitud']; ?>"readonly>
@@ -343,7 +343,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         <div class="col-md-4">
 
           <input type="hidden" name="actualizar_solicitud" value="1">
-          <button style="color:white" type="submit" class="btn btn-warning form-control"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> ACTUALIZAR SOLICITUD</button>
+          <button style="color:white" type="submit" class="btn btn-warning form-control"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> UPDATE APPLICATION</button>
         </div>
 
       </div>
@@ -351,19 +351,19 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
       <!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
       <div class="col-lg-12">
         <div class="col-md-6">
-          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMACION GENERALES</div>
-          <label for="fecha_elaboracion">FECHA ELABORACIÓN</label>
+          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">GENERAL INFORMATION</div>
+          <label for="fecha_elaboracion">DATE OF ELABORATION</label>
           <input type="text" class="form-control" id="fecha_elaboracion" name="fecha_elaboracion" value="<?php echo date('Y-m-d', time()); ?>" readonly>  
 
-          <label for="spp">CODIGO DE IDENTIFICACIÓN SPP(#SPP): </label>
+          <label for="spp">SPP IDENTIFICATION CODE(#SPP): </label>
           <input type="text" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp_empresa']; ?>" readonly>
 
-          <label for="nombre">NOMBRE COMPLETO DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES: </label>
+          <label for="nombre">COMPANY NAME: </label>
           <textarea name="nombre" id="nombre" class="form-control"><?php echo $solicitud['nombre']; ?></textarea>
 
-          <label for="pais">PAÍS:</label>
+          <label for="pais">COUNTRY:</label>
            <select name="pais" id="pais" class="form-control">
-            <option value="">Selecciona un País</option>
+            <option value="">Select a Country</option>
             <?php 
             while($pais = mysql_fetch_assoc($row_pais)){
               if(utf8_encode($pais['nombre']) == $solicitud['pais']){
@@ -375,27 +375,27 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
              ?>
            </select>
 
-          <label for="direccion_oficina">DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES(CALLE, BARRIO, LUGAR, REGIÓN)</label>
+          <label for="direccion_oficina">COMPLETE ADDRESS FOR COMPANY LOCATION (STREET, DISTRICT, TOWN / CITY, REGION):</label>
           <textarea name="direccion_oficina" id="direccion_oficina"  class="form-control"><?php echo $solicitud['direccion_oficina']; ?></textarea>
 
-          <label for="email">CORREO ELECTRÓNICO:</label>
+          <label for="email">EMAIL:</label>
           <input type="email" class="form-control" id="email" name="email" value="<?php echo $solicitud['email']; ?>">
 
-          <label for="telefono">TELÉFONOS (CODIGO DE PAÍS + CÓDIGO DE ÁREA + NÚMERO):</label>
+          <label for="telefono">COMPANY TELEPHONES(COUNTRY CODE+AREA CODE+NUMBER):</label>
           <input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $solicitud['telefono']; ?>">  
 
-          <label for="sitio_web">SITIO WEB:</label>
+          <label for="sitio_web">WEBSITE:</label>
           <input type="text" class="form-control" id="sitio_web" name="sitio_web" value="<?php echo $solicitud['sitio_web']; ?>">
 
         </div>
 
         <div class="col-md-6">
-          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">DATOS FISCALES PARA FACTURACIÓN</div>
+          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">FISCAL DATA</div>
 
-          <label for="razon_social">RAZÓN SOCIAL</label>
+          <label for="razon_social">RBUSINESS NAME</label>
           <input type="text" class="form-control" id="razon_social" name="razon_social" value="<?php echo $solicitud['razon_social']; ?>">
 
-          <label for="direccion_fiscal">DIRECCIÓN FISCAL</label>
+          <label for="direccion_fiscal">FISCAL ADDRESS</label>
           <textarea class="form-control" name="direccion_fiscal" id="direccion_fiscal"><?php echo $solicitud['direccion_fiscal']; ?></textarea>
 
           <label for="rfc">RFC</label>
@@ -411,40 +411,40 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
       <!------ INICIA INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
       <div class="col-lg-12">
         <div class="col-md-6">
-          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONA(S) DE CONTACTO</div>
+          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">CONTACT PERSON(S) OF APPLICATION</div>
 
-          <label for="persona1">PERSONA(S) DE CONTACTO</label>
+          <label for="persona1">CONTACT PERSON(S)</label>
           <input type="text" class="form-control" id="persona1" value="<?php echo $solicitud['contacto1_nombre']; ?>"  readonly>
-          <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_nombre']; ?>" placeholder="Nombre Persona 2" readonly>
+          <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_nombre']; ?>" placeholder="Name Person 2" readonly>
 
-          <label for="cargo">CARGO</label>
+          <label for="cargo">POSITION(S)</label>
           <input type="text" class="form-control" id="cargo" value="<?php echo $solicitud['contacto1_cargo']; ?>" placeholder="* Cargo Persona 1" readonly>
           <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_cargo']; ?>" palceholder="Cargo Persona 2" readonly>
 
-          <label for="email">CORREO ELECTRÓNICO</label>
-          <input type="email" class="form-control" id="email" value="<?php echo $solicitud['contacto1_email']; ?>" placeholder="* Email Persona 1" readonly>
-          <input type="email" class="form-control" id="" value="<?php echo $solicitud['contacto2_email']; ?>" placeholder="Email Persona 2" readonly>
+          <label for="email">EMAIL</label>
+          <input type="email" class="form-control" id="email" value="<?php echo $solicitud['contacto1_email']; ?>" placeholder="* Email Person 1" readonly>
+          <input type="email" class="form-control" id="" value="<?php echo $solicitud['contacto2_email']; ?>" placeholder="Email Person 2" readonly>
 
-          <label for="telefono">TELEFONO</label>
-          <input type="text" class="form-control" id="telefono" value="<?php echo $solicitud['contacto1_telefono']; ?>" placeholder="* Telefono Persona 1" readonly>
-          <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_telefono']; ?>" placeholder="Telefono Persona 2" readonly>
+          <label for="telefono">TELEPHONE(S)  FOR CONTACT PERSON(S):</label>
+          <input type="text" class="form-control" id="telefono" value="<?php echo $solicitud['contacto1_telefono']; ?>" placeholder="* Telephone Person 1" readonly>
+          <input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_telefono']; ?>" placeholder="Telephone Person 2" readonly>
 
         </div>
 
         <div class="col-md-6">
-          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONA(S) ÁREA ADMINISTRATIVA</div>
+          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSON(S) OF THE ADMINISTRATIVE AREA:</div>
 
-          <label for="persona_adm">PERSONA(S) DEL ÁREA ADMINSITRATIVA</label>
-          <input type="text" class="form-control" id="persona_adm" value="<?php echo $solicitud['adm1_nombre']; ?>" placeholder="Nombre Persona 1" readonly>
-          <input type="text" class="form-control" id="" value="<?php echo $solicitud['adm2_nombre']; ?>" placeholder="Nombre Persona 2" readonly>
+          <label for="persona_adm">PERSON(S) OF THE ADMINISTRATIVE AREA</label>
+          <input type="text" class="form-control" id="persona_adm" value="<?php echo $solicitud['adm1_nombre']; ?>" placeholder="Name Person 1" readonly>
+          <input type="text" class="form-control" id="" value="<?php echo $solicitud['adm2_nombre']; ?>" placeholder="Name Person 2" readonly>
 
-          <label for="email_adm">CORREO ELECTRÓNICO</label>
-          <input type="email" class="form-control" id="email_adm" value="<?php echo $solicitud['adm1_email']; ?>" placeholder="Email Persona 1" readonly>
-          <input type="email" class="form-control" id="" value="<?php echo $solicitud['adm2_email']; ?>" placeholder="Email Persona 2" readonly>
+          <label for="email_adm">EMAIL</label>
+          <input type="email" class="form-control" id="email_adm" value="<?php echo $solicitud['adm1_email']; ?>" placeholder="Email Person 1" readonly>
+          <input type="email" class="form-control" id="" value="<?php echo $solicitud['adm2_email']; ?>" placeholder="Email Person 2" readonly>
 
-          <label for="telefono_adm">TELÉFONO</label>
-          <input type="text" class="form-control" id="telefono_adm" value="<?php echo $solicitud['adm1_telefono']; ?>" placeholder="Telefono Persona 1" readonly>
-          <input type="text" class="form-control" id="" value="<?php echo $solicitud['adm2_telefono']; ?>" placeholder="Telefono Persona 2" readonly>
+          <label for="telefono_adm">TELEPHONE</label>
+          <input type="text" class="form-control" id="telefono_adm" value="<?php echo $solicitud['adm1_telefono']; ?>" placeholder="Telephone Person 1" readonly>
+          <input type="text" class="form-control" id="" value="<?php echo $solicitud['adm2_telefono']; ?>" placeholder="Telephone Person 2" readonly>
         </div>
       </div>
       <!------ FIN INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
@@ -456,82 +456,81 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
       <div class="col-md-12 alert alert-info">
         <div>
           <label for="alcance_opp">
-            SELECCIONE EL TIPO DE EMPRESA SPP PARA EL CUAL SE SOLICITA EL REGISTRO. UN INTERMEDIARIO NO PUEDE REGISTRARSE SPP SI NO CUENTA CON UN COMPRADOR FINAL REGISTRADO SPP O EN PROCESO DE REGISTRO. 
-          </label>
+            SELECT TYPE OF COMPANY SPP FOR WHICH REGISTRATION IS SOUGHT. INTERMEDIARY MAY NOT SIGN SPP IF NOT HAVE A BUYER OR FINAL SPP REGISTERED REGISTRATION PROCESS.           </label>
         </div>
 
         <div class="checkbox">
           <label class="col-sm-4">
-            <input type="checkbox"name="comprador" <?php if($solicitud['comprador_final']){echo "checked"; } ?> value="1"> COMPRADOR-FINAL
+            <input type="checkbox"name="comprador" <?php if($solicitud['comprador_final']){echo "checked"; } ?> value="1"> FINAL BUYER
           </label>
           <label class="col-sm-4">
-            <input type="checkbox"name="intermediario" <?php if($solicitud['intermediario']){echo "checked"; } ?> value="1"> INTERMEDIARIO
+            <input type="checkbox"name="intermediario" <?php if($solicitud['intermediario']){echo "checked"; } ?> value="1"> INTERMEDIARY
           </label>
           <label class="col-sm-4">
-            <input type="checkbox"name="maquilador" <?php if($solicitud['maquilador']){echo "checked"; } ?> value="1"> MAQUILADOR
+            <input type="checkbox"name="maquilador" <?php if($solicitud['maquilador']){echo "checked"; } ?> value="1"> MAQUILA COMPANY
           </label>
         </div>
       </div>
 
 
 
-      <div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE OPERACIÓN</div>
+      <div class="col-md-12 text-center alert alert-success" style="padding:7px;">INFORMATION ON OPERATION</div>
 
       <div class="col-lg-12">
         <div class="col-md-12">
           <label for="preg1">
-            1.  ¿CUÁLES SON LAS ORGANIZACIONES DE PEQUEÑOS PRODUCTORES A LAS QUE LES COMPRA O PRETENDE COMPRAR BAJO EL ESQUEMA DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?
+            1.  FROM WHICH SMALL PRODUCERS’ ORGANIZATIONS DO YOU MAKE PURCHASES OR ATTEMPT TO DO SO UNDER THE SMALL PRODUCERS’ SYMBOL SCHEME? 
           </label>
           <textarea name="preg1" id="preg1" class="form-control"><?php echo $solicitud['preg1']; ?></textarea>
 
           <label for="preg2">
-            2.  ¿QUIÉN O QUIÉNES SON LOS PROPIETARIOS DE LA EMPRESA?
+            2.  WHO IS/ARE THE OWNER(S) OF THE COMPANY? 
           </label>
           <textarea name="preg2" id="preg2" class="form-control"><?php echo $solicitud['preg2']; ?></textarea>
 
 
           <label for="preg3">
-            3. ESPECIFIQUE QUÉ PRODUCTO(S) QUIERE INCLUIR EN EL CERTIFICADO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES PARA LOS CUALES EL ORGNISMO DE CERTIFICACIÓN REALIZARÁ LA EVALUACIÓN.<sup>4</sup>
+            3.  SPECIFY WHICH PRODUCT (S) YOU WANT TO INCLUDE IN THE CERTIFICATE OF THE SMALL PRODUCERS’  SYMBOL FOR WHICH THE CERTIFICATION ENTITY WILL CONDUCT THE ASSESSMENT.<sup>4 Check the Regulation on Graphics and the List of  Optional Complementary Criteria.</sup>>
           </label>
           <input type="text" class="form-control" id="preg3" name="preg3" value="<?php echo $solicitud['preg3']; ?>">
 
           <label for="preg4">
-            4. SI SU EMPRESA ES UN COMPRADOR FINAL, MENCIONE SI QUIEREN INCLUIR ALGÚN CALIFICATIVO ADICIONAL PARA USO COMPLEMENTARIO CON EL DISEÑO GRÁFICO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
+            4.  IF YOUR COMPANY IS A FINAL BUYER, MENTION IF YOUR ORGANIZATION WOULD LIKE TO INCLUDE AN ADDITIONAL DESCRIPTOR FOR COMPLEMENTARY USE WITH THE GRAPHIC DESIGN OF THE SMALL PRODUCERS’ SYMBOL 
           </label>
           <textarea name="preg4" id="preg4" class="form-control"><?php echo $solicitud['preg4']; ?></textarea>
 
           <div >
             <label for="alcance_opp">
-              5. SELECCIONE EL ALCANCE QUE TIENE LA EMPRESA:
+              5. SELECT THE SCOPE OF THE COMPANY:
             </label>
           </div>
           <div class="col-md-4">
-            <label>PRODUCCIÓN</label>
+            <label>PRODUCTION</label>
             <input type="checkbox" name="produccion" class="form-control" <?php if($solicitud['produccion']){echo "checked";} ?> value="1">
           </div>
           <div class="col-md-4">
-            <label>PROCESAMIENTO</label>
+            <label>PROCESSING</label>
             <input type="checkbox" name="procesamiento" class="form-control" <?php if($solicitud['procesamiento']){echo "checked";} ?> value="1">
           </div>
           <div class="col-md-4">
-            <label>IMPORTACIÓN</label>
+            <label>TRADING</label>
             <input type="checkbox" name="importacion" class="form-control" <?php if($solicitud['importacion']){echo "checked";} ?> value="1">
           </div>
 
-        <p><b>6.  SELECCIONE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN</b></p>
+        <p><b>6.  SPECIFY IF YOUR COMPANY SUBCONTRACT THE SERVICES OF PROCESSING PLANTS, TRADING COMPANIES OR COMPANIES THAT CARRY OUT THE IMPORT OR EXPORT, IF THE ANSWER IS AFFIRMATIVE, MENTION THE NAME AND THE SERVICE THAT PERFORMS</b></p>
         <div class="col-md-6">
-          SI <input type="radio" class="form-control" name="preg6" onclick="mostrar_empresas()" id="preg6" <?php if($solicitud['preg6'] == 'SI'){echo "checked"; } ?> value="SI">
+          YES <input type="radio" class="form-control" name="preg6" onclick="mostrar_empresas()" id="preg6" <?php if($solicitud['preg6'] == 'SI'){echo "checked"; } ?> value="SI">
         </div>
         <div class="col-md-6">
           NO <input type="radio" class="form-control" name="preg6" onclick="ocultar_empresas()" id="preg6" <?php if($solicitud['preg6'] == 'NO'){echo "checked"; } ?> value="NO">
         </div>
 
-        <p>SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA</p>
+        <p>IF THE RESPONSE IS AFFIRMATIVE, MENTION THE NAME AND THE SERVICE THAT IT REALIZES</p>
         <div id="contenedor_tablaEmpresas" class="col-md-12" style="display:none">
           <table class="table table-bordered" id="tablaEmpresas">
             <tr>
-              <td>NOMBRE DE LA EMPRESA</td>
-              <td>SERVICIO QUE REALIZA</td>
+              <td>NAME OF THE COMPANY</td>
+              <td>SERVICE THAT IT REALIZES</td>
             </tr>
             <?php 
             $query_subempresa = "SELECT * FROM sub_empresas WHERE idsolicitud_registro = $idsolicitud_registro";
@@ -551,19 +550,19 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         </div>  
 
           <label for="preg7">
-            7.  SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, INDIQUE SI ESTAS ESTAN REGISTRADAS O VAN A REALIZAR EL REGISTRO BAJO EL PROGRAMA DEL SPP O SERÁN CONTROLADAS A TRAVÉS DE SU EMPRESA <sup>5</sup>
+            7.  IF YOU SUBCONTRACT THE SERVICES OF PROCESSING PLANTS, TRADING COMPANIES OR COMPANIES THAT CARRY OUT THE IMPORT OR EXPORT, INDICATE WHETHER THESE COMPANIES ARE GOING TO APPLYFOR THE REGISTRATION UNDER SPP CERTIFICATION PROGRAM. <sup>5</sup>
             <br>
-            <small><sup>5</sup> Revisar el documento de 'Directrices Generales del Sistema SPP' en su última versión.</small>
+            <small><sup>5</sup> Check the document General Application Guidelines SPP System.</small>
           </label>
           <textarea name="preg7" id="preg7" class="form-control"><?php echo $solicitud['preg7']; ?></textarea>
 
           <label for="preg8">
-            8. ADICIONAL A SUS OFICINAS CENTRALES, ESPECIFIQUE CUÁNTOS CENTROS DE ACOPIO, ÁREAS DE PROCESAMIENTO U OFICINAS ADICIONALES TIENE.
+            8.  IN ADDITION TO YOUR MAIN OFFICES, PLEASE SPECIFY HOW MANY COLLECTION CENTERS, PROCESSING AREAS AND ADDITIONAL OFFICES YOU HAVE.
           </label>
           <textarea name="preg8" id="preg8" class="form-control"><?php echo $solicitud['preg8']; ?></textarea>
 
           <label for="preg9">
-            9. EN CASO DE TENER CENTROS DE ACOPIO, ÁREAS DE PROCESAMIENTO U OFICINAS ADICIONALES,  ANEXAR UN CROQUIS GENERAL MOSTRANDO SU UBICACIÓN.
+            9. IF YOU HAVE COLLECTION CENTERS, PROCESSING AREAS OR ADDITIONAL OFFICES, PLEASE ATTACH A GENERAL MAP INDICATING WHERE THEY ARE LOCATED.
           </label>
           <?php 
           if(empty($solicitud['preg9'])){
@@ -573,23 +572,23 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           }else{
           ?>
             <input type="text" name="preg9" value="<?php echo $solicitud['preg9']; ?>">
-            <a href="<?php echo $solicitud['preg9']; ?>" target="_blank" class="btn btn-success form-control">Descargar Croquis</a>
+            <a href="<?php echo $solicitud['preg9']; ?>" target="_blank" class="btn btn-success form-control">Download the sketch</a>
           <?php
           }
            ?>
           <label for="preg10">
-            10. ¿CUENTA CON UN SISTEMA DE CONTROL INTERNO PARA DAR CUMPLIMIENTO A LOS CRITERIOS DE LA NORMA GENERAL DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?, EN SU CASO, EXPLIQUE.
+            10. IF THE APPLICANT HAS AN INTERNAL CONTROL SYSTEM FOR COMPLYING WITH THE CRITERIA IN THE GENERAL STANDARD OF THE SMALL PRODUCERS’ SYMBOL, PLEASE EXPLAIN HOW IT WORKS.
           </label>
           <textarea name="preg10" id="preg10" class="form-control"><?php echo $solicitud['preg10'] ?></textarea>
 
-          <p class="alert alert-info">11. LLENAR LA TABLA DE ACUERDO A LAS CERTIFICACIONES QUE TIENE, (EJEMPLO: EU, NOP, JASS, FLO, etc).</p>
+          <p class="alert alert-info">11. FILL OUT THE TABLE ACCORDING YOUR CERTIFICATIONS, (example: EU, NOP, JASS, FLO, etc)</p>
           
           <table class="table table-bordered" id="tablaCertificaciones">
             <tr>
-              <td>CERTIFICACIÓN</td>
-              <td>CERTIFICADORA</td>
-              <td>AÑO INICIAL DE CERTIFICACIÓN?</td>
-              <td>¿HA SIDO INTERRUMPIDA?</td>
+              <td>CERTIFICATION</td>
+              <td>CERTIFICATION ENTITY</td>
+              <td>INITIAL YEAR OF CERTIFICATION</td>
+              <td>HAS BEEN INTERRUPTED?</td>
             </tr>
             <?php 
             $query_certificacion_detalle = "SELECT * FROM certificaciones WHERE idsolicitud_registro = $idsolicitud_registro";
@@ -598,10 +597,10 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             while($row_certificacion = mysql_fetch_assoc($certificacion_detalle)){
             ?>
               <tr class="text-center">
-                <td><input type="text" class="form-control" name="certificacion[]" id="exampleInputEmail1" placeholder="CERTIFICACIÓN" value="<?echo $row_certificacion['certificacion']?>"></td>
-                <td><input type="text" class="form-control" name="certificadora[]" id="exampleInputEmail1" placeholder="CERTIFICADORA" value="<?echo $row_certificacion['certificadora']?>"></td>
+                <td><input type="text" class="form-control" name="certificacion[]" id="exampleInputEmail1" placeholder="CERTIFICATION" value="<?echo $row_certificacion['certificacion']?>"></td>
+                <td><input type="text" class="form-control" name="certificadora[]" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY" value="<?echo $row_certificacion['certificadora']?>"></td>
                 <td><input type="text" class="form-control" name="ano_inicial[]" id="exampleInputEmail1" placeholder="AÑO INICIAL" value="<?echo $row_certificacion['ano_inicial']?>"></td>
-                <td><input type="text" class="form-control" name="interrumpida[]" id="exampleInputEmail1" placeholder="¿HA SIDO INTERRUMPIDA?" value="<?echo $row_certificacion['interrumpida']?>"></td>
+                <td><input type="text" class="form-control" name="interrumpida[]" id="exampleInputEmail1" placeholder="HAS BEEN INTERRUPTED" value="<?echo $row_certificacion['interrumpida']?>"></td>
                 <input type="hidden" name="idcertificacion[]" value="<?echo $row_certificacion['idcertificacion']?>">
               </tr>
             <?php 
@@ -611,11 +610,36 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           </table>
 
           <label for="preg12">
-            12.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
+           12.  ACCORDING THE CERTIFICATIONS, IN ITS MOST RECENT INTERNAL AND EXTERNAL EVALUATIONS, HOW MANY CASES OF NON COMPLIANCE WERE INDENTIFIED? PLEASE EXPLAIN IF THEY HAVE BEEN RESOLVED OR WHAT THEIR STATUS IS?</label>
           <textarea name="preg12" id="preg12" class="form-control"><?php echo $solicitud['preg12']; ?></textarea>
 
+              <div class="col-xs-12">
+                <p for="op_preg11">
+                  <b>13.  OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+                </p>
+                <p><i>(* Enter percentage)</i></p>
+                  <div class="col-xs-3">
+                    <label for="organico">% ORGANIC</label>
+                    <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
+                  </div>
+                  <div class="col-xs-3">
+                    <label for="comercio_justo">% FAIR TRADE</label>
+                    <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
+                  </div>
+                  <div class="col-xs-3">
+                    <label for="spp">SMALL PRODUCERS´ SYMBOL</label>
+                    <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
+                    
+                  </div>
+                  <div class="col-xs-3">
+                    <label for="otro">OTHER</label>
+                    <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
+                    
+                  </div>            
+              </div>
 
-          <p><b>13. ¿TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
+
+          <p><b>14. DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
           <div class="col-xs-12 ">
                 <?php
                   if($solicitud['preg13'] == 'SI'){
@@ -627,25 +651,25 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
                     echo "</div>";*/
                 ?>
                   <div class="col-xs-6">
-                    <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> SI</p>
+                    <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> YES</p>
                   </div>
                   <div class="col-xs-6">
                     <?php 
                       if(empty($solicitud['op_preg14'])){
                      ?>
-                      <p class="alert alert-danger">No se proporciono ninguna respuesta.</p>
+                      <p class="alert alert-danger">No response was provided.</p>
                     <?php 
                       }else if($solicitud['op_preg14'] == "HASTA $3,000 USD"){
                      ?>
-                      <p class="alert alert-info">HASTA $3,000 USD</p>
+                      <p class="alert alert-info">UP TO  $3,000 USD</p>
                     <?php 
                       }else if($solicitud['op_preg14'] == "ENTRE $3,000 Y $10,000 USD"){
                      ?>
-                     <p class="alert alert-info">ENTRE $3,000 Y $10,000 USD</p>
+                     <p class="alert alert-info">BETWEEN $3,000 AND $10,000 USD</p>
                     <?php 
                       }else if($solicitud['op_preg14'] == "ENTRE $10,000 A $25,000 USD"){
                      ?>
-                     <p class="alert alert-info">ENTRE $10,000 A $25,000 USD</p>
+                     <p class="alert alert-info">BETWEEN $10,000 AND $25,000 USD</p>
                     <?php 
                       }else if($solicitud['op_preg14'] != "HASTA $3,000 USD" && $solicitud['op_preg14'] != "ENTRE $3,000 Y $10,000 USD" && $solicitud['op_preg14'] != "ENTRE $10,000 A $25,000 USD"){
                      ?>
@@ -655,30 +679,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
                       }
                      ?>
                   </div>
-              <div class="col-xs-12">
-                <p for="op_preg11">
-                  <b>14_1.DEL TOTAL DE SUS COMPRAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
-                </p>
-                <p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-                  <div class="col-xs-3">
-                    <label for="organico">% ORGÁNICO</label>
-                    <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="comercio_justo">% COMERCIO JUSTO</label>
-                    <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
-                    <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
-                    
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="otro">SIN CERTIFICADO</label>
-                    <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
-                    
-                  </div>            
-              </div>
+
                 <?php
                   }else if($solicitud['preg13'] == 'NO'){
                 ?>
@@ -692,22 +693,22 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           </div>
 
           <label for="preg15">
-            15. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
+            16. ESTIMATED DATE FOR BEGINNING TO USE THE SMALL PRODUCERS’ SYMBOL:
           </label>
           <input type="text" class="form-control" id="preg15" name="preg15" value="<?php echo $solicitud['preg15']; ?>">
 
 
 
-      <div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE PRODUCTOS PARA LOS CUALES QUIERE UTILIZAR EL SÍMBOLO<sup>6</sup></div>
+      <div class="col-md-12 text-center alert alert-success" style="padding:7px;">INFORMATION ON PRODUCTS FOR WHICH APPLICAT WISHES TO USE SYMBOL<sup>6</sup></div>
       <div class="col-lg-12">
         <table class="table table-bordered" id="tablaProductos">
           <tr>
-            <td>Producto</td>
-            <td>Volumen Total Estimado a Comercializar</td>
-            <td>Volumen como Producto Terminado</td>
-            <td>Volumen como Materia Prima</td>
-            <td>País(es) de Origen</td>
-            <td>País(es) Destino</td>          
+            <td>Product</td>
+            <td>Total Estimated Volume to be Sold</td>
+            <td>Volume of Finished Product</td>
+            <td>Volume of Raw Material</td>
+            <td>Country/Countries of Origin</td>
+            <td>Country/Countries of Destination</td>          
           </tr>
           <?php 
           $query_producto_detalle = "SELECT * FROM productos WHERE idsolicitud_registro = $idsolicitud_registro";
@@ -717,23 +718,23 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           ?>
             <tr>
               <td>
-                <input type="text" class="form-control" name="producto[]" id="exampleInputEmail1" placeholder="Producto" value="<?echo $row_producto['producto']?>">
+                <input type="text" class="form-control" name="producto[]" id="exampleInputEmail1" placeholder="Product" value="<?echo $row_producto['producto']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="volumen_estimado[]" id="exampleInputEmail1" placeholder="Volumen Estimado" value="<?echo $row_producto['volumen_estimado']?>">
+                <input type="text" class="form-control" name="volumen_estimado[]" id="exampleInputEmail1" placeholder="Estimated Volume" value="<?echo $row_producto['volumen_estimado']?>">
               </td>
         
               <td>
-                <input type="text" class="form-control" name="volumen_terminado[]" id="exampleInputEmail1" placeholder="Volumen Terminado" value="<?echo $row_producto['volumen_terminado']?>">
+                <input type="text" class="form-control" name="volumen_terminado[]" id="exampleInputEmail1" placeholder="Volumen Finished" value="<?echo $row_producto['volumen_terminado']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="volumen_materia[]" id="exampleInputEmail1" placeholder="Volumen Materia" value="<?echo $row_producto['volumen_materia']?>">
+                <input type="text" class="form-control" name="volumen_materia[]" id="exampleInputEmail1" placeholder="Volumen of Material" value="<?echo $row_producto['volumen_materia']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="origen[]" id="exampleInputEmail1" placeholder="Origen" value="<?echo $row_producto['origen']?>">
+                <input type="text" class="form-control" name="origen[]" id="exampleInputEmail1" placeholder="Origin" value="<?echo $row_producto['origen']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="destino[]" id="exampleInputEmail1" placeholder="Destino" value="<?echo $row_producto['destino']?>">
+                <input type="text" class="form-control" name="destino[]" id="exampleInputEmail1" placeholder="Destination" value="<?echo $row_producto['destino']?>">
               </td>
 
                 <input type="hidden" name="idproducto[]" value="<?echo $row_producto['idproducto']?>">                     
@@ -744,7 +745,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           ?>        
           <tr>
             <td colspan="6">
-              <h6><sup>6</sup> La información proporcionada en esta sección será tratada con plena confidencialidad. Favor de insertar filas adicionales de ser necesario.</h6>
+              <h6><sup>6</sup> Information provided in this section will be handled with complete confidentiality. Please insert additional lines necessary.</h6>
             </td>
           </tr>
         </table>
@@ -752,24 +753,24 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
 
       <div class="col-lg-12 text-center alert alert-success" style="padding:7px;">
-        <b>COMPROMISOS</b>
+        <b>COMMITMENTS</b>
       </div>
       <div class="col-lg-12 text-justify">
-        <p>1. Con el envío de esta solicitud se manifiesta el interés de recibir una propuesta de Registro.</p>
-        <p>2. El proceso de Registro comenzará en el momento que se confirme la recepción del pago correspondiente.</p>
-        <p>3. La entrega y recepción de esta solicitud no garantiza que el proceso de Registro será positivo.</p>
-        <p>4. Conocer y dar cumplimiento a todos los requisitos de la Norma General del Símbolo de Pequeños Productores que le apliquen como Compradores, Comercializadoras Colectiva de Organizaciones de Pequeños Productores, Intermediarios y Maquiladores, tanto Críticos como Mínimos, independientemente del tipo de evaluación que se realice.</p>
+        <p>1. By signing and sending in this document, the applicant expresses its interest in receiving a proposal for Registration with the Small Producers’ Symbol.</p>
+        <p>2. The registration process will begin when it is confirmed that the payment corresponding to the proposal has been received. </p>
+        <p>3. The fact that this application is delivered and received does not guarantee that the results of the registration process will be positive. </p>
+        <p>4. The applicant will become familiar with and comply with all the applicable requirements in the General Standard of the Small Producers’ Symbol for Buyers, Collective Trading Companies owned by Small Producers’ Organizations, Intermediaries and Maquila Companies, including both Critical and Minimum Criteria, and independently of the type of evaluation conducted.  </p>
       </div>
       <div class="col-lg-12">
 
-        <p style="font-size:14px;"><strong>Nombre de la persona que se responsabiliza de la veracidad de la información del formato y que le dará seguimiento a la solicitud de parte del solicitante:</strong></p>
+        <p style="font-size:14px;"><strong>Name of the person who is responsible for the accuracy of the information on this form, and who, on behalf of the Applicant, will follow up on the application:</strong></p>
 
         <input type="hidden" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
         <input type="hidden" name="fecha_registro" value="<?php echo $solicitud['fecha_registro']; ?>">
         <input type="text" class="form-control" id="responsable" value="<?php echo $solicitud['responsable']; ?>" > 
 
         <p>
-          <b>OC que recibe la solicitud:</b>
+          <b>Certification Entity who receives the application:</b>
         </p>
         <p class="alert alert-info" style="padding:7px;">
           <?php echo $solicitud['abreviacionOC']; ?>
@@ -797,7 +798,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
     }
      
     if(!seleccionado) {
-      alert("Debes de seleecionar un Tipo de Solicitud");
+      alert("You must select a type of Application");
       return false;
     }
 
@@ -819,8 +820,8 @@ var contador=0;
     var cell3 = row.insertCell(2);
     var cell4 = row.insertCell(3);
 
-    cell1.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICACIÓN">';
-    cell2.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICADORA">';
+    cell1.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION">';
+    cell2.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY">';
     cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="AÑO INICIAL">';
     cell4.innerHTML = '<div class="col-xs-6">SI<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
     }
@@ -885,7 +886,7 @@ var contador=0;
 
     
 
-    cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Producto">';
+    cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Product">';
     
     cell2.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volumen">';
     

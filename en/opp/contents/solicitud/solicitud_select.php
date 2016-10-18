@@ -822,7 +822,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
         }else{
         ?>
           <tr class="info text-center">
-            <td colspan="10">No se encontraron registros</td>
+            <td colspan="10">No records found</td>
           </tr>
         <?php
         }
