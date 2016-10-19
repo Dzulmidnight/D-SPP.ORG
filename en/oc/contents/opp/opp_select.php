@@ -356,7 +356,7 @@ function preguntar(){
         <div class="col-md-8">
           <div class="input-group">
             <span class="input-group-btn">
-              <button class="btn btn-default" type="submit" name="buscar" value="1">search</button>
+              <button class="btn btn-default" type="submit" name="buscar" value="1">Search</button>
             </span>
             <input type="text" class="form-control" name="campo_buscar" placeholder="Search for: #spp, name, short name">
           </div><!-- /input-group -->
@@ -393,9 +393,9 @@ function preguntar(){
           <th class="text-center">Short name</th>
           <th class="text-center"><a href="#" data-toggle="tooltip" title="Certification process which is the SPO"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Certification process</a></th>
           <th class="text-center">
-            <a href="#" data-toggle="tooltip" title="Fecha en la que expira el Certificado"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Final date<br>(Certificate)</a>
+            <a href="#" data-toggle="tooltip" title="Date on which the Certificate expires"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Final date<br>(Certificate)</a>
           </th>
-          <th class="text-center"><a href="#" data-toggle="tooltip" title="Certificate status defined by the date of final effect">
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Certificate status defined by the date of final validity of the certificate">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Certificate status</a>
           </th>
 
@@ -463,7 +463,7 @@ function preguntar(){
 
                      echo $certificado['nombre_ingles'];
                   }else{
-                    echo "No Disponible";
+                    echo "Not available";
                   }
                     //echo $opp['estatus_certificado'];
                    ?>
@@ -474,7 +474,7 @@ function preguntar(){
                   $row_productos = mysql_query("SELECT * FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
                   $total_productos = mysql_num_rows($row_productos);
                   if($total_productos == 0){
-                    echo "No Disponible";
+                    echo "Not available";
                   }else{
 
                   }

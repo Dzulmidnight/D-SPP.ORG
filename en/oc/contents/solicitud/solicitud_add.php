@@ -971,7 +971,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 			<div class="col-xs-12">
 				<hr>
 				<input type="hidden" name="insertar_solicitud" value="1">
-				<input type="submit" class="btn btn-primary form-control" value="Enviar Solicitud" onclick="return validar()">
+				<input type="submit" class="btn btn-primary form-control" value="Send Application" onclick="return validar()">
 			</div>
 
 		</fieldset>

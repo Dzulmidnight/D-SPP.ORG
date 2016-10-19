@@ -50,9 +50,9 @@ mysql_select_db($database_dspp, $dspp);
 if(isset($_POST['buscar']) && $_POST['buscar'] == 1){
   $busqueda = $_POST['campo_buscar'];
 
-  $query_empresa = "SELECT empresa.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico' FROM empresa LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $idoc AND (empresa.spp LIKE '%$busqueda%' OR empresa.nombre LIKE '%$busqueda%' OR empresa.abreviacion LIKE '%$busqueda%') ORDER BY empresa.nombre ASC";
+  $query_empresa = "SELECT empresa.*, estatus_interno.idestatus_interno, estatus_interno.nombre_ingles AS 'nombre_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico' FROM empresa LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $idoc AND (empresa.spp LIKE '%$busqueda%' OR empresa.nombre LIKE '%$busqueda%' OR empresa.abreviacion LIKE '%$busqueda%') ORDER BY empresa.nombre ASC";
 }else{
-  $query_empresa = "SELECT empresa.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico' FROM empresa LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $idoc ORDER BY empresa.nombre ASC";
+  $query_empresa = "SELECT empresa.*, estatus_interno.idestatus_interno, estatus_interno.nombre_ingles AS 'nombre_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico' FROM empresa LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $idoc ORDER BY empresa.nombre ASC";
 }
 
 
@@ -349,16 +349,16 @@ function preguntar(){
   <hr>
     <div class="row">
       <div class="col-md-4" >
-        <button class="btn btn-sm btn-primary" onclick="guardarDatos()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Cambios</button><!-- BOTON GUARDAR DATOS -->
-        | <span class="alert alert-warning" style="padding:7px;">Total EMPRESAS: <?php echo $totalEmpresa; ?></span>
+        <button class="btn btn-sm btn-primary" onclick="guardarDatos()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save changes</button><!-- BOTON GUARDAR DATOS -->
+        | <span class="alert alert-warning" style="padding:7px;">Total Companies: <?php echo $totalEmpresa; ?></span>
       </div>
       <form action="" method="POST">
         <div class="col-md-8">
           <div class="input-group">
             <span class="input-group-btn">
-              <button class="btn btn-default" type="submit" name="buscar" value="1">Buscar</button>
+              <button class="btn btn-default" type="submit" name="buscar" value="1">Search</button>
             </span>
-            <input type="text" class="form-control" name="campo_buscar" placeholder="Buscar por: #spp, palabra, abreviación">
+            <input type="text" class="form-control" name="campo_buscar" placeholder="Search for: #spp, name, short name">
           </div><!-- /input-group -->
         </div><!-- /.col-lg-6 -->
       </form>
@@ -389,18 +389,18 @@ function preguntar(){
       <thead>
         <tr>
           <th class="text-center" style="width:100px;">#SPP</th>
-          <th class="text-center" style="width:100px;">Nombre</th>
-          <th class="text-center">Abreviación</th>
-          <th class="text-center"><a href="#" data-toggle="tooltip" title="Proceso de Certificación en el que se encuentra la Empresa"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Proceso certificación</a></th>
+          <th class="text-center" style="width:100px;">Name</th>
+          <th class="text-center">Short name</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Certification process which is the Company"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Certification process</a></th>
           <th class="text-center">
-            <a href="#" data-toggle="tooltip" title="Fecha en la que expira el Certificado"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Fecha Final<br>(Certificado)</a>
+            <a href="#" data-toggle="tooltip" title="Date on which the Certificate expires"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Final date<br>(Certificate)</a>
           </th>
-          <th class="text-center"><a href="#" data-toggle="tooltip" title="Estatus del Certificado definido por la fecha de vigencia final">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Estatus Certificado</a>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Certificate status defined by the date of final validity of the certificate">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Certificate status</a>
           </th>
 
           <!--<th class="text-center">Abreviación</th>-->
-          <th class="text-center">Productos</th>
+          <th class="text-center">Products</th>
           <!--<th class="text-center">Email</th>
           <th class="text-center">Teléfono Oficinas</th>
           <th class="text-center">País</th>-->
@@ -409,7 +409,7 @@ function preguntar(){
 
           <!--<th class="text-center">Dirección fiscal</th>-->
           <!--<th class="text-center">RFC</th>-->
-          <th class="text-center">Acciones</th>
+          <th class="text-center">Actions</th>
         </tr>
       </thead>
       <form name="formularioActualizar" id="formularioActualizar" action="" method="POST">
@@ -417,14 +417,14 @@ function preguntar(){
         <tbody>
           <?php 
           if($totalEmpresa == 0){
-            echo "<tr><td class='alert alert-info text-center' colspan='10'>No se encontraron registros</td></tr>";
+            echo "<tr><td class='alert alert-info text-center' colspan='10'>No records found</td></tr>";
           }else{
             while($empresa = mysql_fetch_assoc($detalle_empresa)){
             ?>
               <tr>
                 <td>
                   <input type="text" name="spp<?php echo $empresa['idempresa']; ?>" value="<?php echo $empresa['spp']; ?>">
-                  <a class="btn btn-xs btn-primary" style="width:100%;" href="?EMPRESAS&amp;detail&amp;idempresa=<?php echo $empresa['idempresa']; ?>">Consultar</a>
+                  <a class="btn btn-xs btn-primary" style="width:100%;" href="?EMPRESAS&amp;detail&amp;idempresa=<?php echo $empresa['idempresa']; ?>">Consult</a>
                 </td>
                 <td>
                   <?php echo $empresa['nombre']; ?>
@@ -439,7 +439,7 @@ function preguntar(){
                     $row_interno = mysql_query("SELECT * FROM estatus_interno", $dspp) or die(mysql_error());
                     while($estatus_interno = mysql_fetch_assoc($row_interno)){
                     ?>
-                      <option value="<?php echo $estatus_interno['idestatus_interno'] ?>" <?php if($estatus_interno['idestatus_interno'] == $empresa['estatus_interno']){echo "selected";} ?>><?php echo $estatus_interno['nombre']; ?></option>
+                      <option value="<?php echo $estatus_interno['idestatus_interno'] ?>" <?php if($estatus_interno['idestatus_interno'] == $empresa['estatus_interno']){echo "selected";} ?>><?php echo $estatus_interno['nombre_ingles']; ?></option>
                     <?php
                     }
                      ?>
@@ -457,12 +457,12 @@ function preguntar(){
                 <td>
                   <?php 
                   if(isset($empresa['idcertificado'])){
-                    $estatus_certificado = mysql_query("SELECT idcertificado, estatus_certificado, estatus_dspp.nombre FROM certificado LEFT JOIN estatus_dspp ON certificado.estatus_certificado = estatus_dspp.idestatus_dspp WHERE idcertificado = $empresa[idcertificado]", $dspp) or die(mysql_error());
+                    $estatus_certificado = mysql_query("SELECT idcertificado, estatus_certificado, estatus_dspp.nombre_ingles FROM certificado LEFT JOIN estatus_dspp ON certificado.estatus_certificado = estatus_dspp.idestatus_dspp WHERE idcertificado = $empresa[idcertificado]", $dspp) or die(mysql_error());
                     $certificado = mysql_fetch_assoc($estatus_certificado);
 
-                     echo $certificado['nombre'];
+                     echo $certificado['nombre_ingles'];
                   }else{
-                    echo "No Disponible";
+                    echo "Not available";
                   }
                     //echo $empresa['estatus_certificado'];
                    ?>
@@ -473,7 +473,7 @@ function preguntar(){
                   $row_productos = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
                   $total_productos = mysql_num_rows($row_productos);
                   if($total_productos == 0){
-                    echo "No Disponible";
+                    echo "Not available";
                   }else{
 
                   }
@@ -484,7 +484,7 @@ function preguntar(){
                 </td>
                 <td>
                   <!-- ELIMINAR EMPRESA -->
-                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Organización" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_empresa" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete Company" type="submit" onclick="return confirm('Are you sure?, Data is permanently deleted');" name="eliminar_empresa" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
                   <input type="hidden" name="idempresa" value="<?php echo $empresa['idempresa']; ?>">
                 </td>
               </tr>

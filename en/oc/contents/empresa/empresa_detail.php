@@ -157,7 +157,7 @@ if(isset($_POST['actualizar_empresa']) && $_POST['actualizar_empresa'] == 1){
       GetSQLValueString($idempresa, "int"));
   $actualizar = mysql_query($insertar,$dspp) or die(mysql_error());
 
-  $mensaje = "Datos Actualizados Correctamente";
+  $mensaje = "Information correctly updated";
 }
 
 $query = "SELECT * FROM empresa WHERE idempresa = $idempresa";
@@ -179,7 +179,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
   <?php
   }
   ?>
-    <h3>Mis Datos </h3>
+    <h3>Company Data</h3>
     <form action="" method="POST">
       <table class="table table-condensed">
         <tr>
@@ -189,13 +189,13 @@ $empresa = mysql_fetch_assoc($row_empresa);
           </td>
         </tr>
         <tr>
-          <td>Nombre</td>
+          <td>Name</td>
           <td>
             <input class="form-control" id="" name="nombre" value="<?php echo $empresa['nombre']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Abreviación</td>
+          <td>Short name</td>
           <td>
             <input class="form-control" id="" name="abreviacion" value="<?php echo $empresa['abreviacion']; ?>">
           </td>
@@ -213,53 +213,53 @@ $empresa = mysql_fetch_assoc($row_empresa);
           </td>
         </tr>
         <tr>
-          <td>Sitio Web</td>
+          <td>Website</td>
           <td>
             <input class="form-control" id="" name="sitio_web" value="<?php echo $empresa['sitio_web']; ?>">
           </td>
         </tr>
         <tr>
-          <td style="width:300px;">Email<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
+          <td style="width:300px;">Email<br>(<small>email that the system will send notifications</small>)</td>
           <td>
             <input class="form-control" id="" name="email" value="<?php echo $empresa['email']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Teléfono</td>
+          <td>Telephone</td>
           <td>
             <input class="form-control" id="" name="telefono" value="<?php echo $empresa['telefono']; ?>">
           </td>
         </tr>
         <tr>
-          <td>País</td>
+          <td>Country</td>
           <td>
             <?php echo $empresa['pais']; ?>
           </td>
         </tr>
         <tr>
-          <td>Ciudad</td>
+          <td>City</td>
           <td>
             <input class="form-control" id="" name="ciudad" value="<?php echo $empresa['ciudad']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Dirección Oficina</td>
+          <td>Office address</td>
           <td>
             <input class="form-control" id="" name="direccion_oficina" value="<?php echo $empresa['direccion_oficina']; ?>">
           </td>
         </tr>
 
         <tr class="warning">
-          <td colspan="2" class="text-center"><strong>Datos Fiscales</strong></td>
+          <td colspan="2" class="text-center"><strong>Fiscal Information</strong></td>
         </tr>
         <tr>
-          <td>Razón Social</td>
+          <td>Business name</td>
           <td>
             <input class="form-control" id="" name="razon_social" value="<?php echo $empresa['razon_social']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Dirección Fiscal</td>
+          <td>Fiscal address</td>
           <td>
             <input class="form-control" id="" name="direccion_fiscal" value="<?php echo $empresa['direccion_fiscal']; ?>">
           </td>
@@ -282,7 +282,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
             <?php 
             if($empresa['ver_password']){
             ?>
-              <input class="btn btn-success" type="submit" value="Actualizar Información">
+              <input class="btn btn-success" type="submit" value="Update Information">
               <input type="hidden" name="actualizar_empresa" value="1">
             <?php
             }

@@ -460,7 +460,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>DOCUMENTARY "SHORTENED"</b></p> 
+            <p style="font-size:10px;"><b>"SHORTENED" DOCUMENT-BASED</b></p> 
           </div>       
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='DOCUMENTAL "ACORTADO"' <?php if($solicitud['tipo_procedimiento'] == 'DOCUMENTAL "ACORTADO"'){ echo "checked"; } ?>>
@@ -471,7 +471,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>DOCUMENTARY "NORMAL"</b></p> 
+            <p style="font-size:10px;"><b>"NORMAL" DOCUMENT-BASED</b></p> 
           </div>
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='DOCUMENTAL "NORMAL"' <?php if($solicitud['tipo_procedimiento'] == 'DOCUMENTAL "NORMAL"'){ echo "checked"; } ?>>
@@ -482,7 +482,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>COMPLETE "IN SITU"</b></p>  
+            <p style="font-size:10px;"><b>COMPLETE "ON SITE"</b></p>  
           </div>
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='COMPLETO "IN SITU"' <?php if($solicitud['tipo_procedimiento'] == 'COMPLETO "IN SITU"'){ echo "checked"; } ?>>
@@ -493,7 +493,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>COMPLETE "FROM DISTANCE"</b></p>  
+            <p style="font-size:10px;"><b>COMPLETE "REMOTE"</b></p>  
           </div>
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='COMPLETO "A DISTANCIA"' <?php if($solicitud['tipo_procedimiento'] == 'COMPLETO "A DISTANCIA"'){ echo "checked"; } ?>>
@@ -980,7 +980,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
   function validar(){
     valor = document.getElementById("cotizacion_opp").value;
     if( valor == null || valor.length == 0 ) {
-      alert("No se ha cargado la cotización de el OPP");
+      alert("It has not yet been charged quote");
       return false;
     }
     
@@ -1064,17 +1064,17 @@ var contador=0;
     
     cell2.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volume">';
     
-    cell3.innerHTML = 'SI <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
+    cell3.innerHTML = 'YES <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
     
     cell4.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Material">';
     
     cell5.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destination">';
     
-    cell6.innerHTML = 'SI <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
+    cell6.innerHTML = 'YES <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
     
-    cell7.innerHTML = 'SI <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
+    cell7.innerHTML = 'YES <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
     
-    cell8.innerHTML = 'SI <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';   
+    cell8.innerHTML = 'YES <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';   
 
     }
 

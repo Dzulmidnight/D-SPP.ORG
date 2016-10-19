@@ -3,7 +3,7 @@
 <li role="presentation" 
  class="active" >
  <a href="#">
- 	<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detalle
+ 	<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detail
  </a>
 </li>
 <? }?>

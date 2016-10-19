@@ -153,7 +153,7 @@ if(isset($_POST['actualizar_oc']) && $_POST['actualizar_oc'] == 1){
       GetSQLValueString($_SESSION['idoc'], "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
-  $mensaje = "Datos Actualizados Correctamente";
+  $mensaje = "Information correctly updated";
 }
 
 $query = "SELECT * FROM oc WHERE idoc = $_SESSION[idoc]";
@@ -175,7 +175,7 @@ $oc = mysql_fetch_assoc($row_oc);
   <?php
   }
   ?>
-    <h3>Mis Datos </h3>
+    <h3>My account </h3>
     <form action="" method="POST">
       <table class="table table-condensed">
         <tr>
@@ -185,13 +185,13 @@ $oc = mysql_fetch_assoc($row_oc);
           </td>
         </tr>
         <tr>
-          <td>Nombre</td>
+          <td>Name</td>
           <td>
             <input class="form-control" id="" name="nombre" value="<?php echo $oc['nombre']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Abreviación</td>
+          <td>Short name</td>
           <td>
             <input class="form-control" id="" name="abreviacion" value="<?php echo $oc['abreviacion']; ?>">
           </td>
@@ -203,54 +203,54 @@ $oc = mysql_fetch_assoc($row_oc);
           </td>
         </tr>
         <tr>
-          <td>Sitio Web</td>
+          <td>Website</td>
           <td>
             <input class="form-control" id="" name="sitio_web" value="<?php echo $oc['sitio_web']; ?>">
           </td>
         </tr>
         <tr>
-          <td style="width:300px;">Email 1<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
+          <td style="width:300px;">Email 1<br>(<small>email that the system will send notifications</small>)</td>
           <td>
             <input class="form-control" id="" name="email1" value="<?php echo $oc['email1']; ?>">
           </td>
         </tr>
         <tr>
-          <td style="width:300px;">Email 2<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
+          <td style="width:300px;">Email 2<br>(<small>email that the system will send notifications</small>)</td>
           <td>
             <input class="form-control" id="" name="email2" value="<?php echo $oc['email2']; ?>">
           </td>
         </tr>
 
         <tr>
-          <td>Teléfono</td>
+          <td>Telephone</td>
           <td>
             <input class="form-control" id="" name="telefono" value="<?php echo $oc['telefono']; ?>">
           </td>
         </tr>
         <tr>
-          <td>País</td>
+          <td>Country</td>
           <td>
             <?php echo $oc['pais']; ?>
           </td>
         </tr>
         <tr>
-          <td>Dirección Oficina</td>
+          <td>Office address</td>
           <td>
             <input class="form-control" id="" name="direccion_oficina" value="<?php echo $oc['direccion_oficina']; ?>">
           </td>
         </tr>
 
         <tr class="warning">
-          <td colspan="2" class="text-center"><strong>Datos Fiscales</strong></td>
+          <td colspan="2" class="text-center"><strong>Fiscal Information</strong></td>
         </tr>
         <tr>
-          <td>Razón Social</td>
+          <td>Business name</td>
           <td>
             <input class="form-control" id="" name="razon_social" value="<?php echo $oc['razon_social']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Dirección Fiscal</td>
+          <td>Fiscal address</td>
           <td>
             <input class="form-control" id="" name="direccion_fiscal" value="<?php echo $oc['direccion_fiscal']; ?>">
           </td>
@@ -270,7 +270,7 @@ $oc = mysql_fetch_assoc($row_oc);
         </tr>
         <tr>
           <td colspan="2">
-            <input class="btn btn-success" type="submit" value="Actualizar Información">
+            <input class="btn btn-success" type="submit" value="Update Information">
             <input type="hidden" name="actualizar_oc" value="1">
           </td>
         </tr>

@@ -158,7 +158,7 @@ if(isset($_POST['actualizar_opp']) && $_POST['actualizar_opp'] == 1){
       GetSQLValueString($_SESSION['idopp'], "int"));
   $actualizar = mysql_query($insertar,$dspp) or die(mysql_error());
 
-  $mensaje = "Datos Actualizados Correctamente";
+  $mensaje = "Information correctly updated";
 }
 
 $query = "SELECT * FROM opp WHERE idopp = $_SESSION[idopp]";
@@ -192,7 +192,7 @@ $opp = mysql_fetch_assoc($row_opp);
         <tr>
           <td>
             <label class="radio-inline">
-              <input type="radio" name="ver_password" id="inlineRadio1" <?php if(isset($opp['ver_password']) && $opp['ver_password'] == 1){ echo 'checked'; } ?> value="1"> SI
+              <input type="radio" name="ver_password" id="inlineRadio1" <?php if(isset($opp['ver_password']) && $opp['ver_password'] == 1){ echo 'checked'; } ?> value="1"> YES
             </label>
             <label class="radio-inline">
               <input type="radio" name="ver_password" id="inlineRadio2" <?php if(isset($opp['ver_password']) && $opp['ver_password'] == 0){ echo 'checked'; } ?> value="0"> NO
@@ -228,7 +228,7 @@ $opp = mysql_fetch_assoc($row_opp);
           </td>
         </tr>
         <tr>
-          <td style="width:300px;">Email<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
+          <td style="width:300px;">Email<br>(<small>email that the system will send notifications</small>)</td>
           <td>
             <input class="form-control" id="" name="email" value="<?php echo $opp['email']; ?>">
           </td>

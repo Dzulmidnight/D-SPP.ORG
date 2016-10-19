@@ -551,7 +551,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!--<th class="text-center">Contacto</th>-->
           <!--<th class="text-center">País</th>-->
           <th class="text-center">Objection Process</th>
-          <th class="text-center">Certification Process</th>
+          <th class="text-center">Certification <br>Process</th>
           <th class="text-center">Certificate</th>
           <!--<th class="text-center">Propuesta</th>-->
           <!--<th class="text-center">Observaciones Solicitud</th>-->
@@ -593,7 +593,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             if(isset($proceso_certificacion['estatus_dspp'])){
               echo $proceso_certificacion['nombre_dspp'];
             }else{
-              echo "No Disponible";
+              echo "Not available";
             }
              ?>
           </td>
@@ -611,7 +611,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                }
 
             }else{ // INICIA CARGAR COTIZACIÓN
-              echo "No Disponible";
+              echo "Not available";
             } // TERMINA CARGAR COTIZACIÓN
              ?>
           </td>
@@ -619,7 +619,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <?php
             if($solicitud['tipo_solicitud'] == 'RENOVACION'){
             ?>
-              <a href="#" data-toggle="tooltip" title="Esta solicitud se encuentra en Proceso de Renovación del Registro por lo tanto no aplica el periodo de objeción" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>SOLICITUD EN RENOVACIÓN</a>
+              <a href="#" data-toggle="tooltip" title="This request is in process Certificate Renewal therefore does not apply the objection period" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>APPLICATION FOR RENEWAL</a>
             <?php
             }else{
               if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] != 'EN ESPERA'){
@@ -630,13 +630,13 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 if(isset($solicitud['documento'])){
                 ?>
                   <p class="alert alert-success" style="margin-bottom:0;padding:0px;">Dictamen: <?php echo $solicitud['dictamen']; ?></p>
-                  <a class="btn btn-info" style="font-size:12px;width:100%;height:30px;" href='<?php echo $solicitud['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
+                  <a class="btn btn-info" style="font-size:12px;width:100%;height:30px;" href='<?php echo $solicitud['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Download Resolution</a> 
                 <?php
                 }
                 ?>
               <?php
               }else{
-                echo "No Disponible";
+                echo "Not available";
               }
             }
             ?>
@@ -647,14 +647,14 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
               <?php 
               if(isset($solicitud['dictamen']) && $solicitud['dictamen'] == 'POSITIVO'){
               ?>
-                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
+                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Certification Process</button>
                 <!-- inicia modal proceso de certificación -->
                 <div id="<?php echo "certificacion".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso de Certificación</h4>
+                        <h4 class="modal-title" id="myModalLabel">Certification Process</h4>
                       </div>
                       <div class="modal-body">
                         <div class="row">
@@ -830,7 +830,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
 
               }else{
-                echo "No Disponible";
+                echo "Not available";
               }
                ?>
                <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
@@ -852,7 +852,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <?php
             }*/
              ?>
-            <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Cargar Certificado</button>
+            <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Load Certificate</button>
 
           </td>
                 <!-- inicia modal estatus_Certificado -->
@@ -864,7 +864,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">Cargar Certificado</h4>
+                        <h4 class="modal-title" id="myModalLabel">Load Certificate</h4>
                       </div>
                       <div class="modal-body">
                         <div class="row">
