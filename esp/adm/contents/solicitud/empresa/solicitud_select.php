@@ -872,7 +872,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                       if($fecha > $solicitud['fecha_fin']){
                         $estatus_dspp = 7; //TERMINA PERIODO DE OBJECIÓN
                         $estatus_objecion = 'FINALIZADO';
-                        echo "<script>alerrt('paso 1');</script>";
+
 
                         //INSERTARMOS PROCESO_CERTIFICACION
                         $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
@@ -880,13 +880,13 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                           GetSQLValueString($estatus_dspp, "int"),
                           GetSQLValueString($fecha, "int"));
                         $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
-                        echo "<script>alerrt('paso 2');</script>";
+
                         //ACTUALIZAMOS EL PERIODO_OBJECION
                         $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
                           GetSQLValueString($estatus_objecion, "text"),
                           GetSQLValueString($solicitud['idperiodo_objecion'], "int"));
                         $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
-                        echo "<script>alerrt('paso 3');</script>";
+
                       }
                     }
 
