@@ -126,7 +126,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+               <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
               </tr>
 
               <tr>
@@ -148,7 +148,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
                   <ol>
                     <li>Dar clic en la opción "SOLICITUDES"</li>
-                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Seleccionar "Solicitudes EMPRESA"</li>
                     <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
                     <li>Se desplegara una ventana donde podran cargar la documentación</li>
                   </ol>

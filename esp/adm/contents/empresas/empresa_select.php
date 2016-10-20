@@ -48,109 +48,6 @@ $startRow_empresa = $pageNum_empresa * $maxRows_empresa;
 
 mysql_select_db($database_dspp, $dspp);
 
-if(isset($_GET['query'])){
-  $query_empresa = "SELECT *, empresa.idempresa AS 'idempresa', empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa', empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE idoc = $_GET[query] AND (empresa.estado IS NULL OR empresa.estado != 'ARCHIVADO') ORDER BY empresa.idempresa ASC";
-
-  $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE idoc = $_GET[query] AND (empresa.estado IS NULL OR empresa.estado != 'ARCHIVADO') ORDER BY empresa.idempresa ASC";
-
-
-
-}else if(isset($_POST['filtroPalabra']) && $_POST['filtroPalabra'] == "1"){
-  $palabraClave = $_POST['palabraClave'];
-
-  //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.estado != 'ARCHIVADO' OR empresa.estado IS NULL) AND ((idf LIKE '%$palabraClave%') OR (empresa.nombre LIKE '%$palabraClave%') OR (empresa.abreviacion LIKE '%$palabraClave%') OR (sitio_web LIKE '%$palabraClave%') OR (email LIKE '%$palabraClave%') OR (pais LIKE '%$palabraClave%') OR (razon_social LIKE '%$palabraClave%') OR (direccion_fiscal LIKE '%$palabraClave%') OR (rfc LIKE '%$palabraClave%')) ORDER BY empresa.idempresa ASC";
-
-  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.spp LIKE '%$palabraClave%' OR empresa.nombre LIKE '%$palabraClave%' OR empresa.abreviacion LIKE '%$palabraClave%' ORDER BY empresa.idempresa DESC";
-
-
-  $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE (empresa.estado != 'ARCHIVADO' OR empresa.estado IS NULL) AND ((empresa.idf LIKE '%$palabraClave%') OR (empresa.nombre LIKE '%$palabraClave%') OR (empresa.abreviacion LIKE '%$palabraClave%') OR (sitio_web LIKE '%$palabraClave%') OR (email LIKE '%$palabraClave%') OR (pais LIKE '%$palabraClave%') OR (razon_social LIKE '%$palabraClave%') OR (direccion_fiscal LIKE '%$palabraClave%') OR (rfc LIKE '%$palabraClave%')) ORDER BY empresa.idempresa ASC";
-
-
-
-}else if(isset($_POST['busquedaPais']) && $_POST['busquedaPais'] == 1){
-  $pais = $_POST['nombrePais'];
-
-  //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais' ORDER BY empresa.idempresa ASC";
-
-
-  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais' ORDER BY empresa.idempresa DESC";
-
-
-  $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE empresa.pais = '$pais' ORDER BY empresa.idempresa ASC";
-
-}else if(isset($_POST['busquedaOC']) && $_POST['busquedaOC'] == 1){
-  $idoc = $_POST['idoc'];
-  if($idoc == "sinOC"){
-    //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc IS NULL || empresa.idoc = '' ORDER BY empresa.idempresa ASC";
-
-
-  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc IS NULL || empresa.idoc = '' ORDER BY empresa.idempresa DESC";
-
-
-  $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE empresa.idoc IS NULL || empresa.idoc = '' ORDER BY empresa.idempresa ASC";
-
-  }else{
-    //query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = '$idoc' ORDER BY empresa.idempresa ASC";
-
-  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = '$idoc' ORDER BY empresa.idempresa DESC";
-
-
-    $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE empresa.idoc = '$idoc' ORDER BY empresa.idempresa ASC";
-  }
-
-}else if(isset($_POST['busquedaEstatus']) && $_POST['busquedaEstatus'] == 1){
-  $estatus = $_POST['estatus'];
-
-  //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estado = '$estatus' ORDER BY empresa.idempresa ASC";
-  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.estatus_empresa, empresa.intermediario, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa = '$estatus' ORDER BY empresa.idempresa DESC";
-
-
-
-  $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE empresa.estado = '$estatus' ORDER BY empresa.idempresa ASC";
-
-}else{
-  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa ORDER BY empresa.idempresa DESC";
-
-  //$query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion, empresa.pais, empresa.estatus_publico, empresa.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_dspp.nombre AS 'nombre_dspp' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp";
-
-
-  //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa', empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa', empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.estado IS NULL) OR (empresa.estado != 'ARCHIVADO') ORDER BY empresa.idempresa ASC";
-  $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE (empresa.estado IS NULL) OR (empresa.estado != 'ARCHIVADO') ORDER BY empresa.idempresa ASC";
-
-}
-
-$query_limit_empresa = sprintf("%s LIMIT %d, %d", $query_empresa, $startRow_empresa, $maxRows_empresa);
-$empresa = mysql_query($query_limit_empresa, $dspp) or die(mysql_error());
-
-
-
-if (isset($_GET['totalRows_empresa'])) {
-  $totalRows_empresa = $_GET['totalRows_empresa'];
-} else {
-  $all_empresa = mysql_query($query_empresa);
-  $totalRows_empresa = mysql_num_rows($all_empresa);
-}
-$totalPages_empresa = ceil($totalRows_empresa/$maxRows_empresa)-1;
-
-$queryString_empresa = "";
-if (!empty($_SERVER['QUERY_STRING'])) {
-  $params = explode("&", $_SERVER['QUERY_STRING']);
-  $newParams = array();
-  foreach ($params as $param) {
-    if (stristr($param, "pageNum_empresa") == false && 
-        stristr($param, "totalRows_empresa") == false) {
-      array_push($newParams, $param);
-    }
-  }
-  if (count($newParams) != 0) {
-    $queryString_empresa = "&" . htmlentities(implode("&", $newParams));
-  }
-}
-
-
-$queryString_empresa = sprintf("&totalRows_empresa=%d%s", $totalRows_empresa, $queryString_empresa);
-
-
 $timeActual = time();
 
   if(isset($_POST['archivar']) && $_POST['archivar'] == 1){
@@ -459,6 +356,155 @@ $timeActual = time();
     //echo '<script>location.href="?EMPRESAS&select";</script>';
   } /* TERMINA BOTON ACTUALIZAR LISTA empresa*/
 
+
+
+if(isset($_GET['query'])){
+  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $_GET[query] ORDER BY empresa.idempresa DESC";
+
+  $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE idoc = $_GET[query] AND (empresa.estado IS NULL OR empresa.estado != 'ARCHIVADO') ORDER BY empresa.idempresa ASC";
+
+
+
+}else if(isset($_POST['filtroPalabra']) && $_POST['filtroPalabra'] == "1"){
+  $palabraClave = $_POST['palabraClave'];
+
+  //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.estado != 'ARCHIVADO' OR empresa.estado IS NULL) AND ((idf LIKE '%$palabraClave%') OR (empresa.nombre LIKE '%$palabraClave%') OR (empresa.abreviacion LIKE '%$palabraClave%') OR (sitio_web LIKE '%$palabraClave%') OR (email LIKE '%$palabraClave%') OR (pais LIKE '%$palabraClave%') OR (razon_social LIKE '%$palabraClave%') OR (direccion_fiscal LIKE '%$palabraClave%') OR (rfc LIKE '%$palabraClave%')) ORDER BY empresa.idempresa ASC";
+
+  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.spp LIKE '%$palabraClave%' OR empresa.nombre LIKE '%$palabraClave%' OR empresa.abreviacion LIKE '%$palabraClave%' ORDER BY empresa.idempresa DESC";
+
+
+  $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE (empresa.estado != 'ARCHIVADO' OR empresa.estado IS NULL) AND ((empresa.idf LIKE '%$palabraClave%') OR (empresa.nombre LIKE '%$palabraClave%') OR (empresa.abreviacion LIKE '%$palabraClave%') OR (sitio_web LIKE '%$palabraClave%') OR (email LIKE '%$palabraClave%') OR (pais LIKE '%$palabraClave%') OR (razon_social LIKE '%$palabraClave%') OR (direccion_fiscal LIKE '%$palabraClave%') OR (rfc LIKE '%$palabraClave%')) ORDER BY empresa.idempresa ASC";
+
+
+
+}else if(isset($_POST['busqueda_filtros']) && $_POST['busqueda_filtros'] == 1){
+  $idoc = $_POST['buscar_oc'];
+  $pais = $_POST['buscar_pais'];
+  $estatus = $_POST['buscar_estatus'];
+  $producto = $_POST['buscar_producto'];
+  $idempresa_producto = '';
+
+  if(!empty($idoc) && !empty($pais) && !empty($producto) && !empty($estatus)){
+
+
+    $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE empresa.idoc = $idoc AND empresa.pais = '$pais' AND empresa.estatus_dspp = $estatus AND producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
+    $total_idempresa = mysql_num_rows($query_productos);
+    $cont_idempresa = 1;
+    while($producto_empresa = mysql_fetch_assoc($query_productos)){
+      $idempresa_producto .= "empresa.idempresa = '$producto_empresa[idempresa]'";
+      if($cont_idempresa < $total_idempresa){
+        $idempresa_producto .= " OR ";
+      }
+      $cont_idempresa++;
+    }
+
+    $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE $idempresa_producto ORDER BY empresa.idempresa DESC";
+
+
+  }else if(!empty($idoc) && !empty($pais) && !empty($estatus) && empty($producto)){
+
+    $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $idoc AND empresa.pais = '$pais' AND empresa.estatus_dspp = $estatus ORDER BY empresa.idempresa DESC";
+
+
+  }else if(!empty($idoc) && !empty($pais) && empty($estatus) && empty($producto)){ 
+
+    $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $idoc AND empresa.pais = '$pais' ORDER BY empresa.idempresa DESC";
+
+
+  }else if(!empty($idoc) && empty($pais) && empty($estatus) && empty($producto)){
+
+    $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $idoc ORDER BY empresa.idempresa DESC";
+
+
+  }else if(empty($idoc) && !empty($pais) && empty($estatus) && empty($producto)){
+
+    $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais' ORDER BY empresa.idempresa DESC";
+  }else if(empty($idoc) && empty($pais) && empty($estatus) && !empty($producto)){
+    $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
+    $total_idempresa = mysql_num_rows($query_productos);
+    $cont_idempresa = 1;
+    while($producto_empresa = mysql_fetch_assoc($query_productos)){
+      $idempresa_producto .= "empresa.idempresa = '$producto_empresa[idempresa]'";
+      if($cont_idempresa < $total_idempresa){
+        $idempresa_producto .= " OR ";
+      }
+      $cont_idempresa++;
+    }
+
+    $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE $idempresa_producto ORDER BY empresa.idempresa DESC";
+
+
+  }else if(empty($idoc) && !empty($pais) && empty($estatus) && !empty($producto)){
+    $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE empresa.pais = '$pais' AND producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
+    $total_idempresa = mysql_num_rows($query_productos);
+    $cont_idempresa = 1;
+    while($producto_empresa = mysql_fetch_assoc($query_productos)){
+      $idempresa_producto .= "empresa.idempresa = '$producto_empresa[idempresa]'";
+      if($cont_idempresa < $total_idempresa){
+        $idempresa_producto .= " OR ";
+      }
+      $cont_idempresa++;
+    }
+
+
+    $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE $idempresa_producto ORDER BY empresa.idempresa DESC";
+
+
+  }else if(empty($idoc) && empty($pais) && !empty($estatus) && empty($producto)){
+
+    $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_dspp = $estatus ORDER BY empresa.idempresa DESC";
+
+
+  }else{
+    $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa ORDER BY empresa.idempresa DESC";
+  }
+
+
+}else{
+  $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', certificado.idcertificado, certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa ORDER BY empresa.idempresa DESC";
+
+  //$query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion, empresa.pais, empresa.estatus_publico, empresa.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_dspp.nombre AS 'nombre_dspp' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp";
+
+
+  //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa', empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa', empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.estado IS NULL) OR (empresa.estado != 'ARCHIVADO') ORDER BY empresa.idempresa ASC";
+  $queryExportar = "SELECT empresa.*, contacto.*  FROM empresa LEFT JOIN contacto ON empresa.idempresa = contacto.idempresa WHERE (empresa.estado IS NULL) OR (empresa.estado != 'ARCHIVADO') ORDER BY empresa.idempresa ASC";
+
+}
+
+$query_limit_empresa = sprintf("%s LIMIT %d, %d", $query_empresa, $startRow_empresa, $maxRows_empresa);
+$empresa = mysql_query($query_limit_empresa, $dspp) or die(mysql_error());
+
+
+
+if (isset($_GET['totalRows_empresa'])) {
+  $totalRows_empresa = $_GET['totalRows_empresa'];
+} else {
+  $all_empresa = mysql_query($query_empresa);
+  $totalRows_empresa = mysql_num_rows($all_empresa);
+}
+$totalPages_empresa = ceil($totalRows_empresa/$maxRows_empresa)-1;
+
+$queryString_empresa = "";
+if (!empty($_SERVER['QUERY_STRING'])) {
+  $params = explode("&", $_SERVER['QUERY_STRING']);
+  $newParams = array();
+  foreach ($params as $param) {
+    if (stristr($param, "pageNum_empresa") == false && 
+        stristr($param, "totalRows_empresa") == false) {
+      array_push($newParams, $param);
+    }
+  }
+  if (count($newParams) != 0) {
+    $queryString_empresa = "&" . htmlentities(implode("&", $newParams));
+  }
+}
+
+
+$queryString_empresa = sprintf("&totalRows_empresa=%d%s", $totalRows_empresa, $queryString_empresa);
+
+
+
+
   $rowempresa = mysql_query("SELECT * FROM empresa",$dspp) or die(mysql_error());
     $estatus_publico = "";
 
@@ -478,128 +524,110 @@ $timeActual = time();
 
   }*/
 
- $detalle_empresa = mysql_query($query_empresa,$dspp) or die(mysql_error());
- $total_empresa = mysql_num_rows($detalle_empresa);
+  $detalle_empresa = mysql_query($query_empresa,$dspp) or die(mysql_error());
+  $total_empresa = mysql_num_rows($detalle_empresa);
 
- $row_interno = mysql_query("SELECT * FROM estatus_interno", $dspp) or die(mysql_error());
+  $row_interno = mysql_query("SELECT * FROM estatus_interno", $dspp) or die(mysql_error());
+
+  $row_oc = mysql_query("SELECT * FROM oc", $dspp) or die(mysql_error());
+  $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
+  $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempresa IS NOT NULL GROUP BY producto",$dspp) or die(mysql_error())
  ?>
 
+    <form action="" method="POST">
+      <div class="col-md-12 alert alert-info">
+        <div class="text-center col-md-12">
+          <b style="color:#d35400">Seleccione los parametros de los cuales desea realizar la busqueda</b>
+        </div> 
+        <div class="row">
+          <div class="col-xs-3">
+            Organismo de Certificación
+            <select name="buscar_oc" class="form-control">
+              <option value=''>Selecciona un organismo de certificación</option>
+              <?php 
+              while($oc = mysql_fetch_assoc($row_oc)){
+                echo "<option value='$oc[idoc]'>$oc[abreviacion]</option>";
+              }
+               ?>
+            </select>
+          </div>
+          <div class="col-xs-3">
+            País
+            <select name="buscar_pais" class="form-control">
+              <option value=''>Selecciona un país</option>
+              <?php 
+              while($pais = mysql_fetch_assoc($row_pais)){
+                echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
+              }
+               ?>
+            </select>
+          </div>
+          <div class="col-xs-3">
+            Producto
+            <select class="form-control" name="buscar_producto" id="">
+              <option value=''>Seleccione un producto</option>
+              <?php 
+              while($lista_productos = mysql_fetch_assoc($query_productos)){
+                echo "<option value='$lista_productos[producto]'>$lista_productos[producto]</option>";
+              }
+               ?>
+            </select>
+          </div>
+          <div class="col-xs-3">
+            Estatus Certificado
+            <select class="form-control" name="buscar_estatus" id="">
+              <option value=''>Estatus Certificado</option>
+              <option value="13">CERTIFICADA</option>
+              <option value="14">AVISO DE RENOVACIÓN</option>
+              <option value="15">CERTIFICADO POR EXPIRAR</option>
+              <option value="16">CERTIFICADO EXPIRADO</option>
+            </select>
+          </div>
 
-  <hr>
-  <div class="row">
-    <div class="col-xs-6">
-      <p class="alert alert-info" >Busqueda extendida(idf, nombre, abreviacion, sitio web, email, país, etc...). Sensible a acentos.</p>
-
-      <form method="post" name="filtro" action="" enctype="application/x-www-form-urlencoded">
+          <div class="col-xs-12">
+            <button type="submit" class="btn btn-success" name="busqueda_filtros" style="width:100%" value="1">Buscar</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <form action="" method="POST">
+      <div class="col-md-12">
         <div class="input-group">
-          <input type="text" class="form-control" name="palabraClave" placeholder="Palabra clave...">
           <span class="input-group-btn">
-            <input type="hidden" name="filtroPalabra" value="1">
-            <button class="btn btn-default" type="submit" >Buscar !</button>
+            <button class="btn btn-default" name="busqueda_palabra" value="1" type="submit">Buscar</button>
           </span>
-        </div><!-- /input-group -->        
-      </form>
-    </div><!-- /.col-lg-6 -->
-    <div class="col-xs-6">
-      <div class="alert alert-warning col-xs-12">
-        Consulta Empresas  | 
-        <span> 
-          <?php 
-            $ejecutar = mysql_query($query_empresa,$dspp) or die(mysql_error());
-            $total_empresa = mysql_num_rows($ejecutar);
-          ?>
-            Total Empresas: <strong style="color:red"><?php echo $total_empresa; ?></strong>
-
-        </span>
+          <input type="text" class="form-control" name="palabra" placeholder="Buscar por: #SPP, Nombre, Abreviacion">
+        </div><!-- /input-group -->
       </div>
-      <div class="col-lg-6 col-xs-12">
-        <form action="" name="formularioPais" method="POST" enctype="application/x-www-form-urlencoded">
-          <?php 
-          $row_paises = mysql_query("SELECT * FROM paises",$dspp) or die(mysql_error());
-           ?>
-          <select name="nombrePais" id="" onchange="document.formularioPais.submit()">
-            <option value="">Buscar País</option>
-            <?php 
-            while($datosPais = mysql_fetch_assoc($row_paises)){
-            ?>
-            <option class="form-control" value="<?php echo utf8_encode($datosPais['nombre']);?>" ><?php echo utf8_encode($datosPais['nombre']);?></option>
-            <?php
-            }
-             ?>
-          </select>
-          <input type="hidden" name="busquedaPais" value="1">
-        </form>
-      </div>
-
-      <div class="col-lg-6 col-md-12 col-xs-6">
-        <form action="" name="formularioOC" method="POST" enctype="application/x-www-form-urlencoded">
-          <?php 
-          $row_oc = mysql_query("SELECT * FROM oc",$dspp) or die(mysql_error());
-           ?>
-          <select name="idoc" id="" onchange="document.formularioOC.submit()">
-            <option value="">Buscar OC</option>
-            <option value="sinOC">SIN OC</option>
-            <?php 
-            while($datosOC = mysql_fetch_assoc($row_oc)){
-            ?>
-            <option class="form-control" value="<?php echo $datosOC['idoc'];?>" ><?php echo $datosOC['abreviacion'];?></option>
-            <?php
-            }
-             ?>
-          </select>
-          <input type="hidden" name="busquedaOC" value="1">
-        </form>
-      </div>
-
-      <div class="col-lg-6 col-md-12 col-xs-6">
-        <form action="" name="formularioEstatus" method="POST" enctype="application/x-www-form-urlencoded">
-          <select name="estatus" id="" onchange="document.formularioEstatus.submit()">
-            <option value="">ESTATUS CERTIFICADO</option>
-            <option value="13">CERTIFICADA</option>
-            <option value="14">AVISO DE RENOVACIÓN</option>
-            <option value="15">CERTIFICADO POR EXPIRAR</option>
-            <option value="16">CERTIFICADO EXPIRADO</option>
-          </select>
-          <input type="hidden" name="busquedaEstatus" value="1">
-        </form>
-      </div>
-
-    </div>
-
-
-  </div>
-
-
-  <hr>
-
-  <a class="btn btn-sm btn-warning" href="?EMPRESA&filed">Empresas Archivadas</a>
-
-
-<!--<div class="panel panel-default fluid">-->
-  <!--<div class="panel-heading">-->
-    <div style="display:inline;margin-right:10em;">
-      <button class="btn btn-sm btn-success" onclick="guardarDatos()"><span class="glyphicon glyphicon-flempresay-disk" aria-hidden="true"></span> Guardar Cambios</button><!-- BOTON GUARDAR DATOS -->
-    </div>
-    <!--<div style="display:inline;margin-right:10em;">
-      Exportar Contactos
-      <a href="#" onclick="document.formulario1.submit()"><img src="../../img/pdf.png"></a>
-      <a href="#" onclick="document.formulario2.submit()"><img src="../../img/excel.png"></a>
-    </div>-->
- 
-  <!--</div>-->
-
-  <form name="formulario1" method="POST" action="../../reporte.php">
-    <input type="hidden" name="contactoPDF" value="1">
-    <input type="hidden" name="queryPDF" value="<?php echo $queryExportar; ?>">
-  </form>
-  <form name="formulario2" method="POST" action="../../reporte.php">
-    <input type="hidden" name="contactoExcel" value="2">
-    <input type="hidden" name="queryExcel" value="<?php echo $queryExportar; ?>">
-  </form>
+    </form>
   
   <!--<div class="panel-body">-->
   <table class="table table-condensed table-bordered table-hover" style="font-size:11px;">
     <thead>
+      <tr>
+        <th colspan="3">
+          <!--<a class="btn btn-sm btn-warning" href="?EMPRESA&filed">OPP(s) Archivado(s)</a>-->
+          <button class="btn btn-sm btn-success" onclick="guardarDatos()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Cambios</button><!-- BOTON GUARDAR DATOS -->
+        </th>
+        <th colspan="4">
+          Exportar Contactos
+          <!--<a href="#" onclick="document.formulario1.submit()"><img src="../../img/pdf.png"></a>
+          <a href="#" onclick="document.formulario2.submit()"><img src="../../img/excel.png"></a>-->
+          <form name="formulario1" method="POST" action="../../reporte.php">
+            <input type="hidden" name="contactoPDF" value="1">
+            <input type="hidden" name="queryPDF" value="<?php echo $queryExportar; ?>">
+          </form> 
+          <form name="formulario2" method="POST" action="../../reporte.php">
+            <input type="hidden" name="contactoExcel" value="2">
+            <input type="hidden" name="queryExcel" value="<?php echo $queryExportar; ?>">
+          </form>
+
+        </th>
+        <th colspan="6" class="success text-center">
+          <p style="font-size:12px;color:red">Total OPP(s): <?php echo $total_empresa; ?></p>
+        </th>
+      </tr>
+
       <tr>
         <th class="text-center">#SPP</th>
         <th class="text-center">Nombre</th>
