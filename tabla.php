@@ -15,6 +15,12 @@
                   </tr>
 
                   <tr>
+                    <td colspan="2" style="padding-top:20px;padding-bottom:20px;">
+                      '.$mensaje_renovacion.'
+                    </td>
+                  </tr>
+
+                  <tr>
                     <td colspan="2">
                       <p>Reciban ustedes un cordial y atento saludo, así como el deseo de éxito en todas y cada una de sus actividades</p>
                       <p>La presente tiene por objetivo solicitar el "Pago de Membresia SPP" para la renovación de su certificado, por el monto de: <span style="color:red;">'.$_POST['monto_membresia'].'</span>.</p>
@@ -28,7 +34,7 @@
                   <tr>
                     <td>
                       <ul>
-                        '.$documentacion_nombres.'
+                        DATOS BANCARIOS
                       </ul>
                     </td>
                   </tr>

@@ -52,7 +52,7 @@ if(isset($_POST['buscar']) && $_POST['buscar'] == 1){
 
   $query_opp = "SELECT opp.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', num_socios.idnum_socios, num_socios.numero FROM opp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp WHERE opp.idoc = $idoc AND (opp.spp LIKE '%$busqueda%' OR opp.nombre LIKE '%$busqueda%' OR opp.abreviacion LIKE '%$busqueda%') ORDER BY opp.nombre ASC";
 }else{
-  $query_opp = "SELECT opp.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', num_socios.idnum_socios, num_socios.numero FROM opp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp WHERE opp.idoc = $idoc ORDER BY opp.nombre ASC";
+  $query_opp = "SELECT opp.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', num_socios.idnum_socios, num_socios.numero FROM opp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp WHERE opp.idoc = $idoc GROUP BY opp.idopp ORDER BY opp.nombre ASC";
 }
 
 
@@ -298,7 +298,23 @@ if(isset($_POST['actualizacion_opp']) && $_POST['actualizacion_opp'] == 'actuali
           //echo "cont: $cont | VIGENCIA FIN($datos_opp[idopp]): $vigenciafin :TOTAL Certificado: $totalCertificado<br>";
         }      
       }/************************************ TERMINA VIGENCIA FIN DEL CERTIFICADO ***********************************/
+    if(isset($_POST['eliminar_opp']) && $_POST['eliminar_opp'] == $datos_opp['idopp']){
+      //se agrega el estatus "eliminado" a la OPP;
+      /*$idopp = $_POST['idopp'];
+      $estatus_opp = "ELIMINADO";
+      $updateSQL = sprintf("UPDATE opp SET estatus_opp = %s WHERE idopp = %s",
+        GetSQLValueString($estatus_opp, "text"),
+        GetSQLValueString($idopp, "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+      */
+      $idopp = $datos_opp['idopp'];
+      $deleteSQL = sprintf("DELETE FROM opp WHERE idopp = %s", 
+        GetSQLValueString($idopp, "int"));
+      $eliminar = mysql_query($deleteSQL, $dspp) or die(mysql_error());
 
+      $mensaje = "OPP Eliminada Correctamente";
+
+    }
 
       if(isset($_POST['ocAsignado'.$datos_opp['idopp']])){ //********************************** INICIA LA ASIGNACION DE OC ***********************************/
         $ocAsignado = $_POST['ocAsignado'.$datos_opp['idopp']];
@@ -310,23 +326,7 @@ if(isset($_POST['actualizacion_opp']) && $_POST['actualizacion_opp'] == 'actuali
 
       $cont++;
     }
-    if(isset($_POST['eliminar_opp']) && $_POST['eliminar_opp'] == 1){
-      //se agrega el estatus "eliminado" a la OPP;
-      /*$idopp = $_POST['idopp'];
-      $estatus_opp = "ELIMINADO";
-      $updateSQL = sprintf("UPDATE opp SET estatus_opp = %s WHERE idopp = %s",
-        GetSQLValueString($estatus_opp, "text"),
-        GetSQLValueString($idopp, "int"));
-      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
-      */
-      $idopp = $_POST['idopp'];
-      $deleteSQL = sprintf("DELETE FROM opp WHERE idopp = %s", 
-        GetSQLValueString($idopp, "int"));
-      $eliminar = mysql_query($deleteSQL, $dspp) or die(mysql_error());
 
-      $mensaje = "OPP Eliminada Correctamente";
-
-    }
 
     echo '<script>location.href="?OPP&select";</script>';
 
@@ -489,7 +489,7 @@ function preguntar(){
                 </td>
                 <td>
                   <!-- ELIMINAR OPP -->
-                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Organización" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_opp" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Organización" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_opp" value="<?php echo $opp['idopp']; ?>"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
                   <input type="hidden" name="idopp" value="<?php echo $opp['idopp']; ?>">
                 </td>
               </tr>

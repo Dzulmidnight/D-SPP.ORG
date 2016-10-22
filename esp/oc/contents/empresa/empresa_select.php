@@ -308,25 +308,28 @@ if(isset($_POST['actualizacion_empresa']) && $_POST['actualizacion_empresa'] == 
         }
       } //********************************** TERMINA LA ASIGNACION DE OC ***********************************/
 
+      if(isset($_POST['eliminar_empresa']) && $_POST['eliminar_empresa'] == $datos_empresa['idempresa']){
+        //se agrega el estatus "eliminado" a la OPP;
+        /*$idempresa = $_POST['idempresa'];
+        $estatus_empresa = "ELIMINADO";
+        $updateSQL = sprintf("UPDATE opp SET estatus_empresa = %s WHERE idempresa = %s",
+          GetSQLValueString($estatus_empresa, "text"),
+          GetSQLValueString($idempresa, "int"));
+        $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+        */
+        $idempresa = $datos_empresa['idempresa'];
+        $deleteSQL = sprintf("DELETE FROM empresa WHERE idempresa = %s", 
+          GetSQLValueString($idempresa, "int"));
+        $eliminar = mysql_query($deleteSQL, $dspp) or die(mysql_error());
+
+        $mensaje = "Empresa Eliminada Correctamente";
+
+      }
+
+
       $cont++;
     }
-    if(isset($_POST['eliminar_empresa']) && $_POST['eliminar_empresa'] == 1){
-      //se agrega el estatus "eliminado" a la OPP;
-      /*$idempresa = $_POST['idempresa'];
-      $estatus_empresa = "ELIMINADO";
-      $updateSQL = sprintf("UPDATE opp SET estatus_empresa = %s WHERE idempresa = %s",
-        GetSQLValueString($estatus_empresa, "text"),
-        GetSQLValueString($idempresa, "int"));
-      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
-      */
-      $idempresa = $_POST['idempresa'];
-      $deleteSQL = sprintf("DELETE FROM empresa WHERE idempresa = %s", 
-        GetSQLValueString($idempresa, "int"));
-      $eliminar = mysql_query($deleteSQL, $dspp) or die(mysql_error());
 
-      $mensaje = "Empresa Eliminada Correctamente";
-
-    }
 
     echo '<script>location.href="?EMPRESAS&select";</script>';
 
@@ -484,7 +487,7 @@ function preguntar(){
                 </td>
                 <td>
                   <!-- ELIMINAR EMPRESA -->
-                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Organización" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_empresa" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Organización" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_empresa" value="<?php echo $empresa['idempresa']; ?>"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
                   <input type="hidden" name="idempresa" value="<?php echo $empresa['idempresa']; ?>">
                 </td>
               </tr>

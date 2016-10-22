@@ -114,6 +114,11 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
     $asunto = "D-SPP | Proceso de Certificación, Dictamen Positivo";
 
     if($_POST['tipo_solicitud'] == 'RENOVACION'){
+      if(isset($_POST['mensaje_renovacion'])){
+        $mensaje_renovacion = $_POST['mensaje_renovacion'];
+      }else{
+        $mensaje_renovacion = '';
+      }
 
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
         GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
@@ -169,6 +174,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   </tr>
 
                   <tr>
+                    <td colspan="2" style="padding-top:20px;padding-bottom:20px;">
+                      '.$mensaje_renovacion.'
+                    </td>
+                  </tr>
+
+                  <tr>
                     <td colspan="2">
                       <p>Reciban ustedes un cordial y atento saludo, así como el deseo de éxito en todas y cada una de sus actividades</p>
                       <p>La presente tiene por objetivo solicitar el "Pago de Membresia SPP" para la renovación de su certificado, por el monto de: <span style="color:red;">'.$_POST['monto_membresia'].'</span>.</p>
@@ -182,7 +193,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   <tr>
                     <td>
                       <ul>
-                        DATOS BANCARIOS
+                        Datos Bancarios Anexos en el correo.
                       </ul>
                     </td>
                   </tr>
@@ -197,6 +208,15 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
             </body>
             </html>
       ';
+
+      $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE nombre = 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
+      $documentacion = mysql_fetch_assoc($row_documentacion);
+          $mail->AddAttachment($documentacion['archivo']);
+   
+
+          if(!empty($archivo)){
+            $mail->AddAttachment($archivo);
+          }
           $mail->AddAddress($detalle_opp['contacto1_email']);
           $mail->AddAddress($detalle_opp['contacto2_email']);
           $mail->AddAddress($detalle_opp['adm1_email']);
@@ -814,7 +834,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               <div id="tablaCorreo" style="display:none">
                                 <div class="col-xs-12"  style="margin-top:10px;">
                                   <?php 
-                                  if($solicitud['tipo_solicitud'] = 'RENOVACION'){
+                                  if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                                   ?>
                                     <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP</p>
                                     <div class="col-xs-6">
@@ -829,7 +849,13 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                           
                                         </div>
                                       </div>
+                                      <div class="col-xs-12">
+                                        <h4 class="alert alert-warning">MENSAJE OPP( <small>*opcional. <span style="color:red">Campo para enviar un mensaje al OPP sobre el Dictamen Positivo</span></small>)</h4>
+                                        <textarea name="mensaje_renovacion" class="form-control" id="textareaMensaje" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé" readonly></textarea>
+
+                                      </div>
                                     </div>
+
                                     <div class="col-xs-6">
                                       <div class="col-xs-12">
                                         <h4>ARCHIVOS ADJUNTOS( <small>Archivos adjuntos dentro del email</small> )</h4>
@@ -837,7 +863,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                           echo '<h5 style="font-size:12px;" class="alert alert-warning">
                                           <ul>
                                             <li>Está Organización se encuentra en "Proceso de Renovación del Certificado", por lo tanto no se enviara "Contrato de Uso".</li>
-                                            <li>Solo las Organizaciones nuevas que no cuentan con registro se les enviara "Contrato de uso".</li>
+                                            <li style="color:red;">El pago de la Membresia SPP se considera una ratificacionón de la firma del contrato.</li>
                                           </ul>
                                           </h5>';
                                          ?>
@@ -848,7 +874,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       </div>
 
                                       <div class="col-xs-12">
-                                        <h4>ARCHIVO EXTRA( <small>Anexar algun otro archivo en diferente a los enviados por SPP GLOBAL</small>)</h4>
+                                        <h4>ARCHIVO EXTRA( <small><span style="color:red">*opcional</span>. Anexar algun otro archivo en diferente a los enviados por SPP GLOBAL</small>)</h4>
                                         <div class="col-xs-12">
                                           <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
                                         </div>
@@ -1128,48 +1154,56 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           <div class="col-md-6">
                             <h4>Cargar Certificado</h4>
                             <?php 
-
                             if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idformato_evaluacion']) && isset($solicitud['idinforme_evaluacion'])){
 
-                              if(isset($solicitud['idcertificado'])){
-                                $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
-                                $certificado = mysql_fetch_assoc($row_certificado);
-                                $inicio = strtotime($certificado['vigencia_inicio']);
-                                $fin = strtotime($certificado['vigencia_fin']);
-                              ?>
-                                <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
-                                <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
-                              <?php
-                              }else{
-                              ?>
-                                <div class="col-md-12">
-                                  <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="fecha_inicio">Fecha Inicio</label> 
-                                  <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd/mm/aaaa" required> 
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="fecha_fin">Fecha Fin</label>
-                                  <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd/mm/aaaa" required>
-                                </div>
-                                
-                                <label for="certificado">Por favor seleccione el Certificado</label>
-                                <input type="file" name="certificado" id="certificado" class="form-control" required>
-                                <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>
+                                $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
+                                $formato = mysql_fetch_assoc($row_formato);
+                                $row_informe = mysql_query("SELECT * FROM informe_evaluacion WHERE idinforme_evaluacion = $solicitud[idinforme_evaluacion]", $dspp) or die(mysql_error());
+                                $informe = mysql_fetch_assoc($row_informe);
+                                $row_dictamen = mysql_query("SELECT * FROM dictamen_evaluacion WHERE iddictamen_evaluacion = $solicitud[iddictamen_evaluacion]", $dspp) or die(mysql_error());
+                                $dictamen = mysql_fetch_assoc($row_dictamen);
 
-                              <?php
-                              }
-                            ?>
-                            <?php
+                                if($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO'){
+                                  if(isset($solicitud['idcertificado'])){
+                                    $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
+                                    $certificado = mysql_fetch_assoc($row_certificado);
+                                    $inicio = strtotime($certificado['vigencia_inicio']);
+                                    $fin = strtotime($certificado['vigencia_fin']);
+                                  ?>
+                                    <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
+                                    <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
+                                  <?php
+                                  }else{
+                                  ?>
+                                    <div class="col-md-12">
+                                      <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="fecha_inicio">Fecha Inicio</label> 
+                                      <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd/mm/aaaa" required> 
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="fecha_fin">Fecha Fin</label>
+                                      <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd/mm/aaaa" required>
+                                    </div>
+                                    
+                                    <label for="certificado">Por favor seleccione el Certificado</label>
+                                    <input type="file" name="certificado" id="certificado" class="form-control" required>
+                                    <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>  
+                                  <?php
+                                  }
+                                }else{
+                                  echo '<p class="alert alert-warning">
+                                  Una vez aprobado el "Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
+                              </p> ';
+                                }
+
                             }else{
-                            ?>
-                              <p class="alert alert-warning">
+                              echo '<p class="alert alert-warning">
                                 Una vez aprobado el "Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
-                              </p> 
-                            <?php
+                              </p> ';
                             }
-                             ?>
+                            ?>
                           </div>
                         </div>
                       </div>

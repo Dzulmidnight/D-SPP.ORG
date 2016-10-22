@@ -479,6 +479,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		$destinatario = $oc['email1'];
 
         $mail->AddAddress($destinatario);
+        $mail->AddAddress($oc['email2']);
 	    $mail->AddBCC($administrador);
 	    $mail->AddBCC($spp_global);
         //$mail->Username = "soporte@d-spp.org";
