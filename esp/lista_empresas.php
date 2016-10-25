@@ -8,7 +8,7 @@ mysql_select_db($database_dspp, $dspp);
 if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
   $palabra = $_POST['palabra'];
 
-  $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.spp LIKE '%$palabra%' OR empresa.nombre LIKE '%$palabra%' OR empresa.abreviacion LIKE '%$palabra%' OR empresa.pais LIKE '%$palabra%' OR oc.abreviacion LIKE '%$palabra%' OR empresa.email LIKE '%$palabra%' OR empresa.telefono LIKE '%$palabra%') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
+  $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.spp LIKE '%$palabra%' OR empresa.nombre LIKE '%$palabra%' OR empresa.abreviacion LIKE '%$palabra%' OR empresa.pais LIKE '%$palabra%' OR oc.abreviacion LIKE '%$palabra%' OR empresa.email LIKE '%$palabra%' OR empresa.telefono LIKE '%$palabra%') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
 }else if(isset($_POST['busqueda_filtros']) && $_POST['busqueda_filtros'] == 1){
   $idoc = $_POST['idoc'];
   $pais = $_POST['pais'];
@@ -29,14 +29,14 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idempresa++;
     }
 
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin, productos.idproducto, productos.producto FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE (empresa.idoc = '$idoc' AND empresa.pais = '$pais' AND $idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY empresa.idempresa";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin, productos.idproducto, productos.producto FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE (empresa.idoc = '$idoc' AND empresa.pais = '$pais' AND $idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY empresa.idempresa";
 
   }else if(!empty($pais) && !empty($idoc) && empty($producto)){ ///BUSQUEDA DE PAIS Y OC
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.idoc = '$idoc' AND empresa.pais = '$pais') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.idoc = '$idoc' AND empresa.pais = '$pais') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
   }else if(empty($pais) && !empty($idoc) && empty($producto)){ ///BUSQUEDA DE OC
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.idoc = '$idoc') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.idoc = '$idoc') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
   }else if(!empty($pais) && empty($idoc) && empty($producto)){///BUSQUEDA DE PAIS
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.pais = '$pais') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.pais = '$pais') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
   }else if(!empty($pais) && !empty($producto) && empty($idoc)){///BUSQUEDA PAIS Y PRODUCTO
     //$query_productos = mysql_query("SELECT idempresa FROM productos WHERE producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
     $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE pais = '$pais' AND producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
@@ -50,7 +50,7 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idempresa++;
     }
 
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin, productos.idproducto, productos.producto FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE ( empresa.pais = '$pais' AND $idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY empresa.idempresa";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin, productos.idproducto, productos.producto FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE ( empresa.pais = '$pais' AND $idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY empresa.idempresa";
   }else if(!empty($producto) && empty($idoc) && empty($pais)){///BUSQUEDA DE PRODUCTO
     $query_productos = mysql_query("SELECT idempresa FROM productos WHERE producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
     $total_idempresa = mysql_num_rows($query_productos);
@@ -63,19 +63,19 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idempresa++;
     }
 
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE ($idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE ($idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
 
   }else{
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'";
   }
 
 
 }else{
-  $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' ORDER BY certificado.vigencia_fin DESC";
+  $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' ORDER BY certificado.vigencia_fin DESC";
 }
 
 $row_empresa = mysql_query($query_empresa, $dspp) or die(mysql_error());
-//$row_empresa = mysql_query("SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'", $dspp) or die(mysql_error());
+//$row_empresa = mysql_query("SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'", $dspp) or die(mysql_error());
 $total_empresa = mysql_num_rows($row_empresa);
 
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
@@ -114,10 +114,10 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
       <div class="col-md-12">
         <ul class="nav nav-pills">
           <li role="presentation" style="margin:0px;padding:0px;"><a href="index.php"><img src="../img/FUNDEPPO.png" alt=""></a></li>
-          <li role="presentation" <? if(isset($_GET['empresa'])){?> class="active" <? }?>><a href="?empresa" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar sesión">Organización de Pequeños Productores</a></li>
-          <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar Sesión">Organismo de Certificación</a></li>
-          <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar sesión">EMPRESAS</a></li>
-          <li role="presentation" <? if(isset($_GET['ADM'])){?> class="active" <? }?>><a href="?ADM">ADM</a></li>
+          <li role="presentation" <? if(isset($_GET['empresa'])){?> class="active" <? }?>><a href="index.php?OPP" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar sesión">Organización de Pequeños Productores</a></li>
+          <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="index.php?OC" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar Sesión">Organismo de Certificación</a></li>
+          <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="index.php?COM" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar sesión">EMPRESAS</a></li>
+          <li role="presentation" <? if(isset($_GET['ADM'])){?> class="active" <? }?>><a href="index.php?ADM">ADM</a></li>
           <li role="presentation" <? if(isset($_GET['RECURSOS'])){?> class="active" <? }?>><a href="#">RECURSOS</a></li>
         </ul>
       </div>
