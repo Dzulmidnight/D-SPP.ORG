@@ -3,11 +3,51 @@
 	require_once('../mpdf/mpdf.php');
 	/** Se agrega la libreria PHPExcel */
 	require_once '../PHPExcel/PHPExcel.php';
+  mysql_select_db($database_dspp, $dspp);
+  ////********* ****** GENERAMOS LA LISTA DE OPPS EN PDF
+  if(isset($_POST['lista_pdf']) && $_POST['lista_pdf'] == 1){
+    $query = $_POST['query_pdf'];
+    $row_opp = mysql_query($query,$dspp) or die(mysql_error());
 
 
+    $html = '
 
-	  mysql_select_db($database_dspp, $dspp);
+      <header class="clearfix">
+        <div>
+          <table style="padding:0px;margin:0px;">
+        <tr>
+          <td style="text-align:left;margin-bottom:0px;font-size:9px;">
+                <div>
+              <img src="img/FUNDEPPO.jpg" >
+                </div>
+          </td>
+          <td style="text-align:right;font-size:9px;">
+                <div>
+              <h2>
+                Solicitud de Certificación para Organizaciones de Pequeños Productores
+              </h2>             
+                </div>
+                <div>Símbolo de Pequeños Productores</div>
+                <div>Versión 7. 26-Ene-2015</div>
+          </td>
+        </tr>
+          </table>
+        </div>
+      </header>
 
+
+    
+
+    ';
+
+    $mpdf = new mPDF('c', 'A4');
+    $css = file_get_contents('css/style.css');  
+    $mpdf->AddPage('L');
+    $mpdf->writeHTML($css,1);
+    $mpdf->writeHTML($html);
+    $mpdf->Output('reporte.pdf', 'I');
+
+  }
 
 	////********* ****** GENERAMOS LA LISTA DE OPPS EN EXCEL
 	if(isset($_POST['lista_excel']) && $_POST['lista_excel'] == 2){
@@ -51,13 +91,32 @@
 		$i = 4;
 		$contador = 1;
 		while ($opp = mysql_fetch_assoc($row_opp)) {
+      $fecha = strtotime($opp['vigencia_fin']);
+      if(!empty($fecha)){
+        $vigencia = date('d/m/Y', $fecha);
+      }else{
+        $vigencia = 'No Disponible';
+      }
+      $productos = '';
+      $query_producto = mysql_query("SELECT * FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
+      $total = mysql_num_rows($query_producto);
+      $cont = 1;
+      while($row_producto = mysql_fetch_assoc($query_producto)){
+        if($cont < $total){
+          $productos .= $row_producto['producto'].", ";
+        }else{
+          $productos .= $row_producto['producto'];
+        }
+        $cont++;
+      }
+
 			$objPHPExcel->setActiveSheetIndex(0)
         		    ->setCellValue('A'.$i,  $contador)
 		            ->setCellValue('B'.$i,  $opp['nombre'])
         		    ->setCellValue('C'.$i,  $opp['abreviacion_opp'])
             		->setCellValue('D'.$i, 	$opp['pais'])
-            		->setCellValue('E'.$i, 	'productos')
-            		->setCellValue('F'.$i, 	$opp['vigencia_fin'])
+            		->setCellValue('E'.$i, 	$productos)
+            		->setCellValue('F'.$i, 	$vigencia)
             		->setCellValue('G'.$i, 	$opp['estatus_opp'])
             		->setCellValue('H'.$i, 	$opp['abreviacion_oc'])
             		->setCellValue('I'.$i, 	$opp['spp_opp'])
@@ -181,7 +240,5 @@
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save('php://output');
 		exit;
-
-
 	}
  ?>
