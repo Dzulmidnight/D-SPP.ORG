@@ -78,7 +78,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
  // $row_empresa = mysql_query("SELECT solicitud_registro.*, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.telefono, empresa.email, empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE solicitud_registro.idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
 
 
-  $row_empresa = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.telefono, empresa.email, empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc', oc.email2 AS 'email_oc2' FROM periodo_objecion LEFT JOIN solicitud_registro ON periodo_objecion.idsolicitud_registro = solicitud_registro.idsolicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE periodo_objecion.idperiodo_objecion = $idperiodo_objecion", $dspp) or die(mysql_error());
+  $row_empresa = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, solicitud_registro.comprador_final, solicitud_registro.intermediario, solicitud_registro.maquilador, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.telefono, empresa.email, empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc', oc.email2 AS 'email_oc2' FROM periodo_objecion LEFT JOIN solicitud_registro ON periodo_objecion.idsolicitud_registro = solicitud_registro.idsolicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE periodo_objecion.idperiodo_objecion = $idperiodo_objecion", $dspp) or die(mysql_error());
 
   $detalle_empresa = mysql_fetch_assoc($row_empresa);
 
@@ -86,7 +86,20 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
   $row_periodo = mysql_query("SELECT fecha_inicio, fecha_fin FROM periodo_objecion WHERE idperiodo_objecion = $idperiodo_objecion",$dspp) or die(mysql_error());
   $periodo = mysql_fetch_assoc($row_periodo);
 
-    $asunto = "D-SPP | Aviso Notificación de Intenciones de Certificación /<br> Intentions Notification of certification";
+  $tipo = '';
+  $tipo = '';
+  if(isset($detalle_empresa['comprador_final'])){
+    $tipo .= 'COMPRADOR FINAL / FINAL BUYER<br>';
+  }
+  if(isset($detalle_empresa['intermediario'])){
+    $tipo .= 'INTERMEDIARIO / INTERMEDIARY<br>';
+  }
+  if(isset($detalle_empresa['maquilador'])){
+    $tipo .= 'MAQUILADOR / MAQUILA COMPANY<br>';
+  }
+
+
+    $asunto = "D-SPP | Aviso Notificación de Intenciones de Certificación / Intentions Notification of certification";
 
     $cuerpo_mensaje = '
       <html>
@@ -124,12 +137,12 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
                       <td style="text-align:center">Fin período de objeción/Objection period end</td>
                     </tr>
                     <tr style="font-size:12px">
-                      <td>empresa</td>
+                      <td>'.$tipo.'</td>
                       <td>'.$detalle_empresa['nombre_empresa'].'</td>
                       <td>'.$detalle_empresa['abreviacion_empresa'].'</td>
                       <td>'.$detalle_empresa['pais'].'</td>
                       <td>'.$detalle_empresa['nombre_oc'].'</td>
-                      <td>Certificación</td>
+                      <td>Registro / Registration</td>
                       <td>'.date('d/m/Y', $periodo['fecha_inicio']).'</td>
                       <td>'.date('d/m/Y', $periodo['fecha_fin']).'</td>
                     </tr>
@@ -155,11 +168,11 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
     ';
 
     ///// inicia envio a correos empresa
-      $query_empresa = "SELECT email FROM empresa WHERE email !=''";
-      $ejecutar = mysql_query($query_empresa,$dspp) or die(mysql_error());
+    /*  $query_empresa = "SELECT email FROM empresa WHERE email !=''";
+      $ejecutar_empresa = mysql_query($query_empresa,$dspp) or die(mysql_error());
 
 
-      while($email_empresa = mysql_fetch_assoc($ejecutar)){
+      while($email_empresa = mysql_fetch_assoc($ejecutar_empresa)){
         $mail->AddAddress($email_empresa['email']);
       }
 
@@ -169,33 +182,34 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
         $mail->Send();
         $mail->ClearAddresses();
-
+*/
     ///// termina envio a correo empresa
 
-    //// inicia envio a correo Empresas
-      $query_empresa = "SELECT email FROM empresa WHERE email !=''";
-      $ejecutar = mysql_query($query_empresa,$dspp) or die(mysql_error());
+    //// inicia envio a correo OPP
+      echo "<script>alert('alerta1');</script>";
+      $query_opp = "SELECT email FROM opp WHERE email !=''";
+      $ejecutar_opp = mysql_query($query_opp,$dspp) or die(mysql_error());
 
 
-      while($email_empresa = mysql_fetch_assoc($ejecutar)){
-        $mail->AddAddress($email_empresa['email']);
+      while($email_opp = mysql_fetch_assoc($ejecutar_opp)){
+        $mail->AddAddress($email_opp['email']);
       }
 
-        $mail->AddBCC($administrador);
+
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
         $mail->Send();
         $mail->ClearAddresses();
-
-    //// termina envio a correo Empresas
+      echo "<script>alert('alerta2');</script>";
+    //// termina envio a correo OPP
 
     //// inicia envio a correo OC
-      $query_oc = "SELECT email1, email2 FROM oc WHERE email1 !=''";
-      $ejecutar = mysql_query($query_oc,$dspp) or die(mysql_error());
+    /*  $query_oc = "SELECT email1, email2 FROM oc";
+      $ejecutar_oc = mysql_query($query_oc,$dspp) or die(mysql_error());
 
 
-      while($email_oc = mysql_fetch_assoc($ejecutar)){
+      while($email_oc = mysql_fetch_assoc($ejecutar_oc)){
         $mail->AddAddress($email_oc['email1']);
         $mail->AddAddress($email_oc['email2']);
       }
@@ -206,14 +220,14 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
         $mail->Send();
         $mail->ClearAddresses();
-
+*/
     //// termina envio a correo OC
 
     //// inicia envio a correo ADM
-        $query_adm = "SELECT email FROM adm";
-        $ejecutar = mysql_query($query_adm,$dspp) or die(mysql_error());
+      /*  $query_adm = "SELECT email FROM adm";
+        $ejecutar_adm = mysql_query($query_adm,$dspp) or die(mysql_error());
 
-        while($email_adm = mysql_fetch_assoc($ejecutar)){  
+        while($email_adm = mysql_fetch_assoc($ejecutar_adm)){  
           if($email_adm['email'] != "isc.jesusmartinez@gmail.com"){
             $mail->AddAddress($email_adm['email']);
           }
@@ -224,12 +238,13 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
         $mail->Send();
+        $mail->ClearAddresses();
+*/
         /*if($mail->Send()){
           
-          echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+          echo "<script>alert('Correo enviado Exitosamenlkjlkjljkte.');location.href ='javascript:history.back()';</script>";
         }else{
               echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
-     
         }*/
     //// termina envio a correo ADM
 

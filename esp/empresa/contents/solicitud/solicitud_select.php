@@ -264,6 +264,17 @@ if(isset($_POST['cotizacion']) ){
       ////// INICIA ENVIAR CORREO AL ADMINISTRADOR PARA APROBAR PERIODO DE OBJECIÓN
       $asunto_adm = "D-SPP Aprobación Periodo de Objeción";
 
+      $tipo = '';
+      if(isset($detalle_empresa['comprador_final'])){
+        $tipo .= 'COMPRADOR FINAL / FINAL BUYER<br>';
+      }
+      if(isset($detalle_empresa['intermediario'])){
+        $tipo .= 'INTERMEDIARIO / INTERMEDIARY<br>';
+      }
+      if(isset($detalle_empresa['maquilador'])){
+        $tipo .= 'MAQUILADOR / MAQUILA COMPANY<br>';
+      }
+
       $mensaje_adm = '
                   <html>
                   <head>
@@ -315,12 +326,12 @@ if(isset($_POST['cotizacion']) ){
                                 <td style="text-align:center">Fin período de objeción/Objection period end</td>
                               </tr>
                               <tr>
-                                <td>empresa</td>
+                                <td>'.$tipo.'</td>
                                 <td>'.$detalle_empresa['nombre_empresa'].'</td>
                                 <td>'.$detalle_empresa['abreviacion_empresa'].'</td>
                                 <td>'.$detalle_empresa['pais'].'</td>
                                 <td>'.$detalle_empresa['nombre_oc'].'</td>
-                                <td>Certificación</td>
+                                <td>Registro / Registration</td>
                                 <td>'.date('d/m/Y', $fecha_inicio).'</td>
                                 <td>'.date('d/m/Y', $fecha_fin).'</td>
                               </tr>

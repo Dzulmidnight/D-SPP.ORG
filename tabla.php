@@ -7,7 +7,7 @@
                 <tbody>
                   <tr>
                     <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">RENOVACIÓN MEMBRESÍA SPP</span></p></th>
+                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">DICTAMEN POSITIVO | RENOVACIÓN MEMBRESÍA SPP</span></p></th>
 
                   </tr>
                   <tr>
@@ -24,8 +24,9 @@
                     <td colspan="2">
                       <p>Reciban ustedes un cordial y atento saludo, así como el deseo de éxito en todas y cada una de sus actividades</p>
                       <p>La presente tiene por objetivo solicitar el "Pago de Membresia SPP" para la renovación de su certificado, por el monto de: <span style="color:red;">'.$_POST['monto_membresia'].'</span>.</p>
-
+                      <p style="color:red">El pago de la Membresia SPP se considera una ratificación de la firma del contrato.</p>
                       <p>Después de realizar el pago por favor cargue el comprobante en el sistema D-SPP</p>
+                      <p></p>
                     </td>
                   </tr>
                   <tr>
@@ -34,7 +35,7 @@
                   <tr>
                     <td>
                       <ul>
-                        DATOS BANCARIOS
+                        Datos Bancarios Anexos en el correo.
                       </ul>
                     </td>
                   </tr>

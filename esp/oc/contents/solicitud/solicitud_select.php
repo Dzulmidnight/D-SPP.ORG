@@ -166,7 +166,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 <tbody>
                   <tr>
                     <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">RENOVACIÓN MEMBRESÍA SPP</span></p></th>
+                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">DICTAMEN POSITIVO | RENOVACIÓN MEMBRESÍA SPP</span></p></th>
 
                   </tr>
                   <tr>
@@ -181,10 +181,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                   <tr>
                     <td colspan="2">
-                      <p>Reciban ustedes un cordial y atento saludo, así como el deseo de éxito en todas y cada una de sus actividades</p>
-                      <p>La presente tiene por objetivo solicitar el "Pago de Membresia SPP" para la renovación de su certificado, por el monto de: <span style="color:red;">'.$_POST['monto_membresia'].'</span>.</p>
+                      <p>NOS COMPLACE INFORMAR QUE LA EVALUACION PARA LA RENOVACION DE SU CERTIFICADO SPP FUE CONCLUIDA CON UN DICTAMEN POSITIVO.</p>
+                      <p>PARA PODER ENTREGAR EL CERTIFICADO SE DEBE PROCEDER CON EL PAGO DE MEMBRESIA, POR EL MONTO DE: <span style="color:red;">'.$_POST['monto_membresia'].'</span>.</p>
+                      <p style="color:red">EL PAGO DE LA MEMBRESIA SPP SE CONSIDERA UNA RATIFICACIÓN DE LA FIRMA DEL CONTRATO.</p>
+                      <p>DESPUÉS DE REALIZAR EL PAGO POR FAVOR CARGUE EL COMPROBANTE DE PAGO EN EL SISTEMA D-SPP.</p>
 
-                      <p>Después de realizar el pago por favor cargue el comprobante en el sistema D-SPP</p>
+                      <p></p>
                     </td>
                   </tr>
                   <tr>
@@ -295,7 +297,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 <tbody>
                   <tr>
                     <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Contrato de uso del Simbolo de Pequeños Productores - SPP</span></p></th>
+                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Dictamen Positivo - SPP</span></p></th>
 
                   </tr>
                   <tr>
@@ -863,7 +865,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                           echo '<h5 style="font-size:12px;" class="alert alert-warning">
                                           <ul>
                                             <li>Está Organización se encuentra en "Proceso de Renovación del Certificado", por lo tanto no se enviara "Contrato de Uso".</li>
-                                            <li style="color:red;">El pago de la Membresia SPP se considera una ratificacionón de la firma del contrato.</li>
+                                            <li style="color:red;">El pago de la Membresia SPP se considera una ratificación de la firma del contrato.</li>
                                           </ul>
                                           </h5>';
                                          ?>

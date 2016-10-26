@@ -34,13 +34,82 @@
           </table>
         </div>
       </header>
+      <div>
+        <table border="1" style="padding:0px;margin:0px;">
+          <tr style="background-color:#B8D186">
+            <td>#</td>
+            <td>
+              NOMBRE DE LA ORGANIZACIÓN / ORGANIZATION´S NAME
+            </td>
+            <td>
+              ABREVIACIÓN / SHORT NAME             
+            </td>
+            <td>
+              PAÍS / COUNTRY            
+            </td>
+            <td>
+              PRODUCTO(S) CERTIFICADO/ CERTIFIED PRODUCTS
+            </td>
+            <td>
+              FECHA SIGUIENTE EVALUACIÓN/ NEXT EVALUATION DATE             
+            </td>
+            <td>
+              ESTATUS / STATUS              
+            </td>
+            <td>
+              ENTIDAD QUE OTORGÓ EL CERTIFICADO / ENTITY THAT GRANTED CERTIFICATE
+            </td>
+            <td>
+              IDENTIFICACIÓN / IDENTIFICATION              
+            </td>
+            <td>
+              SITIO WEB / WEB SITE             
+            </td>
+            <td>
+              CORREO ELECTRÓNICO / EMAIL
+            </td>
+            <td>
+              TELÉFONO / TELEPHONE              
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:left;margin-bottom:0px;font-size:9px;">
+                  <table border="1">
+                <tr>
+                  <td>FECHA DE ELABORACIÓN</td>
+                  <td><h3>'.date("d/m/Y", $solicitud['fecha_registro']).'</h3></td>
+                </tr>
+                <tr>
+                  <td>LUGAR DE ELABORACIÓN</td>
+                  <td></td>
+                </tr>
+                  </table>
+            </td>
+            <td style="text-align:right;font-size:9px;">
+                  <table border="1">
+                <tr>
+                  <td colspan="3" style="background-color:#9ACD32"><b>CODIGO DE IDENTIFICACIÓN SPP(#SPP):</b></td>
+                  <td colspan="2" style="background-color:#9ACD32;"><h3>'.$solicitud['spp_opp'].'</h3></td>
+                </tr>
+                <tr style="background-color:#bdc3c7;">
 
+                  <td style="text-align:left">PROCEDIMIENTO DE CERTIFICACIÓN</td>
+                  <td style="text-align:center;'.$color1.';">DOCUMENTAL "ACORTADO"</td>
+                  <td style="text-align:center;'.$color2.';">DOCUMENTAL "NORMAL"</td>
+                  <td style="text-align:center;'.$color3.';">COMPLETO "IN SITU"</td>
+                  <td style="text-align:center;'.$color4.';">COMPLETO "A DISTANCIA"</td>
+                </tr>
+                  </table>
+            </td>
+          </tr>
+        </table>
+      </div>
 
     
 
     ';
 
-    $mpdf = new mPDF('c', 'A4');
+    $mpdf = new mPDF('c', 'A2');
     $css = file_get_contents('css/style.css');  
     $mpdf->AddPage('L');
     $mpdf->writeHTML($css,1);

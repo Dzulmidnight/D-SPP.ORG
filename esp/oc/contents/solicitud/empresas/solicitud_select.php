@@ -255,7 +255,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 <tbody>
                   <tr>
                     <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Contrato de uso del Simbolo de Pequeños Productores - SPP</span></p></th>
+                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Dictamen Positivo - SPP</span></p></th>
 
                   </tr>
                   <tr>
@@ -743,16 +743,67 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
               <?php 
               if((isset($solicitud['dictamen']) && $solicitud['dictamen'] == 'POSITIVO') || ($solicitud['tipo_solicitud'] == 'RENOVACION' && !empty($solicitud['fecha_aceptacion']))){
               ?>
-                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
+                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_registro']; ?>">Proceso Certificación</button>
                 <!-- inicia modal proceso de certificación -->
-                <div id="<?php echo "certificacion".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                <div id="<?php echo "certificacion".$solicitud['idsolicitud_registro']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso de Certificación</h4>
+                        <h4 class="modal-title" id="myModalLabel">Proceso de Certificación <?php echo $solicitud['idsolicitud_registro']; ?></h4>
                       </div>
                       <div class="modal-body">
+
+
+                        <script>
+                        function funcionSelect() {
+                          var valorSelect = document.getElementById("statusSelect").value;
+
+                          if(valorSelect == '4'){
+                            document.getElementById('divSelect').style.display = 'block';
+                            document.getElementById("registroOculto").style.display = 'block';
+                            document.getElementById("nombreArchivo").style.display = 'block';
+                            document.getElementById("archivo_estatus").style.display = 'block';
+                            document.getElementById("tablaCorreo").style.display = 'none';
+                          }else if(valorSelect == '6'){
+                            document.getElementById('divSelect').style.display = 'block';
+                            document.getElementById("nombreArchivo").style.display = 'block';
+                            document.getElementById("archivo_estatus").style.display = 'block';
+                            document.getElementById("registroOculto").style.display = 'block';
+                            document.getElementById("tablaCorreo").style.display = 'none';
+                          }else if(valorSelect == '7'){
+                            document.getElementById('divSelect').style.display = 'block';
+                            document.getElementById("nombreArchivo").style.display = 'none';
+                            document.getElementById("archivo_estatus").style.display = 'none';
+                            document.getElementById("registroOculto").style.display = 'block';
+                            document.getElementById("tablaCorreo").style.display = 'none';
+                          }else if(valorSelect == '8'){
+                            document.getElementById("tablaCorreo").style.display = 'block'; 
+                            document.getElementById("nombreArchivo").style.display = 'none';
+                            document.getElementById("archivo_estatus").style.display = 'none';
+                            document.getElementById("registroOculto").style.display = 'none';
+                          }else if(valorSelect == '9'){
+                            document.getElementById('divSelect').style.display = 'block';
+                            document.getElementById("tablaCorreo").style.display = 'none'; 
+                            document.getElementById("nombreArchivo").style.display = 'block';
+                            document.getElementById("archivo_estatus").style.display = 'block';
+                            document.getElementById("registroOculto").style.display = 'block';                 
+                          }else if(valorSelect == '23'){
+                            document.getElementById('divSelect').style.display = 'block';
+                            document.getElementById("tablaCorreo").style.display = 'none';
+                            document.getElementById("nombreArchivo").style.display = 'none'; 
+                            document.getElementById("archivo_estatus").style.display = 'none';
+                            document.getElementById("registroOculto").style.display = 'block'                  
+                          }else{
+                            document.getElementById("nombreArchivo").style.display = 'none';
+                            document.getElementById("archivo_estatus").style.display = 'none';
+                            document.getElementById("registroOculto").style.display = 'none'
+                            document.getElementById("tablaCorreo").style.display = 'none';
+                            document.getElementById('divSelect').style.display = 'none';
+                          }
+                        }
+                        </script>
+                        
                         <div class="row">
                           <?php 
 
@@ -858,7 +909,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         </div>
                                         <div class="col-xs-12">
                                           <h5 class="alert alert-warning">MEMBRESÍA SPP( Indicar el monto total de la membresía )</h5>
-                                          <p>Total Membresía: <input type="hidden" class="form-control" name="monto_membresia" placeholder="Total Membresía"></p>
+                                          <p>Total Membresía: <input type="text" class="form-control" name="monto_membresia" placeholder="Total Membresía"></p>
                                         </div>
                                       </div>
                                   <?php
@@ -868,6 +919,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               </div>
 
                         </div>
+
+
                       </div>
                       <div class="modal-footer">
                         <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
@@ -895,54 +948,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                   </div>
                 </div>
                 <!-- termina modal proceso de certificación -->
-                    <script>
-                    function funcionSelect() {
-                      var valorSelect = document.getElementById("statusSelect").value;
 
-                      if(valorSelect == '4'){
-                        document.getElementById('divSelect').style.display = 'block';
-                        document.getElementById("registroOculto").style.display = 'block';
-                        document.getElementById("nombreArchivo").style.display = 'block';
-                        document.getElementById("archivo_estatus").style.display = 'block';
-                        document.getElementById("tablaCorreo").style.display = 'none';
-                      }else if(valorSelect == '6'){
-                        document.getElementById('divSelect').style.display = 'block';
-                        document.getElementById("nombreArchivo").style.display = 'block';
-                        document.getElementById("archivo_estatus").style.display = 'block';
-                        document.getElementById("registroOculto").style.display = 'block';
-                        document.getElementById("tablaCorreo").style.display = 'none';
-                      }else if(valorSelect == '7'){
-                        document.getElementById('divSelect').style.display = 'block';
-                        document.getElementById("nombreArchivo").style.display = 'none';
-                        document.getElementById("archivo_estatus").style.display = 'none';
-                        document.getElementById("registroOculto").style.display = 'block';
-                        document.getElementById("tablaCorreo").style.display = 'none';
-                      }else if(valorSelect == '8'){
-                        document.getElementById("tablaCorreo").style.display = 'block'; 
-                        document.getElementById("nombreArchivo").style.display = 'none';
-                        document.getElementById("archivo_estatus").style.display = 'none';
-                        document.getElementById("registroOculto").style.display = 'none';
-                      }else if(valorSelect == '9'){
-                        document.getElementById('divSelect').style.display = 'block';
-                        document.getElementById("tablaCorreo").style.display = 'none'; 
-                        document.getElementById("nombreArchivo").style.display = 'block';
-                        document.getElementById("archivo_estatus").style.display = 'block';
-                        document.getElementById("registroOculto").style.display = 'block';                 
-                      }else if(valorSelect == '23'){
-                        document.getElementById('divSelect').style.display = 'block';
-                        document.getElementById("tablaCorreo").style.display = 'none';
-                        document.getElementById("nombreArchivo").style.display = 'none'; 
-                        document.getElementById("archivo_estatus").style.display = 'none';
-                        document.getElementById("registroOculto").style.display = 'block'                  
-                      }else{
-                        document.getElementById("nombreArchivo").style.display = 'none';
-                        document.getElementById("archivo_estatus").style.display = 'none';
-                        document.getElementById("registroOculto").style.display = 'none'
-                        document.getElementById("tablaCorreo").style.display = 'none';
-                        document.getElementById('divSelect').style.display = 'none';
-                      }
-                    }
-                    </script>
               <?php
 
 
