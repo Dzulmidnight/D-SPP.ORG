@@ -351,7 +351,6 @@ if(isset($_POST['generarExcel']) && $_POST['generarExcel'] == "tabla"){ //******
 				  	<td>'.$row_contacto['direccion_fiscal'].'</td>
 				  	<td>'.$row_contacto['contacto'].'</td>
 				  	<td>'.$row_contacto['cargo'].'</td>
-
 				  	<td>'.$row_contacto['telefono1'].'</td>
 				  	<td>'.$row_contacto['telefono2'].'</td>
 				  	<td>'.$row_contacto['email1'].'</td>

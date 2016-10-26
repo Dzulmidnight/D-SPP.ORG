@@ -16,12 +16,12 @@
         <div>
           <table style="padding:0px;margin:0px;">
         <tr>
-          <td style="text-align:left;margin-bottom:0px;font-size:9px;">
+          <td style="text-align:left;margin-bottom:0px;:11px;">
                 <div>
               <img src="img/FUNDEPPO.jpg" >
                 </div>
           </td>
-          <td style="text-align:right;font-size:9px;">
+          <td style="text-align:right;:11px;">
                 <div>
               <h2>
                 Solicitud de Certificación para Organizaciones de Pequeños Productores
@@ -37,79 +37,87 @@
       <div>
         <table border="1" style="padding:0px;margin:0px;">
           <tr style="background-color:#B8D186">
-            <td>#</td>
-            <td>
+            <td style="text-align: center;">#</td>
+            <td style="text-align: center;">
               NOMBRE DE LA ORGANIZACIÓN / ORGANIZATION´S NAME
             </td>
-            <td>
-              ABREVIACIÓN / SHORT NAME             
+            <td style="text-align: center;">
+              ABREVIACIÓN / SHORT NAME
             </td>
-            <td>
-              PAÍS / COUNTRY            
+            <td style="text-align: center;">
+              PAÍS / COUNTRY
             </td>
-            <td>
+            <td style="text-align: center;">
               PRODUCTO(S) CERTIFICADO/ CERTIFIED PRODUCTS
             </td>
-            <td>
-              FECHA SIGUIENTE EVALUACIÓN/ NEXT EVALUATION DATE             
+            <td style="text-align: center;">
+              FECHA SIGUIENTE EVALUACIÓN/ NEXT EVALUATION DATE
             </td>
-            <td>
-              ESTATUS / STATUS              
+            <td style="text-align: center;">
+              ESTATUS / STATUS
             </td>
-            <td>
+            <td style="text-align: center;">
               ENTIDAD QUE OTORGÓ EL CERTIFICADO / ENTITY THAT GRANTED CERTIFICATE
             </td>
-            <td>
-              IDENTIFICACIÓN / IDENTIFICATION              
+            <td style="text-align: center;">
+              IDENTIFICACIÓN / IDENTIFICATION
             </td>
-            <td>
-              SITIO WEB / WEB SITE             
+            <td style="text-align: center;width:400px;">
+              SITIO WEB / WEB SITE
             </td>
-            <td>
+            <td style="text-align: center;">
               CORREO ELECTRÓNICO / EMAIL
             </td>
-            <td>
-              TELÉFONO / TELEPHONE              
+            <td style="text-align: center;">
+              TELÉFONO / TELEPHONE
             </td>
           </tr>
-          <tr>
-            <td style="text-align:left;margin-bottom:0px;font-size:9px;">
-                  <table border="1">
-                <tr>
-                  <td>FECHA DE ELABORACIÓN</td>
-                  <td><h3>'.date("d/m/Y", $solicitud['fecha_registro']).'</h3></td>
-                </tr>
-                <tr>
-                  <td>LUGAR DE ELABORACIÓN</td>
-                  <td></td>
-                </tr>
-                  </table>
-            </td>
-            <td style="text-align:right;font-size:9px;">
-                  <table border="1">
-                <tr>
-                  <td colspan="3" style="background-color:#9ACD32"><b>CODIGO DE IDENTIFICACIÓN SPP(#SPP):</b></td>
-                  <td colspan="2" style="background-color:#9ACD32;"><h3>'.$solicitud['spp_opp'].'</h3></td>
-                </tr>
-                <tr style="background-color:#bdc3c7;">
-
-                  <td style="text-align:left">PROCEDIMIENTO DE CERTIFICACIÓN</td>
-                  <td style="text-align:center;'.$color1.';">DOCUMENTAL "ACORTADO"</td>
-                  <td style="text-align:center;'.$color2.';">DOCUMENTAL "NORMAL"</td>
-                  <td style="text-align:center;'.$color3.';">COMPLETO "IN SITU"</td>
-                  <td style="text-align:center;'.$color4.';">COMPLETO "A DISTANCIA"</td>
-                </tr>
-                  </table>
-            </td>
-          </tr>
-        </table>
-      </div>
-
-    
-
     ';
+    $contador = 1;
+    while($opp = mysql_fetch_assoc($row_opp)){
+      $row_producto = mysql_query("SELECT * FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
+      $producto = '';
+      $total_producto = mysql_num_rows($row_producto);
+      $cont = 1;
+      while($detalle_producto = mysql_fetch_assoc($row_producto)){
+        if($cont < $total_producto){
+          $producto .= $detalle_producto['producto'].', ';
+        }else{
+          $producto .= $detalle_producto['producto'];
+        }
+        $cont++;
+      }
+
+      $fecha = strtotime($opp['vigencia_fin']);
+      if(!empty($fecha)){
+        $vigencia = date('d/m/Y', $fecha);
+      }else{
+        $vigencia = '<p style="color:#e74c3c">No Disponible</p>';
+      }
+
+      $html .= '
+      <tr>
+        <td style="font-size:12px;text-align: left;">'.$contador.'</td>
+        <td style="font-size:12px;text-align: left;">'.$opp['nombre'].'</td>
+        <td style="font-size:12px;text-align: left;">'.$opp['abreviacion_opp'].'</td>
+        <td style="font-size:12px;text-align: center;">'.$opp['pais'].'</td>
+        <td style="font-size:12px;text-align: left;">'.$producto.'</td>
+        <td style="font-size:12px;text-align: center;">'.$vigencia.'</td>
+        <td style="font-size:12px;text-align: left;">'.$opp['nombre_dspp'].'</td>
+        <td style="font-size:12px;text-align: center;">'.$opp['abreviacion_oc'].'</td>
+        <td style="font-size:12px;text-align: center;">'.$opp['spp_opp'].'</td>
+        <td style="font-size:12px;text-align: left;">'.$opp['sitio_web'].'</td>
+        <td style="font-size:12px;text-align: left;">'.$opp['email'].'</td>
+        <td style="font-size:12px;text-align: left;">'.$opp['telefono'].'</td>
+      </tr>';
+      $contador++;
+    }
+    $html .='
+      </table>
+    </div>';
 
     $mpdf = new mPDF('c', 'A2');
+    $mpdf->SetHTMLHeader('<div style="text-align: right; font-weight: bold;">My document</div>');
     $css = file_get_contents('css/style.css');  
     $mpdf->AddPage('L');
     $mpdf->writeHTML($css,1);
