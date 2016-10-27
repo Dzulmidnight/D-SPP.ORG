@@ -167,8 +167,27 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
       </html>
     ';
 
+    //// inicia envio a correo OPP
+
+      $query_opp = "SELECT email FROM opp WHERE email !=''";
+      $ejecutar_opp = mysql_query($query_opp,$dspp) or die(mysql_error());
+
+      $direcciones = '';
+      while($email_opp = mysql_fetch_assoc($ejecutar_opp)){
+          if($email_opp['email'] != ""){
+            $mail->AddAddress($email_opp['email']);
+          }
+      }
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+
+
+    //// termina envio a correo OPP
+
     ///// inicia envio a correos empresa
-     /* $query_empresa = "SELECT email FROM empresa WHERE email !=''";
+      $query_empresa = "SELECT email FROM empresa WHERE email !=''";
       $ejecutar_empresa = mysql_query($query_empresa,$dspp) or die(mysql_error());
 
       while($email_empresa = mysql_fetch_assoc($ejecutar_empresa)){
@@ -180,30 +199,12 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
         $mail->Send();
-        $mail->ClearAddresses();*/
+        $mail->ClearAddresses();
 
     ///// termina envio a correo empresa
 
-    //// inicia envio a correo OPP
-
-      $query_opp = "SELECT email FROM opp WHERE email !=''";
-      $ejecutar_opp = mysql_query($query_opp,$dspp) or die(mysql_error());
-
-      $direcciones = '';
-      while($email_opp = mysql_fetch_assoc($ejecutar_opp)){
-        $direcciones.= ($direcciones=='')?$email_opp['email']:';'.$email_opp['email'];
-      }
-        $mail->AddAddress($direcciones);
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
-
-
-    //// termina envio a correo OPP
-
     //// inicia envio a correo OC
-     /* $query_oc = "SELECT email1, email2 FROM oc";
+      $query_oc = "SELECT email1, email2 FROM oc";
       $ejecutar_oc = mysql_query($query_oc,$dspp) or die(mysql_error());
 
 
@@ -218,11 +219,11 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
         $mail->Send();
         $mail->ClearAddresses();
-*/
+
     //// termina envio a correo OC
 
     //// inicia envio a correo ADM
-     /*   $query_adm = "SELECT email FROM adm";
+        $query_adm = "SELECT email FROM adm";
         $ejecutar_adm = mysql_query($query_adm,$dspp) or die(mysql_error());
 
         while($email_adm = mysql_fetch_assoc($ejecutar_adm)){  
@@ -231,20 +232,17 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
           }
         }
 
-
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        /*$mail->Send();
-        $mail->ClearAddresses();*/
 
-       /* if($mail->Send()){
+        if($mail->Send()){
           $mail->ClearAddresses();   
           echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
         }else{
           $mail->ClearAddresses();
           echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
-        }*/
+        }
     //// termina envio a correo ADM
 
 
