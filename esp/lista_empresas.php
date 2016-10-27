@@ -195,7 +195,17 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
         <table class="table table-bordered table-condensed table-striped">
           <thead>
             <tr>
-              <th class="text-center warning" colspan="12">Lista de Organizaciones de Pequeños Productores (Total: <?php echo $total_empresa; ?>)</th>
+              <th colspan="2">
+                Exportar: 
+                <a target="_blank" href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
+                <form name="formulario1" method="POST" action="../reportes/lista_empresas.php">
+                  <input type="hidden" name="lista_publica_pdf" value="1">
+                  <input type="hidden" name="query_pdf" value="<?php echo $query_empresa; ?>">
+                </form> 
+
+              </th>
+
+              <th class="text-center warning" colspan="10">Lista de Compradores Registrados / List of Buyers Registered (Total: <?php echo $total_empresa; ?>)</th>
             </tr>
             <tr style="font-size:11px;">
               <th class="text-center">Nº</th>

@@ -168,44 +168,42 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
     ';
 
     ///// inicia envio a correos empresa
-    /*  $query_empresa = "SELECT email FROM empresa WHERE email !=''";
+     /* $query_empresa = "SELECT email FROM empresa WHERE email !=''";
       $ejecutar_empresa = mysql_query($query_empresa,$dspp) or die(mysql_error());
-
 
       while($email_empresa = mysql_fetch_assoc($ejecutar_empresa)){
         $mail->AddAddress($email_empresa['email']);
       }
 
-        $mail->AddBCC($administrador);
+
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
         $mail->Send();
-        $mail->ClearAddresses();
-*/
+        $mail->ClearAddresses();*/
+
     ///// termina envio a correo empresa
 
     //// inicia envio a correo OPP
-      echo "<script>alert('alerta1');</script>";
+
       $query_opp = "SELECT email FROM opp WHERE email !=''";
       $ejecutar_opp = mysql_query($query_opp,$dspp) or die(mysql_error());
 
-
+      $direcciones = '';
       while($email_opp = mysql_fetch_assoc($ejecutar_opp)){
-        $mail->AddAddress($email_opp['email']);
+        $direcciones.= ($direcciones=='')?$email_opp['email']:';'.$email_opp['email'];
       }
-
-
+        $mail->AddAddress($direcciones);
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
         $mail->Send();
-        $mail->ClearAddresses();
-      echo "<script>alert('alerta2');</script>";
+
+
     //// termina envio a correo OPP
 
     //// inicia envio a correo OC
-    /*  $query_oc = "SELECT email1, email2 FROM oc";
+     /* $query_oc = "SELECT email1, email2 FROM oc";
       $ejecutar_oc = mysql_query($query_oc,$dspp) or die(mysql_error());
 
 
@@ -214,7 +212,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->AddAddress($email_oc['email2']);
       }
 
-        $mail->AddBCC($administrador);
+
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -224,7 +222,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
     //// termina envio a correo OC
 
     //// inicia envio a correo ADM
-      /*  $query_adm = "SELECT email FROM adm";
+     /*   $query_adm = "SELECT email FROM adm";
         $ejecutar_adm = mysql_query($query_adm,$dspp) or die(mysql_error());
 
         while($email_adm = mysql_fetch_assoc($ejecutar_adm)){  
@@ -233,18 +231,19 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
           }
         }
 
-        $mail->AddBCC($administrador);
+
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
-        $mail->ClearAddresses();
-*/
-        /*if($mail->Send()){
-          
-          echo "<script>alert('Correo enviado Exitosamenlkjlkjljkte.');location.href ='javascript:history.back()';</script>";
+        /*$mail->Send();
+        $mail->ClearAddresses();*/
+
+       /* if($mail->Send()){
+          $mail->ClearAddresses();   
+          echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
         }else{
-              echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
+          $mail->ClearAddresses();
+          echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
         }*/
     //// termina envio a correo ADM
 
@@ -282,6 +281,18 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
     GetSQLValueString($resolucion, "text"),
     GetSQLValueString($_POST['idperiodo_objecion'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+  $tipo = '';
+  $tipo = '';
+  if(isset($detalle_empresa['comprador_final'])){
+    $tipo .= 'COMPRADOR FINAL / FINAL BUYER<br>';
+  }
+  if(isset($detalle_empresa['intermediario'])){
+    $tipo .= 'INTERMEDIARIO / INTERMEDIARY<br>';
+  }
+  if(isset($detalle_empresa['maquilador'])){
+    $tipo .= 'MAQUILADOR / MAQUILA COMPANY<br>';
+  }
 
   /// inicia envio correo "periodo de objeción finalizado" a OC
   $asunto = "D-SPP | Periodo de Objeción Finalizado";
@@ -341,7 +352,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
                     <td style="text-align:center">Fin período de objeción/Objection period end</td>
                   </tr>
                   <tr style="font-size:12px;">
-                    <td>empresa</td>
+                    <td>'.$tipo.'</td>
                     <td>'.$detalle_empresa['nombre_empresa'].'</td>
                     <td>'.$detalle_empresa['abreviacion_empresa'].'</td>
                     <td>'.$detalle_empresa['pais'].'</td>
@@ -363,10 +374,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
 
   $mail->AddAddress($detalle_empresa['email_oc']);
   $mail->AddAddress($detalle_empresa['email_oc2']);
-
   $mail->AddBCC($spp_global);  
-  $mail->AddBCC($administrador);
-
   $mail->AddAttachment($resolucion);
 
   $mail->Subject = utf8_decode($asunto);
@@ -378,6 +386,20 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   /// termina envio correo "periodo de objeción finalizado" a OC
 
 
+  $mail->AddAddress($detalle_empresa['email_empresa']);
+  $mail->AddBCC($spp_global);  
+  $mail->AddAttachment($resolucion);
+  $mail->Subject = utf8_decode($asunto);
+  $mail->Body = utf8_decode($mensaje_oc);
+  $mail->MsgHTML(utf8_decode($mensaje_oc));
+  if($mail->Send()){
+    $mail->ClearAddresses();   
+    echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+  }else{
+    $mail->ClearAddresses();
+    echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
+  }
+ 
   /// termina envio correo "periodo de objeción finalizado" a empresa
 
 
@@ -770,10 +792,10 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 //$row_solicitud = mysql_query("SELECT solicitud_registro.idsolicitud_registro AS 'idsolicitud', solicitud_registro.fecha_registro, solicitud_registro.idoc, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_dspp.nombre AS 'nombre_dspp', solicitud_registro.cotizacion_empresa, periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN proceso_certificacion ON solicitud_registro.idsolicitud_registro = proceso_certificacion.idsolicitud_registro LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro = periodo_objecion.idsolicitud_registro LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idsolicitud_registro = certificado.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro  ORDER BY proceso_certificacion.idproceso_certificacion DESC", $dspp) or die(mysql_error());
 if(isset($_POST['campo_busqueda']) && $_POST['campo_busqueda'] == 1){
   $buscar = $_POST['buscar'];
-$query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE empresa.spp LIKE '%$buscar%' OR empresa.nombre LIKE '%$buscar%' OR empresa.abreviacion LIKE '%$buscar%' OR empresa.pais LIKE '%$buscar%' OR empresa.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%'  ORDER BY solicitud_registro.fecha_registro DESC";
+$query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE empresa.spp LIKE '%$buscar%' OR empresa.nombre LIKE '%$buscar%' OR empresa.abreviacion LIKE '%$buscar%' OR empresa.pais LIKE '%$buscar%' OR empresa.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%'  ORDER BY solicitud_registro.fecha_registro DESC";
 
 }else{
-$query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro ORDER BY solicitud_registro.fecha_registro DESC";
+$query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro ORDER BY solicitud_registro.fecha_registro DESC";
 }
 
 

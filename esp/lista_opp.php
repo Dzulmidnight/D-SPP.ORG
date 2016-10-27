@@ -65,6 +65,20 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
 
     $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE ($idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
 
+  }else if(!empty($producto) && !empty($idoc) && empty($pais)){
+    //$query_productos = mysql_query("SELECT idopp FROM productos WHERE producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
+    $query_productos = mysql_query("SELECT opp.idopp, productos.producto FROM opp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE idoc = $idoc  AND producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
+    $total_idopp = mysql_num_rows($query_productos);
+    $cont_idopp = 1;
+    while($producto_opp = mysql_fetch_assoc($query_productos)){
+      $idopp_producto .= "opp.idopp = '$producto_opp[idopp]'";
+      if($cont_idopp < $total_idopp){
+        $idopp_producto .= " OR ";
+      }
+      $cont_idopp++;
+    }
+
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin, productos.idproducto, productos.producto FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE (opp.idoc = '$idoc' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
   }else{
     $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
   }
@@ -195,7 +209,23 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
         <table class="table table-bordered table-condensed table-striped">
           <thead>
             <tr>
-              <th class="text-center warning" colspan="12">Lista de Organizaciones de Pequeños Productores (Total: <?php echo $total_opp; ?>)</th>
+              <th colspan="2">
+                Exportar: 
+                <a target="_blank" href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
+
+                <a href="#" onclick="document.formulario2.submit()"><img src="../img/excel.png"></a>
+                <form name="formulario1" method="POST" action="../reportes/lista_opp.php">
+                  <input type="hidden" name="lista_publica_pdf" value="1">
+                  <input type="hidden" name="query_pdf" value="<?php echo $query_opp; ?>">
+                </form> 
+
+                <form name="formulario2" method="POST" action="../reportes/lista_opp.php">
+                  <input type="hidden" name="lista_publica_excel" value="2">
+                  <input type="hidden" name="query_excel" value="<?php echo $query_opp; ?>">
+                </form>
+              </th>
+
+              <th class="text-center warning" colspan="10">Lista de Organizaciones de Pequeños Productores (Total: <?php echo $total_opp; ?>)</th>
             </tr>
             <tr style="font-size:11px;">
               <th class="text-center">Nº</th>

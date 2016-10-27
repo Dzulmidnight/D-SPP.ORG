@@ -221,12 +221,13 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
         //$mail->Send();
         if($mail->Send()){
-          
+          $mail->ClearAddresses();  
           echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
         }else{
-              echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
-     
+          $mail->ClearAddresses();
+          echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
         }
+
     //// termina envio a correo ADM
 
 

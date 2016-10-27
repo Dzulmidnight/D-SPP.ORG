@@ -9,13 +9,13 @@ $mail->Host = "mailtrap.io";
 //$mail->Port = 25;
 $mail->Port = 25;
 $mail->SMTPAuth = true;
-$mail->Username = "99f9a8c6200b52";
-$mail->Password = "943bba851a952d";
+$mail->Username = "d4071ef0fb933e";
+$mail->Password = "8e53290c3bd811";
 //$mail->SMTPDebug = 1;
 
 $mail->From = "soporte@d-spp.org";
 $mail->FromName = utf8_decode("CERTIFICACIÓN-CERTIFICATION SPP");
-$mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
+
 
 $correoCert = "cert@spp.coop";
 

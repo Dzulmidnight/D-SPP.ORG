@@ -65,6 +65,20 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
 
     $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE ($idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp ORDER BY certificado.vigencia_fin DESC";
 
+  }else if(!empty($producto) && !empty($idoc) && empty($pais)){
+    //$query_productos = mysql_query("SELECT idopp FROM productos WHERE producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
+    $query_productos = mysql_query("SELECT opp.idopp, productos.producto FROM opp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE idoc = $idoc  AND producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
+    $total_idopp = mysql_num_rows($query_productos);
+    $cont_idopp = 1;
+    while($producto_opp = mysql_fetch_assoc($query_productos)){
+      $idopp_producto .= "opp.idopp = '$producto_opp[idopp]'";
+      if($cont_idopp < $total_idopp){
+        $idopp_producto .= " OR ";
+      }
+      $cont_idopp++;
+    }
+
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin, productos.idproducto, productos.producto FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE (opp.idoc = '$idoc' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
   }else{
     $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp ORDER BY certificado.vigencia_fin DESC";
   }
@@ -136,7 +150,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
             <div class="col-md-3">
               <div class="input-group">
                 <span class="input-group-btn">
-                  <button class="btn btn-default" name="busqueda_palabra" value="1" type="submit">Buscar</button>
+                  <button class="btn btn-default" name="busqueda_palabra" value="1" type="submit">Search</button>
                 </span>
                 <input type="text" class="form-control" name="palabra" placeholder="Buscar por palabra">
               </div><!-- /input-group -->
@@ -145,13 +159,13 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
           <form action="" method="POST">
             <div class="col-md-9 alert alert-info">
               <div class="text-center col-md-12">
-                <b style="color:#d35400">Seleccione los parametros de los cuales desea realizar la busqueda</b>
+                <b style="color:#d35400">Select the parameters of which you want to search</b>
               </div> 
               <div class="row">
                 <div class="col-xs-4">
-                  Organismo de Certificación
+                  Certification Entity
                   <select name="idoc" class="form-control">
-                    <option value=''>Selecciona un organismo de certificación</option>
+                    <option value=''>Select a Certification Entity</option>
                     <?php 
                     while($oc = mysql_fetch_assoc($row_oc)){
                       echo "<option value='$oc[idoc]'>$oc[abreviacion]</option>";
@@ -160,9 +174,9 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                   </select>
                 </div>
                 <div class="col-xs-3">
-                  País
+                  Country
                   <select name="pais" class="form-control">
-                    <option value=''>Selecciona un país</option>
+                    <option value=''>Select a Country</option>
                     <?php 
                     while($pais = mysql_fetch_assoc($row_pais)){
                       echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
@@ -171,9 +185,9 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                   </select>
                 </div>
                 <div class="col-xs-3">
-                  Producto
+                  Product
                   <select class="form-control" name="nombre_producto" id="">
-                    <option value=''>Seleccione un producto</option>
+                    <option value=''>Select a Product</option>
                     <?php 
                     while($lista_productos = mysql_fetch_assoc($query_productos)){
                       echo "<option value='$lista_productos[producto]'>$lista_productos[producto]</option>";
@@ -182,7 +196,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                   </select>
                 </div>
                 <div class="col-xs-2">
-                  <button type="submit" class="btn btn-success" name="busqueda_filtros" value="1">Buscar</button>
+                  <button type="submit" class="btn btn-success" name="busqueda_filtros" value="1">Search</button>
                 </div>
               </div>
             </div>
@@ -195,7 +209,24 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
         <table class="table table-bordered table-condensed table-striped">
           <thead>
             <tr>
-              <th class="text-center warning" colspan="12">Lista de Organizaciones de Pequeños Productores (Total: <?php echo $total_opp; ?>)</th>
+              <th colspan="2">
+                Export:  
+                <a target="_blank" href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
+
+                <a href="#" onclick="document.formulario2.submit()"><img src="../img/excel.png"></a>
+                <form name="formulario1" method="POST" action="../reportes/lista_opp.php">
+                  <input type="hidden" name="lista_publica_pdf" value="1">
+                  <input type="hidden" name="query_pdf" value="<?php echo $query_opp; ?>">
+                </form> 
+
+                <form name="formulario2" method="POST" action="../reportes/lista_opp.php">
+                  <input type="hidden" name="lista_publica_excel" value="2">
+                  <input type="hidden" name="query_excel" value="<?php echo $query_opp; ?>">
+                </form>
+
+              </th>
+
+              <th class="text-center warning" colspan="10">Lista de Organizaciones de Pequeños Productores /List of Small Producers´ Organizations (Total: <?php echo $total_opp; ?>)</th>
             </tr>
             <tr style="font-size:11px;">
               <th class="text-center">Nº</th>

@@ -145,13 +145,13 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
           <form action="" method="POST">
             <div class="col-md-9 alert alert-info">
               <div class="text-center col-md-12">
-                <b style="color:#d35400">Seleccione los parametros de los cuales desea realizar la busqueda</b>
+                <b style="color:#d35400">Select the parameters of which you want to search</b>
               </div> 
               <div class="row">
                 <div class="col-xs-4">
-                  Organismo de Certificación
+                 Certification Entity
                   <select name="idoc" class="form-control">
-                    <option value=''>Selecciona un organismo de certificación</option>
+                    <option value=''>Select a Certification Entity</option>
                     <?php 
                     while($oc = mysql_fetch_assoc($row_oc)){
                       echo "<option value='$oc[idoc]'>$oc[abreviacion]</option>";
@@ -160,9 +160,9 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
                   </select>
                 </div>
                 <div class="col-xs-3">
-                  País
+                  Country
                   <select name="pais" class="form-control">
-                    <option value=''>Selecciona un país</option>
+                    <option value=''>Select a Country</option>
                     <?php 
                     while($pais = mysql_fetch_assoc($row_pais)){
                       echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
@@ -171,9 +171,9 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
                   </select>
                 </div>
                 <div class="col-xs-3">
-                  Producto
+                  Product
                   <select class="form-control" name="nombre_producto" id="">
-                    <option value=''>Seleccione un producto</option>
+                    <option value=''>Select a Product</option>
                     <?php 
                     while($lista_productos = mysql_fetch_assoc($query_productos)){
                       echo "<option value='$lista_productos[producto]'>$lista_productos[producto]</option>";
@@ -182,7 +182,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
                   </select>
                 </div>
                 <div class="col-xs-2">
-                  <button type="submit" class="btn btn-success" name="busqueda_filtros" value="1">Buscar</button>
+                  <button type="submit" class="btn btn-success" name="busqueda_filtros" value="1">Search</button>
                 </div>
               </div>
             </div>
@@ -195,7 +195,17 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
         <table class="table table-bordered table-condensed table-striped">
           <thead>
             <tr>
-              <th class="text-center warning" colspan="12">Lista de Organizaciones de Pequeños Productores (Total: <?php echo $total_empresa; ?>)</th>
+              <th colspan="2">
+                Export: 
+                <a target="_blank" href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
+                <form name="formulario1" method="POST" action="../reportes/lista_empresas.php">
+                  <input type="hidden" name="lista_publica_pdf" value="1">
+                  <input type="hidden" name="query_pdf" value="<?php echo $query_empresa; ?>">
+                </form> 
+
+              </th>
+
+              <th class="text-center warning" colspan="10">Lista de Compradores Registrados / List of Buyers Registered (Total: <?php echo $total_empresa; ?>)</th>
             </tr>
             <tr style="font-size:11px;">
               <th class="text-center">Nº</th>
