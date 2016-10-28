@@ -81,7 +81,7 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $_SESSION['MM_Usern
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script>
       tinymce.init({ 
-        selector:'#textareaMensaje'
+        selector:'.textareaMensaje'
       });
     </script>
 

@@ -112,6 +112,50 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         GetSQLValueString($fecha, "int"));
       $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 
+      $cuerpo_mensaje_empresa = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Proceso de Certificación, Dictamen Positivo</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                  <p>NOS COMPLACE INFORMAR QUE LA EVALUACION PARA LA RENOVACION DE SU REGISTRO SPP FUE CONCLUIDA CON UN DICTAMEN POSITIVO.</p>
+                  <p>SERAN NOTIFICADOS UNA VEZ QUE SU CERTIFICADO SE ENCUENTRE DISPONIBLE.</p>
+                </td>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+        </html>
+      ';
+
+      $mail->AddAddress($oc['contacto1_email']);
+      $mail->AddAddress($oc['contacto2_email']);
+      $mail->AddBCC($spp_global);
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje_empresa);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje_empresa));
+      $mail->Send();
+      $mail->ClearAddresses();
+
       $cuerpo_mensaje = '
         <html>
         <head>
@@ -211,7 +255,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 
       //creamos el monto del comprobante de pago
-      $estatus_comprobante = "EN ESPERA";
+      /*$estatus_comprobante = "EN ESPERA";
 
       $insertSQL = sprintf("INSERT INTO comprobante_pago(estatus_comprobante, monto) VALUES (%s, %s)",
         GetSQLValueString($estatus_comprobante, "text"),
@@ -219,113 +263,165 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
       //capturamos el id del comprobante para vincularlo con la membresia
-      $idcomprobante_pago = mysql_insert_id($dspp);
+      $idcomprobante_pago = mysql_insert_id($dspp);*/
 
       //creamos la membresia
-      $estatus_membresia = "EN ESPERA";
+      /*$estatus_membresia = "EN ESPERA";
       $insertSQL = sprintf("INSERT INTO membresia(estatus_membresia, idempresa, idsolicitud_registro, idcomprobante_pago) VALUES (%s, %s, %s, %s)",
         GetSQLValueString($estatus_membresia, "text"),
         GetSQLValueString($_POST['idempresa'], "int"),
         GetSQLValueString($_POST['idsolicitud_registro'], "int"),
         GetSQLValueString($idcomprobante_pago, "int"));
-      $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+      $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());*/
 
       ///inicia envio de mensaje dictamen positivo
 
-      $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]'", $dspp) or die(mysql_error());
+      $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]' AND documentacion.nombre != 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
       while($documentacion = mysql_fetch_assoc($row_documentacion)){
           $mail->AddAttachment($documentacion['archivo']);
           $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
       }
-
-      $documentacion_nombres .= '<li>'.$_POST['nombreArchivo'].'</li>';
-      $mail->AddAttachment($archivo);
+      if(!empty($archivo)){
+        $documentacion_nombres .= '<li>'.$_POST['nombreArchivo'].'</li>';
+        $mail->AddAttachment($archivo);
+      }
 
       $documentacion = mysql_fetch_assoc($row_documentacion);
 
+      if(!empty($_POST['mensaje_empresa'])){
+        $cuerpo_mensaje = '
+          <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+              <tbody>
+                <tr>
+                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Dictamen Positivo - SPP</span></p></th>
 
+                </tr>
+                <tr>
+                 <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+                </tr>
 
-      $cuerpo_mensaje = '
-            <html>
-            <head>
-              <meta charset="utf-8">
-            </head>
-            <body>
-              <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-                <tbody>
-                  <tr>
-                    <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Dictamen Positivo - SPP</span></p></th>
+                <tr>
+                  <td colspan="2">
+                    '.$_POST['mensaje_empresa'].'
+                  </td>
+                </tr>
+                <tr>
+                  <td><p><strong>Documentos Anexos</strong></p></td>
+                </tr>
+                <tr>
+                  <td>
+                    <ul>
+                      '.$documentacion_nombres.'
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="text-align:justify">
+                      <p>
+                        DESPUÉS DE FIRMAR EL <span style="color:red">CONTRATO DE USO</span> PROCEDA A CARGAR EL MISMO POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE EMPRESA EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>.
+                      </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="padding-top:10px;">
+                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </body>
+          </html>
+        ';
+      }else{
+        $cuerpo_mensaje = '
+          <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+              <tbody>
+                <tr>
+                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Dictamen Positivo - SPP</span></p></th>
 
-                  </tr>
-                  <tr>
-                   <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
-                  </tr>
+                </tr>
+                <tr>
+                 <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+                </tr>
 
-                  <tr>
-                    <td colspan="2">
-                      <p>Reciban ustedes un cordial y atento saludo, así como el deseo de éxito en todas y cada una de sus actividades</p>
-                      <p>La presente tiene por objetivo hacerles llegar el documentro <strong>Contrato de Uso del Simbolo de Pequeños Productores y Acuse de Recibido</strong>; documentos que se requieren sean leidos y entendidos, una vez revisada la información de los documentos mencionados, por favor <span style="color:red">proceder a firmarlos y envíar por medio del sistema D-SPP, esto ingresando en su cuenta de empresa </span>en la siguiente dirección <a href="http://d-spp.org/">http://d-spp.org/</a>.</p>
-                      <p>El Contrato de Uso menciona como anexo el documento Manual del SPP y este Manual a su vez menciona como anexos los siguientes documentos.</p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><p><strong>Documentos Anexos</strong></p></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <ul>
-                        '.$documentacion_nombres.'
-                      </ul>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
-                      <p>Asi mismo se anexan los datos bancarios para el respectivo pago de la membresía SPP</p>
-                      <p>El monto total de la membresía SPP es de: <span style="color:red;">'.$_POST['monto_membresia'].'</span></p>
-                      <p>Después de realizar el pago por favor cargue el comprobante en el sistema D-SPP</p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2">
-                      <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </body>
-            </html>
-      ';
-          if(!empty($detalle_empresa['contacto1_email'])){
-            $mail->AddAddress($detalle_empresa['contacto1_email']);
-          }
-          if(!empty($detalle_empresa['contacto2_email'])){
-            $mail->AddAddress($detalle_empresa['contacto2_email']);
-          }
-          if(!empty($detalle_empresa['adm1_email'])){
-            $mail->AddAddress($detalle_empresa['adm1_email']);
-          }
-          if(!empty($detalle_empresa['email'])){
-            $mail->AddAddress($detalle_empresa['email']);
-          }
-          $mail->AddBCC($administrador);
-          $mail->AddBCC($spp_global);
-          $mail->Subject = utf8_decode($asunto);
-          $mail->Body = utf8_decode($cuerpo_mensaje);
-          $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-
-          if($mail->Send()){
-            
-            echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
-          }else{
-                echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-       
-          }
-          //$mail->Send();
-          $mail->ClearAddresses();
-      ///termina envio de mensaje dictamen positivo
-
+                <tr>
+                  <td colspan="2" style="text-align:justify">
+                      <p>RECIBAN USTEDES UN CORDIAL Y ATENTO SALUDO, ASÍ COMO EL DESEO DE ÉXITO EN TODAS Y CADA UNA DE SUS ACTIVIDADES.</p>
+                      <p>
+                        NOS COMPLACE INFOMAR QUE FUE CONCLUIDA LA EVALUACION PARA LA CERTIFICACION SPP.  EL DICTAMEN FUE POSITIVO. 
+                      </p>
+                      <p>                              
+                        PARA CONCLUIR EL PROCESO SE SOLICITA <span style="color:red">FIRMAR EL CONTRATO DE USO</span>, UNA VEZ QUE HAYA <span style="color:red">LEIDO EL MANUAL DEL SPP</span>.
+                      </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td><p><strong>Documentos Anexos</strong></p></td>
+                </tr>
+                <tr>
+                  <td>
+                    <ul>
+                      '.$documentacion_nombres.'
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="text-align:justify">
+                      <p>
+                        DESPUÉS DE FIRMAR EL <span style="color:red">CONTRATO DE USO</span> PROCEDA A CARGAR EL MISMO POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE EMPRESA EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>.
+                      </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="padding-top:10px;">
+                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </body>
+          </html>
+        ';
+      }
+      if(!empty($detalle_empresa['contacto1_email'])){
+        $mail->AddAddress($detalle_empresa['contacto1_email']);
+      }
+      if(!empty($detalle_empresa['contacto2_email'])){
+        $mail->AddAddress($detalle_empresa['contacto2_email']);
+      }
+      if(!empty($detalle_empresa['adm1_email'])){
+        $mail->AddAddress($detalle_empresa['adm1_email']);
+      }
+      if(!empty($detalle_empresa['email'])){
+        $mail->AddAddress($detalle_empresa['email']);
+      }
+      $mail->AddBCC($spp_global);
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      //$mail->Send();
+      //$mail->ClearAddresses();
+      if($mail->Send()){
+        $mail->ClearAddresses();
+        echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+      }else{
+        $mail->ClearAddresses();
+        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+      }
+      //$mail->Send();
+            ///termina envio de mensaje dictamen positivo
 
     }//incia se envian documento si es una nueva solicitud
 
@@ -750,59 +846,9 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso de Certificación <?php echo $solicitud['idsolicitud_registro']; ?></h4>
+                        <h4 class="modal-title" id="myModalLabel">Proceso de Certificación</h4>
                       </div>
                       <div class="modal-body">
-
-
-                        <script>
-                        function funcionSelect() {
-                          var valorSelect = document.getElementById("statusSelect").value;
-
-                          if(valorSelect == '4'){
-                            document.getElementById('divSelect').style.display = 'block';
-                            document.getElementById("registroOculto").style.display = 'block';
-                            document.getElementById("nombreArchivo").style.display = 'block';
-                            document.getElementById("archivo_estatus").style.display = 'block';
-                            document.getElementById("tablaCorreo").style.display = 'none';
-                          }else if(valorSelect == '6'){
-                            document.getElementById('divSelect').style.display = 'block';
-                            document.getElementById("nombreArchivo").style.display = 'block';
-                            document.getElementById("archivo_estatus").style.display = 'block';
-                            document.getElementById("registroOculto").style.display = 'block';
-                            document.getElementById("tablaCorreo").style.display = 'none';
-                          }else if(valorSelect == '7'){
-                            document.getElementById('divSelect').style.display = 'block';
-                            document.getElementById("nombreArchivo").style.display = 'none';
-                            document.getElementById("archivo_estatus").style.display = 'none';
-                            document.getElementById("registroOculto").style.display = 'block';
-                            document.getElementById("tablaCorreo").style.display = 'none';
-                          }else if(valorSelect == '8'){
-                            document.getElementById("tablaCorreo").style.display = 'block'; 
-                            document.getElementById("nombreArchivo").style.display = 'none';
-                            document.getElementById("archivo_estatus").style.display = 'none';
-                            document.getElementById("registroOculto").style.display = 'none';
-                          }else if(valorSelect == '9'){
-                            document.getElementById('divSelect').style.display = 'block';
-                            document.getElementById("tablaCorreo").style.display = 'none'; 
-                            document.getElementById("nombreArchivo").style.display = 'block';
-                            document.getElementById("archivo_estatus").style.display = 'block';
-                            document.getElementById("registroOculto").style.display = 'block';                 
-                          }else if(valorSelect == '23'){
-                            document.getElementById('divSelect').style.display = 'block';
-                            document.getElementById("tablaCorreo").style.display = 'none';
-                            document.getElementById("nombreArchivo").style.display = 'none'; 
-                            document.getElementById("archivo_estatus").style.display = 'none';
-                            document.getElementById("registroOculto").style.display = 'block'                  
-                          }else{
-                            document.getElementById("nombreArchivo").style.display = 'none';
-                            document.getElementById("archivo_estatus").style.display = 'none';
-                            document.getElementById("registroOculto").style.display = 'none'
-                            document.getElementById("tablaCorreo").style.display = 'none';
-                            document.getElementById('divSelect').style.display = 'none';
-                          }
-                        }
-                        </script>
                         
                         <div class="row">
                           <?php 
@@ -816,7 +862,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           if(!isset($solicitud['idcomprobante_pago'])){
                           ?>
                           <div class="col-md-12">
-                            <select class="form-control" name="estatus_interno" id="statusSelect" onchange="funcionSelect()" required>
+                            <select class="form-control" name="estatus_interno" id="<?php echo 'statusSelect'.$solicitud['idsolicitud_registro']; ?>" onchange="<?php echo 'funcionSelect'.$solicitud['idsolicitud_registro'].'()'; ?>">
                               <option value="">Seleccione el proceso en el que se encuentra</option>
                               <?php 
                               $row_estatus_interno = mysql_query("SELECT * FROM estatus_interno",$dspp) or die(mysql_error());
@@ -830,22 +876,22 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           }
                           ?>
 
-                              <div class="col-xs-12" id="divSelect" style="margin-top:10px;">
+                              <div class="col-xs-12" id="<?php echo 'divSelect'.$solicitud['idsolicitud_registro']; ?>" style="margin-top:10px;">
                                 <div class="col-xs-6">
-                                  <input style="display:none" id="nombreArchivo" type='text' class='form-control' name='nombre_archivo' placeholder="Nombre del Archivo"/>
+                                  <input style="display:none" id="<?php echo 'nombreArchivo'.$solicitud['idsolicitud_registro']; ?>" type='text' class='form-control' name='nombre_archivo' placeholder="Nombre del Archivo"/>
                                 </div>
                                 <!-- INICIA CARGAR ARCHIVO ESTATUS -->
                                 <div class="col-xs-6">
-                                  <input style="display:none" id="archivo_estatus" type='file' class='form-control' name='archivo_estatus' />
+                                  <input style="display:none" id="<?php echo 'archivo_estatus'.$solicitud['idsolicitud_registro']; ?>" type='file' class='form-control' name='archivo_estatus' />
                                 </div>
                                 <!-- TERMINA CARGAR ARCHIVO ESTATUS -->
 
                                 <!-- INICIA ACCION PROCESO CERTIFICACION -->
-                                <textarea class="form-control" id="registroOculto" style="display:none" name="accion" cols="30" rows="10" value="" placeholder="Escribe aquí"></textarea>
+                                <textarea class="form-control" id="<?php echo 'registroOculto'.$solicitud['idsolicitud_registro']; ?>" style="display:none" name="accion" cols="30" rows="10" value="" placeholder="Escribe aquí"></textarea>
                                 <!-- TERMINA ACCION PROCESO CERTIFICACION -->
                               </div>
 
-                              <div id="tablaCorreo" style="display:none">
+                              <div id="<?php echo 'tablaCorreo'.$solicitud['idsolicitud_registro']; ?>" style="display:none">
                                 <div class="col-xs-12"  style="margin-top:10px;">
                                   <?php 
                                   if($solicitud['tipo_solicitud'] == 'RENOVACION'){
@@ -859,36 +905,36 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   }else{
                                   ?>
                                       <p class="alert alert-info">El siguiente formato sera enviado en breve al empresa</p>
-                                      <div class="col-xs-6">
+                                      <div class="col-xs-12">
                                         
                                         <div class="col-xs-12">
                                           <div class="col-xs-6"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></div>
                                           <div class="col-xs-6">
                                             <p>Enviado el: <?php echo date("d/m/Y", time()); ?></p>
                                             <p>Para: <span style="color:red"><?php echo $solicitud['nombre_empresa']; ?></span></p>
-                                            <p>Correo(s): <?php echo $solicitud['contacto1_email']." ".$solicitud['contacto2_email']." ".$solicitud['email']; ?></p>
-                                            <p>Asunto: <span style="color:red">Contrato de uso del Simbolo de Pequeños Productores - SPP</span></p>
+                                            <p>Correo(s): <?php echo $solicitud['contacto1_email']." , ".$solicitud['contacto2_email']." , ".$solicitud['email']; ?></p>
+                                            <p>Asunto: <span style="color:red">Notificación del Dictamen - SPP</span></p>
                                             
                                           </div>
                                         </div>
                                         <div class="col-xs-12">
-                                          <h5 class="alert alert-warning">MENSAJE empresa( <small>Cuerpo del mensaje en caso de ser requerido</small>)</h5>
-                                          <textarea name="mensajeempresa" class="form-control" id="textareaMensaje" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé"></textarea>
+                                          <h4 style="font-size:14px;padding:5px;">MENSAJE EMPRESA( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
+                                          <textarea name="mensaje_empresa" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé"></textarea>
 
                                         </div>
                                       </div>
-                                      <div class="col-xs-6">
+                                      <div class="col-xs-12">
                                         <div class="col-xs-12">
-                                          <h4>ARCHIVOS ADJUNTOS( <small>Archivos adjuntos dentro del email</small> )</h4>
+                                          <h4 style="font-size:14px;">ARCHIVOS ADJUNTOS: <span style="color:#7f8c8d">Documentación enviada al actor una vez que ha finalizado el Proceso de Certificación con un dictamen Positivo.</span></h4>
                                           <?php 
-                                          $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8", $dspp) or die(mysql_error());
+                                          $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND documentacion.nombre != 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
                                           while($documetacion = mysql_fetch_assoc($row_documentacion)){
 
                                             echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$documetacion[archivo]' target='_blank'>$documetacion[nombre]</a><br>";
                                           }
                                            ?>
                                           <p class="alert alert-warning" style="padding:5px;">
-                                            Enviar archivos en:
+                                            Seleccione el idioma en el que desea enviar los archivos:
                                             <label class="radio-inline">
                                               <input type="radio" name="idioma" id="inlineRadio1" value="ESP"> Español
                                             </label>
@@ -899,17 +945,13 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
         
                                         </div>
                                         <div class="col-xs-12">
-                                          <h4>ARCHIVO EXTRA( <small>Anexar algun otro archivo en caso de ser requerido</small>)</h4>
+                                          <h4 style="font-size:14px;">ARCHIVO EXTRA: <span style="color:#7f8c8d">Anexar algun otro archivo en caso de ser requerido.</span></h4>
                                           <div class="col-xs-12">
-                                            <input type="hidden" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
+                                            <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
                                           </div>
                                           <div class="col-xs-12">
                                             <input type="file" class="form-control" name="archivo_extra">
                                           </div>
-                                        </div>
-                                        <div class="col-xs-12">
-                                          <h5 class="alert alert-warning">MEMBRESÍA SPP( Indicar el monto total de la membresía )</h5>
-                                          <p>Total Membresía: <input type="text" class="form-control" name="monto_membresia" placeholder="Total Membresía"></p>
                                         </div>
                                       </div>
                                   <?php
@@ -920,6 +962,55 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                         </div>
 
+                      <?php
+                          echo "<script>";
+                          echo "function funcionSelect".$solicitud['idsolicitud_registro']."() {";
+                            echo "var valorSelect = document.getElementById('statusSelect".$solicitud['idsolicitud_registro']."').value;";
+                            echo "if(valorSelect == '4'){";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                            echo "}else if(valorSelect == '6'){";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                            echo "}else if(valorSelect == '7'){";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                            echo "}else if(valorSelect == '8'){";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'block';"; 
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                            echo "}else if(valorSelect == '9'){";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';"; 
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";                 
+                            echo "}else if(valorSelect == '23'){";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';"; 
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";                
+                            echo "}else{";
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                            echo "}";
+                          echo "}";
+                          echo "</script>";
+                      ?>
 
                       </div>
                       <div class="modal-footer">
@@ -950,8 +1041,6 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 <!-- termina modal proceso de certificación -->
 
               <?php
-
-
               }else{
                 echo "No Disponible";
               }

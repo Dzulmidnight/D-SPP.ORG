@@ -169,80 +169,76 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
 
     //// inicia envio a correo OPP
 
-      $query_opp = "SELECT email FROM opp WHERE email !=''";
+      $query_opp = "SELECT email FROM opp INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE email !=''";
       $ejecutar_opp = mysql_query($query_opp,$dspp) or die(mysql_error());
 
       $direcciones = '';
       while($email_opp = mysql_fetch_assoc($ejecutar_opp)){
-          if($email_opp['email'] != ""){
-            $mail->AddAddress($email_opp['email']);
-          }
+        $mail->AddAddress($email_opp['email']);
       }
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
       $mail->Send();
-
+      $mail->ClearAddresses();
 
     //// termina envio a correo OPP
 
     ///// inicia envio a correos empresa
-      $query_empresa = "SELECT email FROM empresa WHERE email !=''";
+      $query_empresa = "SELECT email FROM empresa INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE email !=''";
       $ejecutar_empresa = mysql_query($query_empresa,$dspp) or die(mysql_error());
 
       while($email_empresa = mysql_fetch_assoc($ejecutar_empresa)){
         $mail->AddAddress($email_empresa['email']);
       }
-
-
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
-        $mail->ClearAddresses();
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
 
     ///// termina envio a correo empresa
 
     //// inicia envio a correo OC
       $query_oc = "SELECT email1, email2 FROM oc";
       $ejecutar_oc = mysql_query($query_oc,$dspp) or die(mysql_error());
-
-
       while($email_oc = mysql_fetch_assoc($ejecutar_oc)){
         $mail->AddAddress($email_oc['email1']);
-        $mail->AddAddress($email_oc['email2']);
+        if(!empty($email_oc['email2'])){
+          $mail->AddAddress($email_oc['email2']);
+        }
       }
 
 
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
-        $mail->ClearAddresses();
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
 
     //// termina envio a correo OC
 
     //// inicia envio a correo ADM
-        $query_adm = "SELECT email FROM adm";
-        $ejecutar_adm = mysql_query($query_adm,$dspp) or die(mysql_error());
+      $query_adm = "SELECT email FROM adm";
+      $ejecutar_adm = mysql_query($query_adm,$dspp) or die(mysql_error());
 
-        while($email_adm = mysql_fetch_assoc($ejecutar_adm)){  
-          if($email_adm['email'] != "isc.jesusmartinez@gmail.com"){
-            $mail->AddAddress($email_adm['email']);
-          }
+      while($email_adm = mysql_fetch_assoc($ejecutar_adm)){  
+        if($email_adm['email'] != "isc.jesusmartinez@gmail.com"){
+          $mail->AddAddress($email_adm['email']);
         }
+      }
 
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
 
-        if($mail->Send()){
-          $mail->ClearAddresses();   
-          echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
-        }else{
-          $mail->ClearAddresses();
-          echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
-        }
+      if($mail->Send()){
+        $mail->ClearAddresses();   
+        echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+      }else{
+        $mail->ClearAddresses();
+        echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
+      }
     //// termina envio a correo ADM
 
 

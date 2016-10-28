@@ -278,86 +278,155 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
           $mail->AddAttachment($documentacion['archivo']);
           $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
       }
-
-      $documentacion_nombres .= '<li>'.$_POST['nombreArchivo'].'</li>';
-      $mail->AddAttachment($archivo);
+      if(!empty($archivo)){
+        $documentacion_nombres .= '<li>'.$_POST['nombreArchivo'].'</li>';
+        $mail->AddAttachment($archivo);
+      }
 
       $documentacion = mysql_fetch_assoc($row_documentacion);
 
-
       $asunto = "D-SPP | Proceso de Certificación, Dictamen Positivo";
 
-      $cuerpo_mensaje = '
-            <html>
-            <head>
-              <meta charset="utf-8">
-            </head>
-            <body>
-              <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-                <tbody>
-                  <tr>
-                    <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Dictamen Positivo - SPP</span></p></th>
+      if(!empty($_POST['mensajeOPP'])){
+        $cuerpo_mensaje = '
+              <html>
+              <head>
+                <meta charset="utf-8">
+              </head>
+              <body>
+                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+                  <tbody>
+                    <tr>
+                      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Dictamen Positivo - SPP</span></p></th>
 
-                  </tr>
-                  <tr>
-                   <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
-                  </tr>
+                    </tr>
+                    <tr>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
+                    </tr>
 
-                  <tr>
-                    <td colspan="2">
-                      <p>Reciban ustedes un cordial y atento saludo, así como el deseo de éxito en todas y cada una de sus actividades</p>
-                      <p>La presente tiene por objetivo hacerles llegar el documentro <strong>Contrato de Uso del Simbolo de Pequeños Productores y Acuse de Recibido</strong>; documentos que se requieren sean leidos y entendidos, una vez revisada la información de los documentos mencionados, por favor <span style="color:red">proceder a firmarlos y envíar por medio del sistema D-SPP, esto ingresando en su cuenta de OPP </span>en la siguiente dirección <a href="http://d-spp.org/">http://d-spp.org/</a>.</p>
-                      <p>El Contrato de Uso menciona como anexo el documento Manual del SPP y este Manual a su vez menciona como anexos los siguientes documentos.</p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><p><strong>Documentos Anexos</strong></p></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <ul>
-                        '.$documentacion_nombres.'
-                      </ul>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
-                      <p>Asi mismo se anexan los datos bancarios para el respectivo pago de la membresía SPP</p>
-                      <p>El monto total de la membresía SPP es de: <span style="color:red;">'.$_POST['monto_membresia'].'</span></p>
-                      <p>Después de realizar el pago por favor cargue el comprobante en el sistema D-SPP</p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2">
-                      <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </body>
-            </html>
-      ';
+                    <tr>
+                      <td colspan="2" style="text-align:justify">
+                        <p>'.$_POST['mensajeOPP'].'</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><p><strong>DOCUMENTOS ANEXOS</strong></p></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <ul>
+                          '.$documentacion_nombres.'
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2" style="text-align:justify">
+                        <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
+                        <p>
+                          ADICIONALMENTE SE SOLICITA DE LA MANERA MÁS ATENTA REALIZAR EL PAGO CORRESPONDIENTE A LA MEMBRESIA SPP POR EL IMPORTE DE: <span style="color:red;">'.$_POST['monto_membresia'].'</span>
+                        </p>
+                        <p>
+                          LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
+                        </p>
+                        <p>
+                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </body>
+              </html>
+        ';
+      }else{
+        $cuerpo_mensaje = '
+              <html>
+              <head>
+                <meta charset="utf-8">
+              </head>
+              <body>
+                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+                  <tbody>
+                    <tr>
+                      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Dictamen Positivo - SPP</span></p></th>
+
+                    </tr>
+                    <tr>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
+                    </tr>
+
+                    <tr>
+                      <td colspan="2" style="text-align:justify">
+                        <p>RECIBAN USTEDES UN CORDIAL Y ATENTO SALUDO, ASÍ COMO EL DESEO DE ÉXITO EN TODAS Y CADA UNA DE SUS ACTIVIDADES.</p>
+                        <p>
+                          NOS COMPLACE INFOMAR QUE FUE CONCLUIDA LA EVALUACION PARA LA CERTIFICACION SPP.  EL DICTAMEN FUE POSITIVO. 
+                        </p>
+                        <p>                              
+                          PARA CONCLUIR EL PROCESO SE SOLICITA <span style="color:red">FIRMAR EL CONTRATO DE USO</span>, UNA VEZ QUE HAYA <span style="color:red">LEIDO EL MANUAL DEL SPP</span>.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><p><strong>DOCUMENTOS ANEXOS</strong></p></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <ul>
+                          '.$documentacion_nombres.'
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2" style="text-align:justify">
+                        <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
+                        <p>
+                          ADICIONALMENTE SE SOLICITA DE LA MANERA MÁS ATENTA REALIZAR EL PAGO CORRESPONDIENTE A LA MEMBRESIA SPP POR EL IMPORTE DE: <span style="color:red;">'.$_POST['monto_membresia'].'</span>
+                        </p>
+                        <p>
+                          LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
+                        </p>
+                        <p>
+                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </body>
+              </html>
+        ';
+      }
+
           $mail->AddAddress($detalle_opp['contacto1_email']);
           $mail->AddAddress($detalle_opp['contacto2_email']);
           $mail->AddAddress($detalle_opp['adm1_email']);
           $mail->AddAddress($detalle_opp['email']);
-          $mail->AddBCC($administrador);
           $mail->AddBCC($spp_global);
           $mail->Subject = utf8_decode($asunto);
           $mail->Body = utf8_decode($cuerpo_mensaje);
           $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
 
           if($mail->Send()){
-            
+            $mail->ClearAddresses();
             echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
           }else{
-                echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-       
+            $mail->ClearAddresses();
+            echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
           }
           //$mail->Send();
-          $mail->ClearAddresses();
+          
       ///termina envio de mensaje dictamen positivo
     }
 
@@ -783,6 +852,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
               if(isset($solicitud['dictamen']) && $solicitud['dictamen'] == 'POSITIVO' || ($solicitud['tipo_solicitud']) == 'RENOVACION' && !empty($solicitud['fecha_aceptacion'])){
               ?>
                 <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
+
                 <!-- inicia modal proceso de certificación -->
                 <div id="<?php echo "certificacion".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
@@ -791,8 +861,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myModalLabel">Proceso de Certificación</h4>
                       </div>
-                      <div class="modal-body">
-                        <div class="row">
+                      <div class="modal-body"><!-- INICIA MODAL BODY -->
+                        <div class="row"><!--INICIA ROW-->
                           <?php 
 
                           $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_certificacion = '$solicitud[idsolicitud_certificacion]' AND proceso_certificacion.estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
@@ -804,7 +874,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           if(!isset($solicitud['idcomprobante_pago'])){
                           ?>
                           <div class="col-md-12">
-                            <select class="form-control" name="estatus_interno" id="statusSelect" onchange="funcionSelect()" required>
+                            <select class="form-control" name="estatus_interno" id="<?php echo 'statusSelect'.$solicitud['idsolicitud_certificacion']; ?>" onchange="<?php echo 'funcionSelect'.$solicitud['idsolicitud_certificacion'].'()'; ?>">
                               <option value="">Seleccione el proceso en el que se encuentra</option>
                               <?php 
                               $row_estatus_interno = mysql_query("SELECT * FROM estatus_interno",$dspp) or die(mysql_error());
@@ -814,26 +884,28 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                ?>
                             </select>                        
                           </div>
+
                           <?php
                           }
                           ?>
 
-                              <div class="col-xs-12" id="divSelect" style="margin-top:10px;">
+                              <div class="col-xs-12" id="<?php echo 'divSelect'.$solicitud['idsolicitud_certificacion']; ?>" style="margin-top:10px;">
                                 <div class="col-xs-6">
-                                  <input style="display:none" id="nombreArchivo" type='text' class='form-control' name='nombre_archivo' placeholder="Nombre del Archivo"/>
+                                  <input style="display:none" id="<?php echo 'nombreArchivo'.$solicitud['idsolicitud_certificacion']; ?>"  type='text' class='form-control' name='nombre_archivo' placeholder="Nombre del Archivo"/>
                                 </div>
                                 <!-- INICIA CARGAR ARCHIVO ESTATUS -->
                                 <div class="col-xs-6">
-                                  <input style="display:none" id="archivo_estatus" type='file' class='form-control' name='archivo_estatus' />
+                                  <input style="display:none" id="<?php echo 'archivo_estatus'.$solicitud['idsolicitud_certificacion']; ?>" type='file' class='form-control' name='archivo_estatus' />
                                 </div>
                                 <!-- TERMINA CARGAR ARCHIVO ESTATUS -->
 
                                 <!-- INICIA ACCION PROCESO CERTIFICACION -->
-                                <textarea class="form-control" id="registroOculto" style="display:none" name="accion" cols="30" rows="10" value="" placeholder="Escribe aquí"></textarea>
+                                <textarea class="form-control" id="<?php echo 'registroOculto'.$solicitud['idsolicitud_certificacion']; ?>" style="display:none" name="accion" cols="30" rows="10" value="" placeholder="Escribe aquí"></textarea>
                                 <!-- TERMINA ACCION PROCESO CERTIFICACION -->
                               </div>
-
-                              <div id="tablaCorreo" style="display:none">
+                              
+                              <!-------- INICIA VENTANA DICTAMEN POSITIVO ---------->
+                              <div id="<?php echo 'tablaCorreo'.$solicitud['idsolicitud_certificacion']; ?>" style="display:none"> 
                                 <div class="col-xs-12"  style="margin-top:10px;">
                                   <?php 
                                   if($solicitud['tipo_solicitud'] == 'RENOVACION'){
@@ -853,14 +925,14 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       </div>
                                       <div class="col-xs-12">
                                         <h4 class="alert alert-warning">MENSAJE OPP( <small>*opcional. <span style="color:red">Campo para enviar un mensaje al OPP sobre el Dictamen Positivo</span></small>)</h4>
-                                        <textarea name="mensaje_renovacion" class="form-control" id="textareaMensaje" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé" readonly></textarea>
+                                        <textarea name="mensaje_renovacion" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé"></textarea>
 
                                       </div>
                                     </div>
 
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-12">
                                       <div class="col-xs-12">
-                                        <h4>ARCHIVOS ADJUNTOS( <small>Archivos adjuntos dentro del email</small> )</h4>
+                                        <h4 style="font-size:14px;">ARCHIVOS ADJUNTOS( <small>Archivos adjuntos dentro del email</small> )</h4>
                                         <?php 
                                           echo '<h5 style="font-size:12px;" class="alert alert-warning">
                                           <ul>
@@ -876,7 +948,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       </div>
 
                                       <div class="col-xs-12">
-                                        <h4>ARCHIVO EXTRA( <small><span style="color:red">*opcional</span>. Anexar algun otro archivo en diferente a los enviados por SPP GLOBAL</small>)</h4>
+                                        <h4 style="font-size:14px;">ARCHIVO EXTRA( <small><span style="color:red">*opcional</span>. Anexar algun otro archivo en diferente a los enviados por SPP GLOBAL</small>)</h4>
                                         <div class="col-xs-12">
                                           <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
                                         </div>
@@ -890,27 +962,27 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   }else{
                                   ?>
                                     <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP</p>
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-12">
                                       
                                       <div class="col-xs-12">
                                         <div class="col-xs-6"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></div>
                                         <div class="col-xs-6">
                                           <p>Enviado el: <?php echo date("d/m/Y", time()); ?></p>
                                           <p>Para: <span style="color:red"><?php echo $solicitud['nombre_opp']; ?></span></p>
-                                          <p>Correo(s): <?php echo $solicitud['contacto1_email']." ".$solicitud['contacto2_email']." ".$solicitud['email']; ?></p>
+                                          <p>Correo(s): <?php echo $solicitud['contacto1_email']." , ".$solicitud['contacto2_email']." , ".$solicitud['email']; ?></p>
                                           <p>Asunto: <span style="color:red">Notificación del Dictamen - SPP</span></p>
                                           
                                         </div>
                                       </div>
                                       <div class="col-xs-12">
-                                        <h4 class="alert alert-warning">MENSAJE OPP( <small>EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado</span></small>)</h4>
-                                        <textarea name="mensajeOPP" class="form-control" id="textareaMensaje" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé" readonly></textarea>
+                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?opp=<?php echo $solicitud['nombre_opp'];?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
+                                        <textarea name="mensajeOPP" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé" ></textarea>
 
                                       </div>
                                     </div>
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-12">
                                       <div class="col-xs-12">
-                                        <h4>ARCHIVOS ADJUNTOS( <small>Archivos adjuntos dentro del email</small> )</h4>
+                                        <h4 style="font-size:14px;">ARCHIVOS ADJUNTOS: <span style="color:#7f8c8d">Documentación enviada al actor una vez que ha finalizado el Proceso de Certificación con un dictamen Positivo.</span></h4>
                                         <?php 
                                         $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8", $dspp) or die(mysql_error());
                                         while($documetacion = mysql_fetch_assoc($row_documentacion)){
@@ -919,7 +991,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         }
                                          ?>
                                         <p class="alert alert-warning" style="padding:5px;">
-                                          Enviar archivos en:
+                                          Seleccione el idioma en el que desea enviar los archivos:
                                           <label class="radio-inline">
                                             <input type="radio" name="idioma" id="inlineRadio1" value="ESP"> Español
                                           </label>
@@ -930,17 +1002,17 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
       
                                       </div>
                                       <div class="col-xs-12">
-                                        <h4>ARCHIVO EXTRA( <small>Anexar algun otro archivo en caso de ser requerido</small>)</h4>
+                                        <h4 style="font-size:14px;">ARCHIVO EXTRA: <span style="color:#7f8c8d">Anexar algun otro archivo en caso de ser requerido.</span></h4>
                                         <div class="col-xs-12">
-                                          <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
+                                          <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre del Archivo">
                                         </div>
                                         <div class="col-xs-12">
                                           <input type="file" class="form-control" name="archivo_extra">
                                         </div>
                                       </div>
                                       <div class="col-xs-12">
-                                        <h5 class="alert alert-warning">MEMBRESÍA SPP( Indicar el monto total de la membresía )</h5>
-                                        <p>Total Membresía: <input type="text" class="form-control" name="monto_membresia" placeholder="Total Membresía"></p>
+                                        <h4 style="font-size:14px;">MEMBRESÍA SPP: <span style="color:#7f8c8d">Indicar el monto total de la membresía, asi como el tipo de moneda.</span></h4>
+                                        <input type="text" class="form-control" name="monto_membresia" placeholder="Total Membresía">
                                       </div>
                                     </div>
 
@@ -949,9 +1021,59 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   ?>
                                 </div>
                               </div>
+                              <!-------- TERMINA VENTANA DICTAMEN POSITIVO ---------->
+                        </div><!--TERMINA ROW-->
+                      </div><!-- TERMINA MODAL BODY -->
 
-                        </div>
-                      </div>
+                      <?php
+                          echo "<script>";
+                          echo "function funcionSelect".$solicitud['idsolicitud_certificacion']."() {";
+                            echo "var valorSelect = document.getElementById('statusSelect".$solicitud['idsolicitud_certificacion']."').value;";
+                            echo "if(valorSelect == '4'){";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                            echo "}else if(valorSelect == '6'){";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                            echo "}else if(valorSelect == '7'){";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                            echo "}else if(valorSelect == '8'){";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_certificacion']."').style.display = 'block';"; 
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                            echo "}else if(valorSelect == '9'){";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_certificacion']."').style.display = 'none';"; 
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";                 
+                            echo "}else if(valorSelect == '23'){";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_certificacion']."').style.display = 'none';"; 
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_certificacion']."').style.display = 'block';";                
+                            echo "}else{";
+                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_certificacion']."').style.display = 'none';";
+                            echo "}";
+                          echo "}";
+                          echo "</script>";
+                      ?>
                       <div class="modal-footer">
                         <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
@@ -970,57 +1092,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                   </div>
                 </div>
                 <!-- termina modal proceso de certificación -->
-                    <script>
-                    function funcionSelect() {
-                      var valorSelect = document.getElementById("statusSelect").value;
 
-                      if(valorSelect == '4'){
-                        document.getElementById('divSelect').style.display = 'block';
-                        document.getElementById("registroOculto").style.display = 'block';
-                        document.getElementById("nombreArchivo").style.display = 'block';
-                        document.getElementById("archivo_estatus").style.display = 'block';
-                        document.getElementById("tablaCorreo").style.display = 'none';
-                      }else if(valorSelect == '6'){
-                        document.getElementById('divSelect').style.display = 'block';
-                        document.getElementById("nombreArchivo").style.display = 'block';
-                        document.getElementById("archivo_estatus").style.display = 'block';
-                        document.getElementById("registroOculto").style.display = 'block';
-                        document.getElementById("tablaCorreo").style.display = 'none';
-                      }else if(valorSelect == '7'){
-                        document.getElementById('divSelect').style.display = 'block';
-                        document.getElementById("nombreArchivo").style.display = 'none';
-                        document.getElementById("archivo_estatus").style.display = 'none';
-                        document.getElementById("registroOculto").style.display = 'block';
-                        document.getElementById("tablaCorreo").style.display = 'none';
-                      }else if(valorSelect == '8'){
-                        document.getElementById("tablaCorreo").style.display = 'block'; 
-                        document.getElementById("nombreArchivo").style.display = 'none';
-                        document.getElementById("archivo_estatus").style.display = 'none';
-                        document.getElementById("registroOculto").style.display = 'none';
-                      }else if(valorSelect == '9'){
-                        document.getElementById('divSelect').style.display = 'block';
-                        document.getElementById("tablaCorreo").style.display = 'none'; 
-                        document.getElementById("nombreArchivo").style.display = 'block';
-                        document.getElementById("archivo_estatus").style.display = 'block';
-                        document.getElementById("registroOculto").style.display = 'block';                 
-                      }else if(valorSelect == '23'){
-                        document.getElementById('divSelect').style.display = 'block';
-                        document.getElementById("tablaCorreo").style.display = 'none';
-                        document.getElementById("nombreArchivo").style.display = 'none'; 
-                        document.getElementById("archivo_estatus").style.display = 'none';
-                        document.getElementById("registroOculto").style.display = 'block'                  
-                      }else{
-                        document.getElementById("nombreArchivo").style.display = 'none';
-                        document.getElementById("archivo_estatus").style.display = 'none';
-                        document.getElementById("registroOculto").style.display = 'none'
-                        document.getElementById("tablaCorreo").style.display = 'none';
-                        document.getElementById('divSelect').style.display = 'none';
-                      }
-                    }
-                    </script>
               <?php
-
-
               }else{
                 echo "No Disponible";
               }
@@ -1154,7 +1227,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           </div>
                           
                           <div class="col-md-6">
-                            <h4>Cargar Certificado</h4>
+                            <h4 style="font-size:14px;">Cargar Certificado</h4>
                             <?php 
                             if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idformato_evaluacion']) && isset($solicitud['idinforme_evaluacion'])){
 
@@ -1245,7 +1318,14 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
     </table>
   </div>
 </div>
-
+<script type="text/javascript">
+<!--
+function ventanaNueva(documento,ancho,alto,nombreVentana){
+    window.open(documento, nombreVentana,'width=' + ancho + ', height=' + alto);
+}
+     
+//-->
+</script>
 <!--<table>
 <tr>
 <td width="20"><?php if ($pageNum_opp > 0) { // Show if not first page ?>
