@@ -174,12 +174,6 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   </tr>
 
                   <tr>
-                    <td colspan="2" style="padding-top:20px;padding-bottom:20px;">
-                      '.$mensaje_renovacion.'
-                    </td>
-                  </tr>
-
-                  <tr>
                     <td colspan="2">
                       <p>NOS COMPLACE INFORMAR QUE LA EVALUACION PARA LA RENOVACION DE SU CERTIFICADO SPP FUE CONCLUIDA CON UN DICTAMEN POSITIVO.</p>
                       <p>PARA PODER ENTREGAR EL CERTIFICADO SE DEBE PROCEDER CON EL PAGO DE MEMBRESIA, POR EL MONTO DE: <span style="color:red;">'.$_POST['monto_membresia'].'</span>.</p>
@@ -408,24 +402,32 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               </html>
         ';
       }
+      if(!empty($detalle_opp['contacto1_email'])){
+        $mail->AddAddress($detalle_opp['contacto1_email']);
+      }
+      if(!empty($detalle_opp['contacto2_email'])){
+        $mail->AddAddress($detalle_opp['contacto2_email']);
+      }
+      if(!empty($detalle_opp['adm1_email'])){
+        $mail->AddAddress($detalle_opp['adm1_email']);
+      }
+      if(!empty($detalle_opp['email'])){
+        $mail->AddAddress($detalle_opp['email']);
+      }
+      $mail->AddBCC($spp_global);
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      /*$mail->Send();
+      $mail->ClearAddresses();*/
+      if($mail->Send()){
+        $mail->ClearAddresses();
+        echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+      }else{
+        $mail->ClearAddresses();
+        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+      }
 
-          $mail->AddAddress($detalle_opp['contacto1_email']);
-          $mail->AddAddress($detalle_opp['contacto2_email']);
-          $mail->AddAddress($detalle_opp['adm1_email']);
-          $mail->AddAddress($detalle_opp['email']);
-          $mail->AddBCC($spp_global);
-          $mail->Subject = utf8_decode($asunto);
-          $mail->Body = utf8_decode($cuerpo_mensaje);
-          $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-
-          if($mail->Send()){
-            $mail->ClearAddresses();
-            echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
-          }else{
-            $mail->ClearAddresses();
-            echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-          }
-          //$mail->Send();
           
       ///termina envio de mensaje dictamen positivo
     }
@@ -456,8 +458,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
   if(!empty($_FILES['formato_evaluacion']['name'])){
       $_FILES["formato_evaluacion"]["name"];
-        move_uploaded_file($_FILES["formato_evaluacion"]["tmp_name"], $ruta_evaluacion.time()."_".$_FILES["formato_evaluacion"]["name"]);
-        $formato = $ruta_evaluacion.basename(time()."_".$_FILES["formato_evaluacion"]["name"]);
+        move_uploaded_file($_FILES["formato_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha."_".$_FILES["formato_evaluacion"]["name"]);
+        $formato = $ruta_evaluacion.basename($fecha."_".$_FILES["formato_evaluacion"]["name"]);
   }else{
     $formato = NULL;
   }
@@ -483,8 +485,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
   if(!empty($_FILES['informe_evaluacion']['name'])){
       $_FILES["informe_evaluacion"]["name"];
-        move_uploaded_file($_FILES["informe_evaluacion"]["tmp_name"], $ruta_evaluacion.time()."_".$_FILES["informe_evaluacion"]["name"]);
-        $informe = $ruta_evaluacion.basename(time()."_".$_FILES["informe_evaluacion"]["name"]);
+        move_uploaded_file($_FILES["informe_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha."_".$_FILES["informe_evaluacion"]["name"]);
+        $informe = $ruta_evaluacion.basename($fecha."_".$_FILES["informe_evaluacion"]["name"]);
   }else{
     $informe = NULL;
   }
@@ -511,8 +513,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
   if(!empty($_FILES['dictamen_evaluacion']['name'])){
       $_FILES["dictamen_evaluacion"]["name"];
-        move_uploaded_file($_FILES["dictamen_evaluacion"]["tmp_name"], $ruta_evaluacion.time()."_".$_FILES["dictamen_evaluacion"]["name"]);
-        $dictamen = $ruta_evaluacion.basename(time()."_".$_FILES["dictamen_evaluacion"]["name"]);
+        move_uploaded_file($_FILES["dictamen_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha."_".$_FILES["dictamen_evaluacion"]["name"]);
+        $dictamen = $ruta_evaluacion.basename($fecha."_".$_FILES["dictamen_evaluacion"]["name"]);
   }else{
     $dictamen = NULL;
   }
@@ -593,12 +595,18 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     $mail->Subject = utf8_decode($asunto);
     $mail->Body = utf8_decode($cuerpo_mensaje);
     $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-    $mail->Send();
-    $mail->ClearAddresses();
-
+    //$mail->Send();
+    //$mail->ClearAddresses();
+    if($mail->Send()){
+      $mail->ClearAddresses();
+      echo "<script>alert('Se ha enviado el Formato, Dictamen e Informe de Evaluación, en breve sera contactado.');location.href ='javascript:history.back()';</script>";
+    }else{
+      $mail->ClearAddresses();
+      echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+    }
   //termina enviar correo a ADM sobre documentación de Evaluación
 
-  $mensaje = "Se ha enviado el Formato, Dictamen e Informe de Evaluación";
+  //$mensaje = "Se ha enviado el Formato, Dictamen e Informe de Evaluación";
 
 }
 
@@ -704,6 +712,8 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     $mail->Send();
     $mail->ClearAddresses();
 
+
+
   //termina correo envio de certificado
 
   $mensaje = "Se ha cargado el Certificado y se ha notificado a SPP GLOBAL y a la Organización de Pequeños Productores";
@@ -790,7 +800,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <?php echo $solicitud['abreviacionOC']; ?>
           </td>
           <td>
-            <?php echo $solicitud['abreviacion_opp']; ?>
+            <a href="?OPP&detail&idopp=<?php echo $solicitud['idopp']; ?>"><?php echo $solicitud['abreviacion_opp']; ?></a>
           </td>
           <td>
             <?php 
@@ -833,7 +843,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 <?php 
                 if(isset($solicitud['documento'])){
                 ?>
-                  <p class="alert alert-success" style="margin-bottom:0;padding:0px;">Dictamen: <?php echo $solicitud['dictamen']; ?></p>
+                  <p class="alert alert-success" style="margin-bottom:0;padding:0px;">Resolución: <?php echo $solicitud['dictamen']; ?></p>
                   <a class="btn btn-info" style="font-size:12px;width:100%;height:30px;" href='<?php echo $solicitud['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
                 <?php
                 }
@@ -1107,19 +1117,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- INICIA SECCION CERTIFICADO ------>
           <form action="" method="POST" enctype="multipart/form-data">
           <td>
-            <?php /*
-            if(isset($solicitud['iddictamen_evaluacion'])){
-            ?>
             <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Cargar Certificado</button>
-            <?php
-            }else{
-            ?>
-            <button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Cargar Certificado</button>
-            <?php
-            }*/
-             ?>
-                <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Cargar Certificado</button>
-
           </td>
                 <!-- inicia modal estatus_Certificado -->
 

@@ -562,8 +562,16 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
   $mail->Subject = utf8_decode($asunto);
   $mail->Body = utf8_decode($cuerpo_mensaje);
   $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-  $mail->Send();
-  $mail->ClearAddresses();
+  /*$mail->Send();
+  $mail->ClearAddresses();*/
+  if($mail->Send()){
+    $mail->ClearAddresses();
+    echo "<script>alert('Se ha aprobado el pago de la membresia, la OPP sera noticada en breve.');location.href ='javascript:history.back()';</script>";
+  }else{
+    $mail->ClearAddresses();
+    echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+  }
+
   //termina enviar mensaje aprobacion de membresia
   if($_POST['tipo_solicitud'] == 'RENOVACION'){
     $asunto = "D-SPP | Formatos de Evaluación";
@@ -623,16 +631,26 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
       </body>
       </html>
     ';
+    if(!empty($informacion['email1'])){
+      $mail->AddAddress($informacion['email1']);
+    }
+    if(!empty($informacion['email2'])){
+      $mail->AddAddress($informacion['email2']);
+    }
 
-      $mail->AddAddress($informacion['email1']); 
-      $mail->AddAddress($informacion['email2']); 
-      $mail->Subject = utf8_decode($asunto);
-      $mail->Body = utf8_decode($cuerpo_mensaje);
-      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-      $mail->Send();
+    $mail->Subject = utf8_decode($asunto);
+    $mail->Body = utf8_decode($cuerpo_mensaje);
+    $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      /*$mail->Send();
+      $mail->ClearAddresses();*/
+    if($mail->Send()){
       $mail->ClearAddresses();
-
-      $mensaje = "Se ha aprobado la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
+      echo "<script>alert('Se ha aprobado la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación.');location.href ='javascript:history.back()';</script>";
+    }else{
+      $mail->ClearAddresses();
+      echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+    }
+      //$mensaje = "Se ha aprobado la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
   }else{
     //revisamos el el contrato de uso ya fue aprobado, esto para enviar la notificación al OC de que suba sus archivos
     if(!empty($_POST['idcontrato'])){
@@ -702,10 +720,16 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
           $mail->Subject = utf8_decode($asunto);
           $mail->Body = utf8_decode($cuerpo_mensaje);
           $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-          $mail->Send();
+          /*$mail->Send();
+          $mail->ClearAddresses();*/
+        if($mail->Send()){
           $mail->ClearAddresses();
-
-          $mensaje = "Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
+          echo "<script>alert('Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación');location.href ='javascript:history.back()';</script>";
+        }else{
+          $mail->ClearAddresses();
+          echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+        }
+        //$mensaje = "Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
 
       }else{
         $mensaje = "Se ha aprobado la membresia";
@@ -741,6 +765,7 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
   $estatus_dspp = 19; //CONTRATO DE USO APROBADO
   $estatus_contrato = "ACEPTADO";;
   //actualizamos el contrato de uso
+
   $updateSQL = sprintf("UPDATE contratos SET estatus_contrato = %s WHERE idcontrato = %s",
     GetSQLValueString($estatus_contrato, "text"),
     GetSQLValueString($_POST['idcontrato'], "int"));
@@ -752,9 +777,13 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+
   if(!empty($_POST['idmembresia'])){
-    $row_membresia = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, opp.nombre, oc.email1, oc.email2 membresia.idsolicitud_certificacion, membresia.estatus_membresia FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion WHERE membresia.idmembresia = $_POST[idmembresia]", $dspp) or die(mysql_error());
+
+    $row_membresia = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, opp.nombre, oc.email1, oc.email2, membresia.idsolicitud_certificacion, membresia.estatus_membresia FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion WHERE membresia.idmembresia = $_POST[idmembresia]", $dspp) or die(mysql_error());
     $membresia = mysql_fetch_assoc($row_membresia);
+
     if ($membresia['estatus_membresia'] == 'APROBADA') {
 
       $asunto = "D-SPP | Formatos de Evaluación";
@@ -815,16 +844,26 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
         </html>
       ';
 
-        $mail->AddAddress($membresia['email1']); 
-        $mail->AddAddress($membresia['email2']); 
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
+      if(!empty($membresia['email1'])){
+        $mail->AddAddress($membresia['email1']);
+      }
+      if(!empty($membresia['email2'])){
+        $mail->AddAddress($membresia['email2']);
+      }
+
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      //$mail->Send();
+      //$mail->ClearAddresses();
+      if($mail->Send()){
         $mail->ClearAddresses();
-
-
-        $mensaje = "Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
+        echo "<script>alert('Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación');location.href ='javascript:history.back()';</script>";
+      }else{
+        $mail->ClearAddresses();
+        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+      }
+        //$mensaje = "Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
 
     }else{
       $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
@@ -1308,7 +1347,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                                 echo "<p class='alert alert-warning'>Aun no se ha cargado el comprobante de pago</p>";
                               }else{
                               ?>
-                                <p class="alert alert-success">Se ha cargado el comprobante de pago, ahora puede descargarlo. Una vez revisado debera de \"APROBAR\" o \"RECHAZAR\" el comprobante de pago de la membresia</p>
+                                <p class="alert alert-success">Se ha cargado el comprobante de pago, ahora puede descargarlo. Una vez revisado debera de "APROBAR" o "RECHAZAR" el comprobante de pago de la membresia</p>
                                 <a href="<?php echo $membresia['archivo']; ?>" target="_blank" class="btn btn-info" style="width:100%">Descargar Comprobante</a>
                                 <hr>
                                 <?php 
@@ -1454,7 +1493,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                                 <?php 
                                 if($dictamen['estatus_dictamen'] != "ACEPTADO" && $informe['estatus_informe'] != "ACEPTADO"){
                                 ?>
-                                  <button type="submit" class="btn btn-primary" name="documentos_evaluacion" value="1" onclick="return validar()">Actualizar Documentos</button>
+                                  <button type="submit" class="form-control btn btn-primary" style="color:white" name="documentos_evaluacion" value="1" onclick="return validar()">Enviar Resultados</button>
                                 <?php
                                 }
                                  ?>

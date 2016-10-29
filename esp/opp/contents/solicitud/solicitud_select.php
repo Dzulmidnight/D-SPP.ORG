@@ -46,6 +46,7 @@ if (!function_exists("GetSQLValueString")) {
 
 /**** VARIABLES GLOBALES *******/
 $spp_global = "cert@spp.coop";
+$finanzas_spp = "adm@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 $fecha = time();
 $idopp = $_SESSION['idopp'];
@@ -428,7 +429,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
       <meta charset="utf-8">
     </head>
     <body>
-      <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+      <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979; text-align:justify" border="0" width="650px">
         <tbody>
           <tr>
             <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
@@ -441,12 +442,20 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 
           <tr>
             <td colspan="2">
-             <p>La OPP: '.$informacion['nombre'].' ha cargado el Comprobante de Pago de la membresia SPP por un monto total de: '.$informacion['monto'].'.</p>
+             <p>La OPP: <span style="color:red">'.$informacion['nombre'].'</span> ha cargado el Comprobante de Pago de la membresia SPP por un monto total de: <span style="color:red">'.$informacion['monto'].'</span>.</p>
             </td>
           </tr>
           <tr>
             <td colspan="2">
               <p>Después de revisa el comprobante <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el comprobante de pago</span> </p>
+              <p>Pasos para "Aprobar" o "Rechazar" el Comprobante de pago:</p>
+              <ol>
+                <li>Debe ingresar en su cuenta de Adminitrador dentro del D-SPP.</li>
+                <li>Seleccionar "Solicitudes" > "Solicitudes OPP".</li>
+                <li>Dentro de la tabla de Solicitudes debe localizar la solicitud de la Organización.</li>
+                <li>Posicionarse sobre la columna "Membresia" y dar clic en el botón "Estatus Membresia".</li>
+                <li>Se mostrara una ventana donde podra "Aprobar" o "Rechazar" el comprobante.</li>
+              </ol>
             </td>
           </tr>
         </tbody>
@@ -455,19 +464,25 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
     </html>
   ';
     $mail->AddAddress($spp_global);
-    $mail->AddBCC($administrador);
+    $mail->AddAddress($finanzas_spp);
     $mail->AddAttachment($comprobante_pago);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
     $mail->Subject = utf8_decode($asunto);
     $mail->Body = utf8_decode($cuerpo_mensaje);
     $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-    $mail->Send();
-    $mail->ClearAddresses();
+    /*$mail->Send();
+    $mail->ClearAddresses();*/
 
   //termina correo enviar comprobante de pago
-
-  $mensaje = "Se ha enviado el comprobante de pago, en breve seras notificado";
+    if($mail->Send()){
+      $mail->ClearAddresses();
+      echo "<script>alert('Se ha enviado el comprobante de pago, en breve sera contactado.');location.href ='javascript:history.back()';</script>";
+    }else{
+      $mail->ClearAddresses();
+      echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+    }
+  $mensaje = "Se ha enviado el comprobante de pago, en breve sera contactado.";
 }
 /// TERMINA ENVIAR COMPROBANTE DE PAGO
 
@@ -515,7 +530,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
             <meta charset="utf-8">
           </head>
           <body>
-            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979; text-align:justify" border="0" width="650px">
               <tbody>
                 <tr>
                   <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
@@ -534,6 +549,14 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
                 <tr>
                   <td colspan="2">
                     <p>Después de revisa el "Contrato de Uso" <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el mismo</span> </p>
+                    <p>¿Cómo "Aprobar" o "Rechazar" el Contrato de Uso?</p>
+                    <ol>
+                      <li>Debe de ingresar en su cuenta de administrador dentro del D-SPP.</li>
+                      <li>Seleccionar "Solicitudes" > "Solicitudes OPP".</li>
+                      <li>Localizar la Solicitud de la OPP: '.$informacion['nombre'].'.</li>
+                      <li>Posicionarse sobre la columna "Certificado" y dar clic en el bóton "Consultar Certificado".</li>
+                      <li>Se mostrara una ventana donde podra "Aprobar" o "Rechazar" el Contrato de Uso.</li>
+                    </ol>
                   </td>
                 </tr>
               </tbody>
@@ -542,18 +565,24 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
           </html>
   ';
     $mail->AddAddress($spp_global);
-    $mail->AddBCC($administrador);
     $mail->AddAttachment($contrato);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
     $mail->Subject = utf8_decode($asunto);
     $mail->Body = utf8_decode($cuerpo_mensaje);
     $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-    $mail->Send();
-    $mail->ClearAddresses();
-  //termina enviar mensaje contrato de uso
+    /*$mail->Send();
+    $mail->ClearAddresses();*/
+    if($mail->Send()){
+      $mail->ClearAddresses();
+      echo "<script>alert('Se ha enviado el Contrato de Uso, en breve sera contactado.');location.href ='javascript:history.back()';</script>";
+    }else{
+      $mail->ClearAddresses();
+      echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+    }
 
-  $mensaje = "Se ha enviado el Contrato de Uso, en breve sera contactado";
+  //termina enviar mensaje contrato de uso
+  //$mensaje = "Se ha enviado el Contrato de Uso, en breve sera contactado";
 }
 /// TERMINA ENVIAR CONTRATO DE USO
 
