@@ -1300,8 +1300,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consultar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud_certificacion']; ?>">Consultar</a>
           </td>
           <td>
-            <form action="../../reportes/reporte.php" method="POST" target="_new">
-              <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
+            <form action="../../reportes/solicitud.php" method="POST" target="_new">
+              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
               <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
               <input type="hidden" name="generar_formato" value="1">

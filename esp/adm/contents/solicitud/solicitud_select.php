@@ -1542,22 +1542,27 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                   </div>
                 </div>
                 <!-- termina modal estatus membresia -->
-
-              </td>
-              <!---- inicia CERTIFICADO ---->
-
-              <!---- inicia CONSULTAR SOLICITUD ---->
-              <td>
                 <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
                 <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
                 <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
+              </td>
+              <!---- inicia CERTIFICADO ---->
+          </form>
+              <!---- inicia CONSULTAR SOLICITUD ---->
+              <td>
+                <!--<a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&idsolicitud=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>-->
+                <form action="../../reportes/solicitud.php" method="POST" target="_new">
+                  <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
-                <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&idsolicitud=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+                  <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
+                  <input type="hidden" name="generar_formato" value="1">
+                </form>
+
               </td>
               <!---- termina CONSULTAR SOLICITUD ---->
 
             </tr>
-          </form>
+
           <?php
           }
           ?>

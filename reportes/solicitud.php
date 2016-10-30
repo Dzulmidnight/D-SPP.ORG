@@ -26,33 +26,19 @@
 	}
 
 
+	$alcance = '';
+	if($solicitud['produccion']){
+		$alcance .= 'PRODUCCIÓN - PRODUCTION<br>';
+	}
+	if($solicitud['procesamiento']){
+		$alcance .= 'PROCESAMIENTO - PROCESSING<br>';
+	}
+	if($solicitud['exportacion']){
+		$alcance .= 'EXPORTACIÓN - TRADING<br>';
+	}
+
 
 	$html = '
-
-    <header class="clearfix">
-      <div>
-        <table style="padding:0px;margin:0px;">
-			<tr>
-				<td style="text-align:left;margin-bottom:0px;font-size:9px;">
-			        <div>
-						<img src="img/FUNDEPPO.jpg" >
-			        </div>
-				</td>
-				<td style="text-align:right;font-size:9px;">
-			        <div>
-						<h2>
-							Solicitud de Certificación para Organizaciones de Pequeños Productores
-						</h2>							
-			        </div>
-			        <div>Símbolo de Pequeños Productores</div>
-			        <div>Versión 7. 26-Ene-2015</div>
-				</td>
-			</tr>
-        </table>
-      </div>
-    </header>
-
-
       <div>
         <table border="1" style="padding:0px;margin:0px;">
 			<tr>
@@ -63,16 +49,16 @@
 							<td><h3>'.date("d/m/Y", $solicitud['fecha_registro']).'</h3></td>
 						</tr>
 						<tr>
-							<td>LUGAR DE ELABORACIÓN</td>
-							<td></td>
+							<td>TIPO DE SOLICITUD</td>
+							<td style="background-color:#3498db;text-align:center"><b>'.$solicitud['tipo_solicitud'].'</b></td>
 						</tr>
 			        </table>
 				</td>
 				<td style="text-align:right;font-size:9px;">
 			        <table border="1">
 						<tr>
-							<td colspan="3" style="background-color:#9ACD32"><b>CODIGO DE IDENTIFICACIÓN SPP(#SPP):</b></td>
-							<td colspan="2" style="background-color:#9ACD32;"><h3>'.$solicitud['spp_opp'].'</h3></td>
+							<td colspan="3" style="background-color:#B8D186"><b>CODIGO DE IDENTIFICACIÓN SPP(#SPP):</b></td>
+							<td colspan="2" style="background-color:#B8D186;"><h3>'.$solicitud['spp_opp'].'</h3></td>
 						</tr>
 						<tr style="background-color:#bdc3c7;">
 
@@ -89,9 +75,9 @@
       </div>
 
       <div>
-		<table border="1">
+		<table border="1" style="font-size:11px;">
 			<tr>
-				<td colspan="8" style="text-align:center;background-color:#9ACD32"><h3>DATOS GENERALES</h3></td>
+				<td colspan="8" style="text-align:center;background-color:#B8D186"><h3>DATOS GENERALES</h3></td>
 			</tr>
 			<tr>
 				<td colspan="8" style="text-align:left">
@@ -102,27 +88,27 @@
 			<tr>
 				<td colspan="7" style="text-align:left">
 			        <div>DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES (CALLE, BARRIO, LUGAR, REGIÓN):</div>
-			        <div><b>'.$solicitud['direccion_oficina'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['direccion_oficina'].'</b></div>
 				</td>
 				<td colspan="1" style="text-align:left">
 			        <div>PAÍS:</div>
-			        <div><b>'.$solicitud['pais'].'</b></div>		
+			        <div class="respuesta"><b>'.$solicitud['pais'].'</b></div>		
 				</td>
 			</tr>
 			<tr>
 				<td colspan="8" style="text-align:left">
 			        <div>CORREO ELECTRÓNICO</div>
-			        <div><b>'.$solicitud['email_opp'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['email_opp'].'</b></div>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="4" style="text-align:left">
 			        <div>SITIO WEB:</div>
-			        <div><b>'.$solicitud['sitio_web'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['sitio_web'].'</b></div>
 				</td>
 				<td colspan="4" style="text-align:left">
 			        <div>TELÉFONOS (CÓDIGO DE PAÍS+ CÓDIGO DE ÁREA + NÚMERO):</div>
-			        <div><b>'.$solicitud['telefono_opp'].'</b></div>		
+			        <div class="respuesta"><b>'.$solicitud['telefono_opp'].'</b></div>		
 				</td>
 			</tr>
 			<tr>
@@ -132,108 +118,108 @@
 			        	<hr>
 			        </div>
 
-			        <div>DIRECCION: <b>'.$solicitud['direccion_fiscal'].'</b></div>
-			        <div>RFC: <b>'.$solicitud['rfc'].'</b></div>
-			        <div>RUC: <b>'.$solicitud['ruc'].'</b></div>
-			        <div>CIUDAD: <b>'.$solicitud['ciudad_opp'].'</b></div>
-			        <div>PAIS: <b>'.$solicitud['pais'].'</b></div>
+			        <div class="respuesta">DIRECCION: <b>'.$solicitud['direccion_fiscal'].'</b></div>
+			        <div class="respuesta">RFC: <b>'.$solicitud['rfc'].'</b></div>
+			        <div class="respuesta">RUC: <b>'.$solicitud['ruc'].'</b></div>
+			        <div class="respuesta">CIUDAD: <b>'.$solicitud['ciudad_opp'].'</b></div>
+			        <div class="respuesta">PAIS: <b>'.$solicitud['pais'].'</b></div>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="4" style="text-align:left">
 			        <div>PERSONA(S) DE CONTACTO SOLICITUD:</div>
-			        <div><b>'.$solicitud['contacto1_nombre'].'</b></div>
-			        <div><b>'.$solicitud['contacto2_nombre'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['contacto1_nombre'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['contacto2_nombre'].'</b></div>
 
 			        <div>CORRREO ELECTRÓNICO PERSONA(S) DE CONTACTO:</div>
-			        <div><b>'.$solicitud['contacto1_email'].'</b></div>
-			        <div><b>'.$solicitud['contacto2_email'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['contacto1_email'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['contacto2_email'].'</b></div>
 
 
 			    </td>
 			    <td colspan="4" style="text-align:left">
 			        <div>CARGO(S):</div>
-			        <div><b>'.$solicitud['contacto1_cargo'].'</b></div>
-			        <div><b>'.$solicitud['contacto2_cargo'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['contacto1_cargo'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['contacto2_cargo'].'</b></div>
 
 			        <div>TELÉFONO(S) PERSONA(S) DE CONTACTO:</div>
-			        <div><b>'.$solicitud['contacto1_telefono'].'</b></div>
-			        <div><b>'.$solicitud['contacto2_telefono'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['contacto1_telefono'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['contacto2_telefono'].'</b></div>
 				</td>
 
 			</tr>
 			<tr>
 				<td colspan="4" style="text-align:left">
 			        <div>PERSONA DEL ÁREA ADMINSITRATIVA:</div>
-			        <div><b>'.$solicitud['adm1_nombre'].'</b></div>
-			        <div><b>'.$solicitud['adm2_nombre'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['adm1_nombre'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['adm2_nombre'].'</b></div>
 
 
 			        <div>CORRREO ELECTRÓNICO DEL ÁREA ADMINSITRATIVA:</div>
-			        <div><b>'.$solicitud['adm1_email'].'</b></div>
-			        <div><b>'.$solicitud['adm2_email'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['adm1_email'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['adm2_email'].'</b></div>
 
 
 			    </td>
 			    <td colspan="4" style="text-align:left">
 			        <div>TELÉFONO PERSONA DEL ÁREA ADMINSITRATIVA:</div>
-			        <div><b>'.$solicitud['adm1_telefono'].'</b></div>
-			        <div><b>'.$solicitud['adm2_telefono'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['adm1_telefono'].'</b></div>
+			        <div class="respuesta"><b>'.$solicitud['adm2_telefono'].'</b></div>
 
 
 				</td>
 			</tr>
 			<tr>
-				<td colspan="3" style="text-align:left">NÚMERO DE SOCIOS PRODUCTORES:</td>
-				<td colspan="1" style="text-align:center"><b>'.$solicitud['resp1'].'</b></td>
-				<td colspan="3" style="text-align:left">NÚMERO DE SOCIOS PRODUCTORES DEL (DE LOS) PRODUCTOS(S) A INCLUIR EN LA CERTIFICACIÓN:</td>
-				<td colspan="1" style="text-align:center"><b>'.$solicitud['resp2'].'</b></td>
+				<td colspan="2" style="text-align:left">NÚMERO DE SOCIOS PRODUCTORES:</td>
+				<td class="respuesta" colspan="2" style="text-align:center"><b>'.$solicitud['resp1'].'</b></td>
+				<td colspan="2" style="text-align:left">NÚMERO DE SOCIOS PRODUCTORES DEL (DE LOS) PRODUCTOS(S) A INCLUIR EN LA CERTIFICACIÓN:</td>
+				<td class="respuesta" colspan="2" style="text-align:center"><b>'.$solicitud['resp2'].'</b></td>
 
 			</tr>
 			<tr>
-				<td colspan="3" style="text-align:left">VOLUMEN(ES) DE PRODUCCIÓN TOTAL POR PRODUCTO (UNIDAD DE MEDIDA):</td>
-				<td colspan="1" style="text-align:center"><b>'.$solicitud['resp3'].'</b></td>
-				<td colspan="3" style="text-align:left">TAMAÑO MÁXIMO DE LA UNIDAD DE PRODUCCIÓN POR PRODUCTOR DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACIÓN:</td>
-				<td colspan="1" style="text-align:center"><b>'.$solicitud['resp4'].'</b></td>
+				<td colspan="2" style="text-align:left">VOLUMEN(ES) DE PRODUCCIÓN TOTAL POR PRODUCTO (UNIDAD DE MEDIDA):</td>
+				<td class="respuesta" colspan="2" style="text-align:center"><b>'.$solicitud['resp3'].'</b></td>
+				<td colspan="2" style="text-align:left">TAMAÑO MÁXIMO DE LA UNIDAD DE PRODUCCIÓN POR PRODUCTOR DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACIÓN:</td>
+				<td class="respuesta" colspan="2" style="text-align:center"><b>'.$solicitud['resp4'].'</b></td>
 			</tr>
 			
 
 			<tr>
-				<td colspan="8" style="text-align:center;background-color:#9ACD32"><h3>DATOS DE OPERACIÓN</h3></td>
+				<td colspan="8" style="text-align:center;background-color:#B8D186"><h3>DATOS DE OPERACIÓN</h3></td>
 			</tr>
 			<tr>
 				<td  style="text-align:left" colspan="8">
 			        <div>1.- EXPLIQUE SI SE TRATA DE UNA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES DE 1ER, 2DO, 3ER O 4TO GRADO, ASÍ COMO EL NÚMERO DE OPP DE 3ER, 2DO O 1ER GRADO, Y EL NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO, EN SU CASO, CON LAS QUE CUENTA:</div>
-			        <div><b>'.$solicitud['op_preg1'].'</b></div>	
+			        <div class="respuesta"><b>'.$solicitud['op_preg1'].'</b></div>	
 				</td>
 			</tr>
 			<tr>
 				<td style="text-align:left">NÚMERO DE OPP DE 3ER GRADO:</td>
-					<td style="text-align:center"><b>'.$solicitud['preg1_1'].'</b></td>
+					<td class="respuesta" style="text-align:center"><b>'.$solicitud['preg1_1'].'</b></td>
 				<td style="text-align:left">NÚMERO DE OPP DE 2DO GRADO:</td>
-					<td style="text-align:center"><b>'.$solicitud['preg1_2'].'</b></td>
+					<td class="respuesta" style="text-align:center"><b>'.$solicitud['preg1_2'].'</b></td>
 				<td style="text-align:left">NÚMERO DE OPP DE 1ER GRADO:</td>
-					<td style="text-align:center"><b>'.$solicitud['preg1_3'].'</b></td>
+					<td class="respuesta" style="text-align:center"><b>'.$solicitud['preg1_3'].'</b></td>
 				<td style="text-align:left">NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO:</td>
-					<td style="text-align:center"><b>'.$solicitud['preg1_4'].'</b></td>
+					<td class="respuesta" style="text-align:center"><b>'.$solicitud['preg1_4'].'</b></td>
 			</tr>
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>2. ESPECIFIQUE QUÉ PRODUCTO(S) QUIERE INCLUIR EN EL CERTIFICADO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES PARA LOS CUALES EL ORGNISMO DE CERTIFICACIÓN REALIZARÁ LA EVALUACIÓN.</div>
-			        <div><b>'.$solicitud['op_preg2'].'</b></div>	
+			        <div class="respuesta"><b>'.$solicitud['op_preg2'].'</b></div>	
 				</td>
 			</tr>
 
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>3. MENCIONE SI SU ORGANIZACIÓN QUIERE INCLUIR ALGÚN CALIFICATIVO ADICIONAL PARA USO COMPLEMENTARIO CON EL DISEÑO GRÁFICO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES.</div>
-			        <div><b>'.$solicitud['op_preg3'].'</b></div>	
+			        <div class="respuesta"><b>'.$solicitud['op_preg3'].'</b></div>	
 				</td>
 			</tr>
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>4. INDIQUE EL ALCANCE QUE TIENE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES:</div>
-			        <div><b>'.$solicitud['alcance_opp'].'</b></div>
+			        <div class="respuesta"><b>'.$alcance.'</b></div>
 				</td>
 			</tr>
 			<!--<tr>
@@ -250,25 +236,25 @@
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>5. ESPECIFIQUE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA: </div>
-			        <div><b>'.$solicitud['op_preg5'].'</b></div>	
+			        <div class="respuesta"><b>'.$solicitud['op_preg5'].'</b></div>	
 				</td>
 			</tr>
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>6. SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, INDIQUE SI ESTAS EMPRESAS VAN A REALIZAR EL REGISTRO BAJO EL PROGRAMA DEL SPP O SERÁN CONTROLADAS A TRAVÉS DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES: </div>
-			        <div><b>'.$solicitud['op_preg6'].'</b></div>	
+			        <div class="respuesta"><b>'.$solicitud['op_preg6'].'</b></div>	
 				</td>
 			</tr>
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>7. ADICIONAL A SUS OFICINAS CENTRALES, ESPECIFIQUE CUÁNTOS CENTROS DE ACOPIO, ÁREAS DE PROCESAMIENTO U OFICINAS ADICIONALES TIEN: </div>
-			        <div><b>'.$solicitud['op_preg7'].'</b></div>	
+			        <div class="respuesta"><b>'.$solicitud['op_preg7'].'</b></div>	
 				</td>
 			</tr>
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>8. ¿CUENTA CON UN SISTEMA DE CONTROL INTERNO PARA DAR CUMPLIMIENTO A LOS CRITERIOS DE LA NORMA GENERAL DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?, EN SU CASO, EXPLIQUE: </div>
-			        <div><b>'.$solicitud['op_preg8'].'</b></div>	
+			        <div class="respuesta"><b>'.$solicitud['op_preg8'].'</b></div>	
 				</td>
 			</tr>
 			<tr>
@@ -301,7 +287,7 @@
           $contador = 0;
           while($certificacion = mysql_fetch_assoc($consultar)){
             $html .= '
-            <tr>
+            <tr class="respuesta">
             	<td style="text-align:left">
 					'.$certificacion['certificacion'].'
             	</td>
@@ -328,29 +314,29 @@
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>10.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</div>
-			        <div><b>'.$solicitud['op_preg10'].'</b></div>	
+			        <div class="respuesta"><b>'.$solicitud['op_preg10'].'</b></div>	
 				</td>
 			</tr>
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>12¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</div>
-			        <div><b>'.$solicitud['op_preg12'].'</b></div>	
+			        <div class="respuesta"><b>'.$solicitud['op_preg12'].'</b></div>	
 				</td>
 			</tr>
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>13. SI SU RESPUESTA FUE POSITIVA, FAVOR DE INIDICAR EL RANGO DEL VALOR TOTAL DE SUS VENTAS SPP DEL CICLO ANTERIOR</div>
-			        <div><b>'.$solicitud['op_preg13'].'</b></div>	
+			        <div class="respuesta"><b>'.$solicitud['op_preg13'].'</b></div>	
 				</td>
 			</tr>
 
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>13_1.DEL TOTAL DE SUS VENTAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</div>
-			        <div><b>% ORGÁNICO:</b> '.$solicitud['organico'].'</div>
-			        <div><b>% COMERCIO JUSTO:</b> '.$solicitud['comercio_justo'].'</div>
-			        <div><b>% SÍMBOLO PEQUEÑOS PRODUCTORES:</b> '.$solicitud['spp'].'</div>
-			        <div><b>% SIN CERTIFICADO:</b> '.$solicitud['sin_certificado'].'</div>
+			        <div class="respuesta"><b>% ORGÁNICO:</b> '.$solicitud['organico'].'</div>
+			        <div class="respuesta"><b>% COMERCIO JUSTO:</b> '.$solicitud['comercio_justo'].'</div>
+			        <div class="respuesta"><b>% SÍMBOLO PEQUEÑOS PRODUCTORES:</b> '.$solicitud['spp'].'</div>
+			        <div class="respuesta"><b>% SIN CERTIFICADO:</b> '.$solicitud['sin_certificado'].'</div>
 				</td>
 			</tr>
 
@@ -359,7 +345,7 @@
 			<tr>
 				<td style="text-align:left" colspan="8">
 			        <div>14. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES:</div>
-			        <div><b>'.$solicitud['op_preg14'].'</b></div>	
+			        <div class="respuesta"><b>'.$solicitud['op_preg14'].'</b></div>	
 				</td>
 			</tr>
 		
@@ -395,28 +381,28 @@
 
 					<tr>
 						<td style="text-align:center">
-							<b>'.$row_producto['producto'].'</b>
+							<b class="respuesta">'.$row_producto['producto'].'</b>
 						</td>
 						<td style="text-align:center">
-							<b>'.$row_producto['volumen'].'</b>
+							<b class="respuesta">'.$row_producto['volumen'].'</b>
 						</td>
 						<td style="text-align:center">	
-							<b>'.$row_producto['terminado'].'</b>
+							<b class="respuesta">'.$row_producto['terminado'].'</b>
 			            </td>          
 						<td style="text-align:center">
-							<b>'.$row_producto['materia'].'</b>
+							<b class="respuesta">'.$row_producto['materia'].'</b>
 						</td>
 						<td style="text-align:center">
-							<b>'.$row_producto['destino'].'</b>
+							<b class="respuesta">'.$row_producto['destino'].'</b>
 						</td>
 						<td style="text-align:center">
-    						<b>'.$row_producto['marca_propia'].'</b>
+    						<b class="respuesta">'.$row_producto['marca_propia'].'</b>
 						</td>
 						<td style="text-align:center">
-							<b>'.$row_producto['marca_cliente'].'</b>          
+							<b class="respuesta">'.$row_producto['marca_cliente'].'</b>          
 						</td>
 						<td style="text-align:center">
-							<b>'.$row_producto['sin_cliente'].'</b>
+							<b class="respuesta">'.$row_producto['sin_cliente'].'</b>
 						</td>
 					</tr>';
 
@@ -434,7 +420,7 @@
 	<div>
 		<table border="1">
 		<tr>
-			<td colspan="8" style="text-align:center;background-color:#9ACD32">
+			<td colspan="8" style="text-align:center;background-color:#B8D186">
 				<h3>COMPROMISOS</h3>
 			</td>
 		</tr>
@@ -451,7 +437,7 @@
 				Nombre de la persona que se responsabiliza de la veracidad de la información del formato y que le dará seguimiento a la solicitud de parte del solicitante:
 			</td>
 			<td colspan="8" style="text-align:left">
-				<b>'.$solicitud['responsable'].'</b>
+				<b class="respuesta">'.$solicitud['responsable'].'</b>
 			</td>
 		</tr>
     <tr style="background-color:#bdc3c7">
@@ -459,7 +445,7 @@
         OC que recibe la solicitud:
       </td>
       <td colspan="8" style="text-align:left">
-		<b>'.$solicitud['nombre_oc'].'</b>
+		<b class="respuesta">'.$solicitud['nombre_oc'].'</b>
       </td>
 
     </tr>
@@ -487,6 +473,37 @@
 	';
 
 	$mpdf = new mPDF('c', 'A4');
+    $mpdf->setAutoTopMargin = 'pad';
+    $mpdf->pagenumPrefix = 'Página ';
+    $mpdf->pagenumSuffix = ' - ';
+
+    //$mpdf->nbpgSuffix = ' pages';
+    $mpdf->SetFooter('{PAGENO}{nbpg}');
+
+    $mpdf->SetHTMLHeader('
+    <header>
+      <div>
+        <table style="padding:0px;margin:0px;">
+			<tr>
+				<td style="text-align:left;margin-bottom:0px;font-size:9px;">
+			        <div>
+						<img src="img/FUNDEPPO.jpg" >
+			        </div>
+				</td>
+				<td style="text-align:right;font-size:9px;">
+			        <div>
+						<h2>
+							Solicitud de Certificación para Organizaciones de Pequeños Productores
+						</h2>							
+			        </div>
+			        <div>Símbolo de Pequeños Productores</div>
+			        <div>Versión 7. 26-Ene-2015</div>
+				</td>
+			</tr>
+        </table>
+      </div>
+    </header>
+      ');
 	$css = file_get_contents('css/style.css');	
 	$mpdf->writeHTML($css,1);
 	$mpdf->writeHTML($html);
