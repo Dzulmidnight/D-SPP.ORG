@@ -632,12 +632,19 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
           $ejecutar = mysql_query($query_proceso,$dspp) or die(mysql_error());
           $proceso_certificacion = mysql_fetch_assoc($ejecutar);
           ?>
-          <form action="" method="POST" enctype="multipart/form-data">
             <tr>
               <td>
-                <?php echo $solicitud['idsolicitud_certificacion']; ?>
-                <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
+                <form action="../../reportes/solicitud.php" method="POST" target="_new">
+                  <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><?php echo $solicitud['idsolicitud_certificacion']; ?> <img src="../../img/pdf.png" style="height:30px;" alt=""></button>
+
+                  <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
+                  <input type="hidden" name="generar_formato" value="1">
+                </form>
+                
+            
               </td>
+          <form action="" method="POST" enctype="multipart/form-data">
+              <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
               <!---- inicia TIPO SOLICITUD ---->
               <td <?php if($solicitud['tipo_solicitud'] == 'NUEVA'){ echo "class='success'"; }else{ echo "class='warning'"; } ?>class="warning">
                 <?php echo $solicitud['tipo_solicitud']; ?>
