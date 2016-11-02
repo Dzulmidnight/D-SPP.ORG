@@ -99,9 +99,21 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
   if($_POST['estatus_interno'] == 8){ //checamos si el estatus_interno es positvo
+    $nombre_oc = mysql_query("SELECT nombre FROM oc WHERE idoc = $detalle_empresa[idoc]", $dspp) or die(mysql_error());
+    $detall_oc = mysql_fetch_assoc($nombre_oc);
       $estatus_dspp = 9; //Termina proceso de certificación
-      $asunto = "D-SPP | Proceso de Certificación, Dictamen Positivo";
+      $asunto = "D-SPP | Notificación de Dictamen";
     if($_POST['tipo_solicitud'] == 'RENOVACION'){
+
+      //creamos la variable del archivo extra
+      if(!empty($_FILES['archivo_extra']['name'])){
+          $_FILES["archivo_extra"]["name"];
+            move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_extra"]["name"]);
+            $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_extra"]["name"]);
+      }else{
+        $archivo = NULL;
+      }
+
 
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_interno, estatus_dspp, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s)",
         GetSQLValueString($_POST['idsolicitud_registro'], "int"),
@@ -111,48 +123,112 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         GetSQLValueString($archivo, "text"),
         GetSQLValueString($fecha, "int"));
       $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+      if(!empty($_POST['mensaje_empresa'])){
+        $cuerpo_mensaje_empresa = '
+          <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+              <tbody>
+                <tr>
+                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen</span></p></th>
 
-      $cuerpo_mensaje_empresa = '
-        <html>
-        <head>
-          <meta charset="utf-8">
-        </head>
-        <body>
-          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-            <tbody>
-              <tr>
-                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Proceso de Certificación, Dictamen Positivo</span></p></th>
+                </tr>
+                <tr>
+                 <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+                </tr>
 
-              </tr>
-              <tr>
-               <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
-              </tr>
+                <tr>
+                  <td colspan="2">
+                      <p>
+                        '.$_POST['mensaje_empresa'].'
+                      </p>
+                  </td>
+                </tr>
 
-              <tr>
-                <td colspan="2">
-                  <p>NOS COMPLACE INFORMAR QUE LA EVALUACION PARA LA RENOVACION DE SU REGISTRO SPP FUE CONCLUIDA CON UN DICTAMEN POSITIVO.</p>
-                  <p>SERAN NOTIFICADOS UNA VEZ QUE SU CERTIFICADO SE ENCUENTRE DISPONIBLE.</p>
-                </td>
-              </tr>
+                <tr>
+                  <td colspan="2">
+                    <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </body>
+          </html>
+        ';
+      }else{
+        $cuerpo_mensaje_empresa = '
+          <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+              <tbody>
+                <tr>
+                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen</span></p></th>
 
-              <tr>
-                <td colspan="2">
-                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </body>
-        </html>
-      ';
+                </tr>
+                <tr>
+                 <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+                </tr>
 
-      $mail->AddAddress($oc['contacto1_email']);
-      $mail->AddAddress($oc['contacto2_email']);
+                <tr>
+                  <td colspan="2">
+                      <p>
+                        1. Nosotros <span style="color:red">'.$detall_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.
+                      </p>
+                      <p>
+                        2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente firmar el Contrato de Uso y Acuse de Recibo.  
+                      </p>
+                      <p>
+                        Una vez que haya firmado los documentos indicados, ingresar a su cuenta y cargar los documentos para que éstos sean revisados por SPP Global
+                      </p>
+                      <p>
+                        3.Una vez que haya realizado el pago, favor de entrar a su cuenta y cargar el comprobante bancario.
+                      </p>
+                      <p>
+                        4. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepciòn del pago en la cuenta de SPP Global, el Organismo de Certificación hará entrega del Registro.
+                      </p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td colspan="2">
+                    <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </body>
+          </html>
+        ';
+      }
+      if(!empty($archivo)){
+        $mail->AddAttachment($archivo);
+      }
+
+      if(!empty($detalle_empresa['contacto1_email'])){
+        $mail->AddAddress($detalle_empresa['contacto1_email']);
+      }
+      if(!empty($detalle_empresa['contacto2_email'])){
+        $mail->AddAddress($detalle_empresa['contacto2_email']);
+      }
+      if(!empty($detalle_empresa['adm1_email'])){
+        $mail->AddAddress($detalle_empresa['adm1_email']);
+      }
+      if(!empty($detalle_empresa['email'])){
+        $mail->AddAddress($detalle_empresa['email']);
+      }
       $mail->AddBCC($spp_global);
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje_empresa);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje_empresa));
+
       $mail->Send();
       $mail->ClearAddresses();
 
@@ -214,8 +290,6 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
           $mail->AddAddress($oc['email1']);
           $mail->AddAddress($oc['email2']);
-          $mail->AddBCC($administrador);
-          $mail->AddBCC($spp_global);
           $mail->Subject = utf8_decode($asunto);
           $mail->Body = utf8_decode($cuerpo_mensaje);
           $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -299,7 +373,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               <tbody>
                 <tr>
                   <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Dictamen Positivo - SPP</span></p></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen</span></p></th>
 
                 </tr>
                 <tr>
@@ -349,7 +423,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               <tbody>
                 <tr>
                   <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Dictamen Positivo - SPP</span></p></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen</span></p></th>
 
                 </tr>
                 <tr>
@@ -358,13 +432,18 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                 <tr>
                   <td colspan="2" style="text-align:justify">
-                      <p>RECIBAN USTEDES UN CORDIAL Y ATENTO SALUDO, ASÍ COMO EL DESEO DE ÉXITO EN TODAS Y CADA UNA DE SUS ACTIVIDADES.</p>
-                      <p>
-                        NOS COMPLACE INFOMAR QUE FUE CONCLUIDA LA EVALUACION PARA LA CERTIFICACION SPP.  EL DICTAMEN FUE POSITIVO. 
-                      </p>
-                      <p>                              
-                        PARA CONCLUIR EL PROCESO SE SOLICITA <span style="color:red">FIRMAR EL CONTRATO DE USO</span>, UNA VEZ QUE HAYA <span style="color:red">LEIDO EL MANUAL DEL SPP</span>.
-                      </p>
+                    <p>
+                      1. Nosotros <span style="color:red">'.$detall_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.
+                    </p>
+                    <p>
+                      2. <span style="color:red">Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente firmar el Contrato de Uso y Acuse de Recibo.</span>
+                    </p>
+                    <p>
+                      Una vez que haya firmado los documentos indicados, ingresar a su cuenta y cargar los documentos para que éstos sean revisados por SPP Global.
+                    </p>
+                    <p>
+                      4. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos , el Organismo de Certificaciòn hará entrega del Certificado.
+                    </p>
                   </td>
                 </tr>
                 <tr>
@@ -902,6 +981,39 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       <li>Solo de clic en "Guardar Proceso" para notificar a SPP Global.</li>
                                     </ul>
                                     </h5>';
+                                  ?>
+                                      <p class="alert alert-info">El siguiente formato sera enviado en breve al empresa</p>
+                                      <div class="col-xs-12">
+                                        
+                                        <div class="col-xs-12">
+                                          <div class="col-xs-6"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></div>
+                                          <div class="col-xs-6">
+                                            <p>Enviado el: <?php echo date("d/m/Y", time()); ?></p>
+                                            <p>Para: <span style="color:red"><?php echo $solicitud['nombre_empresa']; ?></span></p>
+                                            <p>Correo(s): <?php echo $solicitud['contacto1_email']." , ".$solicitud['contacto2_email']." , ".$solicitud['email']; ?></p>
+                                            <p>Asunto: <span style="color:red">Notificación del Dictamen - SPP</span></p>
+                                            
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                          <h4 style="font-size:14px;padding:5px;">MENSAJE EMPRESA( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
+                                          <textarea name="mensaje_empresa" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé"></textarea>
+
+                                        </div>
+                                      </div>
+                                      <div class="col-xs-12">
+
+                                        <div class="col-xs-12">
+                                          <h4 style="font-size:14px;">ARCHIVO EXTRA: <span style="color:#7f8c8d">Anexar algun otro archivo en caso de ser requerido.</span></h4>
+                                          <div class="col-xs-12">
+                                            <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
+                                          </div>
+                                          <div class="col-xs-12">
+                                            <input type="file" class="form-control" name="archivo_extra">
+                                          </div>
+                                        </div>
+                                      </div>
+                                  <?php
                                   }else{
                                   ?>
                                       <p class="alert alert-info">El siguiente formato sera enviado en breve al empresa</p>
@@ -1259,7 +1371,14 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
     </table>
   </div>
 </div>
-
+<script type="text/javascript">
+<!--
+function ventanaNueva(documento,ancho,alto,nombreVentana){
+    window.open(documento, nombreVentana,'width=' + ancho + ', height=' + alto);
+}
+     
+//-->
+</script>
 <!--<table>
 <tr>
 <td width="20"><?php if ($pageNum_empresa > 0) { // Show if not first page ?>
