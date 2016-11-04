@@ -1329,7 +1329,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   <?php 
                                   if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                                   ?>
-                                    <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP 1: <?php echo $solicitud['idsolicitud'] ?> 2: <?php echo $solicitud['idsolicitud_certificacion']; ?></p>
+                                    <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP</p>
                                     <div class="col-xs-12">
                                       
                                       <div class="col-xs-12">

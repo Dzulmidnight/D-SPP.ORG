@@ -365,8 +365,8 @@ if(isset($_GET['query'])){
 
 
 
-}else if(isset($_POST['filtroPalabra']) && $_POST['filtroPalabra'] == "1"){
-  $palabraClave = $_POST['palabraClave'];
+}else if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == "1"){
+  $palabraClave = $_POST['palabra'];
 
   //$query_empresa = "SELECT *, empresa.idempresa AS 'idempresa' ,empresa.nombre AS 'nombreempresa', empresa.estado AS 'estadoempresa' , empresa.estatusPagina, status.idstatus, status.nombre AS 'nombreStatus', certificado.idcertificado, certificado.vigenciainicio, certificado.vigenciafin, status_pagina.nombre AS 'nombreEstatusPagina', status_publico.nombre AS 'nombreEstatusPublico' FROM empresa LEFT JOIN status ON empresa.estado = status.idstatus LEFT JOIN status_pagina ON empresa.estatusPagina = status_pagina.idEstatusPagina LEFT JOIN status_publico ON empresa.estatusPublico = status_publico.idstatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.estado != 'ARCHIVADO' OR empresa.estado IS NULL) AND ((idf LIKE '%$palabraClave%') OR (empresa.nombre LIKE '%$palabraClave%') OR (empresa.abreviacion LIKE '%$palabraClave%') OR (sitio_web LIKE '%$palabraClave%') OR (email LIKE '%$palabraClave%') OR (pais LIKE '%$palabraClave%') OR (razon_social LIKE '%$palabraClave%') OR (direccion_fiscal LIKE '%$palabraClave%') OR (rfc LIKE '%$palabraClave%')) ORDER BY empresa.idempresa ASC";
 
@@ -594,7 +594,7 @@ $queryString_empresa = sprintf("&totalRows_empresa=%d%s", $totalRows_empresa, $q
       <div class="col-md-12">
         <div class="input-group">
           <span class="input-group-btn">
-            <button class="btn btn-default" name="busqueda_palabra" value="1" type="submit">Buscar</button>
+            <button class="btn btn-success" name="busqueda_palabra" value="1" type="submit">Buscar</button>
           </span>
           <input type="text" class="form-control" name="palabra" placeholder="Buscar por: #SPP, Nombre, Abreviacion">
         </div><!-- /input-group -->
@@ -680,7 +680,9 @@ $queryString_empresa = sprintf("&totalRows_empresa=%d%s", $totalRows_empresa, $q
               echo $empresa['abreviacion_empresa'];
                ?>
             </td>
-
+            <td>
+              <b style="color:#e74c3c"><?php echo $empresa['pais']; ?></b>
+            </td>
             <!--- INICIA SITUACION EMPRESA ---->
             <td>
               <select name="estatus_empresa<?php  echo $empresa['idempresa']; ?>" id="">
@@ -776,9 +778,6 @@ $queryString_empresa = sprintf("&totalRows_empresa=%d%s", $totalRows_empresa, $q
             }
               //echo $empresa['estatus_certificado'];
              ?>
-            <td>
-              <?php echo $empresa['pais']; ?>
-            </td>
             <td>
               <?php 
               $row_productos = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
