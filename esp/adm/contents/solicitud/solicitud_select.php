@@ -1064,7 +1064,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
           ?>
           <form action="" method="POST" enctype="multipart/form-data">
 
-            <tr>
+            <tr <?php if($proceso_certificacion['estatus_dspp'] == 12){ echo "class='success'"; }else if($proceso_certificacion['estatus_interno'] == 9){ echo "class='danger'"; } ?>>
               <!---- inicia ID ---->
               <td>
                 <?php echo $solicitud['idsolicitud']; ?>

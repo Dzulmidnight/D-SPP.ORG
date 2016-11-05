@@ -547,7 +547,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
 /// TERMINA ENVIAR CONTRATO DE USO
 
 
-$query = "SELECT solicitud_registro.*, oc.abreviacion AS 'abreviacionOC', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro WHERE solicitud_registro.idempresa = $idempresa";
+$query = "SELECT solicitud_registro.*, oc.abreviacion AS 'abreviacionOC', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro WHERE solicitud_registro.idempresa = $idempresa GROUP BY solicitud_registro.idempresa";
 $row_solicitud_registro = mysql_query($query, $dspp) or die(mysql_error());
 $total_solicitudes = mysql_num_rows($row_solicitud_registro);
 
@@ -832,14 +832,18 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                               <h4>Certificado</h4>
                               <?php 
                               if(isset($solicitud['idcertificado'])){
-                                $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
+                                $row_certificado = mysql_query("SELECT * FROM certificado WHERE idsolicitud_registro = $solicitud[idsolicitud_registro]", $dspp) or die(mysql_error());
                                 $certificado = mysql_fetch_assoc($row_certificado);
-                                $inicio = strtotime($certificado['vigencia_inicio']);
-                                $fin = strtotime($certificado['vigencia_fin']);
-
-                                echo "<h4 class='alert alert-success'>Felicidades tu Certificado ha sido aprobado.<br> El certificado tienen una vigencia del <span style='color:red'>".date('d/m/Y', $inicio)."</span> al  <span style='color:red'>".date('d/m/Y', $fin)."</span></h4>";
-                                echo "<a href='".$certificado['archivo']."' class='btn btn-success' style='width:100%' target='_blank'>Descargar Certificado</a>";
-
+                                if(isset($certificado['idsolicitud_registro'])){
+                                  $inicio = strtotime($certificado['vigencia_inicio']);
+                                  $fin = strtotime($certificado['vigencia_fin']);
+                                ?>
+                                <h4 class='text-center alert alert-success'>Felicidades tu Certificado ha sido aprobado.<br> El Certificado tienen una vigencia del <span style='color:red'><?php echo date('d/m/Y', $inicio) ?>"</span> al  <span style='color:red'><?php echo date('d/m/Y', $fin) ?></span></h4>
+                                <a href=<?php echo $certificado['archivo']; ?> class='btn btn-success' style='width:100%' target='_blank'>Descargar Certificado</a>
+                                <?php
+                                }else{
+                                  echo "<p class='alert alert-danger'>El Certificado aun no esta disponible</p>";
+                                }
                               }else{
                                 echo "<p class='alert alert-danger'>El Certificado aun no esta disponible</p>";
                               }
