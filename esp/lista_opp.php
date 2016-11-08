@@ -8,7 +8,7 @@ mysql_select_db($database_dspp, $dspp);
 if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
   $palabra = $_POST['palabra'];
 
-  $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.spp LIKE '%$palabra%' OR opp.nombre LIKE '%$palabra%' OR opp.abreviacion LIKE '%$palabra%' OR opp.pais LIKE '%$palabra%' OR oc.abreviacion LIKE '%$palabra%' OR opp.email LIKE '%$palabra%' OR opp.telefono LIKE '%$palabra%') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'";
+  $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.spp LIKE '%$palabra%' OR opp.nombre LIKE '%$palabra%' OR opp.abreviacion LIKE '%$palabra%' OR opp.pais LIKE '%$palabra%' OR oc.abreviacion LIKE '%$palabra%' OR opp.email LIKE '%$palabra%' OR opp.telefono LIKE '%$palabra%') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'";
 }else if(isset($_POST['busqueda_filtros']) && $_POST['busqueda_filtros'] == 1){
   $idoc = $_POST['idoc'];
   $pais = $_POST['pais'];
@@ -29,14 +29,14 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idopp++;
     }
 
-    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin, productos.idproducto, productos.producto FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE (opp.idoc = '$idoc' AND opp.pais = '$pais' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.idoc = '$idoc' AND opp.pais = '$pais' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
 
   }else if(!empty($pais) && !empty($idoc) && empty($producto)){ ///BUSQUEDA DE PAIS Y OC
-    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.idoc = '$idoc' AND opp.pais = '$pais') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.idoc = '$idoc' AND opp.pais = '$pais') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
   }else if(empty($pais) && !empty($idoc) && empty($producto)){ ///BUSQUEDA DE OC
-    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.idoc = '$idoc') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.idoc = '$idoc') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
   }else if(!empty($pais) && empty($idoc) && empty($producto)){///BUSQUEDA DE PAIS
-    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.pais = '$pais') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.pais = '$pais') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
   }else if(!empty($pais) && !empty($producto) && empty($idoc)){///BUSQUEDA PAIS Y PRODUCTO
     //$query_productos = mysql_query("SELECT idopp FROM productos WHERE producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
     $query_productos = mysql_query("SELECT opp.idopp, productos.producto FROM opp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE pais = '$pais' AND producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
@@ -50,7 +50,7 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idopp++;
     }
 
-    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin, productos.idproducto, productos.producto FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE ( opp.pais = '$pais' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE ( opp.pais = '$pais' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
   }else if(!empty($producto) && empty($idoc) && empty($pais)){///BUSQUEDA DE PRODUCTO
     $query_productos = mysql_query("SELECT idopp FROM productos WHERE producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
     $total_idopp = mysql_num_rows($query_productos);
@@ -63,7 +63,7 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idopp++;
     }
 
-    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE ($idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE ($idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
 
   }else if(!empty($producto) && !empty($idoc) && empty($pais)){
     //$query_productos = mysql_query("SELECT idopp FROM productos WHERE producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
@@ -78,15 +78,18 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idopp++;
     }
 
-    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin, productos.idproducto, productos.producto FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE (opp.idoc = '$idoc' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.idoc = '$idoc' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
   }else{
-    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
+    //$query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp";
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY certificado.idopp ORDER BY fecha_fin  DESC";
+
   }
 
-
 }else{
-  $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp ORDER BY certificado.vigencia_fin DESC";
+  $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY certificado.idopp ORDER BY fecha_fin  DESC";
+  //$query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' GROUP BY opp.idopp ORDER BY certificado.vigencia_fin DESC";
 }
+
 
 $row_opp = mysql_query($query_opp, $dspp) or die(mysql_error());
 //$row_opp = mysql_query("SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA'", $dspp) or die(mysql_error());
@@ -208,10 +211,20 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
 
         <table class="table table-bordered table-condensed table-striped">
           <thead>
+             <tr>
+               <td colspan="12" class="info">
+                <!--<p>NOTAS:</p>
+                <p>1. El estatus de 'En Revisión' significa que la OPP puede encontrarse en cualquiera de los siguientes sub estatus: 'En proceso de renovación', 'Certificado expirado' o 'Suspendido'</p>
+                <p>2. Es responsabilidad de los interesados verificar si la OPP se encuentran en proceso de renovación del certificado, cuando en la presente lista se indica que el estatus es "En Revisión"</p>
+                <p>3. El estatus de 'Cancelado' siginifica que la OPP ya no esta certificada por Incumplimiento con el Marco Regulatorio SPP o por renuncia voluntaria. Si fue cancelado por incumpliento con el marco regulatorio, deberá esperar dos años a partir de la cancelación para volver a solicitar la certificación.</p>-->
+                <h4 style="font-size:13px;text-align:center">NOTA: <span style="color:#e74c3c">ES RESPONSABILIDAD DEL INTERESADO REVISAR EL ESTATUS ESPECÍFICO EN EL QUE SE ENCUENTRA LA OPP</span></h4>
+              </td>
+             </tr>
+
             <tr>
               <th colspan="2">
                 Exportar: 
-                <a target="_blank" href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
+                <a href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
 
                 <a href="#" onclick="document.formulario2.submit()"><img src="../img/excel.png"></a>
                 <form name="formulario1" method="POST" action="../reportes/lista_opp.php">
@@ -227,6 +240,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
 
               <th class="text-center warning" colspan="10">Lista de Organizaciones de Pequeños Productores (Total: <?php echo $total_opp; ?>)</th>
             </tr>
+
             <tr style="font-size:11px;">
               <th class="text-center">Nº</th>
               <th class="text-center">NOMBRE DE LA ORGANIZACIÓN / ORGANIZATION´S NAME</th>
@@ -234,22 +248,26 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
               <th class="text-center">PAÍS</th>
               <th class="text-center">PRODUCTO(S) CERTIFICADO/ CERTIFIED PRODUCTS</th>
               <th class="text-center">FECHA SIGUIENTE EVALUACIÓN/ NEXT EVALUATION DATE</th>
-              <th class="text-center">ESTATUS/STATUS</th>
+              <!--<th class="text-center">ESTATUS/STATUS</th>-->
               <th class="text-center">ENTIDAD QUE OTORGÓ EL CERTIFICADO/ENTITY THAT GRANTED CERTIFICATE</th>
               <th class="text-center">#SPP</th>
               <th class="text-center">EMAIL</th>
               <th class="text-center">SITIO WEB / WEB SITE</th>
               <th class="text-center">TELÉFONO/TELEPHONE</th>
             </tr>
+
+
           </thead>
+
           <tbody style="font-size:11px;">
+
             <?php 
             if($total_opp == 0){
               echo "<tr><td class='info' colspan='12'>No se encontraron registros</td></tr>";
             }else{
               $contador = 1;
               while($opp = mysql_fetch_assoc($row_opp)){
-                $vigencia = strtotime($opp['vigencia_fin']);
+                $vigencia = strtotime($opp['fecha_fin']);
               ?>
                 <tr>
                   <td><?php echo $contador; ?></td>
@@ -277,7 +295,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                      ?>
                   </td>
                   <td><?php echo date('d/m/Y', $vigencia); ?></td>
-                  <td><?php echo $opp['nombre_publico']; ?></td>
+                  <!--<td><?php echo $opp['nombre_publico']; ?></td>-->
                   <td><?php echo $opp['abreviacion_oc']; ?></td>
                   <td><?php echo $opp['spp']; ?></td>
                   <td><?php echo $opp['email']; ?></td>
@@ -289,14 +307,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
               }
             }
              ?>
-             <tr>
-               <td colspan="12" class="info">
-                <p>NOTAS:</p>
-                <p>1. El estatus de 'En Revisión' significa que la OPP puede encontrarse en cualquiera de los siguientes sub estatus: 'En proceso de renovación', 'Certificado expirado' o 'Suspendido'</p>
-                <p>2. Es responsabilidad de los interesados verificar si la OPP se encuentran en proceso de renovación del certificado, cuando en la presente lista se indica que el estatus es "En Revisión"</p>
-                <p>3. El estatus de 'Cancelado' siginifica que la OPP ya no esta certificada por Incumplimiento con el Marco Regulatorio SPP o por renuncia voluntaria. Si fue cancelado por incumpliento con el marco regulatorio, deberá esperar dos años a partir de la cancelación para volver a solicitar la certificación.</p>
-              </td>
-             </tr>
+
 
           </tbody>
         </table>

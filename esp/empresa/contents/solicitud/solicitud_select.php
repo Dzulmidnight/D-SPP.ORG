@@ -788,16 +788,11 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                                   <?php
                                   }else{
                                   ?>
-                                    <?php 
-                                    if(isset($membresia['idcomprobante_pago'])){
-                                    ?>
+
                                       <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
                                       <input type="file" name="contrato" class="form-control">
                                       <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato</button>
 
-                                    <?php
-                                    }
-                                     ?>
                                   <?php
                                   }
                                    ?>

@@ -194,10 +194,20 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
 
         <table class="table table-bordered table-condensed table-striped">
           <thead>
+             <tr>
+               <td colspan="12" class="info">
+                <!--<p>NOTAS:</p>
+                <p>1. El estatus de 'En Revisión' significa que la OPP puede encontrarse en cualquiera de los siguientes sub estatus: 'En proceso de renovación', 'Certificado expirado' o 'Suspendido'</p>
+                <p>2. Es responsabilidad de los interesados verificar si la OPP se encuentran en proceso de renovación del certificado, cuando en la presente lista se indica que el estatus es "En Revisión"</p>
+                <p>3. El estatus de 'Cancelado' siginifica que la OPP ya no esta certificada por Incumplimiento con el Marco Regulatorio SPP o por renuncia voluntaria. Si fue cancelado por incumpliento con el marco regulatorio, deberá esperar dos años a partir de la cancelación para volver a solicitar la certificación.</p>-->
+                <h4 style="font-size:13px;text-align:center">NOTA: <span style="color:#e74c3c">ES RESPONSABILIDAD DEL INTERESADO REVISAR EL ESTATUS ESPECÍFICO EN EL QUE SE ENCUENTRA LA EMPRESA</span></h4>
+              </td>
+             </tr>
+
             <tr>
               <th colspan="2">
                 Exportar: 
-                <a target="_blank" href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
+                <a href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
                 <form name="formulario1" method="POST" action="../reportes/lista_empresas.php">
                   <input type="hidden" name="lista_publica_pdf" value="1">
                   <input type="hidden" name="query_pdf" value="<?php echo $query_empresa; ?>">
@@ -214,7 +224,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
               <th class="text-center">PAÍS/COUNTRY</th>
               <th class="text-center">PRODUCTO(s)/PRODUCTS (s)</th>
               <th class="text-center">VIGENCIA DEL REGISTRO / EFFECTIVE DATE OF REGISTRATION</th>
-              <th class="text-center">ESTATUS/STATUS</th>
+              <!--<th class="text-center">ESTATUS/STATUS</th>-->
               <th class="text-center">ENTIDAD QUE OTORGÓ EL CERTIFICADO/ENTITY THAT GRANTED CERTIFICATE</th>
               <th class="text-center">#SPP</th>
               <th class="text-center">EMAIL</th>
@@ -259,7 +269,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
                      ?>
                   </td>
                   <td><?php echo date('d/m/Y', $vigencia); ?></td>
-                  <td><?php echo $empresa['nombre_publico']; ?></td>
+                  <!--<td><?php echo $empresa['nombre_publico']; ?></td>-->
                   <td><?php echo $empresa['abreviacion_oc']; ?></td>
                   <td><?php echo $empresa['spp']; ?></td>
                   <td><?php echo $empresa['email']; ?></td>
@@ -271,14 +281,14 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
               }
             }
              ?>
-             <tr>
+             <!--<tr>
                <td colspan="12" class="info">
                 <p>NOTAS:</p>
                 <p>1. El estatus de 'En Revisión' significa que la OPP puede encontrarse en cualquiera de los siguientes sub estatus: 'En proceso de renovación', 'Certificado expirado' o 'Suspendido'</p>
                 <p>2. Es responsabilidad de los interesados verificar si la OPP se encuentran en proceso de renovación del certificado, cuando en la presente lista se indica que el estatus es "En Revisión"</p>
                 <p>3. El estatus de 'Cancelado' siginifica que la OPP ya no esta certificada por Incumplimiento con el Marco Regulatorio SPP o por renuncia voluntaria. Si fue cancelado por incumpliento con el marco regulatorio, deberá esperar dos años a partir de la cancelación para volver a solicitar la certificación.</p>
               </td>
-             </tr>
+             </tr>-->
           </tbody>
         </table>
       </div>      

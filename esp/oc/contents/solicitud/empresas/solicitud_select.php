@@ -722,7 +722,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //inicia correo envio de certificado
-  $row_informacion = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.contacto1_email, empresa.nombre AS 'nombre_empresa', empresa.email FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa", $dspp) or die(mysql_error());
+  $row_informacion = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.contacto1_email, empresa.nombre AS 'nombre_empresa', empresa.email FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
   $inicio = strtotime($_POST['fecha_inicio']);
   $fin = strtotime($_POST['fecha_fin']);
@@ -1175,14 +1175,9 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Cargar Certificado</button>
             <?php
             }*/
-              if($proceso_certificacion['estatus_interno'] == 8 || isset($solicitud['iddictamen_evaluacion']) || isset($solicitud['idformato_evaluacion']) || isset($solicitud['idinforme_evaluacion'])){
-              ?>
-                <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_registro']; ?>">Cargar Certificado</button>
-              <?php
-              }else{
-                echo '<button class="btn btn-sm btn-default" disabled>Cargar Certificado</button>';
-              }
             ?>
+                <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_registro']; ?>">Cargar Certificado</button>
+
           </td>
                 <!-- inicia modal estatus_Certificado -->
 
@@ -1244,7 +1239,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               }
 
                             }else{
-                              if($solicitud['estatus_contrato'] == "ACEPTADO" && $solicitud['estatus_membresia'] == "APROBADA"){
+                              if($solicitud['estatus_contrato'] == "ACEPTADO"){
                                 if(isset($solicitud['idformato_evaluacion']) && isset($solicitud['idinforme_evaluacion']) && isset($solicitud['iddictamen_evaluacion'])){
 
                                   $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
@@ -1361,9 +1356,9 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                       </div>
 
                       <div class="modal-footer">
-                        <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
+                        <input type="text" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
-                        <input type="hidden" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
+                        <input type="text" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                       </div>
                     </div>

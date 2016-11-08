@@ -31,9 +31,9 @@
             <td style="text-align: center;">
               VIGENCIA DEL REGISTRO / EFFECTIVE DATE OF REGISTRATION
             </td>
-            <td style="text-align: center;">
+            <!--<td style="text-align: center;">
               ESTATUS / STATUS
-            </td>
+            </td>-->
             <td style="text-align: center;">
               IDENTIFICACIÓN / IDENTIFICATION
             </td>
@@ -63,7 +63,7 @@
         $cont++;
       }
 
-      $fecha = strtotime($empresa['vigencia_fin']);
+      $fecha = strtotime($empresa['fecha_fin']);
       if(!empty($fecha)){
         $vigencia = date('d/m/Y', $fecha);
       }else{
@@ -78,7 +78,7 @@
         <td style="font-size:12px;text-align: center;">'.$empresa['pais'].'</td>
         <td style="font-size:12px;text-align: left;">'.$producto.'</td>
         <td style="font-size:12px;text-align: center;">'.$vigencia.'</td>
-        <td style="font-size:12px;text-align: left;">'.$empresa['nombre_publico'].'</td>
+        <!--<td style="font-size:12px;text-align: left;">'.$empresa['nombre_publico'].'</td>-->
         <td style="font-size:12px;text-align: center;">'.$empresa['spp'].'</td>
         <td style="font-size:12px;text-align: left;width: 10%;">'.$empresa['sitio_web'].'</td>
         <td style="font-size:12px;text-align: left;width: 10%;">'.$empresa['email'].'</td>
@@ -88,11 +88,7 @@
     }
     $html .='
       </table>
-      <h2>NOTAS:</h2>
-      <h2>1. El estatus de \'En Revisión\' significa que el Comprador Final puede encontrarse en cualquiera de los siguientes sub estatus: \'En proceso de renovación\', \'Certificado expirado\' o</h2>
-      <h2>2. Es responsabilidad de los interesados verificar si el Comprador Final se encuentran en proceso de renovación del Registro, cuando en la presente lista se indica que el estatus es \'En Revisión.\'</h2>
-      <h2>3. El estatus de \'Cancelado\' significa que el Comprador ya no esta registrado por Incumplimiento con el Marco Regulatorio SPP o por renuncia voluntaria. Si fue cancelado por incumpliento con el marco regulatorio, deberá esperar dos años a partir de la cancelación para volver a solicitar el registro.</h2>
-
+      <h2>NOTAS: <span style="color:#e74c3c">ES RESPONSABILIDAD DEL INTERESADO REVISAR EL ESTATUS ESPECÍFICO EN EL QUE SE ENCUENTRA LA EMPRESA</span></h2>
     </div>';
 
     $mpdf = new mPDF('c', 'A2');

@@ -31,9 +31,9 @@
             <td style="text-align: center;">
               FECHA SIGUIENTE EVALUACIÓN/ NEXT EVALUATION DATE
             </td>
-            <td style="text-align: center;">
+            <!--<td style="text-align: center;">
               ESTATUS / STATUS
-            </td>
+            </td>-->
             <td style="text-align: center;">
               ENTIDAD QUE OTORGÓ EL CERTIFICADO / ENTITY THAT GRANTED CERTIFICATE
             </td>
@@ -66,7 +66,7 @@
         $cont++;
       }
 
-      $fecha = strtotime($opp['vigencia_fin']);
+      $fecha = strtotime($opp['fecha_fin']);
       if(!empty($fecha)){
         $vigencia = date('d/m/Y', $fecha);
       }else{
@@ -81,7 +81,7 @@
         <td style="font-size:12px;text-align: center;">'.$opp['pais'].'</td>
         <td style="font-size:12px;text-align: left;">'.$producto.'</td>
         <td style="font-size:12px;text-align: center;">'.$vigencia.'</td>
-        <td style="font-size:12px;text-align: left;">'.$opp['nombre_publico'].'</td>
+        <!--<td style="font-size:12px;text-align: left;">'.$opp['nombre_publico'].'</td>-->
         <td style="font-size:12px;text-align: center;">'.$opp['abreviacion_oc'].'</td>
         <td style="font-size:12px;text-align: center;">'.$opp['spp'].'</td>
         <td style="font-size:12px;text-align: left;width: 10%">'.$opp['sitio_web'].'</td>
@@ -92,11 +92,8 @@
     }
     $html .='
       </table>
-      <h2>NOTAS:</h2>
-      <h2>1. El estatus de \'En Revisión\' significa que la OPP puede encontrarse en cualquiera de los siguientes sub estatus: \'En proceso de renovación\', \'Certificado expirado\' o \'Suspendido\' </h2>
-      <h2>2. Es responsabilidad de los interesados verificar si la OPP se encuentran en proceso de renovación del certificado, cuando en la presente lista se indica que el estatus es "En Revisión"</h2>
-      <h2>3. El estatus de \'Cancelado\' siginifica que la OPP ya no esta certificada por Incumplimiento con el Marco Regulatorio SPP o por renuncia voluntaria. Si fue cancelado por incumpliento con el marco regulatorio, deberá esperar dos años a partir de la cancelación para volver a solicitar la certificación.</h2>
-
+      <h2>NOTAS: <span style="color:#e74c3c">ES RESPONSABILIDAD DEL INTERESADO REVISAR EL ESTATUS ESPECÍFICO EN EL QUE SE ENCUENTRA LA OPP</span></h2>
+      
     </div>';
 
     $mpdf = new mPDF('c', 'A2');
@@ -284,17 +281,17 @@
     // Se asignan las propiedades del libro
     $objPHPExcel->getProperties()->setCreator("spp global") //Autor
                ->setLastModifiedBy("spp global") //Ultimo usuario que lo modificó
-               ->setTitle("Reporte Excel con PHP y MySQL")
-               ->setSubject("Reporte Excel con PHP y MySQL")
-               ->setDescription("Reporte de alumnos")
-               ->setKeywords("reporte alumnos carreras")
-               ->setCategory("Reporte excel");
+               ->setTitle("LISTA ORGANIZACIONES DE PEQUEÑOS PRODUCTORES")
+               ->setSubject("LISTA ORGANIZACIONES DE PEQUEÑOS PRODUCTORES")
+               ->setDescription("LISTA ORGANIZACIONES DE PEQUEÑOS PRODUCTORES")
+               ->setKeywords("LISTA ORGANIZACIONES DE PEQUEÑOS PRODUCTORES")
+               ->setCategory("LISTA ORGANIZACIONES");
 
     $tituloReporte = "Lista de Organizaciones de Pequeños Productores /List of Small Producers´ Organizations ";
-    $titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO(S) CERTIFICADO', 'FECHA SIGUIENTE EVALUACIÓN', 'ESTATUS', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', '#SPP', 'EMAIL', 'SITIO WEB', 'TELÉFONO');
+    $titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO(S) CERTIFICADO', 'FECHA SIGUIENTE EVALUACIÓN', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', '#SPP', 'EMAIL', 'SITIO WEB', 'TELÉFONO');
     
     $objPHPExcel->setActiveSheetIndex(0)
-                ->mergeCells('A1:L1');
+                ->mergeCells('A1:K1');
             
     // Se agregan los titulos del reporte
     $objPHPExcel->setActiveSheetIndex(0)
@@ -309,8 +306,7 @@
                 ->setCellValue('H3',  $titulosColumnas[7])
                 ->setCellValue('I3',  $titulosColumnas[8])
                 ->setCellValue('J3',  $titulosColumnas[9])
-                ->setCellValue('K3',  $titulosColumnas[10])
-                ->setCellValue('L3',  $titulosColumnas[11]);
+                ->setCellValue('K3',  $titulosColumnas[10]);
     
     //Se agregan los datos de los alumnos
     $i = 4;
@@ -342,12 +338,11 @@
                 ->setCellValue('D'.$i,  $opp['pais'])
                 ->setCellValue('E'.$i,  $productos)
                 ->setCellValue('F'.$i,  $vigencia)
-                ->setCellValue('G'.$i,  $opp['nombre_publico'])
-                ->setCellValue('H'.$i,  $opp['abreviacion_oc'])
-                ->setCellValue('I'.$i,  $opp['spp'])
-                ->setCellValue('J'.$i,  $opp['email'])
-                ->setCellValue('K'.$i,  $opp['sitio_web'])
-                ->setCellValue('L'.$i,  $opp['telefono']);
+                ->setCellValue('G'.$i,  $opp['abreviacion_oc'])
+                ->setCellValue('H'.$i,  $opp['spp'])
+                ->setCellValue('I'.$i,  $opp['email'])
+                ->setCellValue('J'.$i,  $opp['sitio_web'])
+                ->setCellValue('K'.$i,  $opp['telefono']);
           $i++;
           $contador++;
     }
@@ -439,11 +434,11 @@
             )
         ));
 
-    $objPHPExcel->getActiveSheet()->getStyle('A1:L1')->applyFromArray($estiloTituloReporte);
-    $objPHPExcel->getActiveSheet()->getStyle('A3:L3')->applyFromArray($estiloTituloColumnas);   
-    $objPHPExcel->getActiveSheet()->setSharedStyle($estiloInformacion, "A4:L".($i-1));
+    $objPHPExcel->getActiveSheet()->getStyle('A1:K1')->applyFromArray($estiloTituloReporte);
+    $objPHPExcel->getActiveSheet()->getStyle('A3:K3')->applyFromArray($estiloTituloColumnas);   
+    $objPHPExcel->getActiveSheet()->setSharedStyle($estiloInformacion, "A4:K".($i-1));
         
-    for($i = 'A'; $i <= 'L'; $i++){
+    for($i = 'A'; $i <= 'K'; $i++){
       $objPHPExcel->setActiveSheetIndex(0)      
         ->getColumnDimension($i)->setAutoSize(TRUE);
     }

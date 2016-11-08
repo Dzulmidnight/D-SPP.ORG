@@ -1189,7 +1189,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           $proceso_certificacion = mysql_fetch_assoc($ejecutar);
 
       ?>
-        <tr>
+        <tr <?php if($proceso_certificacion['estatus_dspp'] == 12){ echo "class='success'"; }else if($proceso_certificacion['estatus_interno'] == 9){ echo "class='danger'"; } ?>>
           <td>
             <?php echo $solicitud['idsolicitud']; ?>
             <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
