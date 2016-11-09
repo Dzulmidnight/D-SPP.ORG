@@ -1356,9 +1356,9 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                       </div>
 
                       <div class="modal-footer">
-                        <input type="text" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
+                        <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
-                        <input type="text" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
+                        <input type="hidden" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                       </div>
                     </div>

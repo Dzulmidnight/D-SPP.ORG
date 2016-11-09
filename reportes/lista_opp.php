@@ -198,7 +198,7 @@
         $cont++;
       }
 
-      $fecha = strtotime($opp['vigencia_fin']);
+      $fecha = strtotime($opp['fecha_fin']);
       if(!empty($fecha)){
         $vigencia = date('d/m/Y', $fecha);
       }else{
@@ -312,7 +312,7 @@
     $i = 4;
     $contador = 1;
     while ($opp = mysql_fetch_assoc($row_opp)) {
-      $fecha = strtotime($opp['vigencia_fin']);
+      $fecha = strtotime($opp['fecha_fin']);
       if(!empty($fecha)){
         $vigencia = date('d/m/Y', $fecha);
       }else{
@@ -502,7 +502,7 @@
 		$i = 4;
 		$contador = 1;
 		while ($opp = mysql_fetch_assoc($row_opp)) {
-      $fecha = strtotime($opp['vigencia_fin']);
+      $fecha = strtotime($opp['fecha_fin']);
       if(!empty($fecha)){
         $vigencia = date('d/m/Y', $fecha);
       }else{

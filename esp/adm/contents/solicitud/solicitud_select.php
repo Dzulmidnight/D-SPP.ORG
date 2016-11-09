@@ -359,8 +359,9 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
                     <td>'.date('d/m/Y', $periodo['fecha_inicio']).'</td>
                     <td>'.date('d/m/Y', $periodo['fecha_fin']).'</td>
                   </tr>
+                </table>
               </td>
-              </table>
+              
             </tr>
 
           </tbody>

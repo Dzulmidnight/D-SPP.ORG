@@ -50,9 +50,9 @@ mysql_select_db($database_dspp, $dspp);
 if(isset($_POST['buscar']) && $_POST['buscar'] == 1){
   $busqueda = $_POST['campo_buscar'];
 
-  $query_empresa = "SELECT empresa.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico' FROM empresa LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $idoc AND (empresa.spp LIKE '%$busqueda%' OR empresa.nombre LIKE '%$busqueda%' OR empresa.abreviacion LIKE '%$busqueda%') ORDER BY empresa.nombre ASC";
+  $query_empresa = "SELECT empresa.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', MAX(certificado.idcertificado) AS 'idcertificado', MAX(certificado.vigencia_inicio) AS 'fecha_inicio', MAX(certificado.vigencia_fin) AS 'fecha_fin', certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico' FROM empresa LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $idoc AND (empresa.spp LIKE '%$busqueda%' OR empresa.nombre LIKE '%$busqueda%' OR empresa.abreviacion LIKE '%$busqueda%') GROUP BY empresa.idempresa ORDER BY fecha_fin DESC";
 }else{
-  $query_empresa = "SELECT empresa.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico' FROM empresa LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $idoc ORDER BY empresa.nombre ASC";
+  $query_empresa = "SELECT empresa.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', MAX(certificado.idcertificado) AS 'idcertificado', MAX(certificado.vigencia_inicio) AS 'fecha_inicio', MAX(certificado.vigencia_fin) AS 'fecha_fin', certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico' FROM empresa LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.idoc = $idoc GROUP BY empresa.idempresa ORDER BY fecha_fin DESC";
 }
 
 
@@ -451,26 +451,45 @@ function preguntar(){
                 </td>
                 <td>
                   <?php 
-                    $vigenciafin = date('d-m-Y', strtotime($empresa['vigencia_fin']));
-                    $timeVencimiento = strtotime($empresa['vigencia_fin']);
+                    $vigenciafin = date('d-m-Y', strtotime($empresa['fecha_fin']));
+                    $timeVencimiento = strtotime($empresa['fecha_fin']);
                   
                    ?>
-                  <input type="date" name="vigencia_fin<?php echo $empresa['idempresa']; ?>" value="<?php echo $empresa['vigencia_fin']; ?>">
+                  <input type="date" name="vigencia_fin<?php echo $empresa['idempresa']; ?>" value="<?php echo $empresa['fecha_fin']; ?>">
                 </td>
-                <td>
-                  <?php 
-                  if(isset($empresa['idcertificado'])){
-                    $estatus_certificado = mysql_query("SELECT idcertificado, estatus_certificado, estatus_dspp.nombre FROM certificado LEFT JOIN estatus_dspp ON certificado.estatus_certificado = estatus_dspp.idestatus_dspp WHERE idcertificado = $empresa[idcertificado]", $dspp) or die(mysql_error());
-                    $certificado = mysql_fetch_assoc($estatus_certificado);
 
-                     echo $certificado['nombre'];
-                  }else{
-                    echo "No Disponible";
-                  }
-                    //echo $empresa['estatus_certificado'];
-                   ?>
- 
-                </td>
+            <!--- INICIA ESTATUS_CERTIFICADO ---->
+              <?php 
+              if(isset($empresa['idcertificado'])){
+                $estatus_certificado = mysql_query("SELECT idcertificado, estatus_certificado, estatus_dspp.nombre FROM certificado LEFT JOIN estatus_dspp ON certificado.estatus_certificado = estatus_dspp.idestatus_dspp WHERE idcertificado = $empresa[idcertificado]", $dspp) or die(mysql_error());
+                $certificado = mysql_fetch_assoc($estatus_certificado);
+
+                switch ($certificado['estatus_certificado']) {
+                  case '13': //certificado "activo"
+                    $clase = 'success';
+                    break;
+                  case '14': //certificado "renovacion"
+                    $clase = 'info';
+                    break;
+                  case '15': //certificado "por expirar"
+                    $clase = 'warning';
+                    break;
+                  case '16': //certificado "Expirado"
+                    $clase = 'danger';
+                    break;
+
+                  default:
+                    # code...
+                    break;
+                }
+                 echo "<td class='".$clase."'>".$certificado['nombre']."</td>";
+              }else{
+                echo "<td>No Disponible</td>";
+              }
+                //echo $opp['estatus_certificado'];
+               ?>
+            <!--- TERMINA ESTATUS_CERTIFICADO ---->
+
                 <td>
                   <?php 
                   $row_productos = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());

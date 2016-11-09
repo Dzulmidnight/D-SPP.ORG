@@ -50,9 +50,9 @@ mysql_select_db($database_dspp, $dspp);
 if(isset($_POST['buscar']) && $_POST['buscar'] == 1){
   $busqueda = $_POST['campo_buscar'];
 
-  $query_opp = "SELECT opp.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', num_socios.idnum_socios, num_socios.numero FROM opp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp WHERE opp.idoc = $idoc AND (opp.spp LIKE '%$busqueda%' OR opp.nombre LIKE '%$busqueda%' OR opp.abreviacion LIKE '%$busqueda%') ORDER BY opp.nombre ASC";
+  $query_opp = "SELECT opp.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', MAX(certificado.idcertificado) AS 'idcertificado', MAX(certificado.vigencia_inicio) AS 'fecha_inicio', MAX(certificado.vigencia_fin) AS 'fecha_fin', certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', num_socios.idnum_socios, num_socios.numero FROM opp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp WHERE opp.idoc = $idoc AND (opp.spp LIKE '%$busqueda%' OR opp.nombre LIKE '%$busqueda%' OR opp.abreviacion LIKE '%$busqueda%') ORDER BY fecha_fin DESC";
 }else{
-  $query_opp = "SELECT opp.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', num_socios.idnum_socios, num_socios.numero FROM opp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp WHERE opp.idoc = $idoc GROUP BY opp.idopp ORDER BY opp.nombre ASC";
+  $query_opp = "SELECT opp.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', MAX(certificado.idcertificado) AS 'idcertificado', MAX(certificado.vigencia_inicio) AS 'fecha_inicio', MAX(certificado.vigencia_fin) AS 'fecha_fin', certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', num_socios.idnum_socios, num_socios.numero FROM opp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp WHERE opp.idoc = $idoc GROUP BY opp.idopp ORDER BY fecha_fin DESC";
 }
 
 
@@ -449,26 +449,46 @@ function preguntar(){
                 </td>
                 <td>
                   <?php 
-                    $vigenciafin = date('d-m-Y', strtotime($opp['vigencia_fin']));
-                    $timeVencimiento = strtotime($opp['vigencia_fin']);
+                    $vigenciafin = date('d-m-Y', strtotime($opp['fecha_fin']));
+                    $timeVencimiento = strtotime($opp['fecha_fin']);
                   
                    ?>
-                  <input type="date" name="vigencia_fin<?php echo $opp['idopp']; ?>" value="<?php echo $opp['vigencia_fin']; ?>">
+                  <input type="date" name="vigencia_fin<?php echo $opp['idopp']; ?>" value="<?php echo $opp['fecha_fin']; ?>">
                 </td>
-                <td>
-                  <?php 
-                  if(isset($opp['idcertificado'])){
-                    $estatus_certificado = mysql_query("SELECT idcertificado, estatus_certificado, estatus_dspp.nombre FROM certificado LEFT JOIN estatus_dspp ON certificado.estatus_certificado = estatus_dspp.idestatus_dspp WHERE idcertificado = $opp[idcertificado]", $dspp) or die(mysql_error());
-                    $certificado = mysql_fetch_assoc($estatus_certificado);
 
-                     echo $certificado['nombre'];
-                  }else{
-                    echo "No Disponible";
-                  }
-                    //echo $opp['estatus_certificado'];
-                   ?>
- 
-                </td>
+            <!--- INICIA ESTATUS_CERTIFICADO ---->
+              <?php 
+              if(isset($opp['idcertificado'])){
+                $estatus_certificado = mysql_query("SELECT idcertificado, estatus_certificado, estatus_dspp.nombre FROM certificado LEFT JOIN estatus_dspp ON certificado.estatus_certificado = estatus_dspp.idestatus_dspp WHERE idcertificado = $opp[idcertificado]", $dspp) or die(mysql_error());
+                $certificado = mysql_fetch_assoc($estatus_certificado);
+
+                switch ($certificado['estatus_certificado']) {
+                  case '13': //certificado "activo"
+                    $clase = 'success';
+                    break;
+                  case '14': //certificado "renovacion"
+                    $clase = 'info';
+                    break;
+                  case '15': //certificado "por expirar"
+                    $clase = 'warning';
+                    break;
+                  case '16': //certificado "Expirado"
+                    $clase = 'danger';
+                    break;
+
+                  default:
+                    # code...
+                    break;
+                }
+                 echo "<td class='".$clase."'>".$certificado['nombre']."</td>";
+              }else{
+                echo "<td>No Disponible</td>";
+              }
+                //echo $opp['estatus_certificado'];
+               ?>
+            <!--- TERMINA ESTATUS_CERTIFICADO ---->
+
+
                 <td>
                   <?php 
                   $row_productos = mysql_query("SELECT * FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
