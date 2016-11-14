@@ -399,6 +399,100 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $mensaje = "Se ha enviado la cotizacion al OPP";
 }
 //****** TERMINA ENVIAR COTIZACION *******///
+if(isset($_POST['agregar_observaciones']) && $_POST['agregar_observaciones'] == 1){
+  $idsolicitud_certificacion = $_POST['idsolicitud_certificacion'];
+
+  ////INICIA INGRESAR LAS OBSERVACIONES REALIZADAS
+  $updateSQL = sprintf("UPDATE solicitud_certificacion SET observaciones = %s WHERE idsolicitud_certificacion = %s",
+    GetSQLValueString($_POST['observaciones_solicitud'], "text"),
+    GetSQLValueString($idsolicitud_certificacion, "int"));
+  $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+  //// TERMINA INGRESAR OBSERVACIONES
+
+  $row_informacion = mysql_query("SELECT opp.nombre, opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
+  $informacion = mysql_fetch_assoc($row_informacion);
+  
+  $asunto = "D-SPP | Observaciones Solicitud Certficación SPP";
+
+  $cuerpo_mensaje = '
+    <html>
+    <head>
+      <meta charset="utf-8">
+    </head>
+    <body>
+    
+      <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+        <tbody>
+          <tr>
+            <th rowspan="4" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+            <th scope="col" align="left" width="280" ><strong>Observaciones Realizadas a la Solicitud de Certificación SPP</strong></th>
+          </tr>
+          <tr>
+            <td align="left" style="color:#ff738a;">
+              <p>Organismo de Certificación: '.$informacion['abreviacion_oc'].'</p>
+              <p>Email Organismo de Certificación / Certification Entity: '.$informacion['email1'].'</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td aling="left" style="text-align:justify">
+            A continuación se listan las siguientes observaciones realizadas a su Solicitud de Certificación SPP. Por favor proceda a corregir y/o complementar su solicitud, para poder continuar con el proceso de certificación.
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2" style="padding-top:20px;">
+            <hr>
+              '.$_POST['observaciones_solicitud'].'   
+            <hr>  
+            </td>
+          </tr>
+                <tr>
+                  <td colspan="2">
+                    <span style="color:red">¿Qué es lo de debo realizar ahora?</span>
+                    <ol>
+                      <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organización de Pequeños Productores(OPP).</li>
+                      <li>Usuario(#SPP): <span style="color:red">'.$informacion['spp'].'</span> y contraseña: <span style="color:red">'.$informacion['password'].'</span> de su cuenta.</li>
+                      <li>Dentro de tu cuenta debes seleccionar <span style="color:red">"Solicitudes"</span> > <span style="color:red">Listado Solicitudes</span>.</li>
+                      <li>Dentro de la tabla solicitudes debes localizar la columna <span style="color:red">"Acciones"</span> Y seleccionar el botón <span style="color:red">"CONSULTAR"</span>.</li>
+                      <li>Al dar clic en "Consultar" podra visualizar su Solicitud de Certificación" la cual puede ser modificada.</li>
+                      <li>Una vez realizados los cambios correspondientes debe dar clic en el boton <span style="color:red">"Actualizar Solicitud" al inicio de su Solicitud</span>.</li>
+                    </ol>
+                  </td>
+                </tr> 
+                <tr>
+                  <td colspan="2">Para cualquier duda o aclaración por favor contactar a: soporte@d-spp.org</td>
+                </tr>
+        </tbody>
+      </table>
+
+    </body>
+    </html>
+  ';
+  if(isset($informacion['contacto1_email'])){
+    $mail->AddAddress($informacion['contacto1_email']);
+  }
+  if(isset($informacion['contacto2_email'])){
+    $mail->AddAddress($informacion['contacto2_email']);
+  }
+  if(isset($informacion['adm1_email'])){
+    $mail->AddAddress($informacion['adm1_email']);
+  }
+  //$mail->Username = "soporte@d-spp.org";
+  //$mail->Password = "/aung5l6tZ";
+  $mail->Subject = utf8_decode($asunto);
+  $mail->Body = utf8_decode($cuerpo_mensaje);
+  $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+
+  if($mail->Send()){
+    $mail->ClearAddresses();
+    echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+  }else{
+    $mail->ClearAddresses();
+    echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+  }
+
+}
 
 
 $query = "SELECT solicitud_certificacion.*, opp.nombre, opp.spp AS 'spp_opp', opp.sitio_web, opp.email, opp.telefono, opp.pais, opp.ciudad, opp.razon_social, opp.direccion_oficina, opp.direccion_fiscal, opp.rfc, opp.ruc, oc.abreviacion AS 'abreviacionOC', porcentaje_productoVentas.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN porcentaje_productoVentas ON solicitud_certificacion.idsolicitud_certificacion = porcentaje_productoVentas.idsolicitud_certificacion WHERE solicitud_certificacion.idsolicitud_certificacion = $idsolicitud_certificacion";
@@ -435,6 +529,11 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             <b>ENVAR AL OC (selecciona el OC al que deseas enviar la solicitud):</b>
             <input type="text" class="form-control" value="<?php echo $solicitud['abreviacionOC']; ?>" readonly>
           </div>-->
+          <div class="col-md-4">
+            <b>AGREGAR OBSERVACIONES</b>
+            <button type="button" class="btn btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#observaciones".$_GET['IDsolicitud']; ?>">Agregar Observaciones</button>
+          </div>
+
           <div class="col-xs-4">
             <b>TIPO DE SOLICITUD</b>
             <input type="text" class="form-control" value="<?php echo $solicitud['tipo_solicitud']; ?>"readonly>
@@ -445,7 +544,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             <input type="hidden" name="guarda_cambios" value="1">-->
 
           </div>
-          <div class="col-md-8">
+          <div class="col-md-4">
             <?php 
             if(empty($solicitud['cotizacion_opp'])){
             ?>
@@ -982,6 +1081,35 @@ $solicitud = mysql_fetch_assoc($ejecutar);
   </form>
 </div>
 
+
+<!-- inicia modal estatus_Certificado -->
+
+<div id="<?php echo "observaciones".$_GET['IDsolicitud']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <form action="" method="POST">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">Agregar Observaciones sobre la Solicitud</h4>
+        </div>
+        <div class="modal-body">
+          <textarea name="observaciones_solicitud" id="" class="textareaMensaje" cols="30" rows="10"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
+          <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $_GET['IDsolicitud']; ?>">
+          <input type="hidden" name="agregar_observaciones" value="1">
+          <button type="submit" class="btn btn-success">Enviar Observaciones</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- termina modal estatus_Certificado -->
 
 <script>
   
