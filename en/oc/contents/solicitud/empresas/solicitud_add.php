@@ -260,19 +260,16 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 
 		 // INGRESAMOS EL PORCENTAJE DE VENTA DE LOS PRODUCTOS
-		 if(isset($preg13) && $preg13 == "SI"){
-		 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
-		 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_registro, idempresa) VALUES (%s, %s, %s, %s, %s, %s)",
-		 			GetSQLValueString($_POST['organico'], "text"),
-		 			GetSQLValueString($_POST['comercio_justo'], "text"),
-		 			GetSQLValueString($_POST['spp'], "text"),
-		 			GetSQLValueString($_POST['sin_certificado'], "text"),
-		 			GetSQLValueString($idsolicitud_registro, "int"),
-		 			GetSQLValueString($idempresa, "int"));
-		 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
-		 	}
-		 }	
-
+	 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
+	 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_registro, idempresa) VALUES (%s, %s, %s, %s, %s, %s)",
+	 			GetSQLValueString($_POST['organico'], "text"),
+	 			GetSQLValueString($_POST['comercio_justo'], "text"),
+	 			GetSQLValueString($_POST['spp'], "text"),
+	 			GetSQLValueString($_POST['sin_certificado'], "text"),
+	 			GetSQLValueString($idsolicitud_registro, "int"),
+	 			GetSQLValueString($idempresa, "int"));
+	 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+	 	}
 
 		/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
 		$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_publico, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
@@ -482,6 +479,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		$destinatario = $oc['email1'];
 
         $mail->AddAddress($destinatario);
+        $mail->AddAddress($oc['email2']);
 	    $mail->AddBCC($administrador);
 	    $mail->AddBCC($spp_global);
         //$mail->Username = "soporte@d-spp.org";
@@ -837,29 +835,27 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 						12.	ACCORDING THE CERTIFICATIONS, IN ITS MOST RECENT INTERNAL AND EXTERNAL EVALUATIONS, HOW MANY CASES OF NON COMPLIANCE WERE INDENTIFIED? PLEASE EXPLAIN IF THEY HAVE BEEN RESOLVED OR WHAT THEIR STATUS IS?</label>
 					<textarea name="preg12" id="preg12" class="form-control"></textarea>
 
-						<div class="col-md-12">
-							<p for="op_preg11">
-								<b>13.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
-							</p>
-							<p><i>(* Enter percentage)</i></p>
-								<div class="col-md-3">
-									<label for="organico">% ORGANIC</label>
-									<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
-								</div>
-								<div class="col-md-3">
-									<label for="comercio_justo">% FAIR TRADE</label>
-									<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
-								</div>
-								<div class="col-md-3">
-									<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
-									<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
-									
-								</div>
-								<div class="col-md-3">
-									<label for="otro">OTHER</label>
-									<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
-									
-								</div>						
+					<p for="op_preg11">
+						<b>13.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+					</p>
+					<p><i>(* Enter percentage)</i></p>
+						<div class="col-md-3">
+							<label for="organico">% ORGANIC</label>
+							<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
+						</div>
+						<div class="col-md-3">
+							<label for="comercio_justo">% FAIR TRADE</label>
+							<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
+						</div>
+						<div class="col-md-3">
+							<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
+							<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
+							
+						</div>
+						<div class="col-md-3">
+							<label for="otro">OTHER</label>
+							<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
+							
 						</div>
 
 

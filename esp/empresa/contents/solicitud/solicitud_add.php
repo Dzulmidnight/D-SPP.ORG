@@ -259,18 +259,17 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 
 		 // INGRESAMOS EL PORCENTAJE DE VENTA DE LOS PRODUCTOS
-		 if(isset($preg13) && $preg13 == "SI"){
-		 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
-		 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_registro, idempresa) VALUES (%s, %s, %s, %s, %s, %s)",
-		 			GetSQLValueString($_POST['organico'], "text"),
-		 			GetSQLValueString($_POST['comercio_justo'], "text"),
-		 			GetSQLValueString($_POST['spp'], "text"),
-		 			GetSQLValueString($_POST['sin_certificado'], "text"),
-		 			GetSQLValueString($idsolicitud_registro, "int"),
-		 			GetSQLValueString($idempresa, "int"));
-		 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
-		 	}
-		 }	
+	 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
+	 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_registro, idempresa) VALUES (%s, %s, %s, %s, %s, %s)",
+	 			GetSQLValueString($_POST['organico'], "text"),
+	 			GetSQLValueString($_POST['comercio_justo'], "text"),
+	 			GetSQLValueString($_POST['spp'], "text"),
+	 			GetSQLValueString($_POST['sin_certificado'], "text"),
+	 			GetSQLValueString($idsolicitud_registro, "int"),
+	 			GetSQLValueString($idempresa, "int"));
+	 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+	 	}
+	
 
 
 		/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
@@ -475,10 +474,13 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			</html>
 		';
 		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
-		$destinatario = $oc['email1'];
+		if(isset($oc['email1'])){
+			$mail->AddAddress($oc['email1']);
+		}
+		if(isset($oc['email2'])){
+			$mail->AddAddress($oc['email2']);
+		}
 
-        $mail->AddAddress($destinatario);
-	    $mail->AddBCC($administrador);
 	    $mail->AddBCC($spp_global);
         //$mail->Username = "soporte@d-spp.org";
         //$mail->Password = "/aung5l6tZ";
@@ -818,10 +820,31 @@ $empresa = mysql_fetch_assoc($row_empresa);
 					</table>	
 
 					<label for="preg12">
-						12.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
+						11.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
 					<textarea name="preg12" id="preg12" class="form-control"></textarea>
 
-
+					<p for="op_preg11">
+						<b>12. DEL TOTAL DE SUS COMPRAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
+					</p>
+					<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
+						<div class="col-md-3">
+							<label for="organico">% ORGÁNICO</label>
+							<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
+						</div>
+						<div class="col-md-3">
+							<label for="comercio_justo">% COMERCIO JUSTO</label>
+							<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
+						</div>
+						<div class="col-md-3">
+							<label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
+							<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
+							
+						</div>
+						<div class="col-md-3">
+							<label for="otro">SIN CERTIFICADO</label>
+							<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
+							
+						</div>						
 
 
 					<p><b>13. TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
@@ -852,30 +875,6 @@ $empresa = mysql_fetch_assoc($row_empresa);
 							<input type="text" name="preg14_1" class="form-control" id="oculto" style='display:none;' placeholder="Especifique la Cantidad">
 						</div>
 
-						<div class="col-md-12">
-							<p for="op_preg11">
-								<b>14_1.DEL TOTAL DE SUS COMPRAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
-							</p>
-							<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-								<div class="col-md-3">
-									<label for="organico">% ORGÁNICO</label>
-									<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
-								</div>
-								<div class="col-md-3">
-									<label for="comercio_justo">% COMERCIO JUSTO</label>
-									<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
-								</div>
-								<div class="col-md-3">
-									<label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
-									<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
-									
-								</div>
-								<div class="col-md-3">
-									<label for="otro">SIN CERTIFICADO</label>
-									<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
-									
-								</div>						
-						</div>
 					</div>
 							
 					<label for="preg15">

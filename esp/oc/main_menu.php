@@ -130,10 +130,6 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $_SESSION['MM_Usern
       <script src="../bootstrap-switch-master/bootstrap-switch.js"></script>
 
     <!------------------- bootstrap-switch -------------->
-
-
-
-
   </head>
 
   <body>
@@ -154,28 +150,6 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $_SESSION['MM_Usern
         </div>
       </div>
     </nav>
-
-
-
-
-
-
-    <!--<div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-        
-          <? // include("contents/menu.php");?>
-          
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="padding:10px;">
-        
-        <? // include("selector.php");?>
-
-        </div>
-      </div>
-    </div>-->
-
-
 
     <div class="container-fluid" >
       <div class="row">

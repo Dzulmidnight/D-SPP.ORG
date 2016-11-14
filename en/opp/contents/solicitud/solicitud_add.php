@@ -250,7 +250,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 
 		 // INGRESAMOS EL PORCENTAJE DE VENTA DE LOS PRODUCTOS
-		 if(isset($op_preg12) && $op_preg12 == "SI"){
+
 		 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
 		 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_certificacion, idopp) VALUES (%s, %s, %s, %s, %s, %s)",
 		 			GetSQLValueString($_POST['organico'], "text"),
@@ -261,7 +261,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		 			GetSQLValueString($idopp, "int"));
 		 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 		 	}
-		 }	
 
 
 		/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
@@ -403,67 +402,75 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			</head>
 			<body>
 			
-				<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-				  <tbody>
+		        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+		          <tbody>
+		                <tr>
+		                  <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+		                  <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Application for Small Producers\' Organization Certification </strong></th>
+		                </tr>
+		                <tr>
+		                  <td style="padding-top:10px;">
+		       
+		                    Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+		                  <br>
+		                    To consult the application, please log in to your CE(Certification Entity) account, in the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+		                  </td>
+		                </tr>
 		            <tr>
-		              <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-		              <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Application for Small Producers\' Organization Certification </strong></th>
+		              <td align="left">Teléfono / phone Organización: '.$_POST['telefono'].'</td>
+		            </tr>
+
+		            <tr>
+		              <td align="left">'.$_POST['pais'].'</td>
 		            </tr>
 		            <tr>
-		              <td style="padding-top:10px;">
-		   
-		              Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
-		              <br>
-		              To consult the application, please log in to your CE(Certification Entity) account, in the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+		              <td align="left" style="color:#ff738a;">Email: '.$_POST['email'].'</td>
+		            </tr>
+		            <tr>
+		              <td align="left" style="color:#ff738a;">Email: '.$_POST['contacto1_email'].'</td>
+		            </tr>
 
-		         
+		            <tr>
+		              <td colspan="2">
+		                <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+		                  <tbody>
+		                    <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+		                      <td width="130px">Nombre de la organización/Organization name</td>
+		                      <td width="130px">País / Country</td>
+		                      <td width="130px">Organismo de Certificación / Certification Entity</td>
+		                   
+		                      <td width="130px">Fecha de solicitud/Date of application</td>
+		                    </tr>
+		                    <tr style="font-size: 12px;">
+		                      <td style="padding:10px;">
+		                        '.$_POST['nombre'].'
+		                      </td>
+		                      <td style="padding:10px;">
+		                        '.$_POST['pais'].'
+		                      </td>
+		                      <td style="padding:10px;">
+		                        '.$oc['nombre'].'
+		                      </td>
+		                      <td style="padding:10px;">
+		                      '.date('d/m/Y', $fecha).'
+		                      </td>
+		                    </tr>
 
+		                  </tbody>
+		                </table>  
 		              </td>
 		            </tr>
-				    <tr>
-				      <td align="left">Teléfono / phone Organización: '.$_POST['telefono'].'</td>
-				    </tr>
-
-				    <tr>
-				      <td align="left">'.$_POST['pais'].'</td>
-				    </tr>
-				    <tr>
-				      <td align="left" style="color:#ff738a;">Email: '.$_POST['email'].'</td>
-				    </tr>
-				    <tr>
-				      <td align="left" style="color:#ff738a;">Email: '.$_POST['contacto1_email'].'</td>
-				    </tr>
-
-				    <tr>
-				      <td colspan="2">
-				        <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-				          <tbody>
-				            <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-				              <td width="130px">Nombre de la organización/Organization name</td>
-				              <td width="130px">País / Country</td>
-				              <td width="130px">Organismo de Certificación / Certification Entity</td>
-				           
-				              <td width="130px">Fecha de solicitud/Date of application</td>
-				            </tr>
-				            <tr style="font-size: 12px;">
-				              <td style="padding:10px;">
-				              	'.$_POST['nombre'].'
-				              </td>
-				              <td style="padding:10px;">
-				                '.$_POST['pais'].'
-				              </td>
-				              <td style="padding:10px;">
-				                '.$oc['nombre'].'
-				              </td>
-				              <td style="padding:10px;">
-				              '.date('d/m/Y', $fecha).'
-				              </td>
-				            </tr>
-
-				          </tbody>
-				        </table>        
-				      </td>
-				    </tr>
+		            <tr>
+		              <td colspan="2">
+		                <span style="color:red">¿Qué es lo de debo realizar ahora?. Debes revisar la solicitud y cargar una cotización</span>
+		                <ol>
+		                  <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organismo de Certificación(OC).</li>
+		                  <li>Dentro de tu cuenta debes seleccionar Solicitudes > Solicitudes OPP.</li>
+		                  <li>Dentro de la tabla solicitudes debes localizar la columna "Acciones" Y seleccionar el boton Azul Consultar</li>
+		                  <li>Para poder enviar la cotización debes seleccionar el "Procedimiento de Certificación" y cargar la cotización</li>
+		                </ol>
+		              </td>
+		            </tr> 
 
 				  </tbody>
 				</table>
@@ -473,9 +480,13 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		';
 		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
 		$destinatario = $oc['email1'];
-
-        $mail->AddAddress($destinatario);
-	    $mail->AddBCC($administrador);
+		if(isset($oc['email1'])){
+			$mail->AddAddress($oc['email1']);
+		}
+		$destinatario = $oc['email2'];
+		if(isset($oc['email2'])){
+			$mail->AddAddress($oc['email2']);
+		}
 	    $mail->AddBCC($spp_global);
         //$mail->Username = "soporte@d-spp.org";
         //$mail->Password = "/aung5l6tZ";
@@ -609,7 +620,7 @@ $opp = mysql_fetch_assoc($row_opp);
 					<label for="email">ORGANIZATION’S TELEPHONES(COUNTRY CODE+AREA CODE+NUMBER):</label>
 					<input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $opp['telefono']; ?>">	
 
-					<label for="sitio_web">Website:</label>
+					<label for="sitio_web">WEBSITE:</label>
 					<input type="text" class="form-control" id="sitio_web" name="sitio_web" value="<?php echo $opp['sitio_web']; ?>">
 
 				</div>
@@ -798,9 +809,9 @@ $opp = mysql_fetch_assoc($row_opp);
 							</td>
 						</tr>
 						<tr class="text-center">
-							<td><input type="text" class="form-control" name="certificacion[0]" id="exampleInputEmail1" placeholder="CERTIFICACIÓN"></td>
-							<td><input type="text" class="form-control" name="certificadora[0]" id="exampleInputEmail1" placeholder="CERTIFICADORA"></td>
-							<td><input type="text" class="form-control" name="ano_inicial[0]" id="exampleInputEmail1" placeholder="AÑO INICIAL"></td>
+							<td><input type="text" class="form-control" name="certificacion[0]" id="exampleInputEmail1" placeholder="CERTIFICATION"></td>
+							<td><input type="text" class="form-control" name="certificadora[0]" id="exampleInputEmail1" placeholder="ENTITY"></td>
+							<td><input type="text" class="form-control" name="ano_inicial[0]" id="exampleInputEmail1" placeholder="INITIAL YEAR"></td>
 							<!--<td><input type="text" class="form-control" name="interrumpida[0]" id="exampleInputEmail1" placeholder="¿HA SIDO INTERRUMPIDA?"></td>-->
 							<td>
 								<div class="col-xs-6">YES<input type="radio" class="form-control" name="interrumpida[0]" value="SI"></div>
@@ -813,30 +824,27 @@ $opp = mysql_fetch_assoc($row_opp);
 						10.	ACCORDING THE CERTIFICATIONS, IN ITS MOST RECENT INTERNAL AND EXTERNAL EVALUATIONS, HOW MANY CASES OF NON COMPLIANCE WERE IDENTIFIED? PLEASE EXPLAIN IF THEY HAVE BEEN RESOLVED OR WHAT THEIR STATUS IS?</label>
 					<textarea name="op_preg10" id="op_preg10" class="form-control"></textarea>
 
-
-						<div class="col-xs-12">
-							<p for="op_preg11">
-								<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
-							</p>
-							<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-								<div class="col-xs-3">
-									<label for="organico">% ORGANIC</label>
-									<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
-								</div>
-								<div class="col-xs-3">
-									<label for="comercio_justo">%  FAIR TRADE</label>
-									<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
-								</div>
-								<div class="col-xs-3">
-									<label for="spp">SMALL PRODUCERS' SYMBOL</label>
-									<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
-									
-								</div>
-								<div class="col-xs-3">
-									<label for="otro">OTHER</label>
-									<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
-									
-								</div>						
+					<p for="op_preg11">
+						<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+					</p>
+					<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
+						<div class="col-xs-3">
+							<label for="organico">% ORGANIC</label>
+							<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
+						</div>
+						<div class="col-xs-3">
+							<label for="comercio_justo">%  FAIR TRADE</label>
+							<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
+						</div>
+						<div class="col-xs-3">
+							<label for="spp">SMALL PRODUCERS' SYMBOL</label>
+							<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
+							
+						</div>
+						<div class="col-xs-3">
+							<label for="otro">OTHER</label>
+							<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
+							
 						</div>
 
 					<p><b>12.	DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
@@ -988,7 +996,7 @@ $opp = mysql_fetch_assoc($row_opp);
     }
      
     if(!seleccionado) {
-      alert("You must select a type of Application");
+      alert("Debes de seleecionar un Tipo de Solicitud");
       return false;
     }
 
@@ -1010,10 +1018,10 @@ var contador=0;
 	  var cell3 = row.insertCell(2);
 	  var cell4 = row.insertCell(3);
 
-	  cell1.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICACIÓN">';
-	  cell2.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICADORA">';
-	  cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="AÑO INICIAL">';
-	  cell4.innerHTML = '<div class="col-xs-6">SI<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
+	  cell1.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION">';
+	  cell2.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="ENTITY">';
+	  cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="INITIAL YEAR">';
+	  cell4.innerHTML = '<div class="col-xs-6">YES<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
 	  }
 	}	
 
@@ -1049,9 +1057,7 @@ var contador=0;
 	  var cell5 = row.insertCell(4);
 	  var cell6 = row.insertCell(5);
 	  var cell7 = row.insertCell(6); 
-	  var cell8 = row.insertCell(7); 	   	  
-
-	  
+	  var cell8 = row.insertCell(7);
 
 	  cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Product">';
 	  

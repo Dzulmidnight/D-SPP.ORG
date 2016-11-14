@@ -98,7 +98,6 @@ $total_opp = mysql_num_rows($row_opp);
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT * FROM oc", $dspp) or die(mysql_error());
 $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS NOT NULL GROUP BY producto",$dspp) or die(mysql_error());
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -264,7 +263,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
             }else{
               $contador = 1;
               while($opp = mysql_fetch_assoc($row_opp)){
-                $vigencia = strtotime($opp['vigencia_fin']);
+                $vigencia = strtotime($opp['fecha_fin']);
               ?>
                 <tr>
                   <td><?php echo $contador; ?></td>

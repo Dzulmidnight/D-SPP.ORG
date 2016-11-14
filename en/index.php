@@ -49,6 +49,7 @@ if (isset($_GET['accesscheck'])) {
 
 
 /***  VARIABLE GENERALES  ****/
+$administrador = 'cert@spp.coop';
 $fecha = time();
 $asunto_usuario = "D-SPP Datos de Usuario / User Data";
 
@@ -98,6 +99,7 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
   }
   //echo "se ha creado un nuevo idf de opp el cual es: <b>$spp</b>";
 
+
   $logitud = 8;
   $psswd = substr( md5(microtime()), 1, $logitud);
 
@@ -106,6 +108,11 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
   $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
   $oc = mysql_fetch_assoc($ejecutar);
 */
+  if(empty($_POST['idoc'])){
+    $idoc = NULL;
+  }else{
+    $idoc = $_POST['idoc'];
+  }
 
   $insertSQL = sprintf("INSERT INTO opp (spp, nombre, abreviacion, password, sitio_web, email, telefono, pais, ciudad, razon_social, direccion_oficina, direccion_fiscal, rfc, ruc, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                       // GetSQLValueString($oc['idoc'], "text"),
@@ -169,10 +176,8 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
       </body>
       </html>
     ';
-
       $mail->AddAddress($destinatario);
-      $mail->AddBCC('yasser.midnight@gmail.com');
-      $mail->AddBCC('cert@spp.coop');
+      $mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
       $mail->Subject = utf8_decode($asunto_usuario);
@@ -315,8 +320,7 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
   ';
 
     $mail->AddAddress($destinatario);
-    $mail->AddBCC('yasser.midnight@gmail.com');
-    $mail->AddBCC('cert@spp.coop');
+    $mail->AddBCC($administrador);
 
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
@@ -496,6 +500,15 @@ if (isset($_POST['SPP_OC'])) {
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_error());
 
+$alerta = '
+           <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center">
+            IF YOU ARE OR YOU WERE AN ORGANIZATION OR COMPANY CERTIFIED WITH THE SPP, YOU MUST ASK FOR YOUR USER AND PASSWORD AT THE FOLLOWING MAIL: <a href="mailto:soporte@d-spp.org" style="color:#2c3e50">soporte@d-spp.org</a> AND OMMIT THE FOLLOWING FORM.
+          </p>';
+$alerta2 = '
+           <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center">
+            IF YOU ARE AN ORGANIZATION OR COMPANY CERTIFIED WITH THE SPP, YOU MUST ASK FOR YOUR USER AND PASSWORD AT THE FOLLOWING MAIL: <a href="mailto:soporte@d-spp.org" style="color:#2c3e50">soporte@d-spp.org</a>.
+          </p>';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -635,6 +648,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
               <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM">COMPANIES</a></li>
               </ul>
             </div>
+            <?php echo $alerta2; ?>
           </div>
         <?php
         }
@@ -664,6 +678,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
           <div class="row">
             <div class="col-md-12">
+              <?php echo $alerta; ?>
               <form action="" method="POST" class="form-horizontal">
                 <div class="panel panel-info">
                   <div class="panel-heading">
@@ -704,7 +719,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="telefono" class="col-sm-2 control-label">* Teléfono de Oficina</label>
+                      <label for="telefono" class="col-sm-2 control-label">* Office Telephone</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Enter the office phone" required>
                       </div>
@@ -774,6 +789,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
           <div class="row">
             <div class="col-md-12">
+              <?php echo $alerta; ?>
               <form action="" method="POST" class="form-horizontal">
                 <div class="panel panel-info">
                   <div class="panel-heading">

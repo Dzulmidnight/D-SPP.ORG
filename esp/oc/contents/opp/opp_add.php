@@ -176,7 +176,10 @@ $query_oc = "SELECT idoc, spp, abreviacion, pais FROM oc where idoc = $_SESSION[
 $oc = mysql_query($query_oc, $dspp) or die(mysql_error());
 $row_oc = mysql_fetch_assoc($oc);
 $totalRows_oc = mysql_num_rows($oc);
-
+$alerta = '
+           <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center; padding:5px;">
+            SI YA ES O FUE UNA ORGANIZACIÓN CERTIFICADA CON EL SPP, DEBE DE CONSULTAR EN SU LISTA DE "Informacion OPP" ANTES DE CREAR UN NUEVO USUARIO.
+          </p>';
 
 ?>
 
@@ -198,6 +201,7 @@ $totalRows_oc = mysql_num_rows($oc);
 
 <div class="row">
   <div class="col-md-12">
+    <?php echo $alerta; ?>
     <form action="" method="POST" class="form-horizontal">
       <div class="panel panel-info">
         <div class="panel-heading">

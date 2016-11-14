@@ -859,11 +859,11 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
 
               <td>
                 <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
-                <a class="btn btn-xs btn-primary" style="display:inline-block" href="?SOLICITUD&amp;detail&amp;idsolicitud=<?php echo $solicitud['idsolicitud_registro']; ?>" data-toggle="tooltip" title="Visualizar Solicitud" >
-                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                <a class="btn btn-sm btn-primary" style="display:inline-block" href="?SOLICITUD&amp;detail&amp;idsolicitud=<?php echo $solicitud['idsolicitud_registro']; ?>" data-toggle="tooltip" title="Visualizar Solicitud" >
+                 Consultar
                 </a>
                <!-- <form action="" method="POST"  style="display:inline-block">-->
-                  <button class="btn btn-xs btn-danger" name="eliminar_solicitud" value="1" data-toggle="tooltip" title="Eliminar Solicitud" type="submit" onclick="return confirm('¿Está seguro?, los datos se eliminaran permanentemente');">
+                  <button class="btn btn-sm btn-danger" name="eliminar_solicitud" value="1" data-toggle="tooltip" title="Eliminar Solicitud" type="submit" onclick="return confirm('¿Está seguro?, los datos se eliminaran permanentemente');">
                     <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
                   </button>         
                 <!--</form>-->

@@ -99,21 +99,9 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
   if($_POST['estatus_interno'] == 8){ //checamos si el estatus_interno es positvo
-    $nombre_oc = mysql_query("SELECT nombre FROM oc WHERE idoc = $detalle_empresa[idoc]", $dspp) or die(mysql_error());
-    $detall_oc = mysql_fetch_assoc($nombre_oc);
       $estatus_dspp = 9; //Termina proceso de certificación
-      $asunto = "D-SPP | Notificación de Dictamen";
+      $asunto = "D-SPP | Proceso de Certificación, Dictamen Positivo";
     if($_POST['tipo_solicitud'] == 'RENOVACION'){
-
-      //creamos la variable del archivo extra
-      if(!empty($_FILES['archivo_extra']['name'])){
-          $_FILES["archivo_extra"]["name"];
-            move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_extra"]["name"]);
-            $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_extra"]["name"]);
-      }else{
-        $archivo = NULL;
-      }
-
 
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_interno, estatus_dspp, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s)",
         GetSQLValueString($_POST['idsolicitud_registro'], "int"),
@@ -123,114 +111,6 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         GetSQLValueString($archivo, "text"),
         GetSQLValueString($fecha, "int"));
       $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
-      if(!empty($_POST['mensaje_empresa'])){
-        $cuerpo_mensaje_empresa = '
-          <html>
-          <head>
-            <meta charset="utf-8">
-          </head>
-          <body>
-            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-              <tbody>
-                <tr>
-                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen</span></p></th>
-
-                </tr>
-                <tr>
-                 <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
-                </tr>
-
-                <tr>
-                  <td colspan="2">
-                      <p>
-                        '.$_POST['mensaje_empresa'].'
-                      </p>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td colspan="2">
-                    <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </body>
-          </html>
-        ';
-      }else{
-        $cuerpo_mensaje_empresa = '
-          <html>
-          <head>
-            <meta charset="utf-8">
-          </head>
-          <body>
-            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-              <tbody>
-                <tr>
-                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen</span></p></th>
-
-                </tr>
-                <tr>
-                 <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
-                </tr>
-
-                <tr>
-                  <td colspan="2">
-                      <p>
-                        1. Nosotros <span style="color:red">'.$detall_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.
-                      </p>
-                      <p>
-                        2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente firmar el Contrato de Uso y Acuse de Recibo.  
-                      </p>
-                      <p>
-                        Una vez que haya firmado los documentos indicados, ingresar a su cuenta y cargar los documentos para que éstos sean revisados por SPP Global
-                      </p>
-                      <p>
-                        3.Una vez que haya realizado el pago, favor de entrar a su cuenta y cargar el comprobante bancario.
-                      </p>
-                      <p>
-                        4. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepciòn del pago en la cuenta de SPP Global, el Organismo de Certificación hará entrega del Registro.
-                      </p>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td colspan="2">
-                    <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </body>
-          </html>
-        ';
-      }
-      if(!empty($archivo)){
-        $mail->AddAttachment($archivo);
-      }
-
-      if(!empty($detalle_empresa['contacto1_email'])){
-        $mail->AddAddress($detalle_empresa['contacto1_email']);
-      }
-      if(!empty($detalle_empresa['contacto2_email'])){
-        $mail->AddAddress($detalle_empresa['contacto2_email']);
-      }
-      if(!empty($detalle_empresa['adm1_email'])){
-        $mail->AddAddress($detalle_empresa['adm1_email']);
-      }
-      if(!empty($detalle_empresa['email'])){
-        $mail->AddAddress($detalle_empresa['email']);
-      }
-      $mail->AddBCC($spp_global);
-      $mail->Subject = utf8_decode($asunto);
-      $mail->Body = utf8_decode($cuerpo_mensaje_empresa);
-      $mail->MsgHTML(utf8_decode($cuerpo_mensaje_empresa));
-
-      $mail->Send();
-      $mail->ClearAddresses();
 
       $cuerpo_mensaje = '
         <html>
@@ -246,7 +126,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
               </tr>
 
               <tr>
@@ -268,7 +148,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
                   <ol>
                     <li>Dar clic en la opción "SOLICITUDES"</li>
-                    <li>Seleccionar "Solicitudes EMPRESA"</li>
+                    <li>Seleccionar "Solicitudes OPP"</li>
                     <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
                     <li>Se desplegara una ventana donde podran cargar la documentación</li>
                   </ol>
@@ -290,6 +170,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
           $mail->AddAddress($oc['email1']);
           $mail->AddAddress($oc['email2']);
+          $mail->AddBCC($administrador);
+          $mail->AddBCC($spp_global);
           $mail->Subject = utf8_decode($asunto);
           $mail->Body = utf8_decode($cuerpo_mensaje);
           $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -329,7 +211,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 
       //creamos el monto del comprobante de pago
-      /*$estatus_comprobante = "EN ESPERA";
+      $estatus_comprobante = "EN ESPERA";
 
       $insertSQL = sprintf("INSERT INTO comprobante_pago(estatus_comprobante, monto) VALUES (%s, %s)",
         GetSQLValueString($estatus_comprobante, "text"),
@@ -337,170 +219,113 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
       //capturamos el id del comprobante para vincularlo con la membresia
-      $idcomprobante_pago = mysql_insert_id($dspp);*/
+      $idcomprobante_pago = mysql_insert_id($dspp);
 
       //creamos la membresia
-      /*$estatus_membresia = "EN ESPERA";
+      $estatus_membresia = "EN ESPERA";
       $insertSQL = sprintf("INSERT INTO membresia(estatus_membresia, idempresa, idsolicitud_registro, idcomprobante_pago) VALUES (%s, %s, %s, %s)",
         GetSQLValueString($estatus_membresia, "text"),
         GetSQLValueString($_POST['idempresa'], "int"),
         GetSQLValueString($_POST['idsolicitud_registro'], "int"),
         GetSQLValueString($idcomprobante_pago, "int"));
-      $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());*/
+      $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
       ///inicia envio de mensaje dictamen positivo
 
-      $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]' AND documentacion.nombre != 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
+      $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]'", $dspp) or die(mysql_error());
       while($documentacion = mysql_fetch_assoc($row_documentacion)){
           $mail->AddAttachment($documentacion['archivo']);
           $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
       }
-      if(!empty($archivo)){
-        $documentacion_nombres .= '<li>'.$_POST['nombreArchivo'].'</li>';
-        $mail->AddAttachment($archivo);
-      }
+
+      $documentacion_nombres .= '<li>'.$_POST['nombreArchivo'].'</li>';
+      $mail->AddAttachment($archivo);
 
       $documentacion = mysql_fetch_assoc($row_documentacion);
 
-      if(!empty($_POST['mensaje_empresa'])){
-        $cuerpo_mensaje = '
-          <html>
-          <head>
-            <meta charset="utf-8">
-          </head>
-          <body>
-            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-              <tbody>
-                <tr>
-                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen</span></p></th>
 
-                </tr>
-                <tr>
-                 <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
-                </tr>
 
-                <tr>
-                  <td colspan="2">
-                    '.$_POST['mensaje_empresa'].'
-                  </td>
-                </tr>
-                <tr>
-                  <td><p><strong>Documentos Anexos</strong></p></td>
-                </tr>
-                <tr>
-                  <td>
-                    <ul>
-                      '.$documentacion_nombres.'
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2" style="text-align:justify">
-                      <p>
-                        DESPUÉS DE FIRMAR EL <span style="color:red">CONTRATO DE USO</span> PROCEDA A CARGAR EL MISMO POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE EMPRESA EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>.
-                      </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2" style="padding-top:10px;">
-                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </body>
-          </html>
-        ';
-      }else{
-        $cuerpo_mensaje = '
-          <html>
-          <head>
-            <meta charset="utf-8">
-          </head>
-          <body>
-            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-              <tbody>
-                <tr>
-                  <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen</span></p></th>
+      $cuerpo_mensaje = '
+            <html>
+            <head>
+              <meta charset="utf-8">
+            </head>
+            <body>
+              <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+                <tbody>
+                  <tr>
+                    <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Contrato de uso del Simbolo de Pequeños Productores - SPP</span></p></th>
 
-                </tr>
-                <tr>
-                 <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
-                </tr>
+                  </tr>
+                  <tr>
+                   <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+                  </tr>
 
-                <tr>
-                  <td colspan="2" style="text-align:justify">
-                    <p>
-                      1. Nosotros <span style="color:red">'.$detall_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.
-                    </p>
-                    <p>
-                      2. <span style="color:red">Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente firmar el Contrato de Uso y Acuse de Recibo.</span>
-                    </p>
-                    <p>
-                      Una vez que haya firmado los documentos indicados, ingresar a su cuenta y cargar los documentos para que éstos sean revisados por SPP Global.
-                    </p>
-                    <p>
-                      4. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos , el Organismo de Certificaciòn hará entrega del Certificado.
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td><p><strong>Documentos Anexos</strong></p></td>
-                </tr>
-                <tr>
-                  <td>
-                    <ul>
-                      '.$documentacion_nombres.'
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2" style="text-align:justify">
-                      <p>
-                        DESPUÉS DE FIRMAR EL <span style="color:red">CONTRATO DE USO</span> PROCEDA A CARGAR EL MISMO POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE EMPRESA EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>.
-                      </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2" style="padding-top:10px;">
-                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </body>
-          </html>
-        ';
-      }
-      if(!empty($detalle_empresa['contacto1_email'])){
-        $mail->AddAddress($detalle_empresa['contacto1_email']);
-      }
-      if(!empty($detalle_empresa['contacto2_email'])){
-        $mail->AddAddress($detalle_empresa['contacto2_email']);
-      }
-      if(!empty($detalle_empresa['adm1_email'])){
-        $mail->AddAddress($detalle_empresa['adm1_email']);
-      }
-      if(!empty($detalle_empresa['email'])){
-        $mail->AddAddress($detalle_empresa['email']);
-      }
-      $mail->AddBCC($spp_global);
-      $mail->Subject = utf8_decode($asunto);
-      $mail->Body = utf8_decode($cuerpo_mensaje);
-      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-      //$mail->Send();
-      //$mail->ClearAddresses();
-      if($mail->Send()){
-        $mail->ClearAddresses();
-        echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
-      }else{
-        $mail->ClearAddresses();
-        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-      }
-      //$mail->Send();
-            ///termina envio de mensaje dictamen positivo
+                  <tr>
+                    <td colspan="2">
+                      <p>Reciban ustedes un cordial y atento saludo, así como el deseo de éxito en todas y cada una de sus actividades</p>
+                      <p>La presente tiene por objetivo hacerles llegar el documentro <strong>Contrato de Uso del Simbolo de Pequeños Productores y Acuse de Recibido</strong>; documentos que se requieren sean leidos y entendidos, una vez revisada la información de los documentos mencionados, por favor <span style="color:red">proceder a firmarlos y envíar por medio del sistema D-SPP, esto ingresando en su cuenta de empresa </span>en la siguiente dirección <a href="http://d-spp.org/">http://d-spp.org/</a>.</p>
+                      <p>El Contrato de Uso menciona como anexo el documento Manual del SPP y este Manual a su vez menciona como anexos los siguientes documentos.</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><p><strong>Documentos Anexos</strong></p></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <ul>
+                        '.$documentacion_nombres.'
+                      </ul>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
+                      <p>Asi mismo se anexan los datos bancarios para el respectivo pago de la membresía SPP</p>
+                      <p>El monto total de la membresía SPP es de: <span style="color:red;">'.$_POST['monto_membresia'].'</span></p>
+                      <p>Después de realizar el pago por favor cargue el comprobante en el sistema D-SPP</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </body>
+            </html>
+      ';
+          if(!empty($detalle_empresa['contacto1_email'])){
+            $mail->AddAddress($detalle_empresa['contacto1_email']);
+          }
+          if(!empty($detalle_empresa['contacto2_email'])){
+            $mail->AddAddress($detalle_empresa['contacto2_email']);
+          }
+          if(!empty($detalle_empresa['adm1_email'])){
+            $mail->AddAddress($detalle_empresa['adm1_email']);
+          }
+          if(!empty($detalle_empresa['email'])){
+            $mail->AddAddress($detalle_empresa['email']);
+          }
+          $mail->AddBCC($administrador);
+          $mail->AddBCC($spp_global);
+          $mail->Subject = utf8_decode($asunto);
+          $mail->Body = utf8_decode($cuerpo_mensaje);
+          $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+
+          if($mail->Send()){
+            
+            echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+          }else{
+                echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+       
+          }
+          //$mail->Send();
+          $mail->ClearAddresses();
+      ///termina envio de mensaje dictamen positivo
+
 
     }//incia se envian documento si es una nueva solicitud
 
@@ -686,18 +511,13 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     $certificado = NULL;
   }
   //insertamos el certificado
-  $fecha_inicio = strtotime($_POST['fecha_inicio']);
-  $fecha_fin = strtotime($_POST['fecha_fin']);
-  $vigencia_inicio = date('Y-m-d', $fecha_inicio);
-  $vigencia_fin = date('Y-m-d', $fecha_fin);
-
   $insertSQL = sprintf("INSERT INTO certificado(idempresa, idsolicitud_registro, entidad, estatus_certificado, vigencia_inicio, vigencia_fin, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
     GetSQLValueString($_POST['idempresa'], "int"),
     GetSQLValueString($_POST['idsolicitud_registro'], "int"),
     GetSQLValueString($_POST['idoc'], "int"),
     GetSQLValueString($estatus_dspp, "int"),
-    GetSQLValueString($vigencia_inicio, "text"),
-    GetSQLValueString($vigencia_fin, "text"),
+    GetSQLValueString($_POST['fecha_inicio'], "text"),
+    GetSQLValueString($_POST['fecha_fin'], "text"),
     GetSQLValueString($certificado, "text"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -727,12 +547,10 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //inicia correo envio de certificado
-  $row_informacion = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.contacto1_email, empresa.nombre AS 'nombre_empresa', empresa.email FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+  $row_informacion = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.contacto1_email, empresa.nombre AS 'nombre_empresa', empresa.email FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
   $inicio = strtotime($_POST['fecha_inicio']);
   $fin = strtotime($_POST['fecha_fin']);
-  $formato_inicio = date('d/m/Y', $inicio);
-  $formato_fin = date('d/m/Y', $fin);
   $asunto = "D-SPP | Certificado Disponible para Descargar";
 
   $cuerpo_mensaje = '
@@ -757,7 +575,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
                  <p>
                   Felicidades!!!, su Certificado ha sido liberado, ahora puede descargarlo.
                  </p>
-                 <p>El Certificado tiene un vigencia del dia <span style="color:red">'.$formato_inicio.'</span> al dia: <span style="color:red">'.$formato_fin.'</span>, el cual se encuentra anexo a este correo.</p>
+                 <p>El Certificado tiene un vigencia del dia <span style="color:red">'.date('d/m/Y', $inicio).'</span> al dia: <span style="color:red">'.date('d/m/Y', $fin).'</span>, el cual se encuentra anexo a este correo.</p>
                  
                 </td>
               </tr>
@@ -772,7 +590,6 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
         </body>
       </html>
   ';
-  
     $mail->AddAddress($informacion['email']);
     $mail->AddAddress($informacion['contacto1_email']);
     $mail->AddBCC($spp_global);
@@ -802,7 +619,7 @@ $startRow_empresa = $pageNum_empresa * $maxRows_empresa;
 
 //$query = "SELECT solicitud_registro.idsolicitud_registro AS 'idsolicitud', solicitud_registro.tipo_solicitud, solicitud_registro.idempresa, solicitud_registro.idoc, solicitud_registro.fecha_registro, solicitud_registro.fecha_aceptacion, solicitud_registro.cotizacion_empresa, solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion, informe_evaluacion.idinforme_evaluacion FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN proceso_certificacion ON solicitud_registro.idsolicitud_registro = proceso_certificacion.idsolicitud_registro LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro WHERE solicitud_registro.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC";
 
-$query = "SELECT solicitud_registro.*, oc.abreviacion AS 'abreviacionOC', empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion, informe_evaluacion.idinforme_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro WHERE solicitud_registro.idoc = $idoc GROUP BY solicitud_registro.idempresa";
+$query = "SELECT solicitud_registro.*, oc.abreviacion AS 'abreviacionOC', empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion, informe_evaluacion.idinforme_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro WHERE solicitud_registro.idoc = $idoc";
 
 $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
@@ -844,17 +661,17 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <th>Dirección fiscal</th>
           <th>RFC</th>-->
           <!--<th>Eliminar</th>-->
-        </tr>  
+        </tr>       
       </thead>
       <tbody>
       <?php 
       while($solicitud = mysql_fetch_assoc($row_solicitud)){
-          $query_proceso = "SELECT proceso_certificacion.*, proceso_certificacion.idsolicitud_registro, estatus_publico.idestatus_publico, estatus_publico.nombre_ingles AS 'nombre_publico', estatus_interno.idestatus_interno, estatus_interno.nombre_ingles AS 'nombre_interno', estatus_dspp.idestatus_dspp, estatus_dspp.nombre_ingles AS 'nombre_dspp', membresia.idmembresia, membresia.estatus_membresia, membresia.idcomprobante_pago, membresia.fecha_registro FROM proceso_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON proceso_certificacion.idsolicitud_registro = membresia.idsolicitud_registro WHERE proceso_certificacion.idsolicitud_registro =  $solicitud[idsolicitud_registro] ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
+          $query_proceso = "SELECT proceso_certificacion.*, proceso_certificacion.idsolicitud_registro, estatus_publico.idestatus_publico, estatus_publico.nombre_ingles AS 'nombre_publico', estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', estatus_dspp.idestatus_dspp, estatus_dspp.nombre_ingles AS 'nombre_dspp', membresia.idmembresia, membresia.estatus_membresia, membresia.idcomprobante_pago, membresia.fecha_registro FROM proceso_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON proceso_certificacion.idsolicitud_registro = membresia.idsolicitud_registro WHERE proceso_certificacion.idsolicitud_registro =  $solicitud[idsolicitud_registro] ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
           $ejecutar = mysql_query($query_proceso,$dspp) or die(mysql_error());
           $proceso_certificacion = mysql_fetch_assoc($ejecutar);
 
       ?>
-        <tr <?php if($proceso_certificacion['estatus_dspp'] == 12){ echo "class='success'"; } ?>>
+        <tr>
           <td>
             <?php echo $solicitud['idsolicitud_registro']; ?>
           </td>
@@ -882,11 +699,11 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             if(isset($solicitud['cotizacion_empresa'])){
                echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_empresa']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Download Quotation</a>";
                if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
-                echo "<p class='alert alert-success' style='padding:7px;'>Status: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
-                echo "<p class='alert alert-danger' style='padding:7px;'>Status: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                echo "<p class='alert alert-danger' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }else{
-                echo "<p class='alert alert-info' style='padding:7px;'>Status: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                echo "<p class='alert alert-info' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }
 
             }else{ // INICIA CARGAR COTIZACIÓN
@@ -898,17 +715,17 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <?php
             if($solicitud['tipo_solicitud'] == 'RENOVACION'){
             ?>
-              <a href="#" data-toggle="tooltip" title="This application is in the Process of Renewal of the Registry therefore does not apply the period of objection" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>APPLICATION FOR RENEWAL</a>
+              <a href="#" data-toggle="tooltip" title="This application is in process Registration Renewal therefore does not apply the objection period" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>APPLICATION FOR RENEWAL</a>
             <?php
             }else{
               if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] != 'EN ESPERA'){
               ?>
-                <p class="alert alert-info" style="margin-bottom:0;padding:0px;">Start: <?php echo date('d/m/Y', $solicitud['fecha_inicio']); ?></p>
-                <p class="alert alert-danger" style="margin-bottom:0;padding:0px;">End: <?php echo date('d/m/Y', $solicitud['fecha_fin']); ?></p>
+                <p class="alert alert-info" style="margin-bottom:0;padding:0px;">Inicio: <?php echo date('d/m/Y', $solicitud['fecha_inicio']); ?></p>
+                <p class="alert alert-danger" style="margin-bottom:0;padding:0px;">Fin: <?php echo date('d/m/Y', $solicitud['fecha_fin']); ?></p>
                 <?php 
                 if(isset($solicitud['documento'])){
                 ?>
-                  <p class="alert alert-success" style="margin-bottom:0;padding:0px;">Resolution: <?php echo $solicitud['dictamen']; ?></p>
+                  <p class="alert alert-success" style="margin-bottom:0;padding:0px;">Dictamen: <?php echo $solicitud['dictamen']; ?></p>
                   <a class="btn btn-info" style="font-size:12px;width:100%;height:30px;" href='<?php echo $solicitud['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Download Resolution</a> 
                 <?php
                 }
@@ -926,152 +743,122 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
               <?php 
               if((isset($solicitud['dictamen']) && $solicitud['dictamen'] == 'POSITIVO') || ($solicitud['tipo_solicitud'] == 'RENOVACION' && !empty($solicitud['fecha_aceptacion']))){
               ?>
-                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_registro']; ?>">Certification process</button>
+                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Certification Process</button>
                 <!-- inicia modal proceso de certificación -->
-                <div id="<?php echo "certificacion".$solicitud['idsolicitud_registro']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                <div id="<?php echo "certificacion".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Certification process</h4>
+                        <h4 class="modal-title" id="myModalLabel">Certification Process</h4>
                       </div>
                       <div class="modal-body">
-                        
                         <div class="row">
                           <?php 
 
-                          $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_registro = '$solicitud[idsolicitud_registro]' AND proceso_certificacion.estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
+                          $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre_ingles FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_registro = '$solicitud[idsolicitud_registro]' AND proceso_certificacion.estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
                           while($historial_proceso = mysql_fetch_assoc($row_proceso_certificacion)){
-                            echo "<div class='col-md-10'>Proceso: $historial_proceso[nombre]</div>";
+                            echo "<div class='col-md-10'>Proceso: $historial_proceso[nombre_ingles]</div>";
                             echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$historial_proceso['fecha_registro'])."</div>";
                           }
 
                           if(!isset($solicitud['idcomprobante_pago'])){
                           ?>
                           <div class="col-md-12">
-                            <select class="form-control" name="estatus_interno" id="<?php echo 'statusSelect'.$solicitud['idsolicitud_registro']; ?>" onchange="<?php echo 'funcionSelect'.$solicitud['idsolicitud_registro'].'()'; ?>">
-                              <option value="">Select the process you are in</option>
+                            <select class="form-control" name="estatus_interno" id="statusSelect" onchange="funcionSelect()" required>
+                              <option value="">Select the process in which the company is</option>
                               <?php 
                               $row_estatus_interno = mysql_query("SELECT * FROM estatus_interno",$dspp) or die(mysql_error());
                               while($estatus_interno = mysql_fetch_assoc($row_estatus_interno)){
                                 echo "<option value='$estatus_interno[idestatus_interno]'>$estatus_interno[nombre_ingles]</option>";
                               }
                                ?>
-                            </select>
+                            </select>                        
                           </div>
                           <?php
                           }
                           ?>
 
-                              <div class="col-xs-12" id="<?php echo 'divSelect'.$solicitud['idsolicitud_registro']; ?>" style="margin-top:10px;">
+                              <div class="col-xs-12" id="divSelect" style="margin-top:10px;">
                                 <div class="col-xs-6">
-                                  <input style="display:none" id="<?php echo 'nombreArchivo'.$solicitud['idsolicitud_registro']; ?>" type='text' class='form-control' name='nombre_archivo' placeholder="File Name"/>
+                                  <input style="display:none" id="nombreArchivo" type='text' class='form-control' name='nombre_archivo' placeholder="Nombre del Archivo"/>
                                 </div>
                                 <!-- INICIA CARGAR ARCHIVO ESTATUS -->
                                 <div class="col-xs-6">
-                                  <input style="display:none" id="<?php echo 'archivo_estatus'.$solicitud['idsolicitud_registro']; ?>" type='file' class='form-control' name='archivo_estatus' />
+                                  <input style="display:none" id="archivo_estatus" type='file' class='form-control' name='archivo_estatus' />
                                 </div>
                                 <!-- TERMINA CARGAR ARCHIVO ESTATUS -->
 
                                 <!-- INICIA ACCION PROCESO CERTIFICACION -->
-                                <textarea class="form-control" id="<?php echo 'registroOculto'.$solicitud['idsolicitud_registro']; ?>" style="display:none" name="accion" cols="30" rows="10" value="" placeholder="Write here"></textarea>
+                                <textarea class="form-control" id="registroOculto" style="display:none" name="accion" cols="30" rows="10" value="" placeholder="Escribe aquí"></textarea>
                                 <!-- TERMINA ACCION PROCESO CERTIFICACION -->
                               </div>
 
-                              <div id="<?php echo 'tablaCorreo'.$solicitud['idsolicitud_registro']; ?>" style="display:none">
+                              <div id="tablaCorreo" style="display:none">
                                 <div class="col-xs-12"  style="margin-top:10px;">
                                   <?php 
                                   if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                                     echo '<h5 style="font-size:15px;" class="alert alert-warning">
                                     <ul>
-                                      <li>This company is in "Process of Renewal of the Registry", therefore no "User\'s Contract" will be sent.</li>
-                                      <li>Only new companies that do not have registration will be sent to them "User\'s Contract".</li>
-                                      <li>Just click on "Save Process" to notify SPP Global.</li>
+                                      <li>Está empresa se encuentra en "Proceso de Renovación del Registro", por lo tanto no se enviara "Contrato de Uso".</li>
+                                      <li>Solo las empresas nuevas que no cuentan con registro se les enviara "Contrato de uso.</li>
+                                      <li>Solo de clic en "Guardar Proceso" para notificar a SPP Global.</li>
                                     </ul>
                                     </h5>';
-                                  ?>
-                                      <p class="alert alert-info">The following format will be sent shortly to the company</p>
-                                      <div class="col-xs-12">
-                                        
-                                        <div class="col-xs-12">
-                                          <div class="col-xs-6"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></div>
-                                          <div class="col-xs-6">
-                                            <p>Posted on:: <?php echo date("d/m/Y", time()); ?></p>
-                                            <p>For: <span style="color:red"><?php echo $solicitud['nombre_empresa']; ?></span></p>
-                                            <p>Email(s): <?php echo $solicitud['contacto1_email']." , ".$solicitud['contacto2_email']." , ".$solicitud['email']; ?></p>
-                                            <p>Subject: <span style="color:red">Notification of the judgement - SPP</span></p>
-                                            
-                                          </div>
-                                        </div>
-                                        <div class="col-xs-12">
-                                          <h4 style="font-size:14px;padding:5px;">MESSAGE COMPANY( <small style="font-size:13px;">The OC must write in the field below, the text on the Notification of the judgement and in case the judgement is positive, it must explain that the actor must read the attached documents and sign the User's Contract and Acknowledgment of Receipt. <span style="color:red">If you do not enter a message, the system will send a default message <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">view message</a></span></small>)</h4>
-                                          <textarea name="mensaje_empresa" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Enter a message in case you need it"></textarea>
-
-                                        </div>
-                                      </div>
-                                      <div class="col-xs-12">
-
-                                        <div class="col-xs-12">
-                                          <h4 style="font-size:14px;">ATTACHED FILES( <small>Attachments within email</small> )</h4>
-                                          <div class="col-xs-12">
-                                            <input type="text" class="form-control" name="nombreArchivo" placeholder="File Name">
-                                          </div>
-                                          <div class="col-xs-12">
-                                            <input type="file" class="form-control" name="archivo_extra">
-                                          </div>
-                                        </div>
-                                      </div>
-                                  <?php
                                   }else{
                                   ?>
-                                      <p class="alert alert-info">The following format will be sent shortly to the company</p>
-                                      <div class="col-xs-12">
+                                      <p class="alert alert-info">El siguiente formato sera enviado en breve al empresa</p>
+                                      <div class="col-xs-6">
                                         
                                         <div class="col-xs-12">
                                           <div class="col-xs-6"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></div>
                                           <div class="col-xs-6">
-                                            <p>Posted on:: <?php echo date("d/m/Y", time()); ?></p>
-                                            <p>for: <span style="color:red"><?php echo $solicitud['nombre_empresa']; ?></span></p>
-                                            <p>Email(s): <?php echo $solicitud['contacto1_email']." , ".$solicitud['contacto2_email']." , ".$solicitud['email']; ?></p>
-                                            <p>Subject: <span style="color:red">Notification of the judgement - SPP</span></p>
+                                            <p>Enviado el: <?php echo date("d/m/Y", time()); ?></p>
+                                            <p>Para: <span style="color:red"><?php echo $solicitud['nombre_empresa']; ?></span></p>
+                                            <p>Correo(s): <?php echo $solicitud['contacto1_email']." ".$solicitud['contacto2_email']." ".$solicitud['email']; ?></p>
+                                            <p>Asunto: <span style="color:red">Contrato de uso del Simbolo de Pequeños Productores - SPP</span></p>
                                             
                                           </div>
                                         </div>
                                         <div class="col-xs-12">
-                                          <h4 style="font-size:14px;padding:5px;">MESSAGE COMPANY( <small style="font-size:13px;">The OC must write in the field below, the text on the Notification of the judgement and in case the judgement is positive, it must explain that the actor must read the attached documents and sign the User's Contract and Acknowledgment of Receipt. <span style="color:red">If you do not enter a message, the system will send a default message <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">view message</a></span></small>)</h4>
-                                          <textarea name="mensaje_empresa" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Enter a message in case you need it"></textarea>
+                                          <h5 class="alert alert-warning">MENSAJE empresa( <small>Cuerpo del mensaje en caso de ser requerido</small>)</h5>
+                                          <textarea name="mensajeempresa" class="form-control" id="textareaMensaje" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé"></textarea>
 
                                         </div>
                                       </div>
-                                      <div class="col-xs-12">
+                                      <div class="col-xs-6">
                                         <div class="col-xs-12">
-                                          <h4 style="font-size:14px;">ATTACHED FILES: <span style="color:#7f8c8d">Documentation sent to the actor once the Certification Process has completed with a Positive judgement.</span></h4>
+                                          <h4>ARCHIVOS ADJUNTOS( <small>Archivos adjuntos dentro del email</small> )</h4>
                                           <?php 
-                                          $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND documentacion.nombre != 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
+                                          $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8", $dspp) or die(mysql_error());
                                           while($documetacion = mysql_fetch_assoc($row_documentacion)){
 
                                             echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$documetacion[archivo]' target='_blank'>$documetacion[nombre]</a><br>";
                                           }
                                            ?>
                                           <p class="alert alert-warning" style="padding:5px;">
-                                            Select the language in which you want to send the files:
+                                            Enviar archivos en:
                                             <label class="radio-inline">
-                                              <input type="radio" name="idioma" id="inlineRadio1" value="ESP"> Spanish
+                                              <input type="radio" name="idioma" id="inlineRadio1" value="ESP"> Español
                                             </label>
                                             <label class="radio-inline">
-                                              <input type="radio" name="idioma" id="inlineRadio2" value="EN"> English
+                                              <input type="radio" name="idioma" id="inlineRadio2" value="EN"> Ingles
                                             </label>
                                           </p>
         
                                         </div>
                                         <div class="col-xs-12">
-                                          <h4 style="font-size:14px;">EXTRA FILE: <span style="color:#7f8c8d">Attach some other file if required.</span></h4>
+                                          <h4>ARCHIVO EXTRA( <small>Anexar algun otro archivo en caso de ser requerido</small>)</h4>
                                           <div class="col-xs-12">
-                                            <input type="text" class="form-control" name="nombreArchivo" placeholder="File Name">
+                                            <input type="hidden" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
                                           </div>
                                           <div class="col-xs-12">
                                             <input type="file" class="form-control" name="archivo_extra">
                                           </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                          <h5 class="alert alert-warning">MEMBRESÍA SPP( Indicar el monto total de la membresía )</h5>
+                                          <p>Total Membresía: <input type="hidden" class="form-control" name="monto_membresia" placeholder="Total Membresía"></p>
                                         </div>
                                       </div>
                                   <?php
@@ -1081,57 +868,6 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               </div>
 
                         </div>
-
-                      <?php
-                          echo "<script>";
-                          echo "function funcionSelect".$solicitud['idsolicitud_registro']."() {";
-                            echo "var valorSelect = document.getElementById('statusSelect".$solicitud['idsolicitud_registro']."').value;";
-                            echo "if(valorSelect == '4'){";
-                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                            echo "}else if(valorSelect == '6'){";
-                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                            echo "}else if(valorSelect == '7'){";
-                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                            echo "}else if(valorSelect == '8'){";
-                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'block';"; 
-                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                            echo "}else if(valorSelect == '9'){";
-                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';"; 
-                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";                 
-                            echo "}else if(valorSelect == '23'){";
-                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';"; 
-                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";                
-                            echo "}else{";
-                              echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                              echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                              echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                              echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                            echo "}";
-                          echo "}";
-                          echo "</script>";
-                      ?>
-
                       </div>
                       <div class="modal-footer">
                         <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
@@ -1145,12 +881,12 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                           }else{
                             if($proceso_certificacion['estatus_interno'] != 8){
-                              echo '<button type="submit" class="btn btn-success" name="guardar_proceso" value="1">Save Process</button>';
+                              echo '<button type="submit" class="btn btn-success" name="guardar_proceso" value="1">Guardar Proceso</button>';
                             }
                           }
                         }else{
                           if(empty($solicitud['idmembresia'])){
-                            echo '<button type="submit" class="btn btn-success" name="guardar_proceso" value="1">Save Process</button>';
+                            echo '<button type="submit" class="btn btn-success" name="guardar_proceso" value="1">Guardar Proceso</button>';
                           }
                         }                        ?>
                         <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
@@ -1159,8 +895,57 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                   </div>
                 </div>
                 <!-- termina modal proceso de certificación -->
+                    <script>
+                    function funcionSelect() {
+                      var valorSelect = document.getElementById("statusSelect").value;
 
+                      if(valorSelect == '4'){
+                        document.getElementById('divSelect').style.display = 'block';
+                        document.getElementById("registroOculto").style.display = 'block';
+                        document.getElementById("nombreArchivo").style.display = 'block';
+                        document.getElementById("archivo_estatus").style.display = 'block';
+                        document.getElementById("tablaCorreo").style.display = 'none';
+                      }else if(valorSelect == '6'){
+                        document.getElementById('divSelect').style.display = 'block';
+                        document.getElementById("nombreArchivo").style.display = 'block';
+                        document.getElementById("archivo_estatus").style.display = 'block';
+                        document.getElementById("registroOculto").style.display = 'block';
+                        document.getElementById("tablaCorreo").style.display = 'none';
+                      }else if(valorSelect == '7'){
+                        document.getElementById('divSelect').style.display = 'block';
+                        document.getElementById("nombreArchivo").style.display = 'none';
+                        document.getElementById("archivo_estatus").style.display = 'none';
+                        document.getElementById("registroOculto").style.display = 'block';
+                        document.getElementById("tablaCorreo").style.display = 'none';
+                      }else if(valorSelect == '8'){
+                        document.getElementById("tablaCorreo").style.display = 'block'; 
+                        document.getElementById("nombreArchivo").style.display = 'none';
+                        document.getElementById("archivo_estatus").style.display = 'none';
+                        document.getElementById("registroOculto").style.display = 'none';
+                      }else if(valorSelect == '9'){
+                        document.getElementById('divSelect').style.display = 'block';
+                        document.getElementById("tablaCorreo").style.display = 'none'; 
+                        document.getElementById("nombreArchivo").style.display = 'block';
+                        document.getElementById("archivo_estatus").style.display = 'block';
+                        document.getElementById("registroOculto").style.display = 'block';                 
+                      }else if(valorSelect == '23'){
+                        document.getElementById('divSelect').style.display = 'block';
+                        document.getElementById("tablaCorreo").style.display = 'none';
+                        document.getElementById("nombreArchivo").style.display = 'none'; 
+                        document.getElementById("archivo_estatus").style.display = 'none';
+                        document.getElementById("registroOculto").style.display = 'block'                  
+                      }else{
+                        document.getElementById("nombreArchivo").style.display = 'none';
+                        document.getElementById("archivo_estatus").style.display = 'none';
+                        document.getElementById("registroOculto").style.display = 'none'
+                        document.getElementById("tablaCorreo").style.display = 'none';
+                        document.getElementById('divSelect').style.display = 'none';
+                      }
+                    }
+                    </script>
               <?php
+
+
               }else{
                 echo "Not available";
               }
@@ -1183,9 +968,14 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Cargar Certificado</button>
             <?php
             }*/
+              if($proceso_certificacion['estatus_interno'] == 8 || isset($solicitud['iddictamen_evaluacion']) || isset($solicitud['idformato_evaluacion']) || isset($solicitud['idinforme_evaluacion'])){
+              ?>
+                <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_registro']; ?>">Load Certificate</button>
+              <?php
+              }else{
+                echo '<button class="btn btn-sm btn-default" disabled>Load Certificate</button>';
+              }
             ?>
-                <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_registro']; ?>">Upload Certificate</button>
-
           </td>
                 <!-- inicia modal estatus_Certificado -->
 
@@ -1196,7 +986,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">Upload Certificate
+                        <h4 class="modal-title" id="myModalLabel">Load Certificate
 
                       </div>
                       <div class="modal-body">
@@ -1216,38 +1006,38 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   $dictamen = mysql_fetch_assoc($row_dictamen);
 
                                 ?>
-                                <p>Status of the Evaluation Format: <span style="color:red"><?php echo $formato['estatus_formato']; ?></span></p>
-                                <a href="<?php echo $formato['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download Evaluation Format</a>
+                                <p>Estatus Formato de Evaluación: <span style="color:red"><?php echo $formato['estatus_formato']; ?></span></p>
+                                <a href="<?php echo $formato['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Descargar Formato de Evaluación</a>
 
-                                <p>Status of the Evaluation Judgement: <span style="color:red"><?php echo $dictamen['estatus_dictamen']; ?></span></p>
-                                <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download Judgement</a>
-                                <p>Status of the Evaluation Report: <span style="color:red"><?php echo $informe['estatus_informe']; ?></span></p>
-                                <a href="<?php echo $informe['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download Report</a>
+                                <p>Estatus Dictamen de Evaluación: <span style="color:red"><?php echo $dictamen['estatus_dictamen']; ?></span></p>
+                                <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Descargar Dictamen</a>
+                                <p>Estatus Informe de Evaluación: <span style="color:red"><?php echo $informe['estatus_informe']; ?></span></p>
+                                <a href="<?php echo $informe['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Descargar Informe</a>
 
                                 <?php
                                 }else{
                                 ?>
-                                  <p class="alert alert-info">Please upload the following documents:</p>
+                                  <p class="alert alert-info">Por favor cargue los siguientes documentos:</p>
                                   <p class="alert alert-info">
 
-                                    Evaluation Format
+                                    Formato de Evaluación
                                     <input type="file" class="form-control" name="formato_evaluacion" required>
 
-                                    Evaluation report
+                                    Informe de Evaluación
                                     <input type="file" class="form-control" name="informe_evaluacion" required>
                        
                                     Dictamen de Evaluación
                                     <input type="file" class="form-control" name="dictamen_evaluacion" required>
 
                                   </p>
-                                  <button type="submit" class="btn btn-success" style="width:100%" name="cargar_documentos" value="1">Send documents</button>
+                                  <button type="submit" class="btn btn-success" style="width:100%" name="cargar_documentos" value="1">Enviar Documentos</button>
                                 <?php
                                 }
 
                               }
 
                             }else{
-                              if($solicitud['estatus_contrato'] == "ACEPTADO"){
+                              if($solicitud['estatus_contrato'] == "ACEPTADO" && $solicitud['estatus_membresia'] == "APROBADA"){
                                 if(isset($solicitud['idformato_evaluacion']) && isset($solicitud['idinforme_evaluacion']) && isset($solicitud['iddictamen_evaluacion'])){
 
                                   $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
@@ -1258,36 +1048,36 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   $dictamen = mysql_fetch_assoc($row_dictamen);
 
                                 ?>
-                                <p>Status of the Evaluation Format: <span style="color:red"><?php echo $formato['estatus_formato']; ?></span></p>
-                                <a href="<?php echo $formato['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download Evaluation Format</a>
+                                <p>Estatus Formato de Evaluación: <span style="color:red"><?php echo $formato['estatus_formato']; ?></span></p>
+                                <a href="<?php echo $formato['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Descargar Formato de Evaluación</a>
 
-                                <p>Status of the Evaluation Judgement: <span style="color:red"><?php echo $dictamen['estatus_dictamen']; ?></span></p>
-                                <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download Judgement</a>
-                                <p>Status of the Evaluation Report: <span style="color:red"><?php echo $informe['estatus_informe']; ?></span></p>
-                                <a href="<?php echo $informe['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download Report</a>
+                                <p>Estatus Dictamen de Evaluación: <span style="color:red"><?php echo $dictamen['estatus_dictamen']; ?></span></p>
+                                <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Descargar Dictamen</a>
+                                <p>Estatus Informe de Evaluación: <span style="color:red"><?php echo $informe['estatus_informe']; ?></span></p>
+                                <a href="<?php echo $informe['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Descargar Informe</a>
 
                                 <?php
                                 }else{
                                 ?>
-                                  <p class="alert alert-info">Please upload the following documents:</p>
+                                  <p class="alert alert-info">Por favor cargue los siguientes documentos:</p>
                                   <p class="alert alert-info">
 
-                                    Evaluation Format
+                                    Formato de Evaluación
                                     <input type="file" class="form-control" name="formato_evaluacion" required>
 
-                                    Evaluation report
+                                    Informe de Evaluación
                                     <input type="file" class="form-control" name="informe_evaluacion" required>
                        
                                     Dictamen de Evaluación
                                     <input type="file" class="form-control" name="dictamen_evaluacion" required>
 
                                   </p>
-                                  <button type="submit" class="btn btn-success" style="width:100%" name="cargar_documentos" value="1">Send documents</button>
+                                  <button type="submit" class="btn btn-success" style="width:100%" name="cargar_documentos" value="1">Enviar Documentos</button>
                                 <?php
                                 }
 
                               }else{
-                                echo "<p class='alert alert-danger'>The \"User's Contract\" has not yet been \"Approved\"</p>";
+                                echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" el \"Contrato de Uso\" ni se ha \"Aprobado\" la membresia</p>";
                               }
           
                             }
@@ -1299,53 +1089,31 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                             <?php 
                             if(isset($dictamen['iddictamen_evaluacion']) && $dictamen['estatus_dictamen'] == "ACEPTADO" && $informe['estatus_informe'] == "ACEPTADO"){
                               if(isset($solicitud['idcertificado'])){
-                                $row_certificado = mysql_query("SELECT * FROM certificado WHERE idsolicitud_registro = $solicitud[idsolicitud_registro]", $dspp) or die(mysql_error());
+                                $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                                 $certificado = mysql_fetch_assoc($row_certificado);
-
-                                if(isset($certificado['idsolicitud_registro'])){
-                                  $inicio = strtotime($certificado['vigencia_inicio']);
-                                  $fin = strtotime($certificado['vigencia_fin']);
-                                ?>
+                                $inicio = strtotime($certificado['vigencia_inicio']);
+                                $fin = strtotime($certificado['vigencia_fin']);
+                              ?>
                                 <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
-                                <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Download Certificate</a>
-                                <?php
-                                }else{
-                                ?>
-                                  <div class="col-md-12">
-                                    <p class="alert alert-info">Please set the Certificate Start and End date.</p>
-                                  </div>
-                                  <div class="col-md-6">
-                                    <label for="fecha_inicio">Start Date</label> 
-                                    <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd/mm/aaaa" required> 
-                                  </div>
-                                  <div class="col-md-6">
-                                    <label for="fecha_fin">End Date</label>
-                                    <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd/mm/aaaa" required>
-                                  </div>
-                                  
-                                  <label for="certificado">Please select Certificate</label>
-                                  <input type="file" name="certificado" id="certificado" class="form-control" required>
-                                  <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Send Certificate</button>
-
-                                <?php
-                                }
+                                <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
+                              <?php
                               }else{
                               ?>
                                 <div class="col-md-12">
-                                  <p class="alert alert-info">Please set the Certificate Start and End date.</p>
+                                  <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
                                 </div>
                                 <div class="col-md-6">
-                                  <label for="fecha_inicio">Start Date</label> 
+                                  <label for="fecha_inicio">Fecha Inicio</label> 
                                   <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd/mm/aaaa" required> 
                                 </div>
                                 <div class="col-md-6">
-                                  <label for="fecha_fin">End Date</label>
+                                  <label for="fecha_fin">Fecha Fin</label>
                                   <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd/mm/aaaa" required>
                                 </div>
                                 
-                                <label for="certificado">Please select Certificate</label>
+                                <label for="certificado">Por favor seleccione el Certificado</label>
                                 <input type="file" name="certificado" id="certificado" class="form-control" required>
-                                <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Send Certificate</button>
+                                <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>
 
                               <?php
                               }
@@ -1354,7 +1122,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                             }else{
                             ?>
                               <p class="alert alert-warning">
-                                nce the "Evaluation Report" has been approved and the "Evaluation Judgement" can load the Certificate.
+                                Una vez aprobado el "Formato de Evaluación" ,"Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
                               </p> 
                             <?php
                             }
@@ -1367,7 +1135,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
                         <input type="hidden" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                       </div>
                     </div>
                   </div>
@@ -1377,11 +1145,11 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- TERMINA SECCION CERTIFICADO ------>
             </form>
           <td>
-            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consult Application" href="?SOLICITUD&IDsolicitud_empresa=<?php echo $solicitud['idsolicitud_registro']; ?>">Consult</a>
+            <a class="btn btn-primary" data-toggle="tooltip" title="Consultar Solicitud" href="?SOLICITUD&IDsolicitud_empresa=<?php echo $solicitud['idsolicitud_registro']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
           </td>
           <td>
             <form action="../../reportes/reporte.php" method="POST" target="_new">
-              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Download Application" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
+              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
               <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
               <input type="hidden" name="generar_formato" value="1">
@@ -1396,14 +1164,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
     </table>
   </div>
 </div>
-<script type="text/javascript">
-<!--
-function ventanaNueva(documento,ancho,alto,nombreVentana){
-    window.open(documento, nombreVentana,'width=' + ancho + ', height=' + alto);
-}
-     
-//-->
-</script>
+
 <!--<table>
 <tr>
 <td width="20"><?php if ($pageNum_empresa > 0) { // Show if not first page ?>

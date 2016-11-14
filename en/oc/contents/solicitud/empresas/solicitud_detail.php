@@ -838,30 +838,29 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           <textarea name="preg12" id="preg12" class="form-control"><?php echo $solicitud['preg12']; ?></textarea>
 
 
-              <div class="col-xs-12">
-                <p for="op_preg11">
-                  <b>13.  OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
-                </p>
-                <p><i>(* Enter percentage)</i></p>
-                  <div class="col-xs-3">
-                    <label for="organico">% ORGANIC</label>
-                    <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="comercio_justo">% FAIR TRADE</label>
-                    <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="spp">SMALL PRODUCERS´ SYMBOL</label>
-                    <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
-                    
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="otro">OTHER</label>
-                    <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
-                    
-                  </div>            
+            <p for="op_preg11">
+              <b>13.  OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+            </p>
+            <p><i>(* Enter percentage)</i></p>
+              <div class="col-xs-3">
+                <label for="organico">% ORGANIC</label>
+                <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
               </div>
+              <div class="col-xs-3">
+                <label for="comercio_justo">% FAIR TRADE</label>
+                <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
+              </div>
+              <div class="col-xs-3">
+                <label for="spp">SMALL PRODUCERS´ SYMBOL</label>
+                <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
+                
+              </div>
+              <div class="col-xs-3">
+                <label for="otro">OTHER</label>
+                <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
+                
+              </div>            
+
 
           <p><b>14. DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
           <div class="col-xs-12 ">

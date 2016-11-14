@@ -190,7 +190,10 @@ $row_pais = mysql_query("SELECT * FROM paises",$dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $idoc", $dspp) or die(mysql_error());
 $oc = mysql_fetch_assoc($row_oc);
 
-
+$alerta = '
+           <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center; padding:5px;">
+            SI YA ES O FUE UNA EMPRESA REGISTRADA CON EL SPP, DEBE DE CONSULTAR EN SU LISTA DE "Informacion Empresas" ANTES DE CREAR UN NUEVO USUARIO.
+          </p>';
 
 ?>
 
@@ -212,6 +215,7 @@ $oc = mysql_fetch_assoc($row_oc);
 
           <div class="row">
             <div class="col-md-12">
+              <?php echo $alerta; ?>
               <form action="" method="POST" class="form-horizontal">
                 <div class="panel panel-info">
                   <div class="panel-heading">

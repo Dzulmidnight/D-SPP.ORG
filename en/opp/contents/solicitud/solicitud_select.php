@@ -46,6 +46,7 @@ if (!function_exists("GetSQLValueString")) {
 
 /**** VARIABLES GLOBALES *******/
 $spp_global = "cert@spp.coop";
+$finanzas_spp = "adm@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 $fecha = time();
 $idopp = $_SESSION['idopp'];
@@ -60,225 +61,315 @@ $idopp = $_SESSION['idopp'];
 /*************************** VARIABLES DE CONTROL **********************************/
 /// INICIA SE ACEPTA O RECHAZA COTIZACIÓN
 if(isset($_POST['cotizacion']) ){
-  $row_opp = mysql_query("SELECT solicitud_certificacion.*, opp.idopp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.telefono, opp.email, opp.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc' FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $row_opp = mysql_query("SELECT solicitud_certificacion.*, opp.idopp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.telefono, opp.email, opp.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc', oc.email2 AS 'email_oc2' FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $detalle_opp = mysql_fetch_assoc($row_opp);
 
 
   $estatus_dspp = $_POST['cotizacion'];
   
   if($estatus_dspp == 5){ // se acepta la cotización, modificamos la solicitud y fijamos las fechas del periodo de objeción
+    $asunto_opp = "D-SPP Cotización de Solicitud Aceptada";
+
     $updateSQL = sprintf("UPDATE solicitud_certificacion SET fecha_aceptacion = %s WHERE idsolicitud_certificacion = %s",
       GetSQLValueString($fecha, "int"),
       GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
     $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
-    //CALCULAMOS Y FIJAMOS EL PERIODO DE OBJECIÓN
-    $periodo = 15*(24*60*60); //calculamos los segundos de 15 dias
-    $fecha_inicio = time();
-    $fecha_fin = $fecha + $periodo;
-    $estatus_objecion = 'EN ESPERA';
-    $alerta1 = 1; //se envia la primera alerta para pedir autorización al adm de que inicie el periodo de objeción
+    if($_POST['tipo_solicitud'] == 'RENOVACION'){
+        $mensaje_opp = '
+          <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body>
+          
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+              <tbody>
+                <tr>
+                  <th rowspan="6" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                  <th scope="col" align="left" width="280"><strong>Notificación de Propuesta / Notification of Proposal ('.date('d/m/Y', $fecha).')</strong></th>
+                </tr>
 
-    //INSERTAMOS EL PERIODO DE OBJECIÓN
-    $insertSQL = sprintf("INSERT INTO periodo_objecion (idsolicitud_certificacion, fecha_inicio, fecha_fin, estatus_objecion, alerta1) VALUES (%s, %s, %s, %s, %s)",
-      GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
-      GetSQLValueString($fecha_inicio, "int"),
-      GetSQLValueString($fecha_fin, "int"),
-      GetSQLValueString($estatus_objecion, "text"),
-      GetSQLValueString($alerta1, "int"));
-    $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+                <tr>
+                  <td align="left" style="color:#ff738a;">
+                  Felicidades se ha aceptado su cotización, ahora <span style="color:red">puede iniciar el Proceso de Certificación</span>, ya que esta solicitud se encuentra en proceso de \" RENOVACIÓN DEL REGISTRO\" :
+                  <br><br>
+                  Congratulations! Your quotation has been accepted, <span style="color:red">Now you can start the certification process</span>, as this application is in the process of renewal of registration:
 
-    //////// INICIA ENVIAR CORREO AL OC SOBRE LA ACEPTACION DE LA COTIZACION
-    $row_productos = mysql_query("SELECT producto FROM productos WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
-    $nombre_productos = '';
-    while($producto = mysql_fetch_assoc($row_productos)){
-      $nombre_productos .= $producto['producto']."<br>"; 
-    } 
-    $alcance = '';
-    if(isset($detalle_opp['produccion'])){
-      $alcance .= 'PRODUCCION - PRODUCTION.<br>';
-    }
-    if(isset($detalle_opp['procesamiento'])){
-      $alcance .= 'PROCESAMIENTO - PROCESSING.<br>';
-    }
-    if(isset($detalle_opp['exportacion'])){
-      $alcance .= 'EXPORTACIÓN - TRAIDING.<br>';
-    }
+                  </td>
+                </tr>
+
+                <tr>
+                  <td align="left">Teléfono organización / Organization phone: '.$detalle_opp['telefono'].'</td>
+                </tr>
+                <tr>
+                  <td align="left">País / Country: '.$detalle_opp['pais'].'</td>
+                </tr>
+                <tr>
+                  <td align="left" style="color:#ff738a;">Nombre: '.$detalle_opp['contacto1_nombre'].' | '.$detalle_opp['contacto1_email'].'</td>
+                </tr>
+                <tr>
+                  <td align="left" style="color:#ff738a;">Nombre: '.$detalle_opp['contacto2_nombre'].' | '.$detalle_opp['contacto2_email'].'</td>
+                </tr>
 
 
-    $asunto_oc = "D-SPP Cotización de Solicitud Aceptada";
-    
-    $mensaje_oc = '
-      <html>
-      <head>
-        <meta charset="utf-8">
-      </head>
-      <body>
+                <tr>
+                  <td colspan="2">
+                    <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+                      <tbody>
+                        <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                          <td width="162.5px">Nombre de la organización/Organization name</td>
+                          <td width="162.5px">Abreviación / Short name</td>
+                          <td width="162.5px">País / Country</td>
+                          <td width="162.5px">Organismo de Certificación / Certification Entity</td> 
+                        </tr>
+                        <tr style="font-size: 12px; text-align:justify">
+                          <td style="padding:10px;">
+                            '.$detalle_opp['nombre_opp'].'
+                          </td>
+                          <td style="padding:10px;">
+                            '.$detalle_opp['abreviacion_opp'].'
+                          </td>
+                          <td style="padding:10px;">
+                            '.$detalle_opp['pais'].'
+                          </td>
+                          <td style="padding:10px;">
+                            '.$detalle_opp['nombre_oc'].'
+                          </td>
+
+                        </tr>
+
+                      </tbody>
+                    </table>        
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </body>
+          </html>
+        ';
+      $mail->AddAddress($detalle_opp['email_oc']);
+      $mail->AddAddress($detalle_opp['email_oc2']);
+      $mail->AddBCC($administrador);
+      //$mail->Username = "soporte@d-spp.org";
+      //$mail->Password = "/aung5l6tZ";
+      $mail->Subject = utf8_decode($asunto_opp);
+      $mail->Body = utf8_decode($mensaje_opp);
+      $mail->MsgHTML(utf8_decode($mensaje_opp));
+      $mail->Send();
+      $mail->ClearAddresses();
+    }else{
+      //CALCULAMOS Y FIJAMOS EL PERIODO DE OBJECIÓN
+      $periodo = 15*(24*60*60); //calculamos los segundos de 15 dias
+      $fecha_inicio = time();
+      $fecha_fin = $fecha + $periodo;
+      $estatus_objecion = 'EN ESPERA';
+      $alerta1 = 1; //se envia la primera alerta para pedir autorización al adm de que inicie el periodo de objeción
+
+      //INSERTAMOS EL PERIODO DE OBJECIÓN
+      $insertSQL = sprintf("INSERT INTO periodo_objecion (idsolicitud_certificacion, fecha_inicio, fecha_fin, estatus_objecion, alerta1) VALUES (%s, %s, %s, %s, %s)",
+        GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+        GetSQLValueString($fecha_inicio, "int"),
+        GetSQLValueString($fecha_fin, "int"),
+        GetSQLValueString($estatus_objecion, "text"),
+        GetSQLValueString($alerta1, "int"));
+      $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+      //////// INICIA ENVIAR CORREO AL OC SOBRE LA ACEPTACION DE LA COTIZACION
+      $row_productos = mysql_query("SELECT producto FROM productos WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+      $nombre_productos = '';
+      while($producto = mysql_fetch_assoc($row_productos)){
+        $nombre_productos .= $producto['producto']."<br>"; 
+      } 
+      $alcance = '';
+      if(isset($detalle_opp['produccion'])){
+        $alcance .= 'PRODUCCION - PRODUCTION.<br>';
+      }
+      if(isset($detalle_opp['procesamiento'])){
+        $alcance .= 'PROCESAMIENTO - PROCESSING.<br>';
+      }
+      if(isset($detalle_opp['exportacion'])){
+        $alcance .= 'EXPORTACIÓN - TRAIDING.<br>';
+      }
+
+
+      $asunto_oc = "D-SPP Cotización de Solicitud Aceptada";
       
-        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-          <tbody>
-            <tr>
-              <th rowspan="6" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-              <th scope="col" align="left" width="280"><strong>Notificación de Propuesta / Notification of Proposal ('.date('d/m/Y', $fecha).')</strong></th>
-            </tr>
+      $mensaje_oc = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+        
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="6" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><strong>Notificación de Propuesta / Notification of Proposal ('.date('d/m/Y', $fecha).')</strong></th>
+              </tr>
 
-            <tr>
-              <td align="left" style="color:#ff738a;">
-              Felicidades se ha aceptado su cotización, sera informado una vez que inicie el período de objeción:
-              <br><br>
-              Congratulations! Your quotation has been accepted. You will be notified once the objection period begins:
+              <tr>
+                <td align="left" style="color:#ff738a;">
+                Felicidades se ha aceptado su cotización, sera informado una vez que inicie el período de objeción:
+                <br><br>
+                Congratulations! Your quotation has been accepted. You will be notified once the objection period begins:
 
-              </td>
-            </tr>
+                </td>
+              </tr>
 
-            <tr>
-              <td align="left">Teléfono / phone OPP: '.$detalle_opp['telefono'].'</td>
-            </tr>
-            <tr>
-              <td align="left">País / Country: '.$detalle_opp['pais'].'</td>
-            </tr>
-            <tr>
-              <td align="left" style="color:#ff738a;">Nombre: '.$detalle_opp['contacto1_nombre'].' | '.$detalle_opp['contacto1_email'].'</td>
-            </tr>
-            <tr>
-              <td align="left" style="color:#ff738a;">Nombre: '.$detalle_opp['contacto2_nombre'].' | '.$detalle_opp['contacto2_email'].'</td>
-            </tr>
+              <tr>
+                <td align="left">Teléfono / phone OPP: '.$detalle_opp['telefono'].'</td>
+              </tr>
+              <tr>
+                <td align="left">País / Country: '.$detalle_opp['pais'].'</td>
+              </tr>
+              <tr>
+                <td align="left" style="color:#ff738a;">Nombre: '.$detalle_opp['contacto1_nombre'].' | '.$detalle_opp['contacto1_email'].'</td>
+              </tr>
+              <tr>
+                <td align="left" style="color:#ff738a;">Nombre: '.$detalle_opp['contacto2_nombre'].' | '.$detalle_opp['contacto2_email'].'</td>
+              </tr>
 
 
-            <tr>
-              <td colspan="2">
-                <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-                  <tbody>
-                    <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                      <td width="162.5px">Nombre de la organización/Organization name</td>
-                      <td width="162.5px">Abreviación / Short name</td>
-                      <td width="162.5px">País / Country</td>
-                      <td width="162.5px">Organismo de Certificación / Certification Entity</td> 
-                    </tr>
-                    <tr style="font-size: 12px; text-align:justify">
-                      <td style="padding:10px;">
-                        '.$detalle_opp['nombre_opp'].'
-                      </td>
-                      <td style="padding:10px;">
-                        '.$detalle_opp['abreviacion_opp'].'
-                      </td>
-                      <td style="padding:10px;">
-                        '.$detalle_opp['pais'].'
-                      </td>
-                      <td style="padding:10px;">
-                        '.$detalle_opp['nombre_oc'].'
-                      </td>
-
-                    </tr>
-
-                  </tbody>
-                </table>        
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-      </body>
-      </html>
-    ';
-    $mail->AddAddress($detalle_opp['email_oc']);
-    $mail->AddBCC($administrador);
-    //$mail->Username = "soporte@d-spp.org";
-    //$mail->Password = "/aung5l6tZ";
-    $mail->Subject = utf8_decode($asunto_oc);
-    $mail->Body = utf8_decode($mensaje_oc);
-    $mail->MsgHTML(utf8_decode($mensaje_oc));
-    $mail->Send();
-    $mail->ClearAddresses();
-    /////// TERMINA ENVIAR CORREO AL OC SOBRE LA ACEPTACIÓN DE LA COTIZACION
-
-    ////// INICIA ENVIAR CORREO AL ADMINISTRADOR PARA APROBAR PERIODO DE OBJECIÓN
-    $asunto_adm = "D-SPP Aprobación Periodo de Objeción";
-
-    $mensaje_adm = '
-                <html>
-                <head>
-                  <meta charset="utf-8">
-                </head>
-                <body>
-                
-                  <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="700px">
-                    <thead>
-                      <tr>
-                        <th>
-                          <img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" />
-                        </th>
-                        <th style="text-align:left">
-                          D-SPP Cotización Aceptada | Aviso Notificación de Intenciones
-                          <br><br>Se ha aceptado la cotización de: <span style="color:red">'.$detalle_opp['nombre_oc'].'</span>
-                        </th>
-                      </tr>
-                    </thead>
+              <tr>
+                <td colspan="2">
+                  <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
                     <tbody>
-                      <tr style="text-align:left">
-                        <td colspan="2"><p style="color:red;"><b>El Periodo de Objeción tendra fecha del:</b></p></td>
+                      <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                        <td width="162.5px">Nombre de la organización/Organization name</td>
+                        <td width="162.5px">Abreviación / Short name</td>
+                        <td width="162.5px">País / Country</td>
+                        <td width="162.5px">Organismo de Certificación / Certification Entity</td> 
                       </tr>
-                      <tr> 
-                        <td colspan="2">Fecha Inicio: <span style="color:red">'.date('d/m/Y', $fecha_inicio).'</span></td>
-                      </tr>
-                      <tr>
-                        <td colspan="2">Fecha Fin: <span style="color:red">'.date('d/m/Y', $fecha_fin).'</span></td>
-                      </tr>
-                      <tr>
-                        <td colspan="2">
-                          <p style="font-size:14px;color:red">Para aprobar el Periodo de Objeción debe ingresar en su cuenta de Administrador</p>
+                      <tr style="font-size: 12px; text-align:justify">
+                        <td style="padding:10px;">
+                          '.$detalle_opp['nombre_opp'].'
                         </td>
+                        <td style="padding:10px;">
+                          '.$detalle_opp['abreviacion_opp'].'
+                        </td>
+                        <td style="padding:10px;">
+                          '.$detalle_opp['pais'].'
+                        </td>
+                        <td style="padding:10px;">
+                          '.$detalle_opp['nombre_oc'].'
+                        </td>
+
                       </tr>
 
-                      <tr style="width:100%">
-                        <td colspan="2">
-                          <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-
-                            <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                              <td style="text-align:center">Tipo / Type</td>
-                              <td style="text-align:center">Nombre de la organización/Organization name</td>
-                              <td style="text-align:center">Abreviación / Short name</td>
-                              <td style="text-align:center">País / Country</td>
-                              <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
-                              <td width="72px">Alcance / Scope</td>
-                              <td width="72px">Productos / Products</td>
-                              <td style="text-align:center">Tipo de solicitud / Kind of application</td>
-                              <td style="text-align:center">Fecha de solicitud/Date of application</td>
-                              <td style="text-align:center">Fin período de objeción/Objection period end</td>
-                            </tr>
-                            <tr>
-                              <td>OPP</td>
-                              <td>'.$detalle_opp['nombre_opp'].'</td>
-                              <td>'.$detalle_opp['abreviacion_opp'].'</td>
-                              <td>'.$detalle_opp['pais'].'</td>
-                              <td>'.$detalle_opp['nombre_oc'].'</td>
-                              <td>'.$alcance.'</td>
-                              <td>'.$nombre_productos.'</td>
-                              <td>Certificación</td>
-                              <td>'.date('d/m/Y', $fecha_inicio).'</td>
-                              <td>'.date('d/m/Y', $fecha_fin).'</td>
-                            </tr>
-                        </td>
-                        </table>
-                      </tr>
                     </tbody>
-                  </table>
+                  </table>        
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-                </body>
-                </html>
-    ';
+        </body>
+        </html>
+      ';
+      $mail->AddAddress($detalle_opp['email_oc']);
+      $mail->AddAddress($detalle_opp['email_oc2']);
+      $mail->AddBCC($administrador);
+      //$mail->Username = "soporte@d-spp.org";
+      //$mail->Password = "/aung5l6tZ";
+      $mail->Subject = utf8_decode($asunto_oc);
+      $mail->Body = utf8_decode($mensaje_oc);
+      $mail->MsgHTML(utf8_decode($mensaje_oc));
+      $mail->Send();
+      $mail->ClearAddresses();
+      /////// TERMINA ENVIAR CORREO AL OC SOBRE LA ACEPTACIÓN DE LA COTIZACION
 
-    $mail->AddAddress($spp_global);
-    $mail->AddBCC($administrador);
-    //$mail->Username = "soporte@d-spp.org";
-    //$mail->Password = "/aung5l6tZ";
-    $mail->Subject = utf8_decode($asunto_adm);
-    $mail->Body = utf8_decode($mensaje_adm);
-    $mail->MsgHTML(utf8_decode($mensaje_adm));
-    $mail->Send();
-    $mail->ClearAddresses();
+      ////// INICIA ENVIAR CORREO AL ADMINISTRADOR PARA APROBAR PERIODO DE OBJECIÓN
+      $asunto_adm = "D-SPP Aprobación Periodo de Objeción";
 
-    ////// TERMINA ENVIAR CORREO AL ADMINISTRADOR PARA APROBAR PERIODO DE OBJECIÓN
+      $mensaje_adm = '
+                  <html>
+                  <head>
+                    <meta charset="utf-8">
+                  </head>
+                  <body>
+                  
+                    <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="700px">
+                      <thead>
+                        <tr>
+                          <th>
+                            <img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+                          </th>
+                          <th style="text-align:left">
+                            D-SPP Cotización Aceptada | Aviso Notificación de Intenciones
+                            <br><br>Se ha aceptado la cotización de: <span style="color:red">'.$detalle_opp['nombre_oc'].'</span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr style="text-align:left">
+                          <td colspan="2"><p style="color:red;"><b>El Periodo de Objeción tendra fecha del:</b></p></td>
+                        </tr>
+                        <tr> 
+                          <td colspan="2">Fecha Inicio: <span style="color:red">'.date('d/m/Y', $fecha_inicio).'</span></td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">Fecha Fin: <span style="color:red">'.date('d/m/Y', $fecha_fin).'</span></td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">
+                            <p style="font-size:14px;color:red">Para aprobar el Periodo de Objeción debe ingresar en su cuenta de Administrador</p>
+                          </td>
+                        </tr>
+
+                        <tr style="width:100%">
+                          <td colspan="2">
+                            <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+
+                              <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                                <td style="text-align:center">Tipo / Type</td>
+                                <td style="text-align:center">Nombre de la organización/Organization name</td>
+                                <td style="text-align:center">Abreviación / Short name</td>
+                                <td style="text-align:center">País / Country</td>
+                                <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
+                                <td width="72px">Alcance / Scope</td>
+                                <td width="72px">Productos / Products</td>
+                                <td style="text-align:center">Tipo de solicitud / Kind of application</td>
+                                <td style="text-align:center">Fecha de solicitud/Date of application</td>
+                                <td style="text-align:center">Fin período de objeción/Objection period end</td>
+                              </tr>
+                              <tr>
+                                <td>OPP</td>
+                                <td>'.$detalle_opp['nombre_opp'].'</td>
+                                <td>'.$detalle_opp['abreviacion_opp'].'</td>
+                                <td>'.$detalle_opp['pais'].'</td>
+                                <td>'.$detalle_opp['nombre_oc'].'</td>
+                                <td>'.$alcance.'</td>
+                                <td>'.$nombre_productos.'</td>
+                                <td>Certificación</td>
+                                <td>'.date('d/m/Y', $fecha_inicio).'</td>
+                                <td>'.date('d/m/Y', $fecha_fin).'</td>
+                              </tr>
+                          </td>
+                          </table>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                  </body>
+                  </html>
+      ';
+
+      $mail->AddAddress($spp_global);
+      $mail->AddBCC($administrador);
+      //$mail->Username = "soporte@d-spp.org";
+      //$mail->Password = "/aung5l6tZ";
+      $mail->Subject = utf8_decode($asunto_adm);
+      $mail->Body = utf8_decode($mensaje_adm);
+      $mail->MsgHTML(utf8_decode($mensaje_adm));
+      $mail->Send();
+      $mail->ClearAddresses();
+
+      ////// TERMINA ENVIAR CORREO AL ADMINISTRADOR PARA APROBAR PERIODO DE OBJECIÓN
+    }
+
 
     $mensaje = "La cotización ha sido aceptada, el periodo de objeción ha empezado, en breve seras contactado";
   }else{
@@ -330,7 +421,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
   $row_informacion = mysql_query("SELECT membresia.idopp, membresia.idcomprobante_pago, opp.nombre, comprobante_pago.monto FROM membresia INNER JOIN opp ON membresia.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE membresia.idcomprobante_pago = $_POST[idcomprobante_pago]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
 
-  $asunto = "D-SPP | Aprobación Comprobante de Pago";
+  $asunto = "D-SPP | Comprobante de Pago por Aprobar";
 
   $cuerpo_mensaje = '
     <html>
@@ -338,7 +429,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
       <meta charset="utf-8">
     </head>
     <body>
-      <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+      <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979; text-align:justify" border="0" width="650px">
         <tbody>
           <tr>
             <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
@@ -351,12 +442,20 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 
           <tr>
             <td colspan="2">
-             <p>La OPP: '.$informacion['nombre'].' ha cargado el Comprobante de Pago de la membresia SPP por un monto total de: '.$informacion['monto'].'.</p>
+             <p>La OPP: <span style="color:red">'.$informacion['nombre'].'</span> ha cargado el Comprobante de Pago de la membresia SPP por un monto total de: <span style="color:red">'.$informacion['monto'].'</span>.</p>
             </td>
           </tr>
           <tr>
             <td colspan="2">
               <p>Después de revisa el comprobante <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el comprobante de pago</span> </p>
+              <p>Pasos para "Aprobar" o "Rechazar" el Comprobante de pago:</p>
+              <ol>
+                <li>Debe ingresar en su cuenta de Adminitrador dentro del D-SPP.</li>
+                <li>Seleccionar "Solicitudes" > "Solicitudes OPP".</li>
+                <li>Dentro de la tabla de Solicitudes debe localizar la solicitud de la Organización.</li>
+                <li>Posicionarse sobre la columna "Membresia" y dar clic en el botón "Estatus Membresia".</li>
+                <li>Se mostrara una ventana donde podra "Aprobar" o "Rechazar" el comprobante.</li>
+              </ol>
             </td>
           </tr>
         </tbody>
@@ -365,19 +464,25 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
     </html>
   ';
     $mail->AddAddress($spp_global);
-    $mail->AddBCC($administrador);
+    $mail->AddAddress($finanzas_spp);
     $mail->AddAttachment($comprobante_pago);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
     $mail->Subject = utf8_decode($asunto);
     $mail->Body = utf8_decode($cuerpo_mensaje);
     $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-    $mail->Send();
-    $mail->ClearAddresses();
+    /*$mail->Send();
+    $mail->ClearAddresses();*/
 
   //termina correo enviar comprobante de pago
-
-  $mensaje = "Se ha enviado el comprobante de pago, en breve seras notificado";
+    if($mail->Send()){
+      $mail->ClearAddresses();
+      echo "<script>alert('Se ha enviado el comprobante de pago, en breve sera contactado.');location.href ='javascript:history.back()';</script>";
+    }else{
+      $mail->ClearAddresses();
+      echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+    }
+  $mensaje = "Se ha enviado el comprobante de pago, en breve sera contactado.";
 }
 /// TERMINA ENVIAR COMPROBANTE DE PAGO
 
@@ -425,7 +530,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
             <meta charset="utf-8">
           </head>
           <body>
-            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979; text-align:justify" border="0" width="650px">
               <tbody>
                 <tr>
                   <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
@@ -444,6 +549,14 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
                 <tr>
                   <td colspan="2">
                     <p>Después de revisa el "Contrato de Uso" <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el mismo</span> </p>
+                    <p>¿Cómo "Aprobar" o "Rechazar" el Contrato de Uso?</p>
+                    <ol>
+                      <li>Debe de ingresar en su cuenta de administrador dentro del D-SPP.</li>
+                      <li>Seleccionar "Solicitudes" > "Solicitudes OPP".</li>
+                      <li>Localizar la Solicitud de la OPP: '.$informacion['nombre'].'.</li>
+                      <li>Posicionarse sobre la columna "Certificado" y dar clic en el bóton "Consultar Certificado".</li>
+                      <li>Se mostrara una ventana donde podra "Aprobar" o "Rechazar" el Contrato de Uso.</li>
+                    </ol>
                   </td>
                 </tr>
               </tbody>
@@ -452,23 +565,29 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
           </html>
   ';
     $mail->AddAddress($spp_global);
-    $mail->AddBCC($administrador);
     $mail->AddAttachment($contrato);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
     $mail->Subject = utf8_decode($asunto);
     $mail->Body = utf8_decode($cuerpo_mensaje);
     $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-    $mail->Send();
-    $mail->ClearAddresses();
-  //termina enviar mensaje contrato de uso
+    /*$mail->Send();
+    $mail->ClearAddresses();*/
+    if($mail->Send()){
+      $mail->ClearAddresses();
+      echo "<script>alert('Se ha enviado el Contrato de Uso, en breve sera contactado.');location.href ='javascript:history.back()';</script>";
+    }else{
+      $mail->ClearAddresses();
+      echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+    }
 
-  $mensaje = "Se ha enviado el Contrato de Uso, en breve sera contactado";
+  //termina enviar mensaje contrato de uso
+  //$mensaje = "Se ha enviado el Contrato de Uso, en breve sera contactado";
 }
 /// TERMINA ENVIAR CONTRATO DE USO
 
 
-$query = "SELECT solicitud_certificacion.*, oc.abreviacion AS 'abreviacionOC', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion WHERE solicitud_certificacion.idopp = $idopp";
+$query = "SELECT solicitud_certificacion.*, oc.abreviacion AS 'abreviacionOC', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion WHERE solicitud_certificacion.idopp = $idopp";
 $row_solicitud_certificacion = mysql_query($query, $dspp) or die(mysql_error());
 $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
 
@@ -493,6 +612,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
       <thead>
         <tr class="success">
           <th class="text-center">ID</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Tipo de Solicitud"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Type</a></th>
           <th class="text-center">Date</th>
           <th class="text-center"><a href="#" data-toggle="tooltip" title="Certification Entity">CE</a></th>
           <th class="text-center">Application status</th>
@@ -503,6 +623,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
           <th class="text-center">Certificate</th>
           <th class="text-center">Actions</th>
         </tr>
+
       </thead>
       <tbody>
         <?php 
@@ -512,37 +633,54 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
           $ejecutar = mysql_query($query_proceso,$dspp) or die(mysql_error());
           $proceso_certificacion = mysql_fetch_assoc($ejecutar);
           ?>
-          <form action="" method="POST" enctype="multipart/form-data">
             <tr>
               <td>
-                <?php echo $solicitud['idsolicitud_certificacion']; ?>
-                <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
+                <form action="../../reportes/solicitud.php" method="POST" target="_new">
+                  <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Download Application" target="_new" type="submit" ><?php echo $solicitud['idsolicitud_certificacion']; ?> <img src="../../img/pdf.png" style="height:30px;" alt=""></button>
+
+                  <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
+                  <input type="hidden" name="generar_formato" value="1">
+                </form>
+                
+            
               </td>
+          <form action="" method="POST" enctype="multipart/form-data">
+              <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
+              <!---- inicia TIPO SOLICITUD ---->
+              <td <?php if($solicitud['tipo_solicitud'] == 'NUEVA'){ echo "class='success'"; }else{ echo "class='warning'"; } ?>class="warning">
+                <?php echo $solicitud['tipo_solicitud']; ?>
+              </td>
+              <!---- inicia TIPO SOLICITUD ---->
+
               <td><?php echo date('d/m/Y',$solicitud['fecha_registro']); ?></td>
               <td><?php echo $solicitud['abreviacionOC']; ?></td>
               <td><?php echo $proceso_certificacion['nombre_dspp']; ?></td>
               <td>
                 <?php
                 if(isset($solicitud['cotizacion_opp'])){
-                  echo "<a class='btn btn-info form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
+                  echo "<a class='btn btn-info form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Download Quotation</a>";
 
                    if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
-                    echo "<p class='alert alert-success' style='padding:2px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                    if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+                      echo 'ACCEPTED';
+                    }else{
+                      echo "<p class='alert alert-success' style='padding:2px;'>Status: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                    }
                    }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
-                    echo "<p class='alert alert-danger' style='padding:2px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                    echo "<p class='alert alert-danger' style='padding:2px;'>Status: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                    }else{
-                    if(empty($solicitud['idperiodo_objecion'])){ //si inicio el periodo de objecion quiere decir que se acepto la cotización
+                    if(empty($solicitud['fecha_aceptacion'])){ //si inicio el periodo de objecion quiere decir que se acepto la cotización
                     ?>
                       <div class="text-center">
-                        <button class='btn btn-xs btn-success' type="submit" name="cotizacion" value="5" style='width:45%' data-toggle="tooltip" data-placement="bottom" title="Aceptar cotización"><span class='glyphicon glyphicon-ok'></span></button>
+                        <button class='btn btn-xs btn-success' type="submit" name="cotizacion" value="5" style='width:45%' data-toggle="tooltip" data-placement="bottom" title="Accept Quotation"><span class='glyphicon glyphicon-ok'></span></button>
 
-                        <button class='btn btn-xs btn-danger' style='width:45%' name="cotizacion" value="17" data-toggle="tooltip" data-placement="bottom" title="Rechazar cotización"><span class='glyphicon glyphicon-remove'></span></button>
+                        <button class='btn btn-xs btn-danger' style='width:45%' name="cotizacion" value="17" data-toggle="tooltip" data-placement="bottom" title="Reject Quotation"><span class='glyphicon glyphicon-remove'></span></button>
                       </div>
                     <?php //
                    }
                   }
                 }else{
-                  echo "COTIZACIÓN OPP";
+                  echo "OPP Quotation";
                 }
                 ?>
               </td>
@@ -551,38 +689,57 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                 $row_objecion = mysql_query("SELECT * FROM periodo_objecion WHERE idsolicitud_certificacion = $solicitud[idsolicitud_certificacion]", $dspp) or die(mysql_error());
                 $objecion = mysql_fetch_assoc($row_objecion);
 
-                if(empty($objecion['idperiodo_objecion'])){
-                  echo "No Disponible";
-                }else if($objecion['estatus_objecion'] == 'EN ESPERA'){ // no se muestra nada si esta en espera
-                  echo "No Disponible";
-                }else{ // si se autorizo se muestra:
-                  if(empty($objecion['documento'])){ //si no se ha cargado un documento se muestra el estatus
-                  ?>
-                    <p class="alert alert-info" style="margin-bottom:0;padding:2px;">Inicio: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
-                    <p class="alert alert-danger" style="margin-bottom:0;padding:2px;">Fin: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
-                  <?php
-                  }else{ // se muestra boton descargar resolución y dictamen del mismo
-                   ?>
-                    <p class="alert alert-info" style="margin-bottom:0;padding:2px;">Inicio: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
-                    <p class="alert alert-danger" style="margin-bottom:0;padding:2px;">Fin: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
+                if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+                ?>
+                  <a href="#" data-toggle="tooltip" title="Esta solicitud se encuentra en Proceso de Renovación del Certificado por lo tanto no aplica el periodo de objeción" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>APPLICATION FOR RENEWAL</a>  
+                <?php
+                }else{
+                  if(empty($objecion['idperiodo_objecion'])){
+                    echo "Not available";
+                  }else if($objecion['estatus_objecion'] == 'EN ESPERA'){ // no se muestra nada si esta en espera
+                    echo "Not available";
+                  }else{ // si se autorizo se muestra:
+                    if(empty($objecion['documento'])){ //si no se ha cargado un documento se muestra el estatus
+                    ?>
+                      <p class="alert alert-info" style="margin-bottom:0;padding:2px;">Start: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
+                      <p class="alert alert-danger" style="margin-bottom:0;padding:2px;">End: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
+                    <?php
+                    }else{ // se muestra boton descargar resolución y dictamen del mismo
+                     ?>
+                      <p class="alert alert-info" style="margin-bottom:0;padding:2px;">Start: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
+                      <p class="alert alert-danger" style="margin-bottom:0;padding:2px;">End: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
 
-                   <p class="alert alert-success" style="margin-bottom:0;padding:2px;">Dictamen: <?php echo $objecion['dictamen']; ?></p>
-                   <a class="btn btn-info" style="font-size:12px;width:100%;" href='<?php echo $objecion['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
+                     <p class="alert alert-success" style="margin-bottom:0;padding:2px;">Judgement: <?php echo $objecion['dictamen']; ?></p>
+                     <a class="btn btn-info" style="font-size:12px;width:100%;" href='<?php echo $objecion['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Download Resolution</a> 
 
-                  <?php
-                  }
-                }                
+                    <?php
+                    }
+                  }  
+                }              
                 ?>
               </td>
               <!----- INICIA PROCESO CERTIFICACIÓN ---->
               <td>
-                <?php 
-                if(isset($solicitud['estatus_objecion']) && $solicitud['estatus_objecion'] == 'FINALIZADO' && isset($solicitud['documento'])){
+                <?php
+                if($solicitud['tipo_solicitud'] == 'RENOVACION' && $proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN EN PROCESO DE RENOVACIÓN
                 ?>
-                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
+                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Process of certification</button>
                 <?php
                 }else{
-                  echo "<button class='btn btn-sm btn-default' disabled>Proceso Certificación</button>";
+                  if(!empty($solicitud['fecha_aceptacion']) && $solicitud['tipo_solicitud'] == 'RENOVACION'){
+                  ?>
+                    <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Process of certification</button>
+                  <?php
+                  }else{
+                    if(isset($solicitud['estatus_objecion']) && $solicitud['estatus_objecion'] == 'FINALIZADO' && isset($solicitud['documento'])){
+                    ?>
+                      <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Process of certification</button>
+                    <?php
+                    }else{
+                      echo "<button class='btn btn-sm btn-default' disabled>Process of certification</button>";
+                    }
+                  }
+
                 }
                 ?>
               </td>
@@ -594,16 +751,16 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso de Certificación</h4>
+                        <h4 class="modal-title" id="myModalLabel">Process of certification</h4>
                       </div>
                       <div class="modal-body">
                         <div class="row">
 
                             <div class="col-md-12">
-                              Historial Estatus Certificación
+                              History Status Certification
                             </div>
                             <?php 
-                            $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE idsolicitud_certificacion = $solicitud[idsolicitud_certificacion] AND estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
+                            $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre_ingles FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE idsolicitud_certificacion = $solicitud[idsolicitud_certificacion] AND estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
                             while($historial_certificacion = mysql_fetch_assoc($row_proceso_certificacion)){
                             echo "<div class='col-md-10'>Proceso: $historial_certificacion[nombre]</div>";
                             echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$historial_certificacion['fecha_registro'])."</div>";
@@ -614,7 +771,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                       </div>
                       <div class="modal-footer">
                         <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
                       </div>
                     </div>
@@ -631,10 +788,10 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                   $row_membresia = mysql_query("SELECT membresia.*, comprobante_pago.monto, comprobante_pago.estatus_comprobante, comprobante_pago.archivo FROM membresia LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE idmembresia = $solicitud[idmembresia]", $dspp) or die(mysql_error());
                   $membresia = mysql_fetch_assoc($row_membresia);
                 ?>
-                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#membresia".$solicitud['idperiodo_objecion']; ?>">Estatus Membresia</button>
+                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#membresia".$solicitud['idperiodo_objecion']; ?>">Membership Status</button>
                 <?php
                 }else{
-                  echo "MEMBRESIA";
+                  echo "MEMBERSHIP";
                 }
                  ?>
 
@@ -647,35 +804,35 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso Membresía</h4>
+                        <h4 class="modal-title" id="myModalLabel">Membership Process</h4>
                       </div>
                       <div class="modal-body">
                         <div class="row">
                           <div class="col-md-6">
-                            <p class="alert alert-info">Debe cargar el comprobante de pago de la membresia SPP por el monto de <b style="color:red;"><?php echo $membresia['monto'] ?></b>, una vez cargado debe dar clic en enviar. Sera notificado por correo una vez que sea aprobada su membresia</p>
-                            <p class="alert alert-warning">Estatus Actual: <?php echo $membresia['estatus_comprobante']; ?></p>
+                            <p class="alert alert-info">You must upload the SPP membership voucher in the amount of: <b style="color:red;"><?php echo $membresia['monto'] ?></b>, once charged, click send. You will be notified by mail once your membership is approved.</p>
+                            <p class="alert alert-warning">Actual status: <?php echo $membresia['estatus_comprobante']; ?></p>
                           </div>
                           <div class="col-md-6">
                             <?php 
                             if(isset($membresia['archivo'] )){
                               if($membresia['estatus_comprobante'] == 'ACEPTADO'){
-                                echo "<h4 class='alert alert-success'>Felicidades tu membresía se encuentra activa</h4>";
+                                echo "<h4 class='alert alert-success'>Congratulations your membership is active</h4>";
                               }else if($membresia['estatus_comprobante'] == 'RECHAZADO'){
-                                echo "<p class='alert alert-warning'>Se han encontrado irregularidades en su comprobante de pago, por favor reviselo y cargue otro</p>";
-                                echo "<p>Observaciones: $membresia[observaciones]</p>";
+                                echo "<p class='alert alert-warning'>There are irregularities in your payment receipt, please check it and upload another</p>";
+                                echo "<p>Observations: $membresia[observaciones]</p>";
                               ?>
                                 <p class="alert alert-info">
-                                  Cargar Comprobante de pago
+                                  Upload Payment receipt
                                   <input type="file" class="form-control" name="comprobante_pago">
                                 </p>
                               <?php
                               }else{
-                                echo "SE HA CARGADO EL COMPRANTE POR FAVOR ESPERE";
+                                echo "PAYMENT RECEIPT BEEN CHARGED PLEASE WAIT";
                               }
                             }else{
                             ?>
                               <p class="alert alert-info">
-                                Cargar Comprobante de pago
+                                Upload Payment receipt
                                 <input type="file" class="form-control" name="comprobante_pago">
                               </p>
                             <?php
@@ -687,10 +844,10 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                       <div class="modal-footer">
                         <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
                         <input type="hidden" name="idcomprobante_pago" value="<?php echo $membresia['idcomprobante_pago']; ?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <?php 
                         if($membresia['estatus_comprobante'] == 'RECHAZADO' || $membresia['estatus_comprobante'] == 'EN ESPERA'){
-                          echo '<button type="submit" class="btn btn-primary" name="enviar_comprobante" value="1">Enviar Comprobante</button>';
+                          echo '<button type="submit" class="btn btn-primary" name="enviar_comprobante" value="1">Submit Payment receipt</button>';
                         }
                          ?>
                       </div>
@@ -707,11 +864,11 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                 <?php 
                 if(isset($solicitud['idmembresia'])){
                 ?>
-                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Consultar Certificado</button>
+                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_certificacion']; ?>">Consult certificate</button>
                 <?php
                 }else{
                 ?>
-                  <button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Consultar Certificado</button>
+                  <button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Consult certificate</button>
                 <?php
                 }
                  ?>
@@ -724,79 +881,91 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso Certificado</h4>
+                        <h4 class="modal-title" id="myModalLabel">Certificate process</h4>
                       </div>
                       <div class="modal-body">
                         <div class="row">
                           <div class="col-md-6">
                             <p class="alert alert-warning">
                               <?php 
-                              if(isset($solicitud['idcontrato'])){
-                                $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
-                                $contrato = mysql_fetch_assoc($row_contrato);
-                              ?>
-                                Se ha cargado el contrato
-                              <?php
+                              if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+                                echo "This Organization is in the process of Renewing the Certificate and therefore must not send a User's Contract";
                               }else{
-                              ?>
-                                <?php 
-                                if(isset($membresia['idcomprobante_pago'])){
+                                if(isset($solicitud['idcontrato'])){
+                                  $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
+                                  $contrato = mysql_fetch_assoc($row_contrato);
                                 ?>
-                                  <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
-                                  <input type="file" name="contrato" class="form-control">
-                                  <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato</button>
+                                  The contract has been charged
+                                <?php
+                                }else{
+                                ?>
+                                  <?php 
+                                  if(isset($membresia['idcomprobante_pago'])){
+                                  ?>
+                                    <b>You must upload the signed "User's Contract" to complete the certification process</b>
+                                    <input type="file" name="contrato" class="form-control">
+                                    <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Send User's Contract</button>
 
+                                  <?php
+                                  }
+                                   ?>
                                 <?php
                                 }
-                                 ?>
-                              <?php
+                                 
                               }
-                               ?>
+                              ?>
                             </p>
 
                             <?php 
-                            if(isset($solicitud['idcontrato'])){
-                              echo "<p class='alert alert-info'>Estatus del Contrato: <span style='color:red'>".$contrato['estatus_contrato']."</span></p>";
-                              if($contrato['estatus_contrato'] == "ENVIADO"){
-                                echo "<p class='alert alert-warning'>El contratos se encuentra en proceso de revisión. Sera notificado una vez que sea \"APROBADO\" o \"RECHAZADO\"</p>";
-                              }else if($contrato['estatus_contrato'] == "ACEPTADO"){
-                                echo "<p class='alert alert-success'><b>Se ha aprobado el contrato</b></p>";
-                              }else if($contrato['estatus_contrato'] == "RECHAZADO"){
-                                echo "<p class='alert alert-danger'>Se ha encontrado irregularidades en el contrato</p>";
-                                echo "<p>Observaciones: <span>".$contrato['observaciones']."</span></p>";
-                              ?>
-                                <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
-                                <input type="file" name="contrato" class="form-control">
-                                <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato</button>
-                              <?php
-                              }
+                            if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+
                             }else{
-                              echo '<p class="alert alert-danger">No se ha cargado el "Contrato de Uso"</p>';
+                              if(isset($solicitud['idcontrato'])){
+                                echo "<p class='alert alert-info'>Contract Status: <span style='color:red'>".$contrato['estatus_contrato']."</span></p>";
+                                if($contrato['estatus_contrato'] == "ENVIADO"){
+                                  echo "<p class='alert alert-warning'>The contract is under review. It will be notified once it is \"APPROVED\" or \"REJECTED\"</p>";
+                                }else if($contrato['estatus_contrato'] == "ACEPTADO"){
+                                  echo "<p class='alert alert-success'><b>The User's Contract has been approved</b></p>";
+                                }else if($contrato['estatus_contrato'] == "RECHAZADO"){
+                                  echo "<p class='alert alert-danger'>Irregularities have been found in the User's Contract</p>";
+                                  echo "<p>Observations: <span>".$contrato['observaciones']."</span></p>";
+                                ?>
+                                  <b>You must upload the signed "User's Contract" to complete the certification process</b>
+                                  <input type="file" name="contrato" class="form-control">
+                                  <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Send User's Contract</button>
+                                <?php
+                                }
+                              }else{
+                                echo '<p class="alert alert-danger">The "User\'s Contract" has not been charged</p>';
+                              }
                             }
-                             ?>
+                            ?>
                             
                           </div>
                           <div class="col-md-6">
-                            <h4>Certificado</h4>
+                            <h4>Certificate</h4>
                             <?php 
                             if(isset($solicitud['idcertificado'])){
                               $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                               $certificado = mysql_fetch_assoc($row_certificado);
-                              $inicio = strtotime($certificado['vigencia_inicio']);
-                              $fin = strtotime($certificado['vigencia_fin']);
+                              if(isset($certificado['idsolicitud_certificacion'])){
+                                $inicio = strtotime($certificado['vigencia_inicio']);
+                                $fin = strtotime($certificado['vigencia_fin']);
 
-                              echo "<h4 class='alert alert-success'>Felicidades tu Certificado ha sido aprobado.<br> El certificado tienen una vigencia del <span style='color:red'>".date('d/m/Y', $inicio)."</span> al  <span style='color:red'>".date('d/m/Y', $fin)."</span></h4>";
-                              echo "<a href='".$certificado['archivo']."' class='btn btn-success' style='width:100%' target='_blank'>Descargar Certificado</a>";
-
+                                echo "<h4 class='alert alert-success'>Congratulations your Certificate has been approved.<br> The certificate has a validity of: <span style='color:red'>".date('d/m/Y', $inicio)."</span> to  <span style='color:red'>".date('d/m/Y', $fin)."</span></h4>";
+                                echo "<a href='".$certificado['archivo']."' class='btn btn-success' style='width:100%' target='_blank'>Download Certificate</a>";
+                              }else{
+                                echo "<p class='alert alert-danger'>Certificate not yet available</p>";
+                              }
                             }else{
-                              echo "<p class='alert alert-danger'>El Certificado aun no esta disponible</p>";
+                              echo "<p class='alert alert-danger'>Certificate not yet available</p>";
                             }
                              ?>
                           </div>
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                       </div>
                     </div>
                   </div>
@@ -806,11 +975,12 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
               <!----- TERMINA CONSULTAR CERTIFICADO ---->
 
               <td>
-                <a class="btn btn-xs btn-primary" style="display:inline-block" href="?SOLICITUD&amp;detail&amp;idsolicitud=<?php echo $solicitud['idsolicitud_certificacion']; ?>" data-toggle="tooltip" title="Visualizar Solicitud" >
-                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
+                <a class="btn btn-sm btn-primary" style="display:inline-block" href="?SOLICITUD&amp;detail&amp;idsolicitud=<?php echo $solicitud['idsolicitud_certificacion']; ?>" data-toggle="tooltip" title="View Application" >
+                  Consult
                 </a>
                <!-- <form action="" method="POST"  style="display:inline-block">-->
-                  <button class="btn btn-xs btn-danger" name="eliminar_solicitud" value="1" data-toggle="tooltip" title="Eliminar Solicitud" type="submit" onclick="return confirm('¿Está seguro?, los datos se eliminaran permanentemente');">
+                  <button class="btn btn-sm btn-danger" name="eliminar_solicitud" value="1" data-toggle="tooltip" title="Delete Application" type="submit" onclick="return confirm('Are you sure? Data will be permanently deleted.');">
                     <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
                   </button>         
                 <!--</form>-->

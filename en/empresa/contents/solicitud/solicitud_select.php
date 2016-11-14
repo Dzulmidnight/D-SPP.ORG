@@ -264,6 +264,17 @@ if(isset($_POST['cotizacion']) ){
       ////// INICIA ENVIAR CORREO AL ADMINISTRADOR PARA APROBAR PERIODO DE OBJECIÓN
       $asunto_adm = "D-SPP Aprobación Periodo de Objeción";
 
+      $tipo = '';
+      if(isset($detalle_empresa['comprador_final'])){
+        $tipo .= 'COMPRADOR FINAL / FINAL BUYER<br>';
+      }
+      if(isset($detalle_empresa['intermediario'])){
+        $tipo .= 'INTERMEDIARIO / INTERMEDIARY<br>';
+      }
+      if(isset($detalle_empresa['maquilador'])){
+        $tipo .= 'MAQUILADOR / MAQUILA COMPANY<br>';
+      }
+
       $mensaje_adm = '
                   <html>
                   <head>
@@ -315,12 +326,12 @@ if(isset($_POST['cotizacion']) ){
                                 <td style="text-align:center">Fin período de objeción/Objection period end</td>
                               </tr>
                               <tr>
-                                <td>empresa</td>
+                                <td>'.$tipo.'</td>
                                 <td>'.$detalle_empresa['nombre_empresa'].'</td>
                                 <td>'.$detalle_empresa['abreviacion_empresa'].'</td>
                                 <td>'.$detalle_empresa['pais'].'</td>
                                 <td>'.$detalle_empresa['nombre_oc'].'</td>
-                                <td>Certificación</td>
+                                <td>Registro / Registration</td>
                                 <td>'.date('d/m/Y', $fecha_inicio).'</td>
                                 <td>'.date('d/m/Y', $fecha_fin).'</td>
                               </tr>
@@ -536,7 +547,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
 /// TERMINA ENVIAR CONTRATO DE USO
 
 
-$query = "SELECT solicitud_registro.*, oc.abreviacion AS 'abreviacionOC', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro WHERE solicitud_registro.idempresa = $idempresa";
+$query = "SELECT solicitud_registro.*, oc.abreviacion AS 'abreviacionOC', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro WHERE solicitud_registro.idempresa = $idempresa GROUP BY solicitud_registro.idempresa";
 $row_solicitud_registro = mysql_query($query, $dspp) or die(mysql_error());
 $total_solicitudes = mysql_num_rows($row_solicitud_registro);
 
@@ -561,6 +572,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
       <thead>
         <tr class="success">
           <th class="text-center">ID</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Tipo de Solicitud"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Type</a></th>
           <th class="text-center"><a href="#" data-toggle="tooltip" title="Type of application"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Type</a></th>
           <th class="text-center">Date</th>
           <th class="text-center">CE</th>
@@ -613,7 +625,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                     if(empty($solicitud['fecha_aceptacion']) ){ //si inicio el periodo de objecion quiere decir que se acepto la cotización
                     ?>
                       <div class="text-center">
-                        <button class='btn btn-xs btn-success' type="submit" name="cotizacion" value="5" style='width:45%' data-toggle="tooltip" data-placement="bottom" title="Accept quotation"><span class='glyphicon glyphicon-ok'></span></button>
+                        <button class='btn btn-xs btn-success' type="submit" name="cotizacion" value="5" style='width:45%' data-toggle="tooltip" data-placement="bottom" title="Accept Quotation"><span class='glyphicon glyphicon-ok'></span></button>
 
                         <button class='btn btn-xs btn-danger' style='width:45%' name="cotizacion" value="17" data-toggle="tooltip" data-placement="bottom" title="Reject quotation"><span class='glyphicon glyphicon-remove'></span></button>
                       </div>
@@ -621,7 +633,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                    }
                   }
                 }else{
-                  echo "Not available";
+                  echo "COMPANY QUOTATION";
                 }
                 ?>
               </td>
@@ -632,26 +644,26 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
 
                 if($solicitud['tipo_solicitud'] == 'RENOVACION'){ ///si es solicitud en !!RENOVACION
                 ?>
-                  <a href="#" data-toggle="tooltip" title="This application is in process Registration Renewal therefore does not apply the objection period" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>APPLICATION FOR RENEWAL</a>
+                  <a href="#" data-toggle="tooltip" title="This request is in Process of Renewal of the Registry therefore does not apply the period of objection" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>APPLICATION FOR RENEWAL</a>
                 <?php
                 }else{ ///si es solicitud !!NUEVA
                   if(empty($objecion['idperiodo_objecion'])){
-                    echo "No Disponible";
+                    echo "Not available";
                   }else if($objecion['estatus_objecion'] == 'EN ESPERA'){ // no se muestra nada si esta en espera
-                    echo "No Disponible";
+                    echo "Not available";
                   }else{ // si se autorizo se muestra:
                     if(empty($objecion['documento'])){ //si no se ha cargado un documento se muestra el estatus
                     ?>
-                      <p class="alert alert-info" style="margin-bottom:0;padding:2px;">Inicio: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
-                      <p class="alert alert-danger" style="margin-bottom:0;padding:2px;">Fin: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
+                      <p class="alert alert-info" style="margin-bottom:0;padding:2px;">Start: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
+                      <p class="alert alert-danger" style="margin-bottom:0;padding:2px;">End: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
                     <?php
                     }else{ // se muestra boton descargar resolución y dictamen del mismo
                      ?>
-                      <p class="alert alert-info" style="margin-bottom:0;padding:2px;">Inicio: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
-                      <p class="alert alert-danger" style="margin-bottom:0;padding:2px;">Fin: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
+                      <p class="alert alert-info" style="margin-bottom:0;padding:2px;">Start: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
+                      <p class="alert alert-danger" style="margin-bottom:0;padding:2px;">End: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
 
-                     <p class="alert alert-success" style="margin-bottom:0;padding:2px;">Dictamen: <?php echo $objecion['dictamen']; ?></p>
-                     <a class="btn btn-info" style="font-size:12px;width:100%;" href='<?php echo $objecion['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
+                     <p class="alert alert-success" style="margin-bottom:0;padding:2px;">Resolution: <?php echo $objecion['dictamen']; ?></p>
+                     <a class="btn btn-info" style="font-size:12px;width:100%;" href='<?php echo $objecion['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Download Resolution</a> 
 
                     <?php
                     }
@@ -664,20 +676,20 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                 <?php 
                 if($solicitud['tipo_solicitud'] == 'RENOVACION' && $proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN EN PROCESO DE RENOVACIÓN
                 ?>
-                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Certification process</button>
+                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Certification Process</button>
                 <?php
                 }else{
                   if(!empty($solicitud['fecha_aceptacion']) && $solicitud['tipo_solicitud'] == 'RENOVACION'){
                   ?>
-                    <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Certification process</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Certification Process</button>
                   <?php
                   }else{
                     if(isset($solicitud['estatus_objecion']) && $solicitud['estatus_objecion'] == 'FINALIZADO' && isset($solicitud['documento'])){
                     ?>
-                    <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Certification process</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Certification Process</button>
                     <?php
                     }else{
-                      echo "<button class='btn btn-sm btn-default' disabled>Certification process</button>";
+                      echo "<button class='btn btn-sm btn-default' disabled>Certification Process</button>";
                     }
                   }
                 }
@@ -691,16 +703,16 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Certification process</h4>
+                        <h4 class="modal-title" id="myModalLabel">Certification Process</h4>
                       </div>
                       <div class="modal-body">
                         <div class="row">
 
                             <div class="col-md-12">
-                              Historial Estatus Certificación
+                              History Status Certification
                             </div>
                             <?php 
-                            $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE idsolicitud_registro = $solicitud[idsolicitud_registro] AND estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
+                            $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre_ingles FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE idsolicitud_registro = $solicitud[idsolicitud_registro] AND estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
                             while($historial_certificacion = mysql_fetch_assoc($row_proceso_certificacion)){
                             echo "<div class='col-md-10'>Proceso: $historial_certificacion[nombre]</div>";
                             echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$historial_certificacion['fecha_registro'])."</div>";
@@ -731,19 +743,19 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                 if($solicitud['tipo_solicitud'] == 'RENOVACION'){ 
                   if($solicitud['idcertificado']){
                   ?>
-                    <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_registro']; ?>">Check Certificate</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_registro']; ?>">Consult Certificate</button>
                   <?php
                   }else{
-                    echo '<button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Consultar Certificado</button>';
+                    echo '<button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Consult Certificate</button>';
                   }
                 }else{
                   if(isset($solicitud['idmembresia'])){
                   ?>
-                    <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_registro']; ?>">Check Certificate</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_registro']; ?>">Consult Certificate</button>
                   <?php
                   }else{
                   ?>
-                    <button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Check Certificate</button>
+                    <button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Consult Certificate</button>
                   <?php
                   }
                 }
@@ -773,20 +785,15 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                                     $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
                                     $contrato = mysql_fetch_assoc($row_contrato);
                                   ?>
-                                    Se ha cargado el contrato
+                                    The User's Contract has been charged
                                   <?php
                                   }else{
                                   ?>
-                                    <?php 
-                                    if(isset($membresia['idcomprobante_pago'])){
-                                    ?>
-                                      <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
-                                      <input type="file" name="contrato" class="form-control">
-                                      <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato</button>
 
-                                    <?php
-                                    }
-                                     ?>
+                                      <b>You must upload the signed "User's Contract" to complete the certification process</b>
+                                      <input type="file" name="contrato" class="form-control">
+                                      <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Send User's Contract</button>
+
                                   <?php
                                   }
                                    ?>
@@ -794,22 +801,22 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
 
                                 <?php 
                                 if(isset($solicitud['idcontrato'])){
-                                  echo "<p class='alert alert-info'>Estatus del Contrato: <span style='color:red'>".$contrato['estatus_contrato']."</span></p>";
+                                  echo "<p class='alert alert-info'>Status of the User's Contract: <span style='color:red'>".$contrato['estatus_contrato']."</span></p>";
                                   if($contrato['estatus_contrato'] == "ENVIADO"){
-                                    echo "<p class='alert alert-warning'>El contratos se encuentra en proceso de revisión. Sera notificado una vez que sea \"APROBADO\" o \"RECHAZADO\"</p>";
+                                    echo "<p class='alert alert-warning'>The User's Contract is under review. It will be notified once it is \"APPROVED\" or \"REJECTED\"</p>";
                                   }else if($contrato['estatus_contrato'] == "ACEPTADO"){
-                                    echo "<p class='alert alert-success'><b>Se ha aprobado el contrato</b></p>";
+                                    echo "<p class='alert alert-success'><b>The User's Contract has been approved</b></p>";
                                   }else if($contrato['estatus_contrato'] == "RECHAZADO"){
-                                    echo "<p class='alert alert-danger'>Se ha encontrado irregularidades en el contrato</p>";
-                                    echo "<p>Observaciones: <span>".$contrato['observaciones']."</span></p>";
+                                    echo "<p class='alert alert-danger'>Irregularities have been found in the User's Contract</p>";
+                                    echo "<p>Observations: <span>".$contrato['observaciones']."</span></p>";
                                   ?>
-                                    <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
+                                    <b>You must upload the signed "User's Contract" to complete the certification process</b>
                                     <input type="file" name="contrato" class="form-control">
-                                    <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato</button>
+                                    <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Sen User's Contract</button>
                                   <?php
                                   }
                                 }else{
-                                  echo '<p class="alert alert-danger">No se ha cargado el "Contrato de Uso"</p>';
+                                  echo '<p class="alert alert-danger">The "User\'s Contract" has not been charged</p>';
                                 }
                                  ?>
                                 
@@ -818,26 +825,30 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                             }
                             ?>
                             <div <?php if($solicitud['tipo_solicitud'] == 'RENOVACION'){echo 'class="col-md-12"';}else{ echo 'class="col-md-6"';} ?>>
-                              <h4>Certificado</h4>
+                              <h4>Certificate</h4>
                               <?php 
                               if(isset($solicitud['idcertificado'])){
-                                $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
+                                $row_certificado = mysql_query("SELECT * FROM certificado WHERE idsolicitud_registro = $solicitud[idsolicitud_registro]", $dspp) or die(mysql_error());
                                 $certificado = mysql_fetch_assoc($row_certificado);
-                                $inicio = strtotime($certificado['vigencia_inicio']);
-                                $fin = strtotime($certificado['vigencia_fin']);
-
-                                echo "<h4 class='alert alert-success'>Felicidades tu Certificado ha sido aprobado.<br> El certificado tienen una vigencia del <span style='color:red'>".date('d/m/Y', $inicio)."</span> al  <span style='color:red'>".date('d/m/Y', $fin)."</span></h4>";
-                                echo "<a href='".$certificado['archivo']."' class='btn btn-success' style='width:100%' target='_blank'>Descargar Certificado</a>";
-
+                                if(isset($certificado['idsolicitud_registro'])){
+                                  $inicio = strtotime($certificado['vigencia_inicio']);
+                                  $fin = strtotime($certificado['vigencia_fin']);
+                                ?>
+                                <h4 class='text-center alert alert-success'>Congratulations your Certificate has been approved.<br> The Certificate is valid for: <span style='color:red'><?php echo date('d/m/Y', $inicio) ?>"</span> to  <span style='color:red'><?php echo date('d/m/Y', $fin) ?></span></h4>
+                                <a href=<?php echo $certificado['archivo']; ?> class='btn btn-success' style='width:100%' target='_blank'>Download Certificate</a>
+                                <?php
+                                }else{
+                                  echo "<p class='alert alert-danger'>Certificate not yet available</p>";
+                                }
                               }else{
-                                echo "<p class='alert alert-danger'>El Certificado aun no esta disponible</p>";
+                                echo "<p class='alert alert-danger'>Certificate not yet available</p>";
                               }
                                ?>
                             </div>
                           </div>
                         </div>
                         <div class="modal-footer">
-                          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                       </div>
                     </div>
@@ -849,11 +860,11 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
 
               <td>
                 <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
-                <a class="btn btn-xs btn-primary" style="display:inline-block" href="?SOLICITUD&amp;detail&amp;idsolicitud=<?php echo $solicitud['idsolicitud_registro']; ?>" data-toggle="tooltip" title="View Application" >
-                  Consult
+                <a class="btn btn-sm btn-primary" style="display:inline-block" href="?SOLICITUD&amp;detail&amp;idsolicitud=<?php echo $solicitud['idsolicitud_registro']; ?>" data-toggle="tooltip" title="Consult Application" >
+                 Consult
                 </a>
                <!-- <form action="" method="POST"  style="display:inline-block">-->
-                  <!--<button class="btn btn-xs btn-danger" name="eliminar_solicitud" value="1" data-toggle="tooltip" title="Eliminar Solicitud" type="submit" onclick="return confirm('¿Está seguro?, los datos se eliminaran permanentemente');">
+                  <button class="btn btn-sm btn-danger" name="eliminar_solicitud" value="1" data-toggle="tooltip" title="Delete Application" type="submit" onclick="return confirm('Are you sure? Data will be permanently deleted.');">
                     <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
                   </button>         
                 <!--</form>-->
@@ -865,7 +876,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
         }else{
         ?>
           <tr class="info text-center">
-            <td colspan="10">No se encontraron registros</td>
+            <td colspan="10">No records found</td>
           </tr>
         <?php
         }

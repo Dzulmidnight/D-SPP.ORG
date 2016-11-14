@@ -686,13 +686,18 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     $certificado = NULL;
   }
   //insertamos el certificado
+  $fecha_inicio = strtotime($_POST['fecha_inicio']);
+  $fecha_fin = strtotime($_POST['fecha_fin']);
+  $vigencia_inicio = date('Y-m-d', $fecha_inicio);
+  $vigencia_fin = date('Y-m-d', $fecha_fin);
+
   $insertSQL = sprintf("INSERT INTO certificado(idempresa, idsolicitud_registro, entidad, estatus_certificado, vigencia_inicio, vigencia_fin, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
     GetSQLValueString($_POST['idempresa'], "int"),
     GetSQLValueString($_POST['idsolicitud_registro'], "int"),
     GetSQLValueString($_POST['idoc'], "int"),
     GetSQLValueString($estatus_dspp, "int"),
-    GetSQLValueString($_POST['fecha_inicio'], "text"),
-    GetSQLValueString($_POST['fecha_fin'], "text"),
+    GetSQLValueString($vigencia_inicio, "text"),
+    GetSQLValueString($vigencia_fin, "text"),
     GetSQLValueString($certificado, "text"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -726,6 +731,8 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $informacion = mysql_fetch_assoc($row_informacion);
   $inicio = strtotime($_POST['fecha_inicio']);
   $fin = strtotime($_POST['fecha_fin']);
+  $formato_inicio = date('d/m/Y', $inicio);
+  $formato_fin = date('d/m/Y', $fin);
   $asunto = "D-SPP | Certificado Disponible para Descargar";
 
   $cuerpo_mensaje = '
@@ -750,7 +757,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
                  <p>
                   Felicidades!!!, su Certificado ha sido liberado, ahora puede descargarlo.
                  </p>
-                 <p>El Certificado tiene un vigencia del dia <span style="color:red">'.date('d/m/Y', $inicio).'</span> al dia: <span style="color:red">'.date('d/m/Y', $fin).'</span>, el cual se encuentra anexo a este correo.</p>
+                 <p>El Certificado tiene un vigencia del dia <span style="color:red">'.$formato_inicio.'</span> al dia: <span style="color:red">'.$formato_fin.'</span>, el cual se encuentra anexo a este correo.</p>
                  
                 </td>
               </tr>
@@ -765,6 +772,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
         </body>
       </html>
   ';
+  
     $mail->AddAddress($informacion['email']);
     $mail->AddAddress($informacion['contacto1_email']);
     $mail->AddBCC($spp_global);

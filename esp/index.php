@@ -49,6 +49,7 @@ if (isset($_GET['accesscheck'])) {
 
 
 /***  VARIABLE GENERALES  ****/
+$administrador = 'cert@spp.coop';
 $fecha = time();
 $asunto_usuario = "D-SPP Datos de Usuario / User Data";
 
@@ -180,10 +181,8 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
       </body>
       </html>
     ';
-
       $mail->AddAddress($destinatario);
-      $mail->AddBCC('yasser.midnight@gmail.com');
-      $mail->AddBCC('cert@spp.coop');
+      $mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
       $mail->Subject = utf8_decode($asunto_usuario);
@@ -326,8 +325,7 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
   ';
 
     $mail->AddAddress($destinatario);
-    $mail->AddBCC('yasser.midnight@gmail.com');
-    $mail->AddBCC('cert@spp.coop');
+    $mail->AddBCC($administrador);
 
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
@@ -506,6 +504,14 @@ if (isset($_POST['SPP_OC'])) {
 
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_error());
+$alerta = '
+           <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center">
+            SI YA ES O FUE UNA ORGANIZACIÓN o EMPRESA CERTIFICADA CON EL SPP, DEBE DE SOLICITAR SU USUARIO Y CONTRASEÑA EN EL SIGUIENTE CORREO: <a href="mailto:soporte@d-spp.org" style="color:#2c3e50">soporte@d-spp.org</a> Y OMITIR EL SIGUIENTE FORMULARIO.
+          </p>';
+$alerta2 = '
+           <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center">
+            SI YA ES O FUE UNA ORGANIZACIÓN o EMPRESA CERTIFICADA CON EL SPP, DEBE DE SOLICITAR SU USUARIO Y CONTRASEÑA EN EL SIGUIENTE CORREO: <a href="mailto:soporte@d-spp.org" style="color:#2c3e50">soporte@d-spp.org</a>.
+          </p>';
 
 ?>
 <!DOCTYPE html>
@@ -646,6 +652,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
               <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM">EMPRESAS</a></li>
               </ul>
             </div>
+            <?php echo $alerta2; ?>
           </div>
         <?php
         }
@@ -675,6 +682,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
           <div class="row">
             <div class="col-md-12">
+              <?php echo $alerta; ?>
               <form action="" method="POST" class="form-horizontal">
                 <div class="panel panel-info">
                   <div class="panel-heading">
@@ -800,6 +808,7 @@ $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_er
         ?>
           <div class="row">
             <div class="col-md-12">
+              <?php echo $alerta; ?>
               <form action="" method="POST" class="form-horizontal">
                 <div class="panel panel-info">
                   <div class="panel-heading">

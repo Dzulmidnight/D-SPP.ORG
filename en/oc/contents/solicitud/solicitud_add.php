@@ -251,18 +251,18 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 
 		 // INGRESAMOS EL PORCENTAJE DE VENTA DE LOS PRODUCTOS
-		 if(isset($op_preg12) && $op_preg12 == "SI"){
-		 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
-		 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_certificacion, idopp) VALUES (%s, %s, %s, %s, %s, %s)",
-		 			GetSQLValueString($_POST['organico'], "text"),
-		 			GetSQLValueString($_POST['comercio_justo'], "text"),
-		 			GetSQLValueString($_POST['spp'], "text"),
-		 			GetSQLValueString($_POST['sin_certificado'], "text"),
-		 			GetSQLValueString($idsolicitud_certificacion, "int"),
-		 			GetSQLValueString($idopp, "int"));
-		 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
-		 	}
-		 }	
+
+	 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
+	 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_certificacion, idopp) VALUES (%s, %s, %s, %s, %s, %s)",
+	 			GetSQLValueString($_POST['organico'], "text"),
+	 			GetSQLValueString($_POST['comercio_justo'], "text"),
+	 			GetSQLValueString($_POST['spp'], "text"),
+	 			GetSQLValueString($_POST['sin_certificado'], "text"),
+	 			GetSQLValueString($idsolicitud_certificacion, "int"),
+	 			GetSQLValueString($idopp, "int"));
+	 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+	 	}
+	
 
 
 		/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
@@ -476,10 +476,14 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			</html>
 		';
 		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
-		$destinatario = $oc['email1'];
 
-        $mail->AddAddress($destinatario);
-	    $mail->AddBCC($administrador);
+		if(isset($oc['email1'])){
+			$mail->AddAddress($oc['email1']);
+		}
+		if(isset($oc['email2'])){
+			$mail->AddAddress($oc['email2']);
+		}
+
 	    $mail->AddBCC($spp_global);
         //$mail->Username = "soporte@d-spp.org";
         //$mail->Password = "/aung5l6tZ";
@@ -489,7 +493,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
         $mail->Send();
         $mail->ClearAddresses();
 
- 		$mensaje = "Se ha enviado la Solicitud de Certificacion al OC, en breve seras contactado";
+ 		$mensaje = "The Certification Application has been sent to the OC, soon you will be contacted";
 
 
 }
@@ -501,6 +505,7 @@ $opp = mysql_fetch_assoc($row_opp);
 */
 $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mysql_error());
 ?>
+
 
 <div class="row">
 	<div class="col-lg-12">
@@ -820,29 +825,27 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 						10.	ACCORDING THE CERTIFICATIONS, IN ITS MOST RECENT INTERNAL AND EXTERNAL EVALUATIONS, HOW MANY CASES OF NON COMPLIANCE WERE IDENTIFIED? PLEASE EXPLAIN IF THEY HAVE BEEN RESOLVED OR WHAT THEIR STATUS IS?</label>
 					<textarea name="op_preg10" id="op_preg10" class="form-control"></textarea>
 
-						<div class="col-xs-12">
-							<p for="op_preg11">
-								<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
-							</p>
-							<p><i>(* Enter percentage)</i></p>
-								<div class="col-xs-3">
-									<label for="organico">% ORGANIC</label>
-									<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
-								</div>
-								<div class="col-xs-3">
-									<label for="comercio_justo">% FAIR TRADE</label>
-									<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
-								</div>
-								<div class="col-xs-3">
-									<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
-									<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
-									
-								</div>
-								<div class="col-xs-3">
-									<label for="otro">OTHER</label>
-									<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
-									
-								</div>						
+					<p for="op_preg11">
+						<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+					</p>
+					<p><i>(* Enter percentage)</i></p>
+						<div class="col-xs-3">
+							<label for="organico">% ORGANIC</label>
+							<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
+						</div>
+						<div class="col-xs-3">
+							<label for="comercio_justo">% FAIR TRADE</label>
+							<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
+						</div>
+						<div class="col-xs-3">
+							<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
+							<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
+							
+						</div>
+						<div class="col-xs-3">
+							<label for="otro">OTHER</label>
+							<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
+							
 						</div>
 
 

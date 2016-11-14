@@ -641,25 +641,25 @@ $solicitud = mysql_fetch_assoc($ejecutar);
 
           <div class="col-xs-3">
             <label for="preg1_1">
-              1_1. NÚMERO DE OPP DE 3ER GRADO:
+              1.3: NÚMERO DE OPP DE 3ER GRADO:
             </label>
             <input type="text" class="form-control" id="preg1_1" name="preg1_1" value="<?php echo $solicitud['preg1_1']; ?>" >
           </div>
           <div class="col-xs-3">
             <label for="preg1_2">
-              1_2. NÚMERO DE OPP DE 2DO GRADO:
+              1.2: NÚMERO DE OPP DE 2DO GRADO:
             </label>
             <input type="text" class="form-control" id="preg1_2" name="preg1_2" value="<?php echo $solicitud['preg1_2']; ?>" >
           </div>
           <div class="col-xs-3">
             <label for="preg1_3">
-              1_3. NÚMERO DE OPP DE 1ER GRADO:
+              1.3: NÚMERO DE OPP DE 1ER GRADO:
             </label>
             <input type="text" class="form-control" id="preg1_3" name="preg1_3" value="<?php echo $solicitud['preg1_3']; ?>" >
           </div>
           <div class="col-xs-3">
             <label for="preg1_4">
-              1_4. NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO:
+              1.4: NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO:
             </label>
             <input type="text" class="form-control" id="preg1_4" name="preg1_4" value="<?php echo $solicitud['preg1_4']; ?>" >
           </div>
@@ -748,6 +748,28 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             10.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
           <textarea name="op_preg10" id="op_preg10" class="form-control"><?php echo $solicitud['op_preg10']; ?></textarea>
 
+          <p for="op_preg11">
+            <b>11. DEL TOTAL DE SUS VENTAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
+          </p>
+          <p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
+            <div class="col-xs-3">
+              <label for="organico">% ORGÁNICO</label>
+              <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0" readonly>
+            </div>
+            <div class="col-xs-3">
+              <label for="comercio_justo">% COMERCIO JUSTO</label>
+              <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0" readonly>
+            </div>
+            <div class="col-xs-3">
+              <label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
+              <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0" readonly>
+              
+            </div>
+            <div class="col-xs-3">
+              <label for="otro">SIN CERTIFICADO</label>
+              <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0" readonly>
+              
+            </div>            
 
           <p><b>12. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
           <div class="col-xs-12 ">
@@ -789,30 +811,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
                       }
                      ?>
                   </div>
-              <div class="col-xs-12">
-                <p for="op_preg11">
-                  <b>13_1.DEL TOTAL DE SUS VENTAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
-                </p>
-                <p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-                  <div class="col-xs-3">
-                    <label for="organico">% ORGÁNICO</label>
-                    <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0" readonly>
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="comercio_justo">% COMERCIO JUSTO</label>
-                    <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0" readonly>
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
-                    <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0" readonly>
-                    
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="otro">SIN CERTIFICADO</label>
-                    <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0" readonly>
-                    
-                  </div>            
-              </div>
                 <?php
                   }else if($solicitud['op_preg12'] == 'NO'){
                 ?>

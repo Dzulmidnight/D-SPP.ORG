@@ -65,7 +65,6 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 	CERTIFICACIONES
 	*/
 
-
   if(isset($_POST['op_preg12'])){
     $op_preg12 = $_POST['op_preg12'];
   }else{
@@ -158,62 +157,114 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 	$actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
 	////ACTUALIZAMOS LOS PORCENTAJES DE VENTAS
-    if(isset($op_preg12) && $op_preg12 == "SI"){
-      if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
-      	$updateSQL = sprintf("UPDATE porcentaje_productoVentas SET organico = %s, comercio_justo = %s, spp = %s, sin_certificado = %s WHERE idsolicitud_certificacion = %s",
-      		GetSQLValueString($_POST['organico'], "text"),
-      		GetSQLValueString($_POST['comercio_justo'], "text"),
-      		GetSQLValueString($_POST['spp'], "text"),
-      		GetSQLValueString($_POST['sin_certificado'], "text"),
-      		GetSQLValueString($idsolicitud_certificacion, "int"));
-      	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
-      }
-    }  
+  if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
+  	$row_ventas = mysql_query("SELECT * FROM porcentaje_productoVentas WHERE idsolicitud_certificacion = $_GET[idsolicitud]", $dspp) or die(mysql_error());
+  	$existe_venta = mysql_num_rows($row_ventas);
+  	if($existe_venta){
+	  	$updateSQL = sprintf("UPDATE porcentaje_productoVentas SET organico = %s, comercio_justo = %s, spp = %s, sin_certificado = %s WHERE idsolicitud_certificacion = %s",
+	  		GetSQLValueString($_POST['organico'], "text"),
+	  		GetSQLValueString($_POST['comercio_justo'], "text"),
+	  		GetSQLValueString($_POST['spp'], "text"),
+	  		GetSQLValueString($_POST['sin_certificado'], "text"),
+	  		GetSQLValueString($idsolicitud_certificacion, "int"));
+	  	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+  	}else{
+  		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_certificacion, idopp) VALUES (%s, %s, %s, %s, %s, %s)",
+	  		GetSQLValueString($_POST['organico'], "text"),
+	  		GetSQLValueString($_POST['comercio_justo'], "text"),
+	  		GetSQLValueString($_POST['spp'], "text"),
+	  		GetSQLValueString($_POST['sin_certificado'], "text"),
+	  		GetSQLValueString($idsolicitud_certificacion, "int"),
+  			GetSQLValueString($_POST['idopp'], "int"));
+  		$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+  	}
+
+  }
+ 
+
+	/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
+
+		if(isset($_POST['certificadora'])){
+			$certificadora = $_POST['certificadora'];
+		}else{
+			$certificadora = NULL;
+		}
+
+		if(isset($_POST['ano_inicial'])){
+			$ano_inicial = $_POST['ano_inicial'];
+		}else{
+			$ano_inicial = NULL;
+		}
+
+		if(isset($_POST['interrumpida'])){
+			$interrumpida = $_POST['interrumpida'];
+		}else{
+			$interrumpida = NULL;
+		}
+
+		if(isset($_POST['certificacion'])){
+			$certificacion = $_POST['certificacion'];
+			
+			for($i=0;$i<count($certificacion);$i++){
+				if($certificacion[$i] != NULL){
+					#for($i=0;$i<count($certificacion);$i++){
+					$insertSQL = sprintf("INSERT INTO certificaciones (idsolicitud_certificacion, certificacion, certificadora, ano_inicial, interrumpida) VALUES (%s, %s, %s, %s, %s)",
+					    GetSQLValueString($idsolicitud_certificacion, "int"),
+					    GetSQLValueString(strtoupper($certificacion[$i]), "text"),
+					    GetSQLValueString(strtoupper($certificadora[$i]), "text"),
+					    GetSQLValueString($ano_inicial[$i], "text"),
+					    GetSQLValueString($interrumpida[$i], "text"));
+
+					$Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+					#}
+				}
+			}
+
+		}
+	/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
 
 
     // SE ACTUALIZAN LAS CERTIFICACIONES
-
-
     if(isset($_POST['idcertificacion'])){
 	    $idcertificacion = $_POST['idcertificacion'];
-			if(isset($_POST['certificacion'])){
-				$certificacion = $_POST['certificacion'];
+			if(isset($_POST['certificacion_actual'])){
+				$certificacion_actual = $_POST['certificacion_actual'];
 			}else{
-				$certificacion = NULL;
+				$certificacion_actual = NULL;
 			}
 
 
-			if(isset($_POST['certificadora'])){
-				$certificadora = $_POST['certificadora'];
+			if(isset($_POST['certificadora_actual'])){
+				$certificadora_actual = $_POST['certificadora_actual'];
 			}else{
-				$certificadora = NULL;
+				$certificadora_actual = NULL;
 			}
 
-			if(isset($_POST['ano_inicial'])){
-				$ano_inicial = $_POST['ano_inicial'];
+			if(isset($_POST['ano_inicial_actual'])){
+				$ano_inicial_actual = $_POST['ano_inicial_actual'];
 			}else{
-				$ano_inicial = NULL;
+				$ano_inicial_actual = NULL;
 			}
 
-			if(isset($_POST['interrumpida'])){
-				$interrumpida = $_POST['interrumpida'];
+			if(isset($_POST['interrumpida_actual'])){
+				$interrumpida_actual = $_POST['interrumpida_actual'];
 			}else{
-				$interrumpida = NULL;
+				$interrumpida_actual = NULL;
 			}
 
 
-	    for($i=0;$i<count($certificacion);$i++){
-	      if($certificacion[$i] != NULL){
-	        #for($i=0;$i<count($certificacion);$i++){
+	    for($i=0;$i<count($certificacion_actual);$i++){
+	      if($certificacion_actual[$i] != NULL){
+	        #for($i=0;$i<count($certificacion_actual);$i++){
 
 	      	$updateSQL = sprintf("UPDATE certificaciones SET certificacion = %s, certificadora = %s, ano_inicial = %s, interrumpida = %s WHERE idcertificacion = %s",
-	      		GetSQLValueString(strtoupper($certificacion[$i]), "text"),
-	      		GetSQLValueString(strtoupper($certificadora[$i]), "text"),
-	      		GetSQLValueString($ano_inicial[$i], "text"),
-	      		GetSQLValueString($interrumpida[$i], "text"),
+	      		GetSQLValueString(strtoupper($certificacion_actual[$i]), "text"),
+	      		GetSQLValueString(strtoupper($certificadora_actual[$i]), "text"),
+	      		GetSQLValueString($ano_inicial_actual[$i], "text"),
+	      		GetSQLValueString($interrumpida_actual[$i], "text"),
 	      		GetSQLValueString($idcertificacion[$i], "int"));
 
-	        //$updateSQL = "UPDATE certificaciones SET certificacion= '".$certificacion[$i]."', certificadora='".$certificadora[$i]."', ano_inicial= '".$ano_inicial[$i]."', interrumpida= '".$interrumpida[$i]."' WHERE idcertificacion= '".$idcertificacion[$i]."'";
+	        //$updateSQL = "UPDATE certificaciones SET certificacion= '".$certificacion[$i]."', certificadora='".$certificadora_actual[$i]."', ano_inicial= '".$ano_inicial_actual[$i]."', interrumpida= '".$interrumpida[$i]."' WHERE idcertificacion= '".$idcertificacion[$i]."'";
 
 	        $Result1 = mysql_query($updateSQL, $dspp) or die(mysql_error());
 	        }
@@ -221,26 +272,113 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
     }
 
 
+	/*************************** INICIA INSERTAR PRODUCTOS ***************************/
+
+	if(isset($_POST['volumen'])){
+		$volumen = $_POST['volumen'];
+	}
+	if(isset($_POST['materia'])){
+		$materia = $_POST['materia'];
+	}
+	if(isset($_POST['destino'])){
+		$destino = $_POST['destino'];
+	}
+
+	if(isset($_POST['producto'])){
+		$producto = $_POST['producto'];
+
+
+		for ($i=0;$i<count($producto);$i++) { 
+			if($producto[$i] != NULL){
+
+					$array1[$i] = "terminado".$i; 
+					$array2[$i] = "marca_propia".$i;
+					$array3[$i] = "marca_cliente".$i;
+					$array4[$i] = "sin_cliente".$i;
+
+					if(isset($_POST[$array1[$i]])){
+						$terminado = $_POST[$array1[$i]];
+					}else{
+						$terminado = null;
+					}
+					if(isset($_POST[$array2[$i]])){
+						$marca_propia = $_POST[$array2[$i]];
+					}else{
+						$marca_propia = null;
+					}
+					if(isset($_POST[$array3[$i]])){
+						$marca_cliente = $_POST[$array3[$i]];
+					}else{
+						$marca_cliente = null;
+					}
+					if(isset($_POST[$array4[$i]])){
+						$sin_cliente = $_POST[$array4[$i]];
+					}else{
+						$sin_cliente = null;
+					}
+
+					//$terminado = $_POST[$array1[$i]];
+					//$marca_propia = $_POST[$array2[$i]];
+					//$marca_cliente = $_POST[$array3[$i]];
+					//$sin_cliente = $_POST[$array4[$i]];
+
+					$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
+					$producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+					$str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
+					$destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+					$str = iconv($charset, 'ASCII//TRANSLIT', $materia[$i]);
+					$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+
+				    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+				    	GetSQLValueString($_POST['idopp'], "int"),
+				          GetSQLValueString($idsolicitud_certificacion, "int"),
+				          GetSQLValueString($producto[$i], "text"),
+				          GetSQLValueString($volumen[$i], "text"),
+				          GetSQLValueString($terminado[$i], "text"),
+				          GetSQLValueString($materia[$i], "text"),
+				          GetSQLValueString($destino[$i], "text"),
+				          GetSQLValueString($marca_propia[$i], "text"),
+				          GetSQLValueString($marca_cliente[$i], "text"),                    
+				          GetSQLValueString($sin_cliente[$i], "text"));
+
+				  $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+			}
+		}
+		/***************************** TERMINA INSERTAR PRODUCTOS ******************************/
+
+	}
+
+	/*$marca_propia = $_POST['marca_propia'];
+	$marca_cliente = $_POST['marca_cliente'];
+	$sin_cliente = $_POST['sin_cliente'];*/
+
+
+
+
+
     // SE ACTUALIZAN LOS PRODUCTOS
-  	if(isset($_POST['producto'])){
-  		$producto = $_POST['producto'];
+  	if(isset($_POST['producto_actual'])){
+  		$producto_actual = $_POST['producto_actual'];
   	}else{
-  		$producto = '';
+  		$producto_actual = '';
   	}
-  	if(isset($_POST['volumen'])){
-  		$volumen = $_POST['volumen'];
+  	if(isset($_POST['volumen_actual'])){
+  		$volumen_actual = $_POST['volumen_actual'];
   	}else{
-  		$volumen = '';
+  		$volumen_actual = '';
   	}
-  	if(isset($_POST['materia'])){
-  		$materia = $_POST['materia'];
+  	if(isset($_POST['materia_actual'])){
+  		$materia_actual = $_POST['materia_actual'];
   	}else{
-  		$materia = '';
+  		$materia_actual = '';
   	}
-  	if(isset($_POST['destino'])){
-  		$destino = $_POST['destino'];
+  	if(isset($_POST['destino_actual'])){
+  		$destino_actual = $_POST['destino_actual'];
   	}else{
-  		$destino = '';
+  		$destino_actual = '';
   	}
 
   	if(isset($_POST['idproducto'])){
@@ -250,13 +388,13 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
   	}
 
   	if(isset($_POST['idproducto'])){
-	    for ($i=0;$i<count($producto);$i++) { 
-	      if($producto[$i] != NULL){
+	    for ($i=0;$i<count($producto_actual);$i++) { 
+	      if($producto_actual[$i] != NULL){
 
-	      $array1 = "terminado".$i; 
-	      $array2 = "marca_propia".$i;
-	      $array3 = "marca_cliente".$i;
-	      $array4 = "sin_cliente".$i;
+	      $array1 = "terminado_actual".$i; 
+	      $array2 = "marca_propia_actual".$i;
+	      $array3 = "marca_cliente_actual".$i;
+	      $array4 = "sin_cliente_actual".$i;
 
 
 	      if(isset($_POST[$array1])){
@@ -280,22 +418,22 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 	      	$sin_cliente = '';
 	      }
 
-						$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
-						$producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+						$str = iconv($charset, 'ASCII//TRANSLIT', $producto_actual[$i]);
+						$producto_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
-						$str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
-						$destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+						$str = iconv($charset, 'ASCII//TRANSLIT', $destino_actual[$i]);
+						$destino_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
-						$str = iconv($charset, 'ASCII//TRANSLIT', $materia[$i]);
-						$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+						$str = iconv($charset, 'ASCII//TRANSLIT', $materia_actual[$i]);
+						$materia_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
 
 	      $updateSQL = sprintf("UPDATE productos SET producto = %s, volumen = %s, terminado = %s, materia = %s, destino = %s, marca_propia = %s, marca_cliente = %s, sin_cliente = %s WHERE idproducto = %s",
-	      	GetSQLValueString($producto[$i], "text"),
-	      	GetSQLValueString($volumen[$i], "text"),
+	      	GetSQLValueString($producto_actual[$i], "text"),
+	      	GetSQLValueString($volumen_actual[$i], "text"),
 	      	GetSQLValueString($terminado, "text"),
-	      	GetSQLValueString($materia[$i], "text"),
-	      	GetSQLValueString($destino[$i], "text"),
+	      	GetSQLValueString($materia_actual[$i], "text"),
+	      	GetSQLValueString($destino_actual[$i], "text"),
 	      	GetSQLValueString($marca_propia, "text"),
 	      	GetSQLValueString($marca_cliente, "text"),
 	      	GetSQLValueString($sin_cliente, "text"),
@@ -308,11 +446,13 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
   	}
 
 
-  $mensaje = "Datos Actualizados Correctamente";
+
+
+  $mensaje = "Correctly Updated Data";
 }
  
 
-$query = "SELECT solicitud_certificacion.*, opp.nombre, opp.spp AS 'spp_opp', opp.sitio_web, opp.email, opp.telefono, opp.pais, opp.ciudad, opp.razon_social, opp.direccion_oficina, opp.direccion_fiscal, opp.rfc, opp.ruc, oc.abreviacion AS 'abreviacionOC', porcentaje_productoVentas.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN porcentaje_productoVentas ON solicitud_certificacion.idsolicitud_certificacion = porcentaje_productoVentas.idsolicitud_certificacion WHERE solicitud_certificacion.idsolicitud_certificacion = $idsolicitud_certificacion";
+$query = "SELECT solicitud_certificacion.*, opp.idopp AS 'id_opp', opp.nombre, opp.spp AS 'spp_opp', opp.sitio_web, opp.email, opp.telefono, opp.pais, opp.ciudad, opp.razon_social, opp.direccion_oficina, opp.direccion_fiscal, opp.rfc, opp.ruc, oc.abreviacion AS 'abreviacionOC', porcentaje_productoVentas.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN porcentaje_productoVentas ON solicitud_certificacion.idsolicitud_certificacion = porcentaje_productoVentas.idsolicitud_certificacion WHERE solicitud_certificacion.idsolicitud_certificacion = $idsolicitud_certificacion";
 $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
 $solicitud = mysql_fetch_assoc($ejecutar);
 
@@ -586,6 +726,13 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 							<td>CERTIFICATION ENTITY</td>
 							<td>INITIAL YEAR OF CERTIFICATION</td>
 							<td>HAS BEEN INTERRUPTED?</td>
+							<td>
+								<button type="button" onclick="tablaCertificaciones()" class="btn btn-primary" aria-label="Left Align">
+								  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								</button>
+								
+							</td>
+
 						</tr>
 						<?php 
 						$query_certificacion_detalle = "SELECT * FROM certificaciones WHERE idsolicitud_certificacion = $idsolicitud_certificacion";
@@ -594,10 +741,10 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 						while($row_certificacion = mysql_fetch_assoc($certificacion_detalle)){
 						?>
 							<tr class="text-center">
-							  <td><input type="text" class="form-control" name="certificacion[]" id="exampleInputEmail1" placeholder="CERTIFICACIÓN" value="<?echo $row_certificacion['certificacion']?>"></td>
-							  <td><input type="text" class="form-control" name="certificadora[]" id="exampleInputEmail1" placeholder="CERTIFICADORA" value="<?echo $row_certificacion['certificadora']?>"></td>
-							  <td><input type="text" class="form-control" name="ano_inicial[]" id="exampleInputEmail1" placeholder="AÑO INICIAL" value="<?echo $row_certificacion['ano_inicial']?>"></td>
-							  <td><input type="text" class="form-control" name="interrumpida[]" id="exampleInputEmail1" placeholder="¿HA SIDO INTERRUMPIDA?" value="<?echo $row_certificacion['interrumpida']?>"></td>
+							  <td><input type="text" class="form-control" name="certificacion_actual[]" id="exampleInputEmail1" placeholder="CERTIFICACIÓN" value="<?echo $row_certificacion['certificacion']?>"></td>
+							  <td><input type="text" class="form-control" name="certificadora_actual[]" id="exampleInputEmail1" placeholder="CERTIFICADORA" value="<?echo $row_certificacion['certificadora']?>"></td>
+							  <td><input type="text" class="form-control" name="ano_inicial_actual[]" id="exampleInputEmail1" placeholder="AÑO INICIAL" value="<?echo $row_certificacion['ano_inicial']?>"></td>
+							  <td><input type="text" class="form-control" name="interrumpida_actual[]" id="exampleInputEmail1" placeholder="¿HA SIDO INTERRUMPIDA?" value="<?echo $row_certificacion['interrumpida']?>"></td>
 							  <input type="hidden" name="idcertificacion[]" value="<?echo $row_certificacion['idcertificacion']?>">
 							</tr>
 						<?php 
@@ -610,30 +757,28 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 						10.	ACCORDING THE CERTIFICATIONS, IN ITS MOST RECENT INTERNAL AND EXTERNAL EVALUATIONS, HOW MANY CASES OF NON COMPLIANCE WERE IDENTIFIED? PLEASE EXPLAIN IF THEY HAVE BEEN RESOLVED OR WHAT THEIR STATUS IS?</label>
 					<textarea name="op_preg10" id="op_preg10" class="form-control"><?php echo $solicitud['op_preg10']; ?></textarea>
 
-							<div class="col-xs-12">
-								<p for="op_preg11">
-									<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
-								</p>
-								<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-									<div class="col-xs-3">
-										<label for="organico">% ORGANIC</label>
-										<input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
-									</div>
-									<div class="col-xs-3">
-										<label for="comercio_justo">% FAIR TRADE</label>
-										<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
-									</div>
-									<div class="col-xs-3">
-										<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
-										<input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
-										
-									</div>
-									<div class="col-xs-3">
-										<label for="otro">OTHER</label>
-										<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
-										
-									</div>						
-							</div>
+					<p for="op_preg11">
+						<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+					</p>
+					<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
+						<div class="col-xs-3">
+							<label for="organico">% ORGANIC</label>
+							<input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
+						</div>
+						<div class="col-xs-3">
+							<label for="comercio_justo">% FAIR TRADE</label>
+							<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
+						</div>
+						<div class="col-xs-3">
+							<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
+							<input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
+							
+						</div>
+						<div class="col-xs-3">
+							<label for="otro">OTHER</label>
+							<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
+							
+						</div>
 
 
 					<p><b>12.	DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
@@ -723,7 +868,13 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 						<td>Destination Countries</td>
 						<td>Own brand</td>
 						<td>Client´s brand</td>
-						<td>Still without client</td>					
+						<td>Still without client</td>
+						<td>
+							<button type="button" onclick="tablaProductos()" class="btn btn-primary" aria-label="Left Align">
+							  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							</button>
+							
+						</td>		
 					</tr>
 					<?php 
 					$query_producto_detalle = "SELECT * FROM productos WHERE idsolicitud_certificacion = $idsolicitud_certificacion";
@@ -733,70 +884,70 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					?>
 					  <tr>
 					    <td>
-					      <input type="text" class="form-control" name="producto[]" id="exampleInputEmail1" placeholder="Product" value="<?echo $row_producto['producto']?>">
+					      <input type="text" class="form-control" name="producto_actual[]" id="exampleInputEmail1" placeholder="Product" value="<?echo $row_producto['producto']?>">
 					    </td>
 					    <td>
-					      <input type="text" class="form-control" name="volumen[]" id="exampleInputEmail1" placeholder="Volume" value="<?echo $row_producto['volumen']?>">
+					      <input type="text" class="form-control" name="volumen_actual[]" id="exampleInputEmail1" placeholder="Volume" value="<?echo $row_producto['volumen']?>">
 					    </td>
 					    <td>
 					      <?php 
 					        if($row_producto['terminado'] == 'SI'){
-					          echo "SI <input type='radio'  name='terminado".$contador."' value='SI' checked><br>";
+					          echo "SI <input type='radio'  name='terminado_actual".$contador."' value='SI' checked><br>";
 					        }else{
-					          echo "SI <input type='radio'  name='terminado".$contador."' value='SI'><br>";
+					          echo "SI <input type='radio'  name='terminado_actual".$contador."' value='SI'><br>";
 					        } 
 					        if($row_producto['terminado'] == 'NO'){
-					          echo "NO <input type='radio'  name='terminado".$contador."' value='NO' checked>";
+					          echo "NO <input type='radio'  name='terminado_actual".$contador."' value='NO' checked>";
 					        }else{
-					          echo "NO <input type='radio'  name='terminado".$contador."' value='NO'>";
+					          echo "NO <input type='radio'  name='terminado_actual".$contador."' value='NO'>";
 					        }
 					       ?>
 					    </td>          
 					    <td>
-					      <input type="text" class="form-control" name="materia[]" id="exampleInputEmail1" placeholder="Material" value="<?echo $row_producto['materia']?>">
+					      <input type="text" class="form-control" name="materia_actual[]" id="exampleInputEmail1" placeholder="Material" value="<?echo $row_producto['materia']?>">
 					    </td>
 					    <td>
-					      <input type="text" class="form-control" name="destino[]" id="exampleInputEmail1" placeholder="Destination" value="<?echo $row_producto['destino']?>">
+					      <input type="text" class="form-control" name="destino_actual[]" id="exampleInputEmail1" placeholder="Destination" value="<?echo $row_producto['destino']?>">
 					    </td>
 					    <td>
 					      <?php 
 					        if($row_producto['marca_propia'] == 'SI'){
-					          echo "SI <input type='radio'  name='marca_propia".$contador."' value='SI' checked><br>";
+					          echo "SI <input type='radio'  name='marca_propia_actual".$contador."' value='SI' checked><br>";
 					        }else{
-					          echo "SI <input type='radio'  name='marca_propia".$contador."' value='SI'><br>";
+					          echo "SI <input type='radio'  name='marca_propia_actual".$contador."' value='SI'><br>";
 					        } 
 					        if($row_producto['marca_propia'] == 'NO'){
-					          echo "NO <input type='radio'  name='marca_propia".$contador."' value='NO' checked>";
+					          echo "NO <input type='radio'  name='marca_propia_actual".$contador."' value='NO' checked>";
 					        }else{
-					          echo "NO <input type='radio'  name='marca_propia".$contador."' value='NO'>";
+					          echo "NO <input type='radio'  name='marca_propia_actual".$contador."' value='NO'>";
 					        }
 					       ?>
 					    </td>
 					    <td>
 					      <?php 
 					        if($row_producto['marca_cliente'] == 'SI'){
-					          echo "SI <input type='radio'  name='marca_cliente".$contador."' value='SI' checked><br>";
+					          echo "SI <input type='radio'  name='marca_cliente_actual".$contador."' value='SI' checked><br>";
 					        }else{
-					          echo "SI <input type='radio'  name='marca_cliente".$contador."' value='SI'><br>";
+					          echo "SI <input type='radio'  name='marca_cliente_actual".$contador."' value='SI'><br>";
 					        } 
 					        if($row_producto['marca_cliente'] == 'NO'){
-					          echo "NO <input type='radio'  name='marca_cliente".$contador."' value='NO' checked>";
+					          echo "NO <input type='radio'  name='marca_cliente_actual".$contador."' value='NO' checked>";
 					        }else{
-					          echo "NO <input type='radio'  name='marca_cliente".$contador."' value='NO'>";                  
+					          echo "NO <input type='radio'  name='marca_cliente_actual".$contador."' value='NO'>";                  
 					        }
 					       ?>              
 					    </td>
 					    <td>
 					      <?php 
 					        if($row_producto['sin_cliente'] == 'SI'){
-					          echo "SI <input type='radio'  name='sin_cliente".$contador."' value='SI' checked><br>";
+					          echo "SI <input type='radio'  name='sin_cliente_actual".$contador."' value='SI' checked><br>";
 					        }else{
-					          echo "SI <input type='radio'  name='sin_cliente".$contador."' value='SI'><br>";
+					          echo "SI <input type='radio'  name='sin_cliente_actual".$contador."' value='SI'><br>";
 					        }
 					        if($row_producto['sin_cliente'] == 'NO'){
-					          echo "NO <input type='radio'  name='sin_cliente".$contador."' value='NO' checked>";
+					          echo "NO <input type='radio'  name='sin_cliente_actual".$contador."' value='NO' checked>";
 					        }else{
-					          echo "NO <input type='radio'  name='sin_cliente".$contador."' value='NO'>";
+					          echo "NO <input type='radio'  name='sin_cliente_actual".$contador."' value='NO'>";
 					        }
 					       ?> 
 					    </td>
@@ -875,21 +1026,22 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 var contador=0;
 	function tablaCertificaciones()
 	{
-		contador++;
+
 	var table = document.getElementById("tablaCertificaciones");
 	  {
-	  var row = table.insertRow(2);
+	  var row = table.insertRow(1);
 	  var cell1 = row.insertCell(0);
 	  var cell2 = row.insertCell(1);
 	  var cell3 = row.insertCell(2);
 	  var cell4 = row.insertCell(3);
 
-	  cell1.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICACIÓN">';
-	  cell2.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICADORA">';
-	  cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="AÑO INICIAL">';
-	  cell4.innerHTML = '<div class="col-xs-6">SI<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
+	  cell1.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION">';
+	  cell2.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="ENTITY">';
+	  cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="INITIAL YEAR">';
+	  cell4.innerHTML = '<div class="col-xs-6">YES<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
 	  }
-	}	
+		contador++;
+	}		
 
 	function mostrar(){
 		document.getElementById('oculto').style.display = 'block';
@@ -913,7 +1065,6 @@ var contador=0;
 
 	var table = document.getElementById("tablaProductos");
 	  {
-	cont++;
 
 	  var row = table.insertRow(1);
 	  var cell1 = row.insertCell(0);
@@ -931,18 +1082,19 @@ var contador=0;
 	  
 	  cell2.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volume">';
 	  
-	  cell3.innerHTML = 'SI <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
+	  cell3.innerHTML = 'YES <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
 	  
 	  cell4.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Material">';
 	  
 	  cell5.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destination">';
 	  
-	  cell6.innerHTML = 'SI <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
+	  cell6.innerHTML = 'YES <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
 	  
-	  cell7.innerHTML = 'SI <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
+	  cell7.innerHTML = 'YES <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
 	  
-	  cell8.innerHTML = 'SI <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';	  
+	  cell8.innerHTML = 'YES <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';	 
 
+	  cont++;
 	  }
 
 	}	
