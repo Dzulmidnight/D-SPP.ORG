@@ -180,19 +180,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 <tr>
                   <td colspan="2">
                       <p>
-                        1. Nosotros <span style="color:red">'.$detall_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.
-                      </p>
-                      <p>
-                        2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente firmar el Contrato de Uso y Acuse de Recibo.  
-                      </p>
-                      <p>
-                        Una vez que haya firmado los documentos indicados, ingresar a su cuenta y cargar los documentos para que éstos sean revisados por SPP Global
-                      </p>
-                      <p>
-                        3.Una vez que haya realizado el pago, favor de entrar a su cuenta y cargar el comprobante bancario.
-                      </p>
-                      <p>
-                        4. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepciòn del pago en la cuenta de SPP Global, el Organismo de Certificación hará entrega del Registro.
+                        1. Nosotros <span style="color:red">'.$detall_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo. En breve sera contactado.
                       </p>
                   </td>
                 </tr>
@@ -439,10 +427,10 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                       2. <span style="color:red">Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente firmar el Contrato de Uso y Acuse de Recibo.</span>
                     </p>
                     <p>
-                      Una vez que haya firmado los documentos indicados, ingresar a su cuenta y cargar los documentos para que éstos sean revisados por SPP Global.
+                      Una vez que haya firmado los documentos indicados, ingresar a su cuenta de Empresa dentro del sistema <a href="http://d-spp.org/">d-spp.org</a> y cargar los documentos para que éstos sean revisados por SPP Global.
                     </p>
                     <p>
-                      4. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos , el Organismo de Certificaciòn hará entrega del Certificado.
+                      4. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos, el Organismo de Certificaciòn hará entrega del Certificado.
                     </p>
                   </td>
                 </tr>

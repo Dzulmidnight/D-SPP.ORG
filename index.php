@@ -18,7 +18,7 @@
 
 
 
-    <title>SSP GLOBAL | D-SPP</title>
+    <title>SPP GLOBAL | D-SPP</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">

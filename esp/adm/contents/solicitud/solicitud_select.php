@@ -387,7 +387,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   /// termina envio correo "periodo de objeción finalizado" a OC
 
   /// inicia envio correo "periodo de objeción finalizado" a OPP
-  /*$mensaje_opp = '
+  $mensaje_opp = '
     <html>
       <head>
         <meta charset="utf-8">
@@ -482,7 +482,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   $mail->Body = utf8_decode($mensaje_opp);
   $mail->MsgHTML(utf8_decode($mensaje_opp));
   $mail->Send();
-  $mail->ClearAddresses();*/
+  $mail->ClearAddresses();
 
   /// termina envio correo "periodo de objeción finalizado" a OPP
 

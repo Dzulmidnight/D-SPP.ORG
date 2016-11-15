@@ -399,15 +399,16 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $mensaje = "Se ha enviado la cotizacion al OPP";
 }
 //****** TERMINA ENVIAR COTIZACION *******///
+
+  ////INICIA INGRESAR LAS OBSERVACIONES REALIZADAS
 if(isset($_POST['agregar_observaciones']) && $_POST['agregar_observaciones'] == 1){
   $idsolicitud_certificacion = $_POST['idsolicitud_certificacion'];
 
-  ////INICIA INGRESAR LAS OBSERVACIONES REALIZADAS
+
   $updateSQL = sprintf("UPDATE solicitud_certificacion SET observaciones = %s WHERE idsolicitud_certificacion = %s",
     GetSQLValueString($_POST['observaciones_solicitud'], "text"),
     GetSQLValueString($idsolicitud_certificacion, "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
-  //// TERMINA INGRESAR OBSERVACIONES
 
   $row_informacion = mysql_query("SELECT opp.nombre, opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
@@ -493,7 +494,7 @@ if(isset($_POST['agregar_observaciones']) && $_POST['agregar_observaciones'] == 
   }
 
 }
-
+  //// TERMINA INGRESAR OBSERVACIONES
 
 $query = "SELECT solicitud_certificacion.*, opp.nombre, opp.spp AS 'spp_opp', opp.sitio_web, opp.email, opp.telefono, opp.pais, opp.ciudad, opp.razon_social, opp.direccion_oficina, opp.direccion_fiscal, opp.rfc, opp.ruc, oc.abreviacion AS 'abreviacionOC', porcentaje_productoVentas.* FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN porcentaje_productoVentas ON solicitud_certificacion.idsolicitud_certificacion = porcentaje_productoVentas.idsolicitud_certificacion WHERE solicitud_certificacion.idsolicitud_certificacion = $idsolicitud_certificacion";
 $ejecutar = mysql_query($query,$dspp) or die(mysql_error());

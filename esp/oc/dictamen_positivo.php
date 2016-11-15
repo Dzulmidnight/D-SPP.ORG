@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<?php 
+require_once('../Connections/dspp.php'); 
+mysql_select_db($database_dspp, $dspp);
+ ?>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -6,10 +9,14 @@
 </head>
 <body>
 <?php 
+	if (isset($_GET['oc'])) {
+		$row_oc = mysql_query("SELECT nombre, email1, email2 FROM oc WHERE idoc = $_GET[oc]", $dspp) or die(mysql_error());
+		$oc = mysql_fetch_assoc($row_oc);
+	}
 	if(isset($_GET['opp'])){
 		$nombre_opp = $_GET['opp'];
 		
-		if(isset($_GET['renovacion'])){
+		if(isset($_GET['renovacion_positivo'])){
 		?>
 			<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
 			  <tbody>
@@ -24,7 +31,7 @@
 
 			    <tr>
 			      <td colspan="2" style="text-align:justify">
-			        <p>1. Nosotros (Nombre del OC) como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.</p>
+			        <p>1. Nosotros <span style="color:red"><?php echo $oc['nombre'] ?></span> como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.</p>
 			        <p>
 			          2. Para concluir el proceso, se solicita de la manera más atenta se proceda con el pago de membresìa a SPP Global, de acuerdo al monto indicado. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de entrar a su cuenta y cargar el comprobante bancario.
 			        </p>
@@ -57,7 +64,64 @@
 			    </tr>
 			    <tr>
 			      <td colspan="2">
-			        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+			        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
+			      </td>
+			    </tr>
+			  </tbody>
+			</table>
+
+		<?php
+		}else if(isset($_GET['renovacion_negativo'])){
+		?>
+			<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+			  <tbody>
+			    <tr>
+			      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+			      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+
+			    </tr>
+			    <tr>
+			     <th scope="col" align="left" width="280"><p>Para: <span style="color:red"><?php echo $nombre_opp; ?></span></p></th>
+			    </tr>
+
+			    <tr>
+			      <td colspan="2" style="text-align:justify">
+			        <p>Nosotros <span style="color:red"><?php echo $oc['nombre'] ?></span> como Organismo de Certificación autorizado por SPP Global, lamentamos informar que su Dictamen de la evaluación para el Certificación SPP es negatvio.</p>
+			      </td>
+			    </tr>
+			    <tr>
+			      <td colspan="2">
+			        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
+			      </td>
+			    </tr>
+			  </tbody>
+			</table>
+
+		<?php
+		}else if(isset($_GET['negativo'])){
+		?>
+			<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+			  <tbody>
+			    <tr>
+			      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+			      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+
+			    </tr>
+			    <tr>
+			     <th scope="col" align="left" width="280"><p>Para: <span style="color:red"><?php echo $nombre_opp; ?></span></p></th>
+			    </tr>
+
+			    <tr>
+			      <td colspan="2" style="text-align:justify">
+			        <p>
+			        	Nosotros <span style="color:red"><?php echo $oc['nombre'] ?></span> como Organismo de Certificación autorizado por SPP Global, lamentamos informar que su Dictamen es negativo.
+			        </p>
+			      </td>
+			    </tr>
+
+			    <tr>
+			      <td colspan="2">
+			        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
 			      </td>
 			    </tr>
 			  </tbody>
@@ -79,15 +143,18 @@
 
 			    <tr>
 			      <td colspan="2" style="text-align:justify">
-			        <p>1. Nosotros (Nombre del OC) como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.</p>
 			        <p>
-			          2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente <span style="color:red">firmar el Contrato de Uso y Acuse de Recibo</span>.
+			        	1. Nosotros <span style="color:red"><?php echo $oc['nombre'] ?></span> como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.
 			        </p>
 			        <p>
-			        	Una vez que haya firmado los documentos indicados, <span style="color:red">ingresar a su cuenta y cargar los documentos para que éstos sean revisados por SPP Global</span>.
+			        	2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente <span style="color:red">firmar el Contrato de Uso y Acuse de Recibo</span>. Favor de completar los datos de su organización y del representante legal en los <span style="color:red">textos marcados en color rojo dentro del Contrato de Uso</span>.
 			        </p>
+
+                    <p>
+                      Una vez que haya firmado los documentos indicados, <span style="color:red">ingresar a su cuenta como Organización de Pequeños Productores (OPP) dentro del sistema <a href="http://d-spp.org/">d-spp.org</a> y cargar los documentos para que éstos sean revisados por SPP Global</span>.
+                    </p>
 			        <p>
-			        	3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepciòn del pago en la cuenta de SPP Global, el Organismo de Certificaciòn hará entrega del Certificad
+			        	3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepciòn del pago en la cuenta de SPP Global, se procedera a hacer entrega del Certificado.
 			        </p>
 			      </td>
 			    </tr>
@@ -108,7 +175,7 @@
 			      <td colspan="2" style="text-align:justify">
 			        <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
 			        <p>
-			        	Adicionalmente se solicita de la manera más atenta, se proceda con el <span style="color:red">pago de membresìa a SPP Global</span>, de acuerdo al monto indicado de: <strong style="color:red;">'.$_POST['monto_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de <span style="color:red">entrar a su cuenta y cargar el comprobante bancario</span>.
+			        	Adicionalmente se solicita de la manera más atenta, se proceda con el <span style="color:red">pago de membresìa a SPP Global</span>, de acuerdo al monto indicado de: <strong style="color:red;">$ xxx</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de <span style="color:red">entrar a su cuenta y cargar el comprobante bancario</span>.
 			        </p>
 			        <p>
 			          LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
@@ -120,7 +187,7 @@
 			    </tr>
 			    <tr>
 			      <td colspan="2">
-			        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+			        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
 			      </td>
 			    </tr>
 			  </tbody>
@@ -145,7 +212,7 @@
           <tr>
             <td colspan="2">
                 <p>
-					1. Nosotros (Nombre del OC) como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo
+					1. Nosotros <span style="color:red"><?php echo $oc['nombre'] ?></span> como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo
                 </p>
                 <p>
                   2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente <span style="color:red">firmar el Contrato de Uso y Acuse de Recibo</span>.
@@ -179,7 +246,7 @@
           </tr>
           <tr>
             <td colspan="2" style="padding-top:10px;">
-              <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+              <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
             </td>
           </tr>
         </tbody>

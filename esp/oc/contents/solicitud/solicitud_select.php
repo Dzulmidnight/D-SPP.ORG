@@ -100,18 +100,19 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
   if($_POST['estatus_interno'] == 8){ //checamos si el estatus_interno es positvo
-      $query_oc = mysql_query("SELECT nombre FROM oc WHERE idoc = $detalle_opp[idoc]", $dspp) or die(mysql_error());
-      $detalle_oc = mysql_fetch_assoc($query_oc);
+    $query_oc = mysql_query("SELECT nombre FROM oc WHERE idoc = $detalle_opp[idoc]", $dspp) or die(mysql_error());
+    $detalle_oc = mysql_fetch_assoc($query_oc);
 
     $documentacion_nombres = '';
     $estatus_dspp = 9; //Termina proceso de certificación
     //creamos la variable del archivo extra
-    if(!empty($_FILES['archivo_extra']['name'])){
-        $_FILES["archivo_extra"]["name"];
-          move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_extra"]["name"]);
-          $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_extra"]["name"]);
+
+    if(!empty($_FILES['archivo_dictamen']['name'])){
+        $_FILES["archivo_dictamen"]["name"];
+          move_uploaded_file($_FILES["archivo_dictamen"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_dictamen"]["name"]);
+          $archivo_dictamen = $rutaArchivo.basename(time()."_".$_FILES["archivo_dictamen"]["name"]);
     }else{
-      $archivo = NULL;
+      $archivo_dictamen = NULL;
     }
 
     $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN";
@@ -129,7 +130,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         GetSQLValueString($estatus_dspp, "int"),
         GetSQLValueString($_POST['nombreArchivo'], "text"),
         GetSQLValueString($accion, "text"),
-        GetSQLValueString($archivo, "text"),
+        GetSQLValueString($archivo_dictamen, "text"),
         GetSQLValueString($fecha, "int"));
       $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 
@@ -138,7 +139,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       $insertSQL = sprintf("INSERT INTO comprobante_pago(estatus_comprobante, monto) VALUES (%s, %s)",
         GetSQLValueString($estatus_comprobante, "text"),
-        GetSQLValueString($_POST['monto_membresia'], "text"));
+        GetSQLValueString($_POST['total_membresia'], "text"));
       $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
       //capturamos el id del comprobante para vincularlo con la membresia
@@ -183,7 +184,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         </p>
                         <p>
                           <b>
-                            NOTA: El pago de membresìa se considera una ratificación de la firma de Contrato de Uso por lo que no es necesario firmar el contrato cada año que renuevan su certificado.
+                            NOTA: El pago de membresía se considera una ratificación de la firma de Contrato de Uso por lo que no es necesario firmar el contrato cada año que renuevan su certificado.
                           </b>
                         </p>
                         <hr>
@@ -231,17 +232,17 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     <tr>
                       <td colspan="2">
                         <p>
-                          1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado <span style="color:red">positivo</span>.
+                          1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluación SPP fue concluida con resultado <span style="color:red">positivo</span>.
                         </p>
                         <p>
-                          2. Para concluir el proceso, se solicita de la manera más atenta se <span style="color:red">proceda con el pago de membresìa a SPP Global</span>, de acuerdo al monto de: <strong style="color:red">'.$_POST['monto_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de entrar a su cuenta y cargar el comprobante bancario.
+                          2. Para concluir el proceso, se solicita de la manera más atenta se <span style="color:red">proceda con el pago de membresía a SPP Global</span>, de acuerdo al monto de: <strong style="color:red">'.$_POST['total_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de entrar a su cuenta y cargar el comprobante bancario.
                         </p>
                         <p>
-                          3. Una vez que SPP Global confirme a través del Sistema la recepción del pago en la cuenta de SPP Global, el Organismo de Certificaciòn hará entrega del Certificado.
+                          3. Una vez que SPP Global confirme a través del Sistema la recepción del pago en la cuenta de SPP Global, se procedera a hacer entrega de su Certificado.
                         </p>
                         <p>
                           <b>
-                            NOTA: El pago de membresìa se considera una ratificación de la firma de Contrato de Uso por lo que no es necesario firmar el contrato cada año que renuevan su certificado.
+                            NOTA: El pago de membresía se considera una ratificación de la firma de Contrato de Uso por lo que no es necesario firmar el contrato cada año que renuevan su certificado.
                           </b>
                         </p>
                         <hr>
@@ -272,41 +273,50 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE nombre = 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
       $documentacion = mysql_fetch_assoc($row_documentacion);
-          $mail->AddAttachment($documentacion['archivo']);
+
+      $mail->AddAttachment($documentacion['archivo']);
+
+
+      if(isset($archivo_dictamen)){
+        $mail->AddAttachment($archivo_dictamen);
+      }
+      if(isset($detalle_opp['contacto1_email'])){
+        $mail->AddAddress($detalle_opp['contacto1_email']);
+      }
+      if(isset($detalle_opp['contacto2_email'])){
+        $mail->AddAddress($detalle_opp['contacto2_email']);
+      }
+      if(isset($detalle_opp['adm1_email'])){
+        $mail->AddAddress($detalle_opp['adm1_email']);
+      }
+      if(isset($detalle_opp['email'])){
+        $mail->AddAddress($detalle_opp['email']);
+      }
+      $mail->AddBCC($spp_global);
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+
+      /*if($mail->Send()){
+        
+       echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+      }else{
+        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
    
-
-          if(!empty($archivo)){
-            $mail->AddAttachment($archivo);
-          }
-          $mail->AddAddress($detalle_opp['contacto1_email']);
-          $mail->AddAddress($detalle_opp['contacto2_email']);
-          $mail->AddAddress($detalle_opp['adm1_email']);
-          $mail->AddAddress($detalle_opp['email']);
-          $mail->AddBCC($administrador);
-          $mail->AddBCC($spp_global);
-          $mail->Subject = utf8_decode($asunto);
-          $mail->Body = utf8_decode($cuerpo_mensaje);
-          $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-
-          if($mail->Send()){
-            
-           echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
-          }else{
-            echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-       
-          }
-          //$mail->Send();
-          $mail->ClearAddresses();
+      }*/
+      $mail->Send();
+      $mail->ClearAddresses();
       ///termina envio de mensaje dictamen positivo
-      ///termina envio de mensaje dictamen positivo
-    }else{
+    ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
+    }else{ 
+    ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
         GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
         GetSQLValueString($_POST['estatus_interno'], "int"),
         GetSQLValueString($estatus_dspp, "int"),
-        GetSQLValueString($_POST['nombreArchivo'], "text"),
+        GetSQLValueString($_POST['nombre_archivo_dictamen'], "text"),
         GetSQLValueString($accion, "text"),
-        GetSQLValueString($archivo, "text"),
+        GetSQLValueString($archivo_dictamen, "text"),
         GetSQLValueString($fecha, "int"));
       $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 
@@ -315,7 +325,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       $insertSQL = sprintf("INSERT INTO comprobante_pago(estatus_comprobante, monto) VALUES (%s, %s)",
         GetSQLValueString($estatus_comprobante, "text"),
-        GetSQLValueString($_POST['monto_membresia'], "text"));
+        GetSQLValueString($_POST['total_membresia'], "text"));
       $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
       //capturamos el id del comprobante para vincularlo con la membresia
@@ -337,9 +347,9 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
           $mail->AddAttachment($documentacion['archivo']);
           $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
       }
-      if(!empty($archivo)){
-        $documentacion_nombres .= '<li>'.$_POST['nombreArchivo'].'</li>';
-        $mail->AddAttachment($archivo);
+      if(isset($archivo_dictamen)){
+        $documentacion_nombres .= '<li>'.$_POST['nombre_archivo_dictamen'].'</li>';
+        $mail->AddAttachment($archivo_dictamen);
       }
 
       $documentacion = mysql_fetch_assoc($row_documentacion);
@@ -383,7 +393,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                       <td colspan="2" style="text-align:justify">
                         <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
                         <p>
-                          ADICIONALMENTE SE SOLICITA DE LA MANERA MÁS ATENTA REALIZAR EL PAGO CORRESPONDIENTE A LA MEMBRESIA SPP POR EL IMPORTE DE: <span style="color:red;">'.$_POST['monto_membresia'].'</span>
+                          ADICIONALMENTE SE SOLICITA DE LA MANERA MÁS ATENTA REALIZAR EL PAGO CORRESPONDIENTE A LA MEMBRESIA SPP POR EL IMPORTE DE: <span style="color:red;">'.$_POST['total_membresia'].'</span>
                         </p>
                         <p>
                           LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
@@ -422,15 +432,16 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     </tr>
                     <tr>
                       <td colspan="2" style="text-align:justify">
-                        <p>1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.</p>
+
+                        <p>1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluación SPP fue concluida con resultado positivo.</p>
                         <p>
-                          2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente <span style="color:red">firmar el Contrato de Uso y Acuse de Recibo</span>.
+                          2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente <span style="color:red">firmar el Contrato de Uso y Acuse de Recibo</span>. Favor de completar los datos de su organización y del representante legal en los <span style="color:red">textos marcados en color rojo dentro del Contrato de Uso</span>.
                         </p>
                         <p>
-                          Una vez que haya firmado los documentos indicados, <span style="color:red">ingresar a su cuenta y cargar los documentos para que éstos sean revisados por SPP Global</span>.
+                          Una vez que haya firmado los documentos indicados, <span style="color:red">ingresar a su cuenta como Organización de Pequeños Productores (OPP) dentro del sistema <a href="http://d-spp.org/">d-spp.org</a> y cargar los documentos para que éstos sean revisados por SPP Global</span>.
                         </p>
                         <p>
-                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepciòn del pago en la cuenta de SPP Global, el Organismo de Certificaciòn hará entrega del Certificad
+                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
                         </p>
                       </td>
                     </tr>
@@ -448,7 +459,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                       <td colspan="2" style="text-align:justify">
                         <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
                         <p>
-                          Adicionalmente se solicita de la manera más atenta, se proceda con el <span style="color:red">pago de membresìa a SPP Global</span>, de acuerdo al monto indicado de: <strong style="color:red;">'.$_POST['monto_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de <span style="color:red">entrar a su cuenta y cargar el comprobante bancario</span>.
+                          Adicionalmente se solicita de la manera más atenta, se proceda con el <span style="color:red">pago de membresía a SPP Global</span>, de acuerdo al monto indicado de: <strong style="color:red;">'.$_POST['total_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de <span style="color:red">entrar a su cuenta y cargar el comprobante bancario</span>.
                         </p>
                         <p>
                           LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
@@ -485,15 +496,15 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-      /*$mail->Send();
-      $mail->ClearAddresses();*/
-      if($mail->Send()){
+      $mail->Send();
+      $mail->ClearAddresses();
+      /*if($mail->Send()){
         $mail->ClearAddresses();
         echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
       }else{
         $mail->ClearAddresses();
         echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-      }
+      }*/
 
           
       ///termina envio de mensaje dictamen positivo
@@ -615,30 +626,35 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         ';
       }
    
+      if(!empty($archivo)){
+        $mail->AddAttachment($archivo);
+      }
+      if(isset($detalle_opp['contacto1_email'])){
+        $mail->AddAddress($detalle_opp['contacto1_email']);
+      }
+      if(isset($detalle_opp['contacto2_email'])){
+        $mail->AddAddress($detalle_opp['contacto2_email']);
+      }
+      if(isset($detalle_opp['adm1_email'])){
+        $mail->AddAddress($detalle_opp['adm1_email']);
+      }
+      if(isset($detalle_opp['email'])){
+        $mail->AddAddress($detalle_opp['email']);
+      }
+      $mail->AddBCC($spp_global);
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
 
-          if(!empty($archivo)){
-            $mail->AddAttachment($archivo);
-          }
-          $mail->AddAddress($detalle_opp['contacto1_email']);
-          $mail->AddAddress($detalle_opp['contacto2_email']);
-          $mail->AddAddress($detalle_opp['adm1_email']);
-          $mail->AddAddress($detalle_opp['email']);
-          $mail->AddBCC($administrador);
-          $mail->AddBCC($spp_global);
-          $mail->Subject = utf8_decode($asunto);
-          $mail->Body = utf8_decode($cuerpo_mensaje);
-          $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-
-          if($mail->Send()){
-            
-           echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
-          }else{
-            echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-       
-          }
-          //$mail->Send();
-          $mail->ClearAddresses();
-      ///termina envio de mensaje dictamen positivo
+      if($mail->Send()){
+        
+       echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+      }else{
+        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+   
+      }
+      //$mail->Send();
+      $mail->ClearAddresses();
       ///termina envio de mensaje dictamen positivo
     }else{
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
@@ -763,15 +779,15 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     </tr>
                     <tr>
                       <td colspan="2" style="text-align:justify">
-                        <p>1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.</p>
+                        <p>1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluación SPP fue concluida con resultado positivo.</p>
                         <p>
                           2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente <span style="color:red">firmar el Contrato de Uso y Acuse de Recibo</span>.
                         </p>
                         <p>
-                          Una vez que haya firmado los documentos indicados, <span style="color:red">ingresar a su cuenta y cargar los documentos para que éstos sean revisados por SPP Global</span>.
+                          Una vez que haya firmado los documentos indicados, <span style="color:red">ingresar a su cuenta como Organización de Pequeños Productores (OPP) dentro del sistema <a href="http://d-spp.org/">d-spp.org</a> y cargar los documentos para que éstos sean revisados por SPP Global</span>.
                         </p>
                         <p>
-                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepciòn del pago en la cuenta de SPP Global, el Organismo de Certificaciòn hará entrega del Certificad
+                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
                         </p>
                       </td>
                     </tr>
@@ -789,7 +805,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                       <td colspan="2" style="text-align:justify">
                         <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
                         <p>
-                          Adicionalmente se solicita de la manera más atenta, se proceda con el <span style="color:red">pago de membresìa a SPP Global</span>, de acuerdo al monto indicado de: <strong style="color:red;">'.$_POST['monto_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de <span style="color:red">entrar a su cuenta y cargar el comprobante bancario</span>.
+                          Adicionalmente se solicita de la manera más atenta, se proceda con el <span style="color:red">pago de membresía a SPP Global</span>, de acuerdo al monto indicado de: <strong style="color:red;">'.$_POST['monto_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de <span style="color:red">entrar a su cuenta y cargar el comprobante bancario</span>.
                         </p>
                         <p>
                           LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
@@ -826,16 +842,15 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-      /*$mail->Send();
-      $mail->ClearAddresses();*/
-      if($mail->Send()){
+      $mail->Send();
+      $mail->ClearAddresses();
+      /*if($mail->Send()){
         $mail->ClearAddresses();
         echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
       }else{
         $mail->ClearAddresses();
         echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-      }
-
+      }*/
           
       ///termina envio de mensaje dictamen positivo
     }
@@ -1327,7 +1342,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               <div id="<?php echo 'tablaCorreo'.$solicitud['idsolicitud']; ?>" style="display:none"> 
                                 <div class="col-xs-12"  style="margin-top:10px;">
                                   <?php 
-                                  if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+                                  if($solicitud['tipo_solicitud'] == 'RENOVACION'){ ///  RENOVACIÓN
                                   ?>
                                     <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP</p>
                                     <div class="col-xs-12">
@@ -1343,7 +1358,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         </div>
                                       </div>
                                       <div class="col-xs-12">
-                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?opp=<?php echo $solicitud['nombre_opp'];?>&renovacion" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
+                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?opp=<?php echo $solicitud['nombre_opp'];?>&renovacion_positivo&oc=<?php echo $solicitud['idoc']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
                                         <textarea name="mensaje_renovacion" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé"></textarea>
 
                                       </div>
@@ -1361,24 +1376,24 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                           </h5>';
                                          ?>
                                       </div>
-                                      <div class="col-xs-12">
-                                        <h5 class="alert alert-warning">MEMBRESÍA SPP: <span style="color:#7f8c8d">Indicar el monto total de la membresía, asi como el tipo de moneda.</span></h5>
-                                        <p>Total Membresía: <input type="text" class="form-control" name="monto_membresia" placeholder="Total Membresía"></p>
+                                      <div class="col-xs-12 alert alert-info">
+                                        <h5 class="">MEMBRESÍA SPP: <span style="color:#7f8c8d">Indicar el monto total de la membresía, asi como el tipo de moneda.</span></h5>
+                                        <input type="text" class="form-control" name="total_membresia" placeholder="Total Membresía">
                                       </div>
 
                                       <div class="col-xs-12">
                                         <h4 style="font-size:14px;">ARCHIVO EXTRA( <small><span style="color:red">*opcional</span>. Anexar algun otro archivo en diferente a los enviados por SPP GLOBAL</small>)</h4>
                                         <div class="col-xs-12">
-                                          <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
+                                          <input type="text" class="form-control" name="nombre_archivo_dictamen" placeholder="Nombre Archivo">
                                         </div>
                                         <div class="col-xs-12">
-                                          <input type="file" class="form-control" name="archivo_extra">
+                                          <input type="file" class="form-control" name="archivo_dictamen">
                                         </div>
                                       </div>
                                     </div>
 
                                   <?php
-                                  }else{
+                                  }else{ ///// PRIMERA VEZ
                                   ?>
                                     <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP 1: <?php echo $solicitud['idsolicitud'] ?> 2: <?php echo $solicitud['idsolicitud_certificacion']; ?></p>
                                     <div class="col-xs-12">
@@ -1394,7 +1409,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         </div>
                                       </div>
                                       <div class="col-xs-12">
-                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?opp=<?php echo $solicitud['nombre_opp'];?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
+                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?opp=<?php echo $solicitud['nombre_opp'];?>&oc=<?php echo $solicitud['idoc']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
                                         <textarea name="mensajeOPP" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé" ></textarea>
 
                                       </div>
@@ -1422,16 +1437,14 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       </div>
                                       <div class="col-xs-12">
                                         <h4 style="font-size:14px;">ARCHIVO EXTRA: <span style="color:#7f8c8d">Anexar algun otro archivo en caso de ser requerido.</span></h4>
-                                        <div class="col-xs-12">
-                                          <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre del Archivo">
-                                        </div>
-                                        <div class="col-xs-12">
-                                          <input type="file" class="form-control" name="archivo_extra">
-                                        </div>
+                                        <input type="text" class="form-control" name="nombre_archivo_dictamen" placeholder="Nombre del Archivo">
+                                        <input type="file" class="form-control" name="archivo_dictamen">
+                                        <hr>
                                       </div>
-                                      <div class="col-xs-12">
+
+                                      <div class="col-xs-12 alert alert-info">
                                         <h4 style="font-size:14px;">MEMBRESÍA SPP: <span style="color:#7f8c8d">Indicar el monto total de la membresía, asi como el tipo de moneda.</span></h4>
-                                        <input type="text" class="form-control" name="monto_membresia" placeholder="Total Membresía">
+                                        <input type="text" class="form-control" name="total_membresia" placeholder="Total Membresía">
                                       </div>
                                     </div>
 
@@ -1466,7 +1479,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         </div>
                                       </div>
                                       <div class="col-xs-12">
-                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?opp=<?php echo $solicitud['nombre_opp'];?>&renovacion" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
+                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?opp=<?php echo $solicitud['nombre_opp'];?>&renovacion_negativo&oc=<?php echo $solicitud['idoc'] ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
                                         <textarea name="mensaje_renovacion" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé"></textarea>
 
                                       </div>
@@ -1503,47 +1516,11 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         </div>
                                       </div>
                                       <div class="col-xs-12">
-                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?opp=<?php echo $solicitud['nombre_opp'];?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
+                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?opp=<?php echo $solicitud['nombre_opp'];?>&negativo&oc=<?php echo $solicitud['idoc']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
                                         <textarea name="mensajeOPP" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé" ></textarea>
 
                                       </div>
                                     </div>
-                                    <div class="col-xs-12">
-                                      <div class="col-xs-12">
-                                        <h4 style="font-size:14px;">ARCHIVOS ADJUNTOS: <span style="color:#7f8c8d">Documentación enviada al actor una vez que ha finalizado el Proceso de Certificación con un dictamen Positivo.</span></h4>
-                                        <?php 
-                                        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8", $dspp) or die(mysql_error());
-                                        while($documetacion = mysql_fetch_assoc($row_documentacion)){
-
-                                          echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$documetacion[archivo]' target='_blank'>$documetacion[nombre]</a><br>";
-                                        }
-                                         ?>
-                                        <p class="alert alert-warning" style="padding:5px;">
-                                          Seleccione el idioma en el que desea enviar los archivos:
-                                          <label class="radio-inline">
-                                            <input type="radio" name="idioma" id="inlineRadio1" value="ESP"> Español
-                                          </label>
-                                          <label class="radio-inline">
-                                            <input type="radio" name="idioma" id="inlineRadio2" value="EN"> Ingles
-                                          </label>
-                                        </p>
-      
-                                      </div>
-                                      <div class="col-xs-12">
-                                        <h4 style="font-size:14px;">ARCHIVO EXTRA: <span style="color:#7f8c8d">Anexar algun otro archivo en caso de ser requerido.</span></h4>
-                                        <div class="col-xs-12">
-                                          <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre del Archivo">
-                                        </div>
-                                        <div class="col-xs-12">
-                                          <input type="file" class="form-control" name="archivo_extra">
-                                        </div>
-                                      </div>
-                                      <div class="col-xs-12">
-                                        <h4 style="font-size:14px;">MEMBRESÍA SPP: <span style="color:#7f8c8d">Indicar el monto total de la membresía, asi como el tipo de moneda.</span></h4>
-                                        <input type="text" class="form-control" name="monto_membresia" placeholder="Total Membresía">
-                                      </div>
-                                    </div>
-
                                   <?php
                                   }
                                   ?>
