@@ -679,7 +679,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
           <tr>
             <!--- INICIA CODIGO SPP ---->
             <td>
-                <a class="btn btn-primary btn-xs" style="width:100%;font-size:10px;" href="?OPP&amp;detail&amp;idopp=<?php echo $opp['idopp']; ?>&contact">Consultar<br>
+                <a class="btn btn-primary btn-xs" style="width:100%;font-size:10px;" href="?OPP&amp;detail&amp;idopp=<?php echo $opp['idopp']; ?>">Consultar<br>
                   <!--<?php echo "<br>IDOPP: ".$row_opp['idOPP']; ?>-->
                 </a>
                 <input type="text" name="spp<?php echo $opp['idopp'];?>" value="<?php echo $opp['spp_opp']; ?>">

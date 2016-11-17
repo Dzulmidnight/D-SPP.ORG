@@ -160,6 +160,37 @@ if(isset($_POST['actualizar_opp']) && $_POST['actualizar_opp'] == 1){
 
   $mensaje = "Datos Actualizados Correctamente";
 }
+if(isset($_POST['agregar_contacto']) && $_POST['agregar_contacto'] == 1){
+  $insertSQL = sprintf("INSERT INTO contactos (idopp, nombre, cargo, telefono1, telefono2, email1, email2) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+    GetSQLValueString($_POST['idopp'], "int"),
+    GetSQLValueString($_POST['nombre'], "text"),
+    GetSQLValueString($_POST['cargo'], "text"),
+    GetSQLValueString($_POST['telefono1'], "text"),
+    GetSQLValueString($_POST['telefono2'], "text"),
+    GetSQLValueString($_POST['email1'], "text"),
+    GetSQLValueString($_POST['email2'], "text"));
+  $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+  $mensaje = "Nuevo Contacto Agregado";
+}
+
+if(isset($_POST['actualizar_contacto']) && $_POST['actualizar_contacto'] == 1){
+  $updateSQL = sprintf("UPDATE contactos SET nombre = %s, cargo = %s, telefono1 = %s, telefono2 = %s, email1 = %s, email2 = %s WHERE idcontacto = %s",
+    GetSQLValueString($_POST['nombre'], "text"),
+    GetSQLValueString($_POST['cargo'], "text"),
+    GetSQLValueString($_POST['telefono1'], "text"),
+    GetSQLValueString($_POST['telefono2'], "text"),
+    GetSQLValueString($_POST['email1'], "text"),
+    GetSQLValueString($_POST['email2'], "text"),
+    GetSQLValueString($_POST['idcontacto'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+  $mensaje = "Contacto Actualizado Correctamente";
+}
+if(isset($_POST['eliminar_contacto']) && $_POST['eliminar_contacto'] == 1){
+  $deleteSQL = sprintf("DELETE FROM contactos WHERE idcontacto = %s",
+    GetSQLValueString($_POST['idcontacto'], "int"));
+  $eliminar = mysql_query($deleteSQL, $dspp) or die(mysql_error());
+  $mensaje = "Contacto Eliminado";
+}
 
 $query = "SELECT * FROM opp WHERE idopp = $_GET[idopp]";
 $row_opp = mysql_query($query,$dspp) or die(mysql_error());
@@ -168,7 +199,7 @@ $opp = mysql_fetch_assoc($row_opp);
 ?>
 
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-8">
   <?php 
   if(isset($mensaje)){
   ?>
@@ -179,8 +210,115 @@ $opp = mysql_fetch_assoc($row_opp);
   <?php
   }
   ?>
-    <h3>Datos de: <span style="color:red"><?php echo $opp['nombre']; ?></span> </h3>
-    <form action="" method="POST">
+  
+    <?php 
+    if(isset($_GET['contacto']) && !empty($_GET['contacto'])){
+      $row_contacto = mysql_query("SELECT * FROM contactos WHERE idcontacto = $_GET[contacto]", $dspp) or die(mysql_error());
+      $detalle_contacto = mysql_fetch_assoc($row_contacto);
+    ?>
+      <h4>Contacto de: <span style="color:red"><?php echo $opp['nombre']; ?></span> </h4>
+        <form action="" id="actualizar_contacto" method="POST" class="form-horizontal">
+
+          <div class="form-group">
+            <label for="nombre" class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $detalle_contacto['nombre']; ?>" placeholder="Nombre del Contacto" autofocus required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cargo" class="col-sm-2 control-label">Cargo</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="cargo" name="cargo" value="<?php echo $detalle_contacto['cargo']; ?>" placeholder="Cargo del Contacto" autofocus>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="telefono1" class="col-sm-2 control-label">Telefono 1</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="telefono1" value="<?php echo $detalle_contacto['telefono1']; ?>" placeholder="Escriba el Telefono" name="telefono1" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="telefono2" class="col-sm-2 control-label">Telefono 2</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="telefono2" name="telefono2" value="<?php echo $detalle_contacto['telefono2']; ?>" placeholder="Escriba el Telefono 2">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email1" class="col-sm-2 control-label">Email 1</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="email1" name="email1" value="<?php echo $detalle_contacto['email1']; ?>" placeholder="Escriba el correo electronico">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email2" class="col-sm-2 control-label">Email 2</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="email2" name="email2" value="<?php echo $detalle_contacto['email2']; ?>" placeholder="Escriba el correo electronico">
+            </div>
+          </div>
+          <input type="hidden" name="idcontacto" value="<?php echo $detalle_contacto['idcontacto']; ?>">
+          <input type="hidden" name="actualizar_contacto" value="1">
+          <button type="submit" class="btn btn-success form-control" style="color:white"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Actualizar Contacto</button>
+        </form>
+    <?php
+    }else if(isset($_GET['addContacto'])){ //////// INICIA FORMULARIO PARA AGREGAR UN CONTACTO
+    ?>
+      <h4>Nuevo Contacto de: <span style="color:red"><?php echo $opp['nombre']; ?></span> </h4>
+        <form action="" id="agregar_contacto" method="POST" class="form-horizontal">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Formulario de Contacto</h3>
+            </div>
+            <div class="panel-body">
+              <div class="form-group">
+                <label for="nombre" class="col-sm-2 control-label">Nombre</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Contacto" autofocus required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="cargo" class="col-sm-2 control-label">Cargo</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="cargo" name="cargo" placeholder="Cargo del Contacto" autofocus>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="telefono1" class="col-sm-2 control-label">Telefono 1</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="telefono1" placeholder="Escriba el Telefono" name="telefono1" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="telefono2" class="col-sm-2 control-label">Telefono 2</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="telefono2" name="telefono2" placeholder="Escriba el Telefono 2">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="email1" class="col-sm-2 control-label">Email 1</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="email1" name="email1" placeholder="Escriba el correo electronico">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="email2" class="col-sm-2 control-label">Email 2</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="email2" name="email2" placeholder="Escriba el correo electronico">
+                </div>
+              </div>
+              <input type="hidden" name="idopp" value="<?php echo $_GET['idopp']; ?>">
+              <input type="hidden" name="agregar_contacto" value="1">
+              <button type="submit" class="btn btn-success form-control" style="color:white"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Agregar Nuevo Contacto</button>
+            </div>
+          </div>
+        </form>
+    <?php
+    //////////// TERMINA FORMULARIO PARA AGREGAR CONTACTO
+    }else{
+    ?>
+    <h4>Datos de: <span style="color:red"><?php echo $opp['nombre']; ?></span> </h4>
+    <form action="" id="detalle_contacto" method="POST">
       <table class="table table-condensed">
         <tr>
           <td>#SPP</td>
@@ -276,12 +414,69 @@ $opp = mysql_fetch_assoc($row_opp);
         </tr>
         <tr>
           <td colspan="2">
-            <input class="btn btn-success" type="submit" value="Actualizar Información">
+            <input class="btn btn-success" style="width:100%" type="submit" value="Actualizar Información">
             <input type="hidden" name="actualizar_opp" value="1">
           </td>
         </tr>
       </table>
     </form>
+    <?php
+    }
+     ?>
   </div>
+  
+  <!---- INICIA SECCIÓN CONTACTOS ---->
+  <?php 
+  $row_contactos = mysql_query("SELECT * FROM contactos WHERE idopp = $_GET[idopp]", $dspp) or die(mysql_error());
+  $num_contactos = mysql_num_rows($row_contactos);
+
+   ?>
+  <div class="col-md-4">
+    <h4>Contacto(s) de la Organización</h4>
+    <a class="btn btn-sm btn-primary" href="?OPP&detail&idopp=<?php echo $_GET['idopp']; ?>&addContacto" style="width:100%"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Nuevo Contacto</a>
+
+    <table class="table table-hover table-condensed">
+      <thead>
+        <tr class="success" >
+          <th>Nombre</th>
+          <th colspan="2">Cargo</th>
+        </tr>
+      </thead>
+      <tbody style="font-size:12px;">
+        <?php
+        if($num_contactos > 0){
+          while($contacto = mysql_fetch_assoc($row_contactos)){
+          ?>
+            <tr>
+              <td><?php echo '<a href="?OPP&detail&idopp='.$_GET['idopp'].'&contacto='.$contacto['idcontacto'].'"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> '.$contacto['nombre'].'</a>'; ?><a href=""></a> </td>
+              <td><?php echo $contacto['cargo']; ?></td>
+              <td>
+                <form action="" method="post" name="formularioEliminar" ONSUBMIT="return preguntar();">
+                  <button class="btn btn-sm btn-danger" type="subtmit" value="Eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                  </button>        
+
+                  <input type="hidden" value="1" name="eliminar_contacto" />
+                  <input type="hidden" value="<?php echo $contacto['idcontacto']; ?>" name="idcontacto" />
+                </form>
+              </td>
+            </tr>
+          <?php
+          }
+        }else{
+          echo "<tr><td colspan='2'>Sin contactos</td></tr>";
+        }
+        ?>
+      </tbody>
+    </table>
+  </div>
+  <!---- TERMINA SECCIÓN CONTACTOS ---->
+  
 </div>
 
+<script language="JavaScript"> 
+function preguntar(){ 
+    if(!confirm('¿Estas seguro de eliminar el registro?')){ 
+       return false; } 
+} 
+</script>

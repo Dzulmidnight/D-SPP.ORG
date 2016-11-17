@@ -379,13 +379,104 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
 
   /// termina envio correo "periodo de objeción finalizado" a OC
 
+  /// inicia envio correo "periodo de objeción finalizado" a OC
+  $asunto = "D-SPP | Periodo de Objeción Finalizado";
 
-  $mail->AddAddress($detalle_empresa['email_empresa']);
+  $mensaje_opp = '
+    <html>
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+      
+        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="700px">
+          <thead>
+            <tr>
+              <th>
+                <img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+              </th>
+              <th style="text-align:left">
+                D-SPP | Periodo de Objeción Finalizado / Objection Period Ended
+                
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="text-align:left">
+              <td colspan="2"><p><b>Ha finalizado el periodo de objeción con una resolución: <span style="color:red;">'.$_POST['dictamen'].'</span></b></p></td>
+            </tr>
+            <tr> 
+              <td colspan="2">Fecha Inicio: <span style="color:red">'.date('d/m/Y', $periodo['fecha_inicio']).'</span></td>
+            </tr>
+            <tr>
+              <td colspan="2">Fecha Fin: <span style="color:red">'.date('d/m/Y', $periodo['fecha_fin']).'</span></td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                Ha finalizado el periodo de objeción. Se ha iniciado el Proceso de Certificación, por favor ponerse en contacto con su Organismo de Certificación.
+                
+                <p>Organismo de Certificación: <span style="color:red">'.$detalle_empresa['nombre_oc'].'</span></p>
+                
+                <p>Email: <span style="color:red">'.$detalle_empresa['email_oc'].'</span></p>
+              </td>
+            </tr>
+            <tr style="width:100%">
+              <td colspan="2">
+                <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+
+                  <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                    <td style="text-align:center">Tipo / Type</td>
+                    <td style="text-align:center">Nombre de la Empresa/Company name</td>
+                    <td style="text-align:center">Abreviación / Short name</td>
+                    <td style="text-align:center">País / Country</td>
+                    <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
+                    <td style="text-align:center">Tipo de solicitud / Kind of application</td>
+                    <td style="text-align:center">Fecha de solicitud/Date of application</td>
+                    <td style="text-align:center">Fin período de objeción/Objection period end</td>
+                  </tr>
+                  <tr style="font-size:12px;">
+                    <td>'.$tipo.'</td>
+                    <td>'.$detalle_empresa['nombre_empresa'].'</td>
+                    <td>'.$detalle_empresa['abreviacion_empresa'].'</td>
+                    <td>'.$detalle_empresa['pais'].'</td>
+                    <td>'.$detalle_empresa['nombre_oc'].'</td>
+                    <td>Registro</td>
+                    <td>'.date('d/m/Y', $periodo['fecha_inicio']).'</td>
+                    <td>'.date('d/m/Y', $periodo['fecha_fin']).'</td>
+                  </tr>
+              </td>
+              </table>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </body>
+    </html>
+  ';
+
+  if(isset($detalle_empresa['contacto1_email'])){
+    $mail->AddAddress($detalle_empresa['contacto1_email']);
+  }
+  if(isset($detalle_empresa['contacto2_email'])){
+    $mail->AddAddress($detalle_empresa['contacto2_email']);
+  }
+  if(isset($detalle_empresa['adm1_email'])){
+    $mail->AddAddress($detalle_empresa['adm1_email']);
+  }
+  if(isset($detalle_empresa['email_empresa'])){
+    $mail->AddAddress($detalle_empresa['email_empresa']);
+  }
+
   $mail->AddBCC($spp_global);  
   $mail->AddAttachment($resolucion);
   $mail->Subject = utf8_decode($asunto);
-  $mail->Body = utf8_decode($mensaje_oc);
-  $mail->MsgHTML(utf8_decode($mensaje_oc));
+  $mail->Body = utf8_decode($mensaje_opp);
+  $mail->MsgHTML(utf8_decode($mensaje_opp));
   if($mail->Send()){
     $mail->ClearAddresses();   
     echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";

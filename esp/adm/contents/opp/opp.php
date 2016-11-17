@@ -11,8 +11,8 @@
 	if(isset($_GET['detail'])){
 	?>
 		<li role="presentation" 
-		 class="active" ><a href="#">
-			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detalle 	
+		 class="active" ><a href="?OPP&detail&idopp=<?php echo $_GET['idopp']; ?>">
+			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detalle Organización 	
 		 </a>
 		</li>
 	<?php

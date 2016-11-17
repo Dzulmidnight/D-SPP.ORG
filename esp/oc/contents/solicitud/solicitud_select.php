@@ -871,6 +871,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
   $ruta_evaluacion = "../../archivos/ocArchivos/documentos_evaluacion/";
+  $fecha_sistema = $_POST['fecha_sistema'];
 
   $estatus_formato = "ENVIADO";
   $estatus_dictamen = "ENVIADO";
@@ -878,8 +879,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
   if(!empty($_FILES['formato_evaluacion']['name'])){
       $_FILES["formato_evaluacion"]["name"];
-        move_uploaded_file($_FILES["formato_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha."_".$_FILES["formato_evaluacion"]["name"]);
-        $formato = $ruta_evaluacion.basename($fecha."_".$_FILES["formato_evaluacion"]["name"]);
+        move_uploaded_file($_FILES["formato_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha_sistema."_".$_FILES["formato_evaluacion"]["name"]);
+        $formato = $ruta_evaluacion.basename($fecha_sistema."_".$_FILES["formato_evaluacion"]["name"]);
   }else{
     $formato = NULL;
   }
@@ -889,7 +890,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
     GetSQLValueString($estatus_formato, "text"),
     GetSQLValueString($formato, "text"),
-    GetSQLValueString($fecha, "int"));
+    GetSQLValueString($fecha_sistema, "int"));
   $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 
   //insertamos el proceso_certificacion
@@ -900,13 +901,13 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($nombre_archivo, "text"),
     GetSQLValueString($formato, "text"),
-    GetSQLValueString($fecha, "int"));
+    GetSQLValueString($fecha_sistema, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
   if(!empty($_FILES['informe_evaluacion']['name'])){
       $_FILES["informe_evaluacion"]["name"];
-        move_uploaded_file($_FILES["informe_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha."_".$_FILES["informe_evaluacion"]["name"]);
-        $informe = $ruta_evaluacion.basename($fecha."_".$_FILES["informe_evaluacion"]["name"]);
+        move_uploaded_file($_FILES["informe_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha_sistema."_".$_FILES["informe_evaluacion"]["name"]);
+        $informe = $ruta_evaluacion.basename($fecha_sistema."_".$_FILES["informe_evaluacion"]["name"]);
   }else{
     $informe = NULL;
   }
@@ -917,7 +918,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
     GetSQLValueString($estatus_informe, "text"),
     GetSQLValueString($informe, "text"),
-    GetSQLValueString($fecha, "int"));
+    GetSQLValueString($fecha_sistema, "int"));
   $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 
   //insertamos el proceso_certificacion
@@ -933,8 +934,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
   if(!empty($_FILES['dictamen_evaluacion']['name'])){
       $_FILES["dictamen_evaluacion"]["name"];
-        move_uploaded_file($_FILES["dictamen_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha."_".$_FILES["dictamen_evaluacion"]["name"]);
-        $dictamen = $ruta_evaluacion.basename($fecha."_".$_FILES["dictamen_evaluacion"]["name"]);
+        move_uploaded_file($_FILES["dictamen_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha_sistema."_".$_FILES["dictamen_evaluacion"]["name"]);
+        $dictamen = $ruta_evaluacion.basename($fecha_sistema."_".$_FILES["dictamen_evaluacion"]["name"]);
   }else{
     $dictamen = NULL;
   }
@@ -945,7 +946,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
     GetSQLValueString($estatus_dictamen, "text"),
     GetSQLValueString($dictamen, "text"),
-    GetSQLValueString($fecha, "int"));
+    GetSQLValueString($fecha_sistema, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
   //se crear el proceso_certificacion
@@ -956,7 +957,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($nombre_archivo, "text"),
     GetSQLValueString($dictamen, "text"),
-    GetSQLValueString($fecha, "int"));
+    GetSQLValueString($fecha_sistema, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
   //inicia enviar correo a ADM sobre documentacion de Evaluación
@@ -1787,7 +1788,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                       <div class="modal-footer">
                         <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
-
+                        <input type="hidden" name="fecha_sistema" value="<?php echo time(); ?>">
                         <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
                         <input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
