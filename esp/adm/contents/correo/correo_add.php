@@ -1,221 +1,216 @@
 <?php 
 require_once('../Connections/dspp.php'); 
-require_once('../Connections/mail.php'); 
+require_once('../Connections/mail.php');
 
+//error_reporting(E_ALL ^ E_DEPRECATED);
+mysql_select_db($database_dspp, $dspp);
 
-  $rutaArchivo = "../formatos/anexos/";
-
-  if(isset($_POST['enviarA'])){
-    $asunto = $_POST['asunto'];
-    $mensaje = $_POST['mensaje'];
-
-    if(!empty($_FILES['archivo']['name'])){
-        $_FILES["archivo"]["name"];
-          move_uploaded_file($_FILES["archivo"]["tmp_name"], $rutaArchivo.$_FILES["archivo"]["name"]);
-          $archivo = $rutaArchivo.basename($_FILES["archivo"]["name"]);
-          $mail->AddAttachment($archivo);
-    }
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = $mensaje;
-        $mail->MsgHTML($mensaje);
-
-
-    foreach($_POST['enviarA'] as $enviarA){
-      //echo $enviarA."<br>";
-      if($enviarA == "todos"){
-
-        $query = "SELECT email FROM opp WHERE email != ''";
-        $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-
-        while($correo = mysql_fetch_assoc($ejecutar)){
-          $mail->AddAddress($correo['email']);
-        }
-          $mail->Send();
-          $mail->ClearAddresses(); 
-        /* SE ENVIA EL CORREO A LOS OPPs*/
-
-        $query = "SELECT email FROM com WHERE email != ''";
-        $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-
-        while($correo = mysql_fetch_assoc($ejecutar)){
-          $mail->AddAddress($correo['email']);
-        }
-          $mail->Send();
-          $mail->ClearAddresses(); 
-        /* SE ENVIA EL CORREO A LOS OPPs*/
-
-
-        $query = "SELECT email FROM oc WHERE email != ''";
-        $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-
-        while($correo = mysql_fetch_assoc($ejecutar)){
-          $mail->AddAddress($correo['email']);
-        }
-          $mail->Send();
-          $mail->ClearAddresses(); 
-        /* SE ENVIA EL CORREO A LOS OCs*/
-
-        $query = "SELECT email FROM adm WHERE email != ''";
-        $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-
-        while($correo = mysql_fetch_assoc($ejecutar)){
-          $mail->AddAddress($correo['email']);
-        }
-          $mail->Send();
-          $mail->ClearAddresses(); 
-        /* SE ENVIA EL CORREO A LOS ADMs*/
-
-
-          if($mail->Send()){
-            echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
-          }else{
-                echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
-          }
-
-
-      }else{
-        $query = "SELECT email FROM $enviarA WHERE email != ''";
-        $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
-
-        while($correo = mysql_fetch_assoc($ejecutar)){
-          $mail->AddAddress($correo['email']);
-        }
-
-          if($mail->Send()){
-            echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
-          }else{
-                echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
-          }
-          $mail->ClearAddresses(); 
-      }
-    }
-  }
-
-/**************************************** TERMINA EL ENVIO DE CORREOS  **************************************************************/
-
-
- ?>
-
-<script>
-  function validar(){
-
-    
-    enviarA = document.getElementsByName("enviarA[]");
-     
-    var seleccionado = false;
-    for(var i=0; i<enviarA.length; i++) {    
-      if(enviarA[i].checked) {
-        seleccionado = true;
-        break;
-      }
-    }
-     
-    if(!seleccionado) {
-      alert("Debes de seleecionar un destinatario");
-      return false;
-    }
-
-    return true
-  }
- /* function mostrar(){
-    document.getElementById('oculto').style.display = 'block';
-  }
-  function ocultar()
-  {
-    document.getElementById('oculto').style.display = 'none';
-  }*/
-
-
-  function ocultar()
-  {
-    document.getElementById('todos').checked = 0;
-  }
-  function ocultarTodos()
-  {
-    document.getElementById('checkbox1').checked = 0;
-    document.getElementById('checkbox2').checked = 0;
-    document.getElementById('checkbox3').checked = 0;
-    document.getElementById('checkbox4').checked = 0;
-
-  }
-
-</script>
+if (!isset($_SESSION)) {
+  session_start();
   
+  $redireccion = "../index.php?ADM";
 
- <!--<div class="col-xs-3">
-  Destinatario<input type="text" class="form-control" name="destinatario"> 
- </div>-->
+  if(!$_SESSION["autentificado"]){
+    header("Location:".$redireccion);
+  }
+}
+if (!function_exists("GetSQLValueString")) {
+  function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+  {
+    if (PHP_VERSION < 6) {
+      $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+    }
 
- <form action="" method="post" name="correo1" enctype="multipart/form-data">
-  <div class="well">
-    <div class="col-md-2">
-     Enviar a:
+    $theValue = function_exissts("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+    switch ($theType) {
+      case "text":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;    
+      case "long":
+      case "int":
+        $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+        break;
+      case "double":
+        $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+        break;
+      case "date":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;
+      case "defined":
+        $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+        break;
+    }
+    return $theValue;
+  }
+}
+
+if(isset($_POST['agregar_lista']) && $_POST['agregar_lista'] == 1){
+  $insertSQL = sprintf("INSERT INTO lista_contactos (nombre, descripcion) VALUES (%s, %s)",
+    GetSQLValueString(strtoupper($_POST['nombre_actual']), "text"), 
+    GetSQLValueString($_POST['descripcion_lista'], "text"));
+  $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+  $mensaje = "Nueva Lista de Contactos Creada";
+}
+if(isset($_POST['agregar_contacto']) && $_POST['agregar_contacto'] == 1){
+ $insertSQL = sprintf("INSERT INTO contactos (lista_contactos, nombre, cargo, telefono1, telefono2, email1, email2, pais, direccion) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+  GetSQLValueString($_POST['idlista'], "int"),
+  GetSQLValueString($_POST['nombre'], "text"),
+  GetSQLValueString($_POST['cargo'], "text"),
+  GetSQLValueString($_POST['telefono1'], "text"),
+  GetSQLValueString($_POST['telefono2'], "text"),
+  GetSQLValueString($_POST['email1'], "text"), 
+  GetSQLValueString($_POST['email2'], "text"),
+  GetSQLValueString($_POST['pais'], "text"),
+  GetSQLValueString($_POST['direccion'], "text"));
+ $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+ $mensaje = "Nuevo Contacto Agregado";
+}
+if(isset($_POST['actualizar_nombre_lista']) && $_POST['actualizar_nombre_lista'] == 1){
+  $updateSQL = sprintf("UPDATE lista_contactos SET nombre = %s WHERE idlista_contactos = %s",
+    GetSQLValueString($_POST['titulo_lista'], "text"),
+    GetSQLValueString($_POST['idlista_contactos'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+  $mensaje = 'Titulo de lista actualizado';
+}
+
+$row_lista_contactos = mysql_query("SELECT * FROM lista_contactos", $dspp) or die(mysql_error());
+$total_listas = mysql_num_rows($row_lista_contactos);
+
+$row_paises = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
+?>
+  <?php 
+  if(isset($mensaje)){
+  ?>
+    <div class="col-md-12 alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <?php echo $mensaje; ?>
     </div>
-    <div class="col-md-2">
-      <div class="col-md-4">
-        <input type="checkbox" class="form-control" id="todos" name="enviarA[]" value="todos" onclick="ocultarTodos()">
-      </div>
-      <div class="col-md-6">
-        TODOS
-      </div>
-    </div>
+  <?php
+  }
+  ?>
 
-    <div class="col-md-2">
-      <div class="col-md-4">
-        <input type="checkbox" class="form-control"  id="checkbox1" name="enviarA[]" value="opp" onclick="ocultar()">
-      </div>
-      <div class="col-md-6">
-        OPP
-      </div>
-    </div>
+<div class="row">
 
-    <div class="col-md-2">
-      <div class="col-md-4">
-        <input type="checkbox" class="form-control"  id="checkbox2" name="enviarA[]" value="com" onclick="ocultar()">
-      </div>
-      <div class="col-md-6">
-        EMPRESA
-      </div>
-    </div>
+  <div class="col-md-3">
+    <h4>Lista de Contactos Actuales</h4>
+    <ul class="list-group">
+      <li class="list-group-item">Organizaciones(OPP)</li>
+      <li class="list-group-item">Empresas</li>
+      <li class="list-group-item">
+        Administradores
+        <br>
+        <a href="" class="btn btn-default"><span class="glyphicon glyphicon-user"></span> Agregar Contacto(s)</a>
+      </li>
+      <?php 
+      if($total_listas){
+        while($listas = mysql_fetch_assoc($row_lista_contactos)){
+        ?>
+          <li class="list-group-item">
+            <form action="" method="POST">
+              <div class="input-group">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" type="submit" name="actualizar_nombre_lista" value="1" data-toggle="tooltip" title="Clic para actualizar el Titulo"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+                </span>
+                <input type="hidden" name="idlista_contactos" value="<?php echo $listas['idlista_contactos']; ?>">
+                <input type="text" name="titulo_lista" class="form-control" value="<?php echo $listas['nombre']; ?>" required>
+              </div>
+            </form>
+            <a href="?CORREO&add&editar_lista=<?php echo $listas['idlista_contactos'] ?>" class="btn btn-sm <?php if(isset($_GET['editar_lista']) && $_GET['editar_lista'] == $listas['idlista_contactos']){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>"><span class="glyphicon glyphicon-search"></span> Consultar Contacto(s)</a></a>
+            <a href="?CORREO&add&lista=<?php echo $listas['idlista_contactos'] ?>" class="btn btn-sm <?php if(isset($_GET['lista']) && $_GET['lista'] == $listas['idlista_contactos']){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>"><span class="glyphicon glyphicon-user"></span> Agregar Contacto(s)</a></a>
+          </li>
+        <?php
+        }
+      }
+       ?>
+    </ul>
+
+  </div>
+  <div class="col-md-9">
+    <?php 
+    if(isset($_GET['lista']) && !empty($_GET['lista'])){
+
+    ?>
+      <div class="panel panel-warning">
+        <div class="panel-heading">
+          <h3 class="panel-title">Formulario Nuevo Contacto</span></h3>
+        </div>
+        <div class="panel-body">
+          <form action="" method="POST">
+            <div class="form-group">
+              <label for="nombre">Nombre</label>
+              <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Escriba el nombre del contacto" required>
+            </div>
+            <div class="form-group">
+              <label for="cargo">Cargo</label>
+              <input type="text" class="form-control" name="cargo" id="cargo" placeholder="Escriba el cargo del contacto">
+            </div>
+            <div class="form-group">
+              <label for="cargo">País</label>
+              <select name="pais" id="pais" class="form-control">
+                <option value="">Selecciona un País</option>
+                <?php 
+                while($pais = mysql_fetch_assoc($row_paises)){
+                  echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
+                }
+                 ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="direccion">Dirección</label>
+              <textarea class="form-control" name="direccion" id="direccion"></textarea>
+              
+            </div>
 
 
-    <div class="col-md-2">
-      <div class="col-md-4">
-        <input type="checkbox" class="form-control"  id="checkbox3" name="enviarA[]" value="oc" onclick="ocultar()">
+            <div class="form-group">
+              <label for="telefono1">Telefono 1</label>
+              <input type="text" class="form-control" name="telefono1" id="telefono1" placeholder="Escriba el teléfono">
+            </div>
+            <div class="form-group">
+              <label for="telefono2">Telefono 2</label>
+              <input type="text" class="form-control" name="telefono2" id="telefono2" placeholder="Escriba el teléfono">
+            </div>
+            <div class="form-group">
+              <label for="email1">Email 1</label>
+              <input type="text" class="form-control" name="email1" id="email1" placeholder="Escriba el email">
+            </div>
+            <div class="form-group">
+              <label for="email2">Email 2</label>
+              <input type="text" class="form-control" name="email2" id="email2" placeholder="Escriba el email">
+            </div>
+            <input type="hidden" name="idlista" value="<?php echo $_GET['lista']; ?>">
+            <button type="submit" class="btn btn-success" style="width:100%" name="agregar_contacto" value="1"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Agregar Contacto</button>
+          </form>
+        </div>
       </div>
-      <div class="col-md-6">
-        OC
-      </div>
-    </div>
 
-    <div class="col-md-2">
-      <div class="col-md-4">
-        <input type="checkbox" class="form-control"  id="checkbox4" name="enviarA[]" value="adm" onclick="ocultar()">
+    <?php
+    }else{
+    ?>
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Formulario Nueva Lista de Contactos</h3>
+        </div>
+        <div class="panel-body">
+          <form action="" method="POST">
+            <div class="form-group">
+              <label for="nombre_actual">Nombre de la Lista</label>
+              <input type="text" class="form-control" name="nombre_actual" id="nombre_actual" placeholder="Ingrese el nombre de la lista" required>
+            </div>
+            <div class="form-group">
+              <label for="descripcion_lista">Descripción de la Lista</label>
+              <textarea class="form-control" name="descripcion_lista" id="descripcion_lista"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success" style="width:100%" name="agregar_lista" value="1"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Crear Nueva Lista</button>
+          </form>
+        </div>
       </div>
-      <div class="col-md-6">
-        ADM
-      </div>
-    </div>
+    <?php
+    }
+     ?>
 
   </div>
 
-
-
-
-   <div class="col-xs-12">
-    Asunto: <input type="text" class="form-control" name="asunto">
-   </div>
-   <div class="col-xs-12">
-    Mensaje: <textarea name="mensaje" id="textareaMensaje" cols="30" rows="10" class="form-control"></textarea>   
-   </div>
-   <div class="col-xs-12">
-     Archivos
-     <input type="file" name="archivo" class="form-control">
-   </div>
-
-   <div class="col-xs-12" style="margin-top:10px;">
-    <input type="submit" class="btn btn-success" onclick="validar()">   
-    <input type="hidden" name="correo1" value="1">
-   </div>
-
- </form>
+</div>
