@@ -74,6 +74,14 @@ if(isset($_POST['actualizar_nombre_lista']) && $_POST['actualizar_nombre_lista']
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
   $mensaje = 'Titulo de lista actualizado';
 }
+if(isset($_POST['eliminar_contacto']) && $_POST['eliminar_contacto'] == 1){
+  $deleteSQL = sprintf("DELETE FROM contactos WHERE idcontacto = %s",
+    GetSQLValueString($_POST['idcontacto'], "int"));
+  $eliminar = mysql_query($deleteSQL, $dspp) or die(mysql_error());
+
+  $mensaje = "Contacto Eliminado";
+}
+
 
 $row_lista_contactos = mysql_query("SELECT * FROM lista_contactos", $dspp) or die(mysql_error());
 $total_listas = mysql_num_rows($row_lista_contactos);
@@ -117,7 +125,7 @@ $row_paises = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
                 <input type="text" name="titulo_lista" class="form-control" value="<?php echo $listas['nombre']; ?>" required>
               </div>
             </form>
-            <a href="?CORREO&add&editar_lista=<?php echo $listas['idlista_contactos'] ?>" class="btn btn-sm <?php if(isset($_GET['editar_lista']) && $_GET['editar_lista'] == $listas['idlista_contactos']){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>"><span class="glyphicon glyphicon-search"></span> Consultar Contacto(s)</a></a>
+            <a href="?CORREO&add&editar_lista=<?php echo $listas['idlista_contactos'] ?>&name=<?php echo $listas['nombre']; ?>" class="btn btn-sm <?php if(isset($_GET['editar_lista']) && $_GET['editar_lista'] == $listas['idlista_contactos']){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>"><span class="glyphicon glyphicon-search"></span> Consultar Contacto(s)</a></a>
             <a href="?CORREO&add&lista=<?php echo $listas['idlista_contactos'] ?>" class="btn btn-sm <?php if(isset($_GET['lista']) && $_GET['lista'] == $listas['idlista_contactos']){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>"><span class="glyphicon glyphicon-user"></span> Agregar Contacto(s)</a></a>
           </li>
         <?php
@@ -186,6 +194,58 @@ $row_paises = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         </div>
       </div>
 
+    <?php
+    }else if(isset($_GET['editar_lista'])){
+      $row_lista = mysql_query("SELECT * FROM contactos WHERE lista_contactos = $_GET[editar_lista]", $dspp) or die(mysql_error());
+
+    ?>
+      <table class="table table-bordered table-striped table-condensed">
+        <thead>
+          <tr>
+            <th colspan="9" class="info">CONTACTOS AGREGADOS A LA LISTA: <span style="color:red"><?php echo $_GET['name']; ?></span></th>
+          </tr>
+          <tr style="font-size:12px;">
+            <th style="text-align:center">Nº</th>
+            <th style="text-align:center">Nombre</th>
+            <th style="text-align:center">Cargo</th>
+            <th style="text-align:center">País</th>
+            <th style="text-align:center">Dirección</th>
+            <th style="text-align:center">Telefono 1</th>
+            <th style="text-align:center">Telefono 2</th>
+            <th style="text-align:center">Email 1</th>
+            <th style="text-align:center">Email 2</th>
+          </tr>
+        </thead>
+        <tbody style="font-size:12px;">
+          <?php
+          $contador = 1;
+          while($lista = mysql_fetch_assoc($row_lista)){
+          ?>
+            <form action="" method="POST">
+              <tr>
+                <td><?php echo $contador; ?></td>
+                <td><?php echo $lista['nombre']; ?></td>
+                <td><?php echo $lista['cargo']; ?></td>
+                <td><?php echo $lista['pais']; ?></td>
+                <td><?php echo $lista['direccion']; ?></td>
+                <td><?php echo $lista['telefono1']; ?></td>
+                <td><?php echo $lista['telefono2']; ?></td>
+                <td><?php echo $lista['email1']; ?></td>
+                <td><?php echo $lista['email2']; ?></td>
+                <td>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Contacto" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_contacto" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
+
+                  <a href="" class="btn btn-sm btn-info" data-toggle="tooltip" title="Editar Contacto"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                  <input type="hidden" name="idcontacto" value="<?php echo $lista['idcontacto']; ?>">
+                </td>
+              </tr>
+            </form>
+          <?php
+          $contador++;
+          }
+           ?>
+        </tbody>
+      </table>
     <?php
     }else{
     ?>

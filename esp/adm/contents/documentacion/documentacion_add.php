@@ -228,33 +228,34 @@ if(isset($_POST['eliminar_documentacion']) && $_POST['eliminar_documentacion'] =
 				</tr>
 			</thead>
 			<tbody>
+				<?php 
+				while($documentacion = mysql_fetch_assoc($row_documentacion)){
+				 ?>
 				<form action="" method="POST">
-					<?php 
-					while($documentacion = mysql_fetch_assoc($row_documentacion)){
-					 ?>
-					 	<tr>
-					 		<td><?php echo $documentacion['idioma']; ?></td>
-					 		<td><?php echo $documentacion['nombre']; ?></td>
-					 		<td><?php echo "<a href='".$documentacion['archivo']."' target='_blank'>Visualizar Formato</a>"; ?></td>
-					 		<td><?php echo $documentacion['nombre_interno']; ?></td>
-					 		<td><?php echo date('d/m/Y',$documentacion['fecha_registro']); ?></td>
-					 		<td>
-					 			<button type="submit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Actualizar Documento" name="actualizar" value="<?php echo $documentacion['iddocumento']; ?>"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
-					 		</td>
+				 	<tr>
+				 		<td><?php echo $documentacion['idioma']; ?></td>
+				 		<td><?php echo $documentacion['nombre']; ?></td>
+				 		<td><?php echo "<a href='".$documentacion['archivo']."' target='_blank'>Visualizar Formato</a>"; ?></td>
+				 		<td><?php echo $documentacion['nombre_interno']; ?></td>
+				 		<td><?php echo date('d/m/Y',$documentacion['fecha_registro']); ?></td>
+				 		<td>
+				 			<button type="submit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Actualizar Documento" name="actualizar" value="<?php echo $documentacion['iddocumento']; ?>"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+				 		</td>
 
-					 		<td>
-								<button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Nota" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_documentacion" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
-					 		</td>
-				              <input type="hidden" name="iddocumento" value="<?php echo $documentacion['iddocumento']?>" />
-				              <input type="hidden" name="nombre" value="<?php echo $documentacion['nombre']?>" />
-				              <input type="hidden" name="idioma" value="<?php echo $documentacion['idioma']; ?>">
-				              <input type="hidden" name="archivo" value="<?php echo $documentacion['archivo']?>" />
-				              <input type="hidden" name="idestatus_interno" value="<?php echo $documentacion['idestatus_interno']?>" />
-					 	</tr>
-					<?php
-					}
-					?>
+				 		<td>
+							<button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Nota" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_documentacion" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
+				 		</td>
+			              <input type="hidden" name="iddocumento" value="<?php echo $documentacion['iddocumento']?>" />
+			              <input type="hidden" name="nombre" value="<?php echo $documentacion['nombre']?>" />
+			              <input type="hidden" name="idioma" value="<?php echo $documentacion['idioma']; ?>">
+			              <input type="hidden" name="archivo" value="<?php echo $documentacion['archivo']?>" />
+			              <input type="hidden" name="idestatus_interno" value="<?php echo $documentacion['idestatus_interno']?>" />
+				 	</tr>
 				</form>
+
+				<?php
+				}
+				?>
 			</tbody>
 		</table>
 	</div>
