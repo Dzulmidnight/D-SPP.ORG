@@ -1236,7 +1236,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                             }else{
                               if($solicitud['estatus_contrato'] == "ACEPTADO"){
-                                if(isset($solicitud['idformato_evaluacion']) && isset($solicitud['idinforme_evaluacion']) && isset($solicitud['iddictamen_evaluacion'])){
+                                if(!empty($solicitud['idformato_evaluacion']) && !empty($solicitud['idinforme_evaluacion']) && !empty($solicitud['iddictamen_evaluacion'])){
 
                                   $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
                                   $formato = mysql_fetch_assoc($row_formato);
@@ -1285,7 +1285,10 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           <div <?php if($solicitud['tipo_solicitud'] == 'RENOVACION'){echo 'class="col-md-6"'; }else{ echo 'class="col-md-6"';} ?>>
                             <h4>Cargar Certificado</h4>
                             <?php 
-                            if(isset($dictamen['iddictamen_evaluacion']) && $dictamen['estatus_dictamen'] == "ACEPTADO" && $informe['estatus_informe'] == "ACEPTADO"){
+
+
+
+                            if((isset($dictamen['iddictamen_evaluacion']) && isset($dictamen['estatus_dictamen']) && isset($dictamen['estatus_informe'])) && ($dictamen['iddictamen_evaluacion'] == "ACEPTADO" && $dictamen['estatus_dictamen'] == "ACEPTADO" && $informe['estatus_informe'] == "ACEPTADO")){
                               if(isset($solicitud['idcertificado'])){
                                 $row_certificado = mysql_query("SELECT * FROM certificado WHERE idsolicitud_registro = $solicitud[idsolicitud_registro]", $dspp) or die(mysql_error());
                                 $certificado = mysql_fetch_assoc($row_certificado);

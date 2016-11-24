@@ -43,7 +43,7 @@ if (!function_exists("GetSQLValueString")) {
     <a href="?DOCUMENTACION&select">Documentación</a>
   </li>
   <li <?php if(isset($_GET['CORREO'])){echo "class='active'"; } ?>>
-    <a href="?CORREO&select">Contactos y Correos</a>
+    <a href="?CORREO&select">Lista de Contactos</a>
   </li>
   <li <?php if(isset($_GET['SOLICITUD'])){echo "class='active'"; } ?>>
     <a href="?SOLICITUD&select">Solicitudes</a>

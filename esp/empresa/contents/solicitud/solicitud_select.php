@@ -531,7 +531,6 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
           </html>
   ';
     $mail->AddAddress($spp_global);
-    $mail->AddBCC($administrador);
     $mail->AddAttachment($contrato);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";

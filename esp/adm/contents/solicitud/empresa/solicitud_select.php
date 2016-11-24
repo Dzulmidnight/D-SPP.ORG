@@ -685,10 +685,10 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
-  if(!empty($_POST['idmembresia'])){
-    $row_membresia = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, empresa.nombre, oc.email1, oc.email2, membresia.idsolicitud_registro, membresia.estatus_membresia FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro WHERE membresia.idmembresia = $_POST[idmembresia]", $dspp) or die(mysql_error());
-    $membresia = mysql_fetch_assoc($row_membresia);
-    if ($membresia['estatus_membresia'] == 'APROBADA') {
+
+    $row_empresa = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, empresa.nombre, oc.email1, oc.email2 FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc  WHERE solicitud_registro.idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+    $empresa = mysql_fetch_assoc($row_empresa);
+
 
       $asunto = "D-SPP | Formatos de Evaluación";
 
@@ -706,12 +706,12 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>empresa: <span style="color:red">'.$membresia['nombre'].'</span></p></th>
+               <th scope="col" align="left" width="280"><p>empresa: <span style="color:red">'.$empresa['nombre'].'</span></p></th>
               </tr>
 
               <tr>
                 <td colspan="2">
-                 <p>SPP GLOBLA notifica que la empresa: '.$membresia['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p>SPP GLOBLA notifica que la empresa: '.$empresa['nombre'].' ha cumplido con la documentación necesaria.</p>
                  <p>
                   Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documento: 
                      <ul style="color:red">
@@ -747,9 +747,13 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
         </body>
         </html>
       ';
+        if(isset($empresa['email1'])){
+          $mail->AddAddress($empresa['email1']);
+        }
+        if(isset($empresa['email2'])){
+          $mail->AddAddress($empresa['email2']);
+        }
 
-        $mail->AddAddress($membresia['email1']);
-        $mail->AddAddress($membresia['email2']);
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -757,14 +761,9 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
         $mail->ClearAddresses();
 
 
-        $mensaje = "Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
+        $mensaje = "Se ha aprobado el \"Contrato de Uso\" , se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
 
-    }else{
-      $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
-    } 
-  }
-
-  $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
+  
 
 }
 

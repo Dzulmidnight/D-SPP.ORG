@@ -86,7 +86,17 @@ if (!function_exists("GetSQLValueString")) {
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th colspan="4">Lista de Correos</th>
+            <th colspan="3">Lista de Correos</th>
+            <th colspan="2">
+              <div class="col-lg-12">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+                  </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </th>
           </tr>
           <tr>
             <th>Nº</th>
