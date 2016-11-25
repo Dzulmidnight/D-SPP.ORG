@@ -149,8 +149,12 @@ if(isset($_POST['cotizacion']) ){
           </body>
           </html>
         ';
-      $mail->AddAddress($detalle_opp['email_oc']);
-      $mail->AddAddress($detalle_opp['email_oc2']);
+      if(isset($detalle_opp['email_oc'])){
+        $mail->AddAddress($detalle_opp['email_oc']);
+      }
+      if(isset($detalle_opp['email_oc2'])){
+        $mail->AddAddress($detalle_opp['email_oc2']);
+      }
       $mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
@@ -269,8 +273,12 @@ if(isset($_POST['cotizacion']) ){
         </body>
         </html>
       ';
-      $mail->AddAddress($detalle_opp['email_oc']);
-      $mail->AddAddress($detalle_opp['email_oc2']);
+      if(isset($detalle_opp['email_oc'])){
+        $mail->AddAddress($detalle_opp['email_oc']);
+      }
+      if(isset($detalle_opp['email_oc2'])){
+        $mail->AddAddress($detalle_opp['email_oc2']);
+      }
       $mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";

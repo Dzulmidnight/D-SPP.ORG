@@ -103,42 +103,71 @@ $row_paises = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
   <div class="col-md-3">
     <h4>Lista de Contactos Actuales</h4>
-    <ul class="list-group">
-      <li class="list-group-item">Organizaciones(OPP)</li>
-      <li class="list-group-item">Empresas</li>
-      <li class="list-group-item">
-        Administradores
-        <br>
-        <a href="" class="btn btn-default"><span class="glyphicon glyphicon-user"></span> Agregar Contacto(s)</a>
-      </li>
-      <?php 
-      if($total_listas){
-        while($listas = mysql_fetch_assoc($row_lista_contactos)){
-        ?>
-          <li class="list-group-item">
-            <form action="" method="POST">
-              <div class="input-group">
-                <span class="input-group-btn">
-                  <button class="btn btn-primary" type="submit" name="actualizar_nombre_lista" value="1" data-toggle="tooltip" title="Clic para actualizar el Titulo"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
-                </span>
-                <input type="hidden" name="idlista_contactos" value="<?php echo $listas['idlista_contactos']; ?>">
-                <input type="text" name="titulo_lista" class="form-control" value="<?php echo $listas['nombre']; ?>" required>
-              </div>
-            </form>
-            <a href="?CORREO&add&editar_lista=<?php echo $listas['idlista_contactos'] ?>&name=<?php echo $listas['nombre']; ?>" class="btn btn-sm <?php if(isset($_GET['editar_lista']) && $_GET['editar_lista'] == $listas['idlista_contactos']){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>"><span class="glyphicon glyphicon-search"></span> Consultar Contacto(s)</a></a>
-            <a href="?CORREO&add&lista=<?php echo $listas['idlista_contactos'] ?>" class="btn btn-sm <?php if(isset($_GET['lista']) && $_GET['lista'] == $listas['idlista_contactos']){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>"><span class="glyphicon glyphicon-user"></span> Agregar Contacto(s)</a></a>
-          </li>
-        <?php
-        }
-      }
-       ?>
-    </ul>
+    <a href="?CORREO&add&nueva">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nueva Lista de Contactos
+    </a>
+    <a href="?CORREO&add" class="btn btn-sm btn-primary" style="width:100%;">Consultar Todos</a>
+    <div class="dropdown">
+      <button class="btn btn-default dropdown-toggle" style="width:100%;" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Admisnitradores
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li><a href=""><span class="glyphicon glyphicon-user"></span> Agregar Contacto(s)</a></li>
+      </ul>
+    </div>
 
+    <div class="dropdown">
+      <button class="btn btn-default dropdown-toggle" style="width:100%;" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Organizaciones (OPP)
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li>
+          <a href="?CORREO&add&editar_lista=<?php echo $listas['idlista_contactos'] ?>&name=<?php echo $listas['nombre']; ?>" ><span class="glyphicon glyphicon-search"></span> Consultar Contacto(s)</a></a>
+        </li>
+      </ul>
+
+    </div>
+
+    <div class="dropdown">
+      <button class="btn btn-default dropdown-toggle" style="width:100%;" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Empresas
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li>
+          <a href="?CORREO&add&editar_lista=<?php echo $listas['idlista_contactos'] ?>&name=<?php echo $listas['nombre']; ?>" ><span class="glyphicon glyphicon-search"></span> Consultar Contacto(s)</a></a>
+        </li>
+      </ul>
+
+    </div>
+    <?php 
+    if($total_listas){
+      while($listas = mysql_fetch_assoc($row_lista_contactos)){
+      ?>
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" style="width:100%;" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <?php echo $listas['nombre']; ?>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li>
+              <a href="?CORREO&add&editar_lista=<?php echo $listas['idlista_contactos'] ?>&name=<?php echo $listas['nombre']; ?>" ><span class="glyphicon glyphicon-search"></span> Consultar Contacto(s)</a></a>
+            </li>
+            <li>
+              <a href="?CORREO&add&lista=<?php echo $listas['idlista_contactos'] ?>"><span class="glyphicon glyphicon-user"></span> Agregar Contacto(s)</a></a>
+            </li>
+          </ul>
+        </div>  
+      <?php
+      }
+    }
+    ?>
   </div>
   <div class="col-md-9">
-    <?php 
+    <?php
     if(isset($_GET['lista']) && !empty($_GET['lista'])){
-
     ?>
       <div class="panel panel-warning">
         <div class="panel-heading">
@@ -247,7 +276,7 @@ $row_paises = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         </tbody>
       </table>
     <?php
-    }else{
+    }else if(isset($_GET['nueva'])){
     ?>
       <div class="panel panel-info">
         <div class="panel-heading">
@@ -267,6 +296,81 @@ $row_paises = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           </form>
         </div>
       </div>
+    <?php
+    }else{
+    ?>
+    <?php 
+    $row_correos = mysql_query("SELECT contactos.idcontacto, contactos.idopp, contactos.idempresa, contactos.nombre, contactos.cargo, contactos.telefono1, contactos.telefono2, contactos.email1, contactos.email2, opp.abreviacion AS 'abreviacion_opp', empresa.abreviacion AS 'abreviacion_empresa' FROM contactos LEFT JOIN opp ON contactos.idopp = opp.idopp LEFT JOIN empresa ON contactos.idempresa = empresa.idempresa", $dspp) or die(mysql_error());
+    ?>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th colspan="3">Lista de Correos</th>
+            <th colspan="2">
+              <div class="col-lg-12">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+                  </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </th>
+          </tr>
+          <tr>
+            <th>Nº</th>
+            <th>Nombre</th>
+            <th>Cargo</th>
+            <th>Correo(s)</th>
+            <th>Telefono(s)</th>
+          </tr>
+        </thead>
+        <tbody style="font-size:12px;">
+        <?php 
+        $contador = 1;
+        while($correos = mysql_fetch_assoc($row_correos)){
+        ?>
+          <tr>
+            <td><?php echo $contador; ?></td>
+            <td>
+              <?php 
+              if(isset($correos['idopp'])){
+                echo '<a href="?OPP&detail&idopp='.$correos['idopp'].'&contacto='.$correos['idcontacto'].'">'.$correos['nombre'].'</a>';
+              }else if(isset($correos['idempresa'])){
+                echo '<a href="?EMPRESAS&detail&idempresa='.$correos['idempresa'].'&contacto='.$correos['idcontacto'].'">'.$correos['nombre'].'</a>';
+              }else{
+                echo $correos['nombre'];
+              }
+               ?>
+            </td>
+            <td>
+              <?php 
+              if(isset($correos['idopp'])){
+                echo 'Organización: <a href="?OPP&detail&idopp='.$correos['idopp'].'">'.$correos['abreviacion_opp']."</a>";
+              }else if(isset($correos['idempresa'])){
+                echo 'Empresa: <a href="?EMPRESAS&detail&idempresa='.$correos['idempresa'].'">'.$correos['abreviacion_empresa']."</a>";
+              }
+               ?>
+              <br>
+              Cargo: <?php echo $correos['cargo']; ?>
+            </td>
+            <td>
+              <?php echo "Correo 1:".$correos['email1']; ?>
+              <br>
+              <?php echo "Correo 2:".$correos['email2']; ?>
+            </td>
+            <td>
+              <?php echo "Telefono 1: ".$correos['telefono1']; ?>
+              <br>
+              <?php echo "Telefono 2: ".$correos['telefono2']; ?>
+            </td>
+          </tr>
+        <?php
+        $contador++;
+        }
+         ?>
+        </tbody>
+      </table>    
     <?php
     }
      ?>

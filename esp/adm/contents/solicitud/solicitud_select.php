@@ -156,10 +156,12 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
 
 
       while($email_opp = mysql_fetch_assoc($ejecutar)){
-        $mail->AddAddress($email_opp['email']);
+        if(!empty($email_opp['email'])){
+          $mail->AddAddress($email_opp['email']);
+        }
       }
 
-        $mail->AddBCC($administrador);
+
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -174,10 +176,12 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
 
 
       while($email_empresa = mysql_fetch_assoc($ejecutar)){
-        $mail->AddAddress($email_empresa['email']);
+        if(!empty($email_empresa['email'])){
+          $mail->AddAddress($email_empresa['email']);
+        }
       }
 
-        $mail->AddBCC($administrador);
+
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -192,11 +196,15 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
 
 
       while($email_oc = mysql_fetch_assoc($ejecutar)){
-        $mail->AddAddress($email_oc['email1']);
-        $mail->AddAddress($email_oc['email2']);
+        if(!empty($email_oc['email1'])){
+          $mail->AddAddress($email_oc['email1']);
+        }
+        if(!empty($email_oc['email2'])){
+          $mail->AddAddress($email_oc['email2']);
+        }
       }
 
-        $mail->AddBCC($administrador);
+
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -204,6 +212,25 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->ClearAddresses();
 
     //// termina envio a correo OC
+
+      //// ENVIO DE NOTIFICACIONES A LAS LISTAS DE CONTACTOS APROBADAS
+      $query_contactos = mysql_query("SELECT lista_contactos.idlista_contactos, contactos.lista_contactos, contactos.email1, contactos.email2 FROM lista_contactos INNER JOIN contactos ON lista_contactos.idlista_contactos = contactos.lista_contactos WHERE lista_contactos.notificaciones = 1", $dspp) or die(mysql_error());
+
+      while($lista_contactos = mysql_fetch_assoc($query_contactos)){
+        if(!empty($lista_contactos['email1'])){
+          $mail->AddAddress($lista_contactos['email1']);
+        }
+        if(!empty($lista_contactos['email2'])){
+          $mail->AddAddress($lista_contactos['email2']);
+        }
+      }
+
+
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_mensaje);
+        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
 
     //// inicia envio a correo ADM
         $query_adm = "SELECT email FROM adm";
@@ -215,18 +242,19 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
           }
         }
 
-        $mail->AddBCC($administrador);
+
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        //$mail->Send();
-        if($mail->Send()){
+        $mail->Send();
+        $mail->ClearAddresses();
+        /*if($mail->Send()){
           $mail->ClearAddresses();  
           echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
         }else{
           $mail->ClearAddresses();
           echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
-        }
+        }*/
 
     //// termina envio a correo ADM
 
