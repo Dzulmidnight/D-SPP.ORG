@@ -1425,14 +1425,16 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                           echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$documetacion[archivo]' target='_blank'>$documetacion[nombre]</a><br>";
                                         }
                                          ?>
-                                        <p class="alert alert-warning" style="padding:5px;">
-                                          Seleccione el idioma en el que desea enviar los archivos:
-                                          <label class="radio-inline">
-                                            <input type="radio" name="idioma" id="inlineRadio1" value="ESP"> Español
-                                          </label>
-                                          <label class="radio-inline">
-                                            <input type="radio" name="idioma" id="inlineRadio2" value="EN"> Ingles
-                                          </label>
+                                        <p class="alert alert-warning">
+                                          <strong>
+                                            Seleccione el idioma en el que desea enviar el <span style="color:red">Manual SPP, Contrato de Uso y Acuse de Recibo</span>:
+                                            <label class="radio-inline">
+                                              <input type="radio" name="idioma" id="inlineRadio1" value="ESP"> Español
+                                            </label>
+                                            <label class="radio-inline">
+                                              <input type="radio" name="idioma" id="inlineRadio2" value="EN"> Ingles
+                                            </label>
+                                          </strong>
                                         </p>
       
                                       </div>
@@ -1445,7 +1447,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                                       <div class="col-xs-12 alert alert-info">
                                         <h4 style="font-size:14px;">MEMBRESÍA SPP: <span style="color:#7f8c8d">Indicar el monto total de la membresía, asi como el tipo de moneda.</span></h4>
-                                        <input type="text" class="form-control" name="total_membresia" placeholder="Total Membresía">
+                                        <input type="text" class="form-control" name="total_membresia" id="total_membresia" placeholder="Total Membresía">
                                       </div>
                                     </div>
 
@@ -1545,6 +1547,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud']."').style.display = 'block';";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('tabla_negativo".$solicitud['idsolicitud']."').style.display = 'none';";
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud']."').style.display = 'none';";
                             echo "}else if(valorSelect == '6'){";
                               echo "document.getElementById('divSelect".$solicitud['idsolicitud']."').style.display = 'block';";
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud']."').style.display = 'block';";
@@ -1552,6 +1556,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               echo "document.getElementById('registroOculto".$solicitud['idsolicitud']."').style.display = 'block';";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('tabla_negativo".$solicitud['idsolicitud']."').style.display = 'none';";
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud']."').style.display = 'none';";
                             echo "}else if(valorSelect == '7'){";
                               echo "document.getElementById('divSelect".$solicitud['idsolicitud']."').style.display = 'block';";
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud']."').style.display = 'none';";
@@ -1559,25 +1565,33 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               echo "document.getElementById('registroOculto".$solicitud['idsolicitud']."').style.display = 'block';";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('tabla_negativo".$solicitud['idsolicitud']."').style.display = 'none';";
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud']."').style.display = 'none';";
                             echo "}else if(valorSelect == '8'){";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud']."').style.display = 'block';"; 
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('registroOculto".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('tabla_negativo".$solicitud['idsolicitud']."').style.display = 'none';";
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud']."').style.display = 'none';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud']."').style.display = 'block';";
                             echo "}else if(valorSelect == '9'){";
                               echo "document.getElementById('tabla_negativo".$solicitud['idsolicitud']."').style.display = 'block';"; 
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud']."').style.display = 'none';";
-                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud']."').style.display = 'none';";                 
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud']."').style.display = 'none';";  
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud']."').style.display = 'none';";
                             echo "}else if(valorSelect == '23'){";
                               echo "document.getElementById('divSelect".$solicitud['idsolicitud']."').style.display = 'block';";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud']."').style.display = 'none';"; 
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('registroOculto".$solicitud['idsolicitud']."').style.display = 'block';";    
-                              echo "document.getElementById('tabla_negativo".$solicitud['idsolicitud']."').style.display = 'none';";            
+                              echo "document.getElementById('tabla_negativo".$solicitud['idsolicitud']."').style.display = 'none';";  
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud']."').style.display = 'none';";
                             echo "}else{";
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud']."').style.display = 'none';";
@@ -1585,6 +1599,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('divSelect".$solicitud['idsolicitud']."').style.display = 'none';";
                               echo "document.getElementById('tabla_negativo".$solicitud['idsolicitud']."').style.display = 'none';";
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud']."').style.display = 'none';";
                             echo "}";
                           echo "}";
                           echo "</script>";
@@ -1593,11 +1609,12 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
                         <input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                         <?php 
                         if(empty($solicitud['idmembresia'])){
                         ?>
-                        <button type="submit" class="btn btn-success" name="guardar_proceso" value="1">Guardar Proceso</button>
+                        <button type="submit" class="btn btn-success" style="width:100%" id="<?php echo 'boton1'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1">Guardar Proceso</button>
+                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Enviar Dictamen</button>
                         <?php
                         }
                          ?>
@@ -1822,6 +1839,33 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
   </div>
 </div>
 <script type="text/javascript">
+
+function validar(){
+  membresia = document.getElementById("total_membresia").value;
+  if( membresia == null || membresia.length == 0 ) {
+    alert("Debe de escribir el Total de la Membresia asi como el tipo de moneda");
+    return false;
+  }
+  
+  Idioma = document.getElementsByName("idioma");
+   
+  var seleccionado = false;
+  for(var i=0; i<Idioma.length; i++) {    
+    if(Idioma[i].checked) {
+      seleccionado = true;
+      break;
+    }
+  }
+   
+  if(!seleccionado) {
+    alert("Debes seleccionar el idioma en el que se enviara el Contrato de Uso, Manual SPP y Acuse de Recibo");
+    return false;
+  }
+
+  return true
+}
+
+
 <!--
 function ventanaNueva(documento,ancho,alto,nombreVentana){
     window.open(documento, nombreVentana,'width=' + ancho + ', height=' + alto);

@@ -478,15 +478,15 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-      //$mail->Send();
-      //$mail->ClearAddresses();
-      if($mail->Send()){
+      $mail->Send();
+      $mail->ClearAddresses();
+      /*if($mail->Send()){
         $mail->ClearAddresses();
         echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
       }else{
         $mail->ClearAddresses();
         echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-      }
+      }*/
       //$mail->Send();
             ///termina envio de mensaje dictamen positivo
 
@@ -1080,41 +1080,61 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+
                             echo "}else if(valorSelect == '6'){";
                               echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                               echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+
                             echo "}else if(valorSelect == '7'){";
                               echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
                               echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+
                             echo "}else if(valorSelect == '8'){";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'block';"; 
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
                               echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                             echo "}else if(valorSelect == '9'){";
                               echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';"; 
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'block';";
-                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";                 
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';"; 
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+
                             echo "}else if(valorSelect == '23'){";
                               echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'block';";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';"; 
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
-                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";                
+                              echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+
                             echo "}else{";
                               echo "document.getElementById('nombreArchivo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
                               echo "document.getElementById('archivo_estatus".$solicitud['idsolicitud_registro']."').style.display = 'none';";
                               echo "document.getElementById('registroOculto".$solicitud['idsolicitud_registro']."').style.display = 'none';";
                               echo "document.getElementById('tablaCorreo".$solicitud['idsolicitud_registro']."').style.display = 'none';";
                               echo "document.getElementById('divSelect".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+                              echo "document.getElementById('boton1".$solicitud['idsolicitud_registro']."').style.display = 'block';";
+                              echo "document.getElementById('boton2".$solicitud['idsolicitud_registro']."').style.display = 'none';";
+
                             echo "}";
                           echo "}";
                           echo "</script>";
@@ -1126,7 +1146,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
                         <input type="hidden" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                         <?php 
                         if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                           if(!empty($solicitud['idformato_evaluacion']) || !empty($solicitud['idinforme_evaluacion']) || !empty($solicitud['iddictamen_evaluacion'])){
@@ -1137,10 +1157,14 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                             }
                           }
                         }else{
-                          if(empty($solicitud['idmembresia'])){
-                            echo '<button type="submit" class="btn btn-success" name="guardar_proceso" value="1">Guardar Proceso</button>';
+                          if($proceso_certificacion['estatus_interno'] != 8){
+                          ?>
+                            <button type="submit" class="btn btn-success" style="width:100%" id="<?php echo 'boton1'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1">Guardar Proceso</button>
+                            <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Enviar Dictamen</button>
+                          <?php
                           }
-                        }                        ?>
+                        }                        
+                        ?>
                         <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
                       </div>
                     </div>
@@ -1358,7 +1382,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
                         <input type="hidden" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                       </div>
                     </div>
                   </div>
@@ -1388,6 +1412,27 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
   </div>
 </div>
 <script type="text/javascript">
+
+function validar(){
+
+  Idioma = document.getElementsByName("idioma");
+   
+  var seleccionado = false;
+  for(var i=0; i<Idioma.length; i++) {    
+    if(Idioma[i].checked) {
+      seleccionado = true;
+      break;
+    }
+  }
+   
+  if(!seleccionado) {
+    alert("Debes seleccionar el idioma en el que se enviara el Contrato de Uso, Manual SPP y Acuse de Recibo");
+    return false;
+  }
+
+  return true
+}
+
 <!--
 function ventanaNueva(documento,ancho,alto,nombreVentana){
     window.open(documento, nombreVentana,'width=' + ancho + ', height=' + alto);
