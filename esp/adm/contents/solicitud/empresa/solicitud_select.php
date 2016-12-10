@@ -888,6 +888,53 @@ $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro A
 $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
 $total_solicitudes = mysql_num_rows($row_solicitud);
 
+  /* INICIA PAGINACION */
+    //limitamos la consulta
+    $regXPag = 10;
+    $pagina = false; //cuando se ingresa al menu no tiene ningun valor
+
+    //Examinar la pagina a mostrar y el inicio del registro a mostrar
+    if(isset($_GET['p'])){
+      $pagina = $_GET['p'];
+    }
+    if(!$pagina){ //si la pagina es falsa
+      $inicio = 0;
+      $pagina = 1;
+    }else{
+      $inicio = ($pagina - 1) * $regXPag;
+    }
+    //calculamos el total de páginas
+    $total_paginas = ceil($total_solicitudes / $regXPag);
+
+  $query .= " LIMIT ".$inicio.",".$regXPag;
+
+  $paginacion = "<p style='margin-bottom:-20px;'>";
+    $paginacion .= "Número de resultados: <b>$total_solicitudes</b>. ";
+    $paginacion .= "Mostrando <b>$regXPag</b> resultados por página. ";
+    $paginacion .= "Página <b>$pagina</b> de <b>$total_paginas</b>. ";
+  $paginacion .= "</p>";
+
+  if($total_paginas > 1){
+    $paginacion .= '<nav aria-label="Page navigation">';
+      $paginacion .= '<ul class="pagination">';
+        $paginacion .= ($pagina != 1)?'<li><a href="?SOLICITUD&select_empresa&p='.($pagina-1).'" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a></li>':'';
+
+      for ($i=1; $i <= $total_paginas; $i++) {
+        //si muestro el indice de la pagina actual, no coloco enlace
+        $actual = "<li class='active'><a href='#'>".$pagina."</a></li>";
+        //si el indice no corresponde con la pagina mostrada actualmente, coloco el enlace para ir a esa pagina
+        $enlace = '<li><a href="?SOLICITUD&select_empresa&p='.$i.'">'.$i.'</a></li>';
+
+        $paginacion .= ($pagina == $i)?$actual:$enlace;
+      }
+      $paginacion .= ($pagina!=$total_paginas)?"<li><a href='?SOLICITUD&select_empresa&p=".($pagina+1)."' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>":"";
+      $paginacion .= "</ul>";
+    $paginacion .= "</nav>";
+  }
+  $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
+
+  /* TERMINA PAGINACIÓN*/
+
 ?>
 <div class="row">
   <?php 
@@ -1423,6 +1470,10 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
            ?>
       </tbody>
     </table>
+<?php 
+  echo $paginacion;
+ ?>
+    
   </div>
 </div>
 

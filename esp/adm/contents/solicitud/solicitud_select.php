@@ -1012,7 +1012,10 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 if(isset($_POST['campo_busqueda']) && $_POST['campo_busqueda'] == 1){
   $buscar = $_POST['buscar'];
 
-  $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc', solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion WHERE opp.spp LIKE '%$buscar%' OR opp.nombre LIKE '%$buscar%' OR opp.pais LIKE '%$buscar%' OR opp.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%' ORDER BY solicitud_certificacion.fecha_registro DESC";
+//  $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc', solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion WHERE opp.spp LIKE '%$buscar%' OR opp.nombre LIKE '%$buscar%' OR opp.pais LIKE '%$buscar%' OR opp.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%' GROUP BY solicitud_certificacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
+
+  $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc',solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion WHERE opp.spp LIKE '%$buscar%' OR opp.nombre LIKE '%$buscar' OR opp.abreviacion LIKE '%$buscar%' OR opp.pais LIKE '%$buscar%' OR opp.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%' ORDER BY solicitud_certificacion.fecha_registro DESC";
+
 }else{
   $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc',solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
 }
@@ -1020,6 +1023,55 @@ if(isset($_POST['campo_busqueda']) && $_POST['campo_busqueda'] == 1){
 
 $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
 $total_solicitudes = mysql_num_rows($row_solicitud);
+
+
+  /* INICIA PAGINACION */
+    //limitamos la consulta
+    $regXPag = 10;
+    $pagina = false; //cuando se ingresa al menu no tiene ningun valor
+
+    //Examinar la pagina a mostrar y el inicio del registro a mostrar
+    if(isset($_GET['p'])){
+      $pagina = $_GET['p'];
+    }
+    if(!$pagina){ //si la pagina es falsa
+      $inicio = 0;
+      $pagina = 1;
+    }else{
+      $inicio = ($pagina - 1) * $regXPag;
+    }
+    //calculamos el total de páginas
+    $total_paginas = ceil($total_solicitudes / $regXPag);
+
+  $query .= " LIMIT ".$inicio.",".$regXPag;
+
+  $paginacion = "<p style='margin-bottom:-20px;'>";
+    $paginacion .= "Número de resultados: <b>$total_solicitudes</b>. ";
+    $paginacion .= "Mostrando <b>$regXPag</b> resultados por página. ";
+    $paginacion .= "Página <b>$pagina</b> de <b>$total_paginas</b>. ";
+  $paginacion .= "</p>";
+
+  if($total_paginas > 1){
+    $paginacion .= '<nav aria-label="Page navigation">';
+      $paginacion .= '<ul class="pagination">';
+        $paginacion .= ($pagina != 1)?'<li><a href="?SOLICITUD&select&p='.($pagina-1).'" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a></li>':'';
+
+      for ($i=1; $i <= $total_paginas; $i++) {
+        //si muestro el indice de la pagina actual, no coloco enlace
+        $actual = "<li class='active'><a href='#'>".$pagina."</a></li>";
+        //si el indice no corresponde con la pagina mostrada actualmente, coloco el enlace para ir a esa pagina
+        $enlace = '<li><a href="?SOLICITUD&select&p='.$i.'">'.$i.'</a></li>';
+
+        $paginacion .= ($pagina == $i)?$actual:$enlace;
+      }
+      $paginacion .= ($pagina!=$total_paginas)?"<li><a href='?SOLICITUD&select&p=".($pagina+1)."' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>":"";
+      $paginacion .= "</ul>";
+    $paginacion .= "</nav>";
+  }
+  $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
+
+  /* TERMINA PAGINACIÓN*/
+
 
 ?>
 <div class="row">
@@ -1601,6 +1653,10 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
           ?>
       </tbody>
     </table>
+<?php 
+  echo $paginacion;
+ ?>
+    
   </div>
 </div>
 

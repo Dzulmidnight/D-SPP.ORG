@@ -55,6 +55,9 @@ $fecha = time();
 $idoc = $_SESSION['idoc'];
 $spp_global = "cert@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
+
+$row_correo = mysql_query("SELECT * FROM oc WHERE idoc = $idoc", $dspp) or die(mysql_error());
+$correos_oc = mysql_fetch_assoc($row_correo);
 /**********  TERMINA VARIABLES GLOBALES *****************/
  
 if(isset($_POST['cancelar']) && $_POST['cancelar'] == "cancelar"){
@@ -203,7 +206,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                     <tr>
                       <td colspan="2">
-                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">soporte@d-spp.org</span></p>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
                       </td>
                     </tr>
                   </tbody>
@@ -261,7 +264,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                     <tr>
                       <td colspan="2">
-                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">soporte@d-spp.org</span></p>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
                       </td>
                     </tr>
                   </tbody>
@@ -405,7 +408,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     </tr>
                     <tr>
                       <td colspan="2">
-                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                      <hr>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
                       </td>
                     </tr>
                   </tbody>
@@ -437,12 +441,6 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         <p>
                           2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente <span style="color:red">firmar el Contrato de Uso y Acuse de Recibo</span>. Favor de completar los datos de su organización y del representante legal en los <span style="color:red">textos marcados en color rojo dentro del Contrato de Uso</span>.
                         </p>
-                        <p>
-                          Una vez que haya firmado los documentos indicados, <span style="color:red">ingresar a su cuenta como Organización de Pequeños Productores (OPP) dentro del sistema <a href="http://d-spp.org/">d-spp.org</a> y cargar los documentos para que éstos sean revisados por SPP Global</span>.
-                        </p>
-                        <p>
-                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
-                        </p>
                       </td>
                     </tr>
                     <tr>
@@ -467,11 +465,16 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         <p>
                           DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
                         </p>
+                        <p>
+                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
+                        </p>
+
                       </td>
                     </tr>
                     <tr>
                       <td colspan="2">
-                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                      <hr>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
                       </td>
                     </tr>
                   </tbody>
@@ -580,7 +583,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                     <tr>
                       <td colspan="2">
-                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">soporte@d-spp.org</span></p>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
                       </td>
                     </tr>
                   </tbody>
@@ -616,7 +619,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                     <tr>
                       <td colspan="2">
-                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">soporte@d-spp.org</span></p>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
                       </td>
                     </tr>
                   </tbody>
@@ -752,7 +755,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     </tr>
                     <tr>
                       <td colspan="2">
-                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                      <hr>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
                       </td>
                     </tr>
                   </tbody>
@@ -783,12 +787,6 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         <p>
                           2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente <span style="color:red">firmar el Contrato de Uso y Acuse de Recibo</span>.
                         </p>
-                        <p>
-                          Una vez que haya firmado los documentos indicados, <span style="color:red">ingresar a su cuenta como Organización de Pequeños Productores (OPP) dentro del sistema <a href="http://d-spp.org/">d-spp.org</a> y cargar los documentos para que éstos sean revisados por SPP Global</span>.
-                        </p>
-                        <p>
-                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
-                        </p>
                       </td>
                     </tr>
                     <tr>
@@ -810,14 +808,21 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         <p>
                           LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
                         </p>
+
+
                         <p>
                           DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
                         </p>
+                        <p>
+                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
+                        </p>
+
                       </td>
                     </tr>
                     <tr>
                       <td colspan="2">
-                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                      <hr>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
                       </td>
                     </tr>
                   </tbody>
@@ -1379,7 +1384,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       </div>
                                       <div class="col-xs-12 alert alert-info">
                                         <h5 class="">MEMBRESÍA SPP: <span style="color:#7f8c8d">Indicar el monto total de la membresía, asi como el tipo de moneda.</span></h5>
-                                        <input type="text" class="form-control" name="total_membresia" placeholder="Total Membresía">
+                                        <input type="text" class="form-control" name="total_membresia" id="total_membresia_2" placeholder="Total Membresía">
                                       </div>
 
                                       <div class="col-xs-12">
@@ -1614,7 +1619,18 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         if(empty($solicitud['idmembresia'])){
                         ?>
                         <button type="submit" class="btn btn-success" style="width:100%" id="<?php echo 'boton1'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1">Guardar Proceso</button>
+                        <?php 
+                        if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+                        ?>
+                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validarRenovacion()" style="width:100%; display:none" >Enviar Dictamen</button>
+                        <?php
+                        }else{
+                        ?>
                         <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Enviar Dictamen</button>
+                        <?php
+                        }
+                         ?>
+                        
                         <?php
                         }
                          ?>
@@ -1840,7 +1856,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 </div>
 <script type="text/javascript">
 
-function validar(){
+/*function validar(){
   membresia = document.getElementById("total_membresia").value;
   if( membresia == null || membresia.length == 0 ) {
     alert("Debe de escribir el Total de la Membresia asi como el tipo de moneda");
@@ -1863,7 +1879,16 @@ function validar(){
   }
 
   return true
+}*/
+/*
+function validarRenovacion(){
+  membresia = document.getElementById("total_membresia_2").value;
+  if( membresia == null || membresia.length == 0 ) {
+    alert("Debe de escribir el Total de la Membresia asi como el tipo de moneda");
+    return false;
+  }  
 }
+*/
 
 
 <!--

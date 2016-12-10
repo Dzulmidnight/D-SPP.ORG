@@ -271,9 +271,9 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
               ?>
                 <tr>
                   <td><?php echo $contador; ?></td>
-                  <td><?php echo $opp['nombre']; ?></td>
-                  <td><?php echo $opp['abreviacion']; ?></td>
-                  <td><?php echo $opp['pais']; ?></td>
+                  <td><?php echo strtoupper($opp['nombre']); ?></td>
+                  <td><?php echo strtoupper($opp['abreviacion']); ?></td>
+                  <td><?php echo strtoupper($opp['pais']); ?></td>
                   <td>
                     <?php 
                     $row_productos = mysql_query("SELECT producto FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
@@ -296,7 +296,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                   </td>
                   <td><?php echo date('d/m/Y', $vigencia); ?></td>
                   <!--<td><?php echo $opp['nombre_publico']; ?></td>-->
-                  <td><?php echo $opp['abreviacion_oc']; ?></td>
+                  <td><?php echo strtoupper($opp['abreviacion_oc']); ?></td>
                   <td><?php echo $opp['spp']; ?></td>
                   <td><?php echo $opp['email']; ?></td>
                   <td><?php echo $opp['sitio_web']; ?></td>

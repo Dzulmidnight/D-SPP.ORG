@@ -135,19 +135,20 @@ if(isset($_POST['action_delete'])){
   $ejecutar=mysql_query($query,$dspp) or die(mysql_error());
 }
 
-if(isset($_POST['actualizar_opp']) && $_POST['actualizar_opp'] == 1){
+if(isset($_POST['actualizar_empresa']) && $_POST['actualizar_empresa'] == 1){
   if(isset($_POST['ver_password'])){
     $ver_password = $_POST['ver_password'];
   }else{
     $ver_password = '';
   }
-  $insertar = sprintf("UPDATE empresa SET nombre = %s , abreviacion = %s, password = %s, sitio_web = %s, email = %s, telefono = %s, ciudad  = %s, razon_social = %s, direccion_oficina = %s, direccion_fiscal  = %s, rfc  = %s, ruc  = %s, ver_password = %s WHERE idempresa = %s",
+  $insertar = sprintf("UPDATE empresa SET nombre = %s , abreviacion = %s, password = %s, sitio_web = %s, email = %s, telefono = %s, pais = %s, ciudad  = %s, razon_social = %s, direccion_oficina = %s, direccion_fiscal  = %s, rfc  = %s, ruc  = %s, ver_password = %s WHERE idempresa = %s",
       GetSQLValueString($_POST['nombre'], "text"),
       GetSQLValueString($_POST['abreviacion'], "text"),
       GetSQLValueString($_POST['password'], "text"),
       GetSQLValueString($_POST['sitio_web'], "text"),
       GetSQLValueString($_POST['email'], "text"),
       GetSQLValueString($_POST['telefono'], "text"),
+      GetSQLValueString($_POST['pais'], "text"),
       GetSQLValueString($_POST['ciudad'], "text"),
       GetSQLValueString($_POST['razon_social'], "text"),
       GetSQLValueString($_POST['direccion_oficina'], "text"),
@@ -369,7 +370,21 @@ $empresa = mysql_fetch_assoc($row_empresa);
         <tr>
           <td>País</td>
           <td>
-            <?php echo $empresa['pais']; ?>
+            <select name="pais" id="">
+              <option value="">...</option>
+              <?php 
+              $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
+              while($pais = mysql_fetch_assoc($row_pais)){
+                if(utf8_encode($pais['nombre']) == $empresa['pais']){
+                  echo "<option value='".utf8_encode($pais['nombre'])."' selected>".utf8_encode($pais['nombre'])."</option>";
+                  //echo "<option value='".$pais['nombre']."' selected>".$pais['nombre']."</option>";
+                }else{
+                  echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
+                  //echo "<option value='".$pais['nombre']."'>".$pais['nombre']."</option>";
+                }
+              }
+               ?>
+            </select>
           </td>
         </tr>
         <tr>
@@ -416,7 +431,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
         <tr>
           <td colspan="2">
             <input class="btn btn-success" style="width:100%" type="submit" value="Actualizar Información">
-            <input type="hidden" name="actualizar_opp" value="1">
+            <input type="hidden" name="actualizar_empresa" value="1">
           </td>
         </tr>
       </table>

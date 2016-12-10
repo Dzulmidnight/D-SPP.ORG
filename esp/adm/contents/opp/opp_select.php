@@ -612,7 +612,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
         </th>
         <th colspan="4">
           Exportar Lista
-          <a href="#" onclick="document.formulario1.submit()"><img src="../../img/pdf.png"></a>
+          <a href="#" target="_blank" onclick="document.formulario1.submit()"><img src="../../img/pdf.png"></a>
           <a href="#" onclick="document.formulario2.submit()"><img src="../../img/excel.png"></a>
 
           <form name="formulario1" method="POST" action="../../reportes/lista_opp.php">

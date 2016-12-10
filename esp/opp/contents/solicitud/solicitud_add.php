@@ -856,7 +856,7 @@ $opp = mysql_fetch_assoc($row_opp);
 						<b>13. SI SU RESPUESTA FUE POSITIVA, FAVOR DE INIDICAR CON UNA 'X' EL RANGO DEL VALOR TOTAL DE SUS VENTAS SPP DEL CICLO ANTERIOR DE ACUERDO A LA SIGUIENTE TABLA:</b>
 					</p>
 
-					<div class="well col-xs-12 " id="tablaVentas" style="display:none;">
+					<div class="well col-xs-12 " >
 						<div class="col-xs-6"><p>Hasta $3,000 USD</p></div>
 						<div class="col-xs-6 "><input type="radio" name="op_preg13" class="form-control" id="ver" onclick="ocultar()" value="HASTA $3,000 USD"></div>
 					
@@ -969,7 +969,7 @@ $opp = mysql_fetch_assoc($row_opp);
 			<div class="col-xs-12">
 				<hr>
 				<input type="hidden" name="insertar_solicitud" value="1">
-				<input type="submit" class="btn btn-primary form-control" value="Enviar Solicitud" onclick="return validar()">
+				<input type="submit" class="btn btn-primary form-control" style="color: white;font-size:14px" value="Enviar Solicitud" onclick="return validar()">
 			</div>
 
 		</fieldset>
@@ -982,6 +982,8 @@ $opp = mysql_fetch_assoc($row_opp);
   function validar(){
 
     tipo_solicitud = document.getElementsByName("tipo_solicitud");
+    tuvo_ventas = document.getElementById("op_preg12");
+    opcion_venta = document.getElementsByName("op_preg13");
      
     var seleccionado = false;
     for(var i=0; i<tipo_solicitud.length; i++) {    
@@ -994,6 +996,41 @@ $opp = mysql_fetch_assoc($row_opp);
     if(!seleccionado) {
       alert("Debes de seleecionar un Tipo de Solicitud");
       return false;
+    }
+
+
+    var ventas = false;
+    for(var i=0; i<tuvo_ventas.length; i++) {    
+      if(tuvo_ventas[i].checked) {
+        ventas = true;
+        break;
+      }
+    }
+     
+    if(!ventas) {
+      alert("Debes ");
+      return false;
+    }
+
+
+
+
+    if(tuvo_ventas != 'NO'){
+    	alert('SELECCIONASTE QUE SI');
+
+	    var monto = false;
+	    for(var i=0; i<opcion_venta.length; i++) {    
+	      if(opcion_venta[i].checked) {
+	        monto = true;
+	        break;
+	      }
+	    }
+	     
+	    if(!monto) {
+	      alert("Debes de seleecionar el monto de ventas SPP");
+	      return false;
+	    }
+
     }
 
     return true

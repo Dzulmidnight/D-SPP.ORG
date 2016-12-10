@@ -151,7 +151,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                 <tr>
                   <td colspan="2">
-                    <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                    <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">'.$oc['email1'].', '.$oc['email2'].'</span></p>
                   </td>
                 </tr>
               </tbody>
@@ -187,7 +187,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                 <tr>
                   <td colspan="2">
-                    <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                    <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">'.$oc['email1'].', '.$oc['email2'].'</span></p>
                   </td>
                 </tr>
               </tbody>
@@ -267,7 +267,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               </tr>
               <tr>
                 <td colspan="2">
-                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">'.$oc['email1'].', '.$oc['email2'].'</span></p>
                 </td>
               </tr>
             </tbody>
@@ -392,7 +392,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 </tr>
                 <tr>
                   <td colspan="2" style="padding-top:10px;">
-                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
                   </td>
                 </tr>
               </tbody>
@@ -453,7 +453,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 </tr>
                 <tr>
                   <td colspan="2" style="padding-top:10px;">
-                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
                   </td>
                 </tr>
               </tbody>

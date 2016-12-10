@@ -245,9 +245,9 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
               ?>
                 <tr>
                   <td><?php echo $contador; ?></td>
-                  <td><?php echo $empresa['nombre']; ?></td>
-                  <td><?php echo $empresa['abreviacion']; ?></td>
-                  <td><?php echo $empresa['pais']; ?></td>
+                  <td><?php echo strtoupper($empresa['nombre']); ?></td>
+                  <td><?php echo strtoupper($empresa['abreviacion']); ?></td>
+                  <td><?php echo strtoupper($empresa['pais']); ?></td>
                   <td>
                     <?php 
                     $row_productos = mysql_query("SELECT producto FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
@@ -270,7 +270,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
                   </td>
                   <td><?php echo date('d/m/Y', $vigencia); ?></td>
                   <!--<td><?php echo $empresa['nombre_publico']; ?></td>-->
-                  <td><?php echo $empresa['abreviacion_oc']; ?></td>
+                  <td><?php echo strtoupper($empresa['abreviacion_oc']); ?></td>
                   <td><?php echo $empresa['spp']; ?></td>
                   <td><?php echo $empresa['email']; ?></td>
                   <td><?php echo $empresa['sitio_web']; ?></td>

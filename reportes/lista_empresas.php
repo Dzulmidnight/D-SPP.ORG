@@ -141,7 +141,7 @@
         <table border="1" >
           <tr style="background-color:#B8D186">
             <td style="text-align: center;">#</td>
-            <td style="text-align: center;">
+            <td style="text-align: center;width:300px;">
               NOMBRE DE LA ORGANIZACIÓN / ORGANIZATION´S NAME
             </td>
             <td style="text-align: center;">
@@ -150,7 +150,7 @@
             <td style="text-align: center;">
               PAÍS / COUNTRY
             </td>
-            <td style="text-align: center;">
+            <td style="text-align: center;width:400px;">
               PRODUCTO(S) CERTIFICADO/ CERTIFIED PRODUCTS
             </td>
             <td style="text-align: center;">
@@ -162,15 +162,21 @@
             <td style="text-align: center;">
               IDENTIFICACIÓN / IDENTIFICATION
             </td>
-            <td style="text-align: center;width:400px;">
+            <td style="text-align: center;width:250px;">
               SITIO WEB / WEB SITE
             </td>
-            <td style="text-align: center;">
+            <td style="text-align: center;width:220px;;">
               CORREO ELECTRÓNICO / EMAIL
             </td>
             <td style="text-align: center;">
               TELÉFONO / TELEPHONE
             </td>
+            <td style="text-align: center;width:300px;">
+              CONTACTOS /CONTACTS
+            </td>
+
+
+
           </tr>
     ';
     $contador = 1;
@@ -178,6 +184,10 @@
       $row_producto = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
       $producto = '';
       $total_producto = mysql_num_rows($row_producto);
+
+      $row_contactos = mysql_query("SELECT * FROM contactos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
+      $total_contactos = mysql_num_rows($row_contactos);
+
       $cont = 1;
       while($detalle_producto = mysql_fetch_assoc($row_producto)){
         if($cont < $total_producto){
@@ -188,7 +198,7 @@
         $cont++;
       }
 
-      $fecha = strtotime($empresa['vigencia_fin']);
+      $fecha = strtotime($empresa['fecha_fin']);
       if(!empty($fecha)){
         $vigencia = date('d/m/Y', $fecha);
       }else{
@@ -199,15 +209,47 @@
       <tr>
         <td style="font-size:12px;text-align: left;">'.$contador.'</td>
         <td style="font-size:12px;text-align: left;">'.$empresa['nombre'].'</td>
-        <td style="font-size:12px;text-align: left;">'.$empresa['abreviacion'].'</td>
+        <td style="font-size:12px;text-align: left;">'.$empresa['abreviacion_empresa'].'</td>
         <td style="font-size:12px;text-align: center;">'.$empresa['pais'].'</td>
         <td style="font-size:12px;text-align: left;">'.$producto.'</td>
         <td style="font-size:12px;text-align: center;">'.$vigencia.'</td>
         <td style="font-size:12px;text-align: left;">'.$empresa['nombre_dspp'].'</td>
-        <td style="font-size:12px;text-align: center;">'.$empresa['spp'].'</td>
+        <td style="font-size:12px;text-align: center;">'.$empresa['spp_empresa'].'</td>
         <td style="font-size:12px;text-align: left;">'.$empresa['sitio_web'].'</td>
         <td style="font-size:12px;text-align: left;">'.$empresa['email'].'</td>
         <td style="font-size:12px;text-align: left;">'.$empresa['telefono'].'</td>
+        <td style="font-size:12px;text-align: left;">';
+        if($total_contactos){
+          $html .= '
+            <table border="1" style="margin:0px;padding:0px;">
+              <tr style="width:400px;">
+                <td style="text-align: center;">Nombre</td>
+                <td style="text-align: center;">Cargo</td>
+                <td style="text-align: center;">Email</td>
+                <td style="text-align: center;">Telefono</td>
+              </tr>';
+              while($contactos = mysql_fetch_assoc($row_contactos)){
+                $html .= '
+                <tr style="width:400px;">
+                  <td style="text-align: left;">'.$contactos['nombre'].'</td>
+                  <td style="text-align: left;">'.$contactos['cargo'].'</td>
+                  <td style="text-align: left;">
+                    Email 1: <span style="color:red">'.$contactos['email1'].'</span><br>
+                    Email 2: <span style="color:red">'.$contactos['email2'].'</span>
+                  </td>                
+                  <td style="text-align: left;">
+                    Tel 1: <span style="color:red">'.$contactos['telefono1'].'</span><br>
+                    Tel 2: <span style="color:red">'.$contactos['telefono2'].'</span>
+                  </td>
+                </tr>';
+              }
+        $html .= '
+            </table>';
+        }else{
+          $html .= '<strong style="color:red">No Disponible</strong>';
+        }
+      $html .= '
+        </td>
       </tr>';
       $contador++;
     }
@@ -302,7 +344,7 @@
 		$i = 4;
 		$contador = 1;
 		while ($empresa = mysql_fetch_assoc($row_empresa)) {
-      $fecha = strtotime($empresa['vigencia_fin']);
+      $fecha = strtotime($empresa['fecha_fin']);
       if(!empty($fecha)){
         $vigencia = date('d/m/Y', $fecha);
       }else{
@@ -324,13 +366,13 @@
 			$objPHPExcel->setActiveSheetIndex(0)
         		    ->setCellValue('A'.$i,  $contador)
 		            ->setCellValue('B'.$i,  $empresa['nombre'])
-        		    ->setCellValue('C'.$i,  $empresa['abreviacion_opp'])
+        		    ->setCellValue('C'.$i,  $empresa['abreviacion_empresa'])
             		->setCellValue('D'.$i, 	$empresa['pais'])
             		->setCellValue('E'.$i, 	$productos)
             		->setCellValue('F'.$i, 	$vigencia)
             		->setCellValue('G'.$i, 	$empresa['nombre_dspp'])
             		->setCellValue('H'.$i, 	$empresa['abreviacion_oc'])
-            		->setCellValue('I'.$i, 	$empresa['spp_opp'])
+            		->setCellValue('I'.$i, 	$empresa['spp_empresa'])
             		->setCellValue('J'.$i, 	$empresa['email'])
             		->setCellValue('K'.$i, 	$empresa['sitio_web'])
             		->setCellValue('L'.$i, 	$empresa['telefono']);

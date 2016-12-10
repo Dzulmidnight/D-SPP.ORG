@@ -181,6 +181,10 @@
             <td style="text-align: center;">
               TELÉFONO / TELEPHONE
             </td>
+            <td style="text-align: center;">
+              CONTACTOS / CONTACTS
+            </td>
+
           </tr>
     ';
     $contador = 1;
@@ -188,6 +192,9 @@
       $row_producto = mysql_query("SELECT * FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
       $producto = '';
       $total_producto = mysql_num_rows($row_producto);
+      $row_contactos = mysql_query("SELECT * FROM contactos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
+      $total_contactos = mysql_num_rows($row_contactos);
+
       $cont = 1;
       while($detalle_producto = mysql_fetch_assoc($row_producto)){
         if($cont < $total_producto){
@@ -219,6 +226,38 @@
         <td style="font-size:12px;text-align: left;width: 10%">'.$opp['sitio_web'].'</td>
         <td style="font-size:12px;text-align: left;width: 10%">'.$opp['email'].'</td>
         <td style="font-size:12px;text-align: left;">'.$opp['telefono'].'</td>
+        <td style="font-size:12px;text-align: left;">';
+        if($total_contactos){
+          $html .= '
+            <table border="1" style="margin:0px;padding:0px;">
+              <tr style="width:400px;">
+                <td style="text-align: center;">Nombre</td>
+                <td style="text-align: center;">Cargo</td>
+                <td style="text-align: center;">Email</td>
+                <td style="text-align: center;">Telefono</td>
+              </tr>';
+              while($contactos = mysql_fetch_assoc($row_contactos)){
+                $html .= '
+                <tr style="width:400px;">
+                  <td style="text-align: left;">'.$contactos['nombre'].'</td>
+                  <td style="text-align: left;">'.$contactos['cargo'].'</td>
+                  <td style="text-align: left;">
+                    Email 1: <span style="color:red">'.$contactos['email1'].'</span><br>
+                    Email 2: <span style="color:red">'.$contactos['email2'].'</span>
+                  </td>                
+                  <td style="text-align: left;">
+                    Tel 1: <span style="color:red">'.$contactos['telefono1'].'</span><br>
+                    Tel 2: <span style="color:red">'.$contactos['telefono2'].'</span>
+                  </td>
+                </tr>';
+              }
+        $html .= '
+            </table>';
+        }else{
+          $html .= '<strong style="color:red">No Disponible</strong>';
+        }
+      $html .= '
+        </td>
       </tr>';
       $contador++;
     }
@@ -477,10 +516,10 @@
 							 ->setCategory("Reporte excel");
 
 		$tituloReporte = "Lista de Organizaciones de Pequeños Productores";
-		$titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO(S) CERTIFICADO', 'FECHA SIGUIENTE EVALUACIÓN', 'ESTATUS', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', '#SPP', 'EMAIL', 'SITIO WEB', 'TELÉFONO');
+		$titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO(S) CERTIFICADO', 'FECHA SIGUIENTE EVALUACIÓN', 'ESTATUS', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', '#SPP', 'PASSWORD', 'EMAIL', 'SITIO WEB', 'TELÉFONO');
 		
 		$objPHPExcel->setActiveSheetIndex(0)
-        		    ->mergeCells('A1:L1');
+        		    ->mergeCells('A1:M1');
 						
 		// Se agregan los titulos del reporte
 		$objPHPExcel->setActiveSheetIndex(0)
@@ -496,7 +535,8 @@
             		->setCellValue('I3',  $titulosColumnas[8])
             		->setCellValue('J3',  $titulosColumnas[9])
             		->setCellValue('K3',  $titulosColumnas[10])
-            		->setCellValue('L3',  $titulosColumnas[11]);
+                ->setCellValue('L3',  $titulosColumnas[10])
+            		->setCellValue('M3',  $titulosColumnas[11]);
 		
 		//Se agregan los datos de los alumnos
 		$i = 4;
@@ -531,9 +571,10 @@
             		->setCellValue('G'.$i, 	$opp['nombre_publico'])
             		->setCellValue('H'.$i, 	$opp['abreviacion_oc'])
             		->setCellValue('I'.$i, 	$opp['spp_opp'])
-            		->setCellValue('J'.$i, 	$opp['email'])
-            		->setCellValue('K'.$i, 	$opp['sitio_web'])
-            		->setCellValue('L'.$i, 	$opp['telefono']);
+                ->setCellValue('J'.$i,  $opp['password'])
+            		->setCellValue('K'.$i, 	$opp['email'])
+            		->setCellValue('L'.$i, 	$opp['sitio_web'])
+            		->setCellValue('M'.$i, 	$opp['telefono']);
 					$i++;
 					$contador++;
 		}
@@ -625,11 +666,11 @@
            	)
         ));
 
-		$objPHPExcel->getActiveSheet()->getStyle('A1:L1')->applyFromArray($estiloTituloReporte);
-		$objPHPExcel->getActiveSheet()->getStyle('A3:L3')->applyFromArray($estiloTituloColumnas);		
-		$objPHPExcel->getActiveSheet()->setSharedStyle($estiloInformacion, "A4:L".($i-1));
+		$objPHPExcel->getActiveSheet()->getStyle('A1:M1')->applyFromArray($estiloTituloReporte);
+		$objPHPExcel->getActiveSheet()->getStyle('A3:M3')->applyFromArray($estiloTituloColumnas);		
+		$objPHPExcel->getActiveSheet()->setSharedStyle($estiloInformacion, "A4:M".($i-1));
 				
-		for($i = 'A'; $i <= 'L'; $i++){
+		for($i = 'A'; $i <= 'M'; $i++){
 			$objPHPExcel->setActiveSheetIndex(0)			
 				->getColumnDimension($i)->setAutoSize(TRUE);
 		}

@@ -55,7 +55,7 @@ $charset='utf-8';
 
 
 if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1){
-
+$ruta_croquis = "../../archivos/oppArchivos/croquis/";
 	/*
 	SE ACTUALIZA LA SOLICITUD
 	LA INFORMACION DE OPP
@@ -101,9 +101,16 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
   	$exportacion = 0;
   }
 
+	if(!empty($_FILES['op_preg15']['name'])){
+	    $_FILES["op_preg15"]["name"];
+	      move_uploaded_file($_FILES["op_preg15"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
+	      $croquis = $ruta_croquis.basename(date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
+	}else{
+		$croquis = NULL;
+	}
 
   // ACTUALIZAMOS LA INFORMACION DE LA SOLICITUD
-	$updateSQL = sprintf("UPDATE solicitud_certificacion SET resp1 = %s, resp2 = %s, resp3 = %s, resp4 = %s, op_preg1 = %s, preg1_1 = %s, preg1_2 = %s, preg1_3 = %s, preg1_4 = %s, op_preg2 = %s, op_preg3 = %s, produccion = %s, procesamiento = %s, exportacion = %s, op_preg5 = %s, op_preg6 = %s, op_preg7 = %s, op_preg8 = %s, op_preg10 = %s, op_preg14 = %s WHERE idsolicitud_certificacion = %s",
+	$updateSQL = sprintf("UPDATE solicitud_certificacion SET resp1 = %s, resp2 = %s, resp3 = %s, resp4 = %s, op_preg1 = %s, preg1_1 = %s, preg1_2 = %s, preg1_3 = %s, preg1_4 = %s, op_preg2 = %s, op_preg3 = %s, produccion = %s, procesamiento = %s, exportacion = %s, op_preg5 = %s, op_preg6 = %s, op_preg7 = %s, op_preg8 = %s, op_preg10 = %s, op_preg14 = %s, op_preg15 = %s WHERE idsolicitud_certificacion = %s",
 	       GetSQLValueString($_POST['resp1'], "text"),
 	       GetSQLValueString($_POST['resp2'], "text"),
 	       GetSQLValueString($_POST['resp3'], "text"),
@@ -126,6 +133,7 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 	       //GetSQLValueString($op_preg12, "text"),
 	       //GetSQLValueString($op_preg13, "text"),
 	       GetSQLValueString($_POST['op_preg14'], "text"),
+	       GetSQLValueString($croquis, "text"),
 	       GetSQLValueString($idsolicitud_certificacion, "int"));
 	$actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
@@ -838,18 +846,42 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					</label>
 					<input type="text" class="form-control" id="op_preg14" name="op_preg14" value="<?php echo $solicitud['op_preg14']; ?>">
 
-					<p>
-						<b>14. ANEXAR EL CROQUIS GENERAL DE SU OPP, INDICANDO LAS ZONAS EN DONDE CUENTA CON SOCIOS.</b>
-					</p>
-					<?php 
+					<div class="col-md-12" style="margin-top:10px;">
+						<div class="row">
+							<div class="col-xs-12" style="padding:0px;">
+								<p><strong>14. ANEXAR EL CROQUIS GENERAL DE SU OPP, INDICANDO LAS ZONAS EN DONDE CUENTA CON SOCIOS.</strong></p>
+							</div>
+							<?php 
+							if(empty($solicitud['op_preg15'])){
+							?>
+								<div class="col-xs-6 alert alert-danger">
+									No Disponible
+								</div>
+								<div class="col-xs-6 alert alert-success" style="padding:0px;">
+									<b>Agregar croquis</b>
+									<input type="file" class="form-control" id="op_preg15" name="op_preg15">
+								</div>	
+							<?php
+							}else{
+							?>
+								<a class="btn btn-success" href="<?echo $solicitud['op_preg15']?>" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Descargar Croquis</a>
+							<?php
+							}
+							 ?>
+						</div>
+					</div>
+					
+
+					<?php /*
 					if(empty($solicitud['op_preg15'])){
 						echo "<p class='alert alert-danger' style='padding:7px;'>No Disponible</p>";
+						echo "<input type='file' class='form-control'>";
 					}else{
 					?>
 						<a class="btn btn-success" href="<?echo $solicitud['op_preg15']?>" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Descargar Croquis</a>	
 					<?php
 					}
-					 ?>
+					*/ ?>
 					
 				</div>
 			</div>
@@ -958,7 +990,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					?>				
 					<tr>
 						<td colspan="8">
-							<h6><sup>6</sup> La información proporcionada en esta sección será tratada con plena confidencialidad. Favor de insertar filas adicionales de ser necesario.</h6>
+							<h6><sup>6</sup> La información proporcionada en esta sección será tratada con plena confidencialidad. Favor de insertar filas adicionales de ser necesario.</h6>
 						</td>
 					</tr>
 				</table>
