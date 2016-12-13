@@ -272,14 +272,14 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                   <td><?php echo strtoupper($opp['pais']); ?></td>
                   <td>
                     <?php 
-                    $row_productos = mysql_query("SELECT producto FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
+                    $row_productos = mysql_query("SELECT producto, producto_ingles FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
                     $total_producto = mysql_num_rows($row_productos);
                     $cont = 1;
                     while($producto = mysql_fetch_assoc($row_productos)){
                       if($total_producto == 1){
-                        echo $producto['producto'];
+                        echo $producto['producto_ingles']."(<i style='color:#7f8c8d;'>".$producto['producto']."</i>) ";
                       }else{
-                        echo $producto['producto'];
+                        echo $producto['producto_ingles']."(<i style='color:#7f8c8d;'>".$producto['producto']."</i>)";
                         if($cont < $total_producto){
                           echo "<span style='color:red'>, </span>";
                         }else{

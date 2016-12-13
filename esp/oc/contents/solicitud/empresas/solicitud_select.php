@@ -213,6 +213,14 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->AddAddress($detalle_empresa['email']);
       }
       $mail->AddBCC($spp_global);
+
+      if(isset($oc['email1'])){
+        $mail->AddCC($oc['email1']);
+      }
+      if(isset($oc['email2'])){
+        $mail->AddCC($oc['email2']);
+      }
+
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje_empresa);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje_empresa));
@@ -475,6 +483,13 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->AddAddress($detalle_empresa['email']);
       }
       $mail->AddBCC($spp_global);
+      if(isset($correos_oc['email1'])){
+        $mail->AddCC($correos_oc['email1']);
+      }
+      if(isset($correos_oc['email2'])){
+        $mail->AddCC($correos_oc['email2']);
+      }
+
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -1312,7 +1327,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
 
 
-                            if((isset($dictamen['iddictamen_evaluacion']) && isset($dictamen['estatus_dictamen']) && isset($dictamen['estatus_informe'])) && ($dictamen['iddictamen_evaluacion'] == "ACEPTADO" && $dictamen['estatus_dictamen'] == "ACEPTADO" && $informe['estatus_informe'] == "ACEPTADO")){
+                            if((isset($dictamen['iddictamen_evaluacion']) && isset($dictamen['estatus_dictamen']) && isset($dictamen['estatus_dictamen']) && $dictamen['estatus_dictamen'] == "ACEPTADO" && $formato['estatus_formato'] == "ACEPTADO" && $informe['estatus_informe'] == "ACEPTADO")){
                               if(isset($solicitud['idcertificado'])){
                                 $row_certificado = mysql_query("SELECT * FROM certificado WHERE idsolicitud_registro = $solicitud[idsolicitud_registro]", $dspp) or die(mysql_error());
                                 $certificado = mysql_fetch_assoc($row_certificado);

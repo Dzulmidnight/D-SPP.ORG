@@ -100,7 +100,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
   if($_POST['estatus_interno'] == 8){ //checamos si el estatus_interno es positvo
-      $query_oc = mysql_query("SELECT nombre FROM oc WHERE idoc = $detalle_opp[idoc]", $dspp) or die(mysql_error());
+      $query_oc = mysql_query("SELECT nombre, email1, email2 FROM oc WHERE idoc = $detalle_opp[idoc]", $dspp) or die(mysql_error());
       $detalle_oc = mysql_fetch_assoc($query_oc);
 
     $documentacion_nombres = '';
@@ -202,7 +202,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                     <tr>
                       <td colspan="2">
-                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">soporte@d-spp.org</span></p>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$detalle_oc['email1'].', '.$detalle_oc['email2'].'/span></p>
                       </td>
                     </tr>
                   </tbody>
@@ -260,7 +260,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                     <tr>
                       <td colspan="2">
-                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">soporte@d-spp.org</span></p>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'$detalle_oc['email1']', '.$detalle_oc['email2'].'</span></p>
                       </td>
                     </tr>
                   </tbody>
@@ -284,6 +284,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
           $mail->AddAddress($detalle_opp['email']);
           $mail->AddBCC($administrador);
           $mail->AddBCC($spp_global);
+          if(isset($detalle_oc['email1'])){
+            $mail->AddBCC($detalle_oc['email1']);
+          }
+          if(isset($detalle_oc['email2'])){
+            $mail->AddBCC($detalle_oc['email2']);
+          }
           $mail->Subject = utf8_decode($asunto);
           $mail->Body = utf8_decode($cuerpo_mensaje);
           $mail->MsgHTML(utf8_decode($cuerpo_mensaje));

@@ -644,7 +644,11 @@ $queryString_empresa = sprintf("&totalRows_empresa=%d%s", $totalRows_empresa, $q
         <th class="text-center"><a href="#" data-toggle="tooltip" title="Estatus del Certificado definido por la fecha de vigencia final">
           <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Estatus Certificado</a>
         </th>
-        <th class="text-center">Productos</th>
+        <th class="text-center">
+          Productos
+          <br>
+          <a href="../../traducir_producto.php?empresa" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');"><span class="glyphicon glyphicon-book glyphicon" aria-hidden="true"></span> Traducir</a>
+        </th>
         <th class="text-center">OC</th>
         <th style="width:60px;">
           <form  style="margin: 0;padding: 0;" action="" method="POST" >            

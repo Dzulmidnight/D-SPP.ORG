@@ -647,7 +647,11 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
         </th>
         <!--<th class="text-center">Sitio WEB</th>-->
         <!--<th class="text-center">Email OPP</th>-->
-        <th class="text-center">Productos</th>
+        <th class="text-center">
+          Productos
+          <br>
+          <a href="../../traducir_producto.php?opp" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');"><span class="glyphicon glyphicon-book glyphicon" aria-hidden="true"></span> Traducir</a>
+        </th>
         <th class="text-center">Nº Socios</th>
         <th class="text-center">OC</th>
         <!--<th class="text-center">Razón social</th>
