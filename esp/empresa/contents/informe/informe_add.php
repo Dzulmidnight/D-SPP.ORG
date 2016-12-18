@@ -487,7 +487,7 @@ var contador=0;
 
 
 
-			cell1.innerHTML = contador+'<input type="text" name="contador_formato['+contador+']" id="" value="'+contador+'">';
+			cell1.innerHTML = contador+'<input type="hidden" name="contador_formato['+contador+']" id="" value="'+contador+'">';
 			//nombre del opp
 			cell2.innerHTML = '<input type="text" name="opp['+contador+']" id="" placeholder="opp">';
 			//pais del opp
@@ -512,7 +512,7 @@ var contador=0;
 			cell10.innerHTML = '<input type="text" name="producto_especifico['+contador+']" id="" placeholder="producto_especifico">';
 
 			//INICIA cantidad_total_contrato
-				cell11.innerHTML = '<input type="text" name="peso_cantidad_total_contrato['+contador+']" id="" placeholder="cantidad">';
+				cell11.innerHTML = '<input type="text" style="background-color:gray" name="peso_cantidad_total_contrato['+contador+']" id="peso_cantidad_total_contrato" onChange="calcular();" readonly placeholder="cantidad">';
 
 				cell12.innerHTML = '<input type="text" name="unidad_cantidad_total_contrato['+contador+']" id="" placeholder="unidad">';
 			//TERMINA cantidad_total_contrato
@@ -524,41 +524,60 @@ var contador=0;
 			//TERMINA peso_total_reglamento
 
 			//INICIA precio_total_unitario
-				cell15.innerHTML = '<input type="text" name="precio_precio_total_unitario['+contador+']" id="" placeholder="precio">';
+				cell15.innerHTML = '<input type="text" name="precio_precio_total_unitario['+contador+']" id="precio_total_unitario" placeholder="precio" onChange="calcular();" readonly style="background-color:gray">';
 
 				cell16.innerHTML = '<input type="text" name="unidad_precio_total_unitario['+contador+']" id="" placeholder="unidad_medida">';
 			// TERMINA precio_total_unitario
 
 			//INICIA PRECIO SUSTENTABLE MINIMO precio_sustentable
-				cell17.innerHTML = '<input type="text" name="precio_precio_sustentable['+contador+']" id="" placeholder="precio">';
+				cell17.innerHTML = '<input type="text" name="precio_precio_sustentable['+contador+']" id="precio_sustentable_minimo" onChange="calcular();" value="0" placeholder="precio">';
 
 				cell18.innerHTML = '<input type="text" name="unidad_precio_sustentable['+contador+']" id="" placeholder="unidad_medida">';
 			// TERMINA PRECIO SUSTENTABLE MINIMO precio_sustentable
 
 			// INICIA RECONOCIMIENTO ORGANICO reconocimiento_organico
-				cell19.innerHTML = '<input type="text" name="precio_reconocimiento_organico['+contador+']" id="" placeholder="precio">';
+				cell19.innerHTML = '<input type="text" name="precio_reconocimiento_organico['+contador+']" id="precio_reconocimiento_organico" onChange="calcular();" value="0" placeholder="precio">';
 
 				cell20.innerHTML = '<input type="text" name="unidad_reconocimiento_organico['+contador+']" id="" placeholder="unidad_medida">';
 			// TERMINA RECONOCIMIENTO ORGANICO reconocimiento_organico
 
 			//INICIA incentivo_spp
-				cell21.innerHTML = '<input type="text" name="precio_incentivo_spp['+contador+']" id="" placeholder="precio">';
+				cell21.innerHTML = '<input type="text" name="precio_incentivo_spp['+contador+']" id="precio_incentivo_spp" onChange="calcular();" value="0" placeholder="precio">';
 
 				cell22.innerHTML = '<input type="text" name="unidad_incentivo_spp['+contador+']" id="" placeholder="unidad_medida">';
 			// TERMINA incentivo_spp
 
 			// VALOR TOTAL CONTRATO
-			cell23.innerHTML = '<input type="text" name="valor_total_contrato['+contador+']" id="" placeholder="valor_total">';
+			cell23.innerHTML = '<input type="text" style="background-color:gray" name="valor_total_contrato['+contador+']" id="total_contrato" onChange="calcular();" value="0.0" readonly placeholder="valor_total">';
 
 			//INICIA cuota_uso_reglamento
-				cell24.innerHTML = '<input type="text" name="cuota_uso_reglamento['+contador+']" id="" placeholder="cuota">';
+				cell24.innerHTML = '<input type="text" name="cuota_uso_reglamento['+contador+']" i d="cuota_uso" value="30" placeholder="cuota">';
 
 				cell25.innerHTML = '<input type="text" name="unidad_cuota_uso_reglamento['+contador+']" id="" placeholder="unidad">';
 			//TERMINA cuota_uso_reglamento
 
 			//TOTAL A PAGAR
-			cell26.innerHTML = '<input type="text" name="total['+contador+']" id="" placeholder="total">';
+			cell26.innerHTML = '<input type="text" style="background-color:gray" name="total['+contador+']" id="resultado_total" onChange="calcular();" value="0.0" readonly placeholder="total">';
 
 		}
 	}
+
+	function calcular(){
+		precio_total_unitario = document.getElementById("precio_total_unitario").value;
+		cantidad_total_contrato = document.getElementById("cantidad_total_contrato").value;
+
+		precio_sustentable_minimo = document.getElementById("precio_sustentable_minimo").value;
+		precio_reconocimiento_organico = document.getElementById("precio_reconocimiento_organico").value;
+		precio_incentivo_spp = document.getElementById("precio_incentivo_spp").value;
+
+		precio_total_unitario = parseFloat(precio_sustentable_minimo)+parseFloat(precio_reconocimiento_organico)+parseFloat(precio_incentivo_spp);
+
+		document.getElementById("precio_total_unitario").value = precio_total_unitario;
+
+		//calculamos el valor total del contrato
+		valor_total_contrato = parseFloat(precio_total_unitario)*parseFloat(cantidad_total_contrato);
+		document.getElementById("valor_total_contrato").value = valor_total_contrato;
+	}
+
+
 </script>
