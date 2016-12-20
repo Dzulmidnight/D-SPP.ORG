@@ -209,8 +209,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 					GetSQLValueString($fecha_compra, "int"),
 					GetSQLValueString($producto_general[$i], "text"),
 					GetSQLValueString($producto_especifico[$i], "text"),
-					GetSQLValueString($valor_total_contrato[$i], "int"),
-					GetSQLValueString($total[$i], "int"),
+					GetSQLValueString($valor_total_contrato[$i], "double"),
+					GetSQLValueString($total[$i], "double"),
 					GetSQLValueString($fecha_elaboracion, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
@@ -235,15 +235,15 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 				//iniciamos insertar cantidad_total_contrato
 				$insertSQL = sprintf("INSERT INTO cantidad_total_contrato(peso, unidad, idformato_compras) VALUES(%s, %s, %s)",
-					GetSQLValueString($peso_cantidad_total_contrato[$i], "int"),
-					GetSQLValueString($unidad_cantidad_total_contrato[$i], "int"),
+					GetSQLValueString($peso_cantidad_total_contrato[$i], "double"),
+					GetSQLValueString($unidad_cantidad_total_contrato[$i], "text"),
 					GetSQLValueString($idformato_compras, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 				//terminamos insertar cantidad_total_contrato
 
 				//iniciamos insertar peso_total_reglamento
 				$insertSQL = sprintf("INSERT INTO peso_total_reglamento(peso, unidad, idformato_compras) VALUES (%s, %s, %s)",
-					GetSQLValueString($peso_total_reglamento[$i], "int"),
+					GetSQLValueString($peso_total_reglamento[$i], "double"),
 					GetSQLValueString($unidad_peso_total_reglamento[$i], "text"),
 					GetSQLValueString($idformato_compras, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -251,7 +251,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 				//iniciamos insertar precio_total_unitario
 				$insertSQL = sprintf("INSERT INTO precio_total_unitario(precio, unidad, idformato_compras) VALUES (%s, %s, %s)",
-					GetSQLValueString($precio_precio_total_unitario[$i], "int"),
+					GetSQLValueString($precio_precio_total_unitario[$i], "double"),
 					GetSQLValueString($unidad_precio_total_unitario[$i], "text"),
 					GetSQLValueString($idformato_compras, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -259,7 +259,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 				//inciamos insertar precio_sustentable
 				$insertSQL = sprintf("INSERT INTO precio_sustentable(precio, unidad, idformato_compras) VALUES (%s, %s, %s)",
-					GetSQLValueString($precio_precio_sustentable[$i], "int"),
+					GetSQLValueString($precio_precio_sustentable[$i], "double"),
 					GetSQLValueString($unidad_precio_sustentable[$i], "text"),
 					GetSQLValueString($idformato_compras, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -267,7 +267,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 				//iniciamos insertar reconocimiento_organico
 				$insertSQL = sprintf("INSERT INTO reconocimiento_organico(precio, unidad, idformato_compras) VALUES (%s, %s, %s)",
-					GetSQLValueString($precio_reconocimiento_organico[$i], "int"),
+					GetSQLValueString($precio_reconocimiento_organico[$i], "double"),
 					GetSQLValueString($unidad_reconocimiento_organico[$i], "text"),
 					GetSQLValueString($idformato_compras, "text"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -275,7 +275,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 				//iniciamos insertar incentivo_spp
 				$insertSQL = sprintf("INSERT INTO incentivo_spp(precio, unidad, idformato_compras) VALUES (%s, %s, %s)",
-					GetSQLValueString($precio_incentivo_spp[$i], "int"),
+					GetSQLValueString($precio_incentivo_spp[$i], "double"),
 					GetSQLValueString($unidad_incentivo_spp[$i], "text"), 
 					GetSQLValueString($idformato_compras, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -283,7 +283,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 				//iniciamos insertar cuota_uso_reglamento
 				$insertSQL = sprintf("INSERT INTO cuota_uso_reglamento(cuota, unidad, idformato_compras) VALUES (%s, %s, %s)",
-					GetSQLValueString($cuota_uso_reglamento[$i], "int"),
+					GetSQLValueString($cuota_uso_reglamento[$i], "text"),
 					GetSQLValueString($unidad_cuota_uso_reglamento[$i], "text"),
 					GetSQLValueString($idformato_compras, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -511,72 +511,117 @@ var contador=0;
 			//producto_especifico
 			cell10.innerHTML = '<input type="text" name="producto_especifico['+contador+']" id="" placeholder="producto_especifico">';
 
-			//INICIA cantidad_total_contrato
-				cell11.innerHTML = '<input type="text" style="background-color:gray" name="peso_cantidad_total_contrato['+contador+']" id="peso_cantidad_total_contrato" onChange="calcular();" readonly placeholder="cantidad">';
+			//INICIA cantidad_total_contrato CANTIDAD TOTAL CONFORME A CONTRATO
+				cell11.innerHTML = '<input type="number" step="any" name="peso_cantidad_total_contrato['+contador+']" id="peso_cantidad_total_contrato" onChange="calcular();" placeholder="Ej: 417.26">';
+				//cell12.innerHTML = '<input type="text" name="unidad_cantidad_total_contrato['+contador+']" id="" placeholder="unidad">';
 
-				cell12.innerHTML = '<input type="text" name="unidad_cantidad_total_contrato['+contador+']" id="" placeholder="unidad">';
-			//TERMINA cantidad_total_contrato
+				cell12.innerHTML = '<select name="unidad_cantidad_total_contrato['+contador+']">'
+				+'<option value="Qq">Qq</option>'
+				+'<option value="Lb">Lb</option>'
+				+'<option value="Kg">Kg</option>'
+				+'<option value="unidad">unidad</option>'
+				+'</select>';
+			//TERMINA cantidad_total_contrato CANTIDAD TOTAL CONFORME A CONTRATO
 
 			//INICIA peso_total_reglamento
-				cell13.innerHTML = '<input type="text" name="peso_total_reglamento['+contador+']" id="" placeholder="unidad">';
+				cell13.innerHTML = '<input type="number" step="any" name="peso_total_reglamento['+contador+']" id="" placeholder="Ej: 417.26">';
 
-				cell14.innerHTML = '<input type="text" name="unidad_peso_total_reglamento['+contador+']" id="" placeholder="medida">';
+				//cell14.innerHTML = '<input type="text" name="unidad_peso_total_reglamento['+contador+']" id="" placeholder="medida">';
+				cell14.innerHTML = '<select name="unidad_peso_total_reglamento['+contador+']">'
+				+ '<option value="Lb">Lb</option>'
+				+ '<option value="Kg">Kg</option>'
+				+ '<option value="unidad">unidad</option>'
+				+ '</select>';
+
 			//TERMINA peso_total_reglamento
 
 			//INICIA precio_total_unitario
-				cell15.innerHTML = '<input type="text" name="precio_precio_total_unitario['+contador+']" id="precio_total_unitario" placeholder="precio" onChange="calcular();" readonly style="background-color:gray">';
+				cell15.innerHTML = '<input type="text" name="precio_precio_total_unitario['+contador+']" id="precio_total_unitario" placeholder="precio" onChange="calcular();" value="0" readonly style="background-color:#c0392b;color:#ecf0f1">';
+
 
 				cell16.innerHTML = '<input type="text" name="unidad_precio_total_unitario['+contador+']" id="" placeholder="unidad_medida">';
 			// TERMINA precio_total_unitario
 
 			//INICIA PRECIO SUSTENTABLE MINIMO precio_sustentable
-				cell17.innerHTML = '<input type="text" name="precio_precio_sustentable['+contador+']" id="precio_sustentable_minimo" onChange="calcular();" value="0" placeholder="precio">';
+				cell17.innerHTML = '<input type="number" step="any" name="precio_precio_sustentable['+contador+']" id="precio_sustentable_minimo" onChange="calcular();" value="0" placeholder="Ej: 160">';
 
 				cell18.innerHTML = '<input type="text" name="unidad_precio_sustentable['+contador+']" id="" placeholder="unidad_medida">';
 			// TERMINA PRECIO SUSTENTABLE MINIMO precio_sustentable
 
 			// INICIA RECONOCIMIENTO ORGANICO reconocimiento_organico
-				cell19.innerHTML = '<input type="text" name="precio_reconocimiento_organico['+contador+']" id="precio_reconocimiento_organico" onChange="calcular();" value="0" placeholder="precio">';
+				cell19.innerHTML = '<input type="number" step="any" name="precio_reconocimiento_organico['+contador+']" id="precio_reconocimiento_organico" onChange="calcular();" value="0" placeholder="Ej: 40">';
 
 				cell20.innerHTML = '<input type="text" name="unidad_reconocimiento_organico['+contador+']" id="" placeholder="unidad_medida">';
 			// TERMINA RECONOCIMIENTO ORGANICO reconocimiento_organico
 
 			//INICIA incentivo_spp
-				cell21.innerHTML = '<input type="text" name="precio_incentivo_spp['+contador+']" id="precio_incentivo_spp" onChange="calcular();" value="0" placeholder="precio">';
+				cell21.innerHTML = '<input type="number" step="any" name="precio_incentivo_spp['+contador+']" id="precio_incentivo_spp" onChange="calcular();" value="0" placeholder="Ej: 20">';
 
 				cell22.innerHTML = '<input type="text" name="unidad_incentivo_spp['+contador+']" id="" placeholder="unidad_medida">';
 			// TERMINA incentivo_spp
 
 			// VALOR TOTAL CONTRATO
-			cell23.innerHTML = '<input type="text" style="background-color:gray" name="valor_total_contrato['+contador+']" id="total_contrato" onChange="calcular();" value="0.0" readonly placeholder="valor_total">';
+			cell23.innerHTML = '<input type="text" style="background-color:#c0392b;color:#ecf0f1" name="valor_total_contrato['+contador+']" id="valor_total_contrato" onChange="calcular();" value="0.0" readonly placeholder="valor_total">';
 
 			//INICIA cuota_uso_reglamento
-				cell24.innerHTML = '<input type="text" name="cuota_uso_reglamento['+contador+']" i d="cuota_uso" value="30" placeholder="cuota">';
+				cell24.innerHTML = '<input type="text" style="background-color:#27ae60;color:#ecf0f1" name="cuota_uso_reglamento['+contador+']"  id="cuota_uso_reglamento" onChange="calcular();" value="0" placeholder="cuota">';
 
 				cell25.innerHTML = '<input type="text" name="unidad_cuota_uso_reglamento['+contador+']" id="" placeholder="unidad">';
 			//TERMINA cuota_uso_reglamento
 
 			//TOTAL A PAGAR
-			cell26.innerHTML = '<input type="text" style="background-color:gray" name="total['+contador+']" id="resultado_total" onChange="calcular();" value="0.0" readonly placeholder="total">';
+			cell26.innerHTML = '<input type="text" style="background-color:#c0392b;color:#ecf0f1" name="total['+contador+']" id="resultado_total" onChange="calcular();" value="0.0" readonly placeholder="total">';
 
 		}
 	}
 
 	function calcular(){
+		precio_sustentable_minimo = document.getElementById("precio_sustentable_minimo").value;
+		precio_reconocimiento_organico = document.getElementById("precio_reconocimiento_organico").value;
+		precio_incentivo_spp = document.getElementById("precio_incentivo_spp").value;
 		precio_total_unitario = document.getElementById("precio_total_unitario").value;
+		peso_cantidad_total_contrato = document.getElementById("peso_cantidad_total_contrato").value;
+
+		cuota_uso_reglamento = document.getElementById("cuota_uso_reglamento").value;
+
+		//calculamos el precio total unitario
+		precio_total_unitario = parseFloat(precio_sustentable_minimo) + parseFloat(precio_reconocimiento_organico) + parseFloat(precio_incentivo_spp);
+
+		document.getElementById("precio_total_unitario").value = precio_total_unitario;
+
+		//calculamos el valor total del contrato
+		valor_total_contrato = parseFloat(precio_total_unitario) * parseFloat(peso_cantidad_total_contrato);
+
+		document.getElementById("valor_total_contrato").value = valor_total_contrato; 
+
+		//calculamos el total a pagar
+
+
+		if(isNaN(cuota_uso_reglamento)){ // revisamos si es porcentaje
+			//alert("ES PORCENTAJE : "+cuota_uso_reglamento);
+			total_final = parseFloat(valor_total_contrato) * (0.01);
+		}else{	//si es solo numero
+			//alert("ES NUMERO: "+cuota_uso_reglamento);
+			total_final = parseFloat(peso_cantidad_total_contrato) * parseFloat(cuota_uso_reglamento);
+		}
+		
+
+		document.getElementById("resultado_total").value = total_final;
+
+		/*precio_total_unitario = document.getElementById("precio_total_unitario").value;
 		cantidad_total_contrato = document.getElementById("cantidad_total_contrato").value;
 
 		precio_sustentable_minimo = document.getElementById("precio_sustentable_minimo").value;
 		precio_reconocimiento_organico = document.getElementById("precio_reconocimiento_organico").value;
 		precio_incentivo_spp = document.getElementById("precio_incentivo_spp").value;
 
-		precio_total_unitario = parseFloat(precio_sustentable_minimo)+parseFloat(precio_reconocimiento_organico)+parseFloat(precio_incentivo_spp);
+		precio_total_unitario = parseFloat(precio_sustentable_minimo)+parseFloat(precio_reconocimiento_organico)+parseFloat(precio_incentivo_spp);*/
 
-		document.getElementById("precio_total_unitario").value = precio_total_unitario;
+		/*document.getElementById("precio_total_unitario").value = precio_total_unitario;
 
 		//calculamos el valor total del contrato
 		valor_total_contrato = parseFloat(precio_total_unitario)*parseFloat(cantidad_total_contrato);
-		document.getElementById("valor_total_contrato").value = valor_total_contrato;
+		document.getElementById("valor_total_contrato").value = valor_total_contrato;*/
 	}
 
 

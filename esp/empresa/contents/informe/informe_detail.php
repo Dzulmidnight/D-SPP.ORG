@@ -58,7 +58,7 @@ $row_informe = mysql_query($query_informe, $dspp) or die(mysql_error());
 
 <h3>INFORME TRIMESTRAL GENERAL</h3>
 
-<table border="1" style="font-size:11px;">
+<table class="table table-bordered" style="font-size:11px;">
 	<thead>
 		<tr class="success">
 		<th class="text-center">#</th>
@@ -112,7 +112,7 @@ $row_informe = mysql_query($query_informe, $dspp) or die(mysql_error());
 				<td><?php echo $informe['valor_total_contrato']; ?></td>
 				<td><?php echo $informe['c_u_r_cuota']; ?></td>
 				<td><?php echo $informe['c_u_r_unidad']; ?></td>
-				<td><?php echo $informe['total']; ?></td>
+				<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $informe['total']; ?></td>
 			</tr>
 		<?php
 		$contador++;
