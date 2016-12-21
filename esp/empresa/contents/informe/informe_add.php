@@ -51,6 +51,8 @@ if (isset($_SERVER['QUERY_STRING'])) {
 }
 
 $idempresa = $_SESSION['idempresa'];
+$idtrim = $_GET['idtrim'];
+
 if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	
 	$fecha_elaboracion = time();
@@ -202,7 +204,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		for($i=1;$i<=count($contador_formato);$i++){
 			$fecha_compra = strtotime($fecha_compra[$i]);
 			//Iniciamos insertar formato_compras
-				$insertSQL = sprintf("INSERT INTO formato_compras(idempresa, opp, pais, fecha_compra, producto_general, producto_especifico, valor_total_contrato, total, fecha_elaboracion) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+				$insertSQL = sprintf("INSERT INTO formato_compras(idtrim, idempresa, opp, pais, fecha_compra, producto_general, producto_especifico, valor_total_contrato, total, fecha_elaboracion) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+					GetSQLValueString($idtrim, "text"),
 					GetSQLValueString($idempresa, "int"),
 					GetSQLValueString($opp[$i], "text"),
 					GetSQLValueString($pais[$i], "text"),
@@ -297,7 +300,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 ?>
 
-<h3>Nuevo Informe Trimestral</h3>
+<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>
 <div class="row">
 	<div class="col-lg-12">
  		<?php 

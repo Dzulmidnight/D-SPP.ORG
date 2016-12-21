@@ -71,6 +71,7 @@ if(isset($_POST['crear_informe'])){
 }
 if(isset($_POST['informe_trimestral'])){
 	if($_POST['informe_trimestral'] == 'SI'){
+		$idinforme_general = $_POST['idinforme_general'];
 		$ano = date('Y', time());
 		$idtrim1 = 'T1-'.$ano.'-'.$idempresa;
 		$estado_trim1 = "ACTIVO";
@@ -81,6 +82,12 @@ if(isset($_POST['informe_trimestral'])){
 			GetSQLValueString($fecha_actual, "int"),
 			GetSQLValueString($estado_trim1, "text"));
 		$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+		$updateSQL = sprintf("UPDATE informe_general SET trim1 = %s WHERE idinforme_general = %s",
+			GetSQLValueString($idtrim1, "text"),
+			GetSQLValueString($idinforme_general, "text"));
+		$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
 		echo "<script>alert('Se ha creado un nuevo formato trimestral $idtrim1');</script>";
 	}else{
 		echo "<script>alert('No');</script>";
@@ -94,9 +101,11 @@ if(isset($_POST['informe_trimestral'])){
 	$row_informe = mysql_query("SELECT * FROM informe_general WHERE idempresa = $idempresa", $dspp) or die(mysql_error());
 	$total_informes = mysql_num_rows($row_informe);
 
-	if($total_informes != 0){
+	if($total_informes == 1){
+		$informe_general = mysql_fetch_assoc($row_informe);
 		$row_trim = mysql_query("SELECT * FROM trim1 WHERE idempresa = $idempresa", $dspp) or die(mysql_error());
 		$total_trim1 = mysql_num_rows($row_trim);
+		$informacion_trim = mysql_fetch_assoc($row_trim);
 
 		if($total_trim1 == 1){ // SE YA SE HA INICADO TRIM1, SE MOSTRARAN LAS OPCIONES PARA PODER VISUALIZAR LOS DEMAS TRIM(s)
 		?>
@@ -112,8 +121,8 @@ if(isset($_POST['informe_trimestral'])){
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
 						  <ul class="dropdown-menu">
-						    <li><a href="?INFORME&general_detail&trim=1&add">Agregar</a></li>
-						    <li><a href="?INFORME&general_detail&trim=1&edit">Editar</a></li>
+						    <li><a href="?INFORME&general_detail&trim=1&add&idtrim=<?php echo $informacion_trim['idtrim1']; ?>">Agregar</a></li>
+						    <li><a href="?INFORME&general_detail&trim=1&edit&idtrim=<?php echo $informacion_trim['idtrim1']; ?>">Editar</a></li>
 						  </ul>
 						</div>
 
@@ -166,9 +175,10 @@ if(isset($_POST['informe_trimestral'])){
 		?>
 			<form action="" method="POST">
 				<p class="alert alert-info">
-				No se ha iniciado ningun <b style="color:red">"Formato Trimestral"</b> en el Informe general <b style="color:red"><?php echo $ano_actual ?></b> , <strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
+				Paso 2: No se ha iniciado ningun <b style="color:red">"Formato Trimestral"</b> en el <b style="color:red">Informe general <?php echo $ano_actual ?></b> , <strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
 				<input class="btn btn-success" type="submit" name="informe_trimestral" value="SI">
 				<input class="btn btn-danger" type="submit" name="informe_trimestral" value="NO">
+				<input type="text" name="idinforme_general" value="<?php echo $informe_general['idinforme_general']; ?>">
 				</p>
 			</form>
 		<?php
@@ -180,7 +190,7 @@ if(isset($_POST['informe_trimestral'])){
 	?>		
 		<form action="" method="POST">
 			<p class="alert alert-warning">
-			Paso 1: No se encontraron informes, <strong>¿Desea crear un nuevo Informe General?</strong>
+			Paso 1: No se encontraron Informes Generales, <strong>¿Desea crear un nuevo Informe General?</strong>
 			<input class="btn btn-success" type="submit" name="crear_informe" value="SI">
 			<input class="btn btn-danger" type="submit" name="crear_informe" value="NO">
 			</p>
