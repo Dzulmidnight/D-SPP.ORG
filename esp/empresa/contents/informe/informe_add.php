@@ -300,7 +300,6 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 ?>
 
-<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>
 <div class="row">
 	<div class="col-lg-12">
  		<?php 
@@ -314,8 +313,21 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
  		}
  		 ?>
 	</div>
-
+	<?php 
+	$txt_trim = 'trim'.$_GET['trim'];
+	$txt_idtrim = 'idtrim'.$_GET['trim'];
+	$txt_estatus = 'estado_trim'.$_GET['trim'];
+	$row_trim = mysql_query("SELECT * FROM $txt_trim WHERE $txt_idtrim = '$idtrim'", $dspp) or die(mysql_error());
+	$trim = mysql_fetch_assoc($row_trim);
+	?>
 	<div class="col-md-12">
+	<?php
+	if($trim[$txt_estatus] == 'FINALIZADO'){
+		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se puede agregar más registro al <b>Formato Trimestral $idtrim</b>, ya que fue concluido.</p>";
+	}else{
+	?>
+<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>
+	
 		<form class="form-horizontal" method="POST">
 		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
 		 		<thead>
@@ -445,7 +457,10 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 			</tr>
 		 		</tbody>
 		 	</table>
-		</form>		
+		</form>
+	<?php
+	}
+	?>	
 	</div>
 </div>
 <script>
@@ -593,17 +608,18 @@ var contador=0;
 		document.getElementById("precio_total_unitario").value = precio_total_unitario;
 
 		//calculamos el valor total del contrato
-		//valor_total_contrato = parseFloat(precio_total_unitario) * parseFloat(peso_cantidad_total_contrato);
+		valor_total_contrato = parseFloat(precio_total_unitario) * parseFloat(peso_cantidad_total_contrato);
+		valor_total_contrato_redondeado = parseFloat(valor_total_contrato.toFixed(2));
 		/* se redondea el resultado a 2 decimales */
-		valor_total_contrato = parseFloat(Math.round((precio_total_unitario * peso_cantidad_total_contrato) * 100) / 100).toFixed(2);
-		document.getElementById("valor_total_contrato").value = valor_total_contrato; 
+		//valor_total_contrato = parseFloat(Math.round((precio_total_unitario * peso_cantidad_total_contrato) * 100) / 100).toFixed(2);
+		document.getElementById("valor_total_contrato").value = valor_total_contrato_redondeado; 
 
 		//calculamos el total a pagar
 
 
 		if(isNaN(cuota_uso_reglamento)){ // revisamos si es porcentaje
 			//alert("ES PORCENTAJE : "+cuota_uso_reglamento);
-			total_final = parseFloat(valor_total_contrato) * (0.01);
+			total_final = parseFloat(valor_total_contrato_redondeado) * (0.01);
 		}else{	//si es solo numero
 			//alert("ES NUMERO: "+cuota_uso_reglamento);
 			total_final = parseFloat(peso_cantidad_total_contrato) * parseFloat(cuota_uso_reglamento);
