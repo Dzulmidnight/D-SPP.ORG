@@ -593,8 +593,9 @@ var contador=0;
 		document.getElementById("precio_total_unitario").value = precio_total_unitario;
 
 		//calculamos el valor total del contrato
-		valor_total_contrato = parseFloat(precio_total_unitario) * parseFloat(peso_cantidad_total_contrato);
-
+		//valor_total_contrato = parseFloat(precio_total_unitario) * parseFloat(peso_cantidad_total_contrato);
+		/* se redondea el resultado a 2 decimales */
+		valor_total_contrato = parseFloat(Math.round((precio_total_unitario * peso_cantidad_total_contrato) * 100) / 100).toFixed(2);
 		document.getElementById("valor_total_contrato").value = valor_total_contrato; 
 
 		//calculamos el total a pagar
