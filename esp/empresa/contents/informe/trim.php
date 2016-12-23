@@ -44,6 +44,29 @@ if (!function_exists("GetSQLValueString")) {
 	  return $theValue;
 	}
 }
+if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'SI'){
+	$txt_num_trim = 'trim'.$_GET['trim'];
+	$txt_idtrim = 'idtrim'.$_GET['trim'];
+	$txt_estatus_trim = 'estado_trim'.$_GET['trim'];
+	$idinforme_general = $_POST['idinforme_general'];
+	$ano = date('Y', time());
+	$idtrim = 'T'.$_GET['trim'].'-'.$ano.'-'.$idempresa;
+	$estado_trim = "ACTIVO";
+
+	$insertSQL = sprintf("INSERT INTO $txt_num_trim ($txt_idtrim, idempresa, fecha_inicio, $txt_estatus_trim) VALUES (%s, %s, %s, %s)",
+		GetSQLValueString($idtrim, "text"),
+		GetSQLValueString($idempresa, "int"),
+		GetSQLValueString($fecha_actual, "int"),
+		GetSQLValueString($estado_trim, "text"));
+	$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+	$updateSQL = sprintf("UPDATE informe_general SET $txt_num_trim = %s WHERE idinforme_general = %s",
+		GetSQLValueString($idtrim, "text"),
+		GetSQLValueString($idinforme_general, "text"));
+	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+	echo "<script>alert('Se ha creado un nuevo formato trimestral $idtrim');</script>";
+}
 if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	$txt_idtrim = 'idtrim'.$_GET['trim'];
 	$txt_numero_trim = 'trim'.$_GET['trim'];
@@ -185,7 +208,7 @@ if(isset($_GET['trim'])){
 					}
 						echo "<tr class='info'><td class='text-right' colspan='26'>Total a Pagar: <b style='color:red'>$ $monto_total</b></td></tr>";
 						//EL TOTAL A PAGAR AL FINALIZAR EL TRIMESTRE
-						echo "<input type='text' name='monto_total' value='$monto_total'>";
+						echo "<input type='hidden' name='monto_total' value='$monto_total'>";
 					 ?>
 				</tbody>
 			</table>
@@ -199,6 +222,50 @@ if(isset($_GET['trim'])){
 	<?php
 	}else{
 		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> AUN NO SE PUEDE INICIAR ESTE INFORME TRIMESTRAL, <b>DEBE FINALIZAR EL INFORME ANTERIOR</b></p>";
+	}
+
+	/////
+	$row_trim1 = mysql_query("SELECT idtrim1, estado_trim1 FROM trim1 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+	$trim1 = mysql_fetch_assoc($row_trim1);
+
+	if(isset($trim1['idtrim1'])){ //confirmamos que se ha creado el primer trim (TRIM1)
+		$num_trim = $_GET['trim'];
+		$trim_actual = 'trim'.$num_trim;
+		$txt_idtrim = 'idtrim'.$num_trim;
+
+		if($trim1['estado_trim1'] == 'FINALIZADO'){ // SI EL TRIM1 HA FINALIZADO, REVISAREMOS QUE LOS TRIMS SIGUIENTES CONCLUYAN PARA PODER CREAR UNO NUEVO
+			if($num_trim != 1){
+				//checamos que el trim anterior haya finalizado
+				//// iniciamos VARIABLES DEL TRIM ANTERIOR
+					$trim_anterior = 'trim'.($num_trim - 1); //restamos 1 al trim actual para poder consultar el anterio
+					$idtrim_anterior = 'idtrim'.($num_trim - 1);
+					$estado_trim = 'estado_trim'.($num_trim - 1);
+				// terminamos VARIABLES DEL TRIM ANTERIOR
+
+
+				$row_trim_anterior = mysql_query("SELECT * FROM $trim_anterior WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+				$informacion_trim_anterior = mysql_fetch_assoc($row_trim_anterior);
+
+				if(isset($informacion_trim_anterior[$idtrim_anterior]) && $informacion_trim_anterior[$estado_trim] == 'FINALIZADO'){ /// SI EL TRIM ANTERIOR HA FINALIZADO, MOSTRAREMOS LA OPCIÓN PARA PODER CREAR UN NUEVO TRIM
+					$num_trim_actual = 'trim'.$_GET['trim'];
+					$row_trim_actual = mysql_query("SELECT * FROM $trim_actual WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+					$total_trim_actual = mysql_num_rows($row_trim_actual);
+					if($total_trim_actual != 1){ // si ya se ha iniciado el nuevo trim, ya no mostraremos la opción
+						echo '
+							<form action="" method="POST">
+								<p class="alert alert-info">
+									<strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
+									<input class="btn btn-success" type="submit" name="nuevo_trim" value="SI">
+									<input type="text" name="idinforme_general" value="'.$informe_general['idinforme_general'].'">
+								</p>
+							</form>
+						';
+					}
+				}
+				$row_trim = mysql_query("SELECT * FROM $trim_actual WHERE idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual",$dspp) or die(mysql_error());
+				$informacion_trim = mysql_fetch_assoc($row_trim);
+			}
+		}
 	}
 }
  ?>

@@ -98,20 +98,18 @@ if(isset($_POST['informe_trimestral'])){
 <div class="row">
 	<div class="col-md-12">
 	<?php 
-	$row_informe = mysql_query("SELECT * FROM informe_general WHERE idempresa = $idempresa", $dspp) or die(mysql_error());
+	$row_informe = mysql_query("SELECT * FROM informe_general WHERE idempresa = $idempresa AND FROM_UNIXTIME(ano, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 	$total_informes = mysql_num_rows($row_informe);
 
 	if($total_informes == 1){
 		$informe_general = mysql_fetch_assoc($row_informe);
-		$row_trim = mysql_query("SELECT * FROM trim1 WHERE idempresa = $idempresa", $dspp) or die(mysql_error());
+		$row_trim = mysql_query("SELECT * FROM trim1 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 		$total_trim1 = mysql_num_rows($row_trim);
 		$informacion_trim = mysql_fetch_assoc($row_trim);
 
 		if($total_trim1 == 1){ // SE YA SE HA INICADO TRIM1, SE MOSTRARAN LAS OPCIONES PARA PODER VISUALIZAR LOS DEMAS TRIM(s)
 		?>
 			<div class="row">
-				<?php 
-				 ?>
 				<div class="col-md-12">
 					<div class="btn-group" role="group" aria-label="...">
 						<div class="btn-group">
@@ -133,8 +131,15 @@ if(isset($_POST['informe_trimestral'])){
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
 						  <ul class="dropdown-menu">
-						    <li><a href="?INFORME&general_detail&trim=2&add">Agregar</a></li>
-						    <li><a href="?INFORME&general_detail&trim=2&edit">Editar</a></li>
+						  	<?php 
+						  	$row_trim2 = mysql_query("SELECT * FROM trim2 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual");
+						  	$informacion_trim2 = mysql_fetch_assoc($row_trim2);
+
+						  	if(isset($informacion_trim2['idtrim2'])){
+						  		echo '<li><a href="?INFORME&general_detail&trim=2&add&idtrim='.$informacion_trim2['idtrim2'].'">Agregar</a></li>';
+						  		echo '<li><a href="?INFORME&general_detail&trim=2&edit&idtrim='.$informacion_trim2['idtrim2'].'">Editar</a></li>';
+						  	}
+						  	 ?>
 						  </ul>
 						</div>
 
@@ -145,8 +150,15 @@ if(isset($_POST['informe_trimestral'])){
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
 						  <ul class="dropdown-menu">
-						    <li><a href="?INFORME&general_detail&trim=3&add">Agregar</a></li>
-						    <li><a href="?INFORME&general_detail&trim=3&edit">Editar</a></li>
+						  	<?php 
+						  	$row_trim3 = mysql_query("SELECT * FROM trim3 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual");
+						  	$informacion_trim3 = mysql_fetch_assoc($row_trim3);
+
+						  	if(isset($informacion_trim3['idtrim3'])){
+						  		echo '<li><a href="?INFORME&general_detail&trim=3&add&idtrim='.$informacion_trim3['idtrim3'].'">Agregar</a></li>';
+						  		echo '<li><a href="?INFORME&general_detail&trim=3&edit&idtrim='.$informacion_trim3['idtrim3'].'">Editar</a></li>';
+						  	}
+						  	 ?>
 						  </ul>
 						</div>
 
@@ -157,17 +169,29 @@ if(isset($_POST['informe_trimestral'])){
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
 						  <ul class="dropdown-menu">
-						    <li><a href="?INFORME&general_detail&trim=4&add">Agregar</a></li>
-						    <li><a href="?INFORME&general_detail&trim=4&edit">Editar</a></li>
+						  	<?php 
+						  	$row_trim4 = mysql_query("SELECT * FROM trim4 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual");
+						  	$informacion_trim4 = mysql_fetch_assoc($row_trim4);
+
+						  	if(isset($informacion_trim4['idtrim4'])){
+						  		echo '<li><a href="?INFORME&general_detail&trim=4&add&idtrim='.$informacion_trim4['idtrim4'].'">Agregar</a></li>';
+						  		echo '<li><a href="?INFORME&general_detail&trim=4&edit&idtrim='.$informacion_trim4['idtrim4'].'">Editar</a></li>';
+						  	}
+						  	 ?>
 						  </ul>
 						</div>
 
 					</div>
-				</div>			
+				</div>
+	
 				<div class="col-md-12">
 					<?php 
-					include('trim.php');
-					 ?>
+					if(!isset($_GET['trim'])){
+						include('informe_detail.php');
+					}else{
+						include('trim.php');
+					}
+					?>
 				</div>
 			</div>
 		<?php
@@ -199,4 +223,5 @@ if(isset($_POST['informe_trimestral'])){
 	}
 	 ?>
 	</div>
+
 </div>
