@@ -747,15 +747,9 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                     echo '<button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Consultar Certificado</button>';
                   }
                 }else{
-                  if(isset($solicitud['idmembresia'])){
                   ?>
                     <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud_registro']; ?>">Consultar Certificado</button>
                   <?php
-                  }else{
-                  ?>
-                    <button type="button" class="btn btn-sm btn-default" style="width:100%" disabled>Consultar Certificado</button>
-                  <?php
-                  }
                 }
                 ?>
                   <!-- inicia modal estatus_Certificado -->
