@@ -1115,7 +1115,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //inicia correo envio de certificado
-  $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.contacto1_email, opp.nombre AS 'nombre_opp', opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2', solicitud_certificacion.contacto1_email, opp.nombre AS 'nombre_opp', opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
   $inicio = strtotime($_POST['fecha_inicio']);
   $fin = strtotime($_POST['fecha_fin']);
@@ -1161,6 +1161,13 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     $mail->AddAddress($informacion['email']);
     $mail->AddAddress($informacion['contacto1_email']);
     $mail->AddBCC($spp_global);
+      if(isset($informacion['oc_email1'])){
+        $mail->AddCC($informacion['oc_email1']);
+      }
+      if(isset($informacion['oc_email2'])){
+        $mail->AddCC($informacion['oc_email2']);
+      }
+
     $mail->AddAttachment($certificado);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";

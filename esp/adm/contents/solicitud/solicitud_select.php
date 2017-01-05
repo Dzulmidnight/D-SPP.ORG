@@ -1027,7 +1027,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
 
   /* INICIA PAGINACION */
     //limitamos la consulta
-    $regXPag = 10;
+    $regXPag = 20;
     $pagina = false; //cuando se ingresa al menu no tiene ningun valor
 
     //Examinar la pagina a mostrar y el inicio del registro a mostrar
