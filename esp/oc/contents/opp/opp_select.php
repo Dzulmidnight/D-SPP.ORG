@@ -106,14 +106,17 @@ if(isset($_POST['actualizacion_opp']) && $_POST['actualizacion_opp'] == 'actuali
           4.- CANCELADA
           */
           $estatus_publico = "";
+          $estatus_opp = '';
           if($estatus_interno == 10){ // CANCELADO
             $estatus_publico = 3; //cancelado
+            $estatus_opp = 'CANCELADO';
           }else{ // ESTATUS PAGINA = EN REVISION
             $estatus_publico = 1; //en revision
           }
-          $updateSQL = sprintf("UPDATE opp SET estatus_interno = %s, estatus_publico = %s WHERE idopp = %s",
+          $updateSQL = sprintf("UPDATE opp SET estatus_interno = %s, estatus_publico = %s, estatus_opp = %s WHERE idopp = %s",
             GetSQLValueString($estatus_interno, "int"),
             GetSQLValueString($estatus_publico, "int"),
+            GetSQLValueString($estatus_opp, "text"),
             GetSQLValueString($datos_opp['idopp'], "int"));
           $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 

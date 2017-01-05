@@ -659,66 +659,68 @@ $solicitud = mysql_fetch_assoc($ejecutar);
               
             </div>            
 
-
-          <p><b>12. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
+          
           <div class="col-xs-12 ">
-                <?php
-                  if($solicitud['op_preg12'] == 'SI'){
-                      //echo "SI <input type='radio' name='op_preg12'  checked readonly>";
-                    /*echo "</div>";
-                    echo "<div class='col-xs-6'>";
-                      echo "<p class='text-center alert alert-danger'>NO</p>";
-                      echo "NO <input type='radio' name='op_preg12'  readonly>";
-                    echo "</div>";*/
-                ?>
-                  <div class="col-xs-6">
-                    <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> SI</p>
-                  </div>
-                  <div class="col-xs-6">
-                    <?php 
-                      if(empty($solicitud['op_preg13'])){
-                     ?>
-                      <p class="alert alert-danger">No se proporciono ninguna respuesta.</p>
-                    <?php 
-                      }else if($solicitud['op_preg13'] == "HASTA $3,000 USD"){
-                     ?>
-                      <p class="alert alert-info">HASTA $3,000 USD</p>
-                    <?php 
-                      }else if($solicitud['op_preg13'] == "ENTRE $3,000 Y $10,000 USD"){
-                     ?>
-                     <p class="alert alert-info">ENTRE $3,000 Y $10,000 USD</p>
-                    <?php 
-                      }else if($solicitud['op_preg13'] == "ENTRE $10,000 A $25,000 USD"){
-                     ?>
-                     <p class="alert alert-info">ENTRE $10,000 A $25,000 USD</p>
-                    <?php 
-                      }else if($solicitud['op_preg13'] != "HASTA $3,000 USD" && $solicitud['op_preg13'] != "ENTRE $3,000 Y $10,000 USD" && $solicitud['op_preg13'] != "ENTRE $10,000 A $25,000 USD"){
-                     ?>
-                     <p class="alert alert-info"><?php echo $solicitud['op_preg13']; ?></p>
-                     
-                    <?php 
-                      }
-                     ?>
-                  </div>
-                <?php
-                  }else if($solicitud['op_preg12'] == 'NO'){
-                ?>
-                  <div class="col-xs-12">
-                    <p class='text-center alert alert-danger'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span> NO</p>
-                  </div>
-                
-                <?php         
-                  }
-                ?>
+            <div class="row">
+              <p><b>12. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
+                  <?php
+                    if($solicitud['op_preg12'] == 'SI'){
+                        //echo "SI <input type='radio' name='op_preg12'  checked readonly>";
+                      /*echo "</div>";
+                      echo "<div class='col-xs-6'>";
+                        echo "<p class='text-center alert alert-danger'>NO</p>";
+                        echo "NO <input type='radio' name='op_preg12'  readonly>";
+                      echo "</div>";*/
+                  ?>
+                    <div class="col-xs-6">
+                      <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> SI</p>
+                    </div>
+                    <div class="col-xs-6">
+                      <?php 
+                        if(empty($solicitud['op_preg13'])){
+                       ?>
+                        <p class="alert alert-danger">No se proporciono ninguna respuesta.</p>
+                      <?php 
+                        }else if($solicitud['op_preg13'] == "HASTA $3,000 USD"){
+                       ?>
+                        <p class="alert alert-info">HASTA $3,000 USD</p>
+                      <?php 
+                        }else if($solicitud['op_preg13'] == "ENTRE $3,000 Y $10,000 USD"){
+                       ?>
+                       <p class="alert alert-info">ENTRE $3,000 Y $10,000 USD</p>
+                      <?php 
+                        }else if($solicitud['op_preg13'] == "ENTRE $10,000 A $25,000 USD"){
+                       ?>
+                       <p class="alert alert-info">ENTRE $10,000 A $25,000 USD</p>
+                      <?php 
+                        }else if($solicitud['op_preg13'] != "HASTA $3,000 USD" && $solicitud['op_preg13'] != "ENTRE $3,000 Y $10,000 USD" && $solicitud['op_preg13'] != "ENTRE $10,000 A $25,000 USD"){
+                       ?>
+                       <p class="alert alert-info"><?php echo $solicitud['op_preg13']; ?></p>
+                       
+                      <?php 
+                        }
+                       ?>
+                    </div>
+                  <?php
+                    }else if($solicitud['op_preg12'] == 'NO'){
+                  ?>
+                    <div class="col-xs-12">
+                      <p class='text-center alert alert-danger'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span> NO</p>
+                    </div>
+                  
+                  <?php         
+                    }
+                  ?>
+            </div>
           </div>
               
           <label for="op_preg14">
-            14. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
+            13. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
           </label>
           <input type="text" class="form-control" id="op_preg14" name="op_preg14" value="<?php echo $solicitud['op_preg14']; ?>">
 
           <p>
-            <b>15. ANEXAR EL CROQUIS GENERAL DE SU OPP, INDICANDO LAS ZONAS EN DONDE CUENTA CON SOCIOS.</b>
+            <b>14. ANEXAR EL CROQUIS GENERAL DE SU OPP, INDICANDO LAS ZONAS EN DONDE CUENTA CON SOCIOS.</b>
           </p>
           <?php 
           if(empty($solicitud['op_preg15'])){

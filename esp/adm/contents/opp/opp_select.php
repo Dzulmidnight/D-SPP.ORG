@@ -102,14 +102,12 @@ $timeActual = time();
         $estatus_opp = $_POST['estatus_opp'.$datos_opp['idopp']];
 
         if(!empty($estatus_opp)){
-          if($estatus_opp == 'CANCELADO'){
+          /*if($estatus_opp == 'CANCELADO'){
             $estatus_interno = 10;
             $estatus_publico = 3;
-          }
-            $updateSQL = sprintf("UPDATE opp SET estatus_opp = %s, estatus_interno = %s, estatus_publico = %s WHERE idopp = %s",
+          }*/
+            $updateSQL = sprintf("UPDATE opp SET estatus_opp = %s WHERE idopp = %s",
               GetSQLValueString($estatus_opp, "text"),
-              GetSQLValueString($estatus_interno, "int"),
-              GetSQLValueString($estatus_publico, "int"),
               GetSQLValueString($datos_opp['idopp'], "int"));
             $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
@@ -692,6 +690,9 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
         echo "<tr><td class='text-center info' colspan='12'>No se encontraron Registros</td></tr>";
       }else{
         while($opp = mysql_fetch_assoc($detalle_opp)){
+          $query_solicitud = "SELECT idsolicitud_certificacion, tipo_solicitud, idopp FROM solicitud_certificacion WHERE idopp = '$opp[idopp]'";
+          $row_solicitud = mysql_query($query_solicitud, $dspp) or die(mysql_error());
+          $solicitud = mysql_fetch_assoc($row_solicitud);
         ?>
           <tr>
             <!--- INICIA CODIGO SPP ---->

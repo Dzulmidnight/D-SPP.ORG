@@ -846,10 +846,10 @@ $opp = mysql_fetch_assoc($row_opp);
 
 					<p><b>12. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
 						<div class="col-xs-6">
-							SI <input type="radio" class="form-control" name="op_preg12" onclick="mostrar_ventas()" id="op_preg12" value="SI">
+							SI <input type="radio" class="form-control" name="op_preg12" id="op_preg12_si" value="SI">
 						</div>
 						<div class="col-xs-6">
-							NO <input type="radio" class="form-control" name="op_preg12" onclick="ocultar_ventas()" id="op_preg12" value="NO">
+							NO <input type="radio" class="form-control" name="op_preg12" id="op_preg12_no" value="NO">
 						</div>			
 
 					<p>
@@ -982,9 +982,10 @@ $opp = mysql_fetch_assoc($row_opp);
   function validar(){
 
     tipo_solicitud = document.getElementsByName("tipo_solicitud");
-    tuvo_ventas = document.getElementById("op_preg12");
+    tuvo_ventas = document.getElementsByName("op_preg12");
     opcion_venta = document.getElementsByName("op_preg13");
      
+    // INICIA SELECCION TIPO SOLICITUD
     var seleccionado = false;
     for(var i=0; i<tipo_solicitud.length; i++) {    
       if(tipo_solicitud[i].checked) {
@@ -997,8 +998,9 @@ $opp = mysql_fetch_assoc($row_opp);
       alert("Debes de seleecionar un Tipo de Solicitud");
       return false;
     }
+    //// TERMINA SELECCION TIPO SOLICITUD
 
-
+    /// INICIA OPCION DE VENTAS
     var ventas = false;
     for(var i=0; i<tuvo_ventas.length; i++) {    
       if(tuvo_ventas[i].checked) {
@@ -1008,16 +1010,13 @@ $opp = mysql_fetch_assoc($row_opp);
     }
      
     if(!ventas) {
-      alert("Debes ");
+      alert("Debe seleccionar \"SI\" tuvo ó \"NO\" ventas");
       return false;
     }
-
-
+    /// TERMINA OPCION DE VENTAS
 
 
     if(tuvo_ventas != 'NO'){
-    	alert('SELECCIONASTE QUE SI');
-
 	    var monto = false;
 	    for(var i=0; i<opcion_venta.length; i++) {    
 	      if(opcion_venta[i].checked) {
@@ -1027,7 +1026,7 @@ $opp = mysql_fetch_assoc($row_opp);
 	    }
 	     
 	    if(!monto) {
-	      alert("Debes de seleecionar el monto de ventas SPP");
+	      alert("Seleccionaste que \"SI\" tuviste ventas, debes seleccionar el monto de ventas SPP");
 	      return false;
 	    }
 
