@@ -260,7 +260,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                     <tr>
                       <td colspan="2">
-                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'$detalle_oc['email1']', '.$detalle_oc['email2'].'</span></p>
+                        
                       </td>
                     </tr>
                   </tbody>
@@ -1699,7 +1699,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 }
 
                               }else{
-                                echo "<p class='alert alert-danger'>The \"User's Contract\" has not yet been \"Approved\" and neither has \"Approved\" the membership</p>";
+                                echo "<p class='alert alert-danger'>The \"Membership\" has not yet been \"Approved\" </p>";
                               }
                             }else{
                               if($solicitud['estatus_contrato'] == 'ACEPTADO' && $proceso_certificacion['estatus_membresia'] == "APROBADA"){
@@ -1742,7 +1742,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 }
 
                               }else{
-                                echo "<p class='alert alert-danger'>The \"User's Contract\" has not yet been \"Approved\" and neither has \"Approved\" the membership</p>";
+                                echo "<p class='alert alert-danger'>The \"Membership\" has not yet been \"Approved\" and neither has \"Approved\" the membership</p>";
                               }
                             }
                              ?>

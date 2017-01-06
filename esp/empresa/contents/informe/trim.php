@@ -96,7 +96,7 @@ if(isset($_GET['trim'])){
 			$estatus = $trim[$estado_trim];
 			$pregunta = "
 				<p class='alert alert-info' style='padding:7px;margin-bottom:0px;'>
-					¿Desear Concluir el Formato de Trimestre actual?
+					<b style='color:red'>¿Desear Concluir el Formato de Trimestre actual?</b>
 					<input class='btn btn-success' type='submit' name='finalizar_trim' value='SI'>
 					<input type='text' name='idtrim' value='".$trim[$idtrim]."'>
 					<input type='text' name='fecha' value='".time()."'>

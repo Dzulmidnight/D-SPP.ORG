@@ -1752,7 +1752,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 }
 
                               }else{
-                                echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" el \"Contrato de Uso\" ni se ha \"Aprobado\" la membresia</p>";
+                                echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" el pago de la membresia</p>";
                               }
                             }else{
                               if($solicitud['estatus_contrato'] == 'ACEPTADO' && $proceso_certificacion['estatus_membresia'] == "APROBADA"){
@@ -1795,7 +1795,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 }
 
                               }else{
-                                echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" el \"Contrato de Uso\" ni se ha \"Aprobado\" la membresia</p>";
+                                echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" el pago de la membresia</p>";
                               }
                             }
                              ?>
