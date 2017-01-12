@@ -90,8 +90,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
   if(!empty($_FILES['archivo_estatus']['name'])){
       $_FILES["archivo_estatus"]["name"];
-        move_uploaded_file($_FILES["archivo_estatus"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_estatus"]["name"]);
-        $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_estatus"]["name"]);
+        move_uploaded_file($_FILES["archivo_estatus"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["archivo_estatus"]["name"]);
+        $archivo = $rutaArchivo.basename($fecha."_".$_FILES["archivo_estatus"]["name"]);
   }else{
     $archivo = NULL;
   }
@@ -99,8 +99,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
   if($_POST['estatus_interno'] == 8){ //checamos si el estatus_interno es positvo
-    $nombre_oc = mysql_query("SELECT nombre FROM oc WHERE idoc = $detalle_empresa[idoc]", $dspp) or die(mysql_error());
-    $detall_oc = mysql_fetch_assoc($nombre_oc);
+    $nombre_oc = mysql_query("SELECT nombre, email1, email2 FROM oc WHERE idoc = $detalle_empresa[idoc]", $dspp) or die(mysql_error());
+    $detalle_oc = mysql_fetch_assoc($nombre_oc);
       $estatus_dspp = 9; //Termina proceso de certificación
       $asunto = "D-SPP | Notificación de Dictamen";
     if($_POST['tipo_solicitud'] == 'RENOVACION'){
@@ -108,12 +108,17 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       //creamos la variable del archivo extra
       if(!empty($_FILES['archivo_extra']['name'])){
           $_FILES["archivo_extra"]["name"];
-            move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_extra"]["name"]);
-            $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_extra"]["name"]);
+            move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["archivo_extra"]["name"]);
+            $archivo = $rutaArchivo.basename($fecha."_".$_FILES["archivo_extra"]["name"]);
       }else{
         $archivo = NULL;
       }
 
+      $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
+        GetSQLValueString($_POST['estatus_interno'], "int"),
+        GetSQLValueString($estatus_dspp, "int"),
+        GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_interno, estatus_dspp, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s)",
         GetSQLValueString($_POST['idsolicitud_registro'], "int"),
@@ -180,7 +185,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 <tr>
                   <td colspan="2">
                       <p>
-                        1. Nosotros <span style="color:red">'.$detall_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo. En breve sera contactado.
+                        1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo. En breve sera contactado.
                       </p>
                   </td>
                 </tr>
@@ -309,11 +314,17 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       //creamos la variable del archivo extra
       if(!empty($_FILES['archivo_extra']['name'])){
           $_FILES["archivo_extra"]["name"];
-            move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_extra"]["name"]);
-            $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_extra"]["name"]);
+            move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["archivo_extra"]["name"]);
+            $archivo = $rutaArchivo.basename($fecha."_".$_FILES["archivo_extra"]["name"]);
       }else{
         $archivo = NULL;
       }
+      $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
+        GetSQLValueString($_POST['estatus_interno'], "int"),
+        GetSQLValueString($estatus_dspp, "int"),
+        GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
         GetSQLValueString($_POST['idsolicitud_registro'], "int"),
         GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -400,7 +411,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 </tr>
                 <tr>
                   <td colspan="2" style="padding-top:10px;">
-                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
+                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">cert@spp.coop</span> o <span style="color:red">'.$detalle_oc['email1'].', '.$detalle_oc['email2'].'</span></p>
                   </td>
                 </tr>
               </tbody>
@@ -429,7 +440,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 <tr>
                   <td colspan="2" style="text-align:justify">
                     <p>
-                      1. Nosotros <span style="color:red">'.$detall_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.
+                      1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.
                     </p>
                     <p>
                       2. <span style="color:red">Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente firmar el Contrato de Uso y Acuse de Recibo.</span>
@@ -461,7 +472,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 </tr>
                 <tr>
                   <td colspan="2" style="padding-top:10px;">
-                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
+                    <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$detalle_oc['email1'].', '.$detalle_oc['email2'].'</span></p>
                   </td>
                 </tr>
               </tbody>
@@ -483,11 +494,11 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->AddAddress($detalle_empresa['email']);
       }
       $mail->AddBCC($spp_global);
-      if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
+      if(isset($detalle_oc['email1'])){
+        $mail->AddCC($detalle_oc['email1']);
       }
-      if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+      if(isset($detalle_oc['email2'])){
+        $mail->AddCC($detalle_oc['email2']);
       }
 
       $mail->Subject = utf8_decode($asunto);
@@ -509,6 +520,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
   }else{
+      $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
+        GetSQLValueString($_POST['estatus_interno'], "int"),
+        GetSQLValueString($estatus_dspp, "int"),
+        GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
     $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
       GetSQLValueString($_POST['idsolicitud_registro'], "int"),
       GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -532,8 +549,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
   if(!empty($_FILES['formato_evaluacion']['name'])){
       $_FILES["formato_evaluacion"]["name"];
-        move_uploaded_file($_FILES["formato_evaluacion"]["tmp_name"], $ruta_evaluacion.time()."_".$_FILES["formato_evaluacion"]["name"]);
-        $formato = $ruta_evaluacion.basename(time()."_".$_FILES["formato_evaluacion"]["name"]);
+        move_uploaded_file($_FILES["formato_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha."_".$_FILES["formato_evaluacion"]["name"]);
+        $formato = $ruta_evaluacion.basename($fecha."_".$_FILES["formato_evaluacion"]["name"]);
   }else{
     $formato = NULL;
   }
@@ -559,8 +576,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
   if(!empty($_FILES['informe_evaluacion']['name'])){
       $_FILES["informe_evaluacion"]["name"];
-        move_uploaded_file($_FILES["informe_evaluacion"]["tmp_name"], $ruta_evaluacion.time()."_".$_FILES["informe_evaluacion"]["name"]);
-        $informe = $ruta_evaluacion.basename(time()."_".$_FILES["informe_evaluacion"]["name"]);
+        move_uploaded_file($_FILES["informe_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha."_".$_FILES["informe_evaluacion"]["name"]);
+        $informe = $ruta_evaluacion.basename($fecha."_".$_FILES["informe_evaluacion"]["name"]);
   }else{
     $informe = NULL;
   }
@@ -587,8 +604,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
   if(!empty($_FILES['dictamen_evaluacion']['name'])){
       $_FILES["dictamen_evaluacion"]["name"];
-        move_uploaded_file($_FILES["dictamen_evaluacion"]["tmp_name"], $ruta_evaluacion.time()."_".$_FILES["dictamen_evaluacion"]["name"]);
-        $dictamen = $ruta_evaluacion.basename(time()."_".$_FILES["dictamen_evaluacion"]["name"]);
+        move_uploaded_file($_FILES["dictamen_evaluacion"]["tmp_name"], $ruta_evaluacion.$fecha."_".$_FILES["dictamen_evaluacion"]["name"]);
+        $dictamen = $ruta_evaluacion.basename($fecha."_".$_FILES["dictamen_evaluacion"]["name"]);
   }else{
     $dictamen = NULL;
   }
@@ -683,8 +700,8 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $rutaArchivo = "../../archivos/ocArchivos/certificados/";
   if(!empty($_FILES['certificado']['name'])){
       $_FILES["certificado"]["name"];
-        move_uploaded_file($_FILES["certificado"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["certificado"]["name"]);
-        $certificado = $rutaArchivo.basename(time()."_".$_FILES["certificado"]["name"]);
+        move_uploaded_file($_FILES["certificado"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["certificado"]["name"]);
+        $certificado = $rutaArchivo.basename($fecha."_".$_FILES["certificado"]["name"]);
   }else{
     $certificado = NULL;
   }
@@ -715,6 +732,12 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     GetSQLValueString($certificado, "text"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+      $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
+        GetSQLValueString(8, "int"),
+        GetSQLValueString($estatus_proceso, "int"),
+        GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //ACTUALIZAMOS A LA empresa
   $estatus_dspp = 13; //certificada

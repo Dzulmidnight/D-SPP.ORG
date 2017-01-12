@@ -264,16 +264,17 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
 
   if(!empty($_FILES['cotizacion_opp']['name'])){
       $_FILES["cotizacion_opp"]["name"];
-        move_uploaded_file($_FILES["cotizacion_opp"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["cotizacion_opp"]["name"]);
-        $cotizacion_opp = $rutaArchivo.basename(time()."_".$_FILES["cotizacion_opp"]["name"]);
+        move_uploaded_file($_FILES["cotizacion_opp"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["cotizacion_opp"]["name"]);
+        $cotizacion_opp = $rutaArchivo.basename($fecha."_".$_FILES["cotizacion_opp"]["name"]);
   }else{
     $cotizacion_opp = NULL;
   }
 
   //ACTUALIZAMOS LA SOLICITUD DE CERTIFICACION AGREGANDO LA COTIZACIÓN
-  $updateSQL = sprintf("UPDATE solicitud_certificacion SET tipo_procedimiento = %s, cotizacion_opp = %s WHERE idsolicitud_certificacion = %s",
+  $updateSQL = sprintf("UPDATE solicitud_certificacion SET tipo_procedimiento = %s, cotizacion_opp = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
     GetSQLValueString($procedimiento, "text"),
     GetSQLValueString($cotizacion_opp, "text"),
+    GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($idsolicitud_certificacion, "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
@@ -291,8 +292,11 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
   //ASUNTO DEL CORREO
-  $row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
-  $oc = mysql_fetch_assoc($row_oc);
+  //$row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
+  //$oc = mysql_fetch_assoc($row_oc);
+
+  $row_opp = mysql_query("SELECT opp.nombre, opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
+  $opp_detail = mysql_fetch_assoc($row_opp);
 
   $asunto = "D-SPP Cotización (Solicitud de Certificación para Organizaciones de Pequeños Productores)";
 
@@ -310,19 +314,15 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
             <th scope="col" align="left" width="280" ><strong>Notificación de Cotización / Price Notification</strong></th>
           </tr>
           <tr>
-            <td align="left" style="color:#ff738a;">Email Organismo de Certificación / Certification Entity: '.$oc['email1'].'</td>
-          </tr>
-
-          <tr>
-            <td align="left">'.$oc['pais'].'</td>
+            <td align="left" style="color:#ff738a;">Email Organismo de Certificación / Certification Entity: '.$opp_detail['email1'].'</td>
           </tr>
           <tr>
             <td aling="left" style="text-align:justify">
-            Se ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
+            <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
             <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
 
             <br><br>
-            The quotation corresponding to the Certification Application for Small producers organizations has been sent.
+            <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> has sent the quotation corresponding to the Certification Application for Small producers organizations.
               <br><br>Please log in to the following link <a href="http://d-spp.org/?OPP">www.d-spp.org/</a> as OPP to access the quotation.
 
             </td>
@@ -348,7 +348,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
                       '.$_POST['pais'].'
                     </td>
                     <td style="padding:10px;">
-                      '.$oc['nombre'].'
+                      '.$opp_detail['abreviacion_oc'].'
                     </td>
                     <td style="padding:10px;">
                     '.date('d/m/Y', $fecha).'
@@ -363,10 +363,12 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
                   <td colspan="2">
                     <span style="color:red">¿Qué es lo de debo realizar ahora?. Debes "Aceptar" o "Rechazar" la cotización</span>
                     <ol>
+
                       <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organización de Pequeños Productores(OPP).</li>
+                      <li>Tu Usuario: <b style="color:red">'.$opp_detail['spp'].'</b> y Contraseña: <b style="color:red">'.$opp_detail['password'].'</b></li>
                       <li>Dentro de tu cuenta debes seleccionar Solicitudes > Listado Solicitudes.</li>
                       <li>Dentro de la tabla solicitudes debes localizar la columna "Cotización" Y seleccionar el botón Verde (aceptar cotización) ó el botón Rojo (rechazar cotización)</li>
-                      <li>En caso de aceptar la cotización debes esperar a que finalice el "Periodo de Objeción"</li>
+                      <li>En caso de aceptar la cotización debes esperar a que finalice el "Periodo de Objeción"(en caso de que sea la primera vez que solicitas la certifición SPP)</li>
                     </ol>
                   </td>
                 </tr> 

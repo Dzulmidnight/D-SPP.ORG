@@ -94,8 +94,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
   if(!empty($_FILES['archivo_estatus']['name'])){
       $_FILES["archivo_estatus"]["name"];
-        move_uploaded_file($_FILES["archivo_estatus"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_estatus"]["name"]);
-        $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_estatus"]["name"]);
+        move_uploaded_file($_FILES["archivo_estatus"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["archivo_estatus"]["name"]);
+        $archivo = $rutaArchivo.basename($fecha."_".$_FILES["archivo_estatus"]["name"]);
   }else{
     $archivo = NULL;
   }
@@ -112,8 +112,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
     if(!empty($_FILES['archivo_dictamen']['name'])){
         $_FILES["archivo_dictamen"]["name"];
-          move_uploaded_file($_FILES["archivo_dictamen"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_dictamen"]["name"]);
-          $archivo_dictamen = $rutaArchivo.basename(time()."_".$_FILES["archivo_dictamen"]["name"]);
+          move_uploaded_file($_FILES["archivo_dictamen"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["archivo_dictamen"]["name"]);
+          $archivo_dictamen = $rutaArchivo.basename($fecha."_".$_FILES["archivo_dictamen"]["name"]);
     }else{
       $archivo_dictamen = NULL;
     }
@@ -126,6 +126,11 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }else{
         $mensaje_renovacion = '';
       }
+      $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+        GetSQLValueString($_POST['estatus_interno'], "int"),
+        GetSQLValueString($estatus_dspp, "int"),
+        GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
         GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
@@ -321,6 +326,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
     ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
     }else{ 
     ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
+      $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+        GetSQLValueString($_POST['estatus_interno'], "int"),
+        GetSQLValueString($estatus_dspp, "int"),
+        GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
         GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
         GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -410,7 +421,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                           LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
                         </p>
                         <p>
-                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
+                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO y ACUSE DE RECIBO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
                         </p>
                       </td>
                     </tr>
@@ -471,7 +482,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                           LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
                         </p>
                         <p>
-                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
+                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO y ACUSE DE RECIBO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
                         </p>
                         <p>
                           3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
@@ -540,8 +551,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
     //creamos la variable del archivo extra
     if(!empty($_FILES['archivo_extra']['name'])){
         $_FILES["archivo_extra"]["name"];
-          move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["archivo_extra"]["name"]);
-          $archivo = $rutaArchivo.basename(time()."_".$_FILES["archivo_extra"]["name"]);
+          move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["archivo_extra"]["name"]);
+          $archivo = $rutaArchivo.basename($fecha."_".$_FILES["archivo_extra"]["name"]);
     }else{
       $archivo = NULL;
     }
@@ -554,6 +565,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }else{
         $mensaje_renovacion = '';
       }
+
+      $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+        GetSQLValueString($_POST['estatus_interno'], "int"),
+        GetSQLValueString($estatus_dspp, "int"),
+        GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
         GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
@@ -684,6 +701,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->ClearAddresses();
       ///termina envio de mensaje dictamen positivo
     }else{
+      $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+        GetSQLValueString($_POST['estatus_interno'], "int"),
+        GetSQLValueString($estatus_dspp, "int"),
+        GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
         GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
         GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -892,6 +915,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       ///termina envio de mensaje dictamen positivo
     }
   }else{
+    $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+      GetSQLValueString($_POST['estatus_interno'], "int"),
+      GetSQLValueString($estatus_dspp, "int"),
+      GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
+    $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
     $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
       GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
       GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -1073,8 +1102,8 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $rutaArchivo = "../../archivos/ocArchivos/certificados/";
   if(!empty($_FILES['certificado']['name'])){
       $_FILES["certificado"]["name"];
-        move_uploaded_file($_FILES["certificado"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["certificado"]["name"]);
-        $certificado = $rutaArchivo.basename(time()."_".$_FILES["certificado"]["name"]);
+        move_uploaded_file($_FILES["certificado"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["certificado"]["name"]);
+        $certificado = $rutaArchivo.basename($fecha."_".$_FILES["certificado"]["name"]);
   }else{
     $certificado = NULL;
   }
@@ -1100,6 +1129,13 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     GetSQLValueString($certificado, "text"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+
+  $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+    GetSQLValueString(8, "int"),
+    GetSQLValueString($estatus_proceso, "int"),
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //ACTUALIZAMOS A LA OPP
   $estatus_dspp = 13; //certificada
@@ -1423,7 +1459,31 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       </div>
                                       <div class="col-xs-12 alert alert-info">
                                         <h5 class="">MEMBRESÍA SPP: <span style="color:#7f8c8d">Indicar el monto total de la membresía, asi como el tipo de moneda.</span></h5>
-                                        <input type="text" class="form-control" name="total_membresia" id="total_membresia_2" placeholder="Total Membresía">
+                                        <?php 
+                                        // calculamos el valor de la membresia SPP
+                                        $num_productores = $solicitud['resp1'];
+                                        if($num_productores <= 100){
+                                          $valor_membresia = '$ 150 USD';
+                                        }
+                                        else if(($num_productores > 100) && ($num_productores <= 250)){
+                                          $valor_membresia = '$ 187.50 USD';
+                                        }
+                                        else if(($num_productores > 250) && ($num_productores <= 500)){
+                                          $valor_membresia = '$ 375.00 USD';
+                                        }
+                                        else if(($num_productores > 500) && ($num_productores <= 1000)){
+                                          $valor_membresia = '$ 562.50 USD';
+                                        }
+                                        else if($num_productores > 1000){
+                                          $valor_membresia = '$750.00 USD';
+                                        }else{
+                                          $valor_membresia = '';
+                                        }
+
+
+
+                                         ?>
+                                        <input type="text" class="form-control" name="total_membresia" id="total_membresia_2"  value="<?php echo $valor_membresia; ?>" placeholder="Total Membresía">
                                       </div>
 
                                       <div class="col-xs-12">
@@ -1490,8 +1550,29 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       </div>
 
                                       <div class="col-xs-12 alert alert-info">
+                                        <?php 
+                                        $num_productores = $solicitud['resp1'];
+                                        if($num_productores <= 100){
+                                          $valor_membresia = '$ 150 USD';
+                                        }
+                                        else if(($num_productores > 100) && ($num_productores <= 250)){
+                                          $valor_membresia = '$ 187.50 USD';
+                                        }
+                                        else if(($num_productores > 250) && ($num_productores <= 500)){
+                                          $valor_membresia = '$ 375.00 USD';
+                                        }
+                                        else if(($num_productores > 500) && ($num_productores <= 1000)){
+                                          $valor_membresia = '$ 562.50 USD';
+                                        }
+                                        else if($num_productores > 1000){
+                                          $valor_membresia = '$750.00 USD';
+                                        }else{
+                                          $valor_membresia = '';
+                                        }
+                                         ?>
+
                                         <h4 style="font-size:14px;">MEMBRESÍA SPP: <span style="color:#7f8c8d">Indicar el monto total de la membresía, asi como el tipo de moneda.</span></h4>
-                                        <input type="text" class="form-control" name="total_membresia" id="total_membresia" placeholder="Total Membresía">
+                                        <input type="text" class="form-control" name="total_membresia" id="total_membresia" value="<?php echo $valor_membresia; ?>" placeholder="Total Membresía">
                                       </div>
                                     </div>
 
@@ -1752,7 +1833,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 }
 
                               }else{
-                                echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" el pago de la membresia</p>";
+                                echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" la membresia</p>";
                               }
                             }else{
                               if($solicitud['estatus_contrato'] == 'ACEPTADO' && $proceso_certificacion['estatus_membresia'] == "APROBADA"){
@@ -1795,7 +1876,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 }
 
                               }else{
-                                echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" el pago de la membresia</p>";
+                                echo "<p class='alert alert-danger'>Aun no se ha \"Cargado\" el Contrato de Uso</p>";
                               }
                             }
                              ?>

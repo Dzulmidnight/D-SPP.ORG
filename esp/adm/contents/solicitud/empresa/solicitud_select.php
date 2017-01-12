@@ -53,6 +53,10 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
   $idperiodo_objecion = $_POST['idperiodo_objecion'];
   $estatus_objecion = 'ACTIVO';
   
+  $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
 
   //ACTUALIZAMOS EL PERIODO DE OBJECIÓN
   $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
@@ -508,6 +512,11 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
     GetSQLValueString($_POST['idmembresia'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
+  $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+
   //insertarmos el proceso_certificacion
   $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_registro, estatus_dspp, fecha_registro) VALUES (%s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_registro'], "int"),
@@ -679,6 +688,11 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
     GetSQLValueString($_POST['idcontrato'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
+  $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+
   //creamos el proceso_certificacion
   $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_registro, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_registro'], "int"),
@@ -772,6 +786,12 @@ if(isset($_POST['rechazar_contrato']) && $_POST['rechazar_contrato'] == 2){
   $estatus_dspp = 19; //CONTRATO DE USO APROBADO
   $estatus_contrato = "RECHAZADO";;
   //actualizamos el contrato de uso
+  $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+
+  
   $updateSQL = sprintf("UPDATE contratos SET estatus_contrato = %s, observaciones = %s WHERE idcontrato = %s",
     GetSQLValueString($estatus_contrato, "text"),
     GetSQLValueString($_POST['observaciones_contrato'], "text"),
@@ -1313,7 +1333,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                           }else{
                           ?>
                             <div class="col-md-6">
-                              <h4>Contrato de Uso</h4>
+                              <h4>Contrato de Uso y Acuse de Recibo</h4>
                               <?php 
                               if(isset($solicitud['idcontrato'])){
                                 $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
@@ -1325,7 +1345,22 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
 
                                 }else{
                                 ?>
-                                  <a href="<?php echo $contrato['archivo']; ?>" target="_blank" class="btn btn-sm btn-success" style="width:100%">Descargar Contrato</a>
+                                  <div class="btn-group" role="group" aria-label="...">
+                                    <a href="<?php echo $contrato['archivo']; ?>" target="_blank" class="btn btn-default"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Descargar Contrato</a>
+                                    <?php 
+                                    if(empty($contrato['acuse_recibo'])){
+                                    ?>
+                                      <a href="<?php echo $contrato['acuse_recibo']; ?>" target="_blank" class="disabled btn btn-default"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Acuse de Recibo No Disponible</a>
+                                    <?php
+                                    }else{
+                                    ?>
+                                      <a href="<?php echo $contrato['acuse_recibo']; ?>" target="_blank" class="btn btn-default"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Descargar Acuse de Recibo</a>
+                                    <?php
+                                    }
+                                     ?>
+                                  </div>
+
+                                  <!--<a href="<?php echo $contrato['archivo']; ?>" target="_blank" class="btn btn-sm btn-success" style="width:100%">Descargar Contrato</a>-->
                                   <label for="observaciones_contrato">Observaciones (<span style="color:red">en caso de ser rechazado</span>)</label>
                                   <textarea name="observaciones_contrato" id="observaciones_contrato" class="form-control" placeholder="Observaciones Contrato"></textarea>
                                   <div class="col-md-12">

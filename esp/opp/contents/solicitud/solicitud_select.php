@@ -70,7 +70,8 @@ if(isset($_POST['cotizacion']) ){
   if($estatus_dspp == 5){ // se acepta la cotización, modificamos la solicitud y fijamos las fechas del periodo de objeción
     $asunto_opp = "D-SPP Cotización de Solicitud Aceptada";
 
-    $updateSQL = sprintf("UPDATE solicitud_certificacion SET fecha_aceptacion = %s WHERE idsolicitud_certificacion = %s",
+    $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_dspp = %s, fecha_aceptacion = %s WHERE idsolicitud_certificacion = %s",
+      GetSQLValueString(5, "int"),
       GetSQLValueString($fecha, "int"),
       GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
     $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
@@ -163,6 +164,9 @@ if(isset($_POST['cotizacion']) ){
       $mail->MsgHTML(utf8_decode($mensaje_opp));
       $mail->Send();
       $mail->ClearAddresses();
+
+      $mensaje = "La cotización ha sido aceptada, en breve el Organismo de Certificación se pondra en contacto.";
+
     }else{
       //CALCULAMOS Y FIJAMOS EL PERIODO DE OBJECIÓN
       $periodo = 15*(24*60*60); //calculamos los segundos de 15 dias
@@ -299,7 +303,7 @@ if(isset($_POST['cotizacion']) ){
                   </head>
                   <body>
                   
-                    <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="700px">
+                    <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 12px; color: #797979;" border="0" width="700px">
                       <thead>
                         <tr>
                           <th>
@@ -323,7 +327,7 @@ if(isset($_POST['cotizacion']) ){
                         </tr>
                         <tr>
                           <td colspan="2">
-                            <p style="font-size:14px;color:red">Para aprobar el Periodo de Objeción debe ingresar en su cuenta de Administrador</p>
+                            <p style="font-size:12px;color:red">Para aprobar el Periodo de Objeción debe ingresar en su cuenta de Administrador</p>
                           </td>
                         </tr>
 
@@ -376,14 +380,19 @@ if(isset($_POST['cotizacion']) ){
       $mail->ClearAddresses();
 
       ////// TERMINA ENVIAR CORREO AL ADMINISTRADOR PARA APROBAR PERIODO DE OBJECIÓN
+
+      $mensaje = "La cotización ha sido aceptada, el periodo de objeción ha empezado, en breve seras contactado";
+
     }
 
-
-    $mensaje = "La cotización ha sido aceptada, el periodo de objeción ha empezado, en breve seras contactado";
   }else{
+    $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+      GetSQLValueString(17, "int"),
+      GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
+    $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
     $mensaje = "La cotización ha sido rechazada";
   }
-  
+
   //INSERTAMOS EL PROCESO DE CERTIFICACIÓN
   $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_dspp, fecha_registro) VALUES (%s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
@@ -402,12 +411,16 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 
   if(!empty($_FILES['comprobante_pago']['name'])){
       $_FILES["comprobante_pago"]["name"];
-        move_uploaded_file($_FILES["comprobante_pago"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["comprobante_pago"]["name"]);
-        $comprobante_pago = $rutaArchivo.basename(time()."_".$_FILES["comprobante_pago"]["name"]);
+        move_uploaded_file($_FILES["comprobante_pago"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["comprobante_pago"]["name"]);
+        $comprobante_pago = $rutaArchivo.basename($fecha."_".$_FILES["comprobante_pago"]["name"]);
   }else{
     $comprobante_pago = NULL;
   }
 
+  $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
   //creamos el proceso de certificacion
   $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, nombre_archivo, archivo, fecha_registro) VALUES(%s, %s, %s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
@@ -501,18 +514,34 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
   $rutaArchivo = "../../archivos/admArchivos/contratos/";
   $nombre = "CONTRATO DE USO";
 
+
+  // se carga el Contrato de Uso
   if(!empty($_FILES['contrato']['name'])){
       $_FILES["contrato"]["name"];
-        move_uploaded_file($_FILES["contrato"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["contrato"]["name"]);
-        $contrato = $rutaArchivo.basename(time()."_".$_FILES["contrato"]["name"]);
+        move_uploaded_file($_FILES["contrato"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["contrato"]["name"]);
+        $contrato = $rutaArchivo.basename($fecha."_".$_FILES["contrato"]["name"]);
   }else{
     $contrato = NULL;
   }
+
+  // se carga el ACUSE DE Recibo
+  if(!empty($_FILES['acuse_recibo']['name'])){
+      $_FILES["acuse_recibo"]["name"];
+        move_uploaded_file($_FILES["acuse_recibo"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["acuse_recibo"]["name"]);
+        $acuse_recibo = $rutaArchivo.basename($fecha."_".$_FILES["acuse_recibo"]["name"]);
+  }else{
+    $acuse_recibo = NULL;
+  }
+  $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
   //insertamos el contrato
-  $insertSQL = sprintf("INSERT INTO contratos(idsolicitud_certificacion, nombre, archivo, estatus_contrato, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+  $insertSQL = sprintf("INSERT INTO contratos(idsolicitud_certificacion, nombre, archivo, acuse_recibo, estatus_contrato, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
     GetSQLValueString($nombre, "text"),
     GetSQLValueString($contrato, "text"),
+    GetSQLValueString($acuse_recibo, "text"),
     GetSQLValueString($estatus_contrato, "text"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -530,7 +559,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
   $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, opp.nombre FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
 
-  $asunto = "D-SPP | Aprobación Contrato de Uso";
+  $asunto = "D-SPP | Contrato de Uso y Acuse de Recibo";
 
   $cuerpo_mensaje = '
           <html>
@@ -542,7 +571,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
               <tbody>
                 <tr>
                   <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Aprobación Contrato de Uso </span></p></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Aprobación Contrato de Uso y Acuse de Recibo </span></p></th>
 
                 </tr>
                 <tr>
@@ -551,12 +580,12 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
 
                 <tr>
                   <td colspan="2">
-                   <p>La OPP: '.$informacion['nombre'].' ha cargado el "Contrato de Uso".</p>
+                   <p>La OPP: '.$informacion['nombre'].' ha cargado el "Contrato de Uso" y "Acuse de Recibo".</p>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="2">
-                    <p>Después de revisa el "Contrato de Uso" <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el mismo</span> </p>
+                    <p>Después de revisa el "Contrato de Uso" y "Acuse de Recibo" <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el mismo</span> </p>
                     <p>¿Cómo "Aprobar" o "Rechazar" el Contrato de Uso?</p>
                     <ol>
                       <li>Debe de ingresar en su cuenta de administrador dentro del D-SPP.</li>
@@ -574,6 +603,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
   ';
     $mail->AddAddress($spp_global);
     $mail->AddAttachment($contrato);
+    $mail->AddAttachment($acuse_recibo);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
     $mail->Subject = utf8_decode($asunto);
@@ -583,7 +613,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
     $mail->ClearAddresses();*/
     if($mail->Send()){
       $mail->ClearAddresses();
-      echo "<script>alert('Se ha enviado el Contrato de Uso, en breve sera contactado.');location.href ='javascript:history.back()';</script>";
+      echo "<script>alert('Se ha enviado el Contrato de Uso Y Acuse de Recibo, en breve sera contactado.');location.href ='javascript:history.back()';</script>";
     }else{
       $mail->ClearAddresses();
       echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
@@ -651,7 +681,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                 
             
               </td>
-          <form action="" method="POST" enctype="multipart/form-data">
+          <!--<form action="" method="POST" enctype="multipart/form-data">-->
               <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
               <!---- inicia TIPO SOLICITUD ---->
               <td <?php if($solicitud['tipo_solicitud'] == 'NUEVA'){ echo "class='success'"; }else{ echo "class='warning'"; } ?>class="warning">
@@ -663,33 +693,39 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
               <td><?php echo $solicitud['abreviacionOC']; ?></td>
               <td><?php echo $proceso_certificacion['nombre_dspp']; ?></td>
               <td>
-                <?php
-                if(isset($solicitud['cotizacion_opp'])){
-                  echo "<a class='btn btn-info form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
+                <!--- INICIA FORMULARIO PARA ACEPTAR COTIZACION ---->
+                <form action="" id="frm_cotizacion" method="POST" enctype="application/x-www-form-urlencoded">
+                  <?php
+                  if(isset($solicitud['cotizacion_opp'])){
+                    echo "<a class='btn btn-info form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
 
-                   if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
-                    if($solicitud['tipo_solicitud'] == 'RENOVACION'){
-                      echo 'ACEPTADA';
-                    }else{
-                      echo "<p class='alert alert-success' style='padding:2px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                     if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
+                      if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+                        echo 'ACEPTADA';
+                      }else{
+                        echo "<p class='alert alert-success' style='padding:2px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                      }
+                     }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
+                      echo "<p class='alert alert-danger' style='padding:2px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                     }else{
+                      if(empty($solicitud['fecha_aceptacion'])){ //si inicio el periodo de objecion quiere decir que se acepto la cotización
+                      ?>
+                        <div class="text-center">
+                          <button class='btn btn-xs btn-success' type="submit" name="cotizacion" value="5" style='width:45%' data-toggle="tooltip" data-placement="bottom" title="Aceptar cotización"><span class='glyphicon glyphicon-ok'></span></button>
+
+                          <button class='btn btn-xs btn-danger' style='width:45%' name="cotizacion" value="17" data-toggle="tooltip" data-placement="bottom" title="Rechazar cotización"><span class='glyphicon glyphicon-remove'></span></button>
+                          <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
+                          <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
+                        </div>
+                      <?php //
+                     }
                     }
-                   }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
-                    echo "<p class='alert alert-danger' style='padding:2px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
-                   }else{
-                    if(empty($solicitud['fecha_aceptacion'])){ //si inicio el periodo de objecion quiere decir que se acepto la cotización
-                    ?>
-                      <div class="text-center">
-                        <button class='btn btn-xs btn-success' type="submit" name="cotizacion" value="5" style='width:45%' data-toggle="tooltip" data-placement="bottom" title="Aceptar cotización"><span class='glyphicon glyphicon-ok'></span></button>
-
-                        <button class='btn btn-xs btn-danger' style='width:45%' name="cotizacion" value="17" data-toggle="tooltip" data-placement="bottom" title="Rechazar cotización"><span class='glyphicon glyphicon-remove'></span></button>
-                      </div>
-                    <?php //
-                   }
+                  }else{
+                    echo "COTIZACIÓN OPP";
                   }
-                }else{
-                  echo "COTIZACIÓN OPP";
-                }
-                ?>
+                  ?>
+                </form>
+                <!--- INICIA FORMULARIO PARA ACEPTAR COTIZACION ---->
               </td>
               <td>
                 <?php
@@ -807,57 +843,63 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                 <div id="<?php echo "membresia".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso Membresía</h4>
-                      </div>
-                      <div class="modal-body">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <p class="alert alert-info">Debe cargar el comprobante de pago de la membresia SPP por el monto de <b style="color:red;"><?php echo $membresia['monto'] ?></b>, una vez cargado debe dar clic en enviar. Sera notificado por correo una vez que sea aprobada su membresia</p>
-                            <p class="alert alert-warning">Estatus Actual: <?php echo $membresia['estatus_comprobante']; ?></p>
-                          </div>
-                          <div class="col-md-6">
-                            <?php 
-                            if(isset($membresia['archivo'] )){
-                              if($membresia['estatus_comprobante'] == 'ACEPTADO'){
-                                echo "<h4 class='alert alert-success'>Felicidades tu membresía se encuentra activa</h4>";
-                              }else if($membresia['estatus_comprobante'] == 'RECHAZADO'){
-                                echo "<p class='alert alert-warning'>Se han encontrado irregularidades en su comprobante de pago, por favor reviselo y cargue otro</p>";
-                                echo "<p>Observaciones: $membresia[observaciones]</p>";
+                      <!--- INICIA FORMULARIO MEMBRECIA -->
+                      <form action="" id="frm_membresia" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                          <h4 class="modal-title" id="myModalLabel">Proceso Membresía</h4>
+                        </div>
+                        <div class="modal-body">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <p class="alert alert-info">Debe cargar el comprobante de pago de la membresia SPP por el monto de <b style="color:red;"><?php echo $membresia['monto'] ?></b>, una vez cargado debe dar clic en enviar. Sera notificado por correo una vez que sea aprobada su membresia</p>
+                              <p class="alert alert-warning">Estatus Actual: <?php echo $membresia['estatus_comprobante']; ?></p>
+                            </div>
+                            <div class="col-md-6">
+                              <?php 
+                              if(isset($membresia['archivo'] )){
+                                if($membresia['estatus_comprobante'] == 'ACEPTADO'){
+                                  echo "<h4 class='alert alert-success'>Felicidades tu membresía se encuentra activa</h4>";
+                                }else if($membresia['estatus_comprobante'] == 'RECHAZADO'){
+                                  echo "<p class='alert alert-warning'>Se han encontrado irregularidades en su comprobante de pago, por favor reviselo y cargue otro</p>";
+                                  echo "<p>Observaciones: $membresia[observaciones]</p>";
+                                ?>
+                                  <p class="alert alert-info">
+                                    Cargar Comprobante de pago
+                                    <input type="file" class="form-control" name="comprobante_pago">
+                                  </p>
+                                <?php
+                                }else{
+                                  echo "SE HA CARGADO EL COMPRANTE POR FAVOR ESPERE";
+                                }
+                              }else{
                               ?>
                                 <p class="alert alert-info">
                                   Cargar Comprobante de pago
                                   <input type="file" class="form-control" name="comprobante_pago">
                                 </p>
                               <?php
-                              }else{
-                                echo "SE HA CARGADO EL COMPRANTE POR FAVOR ESPERE";
                               }
-                            }else{
-                            ?>
-                              <p class="alert alert-info">
-                                Cargar Comprobante de pago
-                                <input type="file" class="form-control" name="comprobante_pago">
-                              </p>
-                            <?php
-                            }
-                            ?>
+                              ?>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="modal-footer">
-                        <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
-                        <input type="hidden" name="idcomprobante_pago" value="<?php echo $membresia['idcomprobante_pago']; ?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <?php 
-                        if($membresia['estatus_comprobante'] == 'RECHAZADO' || $membresia['estatus_comprobante'] == 'EN ESPERA'){
-                          echo '<button type="submit" class="btn btn-primary" name="enviar_comprobante" value="1">Enviar Comprobante</button>';
-                        }
-                         ?>
-                      </div>
+                        <div class="modal-footer">
+                          <input type="hidden" name="idperiodo_objecion" value="<?php echo $solicitud['idperiodo_objecion']; ?>">
+                          <input type="hidden" name="idcomprobante_pago" value="<?php echo $membresia['idcomprobante_pago']; ?>">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                          <?php 
+                          if($membresia['estatus_comprobante'] == 'RECHAZADO' || $membresia['estatus_comprobante'] == 'EN ESPERA'){
+                            echo '<button type="submit" class="btn btn-primary" name="enviar_comprobante" value="1">Enviar Comprobante</button>';
+                          }
+                           ?>
+                        </div>
+
+                      </form>
+                      <!--- TERMINA FORMULARIO MEMBRECIA -->
+
                     </div>
                   </div>
                 </div>
@@ -865,6 +907,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
 
               </td>
               <!----- TERMINA MEMBRESIA ------>
+
 
               <!---- INICIA CONSULTAR CERTIFICADO ---->
               <td>
@@ -884,96 +927,121 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                 <div id="<?php echo "certificado".$solicitud['idsolicitud_certificacion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso Certificado</h4>
-                      </div>
-                      <div class="modal-body">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <p class="alert alert-warning">
-                              <?php 
-                              if($solicitud['tipo_solicitud'] == 'RENOVACION'){
-                                echo "Esta Organización se encuentra en proceso de Renovación del Certificado por lo tanto no debe enviar Contrato de Uso";
-                              }else{
-                                if(isset($solicitud['idcontrato'])){
-                                  $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
-                                  $contrato = mysql_fetch_assoc($row_contrato);
-                                ?>
-                                  Se ha cargado el contrato
-                                <?php
-                                }else{
-                                ?>
+
+                      <!--- INICIA FORMULARIO CERTIFICADO -->
+                      <form action="" id="frm_certificado" method="POST" enctype="multipart/form-data">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Proceso Certificado</h4>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <p style="margin-bottom:0px;" class="alert alert-warning">
                                   <?php 
-                                  if(isset($membresia['idcomprobante_pago'])){
-                                  ?>
-                                    <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
-                                    <input type="file" name="contrato" class="form-control">
-                                    <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato</button>
+                                  if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+                                    echo "Esta Organización se encuentra en proceso de Renovación del Certificado por lo tanto no debe enviar Contrato de Uso";
+                                  }else{
+                                    if(isset($solicitud['idcontrato'])){
+                                      $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
+                                      $contrato = mysql_fetch_assoc($row_contrato);
+                                    ?>
+                                      Se ha cargado el contrato y Acuse de Recibo
+                                    <?php
+                                    }else{
+                                    ?>
+                                      <?php 
+                                      if(isset($membresia['idcomprobante_pago'])){
+                                      ?>
+                                        <b>Debe cargar el <span style="color:red">"Contrato de Uso" y "Acuse de Recibo"</span> firmado, para poder completar el proceso de certficación</b>
+                                        <div style="padding:0px;margin-bottom:0px;" class="alert alert-warning form-group">
+                                          <label for="contrato">Contrato de Uso</label>
+                                          <input type="file" id="contrato" name="contrato">
+                                        </div>
+                                        <div style="padding:0px;margin-bottom:0px;" class="alert alert-warning form-group">
+                                          <label for="acuse_recibo">Acuse de Recibo</label>
+                                          <input type="file" id="acuse_recibo" name="acuse_recibo">
+                                        </div>
+                                        <!--<input type="file" name="contrato" class="form-control">
+                                        <input type="file" name="acuse_recibo" class="form-control">-->
+                                        <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato y Acuse de Recibo</button>
 
-                                  <?php
+                                      <?php
+                                      }
+                                       ?>
+                                    <?php
+                                    }
+                                     
                                   }
-                                   ?>
-                                <?php
+                                  ?>
+                                </p>
+
+                                <?php 
+                                if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+
+                                }else{
+                                  if(isset($solicitud['idcontrato'])){
+                                    echo "<p class='alert alert-info'>Estatus del Contrato: <span style='color:red'>".$contrato['estatus_contrato']."</span></p>";
+                                    if($contrato['estatus_contrato'] == "ENVIADO"){
+                                      echo "<p class='alert alert-warning'>El contratos se encuentra en proceso de revisión. Sera notificado una vez que sea \"APROBADO\" o \"RECHAZADO\"</p>";
+                                    }else if($contrato['estatus_contrato'] == "ACEPTADO"){
+                                      echo "<p class='alert alert-success'><b>Se ha aprobado el contrato</b></p>";
+                                    }else if($contrato['estatus_contrato'] == "RECHAZADO"){
+                                      echo "<p class='alert alert-danger'>Se ha encontrado irregularidades en el contrato</p>";
+                                      echo "<p>Observaciones: <span>".$contrato['observaciones']."</span></p>";
+                                    ?>
+                                      <b>Debe cargar el <span style="color:red">"Contrato de Uso" y "Acuse de Recibo"</span> firmado, para poder completar el proceso de certficación</b>
+                                        <div style="padding:0px;margin-bottom:0px;" class="alert alert-warning form-group">
+                                          <label for="contrato">Contrato de Uso</label>
+                                          <input type="file" id="contrato" name="contrato">
+                                        </div>
+                                        <div style="padding:0px;margin-bottom:0px;" class="alert alert-warning form-group">
+                                          <label for="acuse_recibo">Acuse de Recibo</label>
+                                          <input type="file" id="acuse_recibo" name="acuse_recibo">
+                                        </div>
+
+                                      <!--<input type="file" name="contrato" class="form-control">
+                                      <input type="file" name="acuse_recibo" class="form-control">-->
+                                      <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato y Acuse de Recibo</button>
+                                    <?php
+                                    }
+                                  }else{
+                                    echo '<p class="alert alert-danger">No se ha cargado el "Contrato de Uso"</p>';
+                                  }
                                 }
-                                 
-                              }
-                              ?>
-                            </p>
-
-                            <?php 
-                            if($solicitud['tipo_solicitud'] == 'RENOVACION'){
-
-                            }else{
-                              if(isset($solicitud['idcontrato'])){
-                                echo "<p class='alert alert-info'>Estatus del Contrato: <span style='color:red'>".$contrato['estatus_contrato']."</span></p>";
-                                if($contrato['estatus_contrato'] == "ENVIADO"){
-                                  echo "<p class='alert alert-warning'>El contratos se encuentra en proceso de revisión. Sera notificado una vez que sea \"APROBADO\" o \"RECHAZADO\"</p>";
-                                }else if($contrato['estatus_contrato'] == "ACEPTADO"){
-                                  echo "<p class='alert alert-success'><b>Se ha aprobado el contrato</b></p>";
-                                }else if($contrato['estatus_contrato'] == "RECHAZADO"){
-                                  echo "<p class='alert alert-danger'>Se ha encontrado irregularidades en el contrato</p>";
-                                  echo "<p>Observaciones: <span>".$contrato['observaciones']."</span></p>";
                                 ?>
-                                  <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
-                                  <input type="file" name="contrato" class="form-control">
-                                  <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato</button>
-                                <?php
-                                }
-                              }else{
-                                echo '<p class="alert alert-danger">No se ha cargado el "Contrato de Uso"</p>';
-                              }
-                            }
-                            ?>
-                            
-                          </div>
-                          <div class="col-md-6">
-                            <h4>Certificado</h4>
-                            <?php 
-                            if(isset($solicitud['idcertificado'])){
-                              $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
-                              $certificado = mysql_fetch_assoc($row_certificado);
-                              if(isset($certificado['idsolicitud_certificacion'])){
-                                $inicio = strtotime($certificado['vigencia_inicio']);
-                                $fin = strtotime($certificado['vigencia_fin']);
+                                
+                              </div>
+                              <div class="col-md-6">
+                                <h4>Certificado</h4>
+                                <?php 
+                                if(isset($solicitud['idcertificado'])){
+                                  $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
+                                  $certificado = mysql_fetch_assoc($row_certificado);
+                                  if(isset($certificado['idsolicitud_certificacion'])){
+                                    $inicio = strtotime($certificado['vigencia_inicio']);
+                                    $fin = strtotime($certificado['vigencia_fin']);
 
-                                echo "<h4 class='alert alert-success'>Felicidades tu Certificado ha sido aprobado.<br> El certificado tienen una vigencia del <span style='color:red'>".date('d/m/Y', $inicio)."</span> al  <span style='color:red'>".date('d/m/Y', $fin)."</span></h4>";
-                                echo "<a href='".$certificado['archivo']."' class='btn btn-success' style='width:100%' target='_blank'>Descargar Certificado</a>";
-                              }else{
-                                echo "<p class='alert alert-danger'>El Certificado aun no esta disponible</p>";
-                              }
-                            }else{
-                              echo "<p class='alert alert-danger'>El Certificado aun no esta disponible</p>";
-                            }
-                             ?>
+                                    echo "<h4 class='alert alert-success'>Felicidades tu Certificado ha sido aprobado.<br> El certificado tienen una vigencia del <span style='color:red'>".date('d/m/Y', $inicio)."</span> al  <span style='color:red'>".date('d/m/Y', $fin)."</span></h4>";
+                                    echo "<a href='".$certificado['archivo']."' class='btn btn-success' style='width:100%' target='_blank'>Descargar Certificado</a>";
+                                  }else{
+                                    echo "<p class='alert alert-danger'>El Certificado aun no esta disponible</p>";
+                                  }
+                                }else{
+                                  echo "<p class='alert alert-danger'>El Certificado aun no esta disponible</p>";
+                                }
+                                 ?>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                      </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                          </div>
+                          <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
+                      </form>
+                      <!-- TERMINA FORMULARIO CERTICADO-->
                     </div>
                   </div>
                 </div>
@@ -993,7 +1061,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                 <!--</form>-->
               </td>
             </tr>
-          </form>
+
           <?php
           }
         }else{

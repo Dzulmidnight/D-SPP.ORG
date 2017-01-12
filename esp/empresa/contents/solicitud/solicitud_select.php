@@ -69,8 +69,9 @@ if(isset($_POST['cotizacion']) ){
   if($estatus_dspp == 5){ // se acepta la cotización, modificamos la solicitud y fijamos las fechas del periodo de objeción
     $asunto_oc = "D-SPP Cotización de Solicitud Aceptada";
 
-    $updateSQL = sprintf("UPDATE solicitud_registro SET fecha_aceptacion = %s WHERE idsolicitud_registro = %s",
+    $updateSQL = sprintf("UPDATE solicitud_registro SET fecha_aceptacion = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
       GetSQLValueString($fecha, "int"),
+      GetSQLValueString(5, "int"),
       GetSQLValueString($_POST['idsolicitud_registro'], "int"));
     $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
@@ -361,6 +362,11 @@ if(isset($_POST['cotizacion']) ){
 
     $mensaje = "La cotización ha sido aceptada, el periodo de objeción ha empezado, en breve seras contactado";
   }else{
+    $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
+      GetSQLValueString(17, "int"),
+      GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+    $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
     $mensaje = "La cotización ha sido rechazada";
   }
   
@@ -382,12 +388,15 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 
   if(!empty($_FILES['comprobante_pago']['name'])){
       $_FILES["comprobante_pago"]["name"];
-        move_uploaded_file($_FILES["comprobante_pago"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["comprobante_pago"]["name"]);
-        $comprobante_pago = $rutaArchivo.basename(time()."_".$_FILES["comprobante_pago"]["name"]);
+        move_uploaded_file($_FILES["comprobante_pago"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["comprobante_pago"]["name"]);
+        $comprobante_pago = $rutaArchivo.basename($fecha."_".$_FILES["comprobante_pago"]["name"]);
   }else{
     $comprobante_pago = NULL;
   }
-
+  $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
   //creamos el proceso de certificacion
   $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_registro, estatus_dspp, nombre_archivo, archivo, fecha_registro) VALUES(%s, %s, %s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_registro'], "int"),
@@ -469,16 +478,28 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
 
   if(!empty($_FILES['contrato']['name'])){
       $_FILES["contrato"]["name"];
-        move_uploaded_file($_FILES["contrato"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["contrato"]["name"]);
-        $contrato = $rutaArchivo.basename(time()."_".$_FILES["contrato"]["name"]);
+        move_uploaded_file($_FILES["contrato"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["contrato"]["name"]);
+        $contrato = $rutaArchivo.basename($fecha."_".$_FILES["contrato"]["name"]);
   }else{
     $contrato = NULL;
   }
+  if(!empty($_FILES['acuse_recibo']['name'])){
+      $_FILES["acuse_recibo"]["name"];
+        move_uploaded_file($_FILES["acuse_recibo"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["acuse_recibo"]["name"]);
+        $acuse_recibo = $rutaArchivo.basename($fecha."_".$_FILES["acuse_recibo"]["name"]);
+  }else{
+    $acuse_recibo = NULL;
+  }
+  $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
   //insertamos el contrato
-  $insertSQL = sprintf("INSERT INTO contratos(idsolicitud_registro, nombre, archivo, estatus_contrato, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+  $insertSQL = sprintf("INSERT INTO contratos(idsolicitud_registro, nombre, archivo, acuse_recibo, estatus_contrato, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_registro'], "int"),
     GetSQLValueString($nombre, "text"),
     GetSQLValueString($contrato, "text"),
+    GetSQLValueString($acuse_recibo, "text"),
     GetSQLValueString($estatus_contrato, "text"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -496,7 +517,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
   $row_informacion = mysql_query("SELECT solicitud_registro.idempresa, empresa.nombre FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
 
-  $asunto = "D-SPP | Aprobación Contrato de Uso";
+  $asunto = "D-SPP | Contrato de Uso y Acuse de Recibo";
 
   $cuerpo_mensaje = '
           <html>
@@ -508,7 +529,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
               <tbody>
                 <tr>
                   <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Aprobación Contrato de Uso </span></p></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Aprobación Contrato de Uso y Acuse de Recibo </span></p></th>
 
                 </tr>
                 <tr>
@@ -517,12 +538,12 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
 
                 <tr>
                   <td colspan="2">
-                   <p>La empresa: '.$informacion['nombre'].' ha cargado el "Contrato de Uso".</p>
+                   <p>La empresa: '.$informacion['nombre'].' ha cargado el "Contrato de Uso y "Acuse de Recibo"".</p>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="2">
-                    <p>Después de revisa el "Contrato de Uso" <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el mismo</span> </p>
+                    <p>Después de revisar el "Contrato de Uso" y "Acuse de Recibo" <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el mismo</span> </p>
                   </td>
                 </tr>
               </tbody>
@@ -532,6 +553,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
   ';
     $mail->AddAddress($spp_global);
     $mail->AddAttachment($contrato);
+    $mail->AddAttachment($acuse_recibo);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
     $mail->Subject = utf8_decode($asunto);
@@ -541,7 +563,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
     $mail->ClearAddresses();
   //termina enviar mensaje contrato de uso
 
-  $mensaje = "Se ha enviado el Contrato de Uso, en breve sera contactado";
+  $mensaje = "Se ha enviado el Contrato de Uso y Acuse de Recibo, en breve sera contactado";
 }
 /// TERMINA ENVIAR CONTRATO DE USO
 
@@ -771,20 +793,30 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                             }else{
                             ?>
                               <div class="col-md-6">
-                                <p class="alert alert-warning">
+                                <p class="alert alert-warning" style="margin-bottom:0px;">
                                   <?php 
                                   if(isset($solicitud['idcontrato'])){
                                     $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
                                     $contrato = mysql_fetch_assoc($row_contrato);
                                   ?>
-                                    Se ha cargado el contrato
+                                    Se ha cargado el Contrato de Uso y Acuse de Recibo
                                   <?php
                                   }else{
                                   ?>
 
-                                      <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
-                                      <input type="file" name="contrato" class="form-control">
-                                      <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato</button>
+                                    <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
+                                      <!--<input type="file" name="contrato" class="form-control">-->
+
+                                    <div style="padding:0px;margin-bottom:0px;" class="alert alert-warning form-group">
+                                      <label for="contrato">Contrato de Uso</label>
+                                      <input type="file" id="contrato" name="contrato">
+                                    </div>
+                                    <div style="padding:0px;margin-bottom:0px;" class="alert alert-warning form-group">
+                                      <label for="acuse_recibo">Acuse de Recibo</label>
+                                      <input type="file" id="acuse_recibo" name="acuse_recibo">
+                                    </div>
+
+                                      <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato y Acuse de Recibo</button>
 
                                   <?php
                                   }
@@ -795,20 +827,29 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
                                 if(isset($solicitud['idcontrato'])){
                                   echo "<p class='alert alert-info'>Estatus del Contrato: <span style='color:red'>".$contrato['estatus_contrato']."</span></p>";
                                   if($contrato['estatus_contrato'] == "ENVIADO"){
-                                    echo "<p class='alert alert-warning'>El contratos se encuentra en proceso de revisión. Sera notificado una vez que sea \"APROBADO\" o \"RECHAZADO\"</p>";
+                                    echo "<p class='alert alert-warning'>El Contrato de Uso se encuentra en proceso de revisión. Sera notificado una vez que sea \"APROBADO\" o \"RECHAZADO\"</p>";
                                   }else if($contrato['estatus_contrato'] == "ACEPTADO"){
                                     echo "<p class='alert alert-success'><b>Se ha aprobado el contrato</b></p>";
                                   }else if($contrato['estatus_contrato'] == "RECHAZADO"){
                                     echo "<p class='alert alert-danger'>Se ha encontrado irregularidades en el contrato</p>";
                                     echo "<p>Observaciones: <span>".$contrato['observaciones']."</span></p>";
                                   ?>
-                                    <b>Debe cargar el "Contrato de Uso" firmado, para poder completar el proceso de certficación</b>
-                                    <input type="file" name="contrato" class="form-control">
+                                    <b>Debe cargar el "Contrato de Uso" y "Acuse de Recibo" firmado, para poder completar el proceso de certficación</b>
+                                    <!--<input type="file" name="contrato" class="form-control">-->
+                                    <div style="padding:0px;margin-bottom:0px;" class="alert alert-warning form-group">
+                                      <label for="contrato">Contrato de Uso</label>
+                                      <input type="file" id="contrato" name="contrato">
+                                    </div>
+                                    <div style="padding:0px;margin-bottom:0px;" class="alert alert-warning form-group">
+                                      <label for="acuse_recibo">Acuse de Recibo</label>
+                                      <input type="file" id="acuse_recibo" name="acuse_recibo">
+                                    </div>
+
                                     <button type="submit" class="btn btn-success" style="width:100%" name="enviar_contrato" value="1">Enviar Contrato</button>
                                   <?php
                                   }
                                 }else{
-                                  echo '<p class="alert alert-danger">No se ha cargado el "Contrato de Uso"</p>';
+                                  echo '<p class="alert alert-danger">No se ha cargado el "Contrato de Uso" y "Acuse de Recibo"</p>';
                                 }
                                  ?>
                                 

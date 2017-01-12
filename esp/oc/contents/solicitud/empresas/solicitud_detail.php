@@ -312,9 +312,10 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   }
 
   //ACTUALIZAMOS LA SOLICITUD DE CERTIFICACION AGREGANDO LA COTIZACIÓN
-  $updateSQL = sprintf("UPDATE solicitud_registro SET tipo_procedimiento = %s, cotizacion_empresa = %s WHERE idsolicitud_registro = %s",
+  $updateSQL = sprintf("UPDATE solicitud_registro SET tipo_procedimiento = %s, cotizacion_empresa = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
     GetSQLValueString($procedimiento, "text"),
     GetSQLValueString($cotizacion_empresa, "text"),
+    GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($idsolicitud_registro, "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 

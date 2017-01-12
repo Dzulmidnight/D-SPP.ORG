@@ -617,7 +617,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
   <table class="table table-condensed table-bordered table-hover" style="font-size:11px;">
     <thead>
       <tr>
-        <th colspan="3">
+        <th colspan="1">
           <!--<a class="btn btn-sm btn-warning" href="?OPP&filed">OPP(s) Archivado(s)</a>-->
           <button class="btn btn-sm btn-info" onclick="guardarDatos()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Cambios</button><!-- BOTON GUARDAR DATOS -->
         </th>
@@ -642,10 +642,10 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
       </tr>
       <tr>
         <th class="text-center">#SPP</th>
-        <th class="text-center">Nombre</th>
-        <th class="text-center">Abreviación</th>
+        <th class="text-center">Organización</th>
+        <!--<th class="text-center">Abreviación</th>-->
         <th class="text-center">País</th>
-        <th class="text-center">Situación <br>OPP</th>
+        <!--<th class="text-center">Situación <br>OPP</th>-->
         <th class="text-center">Estatus Publico</th>
         <!--<th class="text-center">Proceso Certificación</th>
         <th class="text-center">Fecha Final<br>(Certificado)</th>-->
@@ -694,7 +694,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
           $row_solicitud = mysql_query($query_solicitud, $dspp) or die(mysql_error());
           $solicitud = mysql_fetch_assoc($row_solicitud);
         ?>
-          <tr>
+          <tr <?php if($opp['estatus_interno'] == 10){ echo 'class="alert alert-danger"'; } ?>>
             <!--- INICIA CODIGO SPP ---->
             <td>
                 <a class="btn btn-primary btn-xs" style="width:100%;font-size:10px;" href="?OPP&amp;detail&amp;idopp=<?php echo $opp['idopp']; ?>">Consultar<br>
@@ -706,16 +706,17 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
 
             <!--- INICIA NOMBRE ---->
             <td>
-              <?php echo $opp['nombre']; ?>
+              <p style="color:#2c3e50"><b><?php echo $opp['nombre']; ?></b></p>
+              <p style="color:#2980b9"><?php echo $opp['abreviacion_opp']; ?></p>
             </td>
             <!--- TERMINA NOMBRE ---->
 
             <!--- INICIA ABREVIACIÓN ---->
-            <td>
+            <!--<td>
               <?php
               echo $opp['abreviacion_opp'];
                ?>
-            </td>
+            </td>-->
             <!--- TERMINA ABREVIACIÓN ---->
             <!--- INICIA PAIS ---->
             <td>
@@ -724,7 +725,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
             <!--- TERMINA PAIS ---->
 
             <!--- INICIA SITUACION OPP ---->
-            <td>
+            <!--<td>
               <select name="estatus_opp<?php  echo $opp['idopp']; ?>" id="">
                 <option>...</option>
                 <option value="NUEVA" <?php if($opp['estatus_opp'] == 'NUEVA'){ echo 'selected';} ?>>NUEVA</option>
@@ -741,7 +742,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                 echo "<p class='alert alert-danger' style='font-size:10px;padding:5px;'>CANCELADO</p>";
               }
                ?>
-            </td>
+            </td>-->
             <!--- TERMINA SITUACION OPP ---->
 
             <!--- INICIA ESTATUS_PUBLICO ---->
