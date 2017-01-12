@@ -58,7 +58,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
   $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
-  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //ACTUALIZAMOS EL PERIODO DE OBJECIÓN
   $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
@@ -287,7 +287,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
     GetSQLValueString(7, "int"),
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
-  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   $row_opp = mysql_query("SELECT solicitud_certificacion.idoc, solicitud_certificacion.idopp, opp.idopp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', solicitud_certificacion.produccion, solicitud_certificacion.procesamiento, solicitud_certificacion.exportacion, opp.telefono, opp.email AS 'email_opp', opp.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc', oc.email2 AS 'email_oc2' FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $detalle_opp = mysql_fetch_assoc($row_opp);
@@ -550,7 +550,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
   $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
-  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //insertarmos el proceso_certificacion
   $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, fecha_registro) VALUES (%s, %s, %s)",
@@ -820,7 +820,7 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
   $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
-  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //creamos el proceso_certificacion
   $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
@@ -933,7 +933,7 @@ if(isset($_POST['rechazar_contrato']) && $_POST['rechazar_contrato'] == 2){
   $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
-  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
   
   $updateSQL = sprintf("UPDATE contratos SET estatus_contrato = %s, observaciones = %s WHERE idcontrato = %s",
     GetSQLValueString($estatus_contrato, "text"),

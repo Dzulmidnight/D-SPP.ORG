@@ -56,7 +56,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
   $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idsolicitud_registro'], "int"));
-  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //ACTUALIZAMOS EL PERIODO DE OBJECIÓN
   $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
@@ -515,7 +515,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
   $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idsolicitud_registro'], "int"));
-  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //insertarmos el proceso_certificacion
   $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_registro, estatus_dspp, fecha_registro) VALUES (%s, %s, %s)",
@@ -691,7 +691,7 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
   $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idsolicitud_registro'], "int"));
-  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //creamos el proceso_certificacion
   $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_registro, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
@@ -789,7 +789,7 @@ if(isset($_POST['rechazar_contrato']) && $_POST['rechazar_contrato'] == 2){
   $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idsolicitud_registro'], "int"));
-  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error())
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   
   $updateSQL = sprintf("UPDATE contratos SET estatus_contrato = %s, observaciones = %s WHERE idcontrato = %s",
