@@ -647,7 +647,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					<label for="op_preg1">
 						1. EXPLIQUE SI SE TRATA DE UNA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES DE 1ER, 2DO, 3ER O 4TO GRADO, ASÍ COMO EL NÚMERO DE OPP DE 3ER, 2DO O 1ER GRADO, Y EL NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO, EN SU CASO, CON LAS QUE CUENTA:
 					</label>
-					<input type="text" class="form-control" id="op_preg1" name="op_preg1" value="<?php echo $solicitud['op_preg1']; ?>" >
+					<textarea name="op_preg1" id="op_preg1" class="form-control" rows="2"><?php echo $solicitud['op_preg1']; ?></textarea>
 
 					<div class="col-xs-3">
 						<label for="preg1_1">
@@ -726,7 +726,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 						8. ¿CUENTA CON UN SISTEMA DE CONTROL INTERNO PARA DAR CUMPLIMIENTO A LOS CRITERIOS DE LA NORMA GENERAL DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?, EN SU CASO, EXPLIQUE.
 					</label>
 					<textarea name="op_preg8" id="op_preg8" class="form-control"><?php echo $solicitud['op_preg8']; ?></textarea>
-					<p class="alert alert-info">9. LLENAR LA TABLA DE ACUERDO A LAS CERTIFICACIONES QUE TIENE, (EJEMPLO: EU, NOP, JASS, FLO, etc).</p>
+					<p class="alert alert-info"><b>9. LLENAR LA TABLA DE ACUERDO A LAS CERTIFICACIONES QUE TIENE, (EJEMPLO: EU, NOP, JASS, FLO, etc).</b></p>
 
 					<table class="table table-bordered" id="tablaCertificaciones">
 						<tr>
@@ -767,29 +767,31 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
 					<p for="op_preg11">
 						<b>11.DEL TOTAL DE SUS VENTAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
-					</p>
-					<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-						<div class="col-xs-3">
-							<label for="organico">% ORGÁNICO</label>
-							<input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
+						<i>(* Introducir solo cantidad, entero o decimales)</i>
+						<div class="col-lg-12">
+							<div class="row">
+								<div class="col-xs-3">
+									<label for="organico">% ORGÁNICO</label>
+									<input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="comercio_justo">% COMERCIO JUSTO</label>
+									<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
+									<input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="otro">SIN CERTIFICADO</label>
+									<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
+								</div>
+							</div>
 						</div>
-						<div class="col-xs-3">
-							<label for="comercio_justo">% COMERCIO JUSTO</label>
-							<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
-						</div>
-						<div class="col-xs-3">
-							<label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
-							<input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
-							
-						</div>
-						<div class="col-xs-3">
-							<label for="otro">SIN CERTIFICADO</label>
-							<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
-							
-						</div>						
+					</p>					
 
 
-					<p><b>12. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
+					<p><b>12 - 13. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
 					<div class="col-xs-12 ">
 				        <?php
 				          if($solicitud['op_preg12'] == 'SI'){
@@ -842,14 +844,14 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					</div>
 							
 					<label for="op_preg14">
-						13. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
+						14. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
 					</label>
 					<input type="text" class="form-control" id="op_preg14" name="op_preg14" value="<?php echo $solicitud['op_preg14']; ?>">
 
 					<div class="col-md-12" style="margin-top:10px;">
 						<div class="row">
 							<div class="col-xs-12" style="padding:0px;">
-								<p><strong>14. ANEXAR EL CROQUIS GENERAL DE SU OPP, INDICANDO LAS ZONAS EN DONDE CUENTA CON SOCIOS.</strong></p>
+								<p><strong>15. ANEXAR EL CROQUIS GENERAL DE SU OPP, INDICANDO LAS ZONAS EN DONDE CUENTA CON SOCIOS.</strong></p>
 							</div>
 							<?php 
 							if(empty($solicitud['op_preg15'])){
@@ -888,7 +890,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
 			<!------ FIN INFORMACION DATOS DE OPERACIÓN ------>
 
-			<div class="col-md-12 text-center alert alert-success" style="padding:7px;">15. DATOS DE PRODUCTOS PARA LOS CUALES QUIERE UTILIZAR EL SÍMBOLO<sup>6</sup></div>
+			<div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE PRODUCTOS PARA LOS CUALES QUIERE UTILIZAR EL SÍMBOLO<sup>6</sup></div>
 			<div class="col-lg-12">
 				<table class="table table-bordered" id="tablaProductos">
 					<tr>

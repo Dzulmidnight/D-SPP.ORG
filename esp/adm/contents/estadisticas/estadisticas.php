@@ -17,14 +17,18 @@
 <? }?>
 
 
-<?
-if(isset($_GET['select'])){include ("generales.php");}
-	else
-if(isset($_GET['certificacion'])){include ("certificacion.php");}
-	else
-if(isset($_GET['listaOPP'])){include ("listaOPP.php");}
-	else
-if(isset($_GET['productos'])){include ("est_productos.php");}
-	else
-if(isset($_GET['detail'])){include ("opp_detail.php");}
-?>
+<div class="row">
+	<?
+	if(isset($_GET['select'])){include ("generales.php");}
+		else
+	if(isset($_GET['certificacion'])){include ("certificacion.php");}
+		else
+	if(isset($_GET['listaOPP'])){include ("listaOPP.php");}
+		else
+	if(isset($_GET['socios'])){include("socios.php");}
+		else
+	if(isset($_GET['productos'])){include ("est_productos.php");}
+		else
+	if(isset($_GET['detail'])){include ("opp_detail.php");}
+	?>		
+</div>

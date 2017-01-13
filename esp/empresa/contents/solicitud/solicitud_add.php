@@ -565,7 +565,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 			</div>
 
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
-			<div class="col-lg-12">
+			<div class="row">
 				<div class="col-md-6">
 					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMACION GENERALES</div>
 					<label for="fecha_elaboracion">FECHA ELABORACIÓN</label>
@@ -629,7 +629,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 
 
 			<!------ INICIA INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
-			<div class="col-lg-12">
+			<div class="row">
 				<div class="col-md-6">
 					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONA(S) DE CONTACTO</div>
 
@@ -698,7 +698,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 
 			<div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE OPERACIÓN</div>
 
-			<div class="col-lg-12">
+			<div class="row">
 				<div class="col-md-12">
 					<label for="preg1">
 						1.	¿CUÁLES SON LAS ORGANIZACIONES DE PEQUEÑOS PRODUCTORES A LAS QUE LES COMPRA O PRETENDE COMPRAR BAJO EL ESQUEMA DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?
@@ -793,7 +793,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 					</label>
 					<textarea name="preg10" id="preg10" class="form-control"></textarea>
 
-					<p class="alert alert-info">11. LLENAR LA TABLA DE ACUERDO A LAS CERTIFICACIONES QUE TIENE, (EJEMPLO: EU, NOP, JASS, FLO, etc).</p>
+					<p class="alert alert-info"><b>11. LLENAR LA TABLA DE ACUERDO A LAS CERTIFICACIONES QUE TIENE, (EJEMPLO: EU, NOP, JASS, FLO, etc).</b></p>
 
 					<table class="table table-bordered" id="tablaCertificaciones">
 						<tr>
@@ -821,45 +821,48 @@ $empresa = mysql_fetch_assoc($row_empresa);
 					</table>	
 
 					<label for="preg12">
-						11.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
+						12.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
 					<textarea name="preg12" id="preg12" class="form-control"></textarea>
 
 					<p for="op_preg11">
-						<b>12. DEL TOTAL DE SUS COMPRAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
-					</p>
-					<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-						<div class="col-md-3">
-							<label for="organico">% ORGÁNICO</label>
-							<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
+						<b>13. DEL TOTAL DE SUS COMPRAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
+						<i>(* Introducir solo cantidad, entero o decimales)</i>
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="col-md-3">
+									<label for="organico">% ORGÁNICO</label>
+									<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-md-3">
+									<label for="comercio_justo">% COMERCIO JUSTO</label>
+									<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-md-3">
+									<label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
+									<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-md-3">
+									<label for="otro">SIN CERTIFICADO</label>
+									<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
+								</div>
+							</div>
 						</div>
-						<div class="col-md-3">
-							<label for="comercio_justo">% COMERCIO JUSTO</label>
-							<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
-						</div>
-						<div class="col-md-3">
-							<label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
-							<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
-							
-						</div>
-						<div class="col-md-3">
-							<label for="otro">SIN CERTIFICADO</label>
-							<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
-							
-						</div>						
+
+					</p>					
 
 
-					<p><b>13. TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
+					<p><b>14. TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
 						<div class="col-md-6">
-							SI <input type="radio" class="form-control" name="preg13" onclick="mostrar_ventas()" id="preg13" value="SI">
+							SI <input type="radio" class="form-control" name="preg13" id="preg13" value="SI">
 						</div>
 						<div class="col-md-6">
-							NO <input type="radio" class="form-control" name="preg13" onclick="ocultar_ventas()" id="preg13" value="NO">
+							NO <input type="radio" class="form-control" name="preg13" id="preg13" value="NO">
 						</div>			
 					<p>
-						<b>14. SI SU RESPUESTA FUE POSITIVA FAVOR DE SELECCIONAR EL RANGO DEL VALOR TOTAL DE SUS COMPRAS SPP DEL CICLO ANTERIOR DE ACUERDO A LA SIGUIENTE TABLA 
+						<b>15. SI SU RESPUESTA FUE POSITIVA FAVOR DE SELECCIONAR EL RANGO DEL VALOR TOTAL DE SUS COMPRAS SPP DEL CICLO ANTERIOR DE ACUERDO A LA SIGUIENTE TABLA 
 					</p>
 
-					<div class="well col-md-12 " id="tablaVentas" style="display:none;">
+					<div class="well col-md-12 " id="tablaVentas">
 						<div class="col-md-6"><p>Hasta $3,000 USD</p></div>
 						<div class="col-md-6 "><input type="radio" name="preg14" class="form-control" id="ver" onclick="ocultar()" value="HASTA $3,000 USD"></div>
 					
@@ -879,7 +882,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 					</div>
 							
 					<label for="preg15">
-						15. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
+						16. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
 					</label>
 					<input type="text" class="form-control" id="preg15" name="preg15">
 
@@ -973,7 +976,10 @@ $empresa = mysql_fetch_assoc($row_empresa);
   function validar(){
 
     tipo_solicitud = document.getElementsByName("tipo_solicitud");
+    tuvo_ventas = document.getElementsByName("preg13");
+    opcion_venta = document.getElementsByName("preg14");
      
+    // INICIA SELECCION TIPO SOLICITUD
     var seleccionado = false;
     for(var i=0; i<tipo_solicitud.length; i++) {    
       if(tipo_solicitud[i].checked) {
@@ -983,8 +989,44 @@ $empresa = mysql_fetch_assoc($row_empresa);
     }
      
     if(!seleccionado) {
-      alert("Debes de seleecionar un Tipo de Solicitud");
+      alert("Debes de seleccionar un Tipo de Solicitud");
       return false;
+    }
+    //// TERMINA SELECCION TIPO SOLICITUD
+
+    /// INICIA OPCION DE VENTAS
+    var ventas = false;
+    var valor_venta = '';
+    for(var i=0; i<tuvo_ventas.length; i++) {    
+      if(tuvo_ventas[i].checked) {
+      	valor_venta = tuvo_ventas[i].value;
+        ventas = true;
+        break;
+      }
+    }
+     
+    if(!ventas) {
+      alert("Debe seleccionar \"SI\" tuvo ó \"NO\" compras");
+      return false;
+    }
+    /// TERMINA OPCION DE VENTAS
+
+
+    if(valor_venta != 'NO'){
+	    var monto = false;
+	    for(var i=0; i<opcion_venta.length; i++) {    
+	      if(opcion_venta[i].checked) {
+	        monto = true;
+	        break;
+	      }
+	    }
+	     
+	    if(!monto) {
+	      alert("Seleccionaste que \"SI\" tuviste compras, debes seleccionar el monto de compras SPP");
+	      //alert(valor_venta);
+	      return false;
+	    }
+
     }
 
     return true
