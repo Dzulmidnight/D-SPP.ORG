@@ -539,7 +539,7 @@ $totalOPP = mysql_num_rows($detalle_opp);
 
 $row_interno = mysql_query("SELECT * FROM estatus_interno", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT * FROM oc", $dspp) or die(mysql_error());
-$row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
+$row_pais = mysql_query("SELECT pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
 $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS NOT NULL GROUP BY producto",$dspp) or die(mysql_error());
 
  ?>
@@ -568,7 +568,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
               <option value=''>Selecciona un país</option>
               <?php 
               while($pais = mysql_fetch_assoc($row_pais)){
-                echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
+                echo "<option value='".$pais['pais']."'>".$pais['pais']."</option>";
               }
                ?>
             </select>
