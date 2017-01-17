@@ -52,18 +52,15 @@ SELECT opp.idopp, opp.pais, solicitud_certificacion.idsolicitud_certificacion, s
 ?>
 <div class="col-md-6">
   <div class="row">
-    <div class="btn-group" role="group" aria-label="...">
-      <button type="button" class="btn btn-default">OPP</button>
-      <button type="button" class="btn btn-default">Empresas</button>
-    </div>
+
     <h4>Solicitudes de Certificación</h4>
-    <table class="table table-bordered table-hover ">
+    <table class="table table-bordered table-hover table-condensed">
       <thead>
         <tr class="success">
           <th>País</th>
           <th>Solicitud</th>
           <th>En Proceso</th>
-          <th>Dictamen Positiva</th>
+          <th>Dictamen Positivo</th>
           <th>Certificado Emitido</th>
           <th>Total</th>
         </tr>
@@ -137,18 +134,14 @@ SELECT opp.idopp, opp.pais, solicitud_certificacion.idsolicitud_certificacion, s
 
 <div class="col-md-6">
   <div class="row">
-    <div class="btn-group" role="group" aria-label="...">
-      <button type="button" class="btn btn-default">OPP</button>
-      <button type="button" class="btn btn-default">Empresas</button>
-    </div>
     <h4>Solicitudes de Registro</h4>
-    <table class="table table-bordered table-hover ">
+    <table class="table table-bordered table-hover table-condensed">
       <thead>
         <tr class="warning">
           <th>País</th>
           <th>Solicitud</th>
           <th>En Proceso</th>
-          <th>Dictamen Positiva</th>
+          <th>Dictamen Positivo</th>
           <th>Certificado Emitido</th>
           <th>Total</th>
         </tr>

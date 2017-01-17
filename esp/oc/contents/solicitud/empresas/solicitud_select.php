@@ -67,6 +67,136 @@ if(isset($_POST['cancelar']) && $_POST['cancelar'] == "cancelar"){
   $ejecutar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 }
 
+if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 1){
+  $idsolicitud_registro = $_POST['idsolicitud_registro'];
+  $rutaArchivo = "../../archivos/ocArchivos/cotizaciones/";
+
+  if(!empty($_FILES['nueva_cotizacion']['name'])){
+      $_FILES["nueva_cotizacion"]["name"];
+        move_uploaded_file($_FILES["nueva_cotizacion"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["nueva_cotizacion"]["name"]);
+        $archivo = $rutaArchivo.basename($fecha."_".$_FILES["nueva_cotizacion"]["name"]);
+        unlink($_POST['cotizacion_actual']);
+        $updateSQL = sprintf("UPDATE solicitud_registro SET cotizacion_empresa = %s WHERE idsolicitud_registro = %s",
+          GetSQLValueString($archivo, "text"),
+          GetSQLValueString($idsolicitud_registro, "int"));
+        $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+        $row_empresa = mysql_query("SELECT empresa.nombre, empresa.pais AS 'empresa_pais', empresa.spp, empresa.password, empresa.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, solicitud_registro.adm1_email FROM empresa INNER JOIN solicitud_registro ON empresa.idempresa = solicitud_registro.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $idsolicitud_registro", $dspp) or die(mysql_error());
+        $empresa_detail = mysql_fetch_assoc($row_empresa);
+
+        $asunto = "D-SPP Cotización - actualizada (Solicitud de Registro para Compradores y Otros Actores)";
+
+        $cuerpo_mensaje = '
+          <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body>
+          
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+              <tbody>
+                <tr>
+                  <th rowspan="4" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                  <th scope="col" align="left" width="280" ><strong>Notificación de Cotización / Price Notification</strong></th>
+                </tr>
+                <tr>
+                  <td align="left" style="color:#ff738a;">Email Organismo de Certificación / Certification Entity: '.$empresa_detail['email1'].'</td>
+                </tr>
+                <tr>
+                  <td aling="left" style="text-align:justify">
+                  <b style="color:red">'.$empresa_detail['abreviacion_oc'].'</b> ha enviado la cotización actualizada correspondiente a la Solicitud de Registro para Compradores y Otros Actores.
+                  <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
+
+                  <br><br>
+                  <b style="color:red">'.$empresa_detail['abreviacion_oc'].'</b> has sent the quotation corresponding to the Certification Application for Small producers organizations.
+                    <br><br>Please log in to the following link <a href="http://d-spp.org/?OPP">www.d-spp.org/</a> as OPP to access the quotation.
+
+                  </td>
+                </tr>
+
+                <tr>
+                  <td colspan="2">
+                    <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+                      <tbody>
+                        <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                          <td width="130px">Nombre de la Empresa/Company name</td>
+                          <td width="130px">País / Country</td>
+                          <td width="130px">Organismo de Certificación / Certification Entity</td>
+                          <td width="130px">Fecha de envío / Shipping Date</td>
+                       
+                          
+                        </tr>
+                        <tr style="font-size: 12px; text-align:justify">
+                          <td style="padding:10px;">
+                            '.$empresa_detail['nombre'].'
+                          </td>
+                          <td style="padding:10px;">
+                            '.$empresa_detail['empresa_pais'].'
+                          </td>
+                          <td style="padding:10px;">
+                            '.$empresa_detail['abreviacion_oc'].'
+                          </td>
+                          <td style="padding:10px;">
+                          '.date('d/m/Y', $fecha).'
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>        
+                  </td>
+                </tr>
+
+                      <tr>
+                        <td coslpan="2">Para cualquier duda o aclaración por favor contactar a: soporte@d-spp.org</td>
+                      </tr>
+              </tbody>
+            </table>
+
+          </body>
+          </html>
+        ';
+        if(!empty($empresa_detail['email'])){
+          $mail->AddAddress($empresa_detail['email']);
+        }
+        if(!empty($empresa_detail['contacto1_email'])){
+          $mail->AddAddress($empresa_detail['contacto1_email']);
+        }
+        if(!empty($empresa_detail['contacto2_email'])){
+          $mail->AddAddress($empresa_detail['contacto2_email']);
+        }
+
+        $mail->AddBCC($administrador);
+        $mail->AddBCC($spp_global);
+        if(!empty($oc['email1'])){
+          $mail->AddCC($oc['email1']);
+        }
+        if(!empty($oc['email2'])){
+          $mail->AddCC($oc['email2']);
+        }
+        //se adjunta la cotización
+        $mail->AddAttachment($archivo);
+
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_mensaje);
+        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+
+        echo "<script>alert('Se ha actualizado la cotización');</script>";
+
+
+  }else{
+    $archivo = $_POST['cotizacion_actual'];
+    echo "<script>alert('No se ha podido actualizar la cotización');</script>";
+
+  }
+
+
+}
+
 if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
   $query_empresa = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, solicitud_registro.adm1_email, empresa.nombre, empresa.email FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE solicitud_registro.idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $detalle_empresa = mysql_fetch_assoc($query_empresa);
@@ -903,10 +1033,17 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
              ?>
           </td>
 
+
           <td>
             <?php
             if(isset($solicitud['cotizacion_empresa'])){
-               echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_empresa']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
+            ?>
+              <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="<?php echo "#cotizacion".$solicitud['idsolicitud_registro']; ?>" title="Reemplazar Cotización"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                <a href='<?php echo $solicitud['cotizacion_empresa']; ?>' class='btn btn-sm btn-success' style='font-size:12px;color:white;height:30px;' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>
+              </div>
+            <?php
+               //echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_empresa']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
                if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
                 echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
@@ -919,7 +1056,37 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
               echo "No Disponible";
             } // TERMINA CARGAR COTIZACIÓN
              ?>
+
+            <!-- Modal -->
+            <div class="modal fade" id="<?php echo "cotizacion".$solicitud['idsolicitud_registro']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <form action="" method="POST" enctype="multipart/form-data">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">Reemplazar Cotización Actual</h4>
+                    </div>
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="nueva_cotizacion">Nueva Cotización</label>
+                        <input type="file" id="nueva_cotizacion" name="nueva_cotizacion">
+                        <input type="hidden" name="cotizacion_actual" value="<?php echo $solicitud['cotizacion_empresa']; ?>">
+                        <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
+                      </div>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                      <button type="submit" name="reemplazar_cotizacion" value="1" class="btn btn-primary">Reemplazar Cotización</button>
+                    </div>                    
+
+                  </div>
+                </form>
+              </div>
+            </div>
+
           </td>
+
           <td>
             <?php
             if($solicitud['tipo_solicitud'] == 'RENOVACION'){
@@ -1437,7 +1604,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
               <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
               <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
-              <input type="hidden" name="generar_formato" value="1">
+              <input type="hidden" name="generar_formato_empresa" value="2">
             </form>
           </td>
 

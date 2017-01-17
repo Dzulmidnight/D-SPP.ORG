@@ -27,7 +27,7 @@
 		else
 	if(isset($_GET['socios'])){include("socios.php");}
 		else
-	if(isset($_GET['productos'])){include ("est_productos.php");}
+	if(isset($_GET['productos'])){include ("productos.php");}
 		else
 	if(isset($_GET['detail'])){include ("opp_detail.php");}
 	?>		
