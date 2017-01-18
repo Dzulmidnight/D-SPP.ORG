@@ -1112,23 +1112,60 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
   <?php
   }
   ?>
+  <div class="col-lg-12">
+    <form action="" method="POST">
+      <div class="form-group">
+        <label for="pais">Filtrar por País</label>
+        <?php 
+        $row_pais_solicitud = mysql_query("SELECT opp.pais FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp GROUP BY opp.pais", $dspp) or die(mysql_error());
+         ?>
+        <select name="pais" id="pais">
+          <option value="">Selecciona un país</option>
+          <?php 
+          while($pais_solicitud = mysql_fetch_assoc($row_pais_solicitud)){
+            echo "<option value='$pais_solicitud[pais]'>$pais_solicitud[pais]</option>";
+          }
+           ?>
+        </select>
+      </div>      
+    </form>
 
-  <form action="" method="POST">
-    <div class="col-lg-11 alert alert-info" style="padding:7px;">
-      <label for="campo_busqueda">Busqueda extendida(#spp, nombre, abreviacion, sitio web, email, país, etc...)</label>
+    <form class="form-inline">
+      <div class="form-group">
+        <label class="sr-only" for="exampleInputEmail3">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail3" placeholder="Email">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="exampleInputPassword3">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword3" placeholder="Password">
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox"> Remember me
+        </label>
+      </div>
+      <button type="submit" class="btn btn-default">Sign in</button>
+    </form>
 
-      <div class="input-group">
-        <input type="text" id="buscar" name="buscar" class="form-control" placeholder="campo de busqueda">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="submit" name="campo_busqueda" value="1">Buscar</button>
-        </span>
-      </div><!-- /input-group -->
+    <form action="" method="POST">
+      <div class="col-lg-11 alert alert-info" style="padding:7px;">
+        <label for="campo_busqueda">Busqueda extendida(#spp, nombre, abreviacion, sitio web, email, país, etc...)</label>
 
-    </div>
-    <div class="col-lg-1 alert alert-warning" style="padding:7px;">
-      Total: <?php echo $total_solicitudes; ?>
-    </div>
-  </form>
+        <div class="input-group">
+          <input type="text" id="buscar" name="buscar" class="form-control" placeholder="campo de busqueda">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit" name="campo_busqueda" value="1">Buscar</button>
+          </span>
+        </div><!-- /input-group -->
+
+      </div>
+      <!--<div class="col-lg-1 alert alert-warning" style="padding:7px;">
+        Total: <?php echo $total_solicitudes; ?>
+      </div>-->
+    </form>
+
+  </div>
+
   
   <div class="col-md-12">
     <table class="table table-bordered table-condensed" style="font-size:12px">

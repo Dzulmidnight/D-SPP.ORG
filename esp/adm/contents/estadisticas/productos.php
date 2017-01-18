@@ -50,7 +50,7 @@ opp.pais = 'PerÃº'
 
 SELECT opp.idopp, opp.pais, opp.estatus_opp, opp.estatus_dspp, num_socios.idnum_socios, num_socios.idopp, num_socios.numero FROM num_socios INNER JOIN opp ON num_socios.idopp = opp.idopp WHERE opp.pais = 'PerÃº' AND (opp.estatus_opp != 'CANCELADO' OR opp.estatus_opp != 'ARCHIVADO' OR opp.estatus_opp IS NULL) GROUP BY num_socios.idopp*/
 
-$row_paises = mysql_query("SELECT opp.pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
+$row_paises = mysql_query("SELECT * FROM vw_paises", $dspp) or die(mysql_error());
 ?>
 
 <div class="col-md-12">
@@ -58,7 +58,7 @@ $row_paises = mysql_query("SELECT opp.pais FROM opp GROUP BY pais", $dspp) or di
     <h4>Productos por País</h4>
     <table class="table table-bordered table-hover table-condensed" style="font-size:10px;">
       <thead>
-        <tr>
+        <tr class="success">
           <th>No</th>
           <th>PAÍS</th>
           <?php 
@@ -88,7 +88,7 @@ $row_paises = mysql_query("SELECT opp.pais FROM opp GROUP BY pais", $dspp) or di
                 $total_pais_producto = mysql_num_rows($row_pais_producto);
 
                 if($total_pais_producto > 0){
-                  echo "<td>X</td>";
+                  echo "<td style='background-color:#2ecc71;text-align:center'>X</td>";
                 }else{
                   echo "<td>-</td>";
                 }
