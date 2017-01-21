@@ -500,6 +500,15 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		if(isset($oc['email2'])){
 			$mail->AddAddress($oc['email2']);
 		}
+		if(isset($_POST['email'])){
+			$mail->AddCC($_POST['email']);
+		}
+		if(isset($_POST['contacto1_email'])){
+			$mail->AddCC($_POST['contacto1_email']);
+		}
+
+	    $mail->AddCC($administrador);
+	    $mail->AddBCC($administrador);
 	    $mail->AddBCC($spp_global);
         //$mail->Username = "soporte@d-spp.org";
         //$mail->Password = "/aung5l6tZ";

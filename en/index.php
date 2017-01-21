@@ -158,7 +158,11 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
                   <td style="text-align:justify;padding-top:10px;"><i>Congratulations , your data have been recorded correctly. Below is your <b>#SPP and password needed to log in </b>: <a href="http://d-spp.org/?OPP" target="_new">www.d-spp.org/?OPP</a></i>, once you have logged you are advised to change your password on the Information OPP section, in that section are data which can be modified if be necessary.</td>
                 </tr>
             <tr>
-              <td align="left"><br><b>Nombre / Name:</b> <span style="color:#27ae60;">'.$_POST['nombre'].'</span></td>
+              <td align="left">
+                <br>
+                <b>Pais / Country: </b><span style="color:#27ae60;">'.$_POST['pais'].'</span>
+                <br><b>Nombre / Name:</b> <span style="color:#27ae60;">'.$_POST['nombre'].'</span>
+              </td>
             </tr>
             <tr>
               <td align="left"><br><b>#SPP:</b> <span style="color:#27ae60;">'.$spp.'</span></td>
@@ -302,7 +306,11 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
                 <td style="text-align:justify;padding-top:10px;"><i>Congratulations , your data have been recorded correctly. Below is your <b>#SPP and password needed to log in </b>: <a href="http://d-spp.org/?COM" target="_new">www.d-spp.org/?COM</a></i>, once you have logged you are advised to change your password on the Information COM section, in that section are data which can be modified if be necessary.</td>
               </tr>
           <tr>
-            <td align="left"><br><b>Nombre de la Empresa / Company Name:</b> <span style="color:#27ae60;">'.$_POST['nombre'].'</span></td>
+            <td align="left">
+              <br>
+              <b>Pais / Country: </b><span style="color:#27ae60;">'.$_POST['pais'].'</span>
+              <br><b>Nombre de la Empresa / Company Name:</b> <span style="color:#27ae60;">'.$_POST['nombre'].'</span>
+            </td>
           </tr>
           <tr>
             <td align="left"><br><b>#SPP:</b> <span style="color:#27ae60;">'.$spp.'</span></td>
