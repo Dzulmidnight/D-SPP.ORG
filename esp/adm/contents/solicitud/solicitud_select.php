@@ -241,7 +241,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $ejecutar = mysql_query($query_adm,$dspp) or die(mysql_error());
 
         while($email_adm = mysql_fetch_assoc($ejecutar)){  
-          if($email_adm['email'] != "isc.jesusmartinez@gmail.com"){
+          if($email_adm['email'] != "procu@spp.coop" ){
             $mail->AddAddress($email_adm['email']);
           }
         }
@@ -1113,39 +1113,6 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
   }
   ?>
   <div class="col-lg-12">
-    <form action="" method="POST">
-      <div class="form-group">
-        <label for="pais">Filtrar por País</label>
-        <?php 
-        $row_pais_solicitud = mysql_query("SELECT opp.pais FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp GROUP BY opp.pais", $dspp) or die(mysql_error());
-         ?>
-        <select name="pais" id="pais">
-          <option value="">Selecciona un país</option>
-          <?php 
-          while($pais_solicitud = mysql_fetch_assoc($row_pais_solicitud)){
-            echo "<option value='$pais_solicitud[pais]'>$pais_solicitud[pais]</option>";
-          }
-           ?>
-        </select>
-      </div>      
-    </form>
-
-    <form class="form-inline">
-      <div class="form-group">
-        <label class="sr-only" for="exampleInputEmail3">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail3" placeholder="Email">
-      </div>
-      <div class="form-group">
-        <label class="sr-only" for="exampleInputPassword3">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword3" placeholder="Password">
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox"> Remember me
-        </label>
-      </div>
-      <button type="submit" class="btn btn-default">Sign in</button>
-    </form>
 
     <form action="" method="POST">
       <div class="col-lg-11 alert alert-info" style="padding:7px;">
