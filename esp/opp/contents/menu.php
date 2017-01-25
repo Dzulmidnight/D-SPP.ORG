@@ -38,6 +38,9 @@ if (!function_exists("GetSQLValueString")) {
   <li <? if(isset($_GET['SOLICITUD'])){?> class="active" <? }?>>
     <a href="?SOLICITUD&select">Solicitudes</a>
   </li>
+  <li <? if(isset($_GET['INFORME'])){?> class="active" <? }?>>
+    <a href="?INFORME&select">Informe Trimestral</a>
+  </li>
   <li <? if(isset($_GET['OPP'])){?> class="active" <?}?>>
     <a href="?OPP&detail">Mi Cuenta</a>
   </li>

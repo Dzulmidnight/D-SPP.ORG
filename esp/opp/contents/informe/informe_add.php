@@ -7,7 +7,7 @@ mysql_select_db($database_dspp, $dspp);
 if (!isset($_SESSION)) {
   session_start();
 	
-	$redireccion = "../index.php?EMPRESA";
+	$redireccion = "../index.php?OPP";
 
 	if(!$_SESSION["autentificado"]){
 		header("Location:".$redireccion);
@@ -50,7 +50,7 @@ if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
 
-$idempresa = $_SESSION['idempresa'];
+$idopp = $_SESSION['idopp'];
 $idtrim = $_GET['idtrim'];
 
 if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
@@ -58,10 +58,10 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	$fecha_elaboracion = time();
 
 
-		if(isset($_POST['opp'])){
-			$opp = $_POST['opp'];
+		if(isset($_POST['comprador'])){
+			$comprador = $_POST['comprador'];
 		}else{
-			$opp = NULL;
+			$comprador = NULL;
 		}
 		if(isset($_POST['pais'])){
 			$pais = $_POST['pais'];
@@ -87,12 +87,12 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			$valor_total_contrato = $_POST['valor_total_contrato'];
 		}else{
 			$valor_total_contrato = NULL;
-		}
+		}/*
 		if(isset($_POST['total'])){
 			$total = $_POST['total'];
 		}else{
 			$total = NULL;
-		}
+		}*/
 		if(isset($_POST['primer_intermediario'])){
 			$primer_intermediario = $_POST['primer_intermediario'];
 		}else{
@@ -189,33 +189,33 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		}else{
 			$cuota_uso_reglamento = NULL;
 		}
-		if(isset($_POST['unidad_cuota_uso_reglamento'])){
+		/*if(isset($_POST['unidad_cuota_uso_reglamento'])){
 			$unidad_cuota_uso_reglamento = $_POST['unidad_cuota_uso_reglamento'];
 		}else{
 			$unidad_cuota_uso_reglamento = NULL;
-		}
+		}*/
 
 
 			$fecha_compra = strtotime($fecha_compra);
-			//Iniciamos insertar formato_compras
-				$insertSQL = sprintf("INSERT INTO formato_compras(idtrim, idempresa, opp, pais, fecha_compra, producto_general, producto_especifico, valor_total_contrato, total, fecha_elaboracion) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+			//Iniciamos insertar formato_ventas
+				$insertSQL = sprintf("INSERT INTO formato_ventas(idtrim, idopp, comprador, pais, fecha_compra, producto_general, producto_especifico, total_contrato, fecha_elaboracion) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 					GetSQLValueString($idtrim, "text"),
-					GetSQLValueString($idempresa, "int"),
-					GetSQLValueString($opp, "text"),
+					GetSQLValueString($idopp, "int"),
+					GetSQLValueString($comprador, "text"),
 					GetSQLValueString($pais, "text"),
 					GetSQLValueString($fecha_compra, "int"),
 					GetSQLValueString($producto_general, "text"),
 					GetSQLValueString($producto_especifico, "text"),
 					GetSQLValueString($valor_total_contrato, "double"),
-					GetSQLValueString($total, "double"),
+					//GetSQLValueString($total, "double"),
 					GetSQLValueString($fecha_elaboracion, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
-				$idformato_compras = mysql_insert_id($dspp);
+				$idformato_ventas = mysql_insert_id($dspp);
 
 				//inciamos insertar intermediarios
-				$insertSQL = sprintf("INSERT INTO intermediarios(idformato_compras, primero, segundo) VALUES(%s, %s, %s)",
-					GetSQLValueString($idformato_compras, "int"),
+				$insertSQL = sprintf("INSERT INTO intermediarios(idformato_ventas, primero, segundo) VALUES(%s, %s, %s)",
+					GetSQLValueString($idformato_ventas, "int"),
 					GetSQLValueString($primer_intermediario, "text"),
 					GetSQLValueString($segundo_intermediario, "text"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -223,67 +223,67 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 				//inciamos insertar referencia_contrato
 				$fecha_contrato = strtotime($fecha_contrato);
-				$insertSQL = sprintf("INSERT INTO referencia_contrato(clave, fecha, idformato_compras) VALUES (%s, %s, %s)",
+				$insertSQL = sprintf("INSERT INTO referencia_contrato(clave, fecha, idformato_ventas) VALUES (%s, %s, %s)",
 					GetSQLValueString($clave_contrato, "text"),
 					GetSQLValueString($fecha_contrato, "in"),
-					GetSQLValueString($idformato_compras, "int"));
+					GetSQLValueString($idformato_ventas, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 				//terminamos insertar referencia_contrato
 
 				//iniciamos insertar cantidad_total_contrato
-				$insertSQL = sprintf("INSERT INTO cantidad_total_contrato(peso, unidad, idformato_compras) VALUES(%s, %s, %s)",
+				$insertSQL = sprintf("INSERT INTO cantidad_total_contrato(peso, unidad, idformato_ventas) VALUES(%s, %s, %s)",
 					GetSQLValueString($peso_cantidad_total_contrato, "double"),
 					GetSQLValueString($unidad_cantidad_total_contrato, "text"),
-					GetSQLValueString($idformato_compras, "int"));
+					GetSQLValueString($idformato_ventas, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 				//terminamos insertar cantidad_total_contrato
 
 				//iniciamos insertar peso_total_reglamento
-				$insertSQL = sprintf("INSERT INTO peso_total_reglamento(peso, unidad, idformato_compras) VALUES (%s, %s, %s)",
+				$insertSQL = sprintf("INSERT INTO peso_total_reglamento(peso, unidad, idformato_ventas) VALUES (%s, %s, %s)",
 					GetSQLValueString($peso_total_reglamento, "double"),
 					GetSQLValueString($unidad_peso_total_reglamento, "text"),
-					GetSQLValueString($idformato_compras, "int"));
+					GetSQLValueString($idformato_ventas, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 				//terminamos insertar peso_total_reglamento
 
 				//iniciamos insertar precio_total_unitario
-				$insertSQL = sprintf("INSERT INTO precio_total_unitario(precio, unidad, idformato_compras) VALUES (%s, %s, %s)",
+				$insertSQL = sprintf("INSERT INTO precio_total_unitario(precio, unidad, idformato_ventas) VALUES (%s, %s, %s)",
 					GetSQLValueString($precio_precio_total_unitario, "double"),
 					GetSQLValueString($unidad_precio_total_unitario, "text"),
-					GetSQLValueString($idformato_compras, "int"));
+					GetSQLValueString($idformato_ventas, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 				//terminamos insertar precio_total_unitario
 
 				//inciamos insertar precio_sustentable
-				$insertSQL = sprintf("INSERT INTO precio_sustentable(precio, unidad, idformato_compras) VALUES (%s, %s, %s)",
+				$insertSQL = sprintf("INSERT INTO precio_sustentable(precio, unidad, idformato_ventas) VALUES (%s, %s, %s)",
 					GetSQLValueString($precio_precio_sustentable, "double"),
 					GetSQLValueString($unidad_precio_sustentable, "text"),
-					GetSQLValueString($idformato_compras, "int"));
+					GetSQLValueString($idformato_ventas, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 				//termianos insertar precio_sustentable
 
 				//iniciamos insertar reconocimiento_organico
-				$insertSQL = sprintf("INSERT INTO reconocimiento_organico(precio, unidad, idformato_compras) VALUES (%s, %s, %s)",
+				$insertSQL = sprintf("INSERT INTO reconocimiento_organico(precio, unidad, idformato_ventas) VALUES (%s, %s, %s)",
 					GetSQLValueString($precio_reconocimiento_organico, "double"),
 					GetSQLValueString($unidad_reconocimiento_organico, "text"),
-					GetSQLValueString($idformato_compras, "text"));
+					GetSQLValueString($idformato_ventas, "text"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 				//terminamos insertar reconocimiento_organico
 
 				//iniciamos insertar incentivo_spp
-				$insertSQL = sprintf("INSERT INTO incentivo_spp(precio, unidad, idformato_compras) VALUES (%s, %s, %s)",
+				$insertSQL = sprintf("INSERT INTO incentivo_spp(precio, unidad, idformato_ventas) VALUES (%s, %s, %s)",
 					GetSQLValueString($precio_incentivo_spp, "double"),
 					GetSQLValueString($unidad_incentivo_spp, "text"), 
-					GetSQLValueString($idformato_compras, "int"));
+					GetSQLValueString($idformato_ventas, "int"));
 				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 				//terminamos insertar incetivo_spp
 
 				//iniciamos insertar cuota_uso_reglamento
-				$insertSQL = sprintf("INSERT INTO cuota_uso_reglamento(cuota, unidad, idformato_compras) VALUES (%s, %s, %s)",
+				/*$insertSQL = sprintf("INSERT INTO cuota_uso_reglamento(cuota, unidad, idformato_ventas) VALUES (%s, %s, %s)",
 					GetSQLValueString($cuota_uso_reglamento, "text"),
 					GetSQLValueString($unidad_cuota_uso_reglamento, "text"),
-					GetSQLValueString($idformato_compras, "int"));
-				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+					GetSQLValueString($idformato_ventas, "int"));
+				$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());*/
 				//terminamos insertar cuota_uso_reglamento
 			//Termina insertar formato compras
 
@@ -331,9 +331,9 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 				<th class="text-center">
 					
 		 				</th>
-						<th class="text-center">OPP</th>
-						<th class="text-center">País de la OPP</th>
-						<th class="text-center">Fecha de Compra</th>
+						<th class="text-center">Nombre del Comprador Final</th>
+						<th class="text-center">País del Comprador Final</th>
+						<th class="text-center">Fecha de Compra(dd/mm/aaaa)</th>
 						<th class="text-center">Primer Intermediario</th>
 						<th class="text-center">Segundo Intermediario</th>
 						<th class="text-center">Tipo de Producto</th>
@@ -341,13 +341,11 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<th class="text-center">Producto Especifico de acuerdo al contrato original</th>
 						<th colspan="2" class="text-center">Cantidad Total Conforme Contrato</th>
 						<th colspan="2" class="text-center">Peso Total Conforme Unidad de Medida Reglamento de Uso</th>
-						<th colspan="2" class="text-center">Precio Total Unitario</th>
 						<th colspan="2" class="text-center">Precio Sustentable Minimo</th>
 						<th colspan="2" class="text-center">Reconocimiento Orgánico</th>
 						<th colspan="2" class="text-center">Incentivo SPP</th>
+						<th colspan="2" class="text-center">Precio Total Unitario</th>
 						<th class="text-center">Valor Total Contrato</th>
-						<th colspan="2" class="text-center">Cuota de Uso Reglamento</th>
-						<th class="text-center">Total a Pagar</th>
 		 			</tr>
 		 		</thead>
 		 		<tbody>
@@ -356,13 +354,13 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 					#
 		 				</td>
 		 				<td>
-		 					Nombre de la OPP de donde proviene el producto.
+		 					Nombre del Comprador final que pone el producto en el mercado.
 		 				</td>
 		 				<td>
-		 					País sede la OPP de donde priviene el producto.
+		 					País donde esta ubicado el Comprador final que pone el producto en el mercado.
 		 				</td>
 		 				<td>
-		 					Fecha de embarque del producto. la fecha de la compra del producto por el Comprador Final, usuario del SPP.
+		 					La Fecha de la compra del producto por el Comprador Final, usuario del SPP(de la OPP directamente o a través de algun intermediario).
 		 				</td>
 		 				<td>
 		 					Nombre de la contraparte comercial que hace la compra del producto a la OPP, si no es el Comprador Final.
@@ -400,13 +398,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			 					Unidad de medida utilizada.
 			 				</td>
 		 				<!-- TERMINA PESO TOTAL CONFORME UNIDAD DE MEDIDA REGLAMENTO DE USO -->
-		 				<!-- INICIA PRECIO TOTAL UNITARIO -->
-			 				<td>
-			 					Precio Unitario total pagado (en unidades de peso y divisa conforme lista de precios SPP GLOBAL).
-			 				<td>
-			 					Unidad de medida del precio pagado por el comprador.
-			 				</td>
-		 				<!-- TERMINA PRECIO TOTAL UNITARIO -->
+
 		 				<!-- INICIA PRECIO SUSTENTABLE MINIMO -->
 			 				<td>
 			 					Precio Unitario total pagado (en unidades de peso y divisa conforme lista de precios SPP GLOBAL).
@@ -430,21 +422,16 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			 				<td>
 			 					Unidad de medida del precio pagado por el Comprador.
 			 				</td>
-		 				<!-- TERMINA INCENTIVO SPP -->
-		 				<td>
-		 					Valor total del contrato.
-		 				</td>
-		 				<!-- INICIA CUOTA DE USO REGLAMENTO -->
-		 					<td>
-		 						Cuota establecida conforme Reglamento de Costos SPP GLOBAL para el producto y término comercial.
-		 					</td>
-		 					<td>
-		 						Unidad de medida conforme a Reglamento de Costos.
-		 					</td>
-		 				<!-- TERMIAN CUOTA DE USO REGLAMENTO -->
-		 				<td>
-		 					Total a pagar a SPP GLOBAL conforme cuota de uso y volumen de lote.
-		 				</td>
+
+		 				<!-- INICIA PRECIO TOTAL UNITARIO -->
+			 				<td>
+			 					Precio Unitario total pagado (en unidades de peso y divisa conforme lista de precios SPP GLOBAL).
+			 				<td>
+			 					Unidad de medida del precio pagado por el comprador.
+			 				</td>
+		 				<!-- TERMINA PRECIO TOTAL UNITARIO -->
+
+
 		 			</tr>
 
 		 				<?php 
@@ -467,14 +454,14 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 							# code...
 		 							break;
 		 					}
-							$row_registro = mysql_query("SELECT formato_compras.idtrim, formato_compras.opp, formato_compras.pais, formato_compras.fecha_compra, formato_compras.producto_general, formato_compras.producto_especifico, formato_compras.valor_total_contrato, formato_compras.total, intermediarios.primero, intermediarios.segundo, referencia_contrato.clave, referencia_contrato.fecha AS 'fecha_contrato', cantidad_total_contrato.peso AS 'ctc_peso', cantidad_total_contrato.unidad AS 'ctc_unidad', peso_total_reglamento.peso AS 'ptr_peso', peso_total_reglamento.unidad AS 'ptr_unidad', precio_total_unitario.precio AS 'ptu_precio', precio_total_unitario.unidad AS 'ptu_unidad', precio_sustentable.precio AS 'ps_precio', precio_sustentable.unidad AS 'ps_unidad', reconocimiento_organico.precio AS 'ro_precio', reconocimiento_organico.unidad AS 'ro_unidad', incentivo_spp.precio AS 'incentivo_precio', incentivo_spp.unidad AS 'incentivo_unidad', cuota_uso_reglamento.cuota AS 'cur_cuota', cuota_uso_reglamento.unidad AS 'cur_unidad' FROM formato_compras INNER JOIN intermediarios ON formato_compras.idformato_compras = intermediarios.idformato_compras INNER JOIN referencia_contrato ON formato_compras.idformato_compras = referencia_contrato.idformato_compras INNER JOIN cantidad_total_contrato ON formato_compras.idformato_compras = cantidad_total_contrato.idformato_compras INNER JOIN peso_total_reglamento ON formato_compras.idformato_compras = peso_total_reglamento.idformato_compras INNER JOIN precio_total_unitario ON formato_compras.idformato_compras = precio_total_unitario.idformato_compras INNER JOIN precio_sustentable ON formato_compras.idformato_compras = precio_sustentable.idformato_compras INNER JOIN reconocimiento_organico ON formato_compras.idformato_compras = reconocimiento_organico.idformato_compras INNER JOIN incentivo_spp ON formato_compras.idformato_compras = incentivo_spp.idformato_compras INNER JOIN cuota_uso_reglamento ON formato_compras.idformato_compras = cuota_uso_reglamento.idformato_compras WHERE formato_compras.idtrim  = '$informe_general[$num_trim]'");
+							$row_registro = mysql_query("SELECT formato_ventas.idtrim, formato_ventas.comprador, formato_ventas.pais, formato_ventas.fecha_compra, formato_ventas.producto_general, formato_ventas.producto_especifico, formato_ventas.total_contrato, intermediarios.primero, intermediarios.segundo, referencia_contrato.clave, referencia_contrato.fecha AS 'fecha_contrato', cantidad_total_contrato.peso AS 'ctc_peso', cantidad_total_contrato.unidad AS 'ctc_unidad', peso_total_reglamento.peso AS 'ptr_peso', peso_total_reglamento.unidad AS 'ptr_unidad', precio_total_unitario.precio AS 'ptu_precio', precio_total_unitario.unidad AS 'ptu_unidad', precio_sustentable.precio AS 'ps_precio', precio_sustentable.unidad AS 'ps_unidad', reconocimiento_organico.precio AS 'ro_precio', reconocimiento_organico.unidad AS 'ro_unidad', incentivo_spp.precio AS 'incentivo_precio', incentivo_spp.unidad AS 'incentivo_unidad' FROM formato_ventas INNER JOIN intermediarios ON formato_ventas.idformato_ventas = intermediarios.idformato_ventas INNER JOIN referencia_contrato ON formato_ventas.idformato_ventas = referencia_contrato.idformato_ventas INNER JOIN cantidad_total_contrato ON formato_ventas.idformato_ventas = cantidad_total_contrato.idformato_ventas INNER JOIN peso_total_reglamento ON formato_ventas.idformato_ventas = peso_total_reglamento.idformato_ventas INNER JOIN precio_total_unitario ON formato_ventas.idformato_ventas = precio_total_unitario.idformato_ventas INNER JOIN precio_sustentable ON formato_ventas.idformato_ventas = precio_sustentable.idformato_ventas INNER JOIN reconocimiento_organico ON formato_ventas.idformato_ventas = reconocimiento_organico.idformato_ventas INNER JOIN incentivo_spp ON formato_ventas.idformato_ventas = incentivo_spp.idformato_ventas WHERE formato_ventas.idtrim  = '$informe_general[$num_trim]'");
 							$contador = 1;
 
 							while($informacion_formato = mysql_fetch_assoc($row_registro)){
 							?>
 								<tr class="active">
 									<td><?php echo $contador; ?></td>
-									<td><?php echo $informacion_formato['opp']; ?></td>
+									<td><?php echo $informacion_formato['comprador']; ?></td>
 									<td><?php echo $informacion_formato['pais']; ?></td>
 									<td><?php echo date('d/m/Y',$informacion_formato['fecha_compra']); ?></td>
 									<td><?php echo $informacion_formato['primero']; ?></td>
@@ -495,10 +482,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 									<td><?php echo $informacion_formato['ro_unidad']; ?></td>
 									<td><?php echo $informacion_formato['incentivo_precio']; ?></td>
 									<td><?php echo $informacion_formato['incentivo_unidad']; ?></td>
-									<td><?php echo $informacion_formato['valor_total_contrato']; ?></td>
-									<td><?php echo $informacion_formato['cur_cuota']; ?></td>
-									<td><?php echo $informacion_formato['cur_unidad']; ?></td>
-									<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $informacion_formato['total']; ?></td>
+									<td><?php echo $informacion_formato['total_contrato']; ?></td>
+
 								</tr>
 							<?php
 							$contador++;
@@ -507,7 +492,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 					<tr class="success">
 						<td></td>
 						<td>
-							<input type="text" name="opp" id="" placeholder="opp" autofocus required>
+							<input type="text" name="comprador" id="" placeholder="comprador" autofocus required>
 						</td>
 						<td>
 			              <select name="pais" id="pais" class="" required>
@@ -521,7 +506,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			              </select>
 						</td>
 						<td>
-							<input type="text" name="fecha_compra" id="" placeholder="Fecha Compra">
+							<input type="date" name="fecha_compra" id="" placeholder="dd/mm/aaaa">
 						</td>
 						<td>
 							<input type="text" name="primer_intermediario" id="" placeholder="primer intermediario">
@@ -542,7 +527,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 							<input type="text" name="producto_especifico" id="" placeholder="producto_especifico">
 						</td>
 						<td>
-							<input type="number" step="any" name="peso_cantidad_total_contrato" id="peso_cantidad_total_contrato" onChange="calcular();" placeholder="Ej: 417.26">
+							<input type="number" step="any" name="peso_cantidad_total_contrato" id="peso_cantidad_total_contrato"  placeholder="Ej: 417.26">
 						</td>
 						<td>
 							<select name="unidad_cantidad_total_contrato">
@@ -563,40 +548,31 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 							</select>
 						</td>
 						<td>
-							<input type="text" name="precio_precio_total_unitario" id="precio_total_unitario" placeholder="precio" onChange="calcular();" value="0" readonly style="background-color:#c0392b;color:#ecf0f1">
+							<input type="text" name="precio_precio_total_unitario" id="precio_total_unitario" placeholder="precio"  value="0"  >
 						</td>
 						<td>
 							<input type="text" name="unidad_precio_total_unitario" id="" placeholder="unidad_medida">
 						</td>
 						<td>
-							<input type="number" step="any" name="precio_precio_sustentable" id="precio_sustentable_minimo" onChange="calcular();" value="0" placeholder="Ej: 160">
+							<input type="number" step="any" name="precio_precio_sustentable" id="precio_sustentable_minimo"  value="0" placeholder="Ej: 160">
 						</td>
 						<td>
 							<input type="text" name="unidad_precio_sustentable" id="" placeholder="unidad_medida">
 						</td>
 						<td>
-							<input type="number" step="any" name="precio_reconocimiento_organico" id="precio_reconocimiento_organico" onChange="calcular();" value="0" placeholder="Ej: 40">
+							<input type="number" step="any" name="precio_reconocimiento_organico" id="precio_reconocimiento_organico"  value="0" placeholder="Ej: 40">
 						</td>
 						<td>
 							<input type="text" name="unidad_reconocimiento_organico" id="" placeholder="unidad_medida">
 						</td>
 						<td>
-							<input type="number" step="any" name="precio_incentivo_spp" id="precio_incentivo_spp" onChange="calcular();" value="0" placeholder="Ej: 20">
+							<input type="number" step="any" name="precio_incentivo_spp" id="precio_incentivo_spp"  value="0" placeholder="Ej: 20">
 						</td>
 						<td>
 							<input type="text" name="unidad_incentivo_spp" id="" placeholder="unidad_medida">
 						</td>
 						<td>
-							<input type="text" style="background-color:#c0392b;color:#ecf0f1" name="valor_total_contrato" id="valor_total_contrato" onChange="calcular();" value="0.0" readonly placeholder="valor_total">
-						</td>
-						<td>
-							<input type="text" style="background-color:#27ae60;color:#ecf0f1" name="cuota_uso_reglamento"  id="cuota_uso_reglamento" onChange="calcular();" value="0" placeholder="cuota">
-						</td>
-						<td>
-							<input type="text" name="unidad_cuota_uso_reglamento" id="" placeholder="unidad">
-						</td>
-						<td>
-							<input type="text" style="background-color:#c0392b;color:#ecf0f1" name="total" id="resultado_total" onChange="calcular();" value="0.0" readonly placeholder="total">
+							<input type="text"  name="valor_total_contrato" id="valor_total_contrato"  value="0.0"  placeholder="valor_total">
 						</td>
 					</tr>
 		 			<tr>
@@ -677,7 +653,7 @@ var contador=0;
 			cell10.innerHTML = '<input type="text" name="producto_especifico['+contador+']" id="" placeholder="producto_especifico">';
 
 			//INICIA cantidad_total_contrato CANTIDAD TOTAL CONFORME A CONTRATO
-				cell11.innerHTML = '<input type="number" step="any" name="peso_cantidad_total_contrato['+contador+']" id="peso_cantidad_total_contrato" onChange="calcular();" placeholder="Ej: 417.26">';
+				cell11.innerHTML = '<input type="number" step="any" name="peso_cantidad_total_contrato['+contador+']" id="peso_cantidad_total_contrato"  placeholder="Ej: 417.26">';
 				//cell12.innerHTML = '<input type="text" name="unidad_cantidad_total_contrato['+contador+']" id="" placeholder="unidad">';
 
 				cell12.innerHTML = '<select name="unidad_cantidad_total_contrato['+contador+']">'
@@ -701,20 +677,20 @@ var contador=0;
 			//TERMINA peso_total_reglamento
 
 			//INICIA precio_total_unitario
-				cell15.innerHTML = '<input type="text" name="precio_precio_total_unitario['+contador+']" id="precio_total_unitario" placeholder="precio" onChange="calcular();" value="0" readonly style="background-color:#c0392b;color:#ecf0f1">';
+				cell15.innerHTML = '<input type="text" name="precio_precio_total_unitario['+contador+']" id="precio_total_unitario" placeholder="precio"  value="0"  >';
 
 
 				cell16.innerHTML = '<input type="text" name="unidad_precio_total_unitario['+contador+']" id="" placeholder="unidad_medida">';
 			// TERMINA precio_total_unitario
 
 			//INICIA PRECIO SUSTENTABLE MINIMO precio_sustentable
-				cell17.innerHTML = '<input type="number" step="any" name="precio_precio_sustentable['+contador+']" id="precio_sustentable_minimo" onChange="calcular();" value="0" placeholder="Ej: 160">';
+				cell17.innerHTML = '<input type="number" step="any" name="precio_precio_sustentable['+contador+']" id="precio_sustentable_minimo"  value="0" placeholder="Ej: 160">';
 
 				cell18.innerHTML = '<input type="text" name="unidad_precio_sustentable['+contador+']" id="" placeholder="unidad_medida">';
 			// TERMINA PRECIO SUSTENTABLE MINIMO precio_sustentable
 
 			// INICIA RECONOCIMIENTO ORGANICO reconocimiento_organico
-				cell19.innerHTML = '<input type="number" step="any" name="precio_reconocimiento_organico['+contador+']" id="precio_reconocimiento_organico" onChange="calcular();" value="0" placeholder="Ej: 40">';
+				cell19.innerHTML = '<input type="number" step="any" name="precio_reconocimiento_organico['+contador+']" id="precio_reconocimiento_organico"  value="0" placeholder="Ej: 40">';
 
 				cell20.innerHTML = '<input type="text" name="unidad_reconocimiento_organico['+contador+']" id="" placeholder="unidad_medida">';
 			// TERMINA RECONOCIMIENTO ORGANICO reconocimiento_organico
@@ -726,7 +702,7 @@ var contador=0;
 			// TERMINA incentivo_spp
 
 			// VALOR TOTAL CONTRATO
-			cell23.innerHTML = '<input type="text" style="background-color:#c0392b;color:#ecf0f1" name="valor_total_contrato['+contador+']" id="valor_total_contrato" onChange="calcular();" value="0.0" readonly placeholder="valor_total">';
+			cell23.innerHTML = '<input type="text"  name="valor_total_contrato['+contador+']" id="valor_total_contrato" onChange="calcular();" value="0.0"  placeholder="valor_total">';
 
 			//INICIA cuota_uso_reglamento
 				cell24.innerHTML = '<input type="text" style="background-color:#27ae60;color:#ecf0f1" name="cuota_uso_reglamento['+contador+']"  id="cuota_uso_reglamento" onChange="calcular();" value="0" placeholder="cuota">';
@@ -735,12 +711,12 @@ var contador=0;
 			//TERMINA cuota_uso_reglamento
 
 			//TOTAL A PAGAR
-			cell26.innerHTML = '<input type="text" style="background-color:#c0392b;color:#ecf0f1" name="total['+contador+']" id="resultado_total" onChange="calcular();" value="0.0" readonly placeholder="total">';
+			cell26.innerHTML = '<input type="text"  name="total['+contador+']" id="resultado_total" onChange="calcular();" value="0.0"  placeholder="total">';
 
 		}
 	}*/
 
-	function calcular(){
+/*	function calcular(){
 		precio_sustentable_minimo = document.getElementById("precio_sustentable_minimo").value;
 		precio_reconocimiento_organico = document.getElementById("precio_reconocimiento_organico").value;
 		precio_incentivo_spp = document.getElementById("precio_incentivo_spp").value;
@@ -759,7 +735,7 @@ var contador=0;
 		valor_total_contrato_redondeado = parseFloat(valor_total_contrato.toFixed(2));
 		/* se redondea el resultado a 2 decimales */
 		//valor_total_contrato = parseFloat(Math.round((precio_total_unitario * peso_cantidad_total_contrato) * 100) / 100).toFixed(2);
-		document.getElementById("valor_total_contrato").value = valor_total_contrato_redondeado; 
+	/*	document.getElementById("valor_total_contrato").value = valor_total_contrato_redondeado; 
 
 		//calculamos el total a pagar
 
@@ -789,7 +765,7 @@ var contador=0;
 		//calculamos el valor total del contrato
 		valor_total_contrato = parseFloat(precio_total_unitario)*parseFloat(cantidad_total_contrato);
 		document.getElementById("valor_total_contrato").value = valor_total_contrato;*/
-	}
+	//}
 
 
 </script>

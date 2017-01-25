@@ -224,15 +224,15 @@ mysql_select_db($database_dspp, $dspp);
         <tr class="warning">
           <th>#</th>
           <th style="font-size:11px;" class="text-center">País</th>
-          <th style="font-size:11px;" class="text-center">Solicitud Inicial(<small>Son OPP que han ingresado por primera vez y solo han cargado la solicitud</small>)</th>
-          <th style="font-size:11px;" class="text-center">Solicitud(<small>Son OPP nuevas que han ingresado su solicitud y se les ha enviado una cotizacion</small>)</th>
-          <th style="font-size:11px;" class="text-center">En Proceso(<small>OPPs que han aceptado la cotización y ha iniciado su proceso de certificacion</small>)</th>
-          <th style="font-size:11px;" class="text-center">Evaluación Positiva(<small>OPPs que han finalizado el proceso de certificación con una evaluación positiva</small>)</th>
+          <th style="font-size:11px;" class="text-center">Solicitud Inicial(<small>Son empresas que han ingresado por primera vez y solo han cargado la solicitud</small>)</th>
+          <th style="font-size:11px;" class="text-center">Solicitud(<small>Son empresas nuevas que han ingresado su solicitud y se les ha enviado una cotizacion</small>)</th>
+          <th style="font-size:11px;" class="text-center">En Proceso(<small>empresa que han aceptado la cotización y ha iniciado su proceso de certificacion</small>)</th>
+          <th style="font-size:11px;" class="text-center">Evaluación Positiva(<small>empresas que han finalizado el proceso de certificación con una evaluación positiva</small>)</th>
           <th style="font-size:11px;" class="text-center">Subtotal Proceso</th>
-          <th style="font-size:11px;" class="text-center">Certificada(<small>Se incluyen todas las OPPs que se les ha entragado certificado, ya sean nuevas o renovación</small>)</th>
+          <th style="font-size:11px;" class="text-center">Certificada(<small>Se incluyen todas las empresas que se les ha entragado certificado, ya sean nuevas o renovación</small>)</th>
           <th style="font-size:11px;" class="text-center">Inactiva</th>
-          <th style="font-size:11px;" class="text-center">Suspendida(<small>OPPs que han sido formalmente suspendidas</small>)</th>
-          <th style="font-size:11px;" class="text-center">Expirado(OPPs, que ha expirado las fechas de sus certificados)</th>
+          <th style="font-size:11px;" class="text-center">Suspendida(<small>empresas que han sido formalmente suspendidas</small>)</th>
+          <th style="font-size:11px;" class="text-center">Expirado(empresas, que ha expirado las fechas de sus certificados)</th>
           <th style="font-size:11px;" class="text-center">Subtotal Certificación</th>
           <th style="font-size:11px;" class="text-center">Total</th>
           <!--<th class="text-center" style="background-color:#e74c3c;color:#ecf0f1" colspan="3">Total</th>-->
