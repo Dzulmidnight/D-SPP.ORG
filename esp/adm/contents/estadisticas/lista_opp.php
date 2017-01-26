@@ -9,35 +9,43 @@ if(isset($_POST['buscar_filtros'])){
   $oc = $_POST['oc'];
   $productos = $_POST['productos'];
 
+  /* ESTATUS GENERAL*/
+  /*
+  EN REVISION: abarca los estatu
+
+
+  */
+
+
   if(!empty($pais) && !empty($oc) && !empty($productos)){
-    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.pais = '$pais' AND opp.idoc = $oc AND productos.producto LIKE '%$productos%' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_publico, estatus_publico.nombre AS 'nombre_estatus_publico', opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.pais = '$pais' AND opp.idoc = $oc AND productos.producto_general LIKE '%$productos%' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
   }else if(!empty($pais) && !empty($oc) && empty($productos)){
-    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.pais = '$pais' AND opp.idoc = $oc GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_publico, estatus_publico.nombre AS 'nombre_estatus_publico', opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.pais = '$pais' AND opp.idoc = $oc GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
   }else if(!empty($pais) && empty($oc) && empty($productos)){
-    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.pais = '$pais' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_publico, estatus_publico.nombre AS 'nombre_estatus_publico', opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.pais = '$pais' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
   }else if(empty($pais) && !empty($oc) && !empty($productos)){
-    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.idoc = $oc AND productos.producto LIKE '%$productos%' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_publico, estatus_publico.nombre AS 'nombre_estatus_publico', opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.idoc = $oc AND productos.producto_general LIKE '%$productos%' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
   }else if(empty($pais) && empty($oc) && !empty($productos)){
-    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE productos.producto LIKE '%$productos%' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_publico, estatus_publico.nombre AS 'nombre_estatus_publico', opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE productos.producto_general LIKE '%$productos%' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
   }else if(!empty($pais) && empty($oc) && !empty($productos)){
-    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.pais = '$pais' AND productos.producto LIKE '%$productos%' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_publico, estatus_publico.nombre AS 'nombre_estatus_publico', opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.pais = '$pais' AND productos.producto_general LIKE '%$productos%' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
   }else if(empty($pais) && !empty($oc) && empty($productos)){
-    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.idoc = $oc GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_publico, estatus_publico.nombre AS 'nombre_estatus_publico', opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp WHERE opp.idoc = $oc GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
   }else{
-    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_publico, estatus_publico.nombre AS 'nombre_estatus_publico', opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
   }
 
 }else{
   if(isset($_POST['ordenar_desc'])){
     $ordenar = $_POST['ordenar_desc'];
-    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp GROUP BY opp.idopp ORDER BY $ordenar DESC", $dspp) or die(mysql_error());
+    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_publico, estatus_publico.nombre AS 'nombre_estatus_publico', opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp GROUP BY opp.idopp ORDER BY $ordenar DESC", $dspp) or die(mysql_error());
 
   }else if(isset($_POST['ordenar_asc'])){
     $ordenar = $_POST['ordenar_asc'];
-    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp GROUP BY opp.idopp ORDER BY $ordenar ASC", $dspp) or die(mysql_error());
+    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_publico, estatus_publico.nombre AS 'nombre_estatus_publico', opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp GROUP BY opp.idopp ORDER BY $ordenar ASC", $dspp) or die(mysql_error());
 
   }else{
-    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+    $row_opp = mysql_query("SELECT opp.idopp, opp.nombre, opp.abreviacion, opp.spp, opp.idoc, opp.pais, opp.estatus_publico, estatus_publico.nombre AS 'nombre_estatus_publico', opp.estatus_dspp, opp.estatus_interno, oc.abreviacion AS 'abreviacion_oc', estatus_dspp.nombre AS 'nombre_estatus_dspp', estatus_interno.nombre AS 'nombre_estatus_interno', MAX(certificado.vigencia_fin) AS 'fecha_certificado', num_socios.numero FROM opp INNER JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno INNER JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN productos ON opp.idopp = productos.idopp GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
 
   }
 }
@@ -50,13 +58,13 @@ return $variable;
 $total_registro = mysql_num_rows($row_opp);
 $row_pais = mysql_query("SELECT opp.pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_error());
-$row_productos = mysql_query("SELECT productos.producto FROM productos GROUP BY productos.producto", $dspp) or die(mysql_error());
+$row_productos = mysql_query("SELECT productos.producto_general FROM productos GROUP BY productos.producto_general", $dspp) or die(mysql_error());
 
 ?>
 
 
 
-<table class="table table-bordered table-condensed" style="font-size:11px;">
+<table class="table table-bordered table-condensed table-hover" style="font-size:11px;">
   <thead>
       <tr>
         <th colspan="10">
@@ -81,7 +89,7 @@ $row_productos = mysql_query("SELECT productos.producto FROM productos GROUP BY 
               <option value="">Filtrar por Productos</option>
               <?php 
               while($producto = mysql_fetch_assoc($row_productos)){
-                echo '<option value='.$producto['producto'].'>'.$producto['producto'].'</option>';
+                echo '<option value='.$producto['producto_general'].'>'.$producto['producto_general'].'</option>';
               }
                ?>
             </select>
@@ -142,7 +150,7 @@ $row_productos = mysql_query("SELECT productos.producto FROM productos GROUP BY 
           </form>
         </th>
         <th style="width:130px;" class="text-center">
-          Estatus Público<br>
+          Estatus Certificado<br>
           <form action="" method="POST">
             <button class="btn btn-xs btn-default" name="ordenar_desc" value="idstatus_publico" type="submit"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>
             <button class="btn btn-xs btn-default" name="ordenar_asc" value="idstatus_publico" type="submit"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>
@@ -150,6 +158,10 @@ $row_productos = mysql_query("SELECT productos.producto FROM productos GROUP BY 
         </th>
         <th class="text-center warning">
           Estatus General
+          <form action="" method="POST">
+            <button class="btn btn-xs btn-default" name="ordenar_desc" value="estatus_publico.nombre" type="submit"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>
+            <button class="btn btn-xs btn-default" name="ordenar_asc" value="estatus_publico.nombre" type="submit"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>
+          </form>
         </th>
         <th  class="text-center">
           PRODUCTOS
@@ -179,9 +191,26 @@ $row_productos = mysql_query("SELECT productos.producto FROM productos GROUP BY 
         <td><?php echo mayus($opp['abreviacion_oc']); ?></td>
         <td><?php echo date('d/m/Y', $fecha); ?></td>
         <td><?php echo $opp['pais']; ?></td>
-        <td><?php echo $opp['nombre_estatus_interno']; ?></td>
-        <td><?php echo $opp['nombre_estatus_dspp']; ?></td>
-        <td><?php echo 'estatus general'; ?></td>
+        <td>
+          <?php
+          if(empty($opp['nombre_estatus_interno'])){
+            echo '<span style="color:red">No Disponible</span>';
+          }else{
+            echo $opp['nombre_estatus_interno'];
+          } 
+          ?>
+        </td>
+        <td><?php echo$opp['nombre_estatus_dspp']; ?></td>
+        <?php 
+        if($opp['estatus_publico'] == 1){
+          echo "<td class='warning'>$opp[nombre_estatus_publico]</td>";
+        }else if($opp['estatus_publico'] == 2){
+          echo "<td class='success'>$opp[nombre_estatus_publico]</td>";
+        }else{ 
+          echo "<td class='danger'>$opp[nombre_estatus_publico]</td>";
+        }
+        ?>
+
         <td style="word-wrap: break-word;"><?php echo $productos['productos_opp']; ?></td>
         <td><?php echo $opp['numero']; ?></td>
       </tr>

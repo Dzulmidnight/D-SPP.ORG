@@ -61,6 +61,13 @@ mysql_select_db($database_dspp, $dspp);
     <h4>Estatus Solicitudes de Certificación</h4>
     <table class="table table-bordered table-hover table-condensed">
       <thead>
+        <tr>
+          <th colspan="14">
+            Exportar:
+            <a href="#" ><img src="../../img/pdf.png" alt=""></a>
+            <a href="#" ><img src="../../img/excel.png" alt=""></a>
+          </th>
+        </tr>
         <tr class="success">
           <th>#</th>
           <th style="font-size:11px;" class="text-center">País</th>
@@ -70,9 +77,10 @@ mysql_select_db($database_dspp, $dspp);
           <th style="font-size:11px;" class="text-center">Evaluación Positiva(<small>OPPs que han finalizado el proceso de certificación con una evaluación positiva</small>)</th>
           <th style="font-size:11px;" class="text-center">Subtotal Proceso</th>
           <th style="font-size:11px;" class="text-center">Certificada(<small>Se incluyen todas las OPPs que se les ha entragado certificado, ya sean nuevas o renovación</small>)</th>
+          <th style="font-size:11px;" class="text-center">En Renovación</th>
           <th style="font-size:11px;" class="text-center">Inactiva</th>
-          <th style="font-size:11px;" class="text-center">Suspendida(<small>OPPs que han sido formalmente suspendidas</small>)</th>
           <th style="font-size:11px;" class="text-center">Expirado(OPPs, que ha expirado las fechas de sus certificados)</th>
+          <th style="font-size:11px;" class="text-center">Suspendida(<small>OPPs que han sido formalmente suspendidas</small>)</th>
           <th style="font-size:11px;" class="text-center">Subtotal Certificación</th>
           <th style="font-size:11px;" class="text-center">Total</th>
           <!--<th class="text-center" style="background-color:#e74c3c;color:#ecf0f1" colspan="3">Total</th>-->
@@ -89,6 +97,7 @@ mysql_select_db($database_dspp, $dspp);
         $total_ev_positiva = 0;
         $total_sub_total_proceso = 0;
         $total_certificada = 0;
+        $total_en_renovacion = 0;
         $total_inactiva = 0;
         $total_suspendida = 0;
         $total_expirado = 0;
@@ -128,6 +137,11 @@ mysql_select_db($database_dspp, $dspp);
           $num_certificadas = mysql_num_rows($row_certificadas);
           $total_certificada += $num_certificadas;
 
+          //query EN PROCESO, se cuentan las OPP con estatus_dspp = certificado expirado y que no tengan estatus_interno "CANCELADO"
+          $row_en_renovacion = mysql_query("SELECT opp.idopp, certificado.idopp FROM opp INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.pais = '$pais[pais]' AND (opp.estatus_dspp = 16 AND opp.estatus_interno != 10)", $dspp);
+          $num_en_renovacion = mysql_num_rows($row_en_renovacion);
+          $total_en_renovacion += $num_en_renovacion;
+
           //query INACTIVA, en inactivas estamo contando las opp con estatus cancelado(10)
           $row_inactiva = mysql_query("SELECT opp.idopp, certificado.idopp FROM opp INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.pais = '$pais[pais]' AND opp.estatus_interno = 10", $dspp);
           $num_inactiva = mysql_num_rows($row_inactiva);
@@ -140,7 +154,7 @@ mysql_select_db($database_dspp, $dspp);
           $total_suspendida += $num_suspendida;
 
           //query EXPIRADO, se cuentan las OPP con estatus_dspp = certificado expirado y que no tengan estatus_interno "CANCELADO"
-          $row_expirado = mysql_query("SELECT opp.idopp, certificado.idopp FROM opp INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.pais = '$pais[pais]' AND (opp.estatus_dspp = 16 AND opp.estatus_interno != 10)", $dspp);
+          $row_expirado = mysql_query("SELECT opp.idopp, certificado.idopp FROM opp  INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.pais = '$pais[pais]' AND (opp.estatus_dspp = 16 AND opp.estatus_interno != 10 ) GROUP BY certificado.idopp", $dspp);
           $num_expirado = mysql_num_rows($row_expirado);
           $total_expirado += $num_expirado;
 
@@ -173,14 +187,16 @@ mysql_select_db($database_dspp, $dspp);
           <!--INICIA CERTIFICAD-->
           <td class="text-center"><?php echo $num_certificadas; ?></td>
 
+          <td>En Renovacion</td>
+
           <!--INICIA INACTIVA-->
           <td class="text-center"><?php echo $num_inactiva; ?></td>
 
-          <!--INICIA SUSPENDIDA-->
-          <td class="text-center"><?php echo $num_suspendida; ?></td>
-
           <!--INICIA EXPIRADO-->
           <td class="text-center"><?php echo $num_expirado; ?></td>
+
+          <!--INICIA SUSPENDIDA-->
+          <td class="text-center"><?php echo $num_suspendida; ?></td>
 
           <!--INICIA SUBTOTAL CERTIFICACION-->
           <td class="success text-center"><?php echo $num_sub_total_certificacion; ?></td>
@@ -200,15 +216,26 @@ mysql_select_db($database_dspp, $dspp);
            <td class="text-center"><?php echo $total_ev_positiva; ?></td>
            <td class="success text-center"><?php echo $total_sub_total_proceso; ?></td>
            <td class="text-center"><?php echo $total_certificada; ?></td>
+           <td class="text-center">En Renovación</td>
            <td class="text-center"><?php echo $total_inactiva; ?></td>
-           <td class="text-center"><?php echo $total_suspendida; ?></td>
            <td class="text-center"><?php echo $total_expirado; ?></td>
+           <td class="text-center"><?php echo $total_suspendida; ?></td>
            <td class="success text-center"><?php echo $total_sub_certificacion ?></td>
            <td style="background-color:#e74c3c;color:#ecf0f1" class="text-center"><?php echo $total; ?></td>
          </tr>
       </tbody>
     </table>
   </div>  
+
+            <form name="formulario1" method="POST" action="../../reportes/concentrado_procesos.php">
+              <input type="hidden" name="reporte_pdf" value="1">
+              <input type="hidden" name="query" value="<?php echo $query_opp; ?>">
+            </form> 
+            <form name="formulario2" method="POST" action="../../reportes/concentrado_procesos.php">
+              <input type="hidden" name="reporte_excel" value="2">
+              <input type="hidden" name="query_excel" value="<?php echo $query_opp; ?>">
+            </form>
+
 </div>
 
 <div class="col-md-12">
