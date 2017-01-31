@@ -54,6 +54,7 @@ if (!function_exists("GetSQLValueString")) {
 $fecha = time();
 $idoc = $_SESSION['idoc'];
 $spp_global = "cert@spp.coop";
+$finanzas_spp = "adm@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 
 $row_correo = mysql_query("SELECT * FROM oc WHERE idoc = $idoc", $dspp) or die(mysql_error());
@@ -167,6 +168,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
 
         $mail->AddBCC($administrador);
         $mail->AddBCC($spp_global);
+
         if(!empty($oc['email1'])){
           $mail->AddCC($oc['email1']);
         }
@@ -429,14 +431,14 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       if(isset($detalle_opp['email'])){
         $mail->AddAddress($detalle_opp['email']);
       }
-      $mail->AddBCC($spp_global);
-
       if(isset($correos_oc['email1'])){
         $mail->AddCC($correos_oc['email1']);
       }
       if(isset($correos_oc['email2'])){
         $mail->AddCC($correos_oc['email2']);
       }
+      $mail->AddBCC($spp_global);
+      $mail->AddBCC($finanzas_spp);
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -643,14 +645,15 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       if(!empty($detalle_opp['email'])){
         $mail->AddAddress($detalle_opp['email']);
       }
-      $mail->AddBCC($spp_global);
-
       if(isset($correos_oc['email1'])){
         $mail->AddCC($correos_oc['email1']);
       }
       if(isset($correos_oc['email2'])){
         $mail->AddCC($correos_oc['email2']);
       }
+
+      $mail->AddBCC($spp_global);
+      $mail->AddBCC($finanzas_spp);
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -806,14 +809,15 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       if(isset($detalle_opp['email'])){
         $mail->AddAddress($detalle_opp['email']);
       }
-      $mail->AddBCC($spp_global);
-
       if(isset($correos_oc['email1'])){
         $mail->AddCC($correos_oc['email1']);
       }
       if(isset($correos_oc['email2'])){
         $mail->AddCC($correos_oc['email2']);
       }
+
+      $mail->AddBCC($spp_global);
+      $mail->AddBCC($finanzas_spp);
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -1018,16 +1022,15 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }
       if(!empty($detalle_opp['email'])){
         $mail->AddAddress($detalle_opp['email']);
-      }
-      $mail->AddBCC($spp_global);
-      
+      }    
       if(isset($correos_oc['email1'])){
         $mail->AddCC($correos_oc['email1']);
       }
       if(isset($correos_oc['email2'])){
         $mail->AddCC($correos_oc['email2']);
       }
-
+      $mail->AddBCC($spp_global);
+      $mail->AddBCC($finanzas_spp);
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));

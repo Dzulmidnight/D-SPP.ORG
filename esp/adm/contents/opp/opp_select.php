@@ -642,6 +642,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
       </tr>
       <tr>
         <th class="text-center">#SPP</th>
+        <th class="text-center">Solicitud</th>
         <th class="text-center">Organización</th>
         <!--<th class="text-center">Abreviación</th>-->
         <th class="text-center">País</th>
@@ -703,7 +704,17 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                 <input type="text" name="spp<?php echo $opp['idopp'];?>" value="<?php echo $opp['spp_opp']; ?>">
             </td>
             <!--- TERMINA CODIGO SPP ---->
-
+            <td>
+              <?php 
+              if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+                echo "<span style='font-weight:bold;color:#e67e22'>$solicitud[tipo_solicitud]</span>";
+              }else if($solicitud['tipo_solicitud'] == 'NUEVA'){
+                echo "<span style='font-weight:bold;color:#2ecc71'>$solicitud[tipo_solicitud]</span>";
+              }else{
+                echo "<span style='font-weight:bold;color:#2980b9'>SIN SOLICITUD</span>";
+              }
+              ?>
+            </td>
             <!--- INICIA NOMBRE ---->
             <td>
               <p style="color:#2c3e50"><b><?php echo $opp['nombre']; ?></b></p>

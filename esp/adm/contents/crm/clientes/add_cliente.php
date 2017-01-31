@@ -37,7 +37,8 @@ if (isset($_SERVER['QUERY_STRING'])) {
 }
 mysql_select_db($database_dspp, $dspp);
 
-
+$idadministrador = $_SESSION['idadministrador'];
+$fecha_actual = time();
 /* MUESTRA LAS SOLICITUDES CON LOS OPPs SEPARADOS
 SELECT opp.*, solicitud_certificacion.*, COUNT(solicitud_certificacion.idsolicitud_certificacion) AS "TOTAL_SOLICITUD" FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE opp.pais = "PerÃº" GROUP BY opp.idopp
 */
@@ -47,11 +48,39 @@ SELECT opp.idopp, opp.pais, solicitud_certificacion.idsolicitud_certificacion, s
 opp.pais = 'PerÃº'
 
 SELECT opp.idopp, opp.pais, opp.estatus_opp, opp.estatus_dspp, num_socios.idnum_socios, num_socios.idopp, num_socios.numero FROM num_socios INNER JOIN opp ON num_socios.idopp = opp.idopp WHERE opp.pais = 'PerÃº' AND (opp.estatus_opp != 'CANCELADO' OR opp.estatus_opp != 'ARCHIVADO' OR opp.estatus_opp IS NULL) GROUP BY num_socios.idopp*/
+if(isset($_POST['guardar_cliente'])){
+  
+  $nombre = $_POST['nombre'];
+  $apellido = $_POST['apellido'];
+  $idioma = $_POST['idioma'];
+  $pais = $_POST['pais'];
+  $direccion = $_POST['direccion'];
+  $telefono1 = $_POST['telefono1'];
+  $telefono2 = $_POST['telefono2'];
+  $email1 = $_POST['email1'];
+  $email2 = $_POST['email2'];
+  $skype = $_POST['skype'];
+  $empresa = $_POST['empresa'];
+  $cargo = $_POST['cargo'];
+  $nivel_interes = $_POST['nivel_interes'];
+  $informacion_extra = $_POST['informacion_extra'];
+
+  $insertSQL = sprintf("INSERT INTO contactos_crm (nombre, apeliido, pais, idioma, telefono1, telefono2, email1, email2, skype, compania, cargo, nivel_interes, creador_por, fecha_registro)",
+    GetSQLValueString());
+  $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+  if($_POST['guardar_cliente'] == 1){
+    echo "<script>window.location='?CRM&po_clientes'</script>";
+  }else if($_POST['guardar_cliente'] == 2){
+
+  }
+
+}
+
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 ?>
 
 <form action="" method="POST">
-  <h4>Crear, Posible Cliente</h4>
+  <h4>Crear, Posible Cliente <?php echo 'el id es: '.$idadministrador; ?></h4>
   <div class="row">
     <div class="col-lg-12">
       Información sobre el posible cliente 
@@ -62,21 +91,21 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
     </div>
     <div class="col-lg-6 form-horizontal">
       <div class="form-group">
-          <label for="inputEmail3" class="col-sm-2 control-label">Nombre</label>
+          <label for="nombre" class="col-sm-2 control-label">Nombre</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="inputEmail3" placeholder="nombre">
+            <input type="text" class="form-control" name="nombre" id="nombre" placeholder="nombre">
           </div>
         </div>
         <div class="form-group">
-          <label for="apellido" class="col-sm-2 control-label">Apellido</label>
+          <label for="apellido" class="col-sm-2 control-label">Apellido(s)</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="apellido" placeholder="apellido">
+            <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Apellido(s)">
           </div>
         </div>
         <div class="form-group">
           <label for="idioma" class="col-sm-2 control-label">Idioma</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="idioma" placeholder="idioma">
+            <input type="text" class="form-control" name="idioma" id="idioma" placeholder="idioma">
           </div>
         </div>
         <div class="form-group">
@@ -101,13 +130,13 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         <div class="form-group">
           <label for="telefono1" class="col-sm-2 control-label">Telefono Principal</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="telefono1" placeholder="telefono1">
+            <input type="text" class="form-control" name="telefono1" id="telefono1" placeholder="telefono1">
           </div>
         </div>
         <div class="form-group">
           <label for="telefono2" class="col-sm-2 control-label">Telefono Secundario</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="telefono2" placeholder="telefono2">
+            <input type="text" class="form-control" name="telefono2" id="telefono2" placeholder="telefono2">
           </div>
         </div>
     </div>
@@ -115,57 +144,51 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         <div class="form-group">
           <label for="email1" class="col-sm-2 control-label">Correo Electronico</label>
           <div class="col-sm-10">
-            <input type="email" class="form-control" id="email1" placeholder="email1">
+            <input type="email" class="form-control" name="email1" id="email1" placeholder="email1">
           </div>
         </div>
         <div class="form-group">
           <label for="email2" class="col-sm-2 control-label">Correo Electronico Secundario</label>
           <div class="col-sm-10">
-            <input type="email" class="form-control" id="email2" placeholder="email2">
+            <input type="email" class="form-control" name="email2" id="email2" placeholder="email2">
           </div>
         </div>
 
         <div class="form-group">
           <label for="skype" class="col-sm-2 control-label">Skype</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="skype" placeholder="skype">
+            <input type="text" class="form-control" name="skype" id="skype" placeholder="skype">
           </div>
         </div>
 
         <div class="form-group">
           <label for="empresa" class="col-sm-2 control-label">Empresa</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="empresa" placeholder="empresa">
+            <input type="text" class="form-control" name="empresa" id="empresa" placeholder="empresa">
           </div>
         </div>
         <div class="form-group">
           <label for="cargo" class="col-sm-2 control-label">Cargo</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="cargo" placeholder="cargo">
+            <input type="text" class="form-control" name="cargo" id="cargo" placeholder="cargo">
           </div>
         </div>
         <div class="form-group">
           <label for="nivel_interes" class="col-sm-2 control-label">Nivel de Interes</label>
           <div class="col-sm-10">
             <select name="nivel_interes" id="nivel_interes">
-              <option value="">Bajo</option>
-              <option value="">Normal</option>
-              <option value="">Alto</option>
+              <option value="1">Bajo</option>
+              <option value="2">Normal</option>
+              <option value="3">Alto</option>
             </select>
           </div>
         </div>
-        <div class="form-group">
-          <label for="informacion_extra" class="col-sm-2 control-label">informacion_extra</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="informacion_extra" placeholder="informacion_extra">
-          </div>
-        </div>
-        <div class="form-group">
+        <!--<div class="form-group">
           <label for="status" class="col-sm-2 control-label">status</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="status" placeholder="status">
+            <input type="text" class="form-control" name="status" id="status" value="" readonly>
           </div>
-        </div>
+        </div>-->
     </div>
     <div class="col-lg-12 form-horizontal">
         <div class="form-group">
@@ -177,7 +200,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
         <div class="text-center">
           <button type="submit" name="guardar_cliente" value="1" class="btn btn-default">Guardar</button>
-          <button type="submit" class="btn btn-default">Guardar y Crear Nuevo</button>
+          <button type="submit" name="guardar_cliente" value="2" class="btn btn-default">Guardar y Crear Nuevo</button>
           <button type="submit" class="btn btn-default">Cancelar</button>          
         </div>
      

@@ -54,6 +54,7 @@ if (!function_exists("GetSQLValueString")) {
 $fecha = time();
 $idoc = $_SESSION['idoc'];
 $spp_global = "cert@spp.coop";
+$finanzas_spp = "adm@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 $query_oc = mysql_query("SELECT * FROM oc WHERE idoc = $idoc", $dspp) or die(mysql_error());
 $oc = mysql_fetch_assoc($query_oc);
@@ -347,14 +348,15 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       if(!empty($detalle_empresa['email'])){
         $mail->AddAddress($detalle_empresa['email']);
       }
-      $mail->AddBCC($spp_global);
-
       if(isset($oc['email1'])){
         $mail->AddCC($oc['email1']);
       }
       if(isset($oc['email2'])){
         $mail->AddCC($oc['email2']);
       }
+      $mail->AddBCC($spp_global);
+      $mail->AddBCC($finanzas_spp);
+
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje_empresa);
@@ -623,13 +625,14 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       if(!empty($detalle_empresa['email'])){
         $mail->AddAddress($detalle_empresa['email']);
       }
-      $mail->AddBCC($spp_global);
       if(isset($detalle_oc['email1'])){
         $mail->AddCC($detalle_oc['email1']);
       }
       if(isset($detalle_oc['email2'])){
         $mail->AddCC($detalle_oc['email2']);
       }
+      $mail->AddBCC($spp_global);
+      $mail->AddBCC($finanzas_spp);
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -1551,22 +1554,9 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 }
                               }else{
                               ?>
-                                <div class="col-md-12">
-                                  <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="fecha_inicio">Fecha Inicio</label> 
-                                  <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd/mm/aaaa" required> 
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="fecha_fin">Fecha Fin</label>
-                                  <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd/mm/aaaa" required>
-                                </div>
-                                
-                                <label for="certificado">Por favor seleccione el Certificado</label>
-                                <input type="file" name="certificado" id="certificado" class="form-control" required>
-                                <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>
-
+                              <p class="alert alert-warning">
+                                Una vez aprobado el "Formato de Evaluación" ,"Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
+                              </p> 
                               <?php
                               }
                             ?>

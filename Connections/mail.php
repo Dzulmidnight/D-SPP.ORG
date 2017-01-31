@@ -7,10 +7,10 @@ $mail->IsSMTP();
 //$mail->SMTPSecure = "ssl";
 $mail->Host = "mailtrap.io";
 //$mail->Port = 25;
-$mail->Port = 25;
+$mail->Port = 2525;
 $mail->SMTPAuth = true;
-$mail->Username = "99f9a8c6200b52";
-$mail->Password = "943bba851a952d";
+$mail->Username = "c1964e91a87e55";
+$mail->Password = "7e87bca11dc4a5";
 //$mail->SMTPDebug = 1;
 
 $mail->From = "soporte@d-spp.org";

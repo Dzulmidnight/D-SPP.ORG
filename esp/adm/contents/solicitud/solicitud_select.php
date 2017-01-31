@@ -654,7 +654,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
               </td>
             </tr>
             <tr>
-              <td coslpan="2">
+              <td colspan="2">
                 ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
                 <ol>
                   <li>Dar clic en la opción "SOLICITUDES"</li>
@@ -737,7 +737,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
                   </td>
                 </tr>
                 <tr>
-                  <td coslpan="2">
+                  <td colspan="2">
                     ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
                     <ol>
                       <li>Dar clic en la opción "SOLICITUDES"</li>
@@ -871,7 +871,7 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
                 </td>
               </tr>
               <tr>
-                <td coslpan="2">
+                <td colspan="2">
                   ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
                   <ol>
                     <li>Dar clic en la opción "SOLICITUDES"</li>
@@ -1036,16 +1036,38 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 }
 
 
-if(isset($_POST['campo_busqueda']) && $_POST['campo_busqueda'] == 1){
+/*if(isset($_POST['campo_busqueda']) && $_POST['campo_busqueda'] == 1){
   $buscar = $_POST['buscar'];
-
-//  $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc', solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion WHERE opp.spp LIKE '%$buscar%' OR opp.nombre LIKE '%$buscar%' OR opp.pais LIKE '%$buscar%' OR opp.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%' GROUP BY solicitud_certificacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
 
   $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc',solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion WHERE opp.spp LIKE '%$buscar%' OR opp.nombre LIKE '%$buscar' OR opp.abreviacion LIKE '%$buscar%' OR opp.pais LIKE '%$buscar%' OR opp.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%' GROUP BY solicitud_certificacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
 
 }else{
   $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc',solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion GROUP BY solicitud_certificacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
+}*/
+
+///////// INICIAN CAMPOS DE BUSQUEDA
+
+if(isset($_POST['filtrar']) && $_POST['filtrar'] == 1){
+  $pais = $_POST['filtrar_pais'];
+  $oc = $_POST['filtrar_oc'];
+
+  if(!empty($pais) && !empty($oc)){
+    $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc',solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion WHERE opp.pais = '$pais' AND solicitud_certificacion.idoc = $oc GROUP BY solicitud_certificacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
+  }else if(!empty($pais) && empty($oc)){
+    $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc',solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion WHERE opp.pais = '$pais' GROUP BY solicitud_certificacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
+  }else if(empty($pais) && !empty($oc)){
+    $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc',solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $oc GROUP BY solicitud_certificacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
+  }else{
+    $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc',solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion GROUP BY solicitud_certificacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
+  }
+
+}else if(isset($_POST['buscar']) && $_POST['buscar'] == 1){
+  $buscar = $_POST['campo_busqueda'];
+  $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc',solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion WHERE opp.spp LIKE '%$buscar%' OR opp.nombre LIKE '%$buscar' OR opp.abreviacion LIKE '%$buscar%' OR opp.pais LIKE '%$buscar%' OR opp.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%' GROUP BY solicitud_certificacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
+}else{
+  $query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.idoc AS 'id_oc',solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, oc.abreviacion AS 'abreviacionOC', opp.idopp, opp.abreviacion AS 'abreviacion_opp', opp.pais, periodo_objecion.idperiodo_objecion, membresia.idmembresia, comprobante_pago.idcomprobante_pago, certificado.idcertificado, contratos.idcontrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion GROUP BY solicitud_certificacion.idsolicitud_certificacion ORDER BY solicitud_certificacion.fecha_registro DESC";
 }
+//////// TERMINAN CAMPOS DE BUSQUEDA
 
 
 $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
@@ -1112,31 +1134,51 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
   <?php
   }
   ?>
-  <div class="col-lg-12">
-
-    <form action="" method="POST">
-      <div class="col-lg-11 alert alert-info" style="padding:7px;">
-        <label for="campo_busqueda">Busqueda extendida(#spp, nombre, abreviacion, sitio web, email, país, etc...)</label>
-
-        <div class="input-group">
-          <input type="text" id="buscar" name="buscar" class="form-control" placeholder="campo de busqueda">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="submit" name="campo_busqueda" value="1">Buscar</button>
-          </span>
-        </div><!-- /input-group -->
-
-      </div>
-      <!--<div class="col-lg-1 alert alert-warning" style="padding:7px;">
-        Total: <?php echo $total_solicitudes; ?>
-      </div>-->
-    </form>
-
-  </div>
 
   
   <div class="col-md-12">
     <table class="table table-bordered table-condensed" style="font-size:12px">
       <thead>
+        <tr>
+          <td colspan="6">
+            <form action="" method="POST" id="frm_filtrar">
+              <select name="filtrar_oc" id="">
+                <option value="">Buscar por OC</option>
+                <?php 
+                $row_oc = mysql_query("SELECT oc.idoc, oc.abreviacion FROM oc", $dspp) or die(mysql_error());
+                while($oc = mysql_fetch_assoc($row_oc)){
+                  echo "<option value='$oc[idoc]'>$oc[abreviacion]</option>";
+                }
+                 ?>
+              </select>
+              <select name="filtrar_pais" id="">
+                <option value="">Buscar por país</option>
+                <?php 
+                $row_pais = mysql_query("SELECT opp.pais FROM opp GROUP BY opp.pais", $dspp) or die(mysql_error());
+                while($pais = mysql_fetch_assoc($row_pais)){
+                  echo "<option value='$pais[pais]'>$pais[pais]</option>";
+                }
+                 ?>
+              </select>
+              <button class="btn btn-info" name="filtrar" value="1" type="submit">Filtrar</button>
+            </form>
+          </td>
+          <td colspan="5">
+            <form action="" method="POST" id="frm_buscar">
+              <div class="col-lg-6">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="campo_busqueda" placeholder="campo de busqueda">
+                  <span class="input-group-btn">
+                    <button class="btn btn-info" name="buscar" value="1" type="submit">Buscar</button>
+                  </span>
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+            </form>
+          </td>
+          <td colspan="2">
+            <h4>Total: <span style="color:red"><?php echo $total_solicitudes; ?></span></h4>
+          </td>
+        </tr>
         <tr class="info">
           <th class="text-center">ID</th>
           <th class="text-center"><a href="#" data-toggle="tooltip" title="Tipo de Solicitud"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Tipo</a></th>

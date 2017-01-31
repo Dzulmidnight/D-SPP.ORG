@@ -41,6 +41,7 @@ if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
 if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
+	$pais_destino = $_POST['pais_destino'];
 	$producto_general = strtoupper($_POST['producto_general']);
 	$tipo_producto = strtoupper($_POST['tipo_producto']);
 	$volumen_unitario = $_POST['volumen_unitario'];
@@ -48,7 +49,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	$ventas_totales = $_POST['ventas_totales'];
 	$tipo_moneda = strtoupper($_POST['tipo_moneda']);
 
-	$insertSQL = sprintf("INSERT INTO trim_productos_opp(producto_general, tipo_producto, volumen_unitario, volumen_total, ventas_totales, tipo_moneda) VALUES(%s, %s, %s, %s, %s, %s)",
+	$insertSQL = sprintf("INSERT INTO trim_productos_opp(pais_destino, producto_general, tipo_producto, volumen_unitario, volumen_total, ventas_totales, tipo_moneda) VALUES(%s, %s, %s, %s, %s, %s, %s)",
+		GetSQLValueString($pais_destino, "text"),
 		GetSQLValueString($producto_general, "text"),
 		GetSQLValueString($tipo_producto, "text"),
 		GetSQLValueString($volumen_unitario, "text"),
@@ -65,31 +67,32 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	<div class="col-md-12">
 
 		<form class="form-horizontal" method="POST">
-		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
+		 	<table class="table table-bordered table-condensed table-hover" style="font-size:11px;" id="tablaInforme">
 		 		<thead>
 		 			<tr>
-		 				<th colspan="7"><h4>VALOR DE VENTAS TRIMESTRALES PRODUCTOS TERMINADOS SPP MERCADO INTERNO</h4></th>
+		 				<th colspan="8"><h4>VALOR DE VENTAS TRIMESTRALES PRODUCTOS TERMINADOS SPP MERCADO INTERNO</h4></th>
 		 			</tr>
 		 		</thead>
 		 		<tbody>
 		 			<tr class="success" style="font-size:12px;">
-		 				<td>
+		 				<td class="text-center" style="font-weight:bold">
 		 					#
 		 				</td>
-		 				<td>Producto General(<small>Ej: café</small>)</td>
-		 				<td>
+		 				<td class="text-center" style="font-weight:bold">País destino del producto terminado</td>
+		 				<td class="text-center" style="font-weight:bold">Producto General(<small>Ej: café</small>)</td>
+		 				<td class="text-center" style="font-weight:bold">
 		 					Tipo de Producto(<small>Ej: café soluble</small>)
 		 				</td>
-		 				<td>
+		 				<td class="text-center" style="font-weight:bold">
 		 					Peso o volumen unitario
 		 				</td>
-		 				<td>
+		 				<td class="text-center" style="font-weight:bold">
 		 					Volumen total
 		 				</td>
-		 				<td>
+		 				<td class="text-center" style="font-weight:bold">
 		 					Valor de ventas totales
 		 				</td>
-		 				<td>
+		 				<td class="text-center" style="font-weight:bold">
 		 					Tipo moneda
 		 				</td>
 		 			</tr>
@@ -102,6 +105,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 				?>
 		 				<tr>
 		 					<td><?php echo $contador; ?></td>
+		 					<td><?php echo $trim_opp['pais_destino']; ?></td>
 		 					<td><?php echo $trim_opp['producto_general']; ?></td>
 		 					<td><?php echo $trim_opp['tipo_producto']; ?></td>
 		 					<td><?php echo $trim_opp['volumen_unitario']; ?></td>
@@ -119,6 +123,18 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 					<tr class="success">
 						<td></td>
+						<td>
+			              <select class="form-control" name="pais_destino" id="pais_destino" class="" required>
+			                <option value="">Selecciona un País</option>
+			                <?php 
+			                $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
+			                while($pais = mysql_fetch_assoc($row_pais)){
+			                  echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
+			                }
+			                 ?>
+			              </select>
+						</td>
+
 						<td>
 							<input type="text" class="form-control" name="producto_general" placeholder="producto_general" autofocus requires>
 						</td>
@@ -139,7 +155,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>
 					</tr>
 		 			<tr>
-		 				<td colspan="7"><button class="btn btn-sm btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Registro</button></td>
+		 				<td colspan="8"><button class="btn btn-sm btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Registro</button></td>
 		 			</tr>
 		 		</tbody>
 		 	</table>

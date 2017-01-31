@@ -59,7 +59,7 @@ if(isset($_POST['agregar_registro']) && $_POST['agregar_registro'] == 1){
 	<div class="col-md-12">
 
 		<form class="form-horizontal" method="POST">
-		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
+		 	<table class="table table-bordered table-condensed table-hover" style="font-size:11px;" id="tablaInforme">
 		 		<thead>
 		 			<tr>
 		 				<th colspan="4"><h4>VALOR DE VENTAS TRIMESTRALES PRODUCTOS TERMINADOS SPP POR PAÍS</h4></th>
@@ -67,16 +67,16 @@ if(isset($_POST['agregar_registro']) && $_POST['agregar_registro'] == 1){
 		 		</thead>
 		 		<tbody>
 		 			<tr class="success" style="font-size:12px;">
-		 				<td>
+		 				<td class="text-center" style="font-weight:bold;">
 		 					#
 		 				</td>
-		 				<td>
-		 					País
+		 				<td class="text-center" style="font-weight:bold;">
+		 					País destino del producto terminado
 		 				</td>
-		 				<td>
+		 				<td class="text-center" style="font-weight:bold;">
 		 					Valor de ventas totales SPP
 		 				</td>
-		 				<td>
+		 				<td class="text-center" style="font-weight:bold;">
 		 					Tipo moneda
 		 				</td>
 		 			</tr>

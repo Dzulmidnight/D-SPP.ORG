@@ -369,9 +369,11 @@ if (isset($_POST['username'])) {
     
 	if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
     //declare two session variables and assign them
+    $row_adm = mysql_fetch_assoc($LoginRS);
     $_SESSION['idioma'] = "ESP";
     $_SESSION['MM_Username'] = $loginUsername;
-    $_SESSION['MM_UserGroup'] = $loginStrGroup;	      
+    $_SESSION['MM_UserGroup'] = $loginStrGroup;
+    $_SESSION['idadministrador'] = $row_adm['idadm'];	      
 
     if (isset($_SESSION['PrevUrl']) && false) {
       $MM_redirectLoginSuccess = $_SESSION['PrevUrl'];	

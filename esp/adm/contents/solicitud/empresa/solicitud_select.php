@@ -894,15 +894,34 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 
 
 //$row_solicitud = mysql_query("SELECT solicitud_registro.idsolicitud_registro AS 'idsolicitud', solicitud_registro.fecha_registro, solicitud_registro.idoc, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_dspp.nombre AS 'nombre_dspp', solicitud_registro.cotizacion_empresa, periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN proceso_certificacion ON solicitud_registro.idsolicitud_registro = proceso_certificacion.idsolicitud_registro LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro = periodo_objecion.idsolicitud_registro LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idsolicitud_registro = certificado.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro  ORDER BY proceso_certificacion.idproceso_certificacion DESC", $dspp) or die(mysql_error());
-if(isset($_POST['campo_busqueda']) && $_POST['campo_busqueda'] == 1){
-  $buscar = $_POST['buscar'];
-$query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE empresa.spp LIKE '%$buscar%' OR empresa.nombre LIKE '%$buscar%' OR empresa.abreviacion LIKE '%$buscar%' OR empresa.pais LIKE '%$buscar%' OR empresa.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%' GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro DESC";
 
+///////// INICIAN CAMPOS DE BUSQUEDA
+
+if(isset($_POST['filtrar']) && $_POST['filtrar'] == 1){
+  $pais = $_POST['filtrar_pais'];
+  $oc = $_POST['filtrar_oc'];
+
+  if(!empty($pais) && !empty($oc)){
+    $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE empresa.pais = '$pais' AND solicitud_registro.idoc = $oc GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro  DESC";
+
+  }else if(!empty($pais) && empty($oc)){
+    $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE empresa.pais = '$pais' GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro  DESC";
+  }else if(empty($pais) && !empty($oc)){
+    $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE solicitud_registro.idoc = $oc GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro  DESC";
+
+  }else{
+    $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro  DESC";
+
+  }
+
+}else if(isset($_POST['buscar']) && $_POST['buscar'] == 1){
+  $buscar = $_POST['campo_busqueda'];
+
+  $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE empresa.spp LIKE '%$buscar%' OR empresa.nombre LIKE '%$buscar%' OR empresa.abreviacion LIKE '%$buscar%' OR empresa.pais LIKE '%$buscar%' OR empresa.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%' GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro DESC";
 }else{
-$query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro  DESC";
+  $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro  DESC";
 }
-
-
+//////// TERMINAN CAMPOS DE BUSQUEDA
 
 //$query = "SELECT solicitud_registro.idsolicitud_registro, oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', periodo_objecion  "
 $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
@@ -910,7 +929,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
 
   /* INICIA PAGINACION */
     //limitamos la consulta
-    $regXPag = 10;
+    $regXPag = 20;
     $pagina = false; //cuando se ingresa al menu no tiene ningun valor
 
     //Examinar la pagina a mostrar y el inicio del registro a mostrar
@@ -967,26 +986,49 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
   <?php
   }
   ?>
-  <form action="" method="POST">
-    <div class="col-lg-11 alert alert-info" style="padding:7px;">
-      <label for="campo_busqueda">Busqueda extendida(#spp, nombre, abreviacion, sitio web, email, país, etc...)</label>
-
-      <div class="input-group">
-        <input type="text" id="buscar" name="buscar" class="form-control" placeholder="campo de busqueda">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="submit" name="campo_busqueda" value="1">Buscar</button>
-        </span>
-      </div><!-- /input-group -->
-
-    </div>
-    <div class="col-lg-1 alert alert-warning" style="padding:7px;">
-      Total: <?php echo $total_solicitudes; ?>
-    </div>
-  </form>
-
   <div class="col-md-12">
     <table class="table table-bordered table-condensed" style="font-size:12px">
       <thead>
+        <tr>
+          <td colspan="5">
+            <form action="" method="POST" id="frm_filtrar">
+              <select name="filtrar_oc" id="">
+                <option value="">Buscar por OC</option>
+                <?php 
+                $row_oc = mysql_query("SELECT oc.idoc, oc.abreviacion FROM oc", $dspp) or die(mysql_error());
+                while($oc = mysql_fetch_assoc($row_oc)){
+                  echo "<option value='$oc[idoc]'>$oc[abreviacion]</option>";
+                }
+                 ?>
+              </select>
+              <select name="filtrar_pais" id="">
+                <option value="">Buscar por país</option>
+                <?php 
+                $row_pais = mysql_query("SELECT empresa.pais FROM empresa GROUP BY empresa.pais", $dspp) or die(mysql_error());
+                while($pais = mysql_fetch_assoc($row_pais)){
+                  echo "<option value='$pais[pais]'>$pais[pais]</option>";
+                }
+                 ?>
+              </select>
+              <button class="btn btn-info" name="filtrar" value="1" type="submit">Filtrar</button>
+            </form>
+          </td>
+          <td colspan="5">
+            <form action="" method="POST" id="frm_buscar">
+              <div class="col-lg-6">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="campo_busqueda" placeholder="campo de busqueda">
+                  <span class="input-group-btn">
+                    <button class="btn btn-info" name="buscar" value="1" type="submit">Buscar</button>
+                  </span>
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+            </form>
+          </td>
+          <td colspan="2">
+            <h4>Total: <span style="color:red"><?php echo $total_solicitudes; ?></span></h4>
+          </td>
+        </tr>
         <tr class="info">
           <th class="text-center">ID</th>
           <th class="text-center"><a href="#" data-toggle="tooltip" title="Tipo de Solicitud"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Tipo</a></th>

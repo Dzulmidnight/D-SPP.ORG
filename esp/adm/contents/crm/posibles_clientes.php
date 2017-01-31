@@ -30,19 +30,19 @@
 <?php 
 switch ($_GET['po_clientes']) {
 	case 'add':
-		include('add_cliente.php');
+		include('clientes/add_cliente.php');
 		break;
 	case 'add_tarea':
-		include('add_tarea.php');
+		include('clientes/add_tarea.php');
 		break;
 	case 'add_nota':
-		include('add_nota.php');
+		include('clientes/add_nota.php');
 		break;
 	case 'add_reunion':
-		include('add_tarea.php');
+		include('clientes/add_tarea.php');
 		break;
 	default:
-		include('tabla_posibles_clientes.php');
+		include('clientes/tabla_posibles_clientes.php');
 		break;
 }
  ?>
