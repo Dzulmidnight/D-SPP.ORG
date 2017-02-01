@@ -357,7 +357,7 @@ if (isset($_POST['username'])) {
   $MM_redirectLoginFailed = "?";
   $MM_redirecttoReferrer = false;
   mysql_select_db($database_dspp, $dspp);
-  	
+    
   $LoginRS__query=sprintf("SELECT username, password, clase FROM adm WHERE username=%s AND password=%s",
   GetSQLValueString($loginUsername, "text"), GetSQLValueString($password, "text")); 
    
@@ -367,16 +367,17 @@ if (isset($_POST['username'])) {
     
     $loginStrGroup  = mysql_result($LoginRS,0,'clase');
     
-	if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
+  if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
     //declare two session variables and assign them
-    $row_adm = mysql_fetch_assoc($LoginRS);
+    $row_adm = mysql_query("SELECT idadm FROM adm WHERE username = '$_POST[username]' AND password = '$_POST[password]'", $dspp) or die(mysql_error());
+    $adm = mysql_fetch_assoc($row_adm);
     $_SESSION['idioma'] = "ESP";
     $_SESSION['MM_Username'] = $loginUsername;
     $_SESSION['MM_UserGroup'] = $loginStrGroup;
-    $_SESSION['idadministrador'] = $row_adm['idadm'];	      
+    $_SESSION['idadministrador'] = $adm['idadm'];       
 
     if (isset($_SESSION['PrevUrl']) && false) {
-      $MM_redirectLoginSuccess = $_SESSION['PrevUrl'];	
+      $MM_redirectLoginSuccess = $_SESSION['PrevUrl'];  
     }
     header("Location: " . $MM_redirectLoginSuccess );
   }

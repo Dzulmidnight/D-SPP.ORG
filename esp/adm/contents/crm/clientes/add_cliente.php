@@ -60,18 +60,32 @@ if(isset($_POST['guardar_cliente'])){
   $email1 = $_POST['email1'];
   $email2 = $_POST['email2'];
   $skype = $_POST['skype'];
-  $empresa = $_POST['empresa'];
+  $compania = $_POST['compania'];
   $cargo = $_POST['cargo'];
   $nivel_interes = $_POST['nivel_interes'];
   $informacion_extra = $_POST['informacion_extra'];
+  $status = 1; //posible cliente
 
-  $insertSQL = sprintf("INSERT INTO contactos_crm (nombre, apeliido, pais, idioma, telefono1, telefono2, email1, email2, skype, compania, cargo, nivel_interes, creador_por, fecha_registro)",
-    GetSQLValueString());
+  $insertSQL = sprintf("INSERT INTO contactos_crm (nombre, apellido, pais, idioma, telefono1, telefono2, email1, email2, skype, compania, cargo, nivel_interes, informacion_extra, creado_por, status, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+    GetSQLValueString($nombre, "text"),
+    GetSQLValueString($apellido, "text"),
+    GetSQLValueString($pais, "text"),
+    GetSQLValueString($idioma, "text"),
+    GetSQLValueString($telefono1, "text"),
+    GetSQLValueString($telefono2, "text"),
+    GetSQLValueString($email1, "text"),
+    GetSQLValueString($email2, "text"),
+    GetSQLValueString($skype, "text"),
+    GetSQLValueString($compania, "text"),
+    GetSQLValueString($cargo, "text"),
+    GetSQLValueString($nivel_interes, "int"),
+    GetSQLValueString($informacion_extra, "text"),
+    GetSQLValueString($idadministrador, "int"),
+    GetSQLValueString($status, "int"),
+    GetSQLValueString($fecha_actual, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
   if($_POST['guardar_cliente'] == 1){
     echo "<script>window.location='?CRM&po_clientes'</script>";
-  }else if($_POST['guardar_cliente'] == 2){
-
   }
 
 }
@@ -80,13 +94,13 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 ?>
 
 <form action="" method="POST">
-  <h4>Crear, Posible Cliente <?php echo 'el id es: '.$idadministrador; ?></h4>
+  <h4>Crear, Posible Cliente</h4>
   <div class="row">
     <div class="col-lg-12">
       Información sobre el posible cliente 
-      <button class="btn btn-default">Guardar</button>
-      <button class="btn btn-default">Guardar y Crear nuevo</button>
-      <button class="btn btn-default">Cancelar</button>
+      <button type="submit" name="guardar_cliente" value="1" class="btn btn-default">Guardar</button>
+      <button type="submit" name="guar_cliente" value="2" class="btn btn-default">Guardar y Crear nuevo</button>
+      <a href="?CRM&po_clientes" class="btn btn-default">Cancelar</a>
       <hr>
     </div>
     <div class="col-lg-6 form-horizontal">
@@ -162,9 +176,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         </div>
 
         <div class="form-group">
-          <label for="empresa" class="col-sm-2 control-label">Empresa</label>
+          <label for="compania" class="col-sm-2 control-label">Empresa</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" name="empresa" id="empresa" placeholder="empresa">
+            <input type="text" class="form-control" name="compania" id="compania" placeholder="Empresa">
           </div>
         </div>
         <div class="form-group">
@@ -201,7 +215,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         <div class="text-center">
           <button type="submit" name="guardar_cliente" value="1" class="btn btn-default">Guardar</button>
           <button type="submit" name="guardar_cliente" value="2" class="btn btn-default">Guardar y Crear Nuevo</button>
-          <button type="submit" class="btn btn-default">Cancelar</button>          
+          <a href="?CRM&po_clientes" class="btn btn-default">Cancelar</a>        
         </div>
      
     </div>
