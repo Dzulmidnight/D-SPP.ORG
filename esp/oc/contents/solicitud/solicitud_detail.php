@@ -384,7 +384,6 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
 
   $mail->AddAddress($_POST['email']);
   $mail->AddAddress($_POST['contacto1_email']);
-  $mail->AddBCC($administrador);
   $mail->AddBCC($spp_global);
   if(!empty($oc['email1'])){
     $mail->AddCC($oc['email1']);

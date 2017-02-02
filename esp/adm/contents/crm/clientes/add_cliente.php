@@ -84,6 +84,8 @@ if(isset($_POST['guardar_cliente'])){
     GetSQLValueString($status, "int"),
     GetSQLValueString($fecha_actual, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
+
   if($_POST['guardar_cliente'] == 1){
     echo "<script>window.location='?CRM&po_clientes'</script>";
   }

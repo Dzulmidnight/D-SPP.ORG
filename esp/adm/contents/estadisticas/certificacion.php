@@ -70,7 +70,7 @@ mysql_select_db($database_dspp, $dspp);
         </tr>
         <tr class="success">
           <th>#</th>
-          <th style="font-size:11px;" class="text-center">País</th>
+          <!--<th style="font-size:11px;" class="text-center">País</th>
           <th style="font-size:11px;" class="text-center">Solicitud Inicial(<small>Son OPP que han ingresado por primera vez y solo han cargado la solicitud</small>)</th>
           <th style="font-size:11px;" class="text-center">Solicitud(<small>Son OPP nuevas que han ingresado su solicitud y se les ha enviado una cotizacion</small>)</th>
           <th style="font-size:11px;" class="text-center">En Proceso(<small>OPPs que han aceptado la cotización y ha iniciado su proceso de certificacion</small>)</th>
@@ -80,10 +80,27 @@ mysql_select_db($database_dspp, $dspp);
           <th style="font-size:11px;" class="text-center">En Renovación(<small>estarian entrando las OPPs con certificado expirado pero que se encuentran en proceso de renovacion</small>)</th>
           <!---- faltaria agregar las inactivas ---->
           <!--<th style="font-size:11px;" class="text-center">Canceladas(pero no se debian poner)</th>-->
-          <th style="font-size:11px;" class="text-center">Expirado(OPPs, que ha expirado las fechas de sus certificados)</th>
+          <!--<th style="font-size:11px;" class="text-center">Expirado(OPPs, que ha expirado las fechas de sus certificados)</th>
+          <th style="font-size:11px;" class="text-center">Inactivas</th>
           <th style="font-size:11px;" class="text-center">Suspendida(<small>OPPs que han sido formalmente suspendidas</small>)</th>
           <th style="font-size:11px;" class="text-center">Subtotal Certificación</th>
+          <th style="font-size:11px;" class="text-center">Total</th>-->
+          <th style="font-size:11px;" class="text-center">País</th>
+          <th style="font-size:11px;" class="text-center">Solicitud Inicial</th>
+          <th style="font-size:11px;" class="text-center">Solicitud</th>
+          <th style="font-size:11px;" class="text-center">En Proceso</th>
+          <th style="font-size:11px;" class="text-center">Evaluación Positiva</th>
+          <th style="font-size:11px;" class="text-center">Subtotal Proceso</th>
+          <th style="font-size:11px;" class="text-center">Certificada</th>
+          <th style="font-size:11px;" class="text-center">En Renovación</th>
+          <!---- faltaria agregar las inactivas ---->
+          <!--<th style="font-size:11px;" class="text-center">Canceladas(pero no se debian poner)</th>-->
+          <th style="font-size:11px;" class="text-center">Expirado</th>
+          <th style="font-size:11px;" class="text-center">Inactivas</th>
+          <th style="font-size:11px;" class="text-center">Suspendida</th>
+          <th style="font-size:11px;" class="text-center">Subtotal Certificación</th>
           <th style="font-size:11px;" class="text-center">Total</th>
+
           <!--<th class="text-center" style="background-color:#e74c3c;color:#ecf0f1" colspan="3">Total</th>-->
         </tr>
 
@@ -155,14 +172,18 @@ mysql_select_db($database_dspp, $dspp);
           $total_suspendida += $num_suspendida;
 
           //query EXPIRADO, se cuentan las OPP con estatus_dspp = certificado expirado y que no tengan estatus_interno "CANCELADO"
-          $row_expirado = mysql_query("SELECT opp.idopp, certificado.idopp FROM opp  INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.pais = '$pais[pais]' AND (opp.estatus_dspp = 16 AND opp.estatus_interno != 10) AND (opp.estatus_interno != 'CANCELADO' OR opp.estatus_opp != 'ARCHIVADO')  GROUP BY certificado.idopp", $dspp);
+          $row_expirado = mysql_query("SELECT opp.idopp, certificado.idopp FROM opp  INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.pais = '$pais[pais]' AND (opp.estatus_dspp = 16 AND opp.estatus_interno != 10 AND estatus_interno != 12) AND (opp.estatus_interno != 'CANCELADO' OR opp.estatus_opp != 'ARCHIVADO')  GROUP BY certificado.idopp", $dspp);
           $num_expirado = mysql_num_rows($row_expirado);
 
           //$total_expirado = $num_expirado - $num_en_renovacion;
           $total_expirado += $num_expirado;
 
+          $row_inactiva = mysql_query("SELECT opp.idopp FROM opp WHERE opp.pais = '$pais[pais]' AND opp.estatus_interno = 12", $dspp) or die(mysql_error());
+          $num_inactiva = mysql_num_rows($row_inactiva);
+
+          $total_inactiva += $num_inactiva;
           // num subtotal certificacion
-          $num_sub_total_certificacion = $num_certificadas + $num_suspendida + $num_expirado;
+          $num_sub_total_certificacion = $num_certificadas + $num_suspendida + $num_expirado + $num_inactiva;
           $total_sub_certificacion += $num_sub_total_certificacion;
 
           //num TOTAL
@@ -197,7 +218,9 @@ mysql_select_db($database_dspp, $dspp);
 
           <!--INICIA EXPIRADO-->
           <td class="text-center"><?php echo $num_expirado - $num_en_renovacion; ?></td>
-
+          
+          <!-- INICIA INACTIVAS -->
+          <td class="text-center"><?php echo $num_inactiva; ?></td>
           <!--INICIA SUSPENDIDA-->
           <td class="text-center"><?php echo $num_suspendida; ?></td>
 
@@ -222,6 +245,8 @@ mysql_select_db($database_dspp, $dspp);
            <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_en_renovacion; ?></td>
            <!--<td class="text-center"><?php echo $total_inactiva; ?></td>-->
            <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_expirado - $total_en_renovacion; ?></td>
+           <!-- INACTIVAS -->
+           <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_inactiva; ?></td>
            <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_suspendida; ?></td>
            <td class="success text-center"><?php echo $total_sub_certificacion ?></td>
            <td style="background-color:#e74c3c;color:#ecf0f1" class="text-center"><?php echo $total; ?></td>

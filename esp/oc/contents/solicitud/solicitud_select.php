@@ -166,7 +166,6 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
           $mail->AddAddress($opp_detail['contacto2_email']);
         }
 
-        $mail->AddBCC($administrador);
         $mail->AddBCC($spp_global);
 
         if(!empty($oc['email1'])){

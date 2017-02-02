@@ -27,7 +27,7 @@
 
 </div>	
 
-
+<!---  TABLA DE ULTIMAS ACCIONES -->
 <table class="table">
 	<thead>
 		<tr>
