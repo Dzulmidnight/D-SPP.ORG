@@ -406,7 +406,7 @@ if(isset($_GET['query'])){
 }else if(isset($_POST['busqueda_filtros']) && $_POST['busqueda_filtros'] == 1){
   $idoc = $_POST['buscar_oc'];
   $pais = $_POST['buscar_pais'];
-  $estatus = $_POST['buscar_estatus'];
+  //$estatus = $_POST['buscar_estatus'];
   $producto = $_POST['buscar_producto'];
   $idopp_producto = '';
 
@@ -551,7 +551,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
           <b style="color:#d35400">Seleccione los parametros de los cuales desea realizar la busqueda</b>
         </div> 
         <div class="row">
-          <div class="col-xs-3">
+          <div class="col-xs-4">
             Organismo de Certificación
             <select name="buscar_oc" class="form-control">
               <option value=''>Selecciona un organismo de certificación</option>
@@ -562,7 +562,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                ?>
             </select>
           </div>
-          <div class="col-xs-3">
+          <div class="col-xs-4">
             País
             <select name="buscar_pais" class="form-control">
               <option value=''>Selecciona un país</option>
@@ -573,7 +573,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                ?>
             </select>
           </div>
-          <div class="col-xs-3">
+          <div class="col-xs-4">
             Producto
             <select class="form-control" name="buscar_producto" id="">
               <option value=''>Seleccione un producto</option>
@@ -584,7 +584,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                ?>
             </select>
           </div>
-          <div class="col-xs-3">
+          <!--<div class="col-xs-3">
             Estatus Certificado
             <select class="form-control" name="buscar_estatus" id="">
               <option value=''>Estatus Certificado</option>
@@ -593,10 +593,10 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
               <option value="15">CERTIFICADO POR EXPIRAR</option>
               <option value="16">CERTIFICADO EXPIRADO</option>
             </select>
-          </div>
+          </div>-->
 
           <div class="col-xs-12">
-            <button type="submit" class="btn btn-success" name="busqueda_filtros" style="width:100%" value="1">Buscar</button>
+            <button type="submit" class="btn btn-success" name="busqueda_filtros" style="width:100%" value="1">Filtrar Información</button>
           </div>
         </div>
       </div>
@@ -636,7 +636,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
           </form>
 
         </th>
-        <th colspan="6" class="success text-center">
+        <th colspan="7" class="success text-center">
           <p style="font-size:12px;color:red">Total OPP(s): <?php echo $totalOPP; ?></p>
         </th>
       </tr>
@@ -652,10 +652,10 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
         <th class="text-center">Fecha Final<br>(Certificado)</th>-->
         <th class="text-center"><a href="#" data-toggle="tooltip" title="Proceso de Certificación en el que se encuentra la OPP"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Proceso certificación</a></th>
         <th class="text-center">
-          <a href="#" data-toggle="tooltip" title="Fecha en la que expira el Certificado"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Fecha Final<br>(Certificado)</a>
+          <a href="#" data-toggle="tooltip" title="Fecha en la que expira el Certificado"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Ultima Fecha de Certificado</a>
         </th>
-        <th class="text-center"><a href="#" data-toggle="tooltip" title="Estatus del Certificado definido por la fecha de vigencia final">
-          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Estatus Certificado</a>
+        <th class="text-center"><a href="#" data-toggle="tooltip" title="Estatus general en el que se encuentra la OPP">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Estatus de la OPP</a>
         </th>
         <!--<th class="text-center">Sitio WEB</th>-->
         <!--<th class="text-center">Email OPP</th>-->
@@ -789,10 +789,6 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
               
                ?>
               <input type="date" name="vigencia_fin<?php echo $opp['idopp']; ?>" value="<?php echo $opp['fecha_fin']; ?>">
-            </td>
-            <!--- TERMINA FECHA_FINAL ---->
-
-            <!--- INICIA ESTATUS_CERTIFICADO ---->
               <?php 
               if(isset($opp['idcertificado'])){
                 $estatus_certificado = mysql_query("SELECT idcertificado, estatus_certificado, estatus_dspp.nombre FROM certificado LEFT JOIN estatus_dspp ON certificado.estatus_certificado = estatus_dspp.idestatus_dspp WHERE idcertificado = $opp[idcertificado]", $dspp) or die(mysql_error());
@@ -800,28 +796,56 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
 
                 switch ($certificado['estatus_certificado']) {
                   case '13': //certificado "activo"
-                    $clase = 'success';
+                    $clase = 'text-center alert alert-success';
                     break;
                   case '14': //certificado "renovacion"
-                    $clase = 'info';
+                    $clase = 'text-center alert alert-info';
                     break;
                   case '15': //certificado "por expirar"
-                    $clase = 'warning';
+                    $clase = 'text-center alert alert-warning';
                     break;
                   case '16': //certificado "Expirado"
-                    $clase = 'danger';
+                    $clase = 'text-center alert alert-danger';
                     break;
 
                   default:
                     # code...
                     break;
                 }
-                 echo "<td class='".$clase."'>".$certificado['nombre']."</td>";
+                 echo "<p style='padding:5px;' class='".$clase."'>".$certificado['nombre']."</p>";
               }else{
-                echo "<td>No Disponible</td>";
+                echo "<p style='padding:5px;'>No Disponible</p>";
               }
                 //echo $opp['estatus_certificado'];
                ?>
+
+            </td>
+            <!--- TERMINA FECHA_FINAL ---->
+
+            <!--- INICIA ESTATUS_CERTIFICADO ---->
+            <td>
+            <?php 
+            /*$row_certificadas = mysql_query("SELECT opp.idopp, certificado.idopp FROM opp INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.idopp = '$pais[pais]' AND (opp.estatus_dspp != 16 AND opp.estatus_interno != 10 AND opp.estatus_interno != 11 OR opp.estatus_interno = 15) GROUP BY certificado.idopp", $dspp);
+            $num_certificadas = mysql_num_rows($row_certificadas);
+            $total_certificada += $num_certificadas;
+            */
+            if($opp['estatus_dspp'] == 14 OR $opp['estatus_dspp'] == 15 OR $opp['estatus_dspp'] == 13){
+              echo "<p class='text-center alert alert-success' style='padding:5px;'>Certificada</p>";
+            }else if($solicitud['tipo_solicitud'] == 'RENOVACION' && $opp['estatus_dspp'] = 16 ){
+              echo "<p class='text-center alert alert-warning' style='padding:5px;'>En Proceso de Renovación</p>";
+            }else if(!isset($opp['fecha_fin']) && $solicitud['tipo_solicitud'] == 'NUEVA'){
+              echo "<p class='text-center alert alert-info' style='padding:5px;'>Solicitud Inicial</p>";
+            }else if($opp['estatus_dspp'] == 16 && !isset($solicitud['tipo_solicitud'])){
+              echo "<p class='text-center alert alert-danger' style='padding:5px;'>Certificación Expirada</p>";
+            }else{
+              echo '<p style="color:red">No Disponible</p>';
+            }
+            /*echo 'interno'.$opp['estatus_interno'].'<br>';
+            echo 'dspp'.$opp['estatus_dspp'].'<br>';
+            echo 'opp'.$opp['estatus_opp'].'<br>';
+            */
+             ?>
+            </td>
             <!--- TERMINA ESTATUS_CERTIFICADO ---->
 
             <!--- INICIA PRODUCTOS ---->

@@ -172,7 +172,7 @@ mysql_select_db($database_dspp, $dspp);
           $total_suspendida += $num_suspendida;
 
           //query EXPIRADO, se cuentan las OPP con estatus_dspp = certificado expirado y que no tengan estatus_interno "CANCELADO"
-          $row_expirado = mysql_query("SELECT opp.idopp, certificado.idopp FROM opp  INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.pais = '$pais[pais]' AND (opp.estatus_dspp = 16 AND opp.estatus_interno != 10 AND estatus_interno != 12) AND (opp.estatus_interno != 'CANCELADO' OR opp.estatus_opp != 'ARCHIVADO')  GROUP BY certificado.idopp", $dspp);
+          $row_expirado = mysql_query("SELECT opp.idopp, certificado.idopp FROM opp  INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.pais = '$pais[pais]' AND (opp.estatus_dspp = 16 AND opp.estatus_interno != 10 AND estatus_interno != 11 AND opp.estatus_interno != 12) AND (opp.estatus_interno != 'CANCELADO' OR opp.estatus_opp != 'ARCHIVADO')  GROUP BY certificado.idopp", $dspp);
           $num_expirado = mysql_num_rows($row_expirado);
 
           //$total_expirado = $num_expirado - $num_en_renovacion;
