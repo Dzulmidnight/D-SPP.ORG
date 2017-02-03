@@ -1,3 +1,42 @@
+<?php 
+require_once('../Connections/dspp.php');
+if (!function_exists("GetSQLValueString")) {
+  function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+  {
+    if (PHP_VERSION < 6) {
+      $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+    }
+
+    $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+    switch ($theType) {
+      case "text":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;    
+      case "long":
+      case "int":
+        $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+        break;
+      case "double":
+        $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+        break;
+      case "date":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;
+      case "defined":
+        $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+        break;
+    }
+    return $theValue;
+  }
+}
+
+$editFormAction = $_SERVER['PHP_SELF'];
+if (isset($_SERVER['QUERY_STRING'])) {
+  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
+}
+mysql_select_db($database_dspp, $dspp);
+?>
 <div class="btn-group" role="group" aria-label="...">
 	<!-- Split button -->
 	<div class="btn-group">
@@ -28,6 +67,9 @@
 </div>	
 
 <!---  TABLA DE ULTIMAS ACCIONES -->
+<?php 
+	$row_bitacora = mysql_query("SELECT * FROM bitacora_crm", $dspp) or die(mysql_error());
+ ?>
 <table class="table">
 	<thead>
 		<tr>
@@ -40,13 +82,19 @@
 		</tr>	
 	</thead>
 	<tbody>
+		<?php 
+		while($bitacora = mysql_fetch_assoc($row_bitacora)){
+		?>
 		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td><?php echo $bitacora['accion']; ?></td>
+			<td><?php echo $bitacora['idbitacora_crm']; ?></td>
+			<td><?php echo $bitacora['idcontacto']; ?></td>
+			<td><?php echo $bitacora['idempresa']; ?></td>
+			<td><?php echo $bitacora['idtarea']; ?></td>
+			<td><?php echo $bitacora['idnota']; ?></td>
 		</tr>
+		<?php
+		}
+		 ?>
 	</tbody>
 </table>
