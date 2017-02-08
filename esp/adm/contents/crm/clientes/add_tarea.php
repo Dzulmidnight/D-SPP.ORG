@@ -58,8 +58,38 @@ if(isset($_POST['agregar_tarea'])){
   $hora = $_POST['hora'];
   $responsable = $_POST['responsable'];
   //$idcontacto = $_POST['idcontacto'];
+  $tipo_tarea = $_POST['tipo_tarea'];
 
+  switch ($tipo_tarea) {
+    case '1': // enviar correo
+      $asunto = $_POST['asunto'];
+      $contenido = $_POST['contenido'];
+      $fecha_fin = $_POST['fecha_fin'];
+      $hora = $_POST['hora'];
 
+      foreach ($_POST['idcontacto'] as $value) {
+        
+      }
+      $insertSQL = sprintf("INSERT INTO tareas(fecha_fin, tipo_tarea, status_tarea, titulo, detalle, hora, responsable, fecha_registro)",
+        GetSQLValueString());
+      $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+      break;
+    case '2': // reunión
+      # code...
+      break;
+    case '3': // llamada
+      # code...
+      break;
+    case '4': // evento
+      # code...
+      break;
+    case '5': // tarea
+      # code...
+      break;
+    default: // no se selecciono una opción valida
+        echo "<script>alert('No se pudo crear la tarea');</script>";
+      break;
+  }
   //creamos la nueva tarea
   $insertSQL = sprintf("INSERT INTO tareas(fecha_inicio, fecha_fin, tipo_tarea, status_tarea, titulo, detalle, hora, responsable, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
     GetSQLValueString($fecha_inicio, "int"),
@@ -319,7 +349,7 @@ if($_GET['po_clientes'] == 'add_reunion'){
 }else{
 ?>
 
-  <form action="" method="POST">
+  <form action="" method="POST"> <!--- INICIA FORM NUEVA TAREA -->
     <h4>Crear, Nueva Tarea</h4>
     <div class="row">
       <div class="col-lg-12">
@@ -413,16 +443,13 @@ if($_GET['po_clientes'] == 'add_reunion'){
               </div>
               <div class="form-group">
                 <label for="detalle">Contenido del correo</label>
-                <textarea name="detalle" id="detalle" class="form-control" rows="2" placeholder="Descripción de la tarea"></textarea>
+                <textarea name="detalle" id="detalle" class="form-control" rows="2" placeholder="Descripción del correo"></textarea>
               </div>
           </div>
           <div class="col-lg-6">
+
               <div class="form-group">
-                <label for="fecha_inicio">Fecha Inicio</label>
-                <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" placeholder="dd/mm/aaaa">
-              </div>
-              <div class="form-group">
-                <label for="fecha_fin">Fecha Fin</label>
+                <label for="fecha_fin">Fecha de envio del correo</label>
                 <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" placeholder="dd/mm/aaaa">
               </div>
               <div class="form-group">
@@ -431,7 +458,7 @@ if($_GET['po_clientes'] == 'add_reunion'){
               </div>
               <div class="form-group">
                 <label for="idcontacto">Posible Cliente Involucrado</label>
-                  <select id="idcontacto" class="form-control chosen-select" data-placeholder="Posibles Clientes" name="idcontacto[]"  multiple>
+                  <select id="idcontacto" class="chosen-select" data-placeholder="Posibles Clientes" name="idcontacto[]"  multiple>
                     <?php
                     $row_posibles_clientes1 = mysql_query("SELECT idcontacto, nombre FROM contactos_crm WHERE status = 1", $dspp) or die(mysql_error());
 
@@ -444,13 +471,336 @@ if($_GET['po_clientes'] == 'add_reunion'){
           </div>  
         </div><!-- TERMINA DIV_CORREO -->
         <div id="div_reunion" style="display:none"><!-- INICIA DIV_REUNION -->
-          div de reunion
+            <div class="col-lg-6">
+                <h4>Información sobre la nueva reunión</h4>
+
+                <div class="form-group">
+                  <label for="titulo">Asunto de la Reunión</label>
+                  <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Asunto de la reunión">
+                </div>
+                <div class="form-group">
+                  <label for="detalle">Descripción sobre la reunión</label>
+                  <textarea name="detalle" id="detalle" class="form-control" rows="2" placeholder="Descripción de la reunión"></textarea>
+                </div>
+
+
+                <div class="form-group">
+                  <label for="responsable">Responsable de la Reunión</label>
+                  <br>
+                  <select name="responsable" id="responsable">
+                    <option value="">---</option>
+                    <?php 
+                    $row_adm = mysql_query("SELECT idadm, nombre FROM adm", $dspp) or die(mysql_error());
+                    while($adm = mysql_fetch_assoc($row_adm)){
+                      if($adm['idadm'] == $idadministrador){
+                        echo "<option value='$adm[idadm]' selected>".utf8_encode($adm['nombre'])."</option>";
+                      }else{
+                        echo "<option value='$adm[idadm]'>".utf8_encode($adm['nombre'])."</option>";
+                      }
+                    }
+                     ?>
+                  </select>
+                </div>
+
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="fecha_fin">Fecha de la Reunión</label>
+                  <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" placeholder="dd/mm/aaaa">
+                </div>
+                <div class="form-group">
+                  <label for="hora">Hora de la Reunión</label>
+                  <input type="text" class="form-control" name="hora" id="hora" placeholder="Hora">
+                </div>
+
+                <h4 style="color:#e74c3c">Involucrados en la Reunión</h4>
+                <div class="form-group">
+                  <label for="idcontacto">Agregar Posibles clientes a la reunión</label>
+                    <select id="idcontacto" class="form-control chosen-select" data-placeholder="Posibles Clientes" name="idcontacto[]"  multiple>
+                      <?php
+                      $row_posibles_clientes1 = mysql_query("SELECT idcontacto, nombre FROM contactos_crm WHERE status = 1", $dspp) or die(mysql_error());
+
+                      while($posible_cliente1 = mysql_fetch_assoc($row_posibles_clientes1)){
+                        echo "<option value='$posible_cliente1[idcontacto]'>$posible_cliente1[nombre]</option>";
+                      }
+                       ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="adm_involucrado">Agregar administradores a la reunión</label>
+                    <select id="adm_involucrado" class="chosen-select" data-placeholder="Posibles Clientes" name="adm_involucrado[]"  multiple>
+                      <?php
+                      $row_adm = mysql_query("SELECT idadm, username, nombre FROM adm", $dspp) or die(mysql_error());
+
+                      while($adm = mysql_fetch_assoc($row_adm)){
+                        echo "<option value='$adm[idadm]'>".utf8_decode($adm['nombre'])."</option>";
+                      }
+                       ?>
+                    </select>
+                </div>
+
+                <!--<div class="form-group">
+                  <label for="status" class="col-sm-2 control-label">status</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" name="status" id="status" value="" readonly>
+                  </div>
+                </div>-->
+            </div>
+            <div class="col-lg-12">
+              <h4>¿Desea enviar un recordatorio antes de la reunión?</h4>
+              <div class="radio">
+                <label>
+                  <input onchange="validarRecordatorio()" type="radio" name="recordatorio" id="recordatorio" value="SI">
+                  Si deseo enviar un recordatorio.
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input onchange="validarRecordatorio()" type="radio" name="recordatorio" id="recordatorio" value="NO">
+                  No deseo enviar recordatorio.
+                </label>
+              </div>
+              <div id="fecha_recordatorio" style="display:none">
+                <h4 style="color:#e74c3c">Seleccione la fecha en la que se enviara el recordatorio</h4>
+                <input type="date" name="fecha_recordatorio" placeholder="dd/mm/aaaa" required>  
+              </div>
+              
+
+                <div class="text-center">
+                  <hr>
+                  <button type="submit" name="agregar_reunion" value="1" class="btn btn-default">Guardar</button>
+                  <button type="submit" name="agregar_reunion" value="2" class="btn btn-default">Guardar y Crear Nuevo</button>
+                  <a href="?CRM&po_clientes" class="btn btn-default">Cancelar</a>        
+                </div>
+             
+            </div>
+
+
+
+          <script>
+        /*    function funcionReunion(){
+              var opcion = document.getElementById('tipo_tarea').value;
+
+              if(opcion == 2){
+                document.getElementById('descripcion_tarea').style.display = 'block';
+              }else if(opcion == 3){
+                document.getElementById('descripcion_tarea').style.display = 'block';
+              }
+            }
+        */
+            function validarRecordatorio(){
+              
+              /// evaluamos si el usuario quiere que se envie un recordatorio
+              var recordatorio = '';
+              recordatorio = document.getElementsByName("recordatorio");
+
+              var opcion_recordatorio = '';
+              for(var i=0; i<recordatorio.length; i++) {    
+                if(recordatorio[i].checked) {
+                  opcion_recordatorio = recordatorio[i].value;
+                  ventas = true;
+                  break;
+                }
+              }
+              if(opcion_recordatorio == 'SI'){
+                document.getElementById('fecha_recordatorio').style.display = 'block';
+              }else{
+                document.getElementById('fecha_recordatorio').style.display = 'none'
+              }
+            }
+          </script>
         </div><!-- TERMINA DIV_REUNION -->
         <div id="div_llamada" style="display:none"><!-- INICIA DIV_LLAMADA -->
-          div llamada
+          <div class="col-lg-6">
+              <div class="form-group">
+                <label for="titulo">Asunto de la llamada</label>
+                <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Asunto de la llamada">
+              </div>
+              <div class="form-group">
+                <label for="detalle">Descripción de la llamada</label>
+                <textarea name="detalle" id="detalle" class="form-control" rows="2" placeholder="Descripción de la llamada"></textarea>
+              </div>
+
+
+              <div class="form-group">
+                <label for="responsable">Responsable de la llamada</label>
+                <br>
+                <select name="responsable" id="responsable">
+                  <option value="">---</option>
+                  <?php 
+                  $row_adm = mysql_query("SELECT idadm, nombre FROM adm", $dspp) or die(mysql_error());
+                  while($adm = mysql_fetch_assoc($row_adm)){
+                    if($adm['idadm'] == $idadministrador){
+                      echo "<option value='$adm[idadm]' selected>".utf8_encode($adm['nombre'])."</option>";
+                    }else{
+                      echo "<option value='$adm[idadm]'>".utf8_encode($adm['nombre'])."</option>";
+                    }
+                  }
+                   ?>
+                </select>
+              </div>
+
+          </div>
+          <div class="col-lg-6">
+              <div class="form-group">
+                <label for="fecha_fin">Fecha de la llamada</label>
+                <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" placeholder="dd/mm/aaaa">
+              </div>
+              <div class="form-group">
+                <label for="hora">Hora</label>
+                <input type="text" class="form-control" name="hora" id="hora" placeholder="Hora">
+              </div>
+              <div class="form-group">
+                <label for="idcontacto">Posible Cliente Involucrado</label>
+                  <select id="idcontacto" class="form-control chosen-select" data-placeholder="Posibles Clientes" name="idcontacto">
+                    <?php
+                    $row_posibles_clientes1 = mysql_query("SELECT idcontacto, nombre FROM contactos_crm WHERE status = 1", $dspp) or die(mysql_error());
+
+                    while($posible_cliente1 = mysql_fetch_assoc($row_posibles_clientes1)){
+                      echo "<option value='$posible_cliente1[idcontacto]'>$posible_cliente1[nombre]</option>";
+                    }
+                     ?>
+                  </select>
+              </div>
+          </div> 
         </div><!-- TERMINA DIV_LLAMADA -->
         <div id="div_evento" style="display:none"><!-- INICIA DIV_EVENTO -->
-          div evento
+
+            <div class="col-lg-6">
+                <h4>Información sobre la nueva reunión</h4>
+
+                <div class="form-group">
+                  <label for="titulo">Nombre del evento</label>
+                  <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Nombre del evento">
+                </div>
+                <div class="form-group">
+                  <label for="detalle">Detalles sobre el evento</label>
+                  <textarea name="detalle" id="detalle" class="form-control" rows="2" placeholder="Detalles del evento"></textarea>
+                </div>
+
+
+                <div class="form-group">
+                  <label for="responsable">Responsable del evento</label>
+                  <br>
+                  <select name="responsable" id="responsable">
+                    <option value="">---</option>
+                    <?php 
+                    $row_adm = mysql_query("SELECT idadm, nombre FROM adm", $dspp) or die(mysql_error());
+                    while($adm = mysql_fetch_assoc($row_adm)){
+                      if($adm['idadm'] == $idadministrador){
+                        echo "<option value='$adm[idadm]' selected>".utf8_encode($adm['nombre'])."</option>";
+                      }else{
+                        echo "<option value='$adm[idadm]'>".utf8_encode($adm['nombre'])."</option>";
+                      }
+                    }
+                     ?>
+                  </select>
+                </div>
+
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="fecha_inicio">Fecha de Inicio</label>
+                  <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" placeholder="dd/mm/aaaa">
+                </div>
+                <div class="form-group">
+                  <label for="fecha_fin">Fecha de Fin</label>
+                  <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" placeholder="dd/mm/aaaa">
+                </div>
+                <div class="form-group">
+                  <label for="hora">Hora del evento</label>
+                  <input type="text" class="form-control" name="hora" id="hora" placeholder="Hora">
+                </div>
+
+                <h4 style="color:#e74c3c">Involucrados en el evento</h4>
+                <div class="form-group">
+                  <label for="idcontacto">Agregar Posibles clientes en el evento</label>
+                    <select id="idcontacto" class="form-control chosen-select" data-placeholder="Posibles Clientes" name="idcontacto[]"  multiple>
+                      <?php
+                      $row_posibles_clientes1 = mysql_query("SELECT idcontacto, nombre FROM contactos_crm WHERE status = 1", $dspp) or die(mysql_error());
+
+                      while($posible_cliente1 = mysql_fetch_assoc($row_posibles_clientes1)){
+                        echo "<option value='$posible_cliente1[idcontacto]'>$posible_cliente1[nombre]</option>";
+                      }
+                       ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="adm_involucrado">Agregar administradores al evento</label>
+                    <select id="adm_involucrado" class="chosen-select" data-placeholder="Posibles Clientes" name="adm_involucrado[]"  multiple>
+                      <?php
+                      $row_adm = mysql_query("SELECT idadm, username, nombre FROM adm", $dspp) or die(mysql_error());
+
+                      while($adm = mysql_fetch_assoc($row_adm)){
+                        echo "<option value='$adm[idadm]'>".utf8_decode($adm['nombre'])."</option>";
+                      }
+                       ?>
+                    </select>
+                </div>
+
+                <!--<div class="form-group">
+                  <label for="status" class="col-sm-2 control-label">status</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" name="status" id="status" value="" readonly>
+                  </div>
+                </div>-->
+            </div>
+            <div class="col-lg-12">
+              <h4>¿Desea enviar un recordatorio antes del evento?</h4>
+              <div class="radio">
+                <label>
+                  <input onchange="validarRecordatorio2()" type="radio" name="recordatorio2" id="recordatorio2" value="SI">
+                  Si deseo enviar un recordatorio.
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input onchange="validarRecordatorio2()" type="radio" name="recordatorio2" id="recordatorio2" value="NO">
+                  No deseo enviar recordatorio.
+                </label>
+              </div>
+              <div id="fecha_recordatorio2" style="display:none">
+                <h4 style="color:#e74c3c">Seleccione la fecha en la que se enviara el recordatorio</h4>
+                <input type="date" name="fecha_recordatorio2" placeholder="dd/mm/aaaa" required>  
+              </div>
+
+             
+            </div>
+
+          <script>
+        /*    function funcionReunion(){
+              var opcion = document.getElementById('tipo_tarea').value;
+
+              if(opcion == 2){
+                document.getElementById('descripcion_tarea').style.display = 'block';
+              }else if(opcion == 3){
+                document.getElementById('descripcion_tarea').style.display = 'block';
+              }
+            }
+        */
+            function validarRecordatorio2(){
+              
+              /// evaluamos si el usuario quiere que se envie un recordatorio
+              var recordatorio = '';
+              recordatorio = document.getElementsByName("recordatorio2");
+
+              var opcion_recordatorio = '';
+              for(var i=0; i<recordatorio.length; i++) {    
+                if(recordatorio[i].checked) {
+                  opcion_recordatorio = recordatorio[i].value;
+                  ventas = true;
+                  break;
+                }
+              }
+              if(opcion_recordatorio == 'SI'){
+                document.getElementById('fecha_recordatorio2').style.display = 'block';
+              }else{
+                document.getElementById('fecha_recordatorio2').style.display = 'none'
+              }
+            }
+          </script>
         </div><!-- TERMINA DIV_EVENTO -->
 
       <div class="col-lg-12">
@@ -464,7 +814,7 @@ if($_GET['po_clientes'] == 'add_reunion'){
       </div>
 
     </div>
-  </form>
+  </form> <!-- TERMINA FORM NUEVA TAREA -->
 
 <script>
 function funcionSelect() {
