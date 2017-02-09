@@ -35,15 +35,21 @@ if (!function_exists("GetSQLValueString")) {
 ?>
 
 <ul class="nav nav-sidebar">
+  <li <?php if(isset($_GET['CRM'])){echo "class='active'"; } ?>>
+    <a href="?CRM&inicio">CRM</a>
+  <li <?php if(isset($_GET['FINANZAS'])){echo "class='active'"; } ?>>
+    <a href="?FINANZAS&select">Reportes Comerciales</a>
+    <!--<a href="?ESTADISTICAS&select">Estadisticas</a>-->
+  </li>
   <li <?php if(isset($_GET['ESTADISTICAS'])){echo "class='active'"; } ?>>
-    <a href="#">Estadisticas</a>
+    <a href="?ESTADISTICAS&select">Concentrado Procesos</a>
     <!--<a href="?ESTADISTICAS&select">Estadisticas</a>-->
   </li>
   <li <?php if(isset($_GET['DOCUMENTACION'])){echo "class='active'"; } ?>>
     <a href="?DOCUMENTACION&select">Documentación</a>
   </li>
   <li <?php if(isset($_GET['CORREO'])){echo "class='active'"; } ?>>
-    <a href="?CORREO&select">Correo</a>
+    <a href="?CORREO&select">Lista de Contactos</a>
   </li>
   <li <?php if(isset($_GET['SOLICITUD'])){echo "class='active'"; } ?>>
     <a href="?SOLICITUD&select">Solicitudes</a>

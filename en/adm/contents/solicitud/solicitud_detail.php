@@ -404,7 +404,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       </div> 
 
       <!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
-      <div class="col-lg-12">
+      <div class="row">
         <div class="col-md-6">
           <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMACION GENERAL</div>
           <label for="fecha_elaboracion">FECHA ELABORACIÓN</label>
@@ -453,7 +453,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
 
 
       <!------ INICIA INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
-      <div class="col-lg-12">
+      <div class="row">
         <div class="col-md-6">
           <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONA(S) DE CONTACTO</div>
 
@@ -498,7 +498,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
 
 
-      <div class="col-lg-12">
+      <div class="row">
         <div class="col-md-12">
           <label for="resp1">NÚMERO DE SOCIOS PRODUCTORES</label>
           <input type="number" step="any" class="form-control" id="resp1" name="resp1" value="<?php echo $solicitud['resp1']; ?>" >
@@ -519,12 +519,12 @@ $solicitud = mysql_fetch_assoc($ejecutar);
 
       <div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE OPERACIÓN</div>
 
-      <div class="col-lg-12">
+      <div class="row">
         <div class="col-md-12">
           <label for="op_preg1">
             1. EXPLIQUE SI SE TRATA DE UNA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES DE 1ER, 2DO, 3ER O 4TO GRADO, ASÍ COMO EL NÚMERO DE OPP DE 3ER, 2DO O 1ER GRADO, Y EL NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO, EN SU CASO, CON LAS QUE CUENTA:
           </label>
-          <input type="text" class="form-control" id="op_preg1" name="op_preg1" value="<?php echo $solicitud['op_preg1']; ?>" >
+          <textarea name="op_preg1" id="op_preg1" class="form-control" rows="2"></textarea>
 
           <div class="col-xs-3">
             <label for="preg1_1">
@@ -603,7 +603,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             8. ¿CUENTA CON UN SISTEMA DE CONTROL INTERNO PARA DAR CUMPLIMIENTO A LOS CRITERIOS DE LA NORMA GENERAL DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?, EN SU CASO, EXPLIQUE.
           </label>
           <textarea name="op_preg8" id="op_preg8" class="form-control"><?php echo $solicitud['op_preg8']; ?></textarea>
-          <p class="alert alert-info">9. LLENAR LA TABLA DE ACUERDO A LAS CERTIFICACIONES QUE TIENE, (EJEMPLO: EU, NOP, JASS, FLO, etc).</p>
+          <p class="alert alert-info"><b>9. LLENAR LA TABLA DE ACUERDO A LAS CERTIFICACIONES QUE TIENE, (EJEMPLO: EU, NOP, JASS, FLO, etc).</b></p>
 
           <table class="table table-bordered" id="tablaCertificaciones">
             <tr>
@@ -636,80 +636,82 @@ $solicitud = mysql_fetch_assoc($ejecutar);
           <textarea name="op_preg10" id="op_preg10" class="form-control"><?php echo $solicitud['op_preg10']; ?></textarea>
 
 
-          <p><b>12. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
+          <p for="op_preg11">
+            <b>11. DEL TOTAL DE SUS VENTAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
+          </p>
+          <p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
+            <div class="col-xs-3">
+              <label for="organico">% ORGÁNICO</label>
+              <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0" readonly>
+            </div>
+            <div class="col-xs-3">
+              <label for="comercio_justo">% COMERCIO JUSTO</label>
+              <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0" readonly>
+            </div>
+            <div class="col-xs-3">
+              <label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
+              <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0" readonly>
+              
+            </div>
+            <div class="col-xs-3">
+              <label for="otro">SIN CERTIFICADO</label>
+              <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0" readonly>
+              
+            </div>            
+
+          
           <div class="col-xs-12 ">
-                <?php
-                  if($solicitud['op_preg12'] == 'SI'){
-                      //echo "SI <input type='radio' name='op_preg12'  checked readonly>";
-                    /*echo "</div>";
-                    echo "<div class='col-xs-6'>";
-                      echo "<p class='text-center alert alert-danger'>NO</p>";
-                      echo "NO <input type='radio' name='op_preg12'  readonly>";
-                    echo "</div>";*/
-                ?>
-                  <div class="col-xs-6">
-                    <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> SI</p>
-                  </div>
-                  <div class="col-xs-6">
-                    <?php 
-                      if(empty($solicitud['op_preg13'])){
-                     ?>
-                      <p class="alert alert-danger">No se proporciono ninguna respuesta.</p>
-                    <?php 
-                      }else if($solicitud['op_preg13'] == "HASTA $3,000 USD"){
-                     ?>
-                      <p class="alert alert-info">HASTA $3,000 USD</p>
-                    <?php 
-                      }else if($solicitud['op_preg13'] == "ENTRE $3,000 Y $10,000 USD"){
-                     ?>
-                     <p class="alert alert-info">ENTRE $3,000 Y $10,000 USD</p>
-                    <?php 
-                      }else if($solicitud['op_preg13'] == "ENTRE $10,000 A $25,000 USD"){
-                     ?>
-                     <p class="alert alert-info">ENTRE $10,000 A $25,000 USD</p>
-                    <?php 
-                      }else if($solicitud['op_preg13'] != "HASTA $3,000 USD" && $solicitud['op_preg13'] != "ENTRE $3,000 Y $10,000 USD" && $solicitud['op_preg13'] != "ENTRE $10,000 A $25,000 USD"){
-                     ?>
-                     <p class="alert alert-info"><?php echo $solicitud['op_preg13']; ?></p>
-                     
-                    <?php 
-                      }
-                     ?>
-                  </div>
-              <div class="col-xs-12">
-                <p for="op_preg11">
-                  <b>13_1.DEL TOTAL DE SUS VENTAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
-                </p>
-                <p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-                  <div class="col-xs-3">
-                    <label for="organico">% ORGÁNICO</label>
-                    <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0" readonly>
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="comercio_justo">% COMERCIO JUSTO</label>
-                    <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0" readonly>
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
-                    <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0" readonly>
-                    
-                  </div>
-                  <div class="col-xs-3">
-                    <label for="otro">SIN CERTIFICADO</label>
-                    <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0" readonly>
-                    
-                  </div>            
-              </div>
-                <?php
-                  }else if($solicitud['op_preg12'] == 'NO'){
-                ?>
-                  <div class="col-xs-12">
-                    <p class='text-center alert alert-danger'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span> NO</p>
-                  </div>
-                
-                <?php         
-                  }
-                ?>
+            <div class="row">
+              <p><b>12 - 13. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
+                  <?php
+                    if($solicitud['op_preg12'] == 'SI'){
+                        //echo "SI <input type='radio' name='op_preg12'  checked readonly>";
+                      /*echo "</div>";
+                      echo "<div class='col-xs-6'>";
+                        echo "<p class='text-center alert alert-danger'>NO</p>";
+                        echo "NO <input type='radio' name='op_preg12'  readonly>";
+                      echo "</div>";*/
+                  ?>
+                    <div class="col-xs-6">
+                      <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> SI</p>
+                    </div>
+                    <div class="col-xs-6">
+                      <?php 
+                        if(empty($solicitud['op_preg13'])){
+                       ?>
+                        <p class="alert alert-danger">No se proporciono ninguna respuesta.</p>
+                      <?php 
+                        }else if($solicitud['op_preg13'] == "HASTA $3,000 USD"){
+                       ?>
+                        <p class="alert alert-info">HASTA $3,000 USD</p>
+                      <?php 
+                        }else if($solicitud['op_preg13'] == "ENTRE $3,000 Y $10,000 USD"){
+                       ?>
+                       <p class="alert alert-info">ENTRE $3,000 Y $10,000 USD</p>
+                      <?php 
+                        }else if($solicitud['op_preg13'] == "ENTRE $10,000 A $25,000 USD"){
+                       ?>
+                       <p class="alert alert-info">ENTRE $10,000 A $25,000 USD</p>
+                      <?php 
+                        }else if($solicitud['op_preg13'] != "HASTA $3,000 USD" && $solicitud['op_preg13'] != "ENTRE $3,000 Y $10,000 USD" && $solicitud['op_preg13'] != "ENTRE $10,000 A $25,000 USD"){
+                       ?>
+                       <p class="alert alert-info"><?php echo $solicitud['op_preg13']; ?></p>
+                       
+                      <?php 
+                        }
+                       ?>
+                    </div>
+                  <?php
+                    }else if($solicitud['op_preg12'] == 'NO'){
+                  ?>
+                    <div class="col-xs-12">
+                      <p class='text-center alert alert-danger'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span> NO</p>
+                    </div>
+                  
+                  <?php         
+                    }
+                  ?>
+            </div>
           </div>
               
           <label for="op_preg14">

@@ -1,32 +1,15 @@
-<ul class="nav nav-pills">
-	<li role="presentation"
-		<? if(isset($_GET['select'])){?> class="active" <? }?>><a href="?ESTADISTICAS&select">Generales</a></li>
-
-	<li role="presentation"
-		<? if(isset($_GET['certificacion'])){?> class="active" <? }?>><a href="?ESTADISTICAS&certificacion">Certificación</a></li>
-
-	<li role="presentation"
-		<? if(isset($_GET['listaOPP'])){?> class="active" <? }?>><a href="?ESTADISTICAS&listaOPP">Lista OPP</a></li>
-
-	<li role="presentation"
-	<? if(isset($_GET['productos'])){?> class="active" <? }?>>
-		<a href="?ESTADISTICAS&productos" aria-label="Left Align">
-			<span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> Productos
-		</a>
-	</li>
-
-	<? if(isset($_GET['detail'])){?>
-	<li role="presentation" 
-	 class="active" ><a href="#">
-		<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detalle 	
-	 </a>
-	</li>
-	<? }?>
+<div class="row">
+	<div class="btn-group" role="group" aria-label="...">
+	  <!--<a href="?ESTADISTICAS&select" <?php if(isset($_GET['select'])){echo 'class="btn btn-sm btn-primary"'; }else{echo 'class="btn btn-sm btn-default"'; } ?>>Generales</a>-->
+	  <a href="?ESTADISTICAS&certificacion" <?php if(isset($_GET['certificacion']) || isset($_GET['select'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Certificación</a>
+	  <a href="?ESTADISTICAS&lista_opp" <?php if(isset($_GET['lista_opp'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Lista OPP</a>
+	  <a href="?ESTADISTICAS&socios" <?php if(isset($_GET['socios'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>No Socios</a>
+	  <a href="?ESTADISTICAS&productos" <?php if(isset($_GET['productos'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Productos</a>
+	</div>
+	<hr>	
+</div>
 
 
-
-
-</ul>
 
 <? if(isset($_GET['mensaje'])){?>
 <p>
@@ -35,14 +18,18 @@
 <? }?>
 
 
-<?
-if(isset($_GET['select'])){include ("generales.php");}
-	else
-if(isset($_GET['certificacion'])){include ("certificacion.php");}
-	else
-if(isset($_GET['listaOPP'])){include ("listaOPP.php");}
-	else
-if(isset($_GET['productos'])){include ("est_productos.php");}
-	else
-if(isset($_GET['detail'])){include ("opp_detail.php");}
-?>
+<div class="row">
+	<?
+	if(isset($_GET['select'])){include ("certificacion.php");}
+		else
+	if(isset($_GET['certificacion'])){include ("certificacion.php");}
+		else
+	if(isset($_GET['lista_opp'])){include ("lista_opp.php");}
+		else
+	if(isset($_GET['socios'])){include("socios.php");}
+		else
+	if(isset($_GET['productos'])){include ("productos.php");}
+		else
+	if(isset($_GET['detail'])){include ("opp_detail.php");}
+	?>		
+</div>

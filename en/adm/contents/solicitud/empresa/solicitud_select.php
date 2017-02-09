@@ -53,6 +53,10 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
   $idperiodo_objecion = $_POST['idperiodo_objecion'];
   $estatus_objecion = 'ACTIVO';
   
+  $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //ACTUALIZAMOS EL PERIODO DE OBJECIÓN
   $updateSQL = sprintf("UPDATE periodo_objecion SET estatus_objecion = %s WHERE idperiodo_objecion = %s",
@@ -167,85 +171,78 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
       </html>
     ';
 
-    ///// inicia envio a correos empresa
-    /*  $query_empresa = "SELECT email FROM empresa WHERE email !=''";
-      $ejecutar_empresa = mysql_query($query_empresa,$dspp) or die(mysql_error());
+    //// inicia envio a correo OPP
 
+      $query_opp = "SELECT email FROM opp INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE email !=''";
+      $ejecutar_opp = mysql_query($query_opp,$dspp) or die(mysql_error());
+
+      $direcciones = '';
+      while($email_opp = mysql_fetch_assoc($ejecutar_opp)){
+        $mail->AddAddress($email_opp['email']);
+      }
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+
+    //// termina envio a correo OPP
+
+    ///// inicia envio a correos empresa
+      $query_empresa = "SELECT email FROM empresa INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE email !=''";
+      $ejecutar_empresa = mysql_query($query_empresa,$dspp) or die(mysql_error());
 
       while($email_empresa = mysql_fetch_assoc($ejecutar_empresa)){
         $mail->AddAddress($email_empresa['email']);
       }
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
 
-        $mail->AddBCC($administrador);
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
-        $mail->ClearAddresses();
-*/
     ///// termina envio a correo empresa
 
-    //// inicia envio a correo OPP
-      echo "<script>alert('alerta1');</script>";
-      $query_opp = "SELECT email FROM opp WHERE email !=''";
-      $ejecutar_opp = mysql_query($query_opp,$dspp) or die(mysql_error());
-
-
-      while($email_opp = mysql_fetch_assoc($ejecutar_opp)){
-        $mail->AddAddress($email_opp['email']);
-      }
-
-
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
-        $mail->ClearAddresses();
-      echo "<script>alert('alerta2');</script>";
-    //// termina envio a correo OPP
-
     //// inicia envio a correo OC
-    /*  $query_oc = "SELECT email1, email2 FROM oc";
+      $query_oc = "SELECT email1, email2 FROM oc";
       $ejecutar_oc = mysql_query($query_oc,$dspp) or die(mysql_error());
-
-
       while($email_oc = mysql_fetch_assoc($ejecutar_oc)){
         $mail->AddAddress($email_oc['email1']);
-        $mail->AddAddress($email_oc['email2']);
+        if(!empty($email_oc['email2'])){
+          $mail->AddAddress($email_oc['email2']);
+        }
       }
 
-        $mail->AddBCC($administrador);
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
-        $mail->ClearAddresses();
-*/
+
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+
     //// termina envio a correo OC
 
     //// inicia envio a correo ADM
-      /*  $query_adm = "SELECT email FROM adm";
-        $ejecutar_adm = mysql_query($query_adm,$dspp) or die(mysql_error());
+      $query_adm = "SELECT email FROM adm";
+      $ejecutar_adm = mysql_query($query_adm,$dspp) or die(mysql_error());
 
-        while($email_adm = mysql_fetch_assoc($ejecutar_adm)){  
-          if($email_adm['email'] != "isc.jesusmartinez@gmail.com"){
-            $mail->AddAddress($email_adm['email']);
-          }
+      while($email_adm = mysql_fetch_assoc($ejecutar_adm)){  
+        if($email_adm['email'] != "isc.jesusmartinez@gmail.com"){
+          $mail->AddAddress($email_adm['email']);
         }
+      }
 
-        $mail->AddBCC($administrador);
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+
+      if($mail->Send()){
+        $mail->ClearAddresses();   
+        echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+      }else{
         $mail->ClearAddresses();
-*/
-        /*if($mail->Send()){
-          
-          echo "<script>alert('Correo enviado Exitosamenlkjlkjljkte.');location.href ='javascript:history.back()';</script>";
-        }else{
-              echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
-        }*/
+        echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
+      }
     //// termina envio a correo ADM
 
 
@@ -282,6 +279,18 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
     GetSQLValueString($resolucion, "text"),
     GetSQLValueString($_POST['idperiodo_objecion'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+  $tipo = '';
+  $tipo = '';
+  if(isset($detalle_empresa['comprador_final'])){
+    $tipo .= 'COMPRADOR FINAL / FINAL BUYER<br>';
+  }
+  if(isset($detalle_empresa['intermediario'])){
+    $tipo .= 'INTERMEDIARIO / INTERMEDIARY<br>';
+  }
+  if(isset($detalle_empresa['maquilador'])){
+    $tipo .= 'MAQUILADOR / MAQUILA COMPANY<br>';
+  }
 
   /// inicia envio correo "periodo de objeción finalizado" a OC
   $asunto = "D-SPP | Periodo de Objeción Finalizado";
@@ -341,7 +350,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
                     <td style="text-align:center">Fin período de objeción/Objection period end</td>
                   </tr>
                   <tr style="font-size:12px;">
-                    <td>empresa</td>
+                    <td>'.$tipo.'</td>
                     <td>'.$detalle_empresa['nombre_empresa'].'</td>
                     <td>'.$detalle_empresa['abreviacion_empresa'].'</td>
                     <td>'.$detalle_empresa['pais'].'</td>
@@ -363,10 +372,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
 
   $mail->AddAddress($detalle_empresa['email_oc']);
   $mail->AddAddress($detalle_empresa['email_oc2']);
-
   $mail->AddBCC($spp_global);  
-  $mail->AddBCC($administrador);
-
   $mail->AddAttachment($resolucion);
 
   $mail->Subject = utf8_decode($asunto);
@@ -377,7 +383,112 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
 
   /// termina envio correo "periodo de objeción finalizado" a OC
 
+  /// inicia envio correo "periodo de objeción finalizado" a OC
+  $asunto = "D-SPP | Periodo de Objeción Finalizado";
 
+  $mensaje_opp = '
+    <html>
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+      
+        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="700px">
+          <thead>
+            <tr>
+              <th>
+                <img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+              </th>
+              <th style="text-align:left">
+                D-SPP | Periodo de Objeción Finalizado / Objection Period Ended
+                
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="text-align:left">
+              <td colspan="2"><p><b>Ha finalizado el periodo de objeción con una resolución: <span style="color:red;">'.$_POST['dictamen'].'</span></b></p></td>
+            </tr>
+            <tr> 
+              <td colspan="2">Fecha Inicio: <span style="color:red">'.date('d/m/Y', $periodo['fecha_inicio']).'</span></td>
+            </tr>
+            <tr>
+              <td colspan="2">Fecha Fin: <span style="color:red">'.date('d/m/Y', $periodo['fecha_fin']).'</span></td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                Ha finalizado el periodo de objeción. Se ha iniciado el Proceso de Certificación, por favor ponerse en contacto con su Organismo de Certificación.
+                
+                <p>Organismo de Certificación: <span style="color:red">'.$detalle_empresa['nombre_oc'].'</span></p>
+                
+                <p>Email: <span style="color:red">'.$detalle_empresa['email_oc'].'</span></p>
+              </td>
+            </tr>
+            <tr style="width:100%">
+              <td colspan="2">
+                <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+
+                  <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                    <td style="text-align:center">Tipo / Type</td>
+                    <td style="text-align:center">Nombre de la Empresa/Company name</td>
+                    <td style="text-align:center">Abreviación / Short name</td>
+                    <td style="text-align:center">País / Country</td>
+                    <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
+                    <td style="text-align:center">Tipo de solicitud / Kind of application</td>
+                    <td style="text-align:center">Fecha de solicitud/Date of application</td>
+                    <td style="text-align:center">Fin período de objeción/Objection period end</td>
+                  </tr>
+                  <tr style="font-size:12px;">
+                    <td>'.$tipo.'</td>
+                    <td>'.$detalle_empresa['nombre_empresa'].'</td>
+                    <td>'.$detalle_empresa['abreviacion_empresa'].'</td>
+                    <td>'.$detalle_empresa['pais'].'</td>
+                    <td>'.$detalle_empresa['nombre_oc'].'</td>
+                    <td>Registro</td>
+                    <td>'.date('d/m/Y', $periodo['fecha_inicio']).'</td>
+                    <td>'.date('d/m/Y', $periodo['fecha_fin']).'</td>
+                  </tr>
+              </td>
+              </table>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </body>
+    </html>
+  ';
+
+  if(isset($detalle_empresa['contacto1_email'])){
+    $mail->AddAddress($detalle_empresa['contacto1_email']);
+  }
+  if(isset($detalle_empresa['contacto2_email'])){
+    $mail->AddAddress($detalle_empresa['contacto2_email']);
+  }
+  if(isset($detalle_empresa['adm1_email'])){
+    $mail->AddAddress($detalle_empresa['adm1_email']);
+  }
+  if(isset($detalle_empresa['email_empresa'])){
+    $mail->AddAddress($detalle_empresa['email_empresa']);
+  }
+
+  $mail->AddBCC($spp_global);  
+  $mail->AddAttachment($resolucion);
+  $mail->Subject = utf8_decode($asunto);
+  $mail->Body = utf8_decode($mensaje_opp);
+  $mail->MsgHTML(utf8_decode($mensaje_opp));
+  if($mail->Send()){
+    $mail->ClearAddresses();   
+    echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+  }else{
+    $mail->ClearAddresses();
+    echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
+  }
+ 
   /// termina envio correo "periodo de objeción finalizado" a empresa
 
 
@@ -399,6 +510,11 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
     GetSQLValueString($estatus_membresia, "text"),
     GetSQLValueString($fecha, "int"),
     GetSQLValueString($_POST['idmembresia'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+  $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_registro'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //insertarmos el proceso_certificacion
@@ -572,16 +688,21 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
     GetSQLValueString($_POST['idcontrato'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
+  $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
   //creamos el proceso_certificacion
   $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_registro, estatus_dspp, fecha_registro) VALUES(%s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_registro'], "int"),
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
-  if(!empty($_POST['idmembresia'])){
-    $row_membresia = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, empresa.nombre, oc.email1, oc.email2, membresia.idsolicitud_registro, membresia.estatus_membresia FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro WHERE membresia.idmembresia = $_POST[idmembresia]", $dspp) or die(mysql_error());
-    $membresia = mysql_fetch_assoc($row_membresia);
-    if ($membresia['estatus_membresia'] == 'APROBADA') {
+
+    $row_empresa = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, empresa.nombre, oc.email1, oc.email2 FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc  WHERE solicitud_registro.idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+    $empresa = mysql_fetch_assoc($row_empresa);
+
 
       $asunto = "D-SPP | Formatos de Evaluación";
 
@@ -599,12 +720,12 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>empresa: <span style="color:red">'.$membresia['nombre'].'</span></p></th>
+               <th scope="col" align="left" width="280"><p>empresa: <span style="color:red">'.$empresa['nombre'].'</span></p></th>
               </tr>
 
               <tr>
                 <td colspan="2">
-                 <p>SPP GLOBLA notifica que la empresa: '.$membresia['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p>SPP GLOBLA notifica que la empresa: '.$empresa['nombre'].' ha cumplido con la documentación necesaria.</p>
                  <p>
                   Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documento: 
                      <ul style="color:red">
@@ -640,9 +761,13 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
         </body>
         </html>
       ';
+        if(isset($empresa['email1'])){
+          $mail->AddAddress($empresa['email1']);
+        }
+        if(isset($empresa['email2'])){
+          $mail->AddAddress($empresa['email2']);
+        }
 
-        $mail->AddAddress($membresia['email1']);
-        $mail->AddAddress($membresia['email2']);
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -650,14 +775,9 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
         $mail->ClearAddresses();
 
 
-        $mensaje = "Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
+        $mensaje = "Se ha aprobado el \"Contrato de Uso\" , se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
 
-    }else{
-      $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
-    } 
-  }
-
-  $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
+  
 
 }
 
@@ -666,6 +786,12 @@ if(isset($_POST['rechazar_contrato']) && $_POST['rechazar_contrato'] == 2){
   $estatus_dspp = 19; //CONTRATO DE USO APROBADO
   $estatus_contrato = "RECHAZADO";;
   //actualizamos el contrato de uso
+  $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
+    GetSQLValueString($estatus_dspp, "int"),
+    GetSQLValueString($_POST['idsolicitud_registro'], "int"));
+  $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+  
   $updateSQL = sprintf("UPDATE contratos SET estatus_contrato = %s, observaciones = %s WHERE idcontrato = %s",
     GetSQLValueString($estatus_contrato, "text"),
     GetSQLValueString($_POST['observaciones_contrato'], "text"),
@@ -696,7 +822,7 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 
   //si toda la documentacion es aceptada se envia el correo al OC
   if(($_POST['estatus_formato'] == 'ACEPTADO') && ($_POST['estatus_informe'] == 'ACEPTADO') && ($_POST['estatus_dictamen'] == 'ACEPTADO')){
-    $row_informacion = mysql_query("SELECT solicitud_registro.idoc, solicitud_registro.idempresa, empresa.nombre AS 'nombre_empresa', oc.email1, oc.email2 FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE solicitud_registro.idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+    $row_informacion = mysql_query("SELECT solicitud_registro.idoc, solicitud_registro.idempresa, empresa.nombre AS 'nombre_empresa', oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE solicitud_registro.idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
     $informacion = mysql_fetch_assoc($row_informacion);
 
     $asunto = "D-SPP | Notificación Certificado";
@@ -752,9 +878,13 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
       </body>
       </html>
     ';
-
-      $mail->AddAddress($informacion['email1']); 
-      $mail->AddAddress($informacion['email2']); 
+      if(!empty($informacion['oc_email1'])){
+        $mail->AddAddress($informacion['oc_email1']); 
+      }
+      if(!empty($informacion['oc_email2'])){
+        $mail->AddAddress($informacion['oc_email2']); 
+      }
+      
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -768,19 +898,85 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 
 
 //$row_solicitud = mysql_query("SELECT solicitud_registro.idsolicitud_registro AS 'idsolicitud', solicitud_registro.fecha_registro, solicitud_registro.idoc, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_dspp.nombre AS 'nombre_dspp', solicitud_registro.cotizacion_empresa, periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN proceso_certificacion ON solicitud_registro.idsolicitud_registro = proceso_certificacion.idsolicitud_registro LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro = periodo_objecion.idsolicitud_registro LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idsolicitud_registro = certificado.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro  ORDER BY proceso_certificacion.idproceso_certificacion DESC", $dspp) or die(mysql_error());
-if(isset($_POST['campo_busqueda']) && $_POST['campo_busqueda'] == 1){
-  $buscar = $_POST['buscar'];
-$query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE empresa.spp LIKE '%$buscar%' OR empresa.nombre LIKE '%$buscar%' OR empresa.abreviacion LIKE '%$buscar%' OR empresa.pais LIKE '%$buscar%' OR empresa.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%'  ORDER BY solicitud_registro.fecha_registro DESC";
 
+///////// INICIAN CAMPOS DE BUSQUEDA
+
+if(isset($_POST['filtrar']) && $_POST['filtrar'] == 1){
+  $pais = $_POST['filtrar_pais'];
+  $oc = $_POST['filtrar_oc'];
+
+  if(!empty($pais) && !empty($oc)){
+    $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE empresa.pais = '$pais' AND solicitud_registro.idoc = $oc GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro  DESC";
+
+  }else if(!empty($pais) && empty($oc)){
+    $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE empresa.pais = '$pais' GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro  DESC";
+  }else if(empty($pais) && !empty($oc)){
+    $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE solicitud_registro.idoc = $oc GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro  DESC";
+
+  }else{
+    $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro  DESC";
+
+  }
+
+}else if(isset($_POST['buscar']) && $_POST['buscar'] == 1){
+  $buscar = $_POST['campo_busqueda'];
+
+  $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE empresa.spp LIKE '%$buscar%' OR empresa.nombre LIKE '%$buscar%' OR empresa.abreviacion LIKE '%$buscar%' OR empresa.pais LIKE '%$buscar%' OR empresa.email LIKE '%$buscar%' OR oc.abreviacion LIKE '%$buscar%' GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro DESC";
 }else{
-$query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro ORDER BY solicitud_registro.fecha_registro DESC";
+  $query = "SELECT solicitud_registro.*, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.idoc AS 'id_oc', oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.documento, periodo_objecion.dictamen, periodo_objecion.alerta1, periodo_objecion.alerta2, periodo_objecion.alerta3, membresia.idmembresia, membresia.estatus_membresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, informe_evaluacion.idinforme_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.fecha_registro  DESC";
 }
-
-
+//////// TERMINAN CAMPOS DE BUSQUEDA
 
 //$query = "SELECT solicitud_registro.idsolicitud_registro, oc.abreviacion AS 'abreviacionOC', empresa.abreviacion AS 'abreviacion_empresa', periodo_objecion  "
 $row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
 $total_solicitudes = mysql_num_rows($row_solicitud);
+
+  /* INICIA PAGINACION */
+    //limitamos la consulta
+    $regXPag = 20;
+    $pagina = false; //cuando se ingresa al menu no tiene ningun valor
+
+    //Examinar la pagina a mostrar y el inicio del registro a mostrar
+    if(isset($_GET['p'])){
+      $pagina = $_GET['p'];
+    }
+    if(!$pagina){ //si la pagina es falsa
+      $inicio = 0;
+      $pagina = 1;
+    }else{
+      $inicio = ($pagina - 1) * $regXPag;
+    }
+    //calculamos el total de páginas
+    $total_paginas = ceil($total_solicitudes / $regXPag);
+
+  $query .= " LIMIT ".$inicio.",".$regXPag;
+
+  $paginacion = "<p style='margin-bottom:-20px;'>";
+    $paginacion .= "Número de resultados: <b>$total_solicitudes</b>. ";
+    $paginacion .= "Mostrando <b>$regXPag</b> resultados por página. ";
+    $paginacion .= "Página <b>$pagina</b> de <b>$total_paginas</b>. ";
+  $paginacion .= "</p>";
+
+  if($total_paginas > 1){
+    $paginacion .= '<nav aria-label="Page navigation">';
+      $paginacion .= '<ul class="pagination">';
+        $paginacion .= ($pagina != 1)?'<li><a href="?SOLICITUD&select_empresa&p='.($pagina-1).'" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a></li>':'';
+
+      for ($i=1; $i <= $total_paginas; $i++) {
+        //si muestro el indice de la pagina actual, no coloco enlace
+        $actual = "<li class='active'><a href='#'>".$pagina."</a></li>";
+        //si el indice no corresponde con la pagina mostrada actualmente, coloco el enlace para ir a esa pagina
+        $enlace = '<li><a href="?SOLICITUD&select_empresa&p='.$i.'">'.$i.'</a></li>';
+
+        $paginacion .= ($pagina == $i)?$actual:$enlace;
+      }
+      $paginacion .= ($pagina!=$total_paginas)?"<li><a href='?SOLICITUD&select_empresa&p=".($pagina+1)."' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>":"";
+      $paginacion .= "</ul>";
+    $paginacion .= "</nav>";
+  }
+  $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
+
+  /* TERMINA PAGINACIÓN*/
 
 ?>
 <div class="row">
@@ -794,32 +990,56 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
   <?php
   }
   ?>
-  <form action="" method="POST">
-    <div class="col-lg-11 alert alert-info" style="padding:7px;">
-      <label for="campo_busqueda">Busqueda extendida(#spp, nombre, abreviacion, sitio web, email, país, etc...)</label>
-
-      <div class="input-group">
-        <input type="text" id="buscar" name="buscar" class="form-control" placeholder="campo de busqueda">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="submit" name="campo_busqueda" value="1">Buscar</button>
-        </span>
-      </div><!-- /input-group -->
-
-    </div>
-    <div class="col-lg-1 alert alert-warning" style="padding:7px;">
-      Total: <?php echo $total_solicitudes; ?>
-    </div>
-  </form>
-
   <div class="col-md-12">
     <table class="table table-bordered table-condensed" style="font-size:12px">
       <thead>
+        <tr>
+          <td colspan="5">
+            <form action="" method="POST" id="frm_filtrar">
+              <select name="filtrar_oc" id="">
+                <option value="">Buscar por OC</option>
+                <?php 
+                $row_oc = mysql_query("SELECT oc.idoc, oc.abreviacion FROM oc", $dspp) or die(mysql_error());
+                while($oc = mysql_fetch_assoc($row_oc)){
+                  echo "<option value='$oc[idoc]'>$oc[abreviacion]</option>";
+                }
+                 ?>
+              </select>
+              <select name="filtrar_pais" id="">
+                <option value="">Buscar por país</option>
+                <?php 
+                $row_pais = mysql_query("SELECT empresa.pais FROM empresa GROUP BY empresa.pais", $dspp) or die(mysql_error());
+                while($pais = mysql_fetch_assoc($row_pais)){
+                  echo "<option value='$pais[pais]'>$pais[pais]</option>";
+                }
+                 ?>
+              </select>
+              <button class="btn btn-info" name="filtrar" value="1" type="submit">Filtrar</button>
+            </form>
+          </td>
+          <td colspan="5">
+            <form action="" method="POST" id="frm_buscar">
+              <div class="col-lg-6">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="campo_busqueda" placeholder="campo de busqueda">
+                  <span class="input-group-btn">
+                    <button class="btn btn-info" name="buscar" value="1" type="submit">Buscar</button>
+                  </span>
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+            </form>
+          </td>
+          <td colspan="2">
+            <h4>Total: <span style="color:red"><?php echo $total_solicitudes; ?></span></h4>
+          </td>
+        </tr>
         <tr class="info">
           <th class="text-center">ID</th>
           <th class="text-center"><a href="#" data-toggle="tooltip" title="Tipo de Solicitud"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Tipo</a></th>
           <th class="text-center">Fecha Solicitud</th>
           <th class="text-center">OC</th>
           <th class="text-center">Organización</th>
+          <th class="text-center"></th>
           <th class="text-center">Estatus Solicitud</th>
           <th class="text-center">Cotización</th>
           <th class="text-center">Proceso de Objeción</th>
@@ -840,7 +1060,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
           ?>
         <form action="" method="POST" enctype="multipart/form-data">
 
-            <tr>
+            <tr <?php if($proceso_certificacion['estatus_dspp'] == 12){ echo "class='success'"; }else if($proceso_certificacion['estatus_interno'] == 9){ echo "class='danger'"; } ?>>
               <td>
                 <?php echo $solicitud['idsolicitud_registro']; ?>
               </td>
@@ -860,6 +1080,9 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
               </td>
               <td>
                 <a href="?EMPRESAS&detail&idempresa=<?php echo $solicitud['idempresa']; ?>"><?php echo $solicitud['abreviacion_empresa']; ?></a>
+              </td>
+              <td>
+                <b style="color:#c0392b"><?php echo $solicitud['pais']; ?></b>
               </td>
               <td>
                 <?php echo $proceso_certificacion['nombre_dspp']; ?>
@@ -1156,7 +1379,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                           }else{
                           ?>
                             <div class="col-md-6">
-                              <h4>Contrato de Uso</h4>
+                              <h4>Contrato de Uso y Acuse de Recibo</h4>
                               <?php 
                               if(isset($solicitud['idcontrato'])){
                                 $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $solicitud[idcontrato]", $dspp) or die(mysql_error());
@@ -1168,7 +1391,22 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
 
                                 }else{
                                 ?>
-                                  <a href="<?php echo $contrato['archivo']; ?>" target="_blank" class="btn btn-sm btn-success" style="width:100%">Descargar Contrato</a>
+                                  <div class="btn-group" role="group" aria-label="...">
+                                    <a href="<?php echo $contrato['archivo']; ?>" target="_blank" class="btn btn-default"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Descargar Contrato</a>
+                                    <?php 
+                                    if(empty($contrato['acuse_recibo'])){
+                                    ?>
+                                      <a href="<?php echo $contrato['acuse_recibo']; ?>" target="_blank" class="disabled btn btn-default"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Acuse de Recibo No Disponible</a>
+                                    <?php
+                                    }else{
+                                    ?>
+                                      <a href="<?php echo $contrato['acuse_recibo']; ?>" target="_blank" class="btn btn-default"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Descargar Acuse de Recibo</a>
+                                    <?php
+                                    }
+                                     ?>
+                                  </div>
+
+                                  <!--<a href="<?php echo $contrato['archivo']; ?>" target="_blank" class="btn btn-sm btn-success" style="width:100%">Descargar Contrato</a>-->
                                   <label for="observaciones_contrato">Observaciones (<span style="color:red">en caso de ser rechazado</span>)</label>
                                   <textarea name="observaciones_contrato" id="observaciones_contrato" class="form-control" placeholder="Observaciones Contrato"></textarea>
                                   <div class="col-md-12">
@@ -1262,13 +1500,22 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                             <h4>Certificado</h4>
                             <?php 
                             if(isset($solicitud['idcertificado'])){
-                                $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
+                                $row_certificado = mysql_query("SELECT * FROM certificado WHERE idsolicitud_registro = $solicitud[idsolicitud_registro]", $dspp) or die(mysql_error());
+
                                 $certificado = mysql_fetch_assoc($row_certificado);
-                                $inicio = strtotime($certificado['vigencia_inicio']);
-                                $fin = strtotime($certificado['vigencia_fin']);
+
+                                if(isset($certificado['idsolicitud_registro'])){
+                                  $inicio = strtotime($certificado['vigencia_inicio']);
+                                  $fin = strtotime($certificado['vigencia_fin']);
+                                ?>
+                                  <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
+                                  <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
+
+                                <?php
+                                }else{
+                                  echo "<p class='alert alert-danger'>Aun no se ha cargado el Certificado</p>";
+                                }
                               ?>
-                                <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
-                                <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
                               <?php
                             }else{
                               echo "<p class='alert alert-danger'>Aun no se ha cargado el Certificado</p>";
@@ -1304,6 +1551,10 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
            ?>
       </tbody>
     </table>
+<?php 
+  echo $paginacion;
+ ?>
+    
   </div>
 </div>
 

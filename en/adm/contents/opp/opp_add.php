@@ -141,7 +141,12 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
                   <td style="text-align:justify;padding-top:10px;"><i>Congratulations , your data have been recorded correctly. Below is your <b>#SPP and password needed to log in </b>: <a href="http://d-spp.org/?OPP" target="_new">www.d-spp.org/?OPP</a></i>, once you have logged you are advised to change your password on the Information OPP section, in that section are data which can be modified if be necessary.</td>
                 </tr>
             <tr>
-              <td align="left"><br><b>Nombre / Name:</b> <span style="color:#27ae60;">'.$_POST['nombre'].'</span></td>
+              <td align="left">
+                <br>
+                <b>Pais / Country: </b><span style="color:#27ae60;">'.$_POST['pais'].'</span>
+                <br>
+                <b>Nombre / Name:</b> <span style="color:#27ae60;">'.$_POST['nombre'].'</span>
+              </td>
             </tr>
             <tr>
               <td align="left"><br><b>#SPP:</b> <span style="color:#27ae60;">'.$spp.'</span></td>
@@ -176,6 +181,10 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
 /****************************** FIN FORMULARIO INSERTAR OPP **************************************************/
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
+$alerta = '
+           <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center; padding:5px;">
+            SI YA ES O FUE UNA ORGANIZACIÓN CERTIFICADA CON EL SPP, DEBE DE CONSULTAR EN SU LISTA DE "Informacion OPP" ANTES DE CREAR UN NUEVO USUARIO.
+          </p>';
 
 ?>
 
@@ -196,6 +205,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
 <div class="row">
   <div class="col-md-12">
+    <?php echo $alerta; ?>
     <form action="" method="POST" class="form-horizontal">
       <div class="panel panel-info">
         <div class="panel-heading">

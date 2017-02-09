@@ -1,71 +1,40 @@
-<ul class="nav nav-pills">
-	<li role="presentation"
+<div class="row">
+	<div class="btn-group" role="group" aria-label="...">
+		<a class="btn btn-sm <?php if(isset($_GET['select'])){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>" href="?SOLICITUD&select">Solicitudes OPP</a>
+		<a class="btn btn-sm <?php if(isset($_GET['select_empresa'])){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>" href="?SOLICITUD&select_empresa">Solicitudes Empresas</a>
 
-	<? if(isset($_GET['select'])){?> class="active" <? }?>>
-		<a href="?SOLICITUD&select" aria-label="Left Align">
-			<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitudes OPP
-		</a>
-	
-
-	</li>
-	<li role="presentation"
-
-	<? if(isset($_GET['select_empresa'])){?> class="active" <? }?>>
-		<a href="?SOLICITUD&select_empresa" aria-label="Left Align">
-			<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitudes Empresas
-		</a>
-	
-
-	</li>
-
-	<li role="presentation"
-
-	<? if(isset($_GET['add'])){?> class="active" <? }?>>
-		<a href="?SOLICITUD&add" aria-label="Left Align">
-			<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Agregar Solicitud
-		</a>
-	
-
-	</li>
+	  <!--<button type="button" class="btn btn-default" href="?SOLICITUD&add">Agregar Solicitud</button>-->
+	</div>
 
 
-	<? if(isset($_GET['detail'])){?>
-	<li role="presentation" 
-	 class="active" ><a href="#">Detalle</a></li>
+	<? if(isset($_GET['mensaje'])){?>
+	<p>
+	<div class="alert alert-success" role="alert"><? echo $_GET['mensaje']?></div>
+	</p>
 	<? }?>
-</ul>
-
-<ul class="nav nav-pills">
-	<li role="presentation" <?php if(isset($_GET['select'])){ echo "class='active'"; } ?>>
-	</li>
-</ul>
-
-<? if(isset($_GET['mensaje'])){?>
-<p>
-<div class="alert alert-success" role="alert"><? echo $_GET['mensaje']?></div>
-</p>
-<? }?>
 
 
-<?
-if(isset($_GET['select'])){include ("solicitud_select.php");}
-else
-if(isset($_GET['add'])){include ("solicitud_add.php");}
-else
-if(isset($_GET['idsolicitud'])){include ("solicitud_detail.php");}
-else
-if(isset($_GET['cancel'])){include ("solicitud_cancel.php");}
-else 
-if(isset($_GET['finalizado'])){include ("proceso_finalizado.php");}
-else 
-if(isset($_GET['detailBlock'])){include ("solicitud_detailBlock.php");}
-else
-if(isset($_GET['idsolicitud_empresa'])){include ("empresa/solicitud_detail.php");}
-else
-if(isset($_GET['select_empresa'])){include ("empresa/solicitud_select.php");}
-else
-if(isset($_GET['cancelCOM'])){include ("com/solicitud_cancel.php");}
-else
-if(isset($_GET['finalizadoCOM'])){include ("com/proceso_finalizado.php");}
+	<?
+	if(isset($_GET['select'])){include ("solicitud_select.php");}
+	else
+	if(isset($_GET['add'])){include ("solicitud_add.php");}
+	else
+	if(isset($_GET['idsolicitud'])){include ("solicitud_detail.php");}
+	else
+	if(isset($_GET['cancel'])){include ("solicitud_cancel.php");}
+	else 
+	if(isset($_GET['finalizado'])){include ("proceso_finalizado.php");}
+	else 
+	if(isset($_GET['detailBlock'])){include ("solicitud_detailBlock.php");}
+	else
+	if(isset($_GET['idsolicitud_empresa'])){include ("empresa/solicitud_detail.php");}
+	else
+	if(isset($_GET['select_empresa'])){include ("empresa/solicitud_select.php");}
+	else
+	if(isset($_GET['cancelCOM'])){include ("com/solicitud_cancel.php");}
+	else
+	if(isset($_GET['finalizadoCOM'])){include ("com/proceso_finalizado.php");}
 
-?>
+	?>	
+
+</div>

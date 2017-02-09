@@ -6,9 +6,12 @@
 		<a href="?EMPRESAS&add">Nueva Empresa</a>
 	</li>
 	<? if(isset($_GET['detail'])){?>
-		<li role="presentation" class="active" >
-			<a href="#">Detalle</a>
+		<li role="presentation" 
+		 class="active" ><a href="?EMPRESAS&detail&idempresa=<?php echo $_GET['idempresa']; ?>">
+			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detalle Empresa 	
+		 </a>
 		</li>
+
 	<? }?>
 </ul>
 
