@@ -127,7 +127,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 
-
 	if(!empty($_FILES['op_preg15']['name'])){
 	    $_FILES["op_preg15"]["name"];
 	      move_uploaded_file($_FILES["op_preg15"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
@@ -137,7 +136,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 	// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
-	$insertSQL = sprintf("INSERT INTO solicitud_certificacion (tipo_solicitud, idopp, idoc, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, resp1, resp2, resp3, resp4, op_preg1, preg1_1, preg1_2, preg1_3, preg1_4, op_preg2, op_preg3, produccion, procesamiento, exportacion, op_preg5, op_preg6, op_preg7, op_preg8, op_preg10, op_preg12, op_preg13, op_preg14, op_preg15, responsable, fecha_registro ) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	$insertSQL = sprintf("INSERT INTO solicitud_certificacion (tipo_solicitud, idopp, idoc, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, resp1, resp2, resp3, resp4, op_preg1, preg1_1, preg1_2, preg1_3, preg1_4, op_preg2, op_preg3, produccion, procesamiento, exportacion, op_preg5, op_preg6, op_preg7, op_preg8, op_preg10, op_preg12, op_preg13, op_preg14, op_preg15, responsable, fecha_registro, estatus_dspp) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 		   GetSQLValueString($_POST['tipo_solicitud'], "text"),
 		   GetSQLValueString($idopp, "int"),
            GetSQLValueString($_POST['idoc'], "int"),
@@ -179,7 +178,8 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
            GetSQLValueString($_POST['op_preg14'], "text"),
            GetSQLValueString($croquis, "text"),
            GetSQLValueString($_POST['responsable'], "text"),
-           GetSQLValueString($fecha, "int"));
+           GetSQLValueString($fecha, "int"),
+           GetSQLValueString($estatus_dspp, "int"));
 
 
 		  $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -187,7 +187,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		 $idsolicitud_certificacion = mysql_insert_id($dspp); 
 
 	///INGRESAMOS EL TIPO DE SOLICITUD A LA TABLA OPP y EL ALCANCE DE LA OPP
-	$updateSQL = sprintf("UPDATE OPP SET produccion = %s, procesamiento = %s, exportacion = %s, estatus_opp = %s WHERE idopp = %s",
+	$updateSQL = sprintf("UPDATE opp SET produccion = %s, procesamiento = %s, exportacion = %s, estatus_opp = %s WHERE idopp = %s",
 		GetSQLValueString($produccion, "int"),
 		GetSQLValueString($procesamiento, "int"),
 		GetSQLValueString($exportacion, "int"),
@@ -238,16 +238,22 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 
-
 	// INGRESAMOS EL NUMERO DE SOCIOS A LA TABLA NUM_SOCIOS
 	if(isset($_POST['resp1'])){
-		$insertSQL = sprintf("INSERT INTO num_socios (idopp, numero, fecha_registro) VALUES (%s, %s, %s)",
-			GetSQLValueString($idopp, "int"),
-			GetSQLValueString($_POST['resp1'], "text"),
-			GetSQLValueString($fecha, "int"));
-		$ejecutar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+		if($_POST['tipo_solicitud'] == "NUEVA"){ //si es nueva se inserta un registro de numero de socios
+			$insertSQL = sprintf("INSERT INTO num_socios (idopp, numero, fecha_registro) VALUES (%s, %s, %s)",
+				GetSQLValueString($idopp, "int"),
+				GetSQLValueString($_POST['resp1'], "text"),
+				GetSQLValueString($fecha, "int"));
+			$ejecutar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+		}else{ //si es renovacion, se actualiza el registro de numero de socios
+			$updateSQL = sprintf("UPDATE num_socios SET numero = %s, fecha_registro = %s WHERE idopp = %s",
+				GetSQLValueString($_POST['resp1'], "text"),
+				GetSQLValueString($fecha, "int"), 
+				GetSQLValueString($idopp, "int"));
+			$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+		}
 	}
-
 
 		 // INGRESAMOS EL PORCENTAJE DE VENTA DE LOS PRODUCTOS
 
@@ -262,7 +268,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 		 	}
 
-
 		/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
 		$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_publico, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
 			GetSQLValueString($idsolicitud_certificacion, "int"),
@@ -272,8 +277,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			GetSQLValueString($fecha, "int"));
 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 		/*************************** TERMINA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
-
-
 
 		/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
 			if(isset($_POST['certificacion'])){
@@ -318,9 +321,8 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
 
 
-
-
 		/*************************** INICIA INSERTAR PRODUCTOS ***************************/
+		$producto_general = $_POST['producto_general'];
 		$producto = $_POST['producto'];
 		$volumen = $_POST['volumen'];
 		$materia = $_POST['materia'];
@@ -363,6 +365,9 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 					//$marca_cliente = $_POST[$array3[$i]];
 					//$sin_cliente = $_POST[$array4[$i]];
 
+					$str = iconv($charset, 'ASCII//TRANSLIT', $producto_general[$i]);
+					$producto_general[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
 					$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
 					$producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
@@ -373,18 +378,18 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 					$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
 
-				    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+				    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto_general, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 				    	GetSQLValueString($idopp, "int"),
-				          GetSQLValueString($idsolicitud_certificacion, "int"),
-				          GetSQLValueString($producto[$i], "text"),
-				          GetSQLValueString($volumen[$i], "text"),
-				          GetSQLValueString($terminado[$i], "text"),
-				          GetSQLValueString($materia[$i], "text"),
-				          GetSQLValueString($destino[$i], "text"),
-				          GetSQLValueString($marca_propia[$i], "text"),
-				          GetSQLValueString($marca_cliente[$i], "text"),                    
-				          GetSQLValueString($sin_cliente[$i], "text"));
-
+				        GetSQLValueString($idsolicitud_certificacion, "int"),
+				        GetSQLValueString($producto_general[$i], "text"),
+				        GetSQLValueString($producto[$i], "text"),
+				        GetSQLValueString($volumen[$i], "text"),
+				        GetSQLValueString($terminado[$i], "text"),
+				        GetSQLValueString($materia[$i], "text"),
+				        GetSQLValueString($destino[$i], "text"),
+				        GetSQLValueString($marca_propia[$i], "text"),
+				        GetSQLValueString($marca_cliente[$i], "text"),                    
+				        GetSQLValueString($sin_cliente[$i], "text"));
 				  $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
 			}
 		}
@@ -487,6 +492,15 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		if(isset($oc['email2'])){
 			$mail->AddAddress($oc['email2']);
 		}
+		if(isset($_POST['email'])){
+			$mail->AddCC($_POST['email']);
+		}
+		if(isset($_POST['contacto1_email'])){
+			$mail->AddCC($_POST['contacto1_email']);
+		}
+
+	    $mail->AddCC($administrador);
+	    $mail->AddBCC($administrador);
 	    $mail->AddBCC($spp_global);
         //$mail->Username = "soporte@d-spp.org";
         //$mail->Password = "/aung5l6tZ";
@@ -500,7 +514,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 
 }
-
   //$insertGoTo = "main_menu.php?SOLICITUD&add&mensaje=Solicitud agregada correctamente, se ha notificado al OC por email.";
 $query = "SELECT * FROM opp WHERE idopp = $idopp";
 $row_opp = mysql_query($query,$dspp) or die(mysql_error());
@@ -509,7 +522,6 @@ $opp = mysql_fetch_assoc($row_opp);
 ?>
 
 <div class="row" style="font-size:12px;">
-
 	<?php 
 	if(isset($mensaje)){
 	?>
@@ -526,7 +538,6 @@ $opp = mysql_fetch_assoc($row_opp);
 			<div class="col-md-12 alert alert-primary" style="padding:7px;">
 				<h3 class="text-center">Application for Small Producers´Organization Certification</h3>
 			</div>
-
 
 			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>GENERAL INFORMATION</b></div>
 
@@ -826,26 +837,29 @@ $opp = mysql_fetch_assoc($row_opp);
 
 					<p for="op_preg11">
 						<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+						<i>(* Enter only quantity, integer or decimal)</i>
+						<div class="col-lg-12">
+							<div class="row">
+								<div class="col-xs-3">
+									<label for="organico">% ORGANIC</label>
+									<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="comercio_justo">% FAIR TRADE</label>
+									<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="spp">SMALL PRODUCERS' SYMBOL</label>
+									<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="otro">WITHOUT CERTIFICATE</label>
+									<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
+								</div>
+							</div>
+						</div>
 					</p>
-					<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-						<div class="col-xs-3">
-							<label for="organico">% ORGANIC</label>
-							<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
-						</div>
-						<div class="col-xs-3">
-							<label for="comercio_justo">%  FAIR TRADE</label>
-							<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
-						</div>
-						<div class="col-xs-3">
-							<label for="spp">SMALL PRODUCERS' SYMBOL</label>
-							<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
-							
-						</div>
-						<div class="col-xs-3">
-							<label for="otro">OTHER</label>
-							<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
-							
-						</div>
+
 
 					<p><b>12.	DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
 						<div class="col-xs-6">
@@ -970,11 +984,13 @@ $opp = mysql_fetch_assoc($row_opp);
 				</label>
 				<input type="text" class="form-control" id="nombre_oc" name="nombre_oc">-->
 			</div>
+
 			<div class="col-xs-12">
 				<hr>
 				<input type="hidden" name="insertar_solicitud" value="1">
-				<input type="submit" class="btn btn-primary form-control" value="Send Application" onclick="return validar()">
+				<input type="submit" class="btn btn-primary form-control" style="color: white;font-size:14px" value="Send Application" onclick="return validar()">
 			</div>
+
 
 		</fieldset>
 	</form>
@@ -986,7 +1002,10 @@ $opp = mysql_fetch_assoc($row_opp);
   function validar(){
 
     tipo_solicitud = document.getElementsByName("tipo_solicitud");
+    tuvo_ventas = document.getElementsByName("op_preg12");
+    opcion_venta = document.getElementsByName("op_preg13");
      
+    // INICIA SELECCION TIPO SOLICITUD
     var seleccionado = false;
     for(var i=0; i<tipo_solicitud.length; i++) {    
       if(tipo_solicitud[i].checked) {
@@ -999,12 +1018,46 @@ $opp = mysql_fetch_assoc($row_opp);
       alert("Debes de seleecionar un Tipo de Solicitud");
       return false;
     }
+    //// TERMINA SELECCION TIPO SOLICITUD
+
+    /// INICIA OPCION DE VENTAS
+    var ventas = false;
+    var valor_venta = '';
+    for(var i=0; i<tuvo_ventas.length; i++) {    
+      if(tuvo_ventas[i].checked) {
+      	valor_venta = tuvo_ventas[i].value;
+        ventas = true;
+        break;
+      }
+    }
+     
+    if(!ventas) {
+      alert("Debe seleccionar \"SI\" tuvo ó \"NO\" ventas");
+      return false;
+    }
+    /// TERMINA OPCION DE VENTAS
+
+
+    if(valor_venta != 'NO'){
+	    var monto = false;
+	    for(var i=0; i<opcion_venta.length; i++) {    
+	      if(opcion_venta[i].checked) {
+	        monto = true;
+	        break;
+	      }
+	    }
+	     
+	    if(!monto) {
+	      alert("Seleccionaste que \"SI\" tuviste ventas, debes seleccionar el monto de ventas SPP");
+	      return false;
+	    }
+
+    }
 
     return true
   }
 
 </script>
-
 <script>
 var contador=0;
 	function tablaCertificaciones()

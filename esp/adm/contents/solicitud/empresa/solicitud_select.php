@@ -822,7 +822,7 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 
   //si toda la documentacion es aceptada se envia el correo al OC
   if(($_POST['estatus_formato'] == 'ACEPTADO') && ($_POST['estatus_informe'] == 'ACEPTADO') && ($_POST['estatus_dictamen'] == 'ACEPTADO')){
-    $row_informacion = mysql_query("SELECT solicitud_registro.idoc, solicitud_registro.idempresa, empresa.nombre AS 'nombre_empresa', oc.email1, oc.email2 FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE solicitud_registro.idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+    $row_informacion = mysql_query("SELECT solicitud_registro.idoc, solicitud_registro.idempresa, empresa.nombre AS 'nombre_empresa', oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE solicitud_registro.idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
     $informacion = mysql_fetch_assoc($row_informacion);
 
     $asunto = "D-SPP | Notificación Certificado";
@@ -878,9 +878,13 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
       </body>
       </html>
     ';
-
-      $mail->AddAddress($informacion['email1']); 
-      $mail->AddAddress($informacion['email2']); 
+      if(!empty($informacion['oc_email1'])){
+        $mail->AddAddress($informacion['oc_email1']); 
+      }
+      if(!empty($informacion['oc_email2'])){
+        $mail->AddAddress($informacion['oc_email2']); 
+      }
+      
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));

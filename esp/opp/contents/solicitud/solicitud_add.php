@@ -127,7 +127,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 
-
 	if(!empty($_FILES['op_preg15']['name'])){
 	    $_FILES["op_preg15"]["name"];
 	      move_uploaded_file($_FILES["op_preg15"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
@@ -238,8 +237,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	}
 
-
-
 	// INGRESAMOS EL NUMERO DE SOCIOS A LA TABLA NUM_SOCIOS
 	if(isset($_POST['resp1'])){
 		if($_POST['tipo_solicitud'] == "NUEVA"){ //si es nueva se inserta un registro de numero de socios
@@ -282,8 +279,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 		/*************************** TERMINA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
 
-
-
 		/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
 			if(isset($_POST['certificacion'])){
 				$certificacion = $_POST['certificacion'];
@@ -325,8 +320,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 				}
 			}
 		/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
-
-
 
 
 		/*************************** INICIA INSERTAR PRODUCTOS ***************************/
@@ -531,7 +524,6 @@ $opp = mysql_fetch_assoc($row_opp);
 ?>
 
 <div class="row" style="font-size:12px;">
-
 	<?php 
 	if(isset($mensaje)){
 	?>
@@ -548,7 +540,6 @@ $opp = mysql_fetch_assoc($row_opp);
 			<div class="col-md-12 alert alert-primary" style="padding:7px;">
 				<h3 class="text-center">Solicitud de Certificación para Organizaciones de Pequeños Productores</h3>
 			</div>
-
 
 			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
 

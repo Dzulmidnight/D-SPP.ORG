@@ -220,7 +220,7 @@ if(isset($_POST['cotizacion']) ){
 
               <tr>
                 <td align="left" style="color:#ff738a;">
-                Felicidades se ha aceptado su cotización, sera informado una vez que inicie el período de objeción:
+                Felicidades se ha aceptado su cotización, será informado una vez que inicie el período de objeción:
                 <br><br>
                 Congratulations! Your quotation has been accepted. You will be notified once the objection period begins:
 
@@ -663,6 +663,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
         </tr>
       </thead>
       <tbody>
+
         <?php 
         if($total_solicitudes != 0){
           while($solicitud = mysql_fetch_assoc($row_solicitud_certificacion)){
@@ -788,7 +789,6 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
               </td>
 
                 <!-- inicia modal proceo de certificación -->
-
                 <div id="<?php echo "certificacion".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -899,7 +899,6 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
 
                       </form>
                       <!--- TERMINA FORMULARIO MEMBRECIA -->
-
                     </div>
                   </div>
                 </div>
@@ -907,7 +906,6 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
 
               </td>
               <!----- TERMINA MEMBRESIA ------>
-
 
               <!---- INICIA CONSULTAR CERTIFICADO ---->
               <td>

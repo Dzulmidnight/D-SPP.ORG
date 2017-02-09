@@ -55,7 +55,7 @@ $charset='utf-8';
 
 
 if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1){
-
+$ruta_croquis = "../../archivos/oppArchivos/croquis/";
 	/*
 	SE ACTUALIZA LA SOLICITUD
 	LA INFORMACION DE OPP
@@ -101,9 +101,16 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
   	$exportacion = 0;
   }
 
+	if(!empty($_FILES['op_preg15']['name'])){
+	    $_FILES["op_preg15"]["name"];
+	      move_uploaded_file($_FILES["op_preg15"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
+	      $croquis = $ruta_croquis.basename(date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
+	}else{
+		$croquis = NULL;
+	}
 
   // ACTUALIZAMOS LA INFORMACION DE LA SOLICITUD
-	$updateSQL = sprintf("UPDATE solicitud_certificacion SET resp1 = %s, resp2 = %s, resp3 = %s, resp4 = %s, op_preg1 = %s, preg1_1 = %s, preg1_2 = %s, preg1_3 = %s, preg1_4 = %s, op_preg2 = %s, op_preg3 = %s, produccion = %s, procesamiento = %s, exportacion = %s, op_preg5 = %s, op_preg6 = %s, op_preg7 = %s, op_preg8 = %s, op_preg10 = %s, op_preg14 = %s WHERE idsolicitud_certificacion = %s",
+	$updateSQL = sprintf("UPDATE solicitud_certificacion SET resp1 = %s, resp2 = %s, resp3 = %s, resp4 = %s, op_preg1 = %s, preg1_1 = %s, preg1_2 = %s, preg1_3 = %s, preg1_4 = %s, op_preg2 = %s, op_preg3 = %s, produccion = %s, procesamiento = %s, exportacion = %s, op_preg5 = %s, op_preg6 = %s, op_preg7 = %s, op_preg8 = %s, op_preg10 = %s, op_preg14 = %s, op_preg15 = %s WHERE idsolicitud_certificacion = %s",
 	       GetSQLValueString($_POST['resp1'], "text"),
 	       GetSQLValueString($_POST['resp2'], "text"),
 	       GetSQLValueString($_POST['resp3'], "text"),
@@ -126,6 +133,7 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 	       //GetSQLValueString($op_preg12, "text"),
 	       //GetSQLValueString($op_preg13, "text"),
 	       GetSQLValueString($_POST['op_preg14'], "text"),
+	       GetSQLValueString($croquis, "text"),
 	       GetSQLValueString($idsolicitud_certificacion, "int"));
 	$actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
@@ -448,7 +456,7 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 
 
 
-  $mensaje = "Correctly Updated Data";
+  $mensaje = "Datos Actualizados Correctamente";
 }
  
 
@@ -458,7 +466,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
 
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 ?>
-
 <div class="row" style="font-size:12px;">
 
 	<?php 
@@ -780,8 +787,33 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 							
 						</div>
 
+					<p for="op_preg11">
+						<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+						<i>(* Enter only quantity, integer or decimal)</i>
+						<div class="col-lg-12">
+							<div class="row">
+								<div class="col-xs-3">
+									<label for="organico">% ORGANIC</label>
+									<input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="comercio_justo">% FAIR TRADE</label>
+									<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
+									<input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="otro">WITHOUT CERTIFICATE</label>
+									<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
+								</div>
+							</div>
+						</div>
+					</p>	
 
-					<p><b>12.	DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
+
+					<p><b>12 - 13.	DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
 					<div class="col-xs-12 ">
 				        <?php
 				          if($solicitud['op_preg12'] == 'SI'){
@@ -833,24 +865,37 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 				          }
 				        ?>
 					</div>
-							
+					
 					<label for="op_preg14">
 						14.	ESTIMATED DATE FOR BEGINNING TO USE THE SMALL PRODUCERS’ SYMBOL:
 					</label>
 					<input type="text" class="form-control" id="op_preg14" name="op_preg14" value="<?php echo $solicitud['op_preg14']; ?>">
 
-					<p>
-						<b>15.	PLEASE ATTACH A GENERAL MAP OF THE AREA WHERE YOUR SPO OPERATES, INDICATING THE ZONES WHERE MEMBERS ARE LOCATED.</b>
-					</p>
-					<?php 
-					if(empty($solicitud['op_preg15'])){
-						echo "<p class='alert alert-danger' style='padding:7px;'>No Disponible</p>";
-					}else{
-					?>
-						<a class="btn btn-success" href="<?echo $solicitud['op_preg15']?>" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Descargar Croquis</a>	
-					<?php
-					}
-					 ?>
+					<div class="col-md-12" style="margin-top:10px;">
+						<div class="row">
+							<div class="col-xs-12" style="padding:0px;">
+								<p><strong>15.	PLEASE ATTACH A GENERAL MAP OF THE AREA WHERE YOUR SPO OPERATES, INDICATING THE ZONES WHERE MEMBERS ARE LOCATED.</strong></p>
+							</div>
+							<?php 
+							if(empty($solicitud['op_preg15'])){
+							?>
+								<div class="col-xs-6 alert alert-danger">
+									Not Available
+								</div>
+								<div class="col-xs-6 alert alert-success" style="padding:0px;">
+									<b>To add sketch</b>
+									<input type="file" class="form-control" id="op_preg15" name="op_preg15">
+								</div>	
+							<?php
+							}else{
+							?>
+								<a class="btn btn-success" href="<?echo $solicitud['op_preg15']?>" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download sketch</a>
+							<?php
+							}
+							 ?>
+						</div>
+					</div>
+
 					
 				</div>
 			</div>
@@ -1013,7 +1058,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
     }
      
     if(!seleccionado) {
-      alert("You must select a type of Application");
+      alert("Debes de seleccionar un Tipo de Solicitud");
       return false;
     }
 
