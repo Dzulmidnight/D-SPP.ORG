@@ -162,7 +162,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
 
-	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro ) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro, estatus_dspp ) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 		   GetSQLValueString($_POST['tipo_solicitud'], "text"),
 		   GetSQLValueString($idempresa, "int"),
            GetSQLValueString($idoc, "int"),
@@ -200,7 +200,8 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
            GetSQLValueString($preg14, "text"),
            GetSQLValueString($_POST['preg15'], "text"),
            GetSQLValueString($_POST['responsable'], "text"),
-           GetSQLValueString($fecha, "int"));
+           GetSQLValueString($fecha, "int"),
+           GetSQLValueString($estatus_dspp, "int"));
 
 
 		  $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -476,10 +477,14 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			</html>
 		';
 		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
-		$destinatario = $oc['email1'];
 
-        $mail->AddAddress($destinatario);
-        $mail->AddAddress($oc['email2']);
+		$destinatario = $oc['email1'];
+		if(!empty($destinatario)){
+        	$mail->AddAddress($destinatario);
+		}
+		if(!empty($oc['email2'])){
+			$mail->AddAddress($oc['email2']);
+		}     
 	    $mail->AddBCC($administrador);
 	    $mail->AddBCC($spp_global);
         //$mail->Username = "soporte@d-spp.org";
@@ -522,23 +527,9 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 				<h3 class="text-center">Application for Buyers´, Registration</h3>
 			</div>
 
-
 			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>GENERAL INFORMATION</b></div>
 
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
-
-				<div class="col-md-12 alert alert-warning" style="padding:5px;">
-					<ul>
-						<li>
-							<b>
-								IF YOU HAD CERTIFICATION PREVIOUSLY SPP (WITH CURRENT CERTIFICATION ENTITY OR OTHER CERTIFICATION ENTITY) TO CHOOSE <span style="color:red">""RENEWAL OF CERTIFICATE"</span>
-							</b>.
-						</li>
-						<li><b>IF THE FIRST TIME YOU CHOOSE TO CERTIFY: <span style="color:red">"FIRST TIME"</span></b></li>
-					</ul>
-					 
-				</div>
-
 				<div class="col-md-6">
 					<div class="col-md-12">
 						<b>Company sending (select the company that sends the Application):</b>
@@ -576,68 +567,7 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 				<div class="col-md-12">
 					<p class="alert alert-info text-center"><b>GENERAL INFORMATION AND FISCAL INFORMATION AND IS PRE-LOADED</b></p>
 				</div>
-
-				<!--<div class="col-md-6">
-					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMACION GENERALES</div>
-					<label for="fecha_elaboracion">FECHA ELABORACIÓN</label>
-					<input type="text" class="form-control" id="fecha_elaboracion" name="fecha_elaboracion" value="<?php echo date('Y-m-d', time()); ?>" readonly>	
-
-					<label for="spp">CODIGO DE IDENTIFICACIÓN SPP(#SPP): </label>
-					<input type="text" class="form-control" id="spp" name="spp" value="<?php echo $empresa['spp']; ?>">
-
-					<label for="nombre">NOMBRE COMPLETO DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES: </label>
-					<textarea name="nombre" id="nombre" class="form-control"><?php echo $empresa['nombre']; ?></textarea>
-
-
-					<label for="pais">PAÍS:</label>
-					<?php 
-					$row_pais = mysql_query("SELECT * FROM paises",$dspp) or die(mysql_error());
-					 ?>
-					 <select name="pais" id="pais" class="form-control">
-					 	<option value="">Selecciona un País</option>
-					 	<?php 
-					 	while($pais = mysql_fetch_assoc($row_pais)){
-					 		if(utf8_encode($pais['nombre']) == $empresa['pais']){
-					 			echo "<option value='".utf8_encode($pais['nombre'])."' selected>".utf8_encode($pais['nombre'])."</option>";
-					 		}else{
-					 			echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
-					 		}
-					 	}
-					 	 ?>
-					 </select>
-
-					<label for="direccion_oficina">DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES(CALLE, BARRIO, LUGAR, REGIÓN)</label>
-					<textarea name="direccion_oficina" id="direccion_oficina"  class="form-control"><?php echo $empresa['direccion_oficina']; ?></textarea>
-
-					<label for="email">CORREO ELECTRÓNICO:</label>
-					<input type="text" class="form-control" id="email" name="email" value="<?php echo $empresa['email']; ?>">
-
-					<label for="email">TELÉFONOS (CODIGO DE PAÍS + CÓDIGO DE ÁREA + NÚMERO):</label>
-					<input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $empresa['telefono']; ?>">	
-
-					<label for="sitio_web">SITIO WEB:</label>
-					<input type="text" class="form-control" id="sitio_web" name="sitio_web" value="<?php echo $empresa['sitio_web']; ?>">
-
-				</div>
-
-				<div class="col-md-6">
-					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">DATOS FISCALES PARA FACTURACIÓN</div>
-
-					<label for="razon_social">RAZÓN SOCIAL</label>
-					<input type="text" class="form-control" id="razon_social" name="razon_social" value="<?php echo $empresa['razon_social']; ?>">
-
-					<label for="direccion_fiscal">DIRECCIÓN FISCAL</label>
-					<textarea class="form-control" name="direccion_fiscal" id="direccion_fiscal"><?php echo $empresa['direccion_fiscal']; ?></textarea>
-
-					<label for="rfc">RFC</label>
-					<input type="text" class="form-control" id="rfc" name="rfc" value="<?php echo $empresa['rfc']; ?>">
-
-					<label for="ruc">RUC</label>
-					<input type="text" class="form-control" id="ruc" name="ruc" value="<?php echo $empresa['ruc']; ?>">
-				</div>
-			</div>
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
-
 
 			<!------ INICIA INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 			<div class="col-lg-12">
@@ -680,11 +610,7 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 			</div>
 			<!------ FIN INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 
-
-
 			<!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
-
-
 
 			<div class="col-md-12 alert alert-info">
 				<div>
@@ -781,7 +707,6 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 					</table>	
 				</div>		
 
-
 					<label for="preg7">
 						7.	IF YOU SUBCONTRACT THE SERVICES OF PROCESSING PLANTS, TRADING COMPANIES OR COMPANIES THAT CARRY OUT THE IMPORT OR EXPORT, INDICATE WHETHER THESE COMPANIES ARE GOING TO APPLYFOR THE REGISTRATION UNDER SPP CERTIFICATION PROGRAM. <sup>5</sup>
 						<br>
@@ -837,27 +762,28 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 
 					<p for="op_preg11">
 						<b>13.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+						<i>(* Enter only quantity, integer or decimals)</i>
+						<div class="col-lg-12">
+							<div class="row">
+								<div class="col-md-3">
+									<label for="organico">% ORGANIC</label>
+									<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-md-3">
+									<label for="comercio_justo">% FAIR TRADE</label>
+									<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-md-3">
+									<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
+									<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-md-3">
+									<label for="otro">WITHOUT CERTIFICATE</label>
+									<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
+								</div>
+							</div>
+						</div>
 					</p>
-					<p><i>(* Enter percentage)</i></p>
-						<div class="col-md-3">
-							<label for="organico">% ORGANIC</label>
-							<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
-						</div>
-						<div class="col-md-3">
-							<label for="comercio_justo">% FAIR TRADE</label>
-							<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
-						</div>
-						<div class="col-md-3">
-							<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
-							<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
-							
-						</div>
-						<div class="col-md-3">
-							<label for="otro">OTHER</label>
-							<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
-							
-						</div>
-
 
 					<p><b>14.	DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
 						<div class="col-md-6">
@@ -886,8 +812,6 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 						<div class="col-md-6"><input type="radio" name="preg14" class="form-control" id="exampleInputEmail1" onclick="mostrar()" value="mayor">
 							<input type="text" name="preg14_1" class="form-control" id="oculto" style='display:none;' placeholder="SPECIFY THE QUANTITY">
 						</div>
-
-
 					</div>
 							
 					<label for="preg15">
@@ -985,7 +909,10 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
   function validar(){
 
     tipo_solicitud = document.getElementsByName("tipo_solicitud");
+    tuvo_ventas = document.getElementsByName("preg13");
+    opcion_venta = document.getElementsByName("preg14");
      
+    // INICIA SELECCION TIPO SOLICITUD
     var seleccionado = false;
     for(var i=0; i<tipo_solicitud.length; i++) {    
       if(tipo_solicitud[i].checked) {
@@ -995,8 +922,44 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
     }
      
     if(!seleccionado) {
-      alert("You must select a type of Application");
+      alert("Debes de seleccionar un Tipo de Solicitud");
       return false;
+    }
+    //// TERMINA SELECCION TIPO SOLICITUD
+
+    /// INICIA OPCION DE VENTAS
+    var ventas = false;
+    var valor_venta = '';
+    for(var i=0; i<tuvo_ventas.length; i++) {    
+      if(tuvo_ventas[i].checked) {
+      	valor_venta = tuvo_ventas[i].value;
+        ventas = true;
+        break;
+      }
+    }
+     
+    if(!ventas) {
+      alert("Debe seleccionar \"SI\" tuvo ó \"NO\" compras");
+      return false;
+    }
+    /// TERMINA OPCION DE VENTAS
+
+
+    if(valor_venta != 'NO'){
+	    var monto = false;
+	    for(var i=0; i<opcion_venta.length; i++) {    
+	      if(opcion_venta[i].checked) {
+	        monto = true;
+	        break;
+	      }
+	    }
+	     
+	    if(!monto) {
+	      alert("Seleccionaste que \"SI\" tuviste compras, debes seleccionar el monto de compras SPP");
+	      //alert(valor_venta);
+	      return false;
+	    }
+
     }
 
     return true

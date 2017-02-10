@@ -237,7 +237,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	}
 
-
 	// INGRESAMOS EL NUMERO DE SOCIOS A LA TABLA NUM_SOCIOS
 	if(isset($_POST['resp1'])){
 		if($_POST['tipo_solicitud'] == "NUEVA"){ //si es nueva se inserta un registro de numero de socios
@@ -255,6 +254,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		}
 	}
 
+
 		 // INGRESAMOS EL PORCENTAJE DE VENTA DE LOS PRODUCTOS
 
 		 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
@@ -267,6 +267,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		 			GetSQLValueString($idopp, "int"));
 		 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 		 	}
+
 
 		/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
 		$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_publico, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
@@ -514,13 +515,13 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 
 }
+
   //$insertGoTo = "main_menu.php?SOLICITUD&add&mensaje=Solicitud agregada correctamente, se ha notificado al OC por email.";
 $query = "SELECT * FROM opp WHERE idopp = $idopp";
 $row_opp = mysql_query($query,$dspp) or die(mysql_error());
 $opp = mysql_fetch_assoc($row_opp);
 
 ?>
-
 <div class="row" style="font-size:12px;">
 	<?php 
 	if(isset($mensaje)){
@@ -551,8 +552,7 @@ $opp = mysql_fetch_assoc($row_opp);
 							</b>.
 						</li>
 						<li><b>IF THE FIRST TIME YOU CHOOSE TO CERTIFY: <span style="color:red">"FIRST TIME"</span></b></li>
-					</ul>
-					 
+					</ul>	 
 				</div>
 
 				<div class="col-md-6">
@@ -700,11 +700,10 @@ $opp = mysql_fetch_assoc($row_opp);
 
 			<!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
 
-
 			<div class="col-lg-12">
 				<div class="col-md-12">
 					<label for="resp1">NUMBER OF PRODUCERS MEMBERS:</label>
-					<input type="text" class="form-control" id="resp1" name="resp1" >
+					<input type="text" class="form-control" id="resp1" name="resp1" placeholder="just number" required>
 
 					<label for="resp2">NUMBER OF PRODUCERS MEMBERS OF THE  PRODUCT (S) TO BE INCLUDED IN THE CERTIFICATION:</label>
 					<input type="text" class="form-control" id="resp2" name="resp2" >
@@ -714,9 +713,6 @@ $opp = mysql_fetch_assoc($row_opp);
 					
 					<label for="resp4">MAXIMUM SIZE OF THE UNIT OF PRODUCTION BY THE PRODUCER OF THE PRODUCT(S) TO INCLUDE IN THE CERTIFICATION:</label>
 					<input type="text" class="form-control" id="resp4" name="resp4" >
-
-
-
 				</div>
 			</div>
 
@@ -860,7 +856,6 @@ $opp = mysql_fetch_assoc($row_opp);
 						</div>
 					</p>
 
-
 					<p><b>12.	DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
 						<div class="col-xs-6">
 							YES <input type="radio" class="form-control" name="op_preg12" onclick="mostrar_ventas()" id="op_preg12" value="SI">
@@ -877,19 +872,16 @@ $opp = mysql_fetch_assoc($row_opp);
 						<div class="col-xs-6"><p>LESS THAN $3,000 USD</p></div>
 						<div class="col-xs-6 "><input type="radio" name="op_preg13" class="form-control" id="ver" onclick="ocultar()" value="HASTA $3,000 USD"></div>
 					
-					
 						<div class="col-xs-6"><p>BETWEENN $3,000 AND $10,000 USD</p></div>
 						<div class="col-xs-6"><input type="radio" name="op_preg13" class="form-control" id="ver" onclick="ocultar()" value="ENTRE $3,000 Y $10,000 USD"></div>
-					
 					
 						<div class="col-xs-6"><p>BEETWENN $10,000 AND $25,000 USD</p></div>
 						<div class="col-xs-6"><input type="radio" name="op_preg13" class="form-control"  id="ver" onclick="ocultar()" value="ENTRE $10,000 A $25,000 USD"></div>
 					
 						<div class="col-xs-6"><p>MORE THAN $25,000 USD<sup>*</sup><br><h6><sup>*</sup>SPECIFY THE QUANTITY</h6></p></div>
 						<div class="col-xs-6"><input type="radio" name="op_preg13" class="form-control" id="exampleInputEmail1" onclick="mostrar()" value="mayor">
-							<input type="text" name="op_resp13_1" class="form-control" id="oculto" style='display:none;' placeholder="Especifique la Cantidad">
+							<input type="text" name="op_resp13_1" class="form-control" id="oculto" style='display:none;' placeholder="Specify Amount">
 						</div>
-
 
 					</div>
 							
@@ -911,7 +903,8 @@ $opp = mysql_fetch_assoc($row_opp);
 			<div class="col-lg-12">
 				<table class="table table-bordered" id="tablaProductos">
 					<tr>
-						<td>Product</td>
+						<td><b>General product General</b> (ej: coffee, cocoa, honey, ...)</td>
+						<td><b>Specific product</b> (ej: green coffee, Cocoa powder, honey bee)</td>
 						<td>Total Estimated Volume to be Traded</td>
 						<td>Finished Product</td>
 						<td>Row material</td>
@@ -928,7 +921,10 @@ $opp = mysql_fetch_assoc($row_opp);
 					</tr>
 					<tr>
 						<td>
-							<input type="text" class="form-control" name="producto[0]" id="exampleInputEmail1" placeholder="Product">
+							<input type="text" class="form-control" name="producto_general[0]" id="exampleInputEmail1" placeholder="General product">
+						</td>
+						<td>
+							<input type="text" class="form-control" name="producto[0]" id="exampleInputEmail1" placeholder="Specific product">
 						</td>
 						<td>
 							<input type="text" class="form-control" name="volumen[0]" id="exampleInputEmail1" placeholder="Volume">
@@ -1111,22 +1107,25 @@ var contador=0;
 	  var cell6 = row.insertCell(5);
 	  var cell7 = row.insertCell(6); 
 	  var cell8 = row.insertCell(7);
+	  var cell9 = row.insertCell(8);
 
-	  cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Product">';
+	  cell1.innerHTML = '<input type="text" class="form-control" name="producto_general['+cont+']" id="exampleInputEmail1" placeholder="General product">';
+
+	  cell2.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Specific Product">';
 	  
-	  cell2.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volume">';
+	  cell3.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volume">';
 	  
-	  cell3.innerHTML = 'YES <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
+	  cell4.innerHTML = 'YES <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
 	  
-	  cell4.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Material">';
+	  cell5.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Material">';
 	  
-	  cell5.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destination">';
+	  cell6.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destination">';
 	  
-	  cell6.innerHTML = 'YES <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
+	  cell7.innerHTML = 'YES <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
 	  
-	  cell7.innerHTML = 'YES <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
+	  cell8.innerHTML = 'YES <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
 	  
-	  cell8.innerHTML = 'YES <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';	  
+	  cell9.innerHTML = 'YES <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';	  
 
 	  }
 

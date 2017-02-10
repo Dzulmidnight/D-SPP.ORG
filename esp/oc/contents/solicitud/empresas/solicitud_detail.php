@@ -443,7 +443,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
 
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 ?>
-
 <div class="row" style="font-size:12px;">
 
   <?php 
@@ -551,33 +550,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             </div>                
           </div>
         </div> 
-
-
-      <!--<div class="col-lg-12 alert alert-info" style="padding:7px;">
-        <div class="col-md-4">
-          <div class="col-xs-12">
-            <b>ENVAR AL OC (selecciona el OC al que deseas enviar la solicitud):</b>
-          </div>
-          <div class="col-xs-12">
-            <input type="text" class="form-control" value="<?php echo $solicitud['abreviacionOC']; ?>" readonly>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="col-xs-12">
-            <b>TIPO DE SOLICITUD</b>
-          </div>
-          <div class="col-xs-6">
-            <input type="text" class="form-control" value="<?php echo $solicitud['tipo_solicitud']; ?>"readonly>
-          </div>
-          
-        </div>
-        <div class="col-md-4">
-
-          <input type="hidden" name="actualizar_solicitud" value="1">
-          <button style="color:white" type="submit" class="btn btn-warning form-control"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> ACTUALIZAR SOLICITUD</button>
-        </div>
-
-      </div>-->
 
       <!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
       <div class="col-lg-12">
@@ -704,8 +676,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         </div>
       </div>
 
-
-
       <div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE OPERACIÓN</div>
 
       <div class="col-lg-12">
@@ -719,7 +689,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             2.  ¿QUIÉN O QUIÉNES SON LOS PROPIETARIOS DE LA EMPRESA?
           </label>
           <textarea name="preg2" id="preg2" class="form-control"><?php echo $solicitud['preg2']; ?></textarea>
-
 
           <label for="preg3">
             3. ESPECIFIQUE QUÉ PRODUCTO(S) QUIERE INCLUIR EN EL CERTIFICADO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES PARA LOS CUALES EL ORGNISMO DE CERTIFICACIÓN REALIZARÁ LA EVALUACIÓN.<sup>4</sup>
@@ -870,17 +839,10 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             </div>
           </p>
             
-
           <p><b>14 - 15. ¿TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
           <div class="col-xs-12 ">
                 <?php
                   if($solicitud['preg13'] == 'SI'){
-                      //echo "SI <input type='radio' name='op_preg12'  checked readonly>";
-                    /*echo "</div>";
-                    echo "<div class='col-xs-6'>";
-                      echo "<p class='text-center alert alert-danger'>NO</p>";
-                      echo "NO <input type='radio' name='op_preg12'  readonly>";
-                    echo "</div>";*/
                 ?>
                   <div class="col-xs-6">
                     <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> SI</p>
@@ -1043,7 +1005,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
   }
 
 </script>
-
 
 <script>
 var contador=0;

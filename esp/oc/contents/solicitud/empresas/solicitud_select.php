@@ -961,7 +961,7 @@ $startRow_empresa = $pageNum_empresa * $maxRows_empresa;
 
 //$query = "SELECT solicitud_registro.idsolicitud_registro AS 'idsolicitud', solicitud_registro.tipo_solicitud, solicitud_registro.idempresa, solicitud_registro.idoc, solicitud_registro.fecha_registro, solicitud_registro.fecha_aceptacion, solicitud_registro.cotizacion_empresa, solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion, informe_evaluacion.idinforme_evaluacion FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN proceso_certificacion ON solicitud_registro.idsolicitud_registro = proceso_certificacion.idsolicitud_registro LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro WHERE solicitud_registro.idoc = $idoc ORDER BY proceso_certificacion.idproceso_certificacion DESC";
 
-$query = "SELECT solicitud_registro.*, oc.abreviacion AS 'abreviacionOC', empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion, informe_evaluacion.idinforme_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro WHERE solicitud_registro.idoc = $idoc GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.idsolicitud_registro DESC";
+$query = "SELECT solicitud_registro.*, oc.abreviacion AS 'abreviacionOC', empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, formato_evaluacion.idformato_evaluacion, formato_evaluacion.estatus_formato, dictamen_evaluacion.iddictamen_evaluacion, dictamen_evaluacion.estatus_dictamen, informe_evaluacion.idinforme_evaluacion, informe_evaluacion.estatus_informe FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro WHERE solicitud_registro.idoc = $idoc GROUP BY solicitud_registro.idempresa ORDER BY solicitud_registro.idsolicitud_registro DESC";
 
 $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
@@ -1515,60 +1515,58 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           </div>
                           
                           <div <?php if($solicitud['tipo_solicitud'] == 'RENOVACION'){echo 'class="col-md-6"'; }else{ echo 'class="col-md-6"';} ?>>
-                            <h4>Cargar Certificado</h4>
+                            <h4 style="font-size:14px;">Cargar Certificado</h4>
                             <?php 
+                            if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idformato_evaluacion']) && isset($solicitud['idinforme_evaluacion'])){
 
+                                $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
+                                $formato = mysql_fetch_assoc($row_formato);
+                                $row_informe = mysql_query("SELECT * FROM informe_evaluacion WHERE idinforme_evaluacion = $solicitud[idinforme_evaluacion]", $dspp) or die(mysql_error());
+                                $informe = mysql_fetch_assoc($row_informe);
+                                $row_dictamen = mysql_query("SELECT * FROM dictamen_evaluacion WHERE iddictamen_evaluacion = $solicitud[iddictamen_evaluacion]", $dspp) or die(mysql_error());
+                                $dictamen = mysql_fetch_assoc($row_dictamen);
 
-
-                            if((isset($dictamen['iddictamen_evaluacion']) && isset($dictamen['estatus_dictamen']) && isset($dictamen['estatus_dictamen']) && $dictamen['estatus_dictamen'] == "ACEPTADO" && $formato['estatus_formato'] == "ACEPTADO" && $informe['estatus_informe'] == "ACEPTADO")){
-                              if(isset($solicitud['idcertificado'])){
-                                $row_certificado = mysql_query("SELECT * FROM certificado WHERE idsolicitud_registro = $solicitud[idsolicitud_registro]", $dspp) or die(mysql_error());
-                                $certificado = mysql_fetch_assoc($row_certificado);
-
-                                if(isset($certificado['idsolicitud_registro'])){
-                                  $inicio = strtotime($certificado['vigencia_inicio']);
-                                  $fin = strtotime($certificado['vigencia_fin']);
-                                ?>
-                                <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
-                                <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
-                                <?php
+                                if($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO'){
+                                  if(isset($solicitud['idcertificado'])){
+                                    $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
+                                    $certificado = mysql_fetch_assoc($row_certificado);
+                                    $inicio = strtotime($certificado['vigencia_inicio']);
+                                    $fin = strtotime($certificado['vigencia_fin']);
+                                  ?>
+                                    <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
+                                    <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
+                                  <?php
+                                  }else{
+                                  ?>
+                                    <div class="col-md-12">
+                                      <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="fecha_inicio">Fecha Inicio</label> 
+                                      <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd/mm/aaaa" required> 
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="fecha_fin">Fecha Fin</label>
+                                      <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd/mm/aaaa" required>
+                                    </div>
+                                    
+                                    <label for="certificado">Por favor seleccione el Certificado</label>
+                                    <input type="file" name="certificado" id="certificado" class="form-control" required>
+                                    <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>  
+                                  <?php
+                                  }
                                 }else{
-                                ?>
-                                  <div class="col-md-12">
-                                    <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
-                                  </div>
-                                  <div class="col-md-6">
-                                    <label for="fecha_inicio">Fecha Inicio</label> 
-                                    <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd/mm/aaaa" required> 
-                                  </div>
-                                  <div class="col-md-6">
-                                    <label for="fecha_fin">Fecha Fin</label>
-                                    <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd/mm/aaaa" required>
-                                  </div>
-                                  
-                                  <label for="certificado">Por favor seleccione el Certificado</label>
-                                  <input type="file" name="certificado" id="certificado" class="form-control" required>
-                                  <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>
-
-                                <?php
+                                  echo '<p class="alert alert-warning">
+                                  Una vez aprobado el "Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
+                              </p> ';
                                 }
-                              }else{
-                              ?>
-                              <p class="alert alert-warning">
-                                Una vez aprobado el "Formato de Evaluación" ,"Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
-                              </p> 
-                              <?php
-                              }
-                            ?>
-                            <?php
+
                             }else{
-                            ?>
-                              <p class="alert alert-warning">
-                                Una vez aprobado el "Formato de Evaluación" ,"Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
-                              </p> 
-                            <?php
+                              echo '<p class="alert alert-warning">
+                                Una vez aprobado el "Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
+                              </p> ';
                             }
-                             ?>
+                            ?>
                           </div>
                         </div>
                       </div>

@@ -623,7 +623,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 			<div class="col-lg-12">
 				<div class="col-md-12">
 					<label for="resp1">NUMBER OF PRODUCERS MEMBERS:</label>
-					<input type="number" step="any" class="form-control" id="resp1" name="resp1" value="<?php echo $solicitud['resp1']; ?>" >
+					<input type="number" class="form-control" id="resp1" name="resp1" value="<?php echo $solicitud['resp1']; ?>" required>
 
 					<label for="resp2">NUMBER OF PRODUCERS MEMBERS OF THE  PRODUCT (S) TO BE INCLUDED IN THE CERTIFICATION:</label>
 					<input type="text" class="form-control" id="resp2" name="resp2" value="<?php echo $solicitud['resp2']; ?>" >
@@ -633,9 +633,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					
 					<label for="resp4">MAXIMUM SIZE OF THE UNIT OF PRODUCTION BY THE PRODUCER OF THE PRODUCT(S) TO INCLUDE IN THE CERTIFICATION:</label>
 					<input type="text" class="form-control" id="resp4" name="resp4" value="<?php echo $solicitud['resp4']; ?>" >
-
-
-
 				</div>
 			</div>
 
@@ -766,30 +763,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
 					<p for="op_preg11">
 						<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
-					</p>
-					<p><i>(* Introducir solo cantidad, entero o decimales)</i></p>
-						<div class="col-xs-3">
-							<label for="organico">% ORGANIC</label>
-							<input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
-						</div>
-						<div class="col-xs-3">
-							<label for="comercio_justo">% FAIR TRADE</label>
-							<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
-						</div>
-						<div class="col-xs-3">
-							<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
-							<input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
-							
-						</div>
-						<div class="col-xs-3">
-							<label for="otro">OTHER</label>
-							<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
-							
-						</div>
-
-					<p for="op_preg11">
-						<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
-						<i>(* Enter only quantity, integer or decimal)</i>
+						<i>(* Enter only quantity, integer or decimals)</i>
 						<div class="col-lg-12">
 							<div class="row">
 								<div class="col-xs-3">
@@ -810,19 +784,12 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 								</div>
 							</div>
 						</div>
-					</p>	
-
+					</p>
 
 					<p><b>12 - 13.	DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
 					<div class="col-xs-12 ">
 				        <?php
 				          if($solicitud['op_preg12'] == 'SI'){
-				              //echo "SI <input type='radio' name='op_preg12'  checked readonly>";
-				            /*echo "</div>";
-				            echo "<div class='col-xs-6'>";
-				              echo "<p class='text-center alert alert-danger'>NO</p>";
-				              echo "NO <input type='radio' name='op_preg12'  readonly>";
-				            echo "</div>";*/
 				        ?>
 				          <div class="col-xs-6">
 				            <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> SI</p>
@@ -853,7 +820,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 				              }
 				             ?>
 				          </div>
-
 				        <?php
 				          }else if($solicitud['op_preg12'] == 'NO'){
 				        ?>
@@ -896,7 +862,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 						</div>
 					</div>
 
-					
 				</div>
 			</div>
 
@@ -1025,7 +990,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					<strong>Name of the person who is responsible for the accuracy of the information on this form, and who, on behalf of the Applicant, will follow up on the application:</strong>
 				</p>
 
-				<input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
+				<input type="hidden" name="idopp" value="<?php echo $solicitud['id_opp']; ?>">
 				<input type="hidden" name="fecha_registro" value="<?php echo $solicitud['fecha_registro']; ?>">
 				<input type="text" class="form-control" id="responsable" value="<?php echo $solicitud['responsable']; ?>" >	
 
@@ -1066,7 +1031,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
   }
 
 </script>
-
 <script>
 var contador=0;
 	function tablaCertificaciones()

@@ -527,7 +527,6 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 				<h3 class="text-center">Solicitud de Registro para Compradores y otros Actores</h3>
 			</div>
 
-
 			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
 
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
@@ -568,68 +567,7 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 				<div class="col-md-12">
 					<p class="alert alert-info text-center"><b>LA INFORMACIÓN GENERAL E INFORMACIÓN FISCAL YA SE ENCUENTRA PRE-CARGADA</b></p>
 				</div>
-
-				<!--<div class="col-md-6">
-					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMACION GENERALES</div>
-					<label for="fecha_elaboracion">FECHA ELABORACIÓN</label>
-					<input type="text" class="form-control" id="fecha_elaboracion" name="fecha_elaboracion" value="<?php echo date('Y-m-d', time()); ?>" readonly>	
-
-					<label for="spp">CODIGO DE IDENTIFICACIÓN SPP(#SPP): </label>
-					<input type="text" class="form-control" id="spp" name="spp" value="<?php echo $empresa['spp']; ?>">
-
-					<label for="nombre">NOMBRE COMPLETO DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES: </label>
-					<textarea name="nombre" id="nombre" class="form-control"><?php echo $empresa['nombre']; ?></textarea>
-
-
-					<label for="pais">PAÍS:</label>
-					<?php 
-					$row_pais = mysql_query("SELECT * FROM paises",$dspp) or die(mysql_error());
-					 ?>
-					 <select name="pais" id="pais" class="form-control">
-					 	<option value="">Selecciona un País</option>
-					 	<?php 
-					 	while($pais = mysql_fetch_assoc($row_pais)){
-					 		if(utf8_encode($pais['nombre']) == $empresa['pais']){
-					 			echo "<option value='".utf8_encode($pais['nombre'])."' selected>".utf8_encode($pais['nombre'])."</option>";
-					 		}else{
-					 			echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
-					 		}
-					 	}
-					 	 ?>
-					 </select>
-
-					<label for="direccion_oficina">DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES(CALLE, BARRIO, LUGAR, REGIÓN)</label>
-					<textarea name="direccion_oficina" id="direccion_oficina"  class="form-control"><?php echo $empresa['direccion_oficina']; ?></textarea>
-
-					<label for="email">CORREO ELECTRÓNICO:</label>
-					<input type="text" class="form-control" id="email" name="email" value="<?php echo $empresa['email']; ?>">
-
-					<label for="email">TELÉFONOS (CODIGO DE PAÍS + CÓDIGO DE ÁREA + NÚMERO):</label>
-					<input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $empresa['telefono']; ?>">	
-
-					<label for="sitio_web">SITIO WEB:</label>
-					<input type="text" class="form-control" id="sitio_web" name="sitio_web" value="<?php echo $empresa['sitio_web']; ?>">
-
-				</div>
-
-				<div class="col-md-6">
-					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">DATOS FISCALES PARA FACTURACIÓN</div>
-
-					<label for="razon_social">RAZÓN SOCIAL</label>
-					<input type="text" class="form-control" id="razon_social" name="razon_social" value="<?php echo $empresa['razon_social']; ?>">
-
-					<label for="direccion_fiscal">DIRECCIÓN FISCAL</label>
-					<textarea class="form-control" name="direccion_fiscal" id="direccion_fiscal"><?php echo $empresa['direccion_fiscal']; ?></textarea>
-
-					<label for="rfc">RFC</label>
-					<input type="text" class="form-control" id="rfc" name="rfc" value="<?php echo $empresa['rfc']; ?>">
-
-					<label for="ruc">RUC</label>
-					<input type="text" class="form-control" id="ruc" name="ruc" value="<?php echo $empresa['ruc']; ?>">
-				</div>
-			</div>
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
-
 
 			<!------ INICIA INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 			<div class="col-lg-12">
@@ -672,11 +610,7 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 			</div>
 			<!------ FIN INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 
-
-
 			<!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
-
-
 
 			<div class="col-md-12 alert alert-info">
 				<div>
@@ -773,7 +707,6 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 					</table>	
 				</div>		
 
-
 					<label for="preg7">
 						7.	SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, INDIQUE SI ESTAS ESTAN REGISTRADAS O VAN A REALIZAR EL REGISTRO BAJO EL PROGRAMA DEL SPP O SERÁN CONTROLADAS A TRAVÉS DE SU EMPRESA <sup>5</sup>
 						<br>
@@ -827,7 +760,6 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 						12.DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
 					<textarea name="preg12" id="preg12" class="form-control"></textarea>
 
-
 					<p for="op_preg11">
 						<b>13. DEL TOTAL DE SUS COMPRAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
 						<i>(* Introducir solo cantidad, entero o decimales)</i>
@@ -852,7 +784,6 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 							</div>
 						</div>
 					</p>
-						
 
 					<p><b>14. TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
 						<div class="col-md-6">
@@ -881,7 +812,6 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 						<div class="col-md-6"><input type="radio" name="preg14" class="form-control" id="exampleInputEmail1" onclick="mostrar()" value="mayor">
 							<input type="text" name="preg14_1" class="form-control" id="oculto" style='display:none;' placeholder="Especifique la Cantidad">
 						</div>
-
 					</div>
 							
 					<label for="preg15">

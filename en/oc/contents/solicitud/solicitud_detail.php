@@ -264,16 +264,17 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
 
   if(!empty($_FILES['cotizacion_opp']['name'])){
       $_FILES["cotizacion_opp"]["name"];
-        move_uploaded_file($_FILES["cotizacion_opp"]["tmp_name"], $rutaArchivo.time()."_".$_FILES["cotizacion_opp"]["name"]);
-        $cotizacion_opp = $rutaArchivo.basename(time()."_".$_FILES["cotizacion_opp"]["name"]);
+        move_uploaded_file($_FILES["cotizacion_opp"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["cotizacion_opp"]["name"]);
+        $cotizacion_opp = $rutaArchivo.basename($fecha."_".$_FILES["cotizacion_opp"]["name"]);
   }else{
     $cotizacion_opp = NULL;
   }
 
   //ACTUALIZAMOS LA SOLICITUD DE CERTIFICACION AGREGANDO LA COTIZACIÓN
-  $updateSQL = sprintf("UPDATE solicitud_certificacion SET tipo_procedimiento = %s, cotizacion_opp = %s WHERE idsolicitud_certificacion = %s",
+  $updateSQL = sprintf("UPDATE solicitud_certificacion SET tipo_procedimiento = %s, cotizacion_opp = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
     GetSQLValueString($procedimiento, "text"),
     GetSQLValueString($cotizacion_opp, "text"),
+    GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($idsolicitud_certificacion, "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
@@ -291,8 +292,11 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
   //ASUNTO DEL CORREO
-  $row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
-  $oc = mysql_fetch_assoc($row_oc);
+  //$row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
+  //$oc = mysql_fetch_assoc($row_oc);
+
+  $row_opp = mysql_query("SELECT opp.nombre, opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
+  $opp_detail = mysql_fetch_assoc($row_opp);
 
   $asunto = "D-SPP Cotización (Solicitud de Certificación para Organizaciones de Pequeños Productores)";
 
@@ -310,19 +314,15 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
             <th scope="col" align="left" width="280" ><strong>Notificación de Cotización / Price Notification</strong></th>
           </tr>
           <tr>
-            <td align="left" style="color:#ff738a;">Email Organismo de Certificación / Certification Entity: '.$oc['email1'].'</td>
-          </tr>
-
-          <tr>
-            <td align="left">'.$oc['pais'].'</td>
+            <td align="left" style="color:#ff738a;">Email Organismo de Certificación / Certification Entity: '.$opp_detail['email1'].'</td>
           </tr>
           <tr>
             <td aling="left" style="text-align:justify">
-            Se ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
+            <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
             <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
 
             <br><br>
-            The quotation corresponding to the Certification Application for Small producers organizations has been sent.
+            <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> has sent the quotation corresponding to the Certification Application for Small producers organizations.
               <br><br>Please log in to the following link <a href="http://d-spp.org/?OPP">www.d-spp.org/</a> as OPP to access the quotation.
 
             </td>
@@ -348,7 +348,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
                       '.$_POST['pais'].'
                     </td>
                     <td style="padding:10px;">
-                      '.$oc['nombre'].'
+                      '.$opp_detail['abreviacion_oc'].'
                     </td>
                     <td style="padding:10px;">
                     '.date('d/m/Y', $fecha).'
@@ -363,10 +363,12 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
                   <td colspan="2">
                     <span style="color:red">¿Qué es lo de debo realizar ahora?. Debes "Aceptar" o "Rechazar" la cotización</span>
                     <ol>
+
                       <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organización de Pequeños Productores(OPP).</li>
+                      <li>Tu Usuario: <b style="color:red">'.$opp_detail['spp'].'</b> y Contraseña: <b style="color:red">'.$opp_detail['password'].'</b></li>
                       <li>Dentro de tu cuenta debes seleccionar Solicitudes > Listado Solicitudes.</li>
                       <li>Dentro de la tabla solicitudes debes localizar la columna "Cotización" Y seleccionar el botón Verde (aceptar cotización) ó el botón Rojo (rechazar cotización)</li>
-                      <li>En caso de aceptar la cotización debes esperar a que finalice el "Periodo de Objeción"</li>
+                      <li>En caso de aceptar la cotización debes esperar a que finalice el "Periodo de Objeción"(en caso de que sea la primera vez que solicitas la certificación SPP)</li>
                     </ol>
                   </td>
                 </tr> 
@@ -382,8 +384,13 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
 
   $mail->AddAddress($_POST['email']);
   $mail->AddAddress($_POST['contacto1_email']);
-  $mail->AddBCC($administrador);
   $mail->AddBCC($spp_global);
+  if(!empty($oc['email1'])){
+    $mail->AddCC($oc['email1']);
+  }
+  if(!empty($oc['email2'])){
+    $mail->AddCC($oc['email2']);
+  }
   //se adjunta la cotización
   $mail->AddAttachment($cotizacion_opp);
 
@@ -764,7 +771,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             <input type="text" class="form-control" id="preg1_4" name="preg1_4" value="<?php echo $solicitud['preg1_4']; ?>" >
           </div>
 
-
           <label for="op_preg2">
             2.  SPECIFY WHICH PRODUCT (S) YOU WANT TO INCLUDE IN THE CERTIFICATE OF THE SYMBOL OF SMALL PRODUCERS FOR WHICH THE CERTIFICATION ENTITY WILL CONDUCT THE ASSESSMENT.
           </label>
@@ -793,7 +799,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             <label>TRADING</label>
             <input type="checkbox" name="exportacion" class="form-control" value="1" <?php if($solicitud['exportacion']){ echo 'checked';} ?>>
           </div>
-
 
           <label for="op_preg5">
             5.  SPECIFY IF YOU SUBCONTRACT THE SERVICES OF PROCESSING PLANTS, TRADING COMPANIES OR COMPANIES THAT CARRY OUT THE IMPORT OR EXPORT, IF THE ANSWER IS AFFIRMATIVE, MENTION THE NAME AND THE SERVICE THAT PERFORMS.
@@ -835,10 +840,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
                 <td><input type="text" class="form-control" name="certificacion[]" id="exampleInputEmail1" placeholder="CERTIFICATION" value="<?echo $row_certificacion['certificacion']?>"></td>
                 <td><input type="text" class="form-control" name="certificadora[]" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY" value="<?echo $row_certificacion['certificadora']?>"></td>
                 <td><input type="text" class="form-control" name="ano_inicial[]" id="exampleInputEmail1" placeholder="INITIAL YEAR" value="<?echo $row_certificacion['ano_inicial']?>"></td>
-                <td>
-                  <div class="col-xs-6">YES<input type="radio" class="form-control" name="interrumpida[0]" value="SI"></div>
-                  <div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida[0]" value="NO"></div>
-                </td>
+                <td><input type="text" class="form-control" name="interrumpida[]" id="exampleInputEmail1" placeholder="HAS BEEN INTERRUPTED?" value="<?echo $row_certificacion['interrumpida']?>"></td>
                 <input type="hidden" name="idcertificacion[]" value="<?echo $row_certificacion['idcertificacion']?>">
               </tr>
             <?php 
@@ -851,30 +853,30 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             10. ACCORDING THE CERTIFICATIONS, IN ITS MOST RECENT INTERNAL AND EXTERNAL EVALUATIONS, HOW MANY CASES OF NON COMPLIANCE WERE IDENTIFIED? PLEASE EXPLAIN IF THEY HAVE BEEN RESOLVED OR WHAT THEIR STATUS IS?</label>
           <textarea name="op_preg10" id="op_preg10" class="form-control"><?php echo $solicitud['op_preg10']; ?></textarea>
 
-          <div class="col-xs-12">
-            <p for="op_preg11">
-              <b>11.  OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
-            </p>
-            <p><i>(* Enter percentage)</i></p>
-              <div class="col-xs-3">
-                <label for="organico">% ORGANIC</label>
-                <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0" readonly>
+          <p for="op_preg11">
+            <b>11.  OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+            <i>(* Enter only quantity, integer or decimal)</i>
+            <div class="col-lg-12">
+              <div class="row">
+                <div class="col-xs-3">
+                  <label for="organico">% ORGANIC</label>
+                  <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0" readonly>
+                </div>
+                <div class="col-xs-3">
+                  <label for="comercio_justo">% FAIR TRADE</label>
+                  <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0" readonly>
+                </div>
+                <div class="col-xs-3">
+                  <label for="spp">SMALL PRODUCERS´SYMBOL</label>
+                  <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0" readonly>
+                </div>
+                <div class="col-xs-3">
+                  <label for="otro">WITHOUT CERTIFICATE</label>
+                  <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0" readonly> 
+                </div>
               </div>
-              <div class="col-xs-3">
-                <label for="comercio_justo">% FAIR TRADE</label>
-                <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0" readonly>
-              </div>
-              <div class="col-xs-3">
-                <label for="spp">SMALL PRODUCERS´SYMBOL</label>
-                <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0" readonly>
-                
-              </div>
-              <div class="col-xs-3">
-                <label for="otro">OTHER</label>
-                <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0" readonly>
-                
-              </div>            
-          </div>
+            </div>
+          </p>
 
           <p><b>12. DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
           <div class="col-xs-12 ">
@@ -888,7 +890,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
                     echo "</div>";*/
                 ?>
                   <div class="col-xs-6">
-                    <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> YES</p>
+                    <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> SI</p>
                   </div>
                   <div class="col-xs-6">
                     <?php 
@@ -916,7 +918,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
                       }
                      ?>
                   </div>
-
                 <?php
                   }else if($solicitud['op_preg12'] == 'NO'){
                 ?>
@@ -1121,7 +1122,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
   function validar(){
     valor = document.getElementById("cotizacion_opp").value;
     if( valor == null || valor.length == 0 ) {
-      alert("It has not yet been charged quote");
+      alert("No se ha cargado la cotización de el OPP");
       return false;
     }
     
@@ -1136,7 +1137,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
     }
      
     if(!seleccionado) {
-      alert("You must select a certification procedure");
+      alert("Debes de seleecionar un Procedimiento de Certificación");
       return false;
     }
 

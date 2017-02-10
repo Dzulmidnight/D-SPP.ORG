@@ -138,7 +138,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 	// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
-	$insertSQL = sprintf("INSERT INTO solicitud_certificacion (tipo_solicitud, idopp, idoc, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, resp1, resp2, resp3, resp4, op_preg1, preg1_1, preg1_2, preg1_3, preg1_4, op_preg2, op_preg3, produccion, procesamiento, exportacion, op_preg5, op_preg6, op_preg7, op_preg8, op_preg10, op_preg12, op_preg13, op_preg14, op_preg15, responsable, fecha_registro ) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	$insertSQL = sprintf("INSERT INTO solicitud_certificacion (tipo_solicitud, idopp, idoc, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, resp1, resp2, resp3, resp4, op_preg1, preg1_1, preg1_2, preg1_3, preg1_4, op_preg2, op_preg3, produccion, procesamiento, exportacion, op_preg5, op_preg6, op_preg7, op_preg8, op_preg10, op_preg12, op_preg13, op_preg14, op_preg15, responsable, fecha_registro, estatus_dspp ) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 		   GetSQLValueString($_POST['tipo_solicitud'], "text"),
 		   GetSQLValueString($idopp, "int"),
            GetSQLValueString($idoc, "int"),
@@ -180,7 +180,8 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
            GetSQLValueString($_POST['op_preg14'], "text"),
            GetSQLValueString($croquis, "text"),
            GetSQLValueString($_POST['responsable'], "text"),
-           GetSQLValueString($fecha, "int"));
+           GetSQLValueString($fecha, "int"),
+           GetSQLValueString($estatus_dspp, "int"));
 
 
 		  $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -242,11 +243,20 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	// INGRESAMOS EL NUMERO DE SOCIOS A LA TABLA NUM_SOCIOS
 	if(isset($_POST['resp1'])){
-		$insertSQL = sprintf("INSERT INTO num_socios (idopp, numero, fecha_registro) VALUES (%s, %s, %s)",
-			GetSQLValueString($idopp, "int"),
-			GetSQLValueString($_POST['resp1'], "text"),
-			GetSQLValueString($fecha, "int"));
-		$ejecutar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+		if($_POST['tipo_solicitud'] == 'NUEVA'){ //si es nueva, se inserta un nuevo registro
+			$insertSQL = sprintf("INSERT INTO num_socios (idopp, numero, fecha_registro) VALUES (%s, %s, %s)",
+				GetSQLValueString($idopp, "int"),
+				GetSQLValueString($_POST['resp1'], "text"),
+				GetSQLValueString($fecha, "int"));
+			$ejecutar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+		}else{// si es renovacion, se actualiza el registro
+			$updateSQL = sprintf("UPDATE num_socios SET numero = %s, fecha_registro = %s WHERE idopp = %s",
+				GetSQLValueString($_POST['resp1'], "text"),
+				GetSQLValueString($fecha, "int"),
+				GetSQLValueString($idopp, "int"));
+			$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+		}
+
 	}
 
 
@@ -323,6 +333,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 
 		/*************************** INICIA INSERTAR PRODUCTOS ***************************/
+		$producto_general = $_POST['producto_general'];
 		$producto = $_POST['producto'];
 		$volumen = $_POST['volumen'];
 		$materia = $_POST['materia'];
@@ -365,6 +376,9 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 					//$marca_cliente = $_POST[$array3[$i]];
 					//$sin_cliente = $_POST[$array4[$i]];
 
+					$str = iconv($charset, 'ASCII//TRANSLIT', $producto_general[$i]);
+					$producto_general[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
 					$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
 					$producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
@@ -375,9 +389,10 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 					$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
 
-				    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+				    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto_general, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 				    	GetSQLValueString($idopp, "int"),
 				          GetSQLValueString($idsolicitud_certificacion, "int"),
+				          GetSQLValueString($producto_general[$i], "text"),
 				          GetSQLValueString($producto[$i], "text"),
 				          GetSQLValueString($volumen[$i], "text"),
 				          GetSQLValueString($terminado[$i], "text"),
@@ -477,13 +492,12 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		';
 		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
 
-		if(isset($oc['email1'])){
+		if(!empty($oc['email1'])){
 			$mail->AddAddress($oc['email1']);
 		}
-		if(isset($oc['email2'])){
+		if(!empty($oc['email2'])){
 			$mail->AddAddress($oc['email2']);
 		}
-
 	    $mail->AddBCC($spp_global);
         //$mail->Username = "soporte@d-spp.org";
         //$mail->Password = "/aung5l6tZ";
@@ -493,7 +507,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
         $mail->Send();
         $mail->ClearAddresses();
 
- 		$mensaje = "The Certification Application has been sent to the OC, soon you will be contacted";
+ 		$mensaje = "Se ha enviado la Solicitud de Certificacion al OC, en breve seras contactado";
 
 
 }
@@ -505,7 +519,6 @@ $opp = mysql_fetch_assoc($row_opp);
 */
 $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mysql_error());
 ?>
-
 
 <div class="row">
 	<div class="col-lg-12">
@@ -533,19 +546,6 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>GENERAL INFORMATION</b></div>
 
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
-
-				<div class="col-md-12 alert alert-warning" style="padding:5px;">
-					<ul>
-						<li>
-							<b>
-								IF YOU HAD CERTIFICATION PREVIOUSLY SPP (WITH CURRENT CERTIFICATION ENTITY OR OTHER CERTIFICATION ENTITY) TO CHOOSE <span style="color:red">""RENEWAL OF CERTIFICATE"</span>
-							</b>.
-						</li>
-						<li><b>IF THE FIRST TIME YOU CHOOSE TO CERTIFY: <span style="color:red">"FIRST TIME"</span></b></li>
-					</ul>
-					 
-				</div>
-
 				<div class="col-md-6">
 					<div class="col-xs-12">
 						<b>Send to Certification Entity:</b>
@@ -577,73 +577,12 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					</div>
 				</div>
 			</div>
-
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
 			<div class="col-lg-12">
 				<div class="col-md-12">
 					<p class="alert alert-info text-center"><b>GENERAL INFORMATION AND FISCAL INFORMATION AND IS PRE-LOADED</b></p>
 				</div>
-				<!--<div class="col-md-6">
-					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMACION GENERALES</div>
-					<label for="fecha_elaboracion">FECHA ELABORACIÓN</label>
-					<input type="text" class="form-control" id="fecha_elaboracion" name="fecha_elaboracion" value="<?php echo date('Y-m-d', time()); ?>" readonly>	
-
-					<label for="spp">CODIGO DE IDENTIFICACIÓN SPP(#SPP): </label>
-					<input type="text" class="form-control" id="spp" name="spp" value="<?php echo $opp['spp']; ?>">
-
-					<label for="nombre">NOMBRE COMPLETO DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES: </label>
-					<textarea name="nombre" id="nombre" class="form-control"><?php echo $opp['nombre']; ?></textarea>
-
-
-					<label for="pais">PAÍS:</label>
-					<?php 
-					$row_pais = mysql_query("SELECT * FROM paises",$dspp) or die(mysql_error());
-					 ?>
-					 <select name="pais" id="pais" class="form-control">
-					 	<option value="">Selecciona un País</option>
-					 	<?php 
-					 	while($pais = mysql_fetch_assoc($row_pais)){
-					 		if(utf8_encode($pais['nombre']) == $opp['pais']){
-					 			echo "<option value='".utf8_encode($pais['nombre'])."' selected>".utf8_encode($pais['nombre'])."</option>";
-					 		}else{
-					 			echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
-					 		}
-					 	}
-					 	 ?>
-					 </select>
-
-					<label for="direccion_oficina">DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES(CALLE, BARRIO, LUGAR, REGIÓN)</label>
-					<textarea name="direccion_oficina" id="direccion_oficina"  class="form-control"><?php echo $opp['direccion_oficina']; ?></textarea>
-
-					<label for="email">CORREO ELECTRÓNICO:</label>
-					<input type="text" class="form-control" id="email" name="email" value="<?php echo $opp['email']; ?>">
-
-					<label for="email">TELÉFONOS (CODIGO DE PAÍS + CÓDIGO DE ÁREA + NÚMERO):</label>
-					<input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $opp['telefono']; ?>">	
-
-					<label for="sitio_web">SITIO WEB:</label>
-					<input type="text" class="form-control" id="sitio_web" name="sitio_web" value="<?php echo $opp['sitio_web']; ?>">
-
-				</div>
-
-				<!--<div class="col-md-6">
-					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">DATOS FISCALES PARA FACTURACIÓN</div>
-
-					<label for="razon_social">RAZÓN SOCIAL</label>
-					<input type="text" class="form-control" id="razon_social" name="razon_social" value="<?php echo $opp['razon_social']; ?>">
-
-					<label for="direccion_fiscal">DIRECCIÓN FISCAL</label>
-					<textarea class="form-control" name="direccion_fiscal" id="direccion_fiscal"><?php echo $opp['direccion_fiscal']; ?></textarea>
-
-					<label for="rfc">RFC</label>
-					<input type="text" class="form-control" id="rfc" name="rfc" value="<?php echo $opp['rfc']; ?>">
-
-					<label for="ruc">RUC</label>
-					<input type="text" class="form-control" id="ruc" name="ruc" value="<?php echo $opp['ruc']; ?>">
-				</div>
-			</div>
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
-
 
 			<!------ INICIA INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 			<div class="col-lg-12">
@@ -665,7 +604,6 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					<label for="telefono">TELEPHONE(S) FOR CONTAC PERSON(S):</label>
 					<input type="text" class="form-control" id="telefono" name="contacto1_telefono" placeholder="* Telephone Person 1" required>
 					<input type="text" class="form-control" id="" name="contacto2_telefono" placeholder="Telephone Person 2">
-
 				</div>
 
 				<div class="col-md-6">
@@ -686,15 +624,11 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 			</div>
 			<!------ FIN INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 
-
-
 			<!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
-
-
 			<div class="col-lg-12">
 				<div class="col-md-12">
 					<label for="resp1">NUMBER OF PRODUCERS MEMBERS:</label>
-					<input type="text" class="form-control" id="resp1" name="resp1" >
+					<input type="number" class="form-control" id="resp1" name="resp1" placeholder="just number" required>
 
 					<label for="resp2">NUMBER OF PRODUCERS MEMBERS OF THE  PRODUCT (S) TO BE INCLUDED IN THE CERTIFICATION:</label>
 					<input type="text" class="form-control" id="resp2" name="resp2" >
@@ -827,27 +761,28 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 
 					<p for="op_preg11">
 						<b>11.	OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+						<i>(* Introducir solo cantidad, entero o decimales)</i>
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="col-xs-3">
+									<label for="organico">% ORGANIC</label>
+									<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="comercio_justo">% FAIR TRADE</label>
+									<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
+									<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
+								</div>
+								<div class="col-xs-3">
+									<label for="otro">WITHOUT CERTIFICATE</label>
+									<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
+								</div>
+							</div>
+						</div>
 					</p>
-					<p><i>(* Enter percentage)</i></p>
-						<div class="col-xs-3">
-							<label for="organico">% ORGANIC</label>
-							<input type="number" step="any" class="form-control" id="organico" name="organico" placeholder="Ej: 0.0">
-						</div>
-						<div class="col-xs-3">
-							<label for="comercio_justo">% FAIR TRADE</label>
-							<input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" placeholder="Ej: 0.0">
-						</div>
-						<div class="col-xs-3">
-							<label for="spp">SMALL PRODUCERS´ SYMBOL</label>
-							<input type="number" step="any" class="form-control" id="spp" name="spp" placeholder="Ej: 0.0">
-							
-						</div>
-						<div class="col-xs-3">
-							<label for="otro">OTHER</label>
-							<input type="number" step="any" class="form-control" id="otro" name="sin_certificado" placeholder="Ej: 0.0">
-							
-						</div>
-
 
 					<p><b>12.	DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
 						<div class="col-xs-6">
@@ -898,7 +833,8 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 			<div class="col-lg-12">
 				<table class="table table-bordered" id="tablaProductos">
 					<tr>
-						<td>Product</td>
+						<td><b>General Product</b> (ej: coffee, cocoa, honey, ...)</td>
+						<td><b>Specific product</b> (ej: green coffee, Cocoa powder, honey bee)</td>
 						<td>Total Estimated Volume to be Traded</td>
 						<td>Finished Product</td>
 						<td>Raw material</td>
@@ -915,7 +851,10 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					</tr>
 					<tr>
 						<td>
-							<input type="text" class="form-control" name="producto[0]" id="exampleInputEmail1" placeholder="Product">
+							<input type="text" class="form-control" name="producto_general[0]" id="exampleInputEmail1" placeholder="General Product">
+						</td>
+						<td>
+							<input type="text" class="form-control" name="producto[0]" id="exampleInputEmail1" placeholder="Specific Product">
 						</td>
 						<td>
 							<input type="text" class="form-control" name="volumen[0]" id="exampleInputEmail1" placeholder="Volume">
@@ -944,7 +883,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 						</td>
 					</tr>				
 					<tr>
-						<td colspan="8">
+						<td colspan="9">
 							<h6><sup>6</sup> Information provided in this section will be handled with complete confidentiality. Please insert additional lines if necessary.</h6>
 						</td>
 					</tr>
@@ -981,13 +920,15 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 	</form>
 </div>
 
-
 <script>
 	
   function validar(){
 
     tipo_solicitud = document.getElementsByName("tipo_solicitud");
+    tuvo_ventas = document.getElementsByName("op_preg12");
+    opcion_venta = document.getElementsByName("op_preg13");
      
+    // INICIA SELECCION TIPO SOLICITUD
     var seleccionado = false;
     for(var i=0; i<tipo_solicitud.length; i++) {    
       if(tipo_solicitud[i].checked) {
@@ -997,8 +938,43 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
     }
      
     if(!seleccionado) {
-      alert("You must select a type of Application");
+      alert("Debes de seleecionar un Tipo de Solicitud");
       return false;
+    }
+    //// TERMINA SELECCION TIPO SOLICITUD
+
+    /// INICIA OPCION DE VENTAS
+    var ventas = false;
+    var valor_venta = '';
+    for(var i=0; i<tuvo_ventas.length; i++) {    
+      if(tuvo_ventas[i].checked) {
+      	valor_venta = tuvo_ventas[i].value;
+        ventas = true;
+        break;
+      }
+    }
+     
+    if(!ventas) {
+      alert("Debe seleccionar \"SI\" tuvo ó \"NO\" ventas");
+      return false;
+    }
+    /// TERMINA OPCION DE VENTAS
+
+
+    if(valor_venta != 'NO'){
+	    var monto = false;
+	    for(var i=0; i<opcion_venta.length; i++) {    
+	      if(opcion_venta[i].checked) {
+	        monto = true;
+	        break;
+	      }
+	    }
+	     
+	    if(!monto) {
+	      alert("Seleccionaste que \"SI\" tuviste ventas, debes seleccionar el monto de ventas SPP");
+	      return false;
+	    }
+
     }
 
     return true
@@ -1058,25 +1034,26 @@ var contador=0;
 	  var cell5 = row.insertCell(4);
 	  var cell6 = row.insertCell(5);
 	  var cell7 = row.insertCell(6); 
-	  var cell8 = row.insertCell(7); 	   	  
+	  var cell8 = row.insertCell(7); 
+	  var cell9 = row.insertCell(8); 	   	  
 
-	  
+	  cell1.innerHTML = '<input type="text" class="form-control" name="producto_general['+cont+']" id="exampleInputEmail1" placeholder="General Product">';
 
-	  cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Product">';
+	  cell2.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Specific Product">';
 	  
-	  cell2.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volume">';
+	  cell3.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volume">';
 	  
-	  cell3.innerHTML = 'SI <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
+	  cell4.innerHTML = 'SI <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
 	  
-	  cell4.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Materia">';
+	  cell5.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Materia">';
 	  
-	  cell5.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destination">';
+	  cell6.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destination">';
 	  
-	  cell6.innerHTML = 'SI <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
+	  cell7.innerHTML = 'SI <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
 	  
-	  cell7.innerHTML = 'SI <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
+	  cell8.innerHTML = 'SI <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
 	  
-	  cell8.innerHTML = 'SI <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';	  
+	  cell9.innerHTML = 'SI <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';	  
 
 	  }
 

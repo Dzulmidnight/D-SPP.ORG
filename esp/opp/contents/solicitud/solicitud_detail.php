@@ -466,7 +466,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
 
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 ?>
-
 <div class="row" style="font-size:12px;">
 
 	<?php 
@@ -624,7 +623,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 			<div class="col-lg-12">
 				<div class="col-md-12">
 					<label for="resp1">NÚMERO DE SOCIOS PRODUCTORES</label>
-					<input type="number" step="any" class="form-control" id="resp1" name="resp1" value="<?php echo $solicitud['resp1']; ?>" >
+					<input type="number" class="form-control" id="resp1" name="resp1" value="<?php echo $solicitud['resp1']; ?>" require>
 
 					<label for="resp2">NÚMERO DE SOCIOS PRODUCTORES DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACION:</label>
 					<input type="text" class="form-control" id="resp2" name="resp2" value="<?php echo $solicitud['resp2']; ?>" >
@@ -634,9 +633,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					
 					<label for="resp4">TAMAÑO MÁXIMO DE LA UNIDAD DE PRODUCCIÓN POR PRODUCTOR DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACIÓN:</label>
 					<input type="text" class="form-control" id="resp4" name="resp4" value="<?php echo $solicitud['resp4']; ?>" >
-
-
-
 				</div>
 			</div>
 
@@ -790,17 +786,10 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 						</div>
 					</p>					
 
-
 					<p><b>12 - 13. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
 					<div class="col-xs-12 ">
 				        <?php
 				          if($solicitud['op_preg12'] == 'SI'){
-				              //echo "SI <input type='radio' name='op_preg12'  checked readonly>";
-				            /*echo "</div>";
-				            echo "<div class='col-xs-6'>";
-				              echo "<p class='text-center alert alert-danger'>NO</p>";
-				              echo "NO <input type='radio' name='op_preg12'  readonly>";
-				            echo "</div>";*/
 				        ?>
 				          <div class="col-xs-6">
 				            <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> SI</p>
@@ -872,18 +861,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 							 ?>
 						</div>
 					</div>
-					
-
-					<?php /*
-					if(empty($solicitud['op_preg15'])){
-						echo "<p class='alert alert-danger' style='padding:7px;'>No Disponible</p>";
-						echo "<input type='file' class='form-control'>";
-					}else{
-					?>
-						<a class="btn btn-success" href="<?echo $solicitud['op_preg15']?>" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Descargar Croquis</a>	
-					<?php
-					}
-					*/ ?>
 					
 				</div>
 			</div>
@@ -1009,7 +986,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 			</div>
 			<div class="col-lg-12">
 
-				<p style="font-size:14px;"><strong>Nombre de la persona que se responsabiliza de la veracidad de la información del formato y que le dará seguimiento a la solicitud de parte del solicitante:</strong></p>
+				<p style="font-size:14px;">
+					<strong>Nombre de la persona que se responsabiliza de la veracidad de la información del formato y que le dará seguimiento a la solicitud de parte del solicitante:</strong>
+				</p>
 
 				<input type="hidden" name="idopp" value="<?php echo $solicitud['id_opp']; ?>">
 				<input type="hidden" name="fecha_registro" value="<?php echo $solicitud['fecha_registro']; ?>">
@@ -1052,7 +1031,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
   }
 
 </script>
-
 <script>
 var contador=0;
 	function tablaCertificaciones()

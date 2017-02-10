@@ -418,7 +418,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
 
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 ?>
-
 <div class="row">
   <?php 
   if(isset($mensaje)){
@@ -570,10 +569,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
       </div>
       <!------ FIN INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 
-
-
       <!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
-
       <div class="col-md-12 alert alert-info">
         <div>
           <label for="alcance_opp">
@@ -593,8 +589,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           </label>
         </div>
       </div>
-
-
 
       <div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE OPERACIÓN</div>
 
@@ -742,7 +736,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             11. DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
           <textarea name="preg12" id="preg12" class="form-control"><?php echo $solicitud['preg12']; ?></textarea>
 
-
           <p for="op_preg11">
             <b>12.DEL TOTAL DE SUS COMPRAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
             <i>(* Introducir solo cantidad, entero o decimales)</i>
@@ -767,7 +760,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
               </div>
             </div>
           </p>          
-
 
           <p><b>13 - 14. ¿TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
           <div class="col-xs-12 ">
@@ -885,7 +877,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           </tr>
         </table>
       </div>
-
 
       <div class="col-lg-12 text-center alert alert-success" style="padding:7px;">
         <b>COMPROMISOS</b>

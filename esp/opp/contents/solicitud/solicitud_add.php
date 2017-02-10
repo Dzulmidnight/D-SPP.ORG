@@ -522,7 +522,6 @@ $row_opp = mysql_query($query,$dspp) or die(mysql_error());
 $opp = mysql_fetch_assoc($row_opp);
 
 ?>
-
 <div class="row" style="font-size:12px;">
 	<?php 
 	if(isset($mensaje)){
@@ -547,10 +546,13 @@ $opp = mysql_fetch_assoc($row_opp);
 
 					<div class="col-md-12 alert alert-warning" style="padding:5px;">
 						<ul>
-							<li><b>SI CONTARON CON CERTITICACION DE SPP ANTERIORMENTE (CON EL ORGANISMO DE CERTIFICACIÓN ACTUAL ó CON OTRO ORGANISMO DE CERTIFICACIÓN)DEBEN ELEGIR <span style="color:red">"RENOVACION DEL CERTIFICADO"</span></b></li>
+							<li>
+								<b>
+									SI CONTARON CON CERTITICACION DE SPP ANTERIORMENTE (CON EL ORGANISMO DE CERTIFICACIÓN ACTUAL ó CON OTRO ORGANISMO DE CERTIFICACIÓN)DEBEN ELEGIR <span style="color:red">"RENOVACION DEL CERTIFICADO"</span>
+								</b>
+							</li>
 							<li><b>SI ES LA PRIMERA VEZ QUE SE CERTIFICAN DEBEN ELEGIR <span style="color:red">"PRIMERA VEZ"</span></b></li>
 						</ul>
-						 
 					</div>
 
 				<div class="col-md-6">
@@ -698,11 +700,10 @@ $opp = mysql_fetch_assoc($row_opp);
 
 			<!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
 
-
 			<div class="col-lg-12">
 				<div class="col-md-12">
 					<label for="resp1">NÚMERO DE SOCIOS PRODUCTORES</label>
-					<input type="number" class="form-control" id="resp1" name="resp1" placeholder="Solo se numero" >
+					<input type="number" class="form-control" id="resp1" name="resp1" placeholder="Solo numero" required>
 
 					<label for="resp2">NÚMERO DE SOCIOS PRODUCTORES DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACION:</label>
 					<input type="text" class="form-control" id="resp2" name="resp2" >
@@ -712,9 +713,6 @@ $opp = mysql_fetch_assoc($row_opp);
 					
 					<label for="resp4">TAMAÑO MÁXIMO DE LA UNIDAD DE PRODUCCIÓN POR PRODUCTOR DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACIÓN:</label>
 					<input type="text" class="form-control" id="resp4" name="resp4" >
-
-
-
 				</div>
 			</div>
 
@@ -858,7 +856,6 @@ $opp = mysql_fetch_assoc($row_opp);
 						</div>
 					</p>
 					
-
 					<p><b>12. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
 						<div class="col-xs-6">
 							SI <input type="radio" class="form-control" name="op_preg12" id="op_preg12_si" value="SI">
@@ -875,10 +872,8 @@ $opp = mysql_fetch_assoc($row_opp);
 						<div class="col-xs-6"><p>Hasta $3,000 USD</p></div>
 						<div class="col-xs-6 "><input type="radio" name="op_preg13" class="form-control" id="ver" onclick="ocultar()" value="HASTA $3,000 USD"></div>
 					
-					
 						<div class="col-xs-6"><p>Entre $3,000 y $10,000 USD</p></div>
 						<div class="col-xs-6"><input type="radio" name="op_preg13" class="form-control" id="ver" onclick="ocultar()" value="ENTRE $3,000 Y $10,000 USD"></div>
-					
 					
 						<div class="col-xs-6"><p>Entre $10,000 a $25,000 USD</p></div>
 						<div class="col-xs-6"><input type="radio" name="op_preg13" class="form-control"  id="ver" onclick="ocultar()" value="ENTRE $10,000 A $25,000 USD"></div>

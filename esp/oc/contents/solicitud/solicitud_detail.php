@@ -746,7 +746,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
           </label>
           <textarea name="op_preg1" id="op_preg1" class="form-control" rows="2"><?php echo $solicitud['op_preg1']; ?></textarea>
 
-
           <div class="col-xs-3">
             <label for="preg1_1">
               1.3: NÚMERO DE OPP DE 3ER GRADO:
@@ -771,7 +770,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             </label>
             <input type="text" class="form-control" id="preg1_4" name="preg1_4" value="<?php echo $solicitud['preg1_4']; ?>" >
           </div>
-
 
           <label for="op_preg2">
             2. ESPECIFIQUE QUÉ PRODUCTO(S) QUIERE INCLUIR EN EL CERTIFICADO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES PARA LOS CUALES EL ORGANISMO DE CERTIFICACIÓN REALIZARÁ LA EVALUACIÓN.
@@ -801,7 +799,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             <label>EXPORTACIÓN</label>
             <input type="checkbox" name="exportacion" class="form-control" value="1" <?php if($solicitud['exportacion']){ echo 'checked';} ?>>
           </div>
-
 
           <label for="op_preg5">
             5. ESPECIFIQUE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA.
@@ -881,7 +878,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             </div>
           </p>
           
-
           <p><b>12 - 13. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
           <div class="col-xs-12 ">
                 <?php
@@ -1092,8 +1088,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
     </fieldset>
   </form>
 </div>
-
-
 <!-- inicia modal estatus_Certificado -->
 
 <div id="<?php echo "observaciones".$_GET['IDsolicitud']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">

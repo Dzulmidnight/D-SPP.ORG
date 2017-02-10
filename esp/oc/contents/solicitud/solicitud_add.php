@@ -577,73 +577,12 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					</div>
 				</div>
 			</div>
-
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
 			<div class="col-lg-12">
 				<div class="col-md-12">
 					<p class="alert alert-info text-center"><b>LA INFORMACIÓN GENERAL E INFORMACIÓN FISCAL YA SE ENCUENTRA PRE-CARGADA</b></p>
 				</div>
-				<!--<div class="col-md-6">
-					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMACION GENERALES</div>
-					<label for="fecha_elaboracion">FECHA ELABORACIÓN</label>
-					<input type="text" class="form-control" id="fecha_elaboracion" name="fecha_elaboracion" value="<?php echo date('Y-m-d', time()); ?>" readonly>	
-
-					<label for="spp">CODIGO DE IDENTIFICACIÓN SPP(#SPP): </label>
-					<input type="text" class="form-control" id="spp" name="spp" value="<?php echo $opp['spp']; ?>">
-
-					<label for="nombre">NOMBRE COMPLETO DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES: </label>
-					<textarea name="nombre" id="nombre" class="form-control"><?php echo $opp['nombre']; ?></textarea>
-
-
-					<label for="pais">PAÍS:</label>
-					<?php 
-					$row_pais = mysql_query("SELECT * FROM paises",$dspp) or die(mysql_error());
-					 ?>
-					 <select name="pais" id="pais" class="form-control">
-					 	<option value="">Selecciona un País</option>
-					 	<?php 
-					 	while($pais = mysql_fetch_assoc($row_pais)){
-					 		if(utf8_encode($pais['nombre']) == $opp['pais']){
-					 			echo "<option value='".utf8_encode($pais['nombre'])."' selected>".utf8_encode($pais['nombre'])."</option>";
-					 		}else{
-					 			echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
-					 		}
-					 	}
-					 	 ?>
-					 </select>
-
-					<label for="direccion_oficina">DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES(CALLE, BARRIO, LUGAR, REGIÓN)</label>
-					<textarea name="direccion_oficina" id="direccion_oficina"  class="form-control"><?php echo $opp['direccion_oficina']; ?></textarea>
-
-					<label for="email">CORREO ELECTRÓNICO:</label>
-					<input type="text" class="form-control" id="email" name="email" value="<?php echo $opp['email']; ?>">
-
-					<label for="email">TELÉFONOS (CODIGO DE PAÍS + CÓDIGO DE ÁREA + NÚMERO):</label>
-					<input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $opp['telefono']; ?>">	
-
-					<label for="sitio_web">SITIO WEB:</label>
-					<input type="text" class="form-control" id="sitio_web" name="sitio_web" value="<?php echo $opp['sitio_web']; ?>">
-
-				</div>
-
-				<!--<div class="col-md-6">
-					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">DATOS FISCALES PARA FACTURACIÓN</div>
-
-					<label for="razon_social">RAZÓN SOCIAL</label>
-					<input type="text" class="form-control" id="razon_social" name="razon_social" value="<?php echo $opp['razon_social']; ?>">
-
-					<label for="direccion_fiscal">DIRECCIÓN FISCAL</label>
-					<textarea class="form-control" name="direccion_fiscal" id="direccion_fiscal"><?php echo $opp['direccion_fiscal']; ?></textarea>
-
-					<label for="rfc">RFC</label>
-					<input type="text" class="form-control" id="rfc" name="rfc" value="<?php echo $opp['rfc']; ?>">
-
-					<label for="ruc">RUC</label>
-					<input type="text" class="form-control" id="ruc" name="ruc" value="<?php echo $opp['ruc']; ?>">
-				</div>
-			</div>
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
-
 
 			<!------ INICIA INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 			<div class="col-lg-12">
@@ -665,7 +604,6 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					<label for="telefono">TELEFONO</label>
 					<input type="text" class="form-control" id="telefono" name="contacto1_telefono" placeholder="* Telefono Persona 1" required>
 					<input type="text" class="form-control" id="" name="contacto2_telefono" placeholder="Telefono Persona 2">
-
 				</div>
 
 				<div class="col-md-6">
@@ -686,15 +624,11 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 			</div>
 			<!------ FIN INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 
-
-
 			<!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
-
-
 			<div class="col-lg-12">
 				<div class="col-md-12">
 					<label for="resp1">NÚMERO DE SOCIOS PRODUCTORES</label>
-					<input type="text" class="form-control" id="resp1" name="resp1" >
+					<input type="text" class="form-control" id="resp1" name="resp1" placeholder="Solo numero" required>
 
 					<label for="resp2">NÚMERO DE SOCIOS PRODUCTORES DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACION:</label>
 					<input type="text" class="form-control" id="resp2" name="resp2" >
@@ -850,7 +784,6 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 						</div>
 					</p>
 
-
 					<p><b>12. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
 						<div class="col-xs-6">
 							SI <input type="radio" class="form-control" name="op_preg12" id="op_preg12" value="SI">
@@ -987,7 +920,6 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 	</form>
 </div>
 
-
 <script>
 	
   function validar(){
@@ -1104,7 +1036,6 @@ var contador=0;
 	  var cell7 = row.insertCell(6); 
 	  var cell8 = row.insertCell(7);
 	  var cell9 = row.insertCell(8); 	   	  
-
 	  
 	  cell1.innerHTML = '<input type="text" class="form-control" name="producto_general['+cont+']" id="exampleInputEmail1" placeholder="Producto General">';
 

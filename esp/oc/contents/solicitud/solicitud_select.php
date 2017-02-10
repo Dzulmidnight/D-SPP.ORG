@@ -1392,20 +1392,10 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <th class="text-center">Organización</th>
           <th class="text-center">Estatus Solicitud</th>
           <th class="text-center">Cotización <br>(Descargable)</th>
-          <!--<th class="text-center">Sitio WEB</th>-->
-          <!--<th class="text-center">Contacto</th>-->
-          <!--<th class="text-center">País</th>-->
           <th class="text-center">Proceso de Objeción</th>
           <th class="text-center"><a href="#" data-toggle="tooltip" title="El OC debe actualizar el estatus del proceso eligiendo una de las opciones que se despliega en esta sección"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Proceso<br>Certificación</a></th>
           <th class="text-center">Certificado</th>
-          <!--<th class="text-center">Propuesta</th>-->
-          <!--<th class="text-center">Observaciones Solicitud</th>-->
           <th class="text-center" colspan="2">Acciones</th>
-          <!--<th>OC</th>
-          <th>Razón social</th>
-          <th>Dirección fiscal</th>
-          <th>RFC</th>-->
-          <!--<th>Eliminar</th>-->
         </tr>       
       </thead>
       <tbody>
@@ -1453,7 +1443,6 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 <a href='<?php echo $solicitud['cotizacion_opp']; ?>' class='btn btn-sm btn-success' style='font-size:12px;color:white;height:30px;' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>
               </div>
             <?php
-               //echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_opp']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
                if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
                 echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
@@ -1496,6 +1485,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             </div>
 
           </td>
+
           <td>
             <?php
             if($solicitud['tipo_solicitud'] == 'RENOVACION'){
@@ -1645,9 +1635,6 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         }else{
                                           $valor_membresia = '';
                                         }
-
-
-
                                          ?>
                                         <input type="text" class="form-control" name="total_membresia" id="total_membresia_2"  value="<?php echo $valor_membresia; ?>" placeholder="Total Membresía">
                                       </div>

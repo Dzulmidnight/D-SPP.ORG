@@ -408,7 +408,7 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
     }
 
 
-  $mensaje = "Correctly Updated Data";
+  $mensaje = "Datos Actualizados Correctamente";
 }
  
 
@@ -418,7 +418,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
 
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 ?>
-
 <div class="row">
   <?php 
   if(isset($mensaje)){
@@ -570,14 +569,12 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
       </div>
       <!------ FIN INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 
-
-
       <!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
-
       <div class="col-md-12 alert alert-info">
         <div>
           <label for="alcance_opp">
-            SELECT TYPE OF COMPANY SPP FOR WHICH REGISTRATION IS SOUGHT. INTERMEDIARY MAY NOT SIGN SPP IF NOT HAVE A BUYER OR FINAL SPP REGISTERED REGISTRATION PROCESS.           </label>
+            SELECT TYPE OF COMPANY SPP FOR WHICH REGISTRATION IS SOUGHT. INTERMEDIARY MAY NOT SIGN SPP IF NOT HAVE A BUYER OR FINAL SPP REGISTERED REGISTRATION PROCESS.         
+          </label>
         </div>
 
         <div class="checkbox">
@@ -592,8 +589,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           </label>
         </div>
       </div>
-
-
 
       <div class="col-md-12 text-center alert alert-success" style="padding:7px;">INFORMATION ON OPERATION</div>
 
@@ -703,13 +698,20 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           <textarea name="preg10" id="preg10" class="form-control"><?php echo $solicitud['preg10'] ?></textarea>
 
           <p class="alert alert-info">11. FILL OUT THE TABLE ACCORDING YOUR CERTIFICATIONS, (example: EU, NOP, JASS, FLO, etc)</p>
-          
+
           <table class="table table-bordered" id="tablaCertificaciones">
             <tr>
               <td>CERTIFICATION</td>
               <td>CERTIFICATION ENTITY</td>
               <td>INITIAL YEAR OF CERTIFICATION</td>
               <td>HAS BEEN INTERRUPTED?</td>
+              <td>
+                <button type="button" onclick="tablaCertificaciones()" class="btn btn-primary" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+                
+              </td>
+
             </tr>
             <?php 
             $query_certificacion_detalle = "SELECT * FROM certificaciones WHERE idsolicitud_registro = $idsolicitud_registro";
@@ -718,10 +720,10 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             while($row_certificacion = mysql_fetch_assoc($certificacion_detalle)){
             ?>
               <tr class="text-center">
-                <td><input type="text" class="form-control" name="certificacion[]" id="exampleInputEmail1" placeholder="CERTIFICATION" value="<?echo $row_certificacion['certificacion']?>"></td>
-                <td><input type="text" class="form-control" name="certificadora[]" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY" value="<?echo $row_certificacion['certificadora']?>"></td>
-                <td><input type="text" class="form-control" name="ano_inicial[]" id="exampleInputEmail1" placeholder="AÑO INICIAL" value="<?echo $row_certificacion['ano_inicial']?>"></td>
-                <td><input type="text" class="form-control" name="interrumpida[]" id="exampleInputEmail1" placeholder="HAS BEEN INTERRUPTED" value="<?echo $row_certificacion['interrumpida']?>"></td>
+                <td><input type="text" class="form-control" name="certificacion_actual[]" id="exampleInputEmail1" placeholder="CERTIFICATION" value="<?echo $row_certificacion['certificacion']?>"></td>
+                <td><input type="text" class="form-control" name="certificadora_actual[]" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY" value="<?echo $row_certificacion['certificadora']?>"></td>
+                <td><input type="text" class="form-control" name="ano_inicial_actual[]" id="exampleInputEmail1" placeholder="STARTING YEAR" value="<?echo $row_certificacion['ano_inicial']?>"></td>
+                <td><input type="text" class="form-control" name="interrumpida_actual[]" id="exampleInputEmail1" placeholder="HAS BEEN INTERRUPTED?" value="<?echo $row_certificacion['interrumpida']?>"></td>
                 <input type="hidden" name="idcertificacion[]" value="<?echo $row_certificacion['idcertificacion']?>">
               </tr>
             <?php 
@@ -731,34 +733,35 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           </table>
 
           <label for="preg12">
-           12.  ACCORDING THE CERTIFICATIONS, IN ITS MOST RECENT INTERNAL AND EXTERNAL EVALUATIONS, HOW MANY CASES OF NON COMPLIANCE WERE INDENTIFIED? PLEASE EXPLAIN IF THEY HAVE BEEN RESOLVED OR WHAT THEIR STATUS IS?</label>
+           11.  ACCORDING THE CERTIFICATIONS, IN ITS MOST RECENT INTERNAL AND EXTERNAL EVALUATIONS, HOW MANY CASES OF NON COMPLIANCE WERE INDENTIFIED? PLEASE EXPLAIN IF THEY HAVE BEEN RESOLVED OR WHAT THEIR STATUS IS?</label>
           <textarea name="preg12" id="preg12" class="form-control"><?php echo $solicitud['preg12']; ?></textarea>
 
           <p for="op_preg11">
-            <b>13.  OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
-          </p>
-          <p><i>(* Enter percentage)</i></p>
-            <div class="col-xs-3">
-              <label for="organico">% ORGANIC</label>
-              <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
+            <b>12. OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+            <i>(* Enter only quantity, integer or decimals)</i>
+            <div class="col-lg-12">
+              <div class="row">
+                <div class="col-xs-3">
+                  <label for="organico">% ORGANIC</label>
+                  <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
+                </div>
+                <div class="col-xs-3">
+                  <label for="comercio_justo">% FAIR TRADE</label>
+                  <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
+                </div>
+                <div class="col-xs-3">
+                  <label for="spp">SMALL PRODUCERS´ SYMBOL</label>
+                  <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
+                </div>
+                <div class="col-xs-3">
+                  <label for="otro">WITHOUT CERTIFICATE</label>
+                  <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
+                </div>
+              </div>
             </div>
-            <div class="col-xs-3">
-              <label for="comercio_justo">% FAIR TRADE</label>
-              <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
-            </div>
-            <div class="col-xs-3">
-              <label for="spp">SMALL PRODUCERS´ SYMBOL</label>
-              <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
-              
-            </div>
-            <div class="col-xs-3">
-              <label for="otro">OTHER</label>
-              <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
-              
-            </div>
+          </p> 
 
-
-          <p><b>14. DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
+          <p><b>13 - 14. DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
           <div class="col-xs-12 ">
                 <?php
                   if($solicitud['preg13'] == 'SI'){
@@ -798,7 +801,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
                       }
                      ?>
                   </div>
-
                 <?php
                   }else if($solicitud['preg13'] == 'NO'){
                 ?>
@@ -812,7 +814,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           </div>
 
           <label for="preg15">
-            16. ESTIMATED DATE FOR BEGINNING TO USE THE SMALL PRODUCERS’ SYMBOL:
+            15. ESTIMATED DATE FOR BEGINNING TO USE THE SMALL PRODUCERS’ SYMBOL:
           </label>
           <input type="text" class="form-control" id="preg15" name="preg15" value="<?php echo $solicitud['preg15']; ?>">
 
@@ -827,7 +829,13 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             <td>Volume of Finished Product</td>
             <td>Volume of Raw Material</td>
             <td>Country/Countries of Origin</td>
-            <td>Country/Countries of Destination</td>          
+            <td>Country/Countries of Destination</td>
+            <td>
+              <button type="button" onclick="tablaProductos()" class="btn btn-primary" aria-label="Left Align">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              </button>
+              
+            </td>   
           </tr>
           <?php 
           $query_producto_detalle = "SELECT * FROM productos WHERE idsolicitud_registro = $idsolicitud_registro";
@@ -837,23 +845,23 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           ?>
             <tr>
               <td>
-                <input type="text" class="form-control" name="producto[]" id="exampleInputEmail1" placeholder="Product" value="<?echo $row_producto['producto']?>">
+                <input type="text" class="form-control" name="producto_2[]" id="exampleInputEmail1" placeholder="Product" value="<?echo $row_producto['producto']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="volumen_estimado[]" id="exampleInputEmail1" placeholder="Estimated Volume" value="<?echo $row_producto['volumen_estimado']?>">
+                <input type="text" class="form-control" name="volumen_estimado_2[]" id="exampleInputEmail1" placeholder="Estimated Volume" value="<?echo $row_producto['volumen_estimado']?>">
               </td>
         
               <td>
-                <input type="text" class="form-control" name="volumen_terminado[]" id="exampleInputEmail1" placeholder="Volumen Finished" value="<?echo $row_producto['volumen_terminado']?>">
+                <input type="text" class="form-control" name="volumen_terminado_2[]" id="exampleInputEmail1" placeholder="Volumen Finished" value="<?echo $row_producto['volumen_terminado']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="volumen_materia[]" id="exampleInputEmail1" placeholder="Volumen of Material" value="<?echo $row_producto['volumen_materia']?>">
+                <input type="text" class="form-control" name="volumen_materia_2[]" id="exampleInputEmail1" placeholder="Volumen of Material" value="<?echo $row_producto['volumen_materia']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="origen[]" id="exampleInputEmail1" placeholder="Origin" value="<?echo $row_producto['origen']?>">
+                <input type="text" class="form-control" name="origen_2[]" id="exampleInputEmail1" placeholder="Origin" value="<?echo $row_producto['origen']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="destino[]" id="exampleInputEmail1" placeholder="Destination" value="<?echo $row_producto['destino']?>">
+                <input type="text" class="form-control" name="destino_2[]" id="exampleInputEmail1" placeholder="Destination" value="<?echo $row_producto['destino']?>">
               </td>
 
                 <input type="hidden" name="idproducto[]" value="<?echo $row_producto['idproducto']?>">                     
@@ -869,7 +877,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           </tr>
         </table>
       </div>
-
 
       <div class="col-lg-12 text-center alert alert-success" style="padding:7px;">
         <b>COMMITMENTS</b>
@@ -917,7 +924,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
     }
      
     if(!seleccionado) {
-      alert("You must select a type of Application");
+      alert("Debes de seleecionar un Tipo de Solicitud");
       return false;
     }
 
@@ -939,10 +946,10 @@ var contador=0;
     var cell3 = row.insertCell(2);
     var cell4 = row.insertCell(3);
 
-    cell1.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICACIÓN">';
-    cell2.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICADORA">';
-    cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="AÑO INICIAL">';
-    cell4.innerHTML = '<div class="col-xs-6">SI<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
+    cell1.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION">';
+    cell2.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY">';
+    cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="STARTED DATE">';
+    cell4.innerHTML = '<div class="col-xs-6">YES<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
     }
     contador++;
   } 
@@ -957,8 +964,8 @@ var contador=0;
     var cell2 = row.insertCell(1);
 
 
-    cell1.innerHTML = '<input type="text" class="form-control" name="subempresa['+contador+']" id="exampleInputEmail1" placeholder="EMPRESA">';
-    cell2.innerHTML = '<input type="text" class="form-control" name="servicio['+contador+']" id="exampleInputEmail1" placeholder="SERVICIO">';
+    cell1.innerHTML = '<input type="text" class="form-control" name="subempresa['+contador+']" id="exampleInputEmail1" placeholder="COMPANY">';
+    cell2.innerHTML = '<input type="text" class="form-control" name="servicio['+contador+']" id="exampleInputEmail1" placeholder="SERVICE">';
 
     }
   } 
@@ -1002,17 +1009,17 @@ var contador=0;
     var cell5 = row.insertCell(4);
     var cell6 = row.insertCell(5);   
     
-    cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Producto">';
+    cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Product">';
     
-    cell2.innerHTML = '<input type="text" class="form-control" name="volumen_estimado['+cont+']" id="exampleInputEmail1" placeholder="Volumen Estimado">';
+    cell2.innerHTML = '<input type="text" class="form-control" name="volumen_estimado['+cont+']" id="exampleInputEmail1" placeholder="Estimated Volume">';
     
-    cell3.innerHTML = '<input type="text" class="form-control" name="volumen_terminado['+cont+']" id="exampleInputEmail1" placeholder="Volumen Terminado">';
+    cell3.innerHTML = '<input type="text" class="form-control" name="volumen_terminado['+cont+']" id="exampleInputEmail1" placeholder="Volumen Finished">';
     
-    cell4.innerHTML = '<input type="text" class="form-control" name="volumen_materia['+cont+']" id="exampleInputEmail1" placeholder="Volumen Materia">';
+    cell4.innerHTML = '<input type="text" class="form-control" name="volumen_materia['+cont+']" id="exampleInputEmail1" placeholder="Volumen of Material">';
     
-    cell5.innerHTML = '<input type="text" class="form-control" name="origen['+cont+']" id="exampleInputEmail1" placeholder="Origen">';
+    cell5.innerHTML = '<input type="text" class="form-control" name="origen['+cont+']" id="exampleInputEmail1" placeholder="Origin">';
     
-    cell6.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destino">';
+    cell6.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destination">';
      
   cont++;
     }

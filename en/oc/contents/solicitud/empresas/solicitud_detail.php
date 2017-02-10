@@ -312,9 +312,10 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   }
 
   //ACTUALIZAMOS LA SOLICITUD DE CERTIFICACION AGREGANDO LA COTIZACIÓN
-  $updateSQL = sprintf("UPDATE solicitud_registro SET tipo_procedimiento = %s, cotizacion_empresa = %s WHERE idsolicitud_registro = %s",
+  $updateSQL = sprintf("UPDATE solicitud_registro SET tipo_procedimiento = %s, cotizacion_empresa = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
     GetSQLValueString($procedimiento, "text"),
     GetSQLValueString($cotizacion_empresa, "text"),
+    GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($idsolicitud_registro, "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
@@ -411,6 +412,13 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $mail->AddAddress($_POST['contacto1_email']);
   $mail->AddBCC($administrador);
   $mail->AddBCC($spp_global);
+  if(!empty($oc['email1'])){
+    $mail->AddCC($oc['email1']);
+  }
+  if(!empty($oc['email2'])){
+    $mail->AddCC($oc['email2']);
+  }
+  
   //se adjunta la cotización
   $mail->AddAttachment($cotizacion_empresa);
 
@@ -429,13 +437,12 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
 
 
 
-$query = "SELECT solicitud_registro.*, empresa.nombre, empresa.spp AS 'spp_empresa', empresa.sitio_web, empresa.email, empresa.telefono, empresa.pais, empresa.ciudad, empresa.razon_social, empresa.direccion_oficina, empresa.direccion_fiscal, empresa.rfc, empresa.ruc, oc.abreviacion AS 'abreviacionOC' FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE solicitud_registro.idsolicitud_registro = $idsolicitud_registro";
+$query = "SELECT solicitud_registro.*, empresa.nombre, empresa.spp AS 'spp_empresa', empresa.sitio_web, empresa.email, empresa.telefono, empresa.pais, empresa.ciudad, empresa.razon_social, empresa.direccion_oficina, empresa.direccion_fiscal, empresa.rfc, empresa.ruc, oc.abreviacion AS 'abreviacionOC', porcentaje_productoVentas.* FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc LEFT JOIN porcentaje_productoVentas ON solicitud_registro.idsolicitud_registro = porcentaje_productoVentas.idsolicitud_registro WHERE solicitud_registro.idsolicitud_registro = $idsolicitud_registro";
 $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
 $solicitud = mysql_fetch_assoc($ejecutar);
 
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 ?>
-
 <div class="row" style="font-size:12px;">
 
   <?php 
@@ -543,33 +550,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             </div>                
           </div>
         </div> 
-
-
-      <!--<div class="col-lg-12 alert alert-info" style="padding:7px;">
-        <div class="col-md-4">
-          <div class="col-xs-12">
-            <b>ENVAR AL OC (selecciona el OC al que deseas enviar la solicitud):</b>
-          </div>
-          <div class="col-xs-12">
-            <input type="text" class="form-control" value="<?php echo $solicitud['abreviacionOC']; ?>" readonly>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="col-xs-12">
-            <b>TIPO DE SOLICITUD</b>
-          </div>
-          <div class="col-xs-6">
-            <input type="text" class="form-control" value="<?php echo $solicitud['tipo_solicitud']; ?>"readonly>
-          </div>
-          
-        </div>
-        <div class="col-md-4">
-
-          <input type="hidden" name="actualizar_solicitud" value="1">
-          <button style="color:white" type="submit" class="btn btn-warning form-control"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> ACTUALIZAR SOLICITUD</button>
-        </div>
-
-      </div>-->
 
       <!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
       <div class="col-lg-12">
@@ -696,8 +676,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         </div>
       </div>
 
-
-
       <div class="col-md-12 text-center alert alert-success" style="padding:7px;">INFORMATION ON OPERATION</div>
 
       <div class="col-lg-12">
@@ -711,7 +689,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             2.  WHO IS/ARE THE OWNER(S) OF THE COMPANY? 
           </label>
           <textarea name="preg2" id="preg2" class="form-control"><?php echo $solicitud['preg2']; ?></textarea>
-
 
           <label for="preg3">
             3.  SPECIFY WHICH PRODUCT (S) YOU WANT TO INCLUDE IN THE CERTIFICATE OF THE SMALL PRODUCERS’  SYMBOL FOR WHICH THE CERTIFICATION ENTITY WILL CONDUCT THE ASSESSMENT.<sup>4 Check the Regulation on Graphics and the List of  Optional Complementary Criteria.</sup>
@@ -837,41 +814,35 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             12. ACCORDING THE CERTIFICATIONS, IN ITS MOST RECENT INTERNAL AND EXTERNAL EVALUATIONS, HOW MANY CASES OF NON COMPLIANCE WERE INDENTIFIED? PLEASE EXPLAIN IF THEY HAVE BEEN RESOLVED OR WHAT THEIR STATUS IS?</label>
           <textarea name="preg12" id="preg12" class="form-control"><?php echo $solicitud['preg12']; ?></textarea>
 
-
-            <p for="op_preg11">
-              <b>13.  OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
-            </p>
-            <p><i>(* Enter percentage)</i></p>
-              <div class="col-xs-3">
-                <label for="organico">% ORGANIC</label>
-                <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
+          <p for="op_preg11">
+            <b>13.  OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
+              <i>(* Enter only quantity, integer or decimals)</i>
+            <div class="col-lg-12">
+              <div class="row">
+                <div class="col-xs-3">
+                  <label for="organico">% ORGANIC</label>
+                  <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
+                </div>
+                <div class="col-xs-3">
+                  <label for="comercio_justo">% FAIR TRADE</label>
+                  <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
+                </div>
+                <div class="col-xs-3">
+                  <label for="spp">SMALL PRODUCERS´ SYMBOL</label>
+                  <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
+                </div>
+                <div class="col-xs-3">
+                  <label for="otro">WITHOUT CERTIFICATE</label>
+                  <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
+                </div>
               </div>
-              <div class="col-xs-3">
-                <label for="comercio_justo">% FAIR TRADE</label>
-                <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
-              </div>
-              <div class="col-xs-3">
-                <label for="spp">SMALL PRODUCERS´ SYMBOL</label>
-                <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
-                
-              </div>
-              <div class="col-xs-3">
-                <label for="otro">OTHER</label>
-                <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
-                
-              </div>            
+            </div>
+          </p>
 
-
-          <p><b>14. DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
+          <p><b>14 - 15. DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
           <div class="col-xs-12 ">
                 <?php
                   if($solicitud['preg13'] == 'SI'){
-                      //echo "SI <input type='radio' name='op_preg12'  checked readonly>";
-                    /*echo "</div>";
-                    echo "<div class='col-xs-6'>";
-                      echo "<p class='text-center alert alert-danger'>NO</p>";
-                      echo "NO <input type='radio' name='op_preg12'  readonly>";
-                    echo "</div>";*/
                 ?>
                   <div class="col-xs-6">
                     <p class='text-center alert alert-success'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span> YES</p>
@@ -902,6 +873,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
                       }
                      ?>
                   </div>
+
                 <?php
                   }else if($solicitud['preg13'] == 'NO'){
                 ?>
@@ -1010,7 +982,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
   function validar(){
     valor = document.getElementById("cotizacion_empresa").value;
     if( valor == null || valor.length == 0 ) {
-      alert("It has not yet been charged quote");
+      alert("No se ha cargado la cotización de la Empresa");
       return false;
     }
     
@@ -1025,7 +997,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
     }
      
     if(!seleccionado) {
-      alert("You must select a certification procedure");
+      alert("Debes de seleecionar un Procedimiento de Certificación");
       return false;
     }
 
@@ -1033,7 +1005,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
   }
 
 </script>
-
 
 <script>
 var contador=0;

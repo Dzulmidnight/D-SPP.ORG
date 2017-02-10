@@ -502,7 +502,6 @@ $row_empresa = mysql_query($query,$dspp) or die(mysql_error());
 $empresa = mysql_fetch_assoc($row_empresa);
 
 ?>
-
 <div class="row">
 	<?php 
 	if(isset($mensaje)){
@@ -516,7 +515,6 @@ $empresa = mysql_fetch_assoc($row_empresa);
 	?>
 </div>
 
-
 <div class="row" style="font-size:12px;">
 	<form action="" name="" method="POST" enctype="multipart/form-data">
 		<fieldset>
@@ -524,10 +522,22 @@ $empresa = mysql_fetch_assoc($row_empresa);
 				<h3 class="text-center">Solicitud de Registro para Compradores y otros Actores</h3>
 			</div>
 
-
 			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
 
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
+
+				<div class="col-md-12 alert alert-warning" style="padding:5px;">
+						<ul>
+							<li>
+								<b>
+									SI CONTARON CON CERTITICACION DE SPP ANTERIORMENTE (CON EL ORGANISMO DE CERTIFICACIÓN ACTUAL ó CON OTRO ORGANISMO DE CERTIFICACIÓN)DEBEN ELEGIR <span style="color:red">"RENOVACION DEL CERTIFICADO"</span>
+								</b>
+							</li>
+							<li><b>SI ES LA PRIMERA VEZ QUE SE CERTIFICAN DEBEN ELEGIR <span style="color:red">"PRIMERA VEZ"</span></b></li>
+						</ul>
+					 
+				</div>
+
 				<div class="col-md-6">
 					<div class="col-md-12">
 						<b>ENVAR AL OC (selecciona el OC al que deseas enviar la solicitud):</b>
@@ -669,12 +679,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 			</div>
 			<!------ FIN INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 
-
-
 			<!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
-
-
-
 			<div class="col-md-12 alert alert-info">
 				<div>
 					<label for="alcance_opp">
@@ -847,9 +852,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 								</div>
 							</div>
 						</div>
-
 					</p>					
-
 
 					<p><b>14. TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
 						<div class="col-md-6">
@@ -885,8 +888,6 @@ $empresa = mysql_fetch_assoc($row_empresa);
 						16. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
 					</label>
 					<input type="text" class="form-control" id="preg15" name="preg15">
-
-
 				</div>
 			</div>
 

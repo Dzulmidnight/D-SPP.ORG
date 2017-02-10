@@ -14,5 +14,5 @@
 <?php } ?>
 
 <?php if(!isset($oc['email1'])){ ?>
-	<div class="col-xs-12 alert alert-danger text-center"><h3>NO SE HA DETECTADO UN CORREO ELECTRÓNICO(EMAIL), POR FAVOR INGRESAR UN CORREO ELECTRÓNICO(EMAIL) PARA <b>VINCULAR LAS NOTIFICACIONES DEL SISTEMA D-SPP</b>. <br><hr><a href="?OC&detail" class="btn btn-warning">INGRESAR EMAIL</a></h3></div>
+	<div class="col-xs-12 alert alert-danger text-center"><h3>NO EMAIL HAS BEEN DETECTED, PLEASE ENTER AN EMAIL TO <b> LINK D-SPP SYSTEM NOTICES</b>. <br><hr><a href="?OC&detail" class="btn btn-warning">ENTER EMAIL</a></h3></div>
 <?php } ?>
