@@ -189,7 +189,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		 $idsolicitud_certificacion = mysql_insert_id($dspp); 
 
 	///INGRESAMOS EL TIPO DE SOLICITUD A LA TABLA OPP y EL ALCANCE DE LA OPP
-	$updateSQL = sprintf("UPDATE OPP SET produccion = %s, procesamiento = %s, exportacion = %s, estatus_opp = %s WHERE idopp = %s",
+	$updateSQL = sprintf("UPDATE opp SET produccion = %s, procesamiento = %s, exportacion = %s, estatus_opp = %s WHERE idopp = %s",
 		GetSQLValueString($produccion, "int"),
 		GetSQLValueString($procesamiento, "int"),
 		GetSQLValueString($exportacion, "int"),
