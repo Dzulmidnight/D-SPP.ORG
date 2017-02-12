@@ -1513,10 +1513,11 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             ?>
           </td>
           <!---- INICIA PROCESO DE CERTIFICACIÓN ---->
-          <td>
+          <td>asdf
+            <?php echo $solicitud['dictamen']; ?>
             <form action="" method="POST" enctype="multipart/form-data">
               <?php 
-              if(isset($solicitud['dictamen']) && $solicitud['dictamen'] == 'POSITIVO' || ($solicitud['tipo_solicitud']) == 'RENOVACION' && !empty($solicitud['fecha_aceptacion'])){
+              if((isset($solicitud['dictamen']) && $solicitud['dictamen'] == 'POSITIVO') || ($solicitud['tipo_solicitud']) == 'RENOVACION' && !empty($solicitud['fecha_aceptacion'])){
               ?>
                 <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_certificacion']; ?>">Proceso Certificación</button>
 

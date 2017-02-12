@@ -918,34 +918,3 @@ $total_solicitudes = mysql_num_rows($row_solicitud_registro);
     </table>
   </div>
 </div>
-
-
-
-<hr>
-
-
-<!--
-<table>
-<tr>
-<td width="20"><?php if ($pageNum_empresa > 0) { // Show if not first page ?>
-<a href="<?php printf("%s?pageNum_empresa=%d%s", $currentPage, 0, $queryString_empresa); ?>">
-<span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not first page ?></td>
-<td width="20"><?php if ($pageNum_empresa > 0) { // Show if not first page ?>
-<a href="<?php printf("%s?pageNum_empresa=%d%s", $currentPage, max(0, $pageNum_empresa - 1), $queryString_empresa); ?>">
-<span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not first page ?></td>
-<td width="20"><?php if ($pageNum_empresa < $totalPages_empresa) { // Show if not last page ?>
-<a href="<?php printf("%s?pageNum_empresa=%d%s", $currentPage, min($totalPages_empresa, $pageNum_empresa + 1), $queryString_empresa); ?>">
-<span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not last page ?></td>
-<td width="20"><?php if ($pageNum_empresa < $totalPages_empresa) { // Show if not last page ?>
-<a href="<?php printf("%s?pageNum_empresa=%d%s", $currentPage, $totalPages_empresa, $queryString_empresa); ?>">
-<span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not last page ?></td>
-</tr>
-</table>-->
