@@ -1507,7 +1507,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 ?>
               <?php
               }else{
-                echo "No Disponible";
+                echo "Not available";
               }
             }
             ?>
@@ -2108,7 +2108,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- TERMINA SECCION CERTIFICADO ------>
             </form>
           <td>
-            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consultar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>">Consult</a>
+            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consult application" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>">Consult</a>
           </td>
           <td>
             <form action="../../reportes/solicitud.php" method="POST" target="_new">

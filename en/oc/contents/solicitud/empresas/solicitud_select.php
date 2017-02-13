@@ -985,15 +985,15 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
         <tr class="success">
           <th class="text-center">ID</th>
           <th class="text-center"><a href="#" data-toggle="tooltip" title="Type of application"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Type</a></th>
-          <th class="text-center">Application Date</th>
-          <th class="text-center">Organization</th>
-          <th class="text-center">Application Status</th>
+          <th class="text-center">Application date</th>
+          <th class="text-center">Company</th>
+          <th class="text-center">Application status</th>
           <th class="text-center">Quotation<br>(downloadable)</th>
           <!--<th class="text-center">Sitio WEB</th>-->
           <!--<th class="text-center">Contacto</th>-->
           <!--<th class="text-center">País</th>-->
-          <th class="text-center">Objetion Process</th>
-          <th class="text-center">Certification<br>Process</th>
+          <th class="text-center">Objection Process</th>
+          <th class="text-center">Certification Process</th>
           <th class="text-center">Certificate</th>
           <!--<th class="text-center">Propuesta</th>-->
           <!--<th class="text-center">Observaciones Solicitud</th>-->
@@ -1031,7 +1031,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             if(isset($proceso_certificacion['estatus_dspp'])){
               echo $proceso_certificacion['nombre_dspp'];
             }else{
-              echo "No Disponible";
+              echo "Not available";
             }
              ?>
           </td>
@@ -1042,17 +1042,17 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             if(isset($solicitud['cotizacion_empresa'])){
             ?>
               <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="<?php echo "#cotizacion".$solicitud['idsolicitud_registro']; ?>" title="Reemplazar Cotización"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="<?php echo "#cotizacion".$solicitud['idsolicitud_registro']; ?>" title="Replace quotation"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
                 <a href='<?php echo $solicitud['cotizacion_empresa']; ?>' class='btn btn-sm btn-success' style='font-size:12px;color:white;height:30px;' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Download quotation</a>
               </div>
             <?php
                //echo "<a class='btn btn-success form-control' style='font-size:12px;color:white;height:30px;' href='".$solicitud['cotizacion_empresa']."' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>";
                if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
-                echo "<p class='alert alert-success' style='padding:7px;'>Status: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
-                echo "<p class='alert alert-danger' style='padding:7px;'>Status: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                echo "<p class='alert alert-danger' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }else{
-                echo "<p class='alert alert-info' style='padding:7px;'>Status: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                echo "<p class='alert alert-info' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }
 
             }else{ // INICIA CARGAR COTIZACIÓN
@@ -1071,7 +1071,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                     </div>
                     <div class="modal-body">
                       <div class="form-group">
-                        <label for="nueva_cotizacion">Nuew quotation</label>
+                        <label for="nueva_cotizacion">New quotation</label>
                         <input type="file" id="nueva_cotizacion" name="nueva_cotizacion">
                         <input type="hidden" name="cotizacion_actual" value="<?php echo $solicitud['cotizacion_empresa']; ?>">
                         <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
@@ -1094,7 +1094,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <?php
             if($solicitud['tipo_solicitud'] == 'RENOVACION'){
             ?>
-              <a href="#" data-toggle="tooltip" title="This application is in Process of Renewal of the Registry therefore does not apply the period of objection" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>APPLICATION FOR RENEWAL</a>
+              <a href="#" data-toggle="tooltip" title="This request is in Process of Renewal of the Registry therefore does not apply the period of objection" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>APPLICATION FOR RENEWAL</a>
             <?php
             }else{
               if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] != 'EN ESPERA'){
@@ -1104,7 +1104,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 <?php 
                 if(isset($solicitud['documento'])){
                 ?>
-                  <p class="alert alert-success" style="margin-bottom:0;padding:0px;">Resolución: <?php echo $solicitud['dictamen']; ?></p>
+                  <p class="alert alert-success" style="margin-bottom:0;padding:0px;">Resolution: <?php echo $solicitud['dictamen']; ?></p>
                   <a class="btn btn-info" style="font-size:12px;width:100%;height:30px;" href='<?php echo $solicitud['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Download resolution</a> 
                 <?php
                 }
@@ -1122,14 +1122,14 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
               <?php 
               if((isset($solicitud['dictamen']) && $solicitud['dictamen'] == 'POSITIVO') || ($solicitud['tipo_solicitud'] == 'RENOVACION' && !empty($solicitud['fecha_aceptacion']))){
               ?>
-                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_registro']; ?>">Process of certification</button>
+                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_registro']; ?>">Certification process</button>
                 <!-- inicia modal proceso de certificación -->
                 <div id="<?php echo "certificacion".$solicitud['idsolicitud_registro']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Process of certification</h4>
+                        <h4 class="modal-title" id="myModalLabel">Certification process</h4>
                       </div>
                       <div class="modal-body">
                         
@@ -1138,15 +1138,15 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                           $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre_ingles FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_registro = '$solicitud[idsolicitud_registro]' AND proceso_certificacion.estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
                           while($historial_proceso = mysql_fetch_assoc($row_proceso_certificacion)){
-                            echo "<div class='col-md-10'>Process: $historial_proceso[nombre_ingles]</div>";
-                            echo "<div class='col-md-2'>Date: ".date('d/m/Y',$historial_proceso['fecha_registro'])."</div>";
+                            echo "<div class='col-md-10'>Proceso: $historial_proceso[nombre_ingles]</div>";
+                            echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$historial_proceso['fecha_registro'])."</div>";
                           }
 
                           if(!isset($solicitud['idcomprobante_pago'])){
                           ?>
                           <div class="col-md-12">
                             <select class="form-control" name="estatus_interno" id="<?php echo 'statusSelect'.$solicitud['idsolicitud_registro']; ?>" onchange="<?php echo 'funcionSelect'.$solicitud['idsolicitud_registro'].'()'; ?>">
-                              <option value="">Select the process in which the certification is found</option>
+                              <option value="">Select the certification process in which you are</option>
                               <?php 
                               $row_estatus_interno = mysql_query("SELECT * FROM estatus_interno",$dspp) or die(mysql_error());
                               while($estatus_interno = mysql_fetch_assoc($row_estatus_interno)){
@@ -1161,7 +1161,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                               <div class="col-xs-12" id="<?php echo 'divSelect'.$solicitud['idsolicitud_registro']; ?>" style="margin-top:10px;">
                                 <div class="col-xs-6">
-                                  <input style="display:none" id="<?php echo 'nombreArchivo'.$solicitud['idsolicitud_registro']; ?>" type='text' class='form-control' name='nombre_archivo' placeholder="File name"/>
+                                  <input style="display:none" id="<?php echo 'nombreArchivo'.$solicitud['idsolicitud_registro']; ?>" type='text' class='form-control' name='nombre_archivo' placeholder="file name"/>
                                 </div>
                                 <!-- INICIA CARGAR ARCHIVO ESTATUS -->
                                 <div class="col-xs-6">
@@ -1194,13 +1194,13 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                           <div class="col-xs-6">
                                             <p>Message sent on: <?php echo date("d/m/Y", time()); ?></p>
                                             <p>To: <span style="color:red"><?php echo $solicitud['nombre_empresa']; ?></span></p>
-                                            <p>Email(s): <?php echo $solicitud['contacto1_email']." , ".$solicitud['contacto2_email']." , ".$solicitud['email']; ?></p>
+                                            <p>email(s): <?php echo $solicitud['contacto1_email']." , ".$solicitud['contacto2_email']." , ".$solicitud['email']; ?></p>
                                             <p>Subject: <span style="color:red">Notification of the opinion - SPP</span></p>
                                             
                                           </div>
                                         </div>
                                         <div class="col-xs-12">
-                                          <h4 style="font-size:14px;padding:5px;">MESSAGE COMPANY( <small style="font-size:13px;">The CE must write in the field below, the text on the Notification of the opinion and in case the opinion is positive, it must explain that the actor must read the attached documents and sign the User´s Contract and Confirmation of Receipt. <span style="color:red">If you do not enter a message, the system will send a default message <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">view message</a></span></small>)</h4>
+                                          <h4 style="font-size:14px;padding:5px;">MESSAGE COMPANY( <small style="font-size:13px;">The CE must write in the field below, the text on the Notification of the opinion and in case the opinion is positive, it must explain that the actor must read the attached documents and sign the User´s Contract and Confirmation of Receipt . <span style="color:red">If you do not enter a message, the system will send a default message. <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">view message</a></span></small>)</h4>
                                           <textarea name="mensaje_empresa" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Enter a message in case you wanted it"></textarea>
 
                                         </div>
@@ -1228,25 +1228,25 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                           <div class="col-xs-6">
                                             <p>Message sent on: <?php echo date("d/m/Y", time()); ?></p>
                                             <p>To: <span style="color:red"><?php echo $solicitud['nombre_empresa']; ?></span></p>
-                                            <p>Email(s): <?php echo $solicitud['contacto1_email']." , ".$solicitud['contacto2_email']." , ".$solicitud['email']; ?></p>
+                                            <p>email(s): <?php echo $solicitud['contacto1_email']." , ".$solicitud['contacto2_email']." , ".$solicitud['email']; ?></p>
                                             <p>Subject: <span style="color:red">Notification of the opinion - SPP</span></p>
                                             
                                           </div>
                                         </div>
                                         <div class="col-xs-12">
-                                          <h4 style="font-size:14px;padding:5px;">MESSAGE COMPANY( <small style="font-size:13px;">The CE must write in the field below, the text on the Notification of the opinion and in case the opinion is positive, it must explain that the actor must read the attached documents and sign the User´s Contract and Confirmation of Receipt. <span style="color:red">If you do not enter a message, the system will send a default message <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">view message</a></span></small>)</h4>
+                                          <h4 style="font-size:14px;padding:5px;">MESSAGE COMPANY( <small style="font-size:13px;">The OC must write in the field below, the text on the Notification of the opinion and in case the opinion is positive, it must explain that the actor must read the attached documents and sign the User´s Contract and Confirmation of Receipt . <span style="color:red">If you do not enter a message, the system will send a default message. <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">view message</a></span></small>)</h4>
                                           <textarea name="mensaje_empresa" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Enter a message in case you wanted it"></textarea>
 
                                         </div>
                                       </div>
                                       <div class="col-xs-12">
                                         <div class="col-xs-12">
-                                          <h4 style="font-size:14px;">ATTACHED FILES: <span style="color:#7f8c8d">Documentation sent to the actor once the Certification Process has been completed with a positive opinion.</span></h4>
+                                          <h4 style="font-size:14px;">ATTACHED FILES: <span style="color:#7f8c8d">Documentation sent to the actor once the Certification Process has completed with a Positive opinion.</span></h4>
                                           <?php 
-                                          $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND documentacion.nombre_ingles != 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
-                                          while($documetacion = mysql_fetch_assoc($row_documentacion)){
+                                          $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND documentacion.nombre != 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
+                                          while($documentacion = mysql_fetch_assoc($row_documentacion)){
 
-                                            echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$documetacion[archivo]' target='_blank'>$documetacion[nombre]</a><br>";
+                                            echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$documentacion[archivo]' target='_blank'>$documentacion[nombre_ingles]</a><br>";
                                           }
                                            ?>
                                           <p class="alert alert-warning" style="padding:5px;">
@@ -1368,7 +1368,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           if($proceso_certificacion['estatus_interno'] != 8){
                           ?>
                             <button type="submit" class="btn btn-success" style="width:100%" id="<?php echo 'boton1'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1">Save Process</button>
-                            <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Send Opinion</button>
+                            <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Send opinion</button>
                           <?php
                           }
                         }                        
@@ -1436,13 +1436,13 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   $dictamen = mysql_fetch_assoc($row_dictamen);
 
                                 ?>
-                                <p>Status: Evaluation Format: <span style="color:red"><?php echo $formato['estatus_formato']; ?></span></p>
-                                <a href="<?php echo $formato['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download Evaluation Format</a>
+                                <p>Status evaluation format: <span style="color:red"><?php echo $formato['estatus_formato']; ?></span></p>
+                                <a href="<?php echo $formato['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download evaluation format</a>
 
                                 <p>Status Evaluation Opinion: <span style="color:red"><?php echo $dictamen['estatus_dictamen']; ?></span></p>
-                                <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download evaluation opinion</a>
+                                <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download opinion</a>
                                 <p>Status Evaluation Report: <span style="color:red"><?php echo $informe['estatus_informe']; ?></span></p>
-                                <a href="<?php echo $informe['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download Report</a>
+                                <a href="<?php echo $informe['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download evaluation report/a>
 
                                 <?php
                                 }else{
@@ -1450,13 +1450,13 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   <p class="alert alert-info">Please upload the following documents:</p>
                                   <p class="alert alert-info">
 
-                                    Evaluation Format
+                                    Status evaluation format
                                     <input type="file" class="form-control" name="formato_evaluacion" required>
 
-                                    Evaluation report
+                                    Status Evaluation Opinion
                                     <input type="file" class="form-control" name="informe_evaluacion" required>
                        
-                                    Opinion of Evaluation
+                                    Status Evaluation Report
                                     <input type="file" class="form-control" name="dictamen_evaluacion" required>
 
                                   </p>
@@ -1478,13 +1478,13 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   $dictamen = mysql_fetch_assoc($row_dictamen);
 
                                 ?>
-                                <p>Status: Evaluation Format: <span style="color:red"><?php echo $formato['estatus_formato']; ?></span></p>
-                                <a href="<?php echo $formato['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download Evaluation Format</a>
+                                <p>Status evaluation format: <span style="color:red"><?php echo $formato['estatus_formato']; ?></span></p>
+                                <a href="<?php echo $formato['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download evaluation format</a>
 
                                 <p>Status Evaluation Opinion: <span style="color:red"><?php echo $dictamen['estatus_dictamen']; ?></span></p>
-                                <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download evaluation opinion</a>
+                                <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download opinion</a>
                                 <p>Status Evaluation Report: <span style="color:red"><?php echo $informe['estatus_informe']; ?></span></p>
-                                <a href="<?php echo $informe['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download Report</a>
+                                <a href="<?php echo $informe['archivo']; ?>" class="btn btn-info" style="width:100%" target="_blank">Download report</a>
 
                                 <?php
                                 }else{
@@ -1492,13 +1492,13 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   <p class="alert alert-info">Please upload the following documents:</p>
                                   <p class="alert alert-info">
 
-                                    Evaluation Format
+                                    Status evaluation format
                                     <input type="file" class="form-control" name="formato_evaluacion" required>
 
-                                    Evaluation report
+                                    Status Evaluation Opinion
                                     <input type="file" class="form-control" name="informe_evaluacion" required>
                        
-                                    Opinion of Evaluation
+                                    Status Evaluation Report
                                     <input type="file" class="form-control" name="dictamen_evaluacion" required>
 
                                   </p>
@@ -1507,7 +1507,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 }
 
                               }else{
-                                echo "<p class='alert alert-danger'>The User´s Contract has not yet been Approved or the SPP membership has not been Approved</p>";
+                                echo "<p class='alert alert-danger'>The User´s Contract has not yet been approved nor has the SPP membership been approved</p>";
                               }
           
                             }
@@ -1533,13 +1533,13 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                     $inicio = strtotime($certificado['vigencia_inicio']);
                                     $fin = strtotime($certificado['vigencia_fin']);
                                   ?>
-                                    <p class="alert alert-info">The certificate has been loaded, which is valid from: <b><?php echo date('d/m/Y', $inicio); ?></b> to <b><?php echo date('d/m/Y', $fin); ?></b></p>
+                                    <p class="alert alert-info">The certificate has been loaded, which has a validity from <b><?php echo date('d/m/Y', $inicio); ?></b> to <b><?php echo date('d/m/Y', $fin); ?></b></p>
                                     <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Download Certificate</a>
                                   <?php
                                   }else{
                                   ?>
                                     <div class="col-md-12">
-                                      <p class="alert alert-info">Please set the Certificate Start and End date.</p>
+                                      <p class="alert alert-info">Please set the Start and End date of the Certificate.</p>
                                     </div>
                                     <div class="col-md-6">
                                       <label for="fecha_inicio">Start date</label> 
@@ -1550,20 +1550,20 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd/mm/aaaa" required>
                                     </div>
                                     
-                                    <label for="certificado">Please select the certificate</label>
+                                    <label for="certificado">Please select Certificate</label>
                                     <input type="file" name="certificado" id="certificado" class="form-control" required>
-                                    <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Send Certificate</button>  
+                                    <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Send certificate</button>  
                                   <?php
                                   }
                                 }else{
                                   echo '<p class="alert alert-warning">
-                                  Once the "Evaluation Report" has been approved and the "Evaluation Opinion" can load the Certificate
+                                  Once the "Evaluation Report" has been approved and the "Evaluation Opinion" can load the Certificate.
                               </p> ';
                                 }
 
                             }else{
                               echo '<p class="alert alert-warning">
-                                Once the "Evaluation Report" has been approved and the "Evaluation Opinion" can load the Certificate
+                                Una vez aprobado el "Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado.
                               </p> ';
                             }
                             ?>
@@ -1585,7 +1585,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- TERMINA SECCION CERTIFICADO ------>
             </form>
           <td>
-            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consult Application" href="?SOLICITUD&IDsolicitud_empresa=<?php echo $solicitud['idsolicitud_registro']; ?>">Consult</a>
+            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consult application" href="?SOLICITUD&IDsolicitud_empresa=<?php echo $solicitud['idsolicitud_registro']; ?>">Consult</a>
           </td>
           <td>
             <form action="../../reportes/reporte.php" method="POST" target="_new">
@@ -1619,7 +1619,7 @@ function validar(){
   }
    
   if(!seleccionado) {
-    alert("You must select the language in which the User´s Contract, Manual SPP and Confirmation of Receipt will be sent");
+    alert("You must select the language in which the User´s Contract, SPP Handbook and Confirmation of Receipt  will be sent");
     return false;
   }
 

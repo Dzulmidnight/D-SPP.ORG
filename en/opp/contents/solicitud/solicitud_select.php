@@ -674,7 +674,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
             <tr>
               <td>
                 <form action="../../reportes/solicitud.php" method="POST" target="_new">
-                  <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><?php echo $solicitud['idsolicitud_certificacion']; ?> <img src="../../img/pdf.png" style="height:30px;" alt=""></button>
+                  <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Download application" target="_new" type="submit" ><?php echo $solicitud['idsolicitud_certificacion']; ?> <img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
                   <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
                   <input type="hidden" name="generar_formato" value="1">
@@ -794,19 +794,19 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso de Certificación</h4>
+                        <h4 class="modal-title" id="myModalLabel">Process of certification</h4>
                       </div>
                       <div class="modal-body">
                         <div class="row">
 
                             <div class="col-md-12">
-                              Historial Estatus Certificación
+                              History certification status
                             </div>
                             <?php 
                             $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre_ingles FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE idsolicitud_certificacion = $solicitud[idsolicitud_certificacion] AND estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
                             while($historial_certificacion = mysql_fetch_assoc($row_proceso_certificacion)){
-                            echo "<div class='col-md-10'>Proceso: $historial_certificacion[nombre_ingles]</div>";
-                            echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$historial_certificacion['fecha_registro'])."</div>";
+                            echo "<div class='col-md-10'>Process: $historial_certificacion[nombre_ingles]</div>";
+                            echo "<div class='col-md-2'>Date: ".date('d/m/Y',$historial_certificacion['fecha_registro'])."</div>";
                             }
                              ?>
 

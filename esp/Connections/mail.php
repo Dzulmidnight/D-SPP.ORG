@@ -1,4 +1,4 @@
-<?php 
+ <?php 
 include_once("../../PHPMailer/class.phpmailer.php");
 include_once("../../PHPMailer/class.smtp.php");
 
@@ -20,7 +20,6 @@ $mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
 $correoCert = "cert@spp.coop";
 
 /*
-
 $mail = new PHPMailer();
 $mail->IsSMTP();
 //$mail->SMTPSecure = "ssl";

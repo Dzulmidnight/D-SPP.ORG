@@ -1011,7 +1011,7 @@ $opp = mysql_fetch_assoc($row_opp);
     }
      
     if(!seleccionado) {
-      alert("Debes de seleecionar un Tipo de Solicitud");
+      alert("You must select an application type");
       return false;
     }
     //// TERMINA SELECCION TIPO SOLICITUD
@@ -1028,7 +1028,7 @@ $opp = mysql_fetch_assoc($row_opp);
     }
      
     if(!ventas) {
-      alert("Debe seleccionar \"SI\" tuvo ó \"NO\" ventas");
+      alert("Must select whether or not you had sales");
       return false;
     }
     /// TERMINA OPCION DE VENTAS
@@ -1044,7 +1044,7 @@ $opp = mysql_fetch_assoc($row_opp);
 	    }
 	     
 	    if(!monto) {
-	      alert("Seleccionaste que \"SI\" tuviste ventas, debes seleccionar el monto de ventas SPP");
+	      alert("You selected that if you had sales, you must select the SPP sales amount");
 	      return false;
 	    }
 

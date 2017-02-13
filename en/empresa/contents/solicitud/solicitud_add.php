@@ -990,7 +990,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
     }
      
     if(!seleccionado) {
-      alert("Debes de seleccionar un Tipo de Solicitud");
+      alert("You must select an application type");
       return false;
     }
     //// TERMINA SELECCION TIPO SOLICITUD
@@ -1007,7 +1007,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
     }
      
     if(!ventas) {
-      alert("Debe seleccionar \"SI\" tuvo ó \"NO\" compras");
+      alert("Must select whether or not you had purchases");
       return false;
     }
     /// TERMINA OPCION DE VENTAS
@@ -1023,7 +1023,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 	    }
 	     
 	    if(!monto) {
-	      alert("Seleccionaste que \"SI\" tuviste compras, debes seleccionar el monto de compras SPP");
+	      alert("You selected that if you had purchases, you must select the amount of purchases SPP");
 	      //alert(valor_venta);
 	      return false;
 	    }
