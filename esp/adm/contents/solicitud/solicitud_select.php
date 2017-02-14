@@ -1021,9 +1021,13 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
       </body>
       </html>
     ';
-
+    if(!empty($informacion['email1'])){
       $mail->AddAddress($informacion['email1']); 
+    }
+    if(!empty($informacion['email2'])){
       $mail->AddAddress($informacion['email2']); 
+    }
+      $mail->AddCC($spp_global);
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));

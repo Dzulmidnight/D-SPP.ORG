@@ -884,7 +884,7 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
       if(!empty($informacion['oc_email2'])){
         $mail->AddAddress($informacion['oc_email2']); 
       }
-      
+      $mail->AddCC($spp_global);
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
