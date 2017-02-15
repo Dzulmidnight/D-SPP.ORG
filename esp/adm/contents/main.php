@@ -54,7 +54,8 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 ?>
 <h4>Menú principal Administrador</h4>
 
-<?php 
+<?php
+  ////////////////////// INICIA SECCIÓN MENSAJES PERIODO DE OBJECIÓN //////////////////////////////
   while($periodo = mysql_fetch_assoc($row_periodo)){  //// INICIIA WHILE
       // REVISION PRIMER MENSAJE 7 DIAS
     $num_dias1 = 7;
@@ -372,4 +373,167 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
     }
   } //// TERMINA WHILE
 
+  ///// TERMINA SECCIÓN MENSAJES PERIODO DE OBJECIÓN ///////////////////////////////////
+
+  ///////////////////////// INICIA SECCIÓN MENSAJES RENOVACÓN DEL CERTIFICADO ///////////////////////////
+
+    $timeActual = "";
+    $timeVencimiento = "";
+    $timeRestante = "";
+    $plazo = "";
+
+    $timeActual= time();   // Obtenemos el timestamp del momento actual
+    //$timeVencimiento = strtotime("2016-02-12");
+    //$timeVencimiento = strtotime(); // Obtenemos timestamp de la fecha de vencimiento
+   // $timeRestante = ($timeVencimiento - $timeActual);
+
+    $plazo = 60 *(24*60*60);
+    // Calculamos el número de segundos que tienen 60 dias
+    $contador = 1;
+    $row_certificado = mysql_query("SELECT opp.*, MAX(certificado.idcertificado) AS 'idcertificado', certificado.idopp, MAX(certificado.vigencia_fin) AS 'ultima_fecha', certificado.estatus_certificado, estatus_dspp.nombre AS 'nombre_estatus', notificaciones.idnotificacion, notificaciones.tipo_notificacion, MAX(notificaciones.fecha) AS 'fecha_notificacion' FROM opp INNER JOIN certificado ON opp.idopp = certificado.idopp INNER JOIN oc ON certificado.entidad = oc.idoc INNER JOIN estatus_dspp ON opp.estatus_dspp LEFT JOIN notificaciones ON opp.idopp = notificaciones.idopp GROUP BY certificado.idopp", $dspp) or die(mysql_error());
+
+    while($certificado = mysql_fetch_assoc($row_certificado)){
+      $timeActual = time();
+
+      $timeVencimiento = strtotime($certificado['ultima_fecha']);
+      $timeRestante = ($timeVencimiento - $timeActual);
+      $estatusCertificado = "";
+      $plazo = 60 *(24*60*60);
+      $plazoDespues = ($timeVencimiento + $plazo);
+      $prorroga = ($timeVencimiento + $plazo);
+      /////INICIA IF 1
+      if($timeActual <= $timeVencimiento){
+        if($timeRestante <= $plazo){
+          $estatusCertificado = 16; // AVISO DE RENOVACIÓN
+
+
+          $row_opp = mysql_query("SELECT opp.*, contactos.* FROM opp INNER JOIN contactos ON opp.idopp = contactos.idopp WHERE opp.idopp = $certificado[idopp]", $dspp) or die(mysql_error());
+          $opp = mysql_fetch_assoc($row_opp);
+
+          $destinatario_opp = "";
+
+          
+          $row_oc = mysql_query("SELECT certificado.idcertificado, certificado.entidad, oc.* FROM certificado INNER JOIN oc ON certificado.entidad = oc.idoc WHERE idcertificado = $certificado[idcertificado]", $dspp) or die(mysql_error());
+
+          $oc = mysql_fetch_assoc($row_oc);
+
+          $fechaVigencia = date('d-m-Y', strtotime($certificado['ultima_fecha']));
+
+          $nombre_opp = $certificado['nombre'];
+          $abreviacion_opp = $certificado['abreviacion'];
+
+          $vigencia_final = $certificado['ultima_fecha'];
+          $email_oc1 = $oc['email1'];
+          $email_oc2 = $oc['email2'];
+
+          $ano_notificacion = date('Y', $certificado['fecha_notificacion']);
+          $ano_actual = date('Y', time());
+          if(empty($certificado['idnotificacion']) || ($ano_notificacion != $ano_actual)){
+            $asunto = "D-SPP - Aviso de Renovacion de Certificado"; 
+            ///CORREOS A LOS QUE SE ENVIARA EL CORREO DE RENOVACIÓN
+            if(!empty($opp['email'])){
+              $mail->AddAddress($opp['email']);
+            }
+            if(!empty($opp['email1'])){
+              $mail->AddAddress($opp['email1']);
+            }
+            if(!empty($opp['email2'])){
+              $mail->AddAddress($opp['email2']);
+            }
+            if(!empty($email_oc1)){
+              $mail->AddAddress($email_oc1);
+            }
+            if(!empty($email_oc2)){
+              $mail->AddAddress($email_oc2);
+            }
+
+            ///correos SPP GLOBAL con copia oculta
+            $mail->AddBCC("cert@spp.coop");
+            $mail->AddBCC("adm@spp.coop");
+            $mail->AddBCC("com@spp.coop");
+
+
+            $cuerpo = '
+              <html>
+              <head>
+                <meta charset="utf-8">
+              </head>
+              <body>    
+                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+                  <tbody>
+                    <tr>
+                      <th rowspan="1" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                      <th scope="col" align="left" width="500"><strong><h3>Aviso de Renovación de Certificado SPP</h3></strong></th>
+                    </tr>
+                    <tr>
+                      <td style="text-align:justify; padding-top:2em" colspan="2">
+                     
+                        <p>Estimados Representantes de <strong style="color:red">'.$nombre_opp.', (<u>'.$abreviacion_opp.'</u>)</strong>:</p>
+                        
+                        <p>Por este conducto se les informa la necesidad de renovación de su Certificado SPP. La fecha de su vigencia es <strong style="color:red">'.$fechaVigencia.'</strong>, por lo que deben proceder con la evaluación anual.</p>
+                        
+                        <p>De acuerdo a los procedimientos del SPP, se puede llevar a cabo la evaluación dos meses antes de la fecha de vigencia o máximo dos meses después.  Si la evaluación se realiza dos meses después, se esperaría que el dictamen se obtuviera 4 meses después  (de la fecha de vencimiento del certificado) como plazo máximo, para obtener el dictamen positivo de parte del Organismo de Certificación.</p>
+                      
+                        <p>Queremos enfatizar que actualmente existen políticas para la suspensión y/o cancelación del certificado por lo que si ustedes no solicitan a tiempo pueden ser acreedores de una suspensión.</p>
+                        
+                        <p>Agradeciendo su atención, nos despedimos y enviamos saludos del SPP GLOBAL.</p>
+                        
+                        <p>CUALQUIER INCONVENIENTE FAVOR DE NOTIFICARLO A SPP GLOBAL AL CORREO <strong>cert@spp.coop</strong></p>
+                      
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </body>
+              </html>
+            ';
+
+
+            //$mail->Username = "soporte@d-spp.org";
+            //$mail->Password = "/aung5l6tZ";
+            $mail->Subject = utf8_decode($asunto);
+            $mail->Body = utf8_decode($cuerpo);
+            $mail->MsgHTML(utf8_decode($cuerpo));
+            $mail->Send();
+            $mail->ClearAddresses();
+
+            $query = "INSERT INTO notificaciones (idopp, tipo_notificacion, fecha) VALUES (".$certificado['idopp'].", '2', $timeActual)";
+            $insertar = mysql_query($query,$dspp) or die(mysql_error());
+          }
+
+          //echo "<p style='color:green'>SE ENVIO CORREO</p>";
+
+        }else{
+          $estatusCertificado = 10; // CERTIFICADO ACTIVO
+          //echo "<p style='color:blue'>DENTRO DE FECHA</p>";
+        }
+      }else{
+        if($prorroga >= $timeActual){
+          $estatusCertificado = 12; // CERTIFICADO POR EXPIRAR
+          if(empty($certificado['idnotificacion'])){
+            $query = "INSERT INTO notificaciones (idopp, tipo_notificacion, fecha) VALUES (".$certificado['idopp'].", '1', $timeActual)";
+            $insertar = mysql_query($query,$dspp) or die(mysql_error());
+          }
+
+          //echo "<p style='color:black'>CERTIFICADO POR EXPIRAR</p>";
+        }else{
+          $estatusCertificado = 11; // CERTIFICADO EXPIRADO
+          if(empty($certificado['idnotificacion'])){
+            $query = "INSERT INTO notificaciones (idopp, tipo_notificacion, fecha) VALUES (".$certificado['idopp'].", '3', $timeActual)";
+            $insertar = mysql_query($query,$dspp) or die(mysql_error());
+          }
+          //echo "<p style='color:red'>FECHA ANTIGUA</p>";
+        }
+      }
+      ///TERMINA IF 1
+      /* 14/02/201/
+      $actualizar = "UPDATE opp SET estado = $estatusCertificado WHERE idopp = $row_opp[idopp]";
+      $ejecutar = mysql_query($actualizar,$dspp) or die(mysql_error());
+
+      $actualizar = "UPDATE certificado SET status = $estatusCertificado WHERE idcertificado = $row_opp[idcertificado]";
+      $ejecutar = mysql_query($actualizar,$dspp) or die(mysql_error());
+      14/02/2017 */
+
+    }
+  //////////////////////// TERMINA SECCIÓN MENSAJES RENOVACÓN DEL CERTIFICADO ///////////////////////////
 ?>
