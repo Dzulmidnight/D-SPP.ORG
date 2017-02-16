@@ -295,7 +295,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   //$row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
   //$oc = mysql_fetch_assoc($row_oc);
 
-  $row_opp = mysql_query("SELECT opp.nombre, opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
+  $row_opp = mysql_query("SELECT opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
   $opp_detail = mysql_fetch_assoc($row_opp);
 
   $asunto = "D-SPP Cotización (Solicitud de Certificación para Organizaciones de Pequeños Productores)";
@@ -342,7 +342,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
                   </tr>
                   <tr style="font-size: 12px; text-align:justify">
                     <td style="padding:10px;">
-                      '.$_POST['nombre'].'
+                      '.$_POST['nombre'].' - ('.$opp_detail['abreviacion_opp'].')
                     </td>
                     <td style="padding:10px;">
                       '.$_POST['pais'].'
@@ -417,7 +417,7 @@ if(isset($_POST['agregar_observaciones']) && $_POST['agregar_observaciones'] == 
     GetSQLValueString($idsolicitud_certificacion, "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
-  $row_informacion = mysql_query("SELECT opp.nombre, opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
+  $row_informacion = mysql_query("SELECT opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
   
   $asunto = "D-SPP | Observaciones Solicitud Certficación SPP";

@@ -82,7 +82,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
           GetSQLValueString($idsolicitud_registro, "int"));
         $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
-        $row_empresa = mysql_query("SELECT empresa.nombre, empresa.pais AS 'empresa_pais', empresa.spp, empresa.password, empresa.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, solicitud_registro.adm1_email FROM empresa INNER JOIN solicitud_registro ON empresa.idempresa = solicitud_registro.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $idsolicitud_registro", $dspp) or die(mysql_error());
+        $row_empresa = mysql_query("SELECT empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais AS 'empresa_pais', empresa.spp, empresa.password, empresa.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, solicitud_registro.adm1_email FROM empresa INNER JOIN solicitud_registro ON empresa.idempresa = solicitud_registro.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $idsolicitud_registro", $dspp) or die(mysql_error());
         $empresa_detail = mysql_fetch_assoc($row_empresa);
 
         $asunto = "D-SPP Cotización - actualizada (Solicitud de Registro para Compradores y Otros Actores)";
@@ -129,7 +129,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
                         </tr>
                         <tr style="font-size: 12px; text-align:justify">
                           <td style="padding:10px;">
-                            '.$empresa_detail['nombre'].'
+                            '.$empresa_detail['nombre'].' - ('.$empresa_detail['abreviacion_empresa'].')
                           </td>
                           <td style="padding:10px;">
                             '.$empresa_detail['empresa_pais'].'
@@ -199,7 +199,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
 }
 
 if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
-  $query_empresa = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, solicitud_registro.adm1_email, empresa.nombre, empresa.email FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE solicitud_registro.idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+  $query_empresa = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, solicitud_registro.adm1_email, empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.email FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE solicitud_registro.idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $detalle_empresa = mysql_fetch_assoc($query_empresa);
   $estatus_dspp = 8; //INICIA PROCESO DE CERTIFICACION
   //ESTATUS INTERNO
@@ -274,7 +274,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                 </tr>
                 <tr>
-                 <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+                 <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].' - ('.$detalle_empresa['abreviacion_empresa'].')</span></p></th>
                 </tr>
 
                 <tr>
@@ -310,7 +310,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                 </tr>
                 <tr>
-                 <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+                 <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].' - ('.$detalle_empresa['abreviacion_empresa'].')</span></p></th>
                 </tr>
 
                 <tr>
@@ -379,7 +379,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+               <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].' - ('.$detalle_empresa['abreviacion_empresa'].')</span></p></th>
               </tr>
 
               <tr>
@@ -516,7 +516,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                 </tr>
                 <tr>
-                 <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+                 <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_empresa['nombre'].' - ('.$detalle_empresa['abreviacion_empresa'].')</span></p></th>
                 </tr>
 
                 <tr>
@@ -566,7 +566,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                 </tr>
                 <tr>
-                 <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_empresa['nombre'].'</span></p></th>
+                 <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_empresa['nombre'].' - ('.$detalle_empresa['abreviacion_empresa'].')</span></p></th>
                 </tr>
 
                 <tr>
@@ -764,7 +764,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
   //inicia enviar correo a ADM sobre documentacion de Evaluación
-  $row_informacion = mysql_query("SELECT solicitud_registro.idsolicitud_registro, empresa.nombre AS 'nombre_empresa', oc.nombre AS 'nombre_oc' FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+  $row_informacion = mysql_query("SELECT solicitud_registro.idsolicitud_registro, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', oc.nombre AS 'nombre_oc' FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
   $asunto = "D-SPP | Se ha cargado el Formato, Dictamen e Informe de Evaluación";
 
@@ -787,7 +787,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
             <tr>
               <td colspan="2">
-               <p>El OC: <span style="color:red">'.$informacion['nombre_oc'].'</span> ha cargado la documentación de evaluación correspondiente al proceso de certificación de la empresa: '.$informacion['nombre_empresa'].'
+               <p>El OC: <span style="color:red">'.$informacion['nombre_oc'].'</span> ha cargado la documentación de evaluación correspondiente al proceso de certificación de la empresa: '.$informacion['nombre_empresa'].' - ('.$informacion['abreviacion_empresa'].')
                <p>
                 Por favor proceda a ingresar en su cuenta de ADMINISTRADOR dentro del sistema D-SPP para poder revisar los siguientes documento: 
                    <ul style="color:red">
@@ -886,7 +886,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //inicia correo envio de certificado
-  $row_informacion = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.contacto1_email, empresa.nombre AS 'nombre_empresa', empresa.email FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+  $row_informacion = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.contacto1_email, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
   $inicio = strtotime($_POST['fecha_inicio']);
   $fin = strtotime($_POST['fecha_fin']);
@@ -908,7 +908,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>empresa: <span style="color:red">'.$informacion['nombre_empresa'].'</span></p></th>
+               <th scope="col" align="left" width="280"><p>empresa: <span style="color:red">'.$informacion['nombre_empresa'].' - ('.$empresa_detail['abreviacion_empresa'].')</span></p></th>
               </tr>
 
               <tr>
