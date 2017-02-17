@@ -329,122 +329,146 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 		<thead>
 		 			<tr class="success">
 		 				<th class="text-center">
-					
+							#
 		 				</th>
-						<th class="text-center">OPP</th>
-						<th class="text-center">País de la OPP</th>
-						<th class="text-center">Fecha de Compra</th>
+						<th class="text-center">#SPP</th>
+						<th class="text-center">Nombre OPP proovedora</th>
+						<th class="text-center">País de OPP proveedora</th>
+						<th class="text-center">Fecha de Facturación</th>
 						<th class="text-center">Primer Intermediario</th>
 						<th class="text-center">Segundo Intermediario</th>
-						<th class="text-center">Tipo de Producto</th>
 						<th colspan="2" class="text-center">Referencia Contrato Original con OPP</th>
-						<th class="text-center">Producto Especifico de acuerdo al contrato original</th>
-						<th colspan="2" class="text-center">Cantidad Total Conforme Contrato</th>
-						<th colspan="2" class="text-center">Peso Total Conforme Unidad de Medida Reglamento de Uso</th>
-						<th colspan="2" class="text-center">Precio Total Unitario</th>
-						<th colspan="2" class="text-center">Precio Sustentable Minimo</th>
-						<th colspan="2" class="text-center">Reconocimiento Orgánico</th>
-						<th colspan="2" class="text-center">Incentivo SPP</th>
+						<th class="text-center">Producto General</th>
+						<th class="text-center">Producto Especifico</th>
+						<th colspan="2" class="text-center">Cantidad Total Conforme Factura</th>
+						<th class="text-center">Precio Sustentable Mínimo</th>
+						<th class="text-center">Reconocimiento Orgánico</th>
+						<th class="text-center">Incentivo SPP</th>
+						<th class="text-center">Otros premios</th>
+						<th class="text-center">Precio Total Unitario pagado</th>
 						<th class="text-center">Valor Total Contrato</th>
-						<th colspan="2" class="text-center">Cuota de Uso Reglamento</th>
-						<th class="text-center">Total a Pagar</th>
+						<th class="text-center">Cuota de Uso Reglamento</th>
+						<th class="text-center">Total a pagar</th>
 		 			</tr>
 		 		</thead>
 		 		<tbody>
 		 			<tr>
+		 				<!-- INICIA NUMERO CONSECUTIVO -->
 		 				<td>
-		 					#
+		 					Número Consecutivo
 		 				</td>
+		 				<!-- TERMINA NUMERO CONSECUTIVO -->
+
+		 				<!-- INICIA #SPP -->
+		 				<td>
+		 					Codigo de identificación SPP
+		 				</td>
+		 				<!-- TERMINA #SPP -->
+						
+						<!-- INICIA NOMBRE DE LA OPP -->
 		 				<td>
 		 					Nombre de la OPP de donde proviene el producto.
 		 				</td>
+		 				<!-- TERMINA NOMBRE DE A OPP
+
+		 				<!-- INICIA PAIS DE LA OPP -->
 		 				<td>
-		 					País sede la OPP de donde priviene el producto.
+		 					País sede la OPP de donde proviene el productos
 		 				</td>
+		 				<!-- TERMINA PAIS DE LA OPP -->
+
+		 				<!-- INICIA FECHA DE LA FACTURACION -->
 		 				<td>
-		 					Fecha de embarque del producto. la fecha de la compra del producto por el Comprador Final, usuario del SPP.
+		 					La fecha de la compra del producto por el Comprador Final, usuario del SPP(de la OPP directamente o a través de algún intermediario).
 		 				</td>
+		 				<!-- TERMINA FECHA DE LA FACTURACION -->
+
+		 				<!-- INICIA PRIMER INTERMEDIARIO -->
 		 				<td>
-		 					Nombre de la contraparte comercial que hace la compra del producto a la OPP, si no es el Comprador Final.
+		 					Nombre de la contraparte comercial que hace la compra del prodcuto a la OPP, si no es el Comprador Final. Si es el Comprador Final poner guión
 		 				</td>
+		 				<!-- TERMINA PRIMER INTERMEDIARIO -->
+
+		 				<!-- INICIA SEGUNDO INTERMEDIARIO -->
 		 				<td>
-		 					Nombre de la contraparte comercial que hace la compra del producto al Primer Intermediario, si no el Comprador Final.
+		 					Nombre de la contraparte comercial que hace la compra del producto al Primer Intermediario, si no es el Comprador Final. Si no existe o es el Comprador Final, poner guión.
 		 				</td>
-		 				<td>
-		 					El producto que se comercializa con certificación SPP. Ej: Café, Miel, Banano, etc.
-		 				</td>
+		 				<!-- TERMINA SEGUNDO INTERMEDIARIO -->
+
 		 				<!-- INICIA REFERENCIA CONTRATO -->
 			 				<td>
-			 					Número o clave del Contrato Original, es decir, el contrato de venta de la OPP al Comprador o al Primer Intermediario.
+			 					Número o la clave del Contrato Original, es decir, el contrato de venta de la OPP al Comprador o al Primer Intermediario.
 			 				</td>
 			 				<td>
 			 					Fecha del Contrato Original de venta de la OPP.
 			 				</td>
 		 				<!-- TERMINA REFERENCIA CONTRATO -->
+
+		 				<!-- INICIA PRODUCTO GENERAL -->
 		 				<td>
-		 					Producto especifico. Ej: Café verde arábica, Miel tipo A, Chips de platano.
+		 					Producto general. Ej: Café, Miel, Platano, Azúcar.
 		 				</td>
-		 				<!-- INICIA CANTIDAD TOTAL CONFORME CONTRATO -->
+		 				<!-- TERMINA PRODUCTO GENERAL -->
+
+		 				<td>
+		 					Producto especifico. Ej: Café verde arábica, Miel tipo A, Chips de platano, Azúcar blanco refinado.
+		 				</td>
+		 				<!-- INICIA CANTIDAD TOTAL CONFORME FACTURA -->
 			 				<td>
-			 					Cantidad total del producto en unidad de medida final indicada en el contrato original, Ej: 417.26
+			 					Unidad de medida utilizada (kg, t, lb, qq, etc)
 			 				</td>
 			 				<td>
-			 					Unidad de medida utilizada.
+			 					Cantidad total del producto en unidad de medida final indicada en el contrato original
 			 				</td>
-		 				<!-- TERMINA CANTIDAD TOTAL CONFORME CONTRATO -->
-		 				<!-- INICIA PESO TOTAL CONFORME UNIDAD DE MEDIDA REGLAMENTO DE USO -->
-			 				<td>
-			 					Conversión del peso total conforme a unidades de la cuota de uso establecida.
-			 				</td>
-			 				<td>
-			 					Unidad de medida utilizada.
-			 				</td>
-		 				<!-- TERMINA PESO TOTAL CONFORME UNIDAD DE MEDIDA REGLAMENTO DE USO -->
-		 				<!-- INICIA PRECIO TOTAL UNITARIO -->
-			 				<td>
-			 					Precio Unitario total pagado (en unidades de peso y divisa conforme lista de precios SPP GLOBAL).
-			 				<td>
-			 					Unidad de medida del precio pagado por el comprador.
-			 				</td>
-		 				<!-- TERMINA PRECIO TOTAL UNITARIO -->
+		 				<!-- TERMINA CANTIDAD TOTAL CONFORME FACTURA -->
+
 		 				<!-- INICIA PRECIO SUSTENTABLE MINIMO -->
-			 				<td>
-			 					Precio Unitario total pagado (en unidades de peso y divisa conforme lista de precios SPP GLOBAL).
-			 				</td>
-			 				<td>
-			 					Unidad de medida del precio pagado por el Comprador.
-			 				</td>
-		 				<!-- TERMINA PRECIO SUSTENTABLE MINIMO -->
+		 				<td>
+		 					Importe pagado por unidad(USD)
+		 				</td>
+						<!-- TERMINA PRECIO SUSTENTABLE MINIMO -->
+
 		 				<!-- INICIA RECONOCIMIENTO ORGANICO -->
-			 				<td>
-			 					Precio pagado (en unidades de peso y divisa conforme lista de precios SPP GLOBAL)
-			 				</td>
-			 				<td>
-			 					Unidad de medida del precio pagado por el Comprador
-			 				</td>
-		 				<!-- TERMINA RECONOCIMIENTO ORGANICO -->
+		 				<td>
+		 					Importe pagado por unidad(USD)
+		 				</td>
+						<!-- TERMINA RECONOCIMIENTO ORGANICO -->
+
 		 				<!-- INICIA INCENTIVO SPP -->
-			 				<td>
-			 					Precio pagado (en unidades de peso y divisa conforme lista de precios SPP GLOBAL).
-			 				</td>
-			 				<td>
-			 					Unidad de medida del precio pagado por el Comprador.
-			 				</td>
-		 				<!-- TERMINA INCENTIVO SPP -->
 		 				<td>
-		 					Valor total del contrato.
+		 					Importe pagado por unidad(USD)
 		 				</td>
+						<!-- TERMINA INCENTIVO SPP -->
+
+		 				<!-- INICIA OTROS PREMIOS -->
+		 				<td>
+		 					Importe pagado por unidad(USD)
+		 				</td>
+						<!-- TERMINA OTROS PREMIOS -->
+
+		 				<!-- INICIA PRECIO TOTAL UNITARIO PAGADO -->
+		 				<td>
+		 					Importe pagado por unidad(USD)
+		 				</td>
+						<!-- TERMINA PRECIO TOTAL UNITARIO PAGADO -->
+
+		 				<!-- INICIA VALOR TOTAL CONTRATO -->
+		 				<td>
+		 					Valor total del contrato (en divisa conforme Lista de Precios Sustentables del SPP)
+		 				</td>
+						<!-- TERMINA VALOR TOTAL CONTRATO -->
+
 		 				<!-- INICIA CUOTA DE USO REGLAMENTO -->
-		 					<td>
-		 						Cuota establecida conforme Reglamento de Costos SPP GLOBAL para el producto y término comercial.
-		 					</td>
-		 					<td>
-		 						Unidad de medida conforme a Reglamento de Costos.
-		 					</td>
-		 				<!-- TERMIAN CUOTA DE USO REGLAMENTO -->
 		 				<td>
-		 					Total a pagar a SPP GLOBAL conforme cuota de uso y volumen de lote.
+		 					Cuota vigente establecida conforme Reglamento de Costos de SPP
 		 				</td>
+						<!-- TERMINA CUOTA DE USO REGLAMENTO -->
+
+		 				<!-- INICIA TOTAL A PAGAR -->
+		 				<td>
+		 					Total a pagar a SPP Global conforme cuota de uso y volumen de lote
+		 				</td>
+						<!-- TERMINA TOTAL A PAGAR -->
 		 			</tr>
 
 		 				<?php 
@@ -505,11 +529,17 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 							}
 		 				 ?>
 					<tr class="success">
-						<td></td>
-						<td>
-							<input type="text" name="opp" id="" placeholder="opp" autofocus required>
+						<td class="warning"></td> <!-- # -->
+
+						<td class="success"><!-- #SPP(codigo de identificación)-->
+							* <input type="text" name="spp" id="" placeholder="#SPP" autofocus required>
 						</td>
-						<td>
+
+						<td class="warning"><!-- nombre de la opp -->
+							<input type="text" name="nombre_opp" id="" placeholder="Nombre de la OPP">
+						</td>
+
+						<td class="warning"><!-- pais de la opp proveedora -->
 			              <select name="pais" id="pais" class="" required>
 			                <option value="">Selecciona un País</option>
 			                <?php 
@@ -520,84 +550,77 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			                 ?>
 			              </select>
 						</td>
-						<td>
-							<input type="text" name="fecha_compra" id="" placeholder="Fecha Compra">
+
+						<td class="success"><!-- fecha de facturación -->
+							* <input type="date" name="fecha_facturacion" id="" placeholder="dd/mm/yyyy" required>
 						</td>
-						<td>
+
+						<td class="info"><!-- primer intermediario -->
 							<input type="text" name="primer_intermediario" id="" placeholder="primer intermediario">
 						</td>
-						<td>
-							<input type="text" name="segundo_intermediario" id="" placeholder="segundo_intermediario">
+
+						<td class="info"><!-- segundo intermediario -->
+							<input type="text" name="segundo_intermediario" id="" placeholder="segundo intermediario">
 						</td>
-						<td>
-							<input type="text" name="producto_general" id="" placeholder="producto_general">
+
+						<td class="info"><!-- REFERENCIA CONTRATO ORIGINAL -->
+							<input type="text" name="clave_contrato" id="" placeholder="clave del contrato"><!-- #clave del contrato -->
 						</td>
-						<td>
-							<input type="text" name="clave_contrato" id="" placeholder="clave_contrato">
+						<td class="info">
+							<input type="text" name="fecha_contrato" id="" placeholder="fecha del contrato original"><!-- #fecha del contrato -->
+						</td><!-- REFERENCIA CONTRATO ORIGINAL -->
+
+						<td><!-- producto general -->
+							* <input type="text" name="producto_general" id="" placeholder="Ej: café, miel, azucar" required>
 						</td>
-						<td>
-							<input type="date" name="fecha_contrato" id="" placeholder="dd/mm/aaaa">
+
+						<td class="success"><!-- producto especifico -->
+							* <input type="text" name="producto_especifico" id="" placeholder="Ej: café verde, miel de abeja, azucar refinada" required>
 						</td>
-						<td>
-							<input type="text" name="producto_especifico" id="" placeholder="producto_especifico">
-						</td>
-						<td>
-							<input type="number" step="any" name="peso_cantidad_total_contrato" id="peso_cantidad_total_contrato" onChange="calcular();" placeholder="Ej: 417.26">
-						</td>
-						<td>
-							<select name="unidad_cantidad_total_contrato">
+
+						<td class="success"><!-- CANTIDAD TOTAL CONFORME FACTURA -->
+							* <select name="unidad_cantidad_total_factura" required><!-- #unidad de medida -->
 								<option value="Qq">Qq</option>
 								<option value="Lb">Lb</option>
 								<option value="Kg">Kg</option>
-								<option value="unidad">unidad</option>
 							</select>
 						</td>
-						<td>
-							<input type="number" step="any" name="peso_total_reglamento" id="" placeholder="Ej: 417.26">
+						<td class="success">
+							* <input type="number" step="any" name="cantidad_total_factura" required><!-- #cantidad total -->
+						</td><!-- CANTIDAD TOTAL CONFORME FACTURA -->
+
+						<td class="info"><!-- precio sustentable minimo -->
+							<input type="number" step="any" name="precio_sustentable" id="" placeholder="importe pagado">
 						</td>
-						<td>
-							<select name="unidad_peso_total_reglamento">
-								<option value="Lb">Lb</option>
-								<option value="Kg">Kg</option>
-								<option value="unidad">unidad</option>
-							</select>
+
+						<td class="info"><!-- reconocimiento organico -->
+							<input type="number" step="any" name="reconocimiento_organico" id="" placeholder="importe pagado">
 						</td>
-						<td>
-							<input type="text" name="precio_precio_total_unitario" id="precio_total_unitario" placeholder="precio" onChange="calcular();" value="0" readonly style="background-color:#c0392b;color:#ecf0f1">
+
+						<td class="info"><!-- incentivo spp -->
+							<input type="number" step="any" name="incentivo_spp" id="" placeholder="importe pagado">
 						</td>
-						<td>
-							<input type="text" name="unidad_precio_total_unitario" id="" placeholder="unidad_medida">
+
+						<td class="info"><!-- otros premios -->
+							<input type="number" step="any" name="otros_premios" id="" placeholder="importe pagado">
 						</td>
-						<td>
-							<input type="number" step="any" name="precio_precio_sustentable" id="precio_sustentable_minimo" onChange="calcular();" value="0" placeholder="Ej: 160">
+
+						<td class="success"><!-- precio total unitario pagado -->
+							* <input type="number" step="any" name="precio_reconocimiento_organico" id="precio_reconocimiento_organico" onChange="calcular();" value="0" placeholder="Ej: 40">
 						</td>
-						<td>
-							<input type="text" name="unidad_precio_sustentable" id="" placeholder="unidad_medida">
-						</td>
-						<td>
-							<input type="number" step="any" name="precio_reconocimiento_organico" id="precio_reconocimiento_organico" onChange="calcular();" value="0" placeholder="Ej: 40">
-						</td>
-						<td>
+
+						<td class="warning"><!-- valor total contrato -->
 							<input type="text" name="unidad_reconocimiento_organico" id="" placeholder="unidad_medida">
 						</td>
-						<td>
+
+						<td class="warning"><!-- cuota de uso reglamento -->
 							<input type="number" step="any" name="precio_incentivo_spp" id="precio_incentivo_spp" onChange="calcular();" value="0" placeholder="Ej: 20">
 						</td>
-						<td>
+
+						<td class="warning"><!-- total a pagar -->
 							<input type="text" name="unidad_incentivo_spp" id="" placeholder="unidad_medida">
 						</td>
-						<td>
-							<input type="text" style="background-color:#c0392b;color:#ecf0f1" name="valor_total_contrato" id="valor_total_contrato" onChange="calcular();" value="0.0" readonly placeholder="valor_total">
-						</td>
-						<td>
-							<input type="text" style="background-color:#27ae60;color:#ecf0f1" name="cuota_uso_reglamento"  id="cuota_uso_reglamento" onChange="calcular();" value="0" placeholder="cuota">
-						</td>
-						<td>
-							<input type="text" name="unidad_cuota_uso_reglamento" id="" placeholder="unidad">
-						</td>
-						<td>
-							<input type="text" style="background-color:#c0392b;color:#ecf0f1" name="total" id="resultado_total" onChange="calcular();" value="0.0" readonly placeholder="total">
-						</td>
+
 					</tr>
 		 			<tr>
 		 				<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1">Guardar Registro</button></td>

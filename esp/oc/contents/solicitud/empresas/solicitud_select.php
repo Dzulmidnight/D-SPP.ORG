@@ -886,7 +886,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //inicia correo envio de certificado
-  $row_informacion = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.contacto1_email, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+  $row_informacion = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, oc.email1 AS 'email_oc1', oc.email2 AS 'email_oc2', solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
   $inicio = strtotime($_POST['fecha_inicio']);
   $fin = strtotime($_POST['fecha_fin']);
@@ -903,12 +903,13 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
           <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
             <tbody>
               <tr>
-                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th rowspan="2" scope="col" align="center" valign="middle
+                " width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
                 <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Certificado Disponible para descargar</span></p></th>
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>empresa: <span style="color:red">'.$informacion['nombre_empresa'].' - ('.$empresa_detail['abreviacion_empresa'].')</span></p></th>
+               <th scope="col" align="left" width="280"><p>empresa: <span style="color:red">'.$informacion['nombre_empresa'].' - ('.$informacion['abreviacion_empresa'].')</span></p></th>
               </tr>
 
               <tr>
@@ -931,9 +932,22 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
         </body>
       </html>
   ';
-  
-    $mail->AddAddress($informacion['email']);
-    $mail->AddAddress($informacion['contacto1_email']);
+    if(!empty($informacion['email'])){
+      $mail->AddAddress($informacion['email']);
+    }
+    if(!empty($informacion['contacto1_email'])){
+      $mail->AddAddress($informacion['contacto1_email']);
+    }
+    if(!empty($informacion['contacto2_email'])){
+      $mail->AddAddress($informacion['contacto2_email']);
+    }
+    if(!empty($informacion['email_oc1'])){
+      $mail->AddAddress($informacion['email_oc1']);
+    }
+    if(!empty($informacion['email2'])){
+      $mail->AddAddress($informacion['email2']);
+    }
+
     $mail->AddBCC($spp_global);
     $mail->AddAttachment($certificado);
     //$mail->Username = "soporte@d-spp.org";
