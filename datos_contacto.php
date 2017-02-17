@@ -41,78 +41,56 @@ if (isset($_SERVER['QUERY_STRING'])) {
 }
 $charset='utf-8';
 
-//Variable de búsqueda
-$consultaBusqueda = $_POST['valorBusqueda'];
+$row_paises = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
+?>
 
-$mensaje = "";
+<html>
+<head>
+<meta charset="utf-8">
+<title>Documento sin título</title>
+</head>
 
-
-if (isset($consultaBusqueda)) {
-//Variable de búsqueda
-
-	//Selecciona todo de la tabla mmv001 
-	//donde el nombre sea igual a $consultaBusqueda, 
-	//o el apellido sea igual a $consultaBusqueda, 
-	//o $consultaBusqueda sea igual a nombre + (espacio) + apellido
-	$consulta = mysql_query("SELECT * FROM opp WHERE spp LIKE '%$consultaBusqueda%'", $dspp) or die(mysql_error());
-
-	//Obtiene la cantidad de filas que hay en la consulta
-	$filas = mysql_num_rows($consulta);
-
-//Si no existe ninguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
-	if ($filas === 0) {
-		$mensaje = "<p>No hay ningún usuario con ese nombre y/o apellido</p>";
-	} else {
-		//Si existe alguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
-		echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
-
-		//La variable $resultado contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
-		while($resultados = mysqli_fetch_array($consulta)) {
-			$spp = $resultados['spp'];
-			$nombre = $resultados['nombre'];
-			$abreviacion = $resultados['abreviacion'];
-
-			//Output
-			$mensaje .= '
-			<p>
-			<strong>Nombre:</strong> ' . $spp . '<br>
-			<strong>Apellido:</strong> ' . $nombre . '<br>
-			<strong>Edad:</strong> ' . $abreviacion . '<br>
-			</p>';
-
-		}//Fin while $resultados
-
-	} //Fin else $filas
-
-}
-
-
-//Devolvemos el mensaje que tomará jQuery
-echo $mensaje;
- ?>
-
+<body>
 	<form action="" method="POST">
-	<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" onKeyUp="buscar();" />
-
+	<!--<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" />-->
+		<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" onKeyUp="buscar();" />
 	</form>
-	<div id="resultadoBusqueda"></div>
+	<div id="resultadoBusqueda">
+		<input id="spp" name="spp" value="" placeholder="nombre">
+		<input id="pais" name="pais" value="" placeholder="pais">
+	</div>
+
+</body>
+</html>
+
 
 
 <script>
 $(document).ready(function() {
-    $("#resultadoBusqueda").html('<p>JQUERY VACIO</p>');
+//    $("#resultadoBusqueda").val('<p>JQUERY VACIO</p>');
+    $("#spp").val('JQUERY VACIO');
+//    $("#resultadoBusqueda").val('<p>JQUERY VACIO</p>');
+    $("#pais").val('JQUERY VACIO');
+
+
 });
 
 function buscar() {
     var textoBusqueda = $("input#busqueda").val();
  
      if (textoBusqueda != "") {
-        $.post("datos_contacto.php", {valorBusqueda: textoBusqueda}, function(mensaje) {
-            $("#resultadoBusqueda").html(mensaje);
+        $.post("ejecucion.php", {valorBusqueda: textoBusqueda}, function(mensaje) {
+            $("#spp").val(mensaje);
+            $("#pais").val(mensaje);
          }); 
      } else { 
-        $("#resultadoBusqueda").html('<p>JQUERY VACIO</p>');
-        };
+        $("#spp").val('JQUERY VACIO');
+        $("#pais").val('JQUERY VACIO');
+     };
+
+
+
+
 };
 </script>
 
