@@ -1238,14 +1238,19 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   }else{
     $certificado = NULL;
   }
+  $fecha_inicio = strtotime($_POST['fecha_inicio']);
+  $fecha_fin = strtotime($_POST['fecha_fin']);
+  $vigencia_inicio = date('Y-m-d', $fecha_inicio);
+  $vigencia_fin = date('Y-m-d', $fecha_fin);
+
   //insertamos el certificado
   $insertSQL = sprintf("INSERT INTO certificado(idopp, idsolicitud_certificacion, entidad, estatus_certificado, vigencia_inicio, vigencia_fin, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
     GetSQLValueString($_POST['idopp'], "int"),
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
     GetSQLValueString($_POST['idoc'], "int"),
     GetSQLValueString($estatus_dspp, "int"),
-    GetSQLValueString($_POST['fecha_inicio'], "text"),
-    GetSQLValueString($_POST['fecha_fin'], "text"),
+    GetSQLValueString($vigencia_inicio, "text"),
+    GetSQLValueString($vigencia_fin, "text"),
     GetSQLValueString($certificado, "text"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -1284,8 +1289,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   //inicia correo envio de certificado
   $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2', solicitud_certificacion.contacto1_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
-  $inicio = strtotime($_POST['fecha_inicio']);
-  $fin = strtotime($_POST['fecha_fin']);
+
   $asunto = "D-SPP | Certificado Disponible para Descargar";
 
   $cuerpo_mensaje = '
@@ -1310,7 +1314,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
                  <p>
                   Felicidades!!!, su Certificado ha sido liberado, ahora puede descargarlo.
                  </p>
-                 <p>El Certificado tiene un vigencia del dia <span style="color:red">'.date('d/m/Y', $inicio).'</span> al dia: <span style="color:red">'.date('d/m/Y', $fin).'</span>, el cual se encuentra anexo a este correo.</p>
+                 <p>El Certificado tiene un vigencia del dia <span style="color:red">'.date('d/m/Y', $fecha_inicio).'</span> al dia: <span style="color:red">'.date('d/m/Y', $fecha_fin).'</span>, el cual se encuentra anexo a este correo.</p>
                  
                 </td>
               </tr>
@@ -2062,14 +2066,15 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   ?>
                                     <div class="col-md-12">
                                       <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
+                                      <p class="alert alert-warning" style="padding:5px;">En caso de que no se despliegue el calendario, por favor definir la fecha con el siguiente formato <span style="color:red">dd-mm-aaaa</span></p>
                                     </div>
                                     <div class="col-md-6">
                                       <label for="fecha_inicio">Fecha Inicio</label> 
-                                      <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd/mm/aaaa" required> 
+                                      <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd-mm-aaaa" required> 
                                     </div>
                                     <div class="col-md-6">
                                       <label for="fecha_fin">Fecha Fin</label>
-                                      <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd/mm/aaaa" required>
+                                      <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd-mm-aaaa" required>
                                     </div>
                                     
                                     <label for="certificado">Por favor seleccione el Certificado</label>
