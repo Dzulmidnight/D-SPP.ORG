@@ -482,7 +482,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
                         <p>Queremos enfatizar que actualmente existen políticas para la suspensión y/o cancelación del certificado por lo que si ustedes no solicitan a tiempo pueden ser acreedores de una suspensión.</p>
                         
                         <p>Agradeciendo su atención, nos despedimos y enviamos saludos del SPP GLOBAL.</p>
-                        
+                        <p style="color:#2c3e50"><b>En caso de haber iniciado ya su proceso de renovación del certificado por favor hacer caso omiso a este mensaje</b></p>
                         <p>CUALQUIER INCONVENIENTE FAVOR DE NOTIFICARLO A SPP GLOBAL AL CORREO <strong>cert@spp.coop</strong></p>
                       
                       </td>
@@ -616,7 +616,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
           if(!isset($aviso_renovacion['aviso3'])){
 
             //agregamos el aviso de renovacion
-            if(!isset($aviso_renovacion['idaviso_renovacion'])){
+            /*17_02_2017 if(!isset($aviso_renovacion['idaviso_renovacion'])){
               $insertSQL = sprintf("INSERT INTO avisos_renovacion(idopp, aviso1, aviso2, ano_aviso, idcertificado, fecha_certificado) VALUES(%s, %s, %s, %s, %s, %s)",
                 GetSQLValueString($opp['idopp'], "int"),
                 GetSQLValueString($time_actual, "int"),
@@ -693,7 +693,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
             $mail->Body = utf8_decode($cuerpo);
             $mail->MsgHTML(utf8_decode($cuerpo));
             $mail->Send();
-            $mail->ClearAddresses();
+            $mail->ClearAddresses(); 17_02_2017 */
 
           }
           echo "<p style='color:#8e44ad'>CERTIIFICADO EXPIRADO $opp[idcertificado] - idopp: $opp[idopp]</p>";
