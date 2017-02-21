@@ -491,7 +491,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 							# code...
 		 							break;
 		 					}
-							$row_registro = mysql_query("SELECT formato_compras.idtrim, formato_compras.opp, formato_compras.pais, formato_compras.fecha_compra, formato_compras.producto_general, formato_compras.producto_especifico, formato_compras.valor_total_contrato, formato_compras.total, intermediarios.primero, intermediarios.segundo, referencia_contrato.clave, referencia_contrato.fecha AS 'fecha_contrato', cantidad_total_contrato.peso AS 'ctc_peso', cantidad_total_contrato.unidad AS 'ctc_unidad', peso_total_reglamento.peso AS 'ptr_peso', peso_total_reglamento.unidad AS 'ptr_unidad', precio_total_unitario.precio AS 'ptu_precio', precio_total_unitario.unidad AS 'ptu_unidad', precio_sustentable.precio AS 'ps_precio', precio_sustentable.unidad AS 'ps_unidad', reconocimiento_organico.precio AS 'ro_precio', reconocimiento_organico.unidad AS 'ro_unidad', incentivo_spp.precio AS 'incentivo_precio', incentivo_spp.unidad AS 'incentivo_unidad', cuota_uso_reglamento.cuota AS 'cur_cuota', cuota_uso_reglamento.unidad AS 'cur_unidad' FROM formato_compras INNER JOIN intermediarios ON formato_compras.idformato_compras = intermediarios.idformato_compras INNER JOIN referencia_contrato ON formato_compras.idformato_compras = referencia_contrato.idformato_compras INNER JOIN cantidad_total_contrato ON formato_compras.idformato_compras = cantidad_total_contrato.idformato_compras INNER JOIN peso_total_reglamento ON formato_compras.idformato_compras = peso_total_reglamento.idformato_compras INNER JOIN precio_total_unitario ON formato_compras.idformato_compras = precio_total_unitario.idformato_compras INNER JOIN precio_sustentable ON formato_compras.idformato_compras = precio_sustentable.idformato_compras INNER JOIN reconocimiento_organico ON formato_compras.idformato_compras = reconocimiento_organico.idformato_compras INNER JOIN incentivo_spp ON formato_compras.idformato_compras = incentivo_spp.idformato_compras INNER JOIN cuota_uso_reglamento ON formato_compras.idformato_compras = cuota_uso_reglamento.idformato_compras WHERE formato_compras.idtrim  = '$informe_general[$num_trim]'");
+							$row_registro = mysql_query("SELECT formato_compras.*, precio_minimo.precio AS 'pm_precio', precio_minimo.unidad AS 'pm_unidad', precio_total_unitario.precio AS 'ptu_precio', precio_total_unitario.unidad AS 'ptu_unidad', incentivo_spp.precio AS 'incentivo_precio', incentivo_spp.unidad AS 'incentivo_unidad', reconocimiento_organico.precio AS 'ro_precio', reconocimiento_organico.unidad AS 'ro_unidad', otros_premios.precio AS 'otros_precio', otros_premios.unidad AS 'otros_unidad' FROM formato_compras INNER JOIN precio_minimo ON formato_compras.idformato_compras = precio_minimo.idformato_compras INNER JOIN precio_total_unitario ON formato_compras.idformato_compras = precio_total_unitario.idformato_compras INNER JOIN incentivo_spp ON formato_compras.idformato_compras = incentivo_spp.idformato_compras INNER JOIN reconocimiento_organico ON formato_compras.idformato_compras = reconocimiento_organico.idformato_compras INNER JOIN otros_premios ON formato_compras.idformato_compras = otros_premios.idformato_compras WHERE formato_compras.idtrim  = '$informe_general[$num_trim]'");
 							$contador = 1;
 
 							while($informacion_formato = mysql_fetch_assoc($row_registro)){
@@ -534,7 +534,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<td>
 							<form action="" method="POST">
 							<!--<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" />-->
-								* <input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" />
+								<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" required />
 							</form>							
 						</td>
 
@@ -544,7 +544,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>-->
 
 						<td class="warning"><!-- nombre de la opp -->
-							<input id="nombre_opp" name="nombre_opp" value="" placeholder="Nombre de la OPP">
+							<textarea id="nombre_opp" name="nombre_opp" value="" placeholder="Nombre de la OPP"></textarea>
+
 							<!--<input type="text" name="nombre_opp" id="" placeholder="Nombre de la OPP">-->
 						</td>
 
@@ -647,9 +648,9 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 <script>
 $(document).ready(function() {
 //    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
-    $("#nombre_opp").val('CAMPO VACIO');
+    $("#nombre_opp").val('Nombre de la OPP');
 //    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
-    $("#pais").val('CAMPO VACIO');
+    $("#pais").val('Pais de la OPP');
 });
 
 function buscar() {

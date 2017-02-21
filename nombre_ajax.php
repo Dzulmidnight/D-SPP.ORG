@@ -6,8 +6,6 @@ if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
 $charset='utf-8';
-
-
 $nombre_opp = "";
 $consultaBusqueda = $_POST['valorBusqueda'];
 
