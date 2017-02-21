@@ -330,8 +330,9 @@ $ruta_croquis = "../../archivos/oppArchivos/croquis/";
 					//$marca_cliente = $_POST[$array3[$i]];
 					//$sin_cliente = $_POST[$array4[$i]];
 
-					$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
-					$producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+					//$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
+					//$producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+					
 
 					$str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
 					$destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
@@ -426,8 +427,8 @@ $ruta_croquis = "../../archivos/oppArchivos/croquis/";
 	      	$sin_cliente = '';
 	      }
 
-						$str = iconv($charset, 'ASCII//TRANSLIT', $producto_actual[$i]);
-						$producto_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+						//$str = iconv($charset, 'ASCII//TRANSLIT', $producto_actual[$i]);
+						//$producto_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
 						$str = iconv($charset, 'ASCII//TRANSLIT', $destino_actual[$i]);
 						$destino_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));

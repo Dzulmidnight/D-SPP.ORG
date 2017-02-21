@@ -531,16 +531,25 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 					<tr class="success">
 						<td class="warning"></td> <!-- # -->
 
-						<td class="success"><!-- #SPP(codigo de identificación)-->
-							* <input type="text" name="spp" id="" placeholder="#SPP" autofocus required>
+						<td>
+							<form action="" method="POST">
+							<!--<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" />-->
+								* <input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" />
+							</form>							
 						</td>
 
+
+						<!--<td class="success"><!-- #SPP(codigo de identificación)-->
+							<!--* <input type="text" name="spp" id="" placeholder="#SPP" autofocus required>
+						</td>-->
+
 						<td class="warning"><!-- nombre de la opp -->
-							<input type="text" name="nombre_opp" id="" placeholder="Nombre de la OPP">
+							<input id="nombre_opp" name="nombre_opp" value="" placeholder="Nombre de la OPP">
+							<!--<input type="text" name="nombre_opp" id="" placeholder="Nombre de la OPP">-->
 						</td>
 
 						<td class="warning"><!-- pais de la opp proveedora -->
-			              <select name="pais" id="pais" class="" required>
+			              <!--<select name="pais" id="pais" class="" required>
 			                <option value="">Selecciona un País</option>
 			                <?php 
 			                $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
@@ -548,7 +557,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			                  echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
 			                }
 			                 ?>
-			              </select>
+			              </select>-->
+			              <input id="pais" name="pais" value="" placeholder="pais">
 						</td>
 
 						<td class="success"><!-- fecha de facturación -->
@@ -633,136 +643,39 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	?>	
 	</div>
 </div>
+
+<script>
+$(document).ready(function() {
+//    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
+    $("#nombre_opp").val('CAMPO VACIO');
+//    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
+    $("#pais").val('CAMPO VACIO');
+});
+
+function buscar() {
+    var textoBusqueda = $("input#spp").val();
+ 
+     if (textoBusqueda != "") {
+        $.post("../../nombre_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_opp) {
+            $("#nombre_opp").val(nombre_opp);
+         }); 
+     } else { 
+        $("#nombre_opp").val('CAMPO VACIO');
+     };
+
+     if (textoBusqueda != "") {
+        $.post("../../pais_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_pais) {
+            $("#pais").val(nombre_pais);
+         }); 
+     } else { 
+        $("#pais").val('CAMPO VACIO');
+     };
+
+};
+</script>
+
 <script>
 var contador=0;
-	/*function tablaInforme()
-	{
-		contador++;
-		var table = document.getElementById("tablaInforme");
-		{
-			var row = table.insertRow(2);
-			var cell1 = row.insertCell(0);
-			var cell2 = row.insertCell(1);
-			var cell3 = row.insertCell(2);
-			var cell4 = row.insertCell(3);
-
-			var cell5 = row.insertCell(4);
-			var cell6 = row.insertCell(5);
-			var cell7 = row.insertCell(6);
-			var cell8 = row.insertCell(7);
-			var cell9 = row.insertCell(8);
-
-			var cell10 = row.insertCell(9);
-			var cell11 = row.insertCell(10);
-			var cell12 = row.insertCell(11);
-			var cell13 = row.insertCell(12);
-			var cell14 = row.insertCell(13);
-
-			var cell15 = row.insertCell(14);
-			var cell16 = row.insertCell(15);
-			var cell17 = row.insertCell(16);
-			var cell18 = row.insertCell(17);
-			var cell19 = row.insertCell(18);
-
-			var cell20 = row.insertCell(19);
-			var cell21 = row.insertCell(20);
-			var cell22 = row.insertCell(21);
-			var cell23 = row.insertCell(22);
-			var cell24 = row.insertCell(23);
-			var cell25 = row.insertCell(24);
-			var cell26 = row.insertCell(25);
-
-
-
-
-			cell1.innerHTML = contador+'<input type="hidden" name="contador_formato['+contador+']" id="" value="'+contador+'">';
-			//nombre del opp
-			cell2.innerHTML = '<input type="text" name="opp['+contador+']" id="" placeholder="opp">';
-			//pais del opp
-			cell3.innerHTML = '<input type="text" name="pais['+contador+']" id="" placeholder="pais">';
-			//fecha de compra
-			cell4.innerHTML = '<input type="date" name="fecha_compra['+contador+']" id="" placeholder="dd/mm/aaaa">';
-			//primer intermediario
-			cell5.innerHTML = '<input type="text" name="primer_intermediario['+contador+']" id="" placeholder="primer intermediario">';
-			//segundo intermediario
-			cell6.innerHTML = '<input type="text" name="segundo_intermediario['+contador+']" id="" placeholder="segundo_intermediario">';
-
-			//TIPO DE PRODUCTO (producto_general)
-			cell7.innerHTML = '<input type="text" name="producto_general['+contador+']" id="" placeholder="producto_general">';
-
-			//INICIA referencia_contrato
-				cell8.innerHTML = '<input type="text" name="clave_contrato['+contador+']" id="" placeholder="clave_contrato">';
-
-				cell9.innerHTML = '<input type="date" name="fecha_contrato['+contador+']" id="" placeholder="dd/mm/aaaa">';
-			//TERMINA referencia_contrato
-
-			//producto_especifico
-			cell10.innerHTML = '<input type="text" name="producto_especifico['+contador+']" id="" placeholder="producto_especifico">';
-
-			//INICIA cantidad_total_contrato CANTIDAD TOTAL CONFORME A CONTRATO
-				cell11.innerHTML = '<input type="number" step="any" name="peso_cantidad_total_contrato['+contador+']" id="peso_cantidad_total_contrato" onChange="calcular();" placeholder="Ej: 417.26">';
-				//cell12.innerHTML = '<input type="text" name="unidad_cantidad_total_contrato['+contador+']" id="" placeholder="unidad">';
-
-				cell12.innerHTML = '<select name="unidad_cantidad_total_contrato['+contador+']">'
-				+'<option value="Qq">Qq</option>'
-				+'<option value="Lb">Lb</option>'
-				+'<option value="Kg">Kg</option>'
-				+'<option value="unidad">unidad</option>'
-				+'</select>';
-			//TERMINA cantidad_total_contrato CANTIDAD TOTAL CONFORME A CONTRATO
-
-			//INICIA peso_total_reglamento
-				cell13.innerHTML = '<input type="number" step="any" name="peso_total_reglamento['+contador+']" id="" placeholder="Ej: 417.26">';
-
-				//cell14.innerHTML = '<input type="text" name="unidad_peso_total_reglamento['+contador+']" id="" placeholder="medida">';
-				cell14.innerHTML = '<select name="unidad_peso_total_reglamento['+contador+']">'
-				+ '<option value="Lb">Lb</option>'
-				+ '<option value="Kg">Kg</option>'
-				+ '<option value="unidad">unidad</option>'
-				+ '</select>';
-
-			//TERMINA peso_total_reglamento
-
-			//INICIA precio_total_unitario
-				cell15.innerHTML = '<input type="text" name="precio_precio_total_unitario['+contador+']" id="precio_total_unitario" placeholder="precio" onChange="calcular();" value="0" readonly style="background-color:#c0392b;color:#ecf0f1">';
-
-
-				cell16.innerHTML = '<input type="text" name="unidad_precio_total_unitario['+contador+']" id="" placeholder="unidad_medida">';
-			// TERMINA precio_total_unitario
-
-			//INICIA PRECIO SUSTENTABLE MINIMO precio_sustentable
-				cell17.innerHTML = '<input type="number" step="any" name="precio_precio_sustentable['+contador+']" id="precio_sustentable_minimo" onChange="calcular();" value="0" placeholder="Ej: 160">';
-
-				cell18.innerHTML = '<input type="text" name="unidad_precio_sustentable['+contador+']" id="" placeholder="unidad_medida">';
-			// TERMINA PRECIO SUSTENTABLE MINIMO precio_sustentable
-
-			// INICIA RECONOCIMIENTO ORGANICO reconocimiento_organico
-				cell19.innerHTML = '<input type="number" step="any" name="precio_reconocimiento_organico['+contador+']" id="precio_reconocimiento_organico" onChange="calcular();" value="0" placeholder="Ej: 40">';
-
-				cell20.innerHTML = '<input type="text" name="unidad_reconocimiento_organico['+contador+']" id="" placeholder="unidad_medida">';
-			// TERMINA RECONOCIMIENTO ORGANICO reconocimiento_organico
-
-			//INICIA incentivo_spp
-				cell21.innerHTML = '<input type="number" step="any" name="precio_incentivo_spp['+contador+']" id="precio_incentivo_spp" onChange="calcular();" value="0" placeholder="Ej: 20">';
-
-				cell22.innerHTML = '<input type="text" name="unidad_incentivo_spp['+contador+']" id="" placeholder="unidad_medida">';
-			// TERMINA incentivo_spp
-
-			// VALOR TOTAL CONTRATO
-			cell23.innerHTML = '<input type="text" style="background-color:#c0392b;color:#ecf0f1" name="valor_total_contrato['+contador+']" id="valor_total_contrato" onChange="calcular();" value="0.0" readonly placeholder="valor_total">';
-
-			//INICIA cuota_uso_reglamento
-				cell24.innerHTML = '<input type="text" style="background-color:#27ae60;color:#ecf0f1" name="cuota_uso_reglamento['+contador+']"  id="cuota_uso_reglamento" onChange="calcular();" value="0" placeholder="cuota">';
-
-				cell25.innerHTML = '<input type="text" name="unidad_cuota_uso_reglamento['+contador+']" id="" placeholder="unidad">';
-			//TERMINA cuota_uso_reglamento
-
-			//TOTAL A PAGAR
-			cell26.innerHTML = '<input type="text" style="background-color:#c0392b;color:#ecf0f1" name="total['+contador+']" id="resultado_total" onChange="calcular();" value="0.0" readonly placeholder="total">';
-
-		}
-	}*/
-
 	function calcular(){
 		precio_sustentable_minimo = document.getElementById("precio_sustentable_minimo").value;
 		precio_reconocimiento_organico = document.getElementById("precio_reconocimiento_organico").value;
