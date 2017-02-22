@@ -64,7 +64,7 @@ $informe_general = mysql_fetch_assoc($row_informe_general);
 	// si se ha creado un informe general con el "IDEMRESA" y el año del informe corresponde al año se muestra el boton "Informe General"
 	if($total_informe == 1){
 	?>
-		<a <?php if(isset($_GET['general_detail'])){ echo "class='btn btn-sm btn-primary'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&general_detail"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Informe General: <?php echo $informe_general['idinforme_general']; ?></a>
+		<a <?php if(isset($_GET['general_detail'])){ echo "class='btn btn-sm btn-primary'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&general_detail"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Informe General:</a>
 	<?php
 	}else{ // si no se ha creado un informe general del año en curso, se muestra el boton "Crear Nuevo Informe General"
 	?>
@@ -85,5 +85,7 @@ if(isset($_GET['general_detail'])){
 	include ("informe_detail.php");
 }else if(isset($_GET['add'])){
 	include ("informe_add.php");
+}else{
+	include ('listado_informes.php');
 }
 ?>
