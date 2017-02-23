@@ -97,12 +97,14 @@ if(isset($_POST['informe_trimestral'])){
 ?>
 <div class="row">
 	<div class="col-md-12">
-	<?php 
-	$row_informe = mysql_query("SELECT * FROM informe_general WHERE idempresa = $idempresa AND FROM_UNIXTIME(ano, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+	<?php
+	$row_informe = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, ROUND(SUM(trim1.total_trim1 + trim2.total_trim2 + trim3.total_trim3 + trim4.total_trim4), 2) AS 'balance_final' FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa AND FROM_UNIXTIME(informe_general.ano, '%Y') = '$ano_actual'", $dspp) or die(mysql_error());
+	//$row_informe = mysql_query("SELECT * FROM informe_general WHERE idempresa = $idempresa AND FROM_UNIXTIME(ano, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+	$informe_general = mysql_fetch_assoc($row_informe);
 	$total_informes = mysql_num_rows($row_informe);
 
-	if($total_informes == 1){
-		$informe_general = mysql_fetch_assoc($row_informe);
+	if($informe_general['idinforme_general']){
+		
 		$row_trim = mysql_query("SELECT * FROM trim1 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 		$total_trim1 = mysql_num_rows($row_trim);
 		$informacion_trim = mysql_fetch_assoc($row_trim);

@@ -56,13 +56,14 @@ $idempresa = $_SESSION['idempresa'];
 //$query_informe = "SELECT * FROM "
 //$row_informe = mysql_query($query_informe, $dspp) or die(mysql_error());
 
-$row_informe = mysql_query("SELECT * FROM informe_general WHERE idempresa = $idempresa AND FROM_UNIXTIME(ano, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+$row_informe = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, SUM(trim1.total_trim1 + trim2.total_trim2 + trim3.total_trim3 + trim4.total_trim4) AS 'balance_final' FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa AND FROM_UNIXTIME(informe_general.ano, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 $informe_general = mysql_fetch_assoc($row_informe);
+
 
 
 ?>
 
-<h3>INFORME TRIMESTRAL GENERAL</h3>
+<h4>INFORMES TRIMESTRALES <span style="color:#e74c3c"><?php echo date('Y',$informe_general['ano']); ?></span></h4>
 
 <table class="table table-bordered" style="font-size:11px;">
 	<thead>
@@ -90,7 +91,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 	</thead>
 	<tbody>
 		<?php 
-		$total_final = 0;
+		$balance_final = 0;
+
 		if(isset($informe_general['trim1'])){
 			$row_registro = mysql_query("SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim = '$informe_general[trim1]'", $dspp) or die(mysql_error());
 
@@ -126,7 +128,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim1 = $total_trim1 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='20' class='text-right warning'>Primer Trimestre</td>
+				<td colspan='20' class='text-right warning'><h5>PRIMER TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim1</td>
 			</tr>";
 
@@ -167,7 +169,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim2 = $total_trim2 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='20' class='text-right warning'>Segundo Trimestre</td>
+				<td colspan='20' class='text-right warning'><h5>SEGUNDO TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim2</td>
 			</tr>";
 
@@ -207,7 +209,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim3 = $total_trim3 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='20' class='text-right warning'>Tercer Trimestre</td>
+				<td colspan='20' class='text-right warning'><h5>TERCER TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim3</td>
 			</tr>";
 		}
@@ -245,14 +247,15 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim4 = $total_trim4 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='20' class='text-right warning'>Cuarto Trimestre</td>
+				<td colspan='20' class='text-right warning'><h5>CUARTO TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim4</td>
 			</tr>";
 		}
+		//$balance_final = $total_trim1 + $total_trim2 + $total_trim3 + $total_trim4;
 		?>
 		<tr>
 			<td class="text-right" colspan="27">
-				
+				<h5>Total actual: <span style="color:#c0392b"><?php echo $informe_general['balance_final']; ?> USD</span></h5>
 			</td>
 		</tr>
 	</tbody>

@@ -52,7 +52,9 @@ if (isset($_SERVER['QUERY_STRING'])) {
 $idempresa = $_SESSION['idempresa'];
 $ano_actual = date('Y', time());
 
-$row_informe_general = mysql_query("SELECT idinforme_general, FROM_UNIXTIME(ano, '%Y') AS 'ano_informe' FROM informe_general WHERE idempresa = ".$idempresa." AND FROM_UNIXTIME(ano, '%Y') = '".$ano_actual."'", $dspp) or die(mysql_error());
+$row_informe_general = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, ROUND(SUM(trim1.total_trim1 + trim2.total_trim2 + trim3.total_trim3 + trim4.total_trim4), 2) AS 'balance_final' FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa AND FROM_UNIXTIME(informe_general.ano, '%Y') = '$ano_actual'", $dspp) or die(mysql_error());
+
+//$row_informe_general = mysql_query("SELECT idinforme_general, FROM_UNIXTIME(ano, '%Y') AS 'ano_informe', total_informe FROM informe_general WHERE idempresa = ".$idempresa." AND FROM_UNIXTIME(ano, '%Y') = '".$ano_actual."'", $dspp) or die(mysql_error());
 $total_informe = mysql_num_rows($row_informe_general);
 $informe_general = mysql_fetch_assoc($row_informe_general);
 

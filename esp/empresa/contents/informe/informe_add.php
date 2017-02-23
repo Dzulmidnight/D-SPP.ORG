@@ -160,7 +160,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		if(isset($_POST['total_a_pagar'])){
 			$total_a_pagar = $_POST['total_a_pagar'];
 		}else{
-			$total_a_pagar = NULL;
+			$total_a_pagar = 0;
 		}
 
 		//Iniciamos insertar formato_compras
@@ -223,7 +223,9 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	?>
 
 
-		<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>
+		<!--<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>-->
+		<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color azul son opcionales, dicha informacion será de utilitdad para la evaluación de la certificación.</p>
+		<p class="alert alert-success" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color verde son obligatorios.</p>
 	
 		<form class="form-horizontal" method="POST">
 		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
@@ -459,41 +461,42 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>
 
 						<td class="success"><!-- fecha de facturación -->
-							* <input type="date" name="fecha_facturacion" id="" placeholder="dd-mm-aaaa" required>
+							<input type="date" name="fecha_facturacion" id="" placeholder="dd-mm-aaaa" required>
 						</td>
 
 						<td class="info"><!-- primer intermediario -->
-							<input type="text" name="primer_intermediario" id="" placeholder="primer intermediario">
+							<input type="text" name="primer_intermediario" id="" placeholder="primer intermediario" onBlur=" ponerMayusculas(this)">
 						</td>
 
 						<td class="info"><!-- segundo intermediario -->
-							<input type="text" name="segundo_intermediario" id="" placeholder="segundo intermediario">
+							<input type="text" name="segundo_intermediario" id="" placeholder="segundo intermediario" onBlur=" ponerMayusculas(this)">
 						</td>
 
 						<td class="info"><!-- REFERENCIA CONTRATO ORIGINAL -->
-							<input type="text" name="clave_contrato" id="" placeholder="clave del contrato"><!-- #clave del contrato -->
+							<input type="text" name="clave_contrato" id="" placeholder="clave del contrato" onBlur=" ponerMayusculas(this)"><!-- #clave del contrato -->
 						</td>
 						<td class="info">
 							<input type="date" name="fecha_contrato" id="" placeholder="dd-mm-aaaa"><!-- #fecha del contrato -->
 						</td><!-- REFERENCIA CONTRATO ORIGINAL -->
 
 						<td><!-- producto general -->
-							* <input type="text" name="producto_general" id="" placeholder="Ej: café, miel, azucar" required>
+							<input type="text" name="producto_general" id="" placeholder="Ej: café, miel, azucar" onBlur=" ponerMayusculas(this)" required>
 						</td>
 
 						<td class="success"><!-- producto especifico -->
-							* <input type="text" name="producto_especifico" id="" placeholder="Ej: café verde, miel de abeja, azucar refinada" required>
+							<input type="text" name="producto_especifico" id="" placeholder="Ej: café verde, miel de abeja, azucar refinada" onBlur=" ponerMayusculas(this)" required>
 						</td>
 
 						<td class="success"><!-- CANTIDAD TOTAL CONFORME FACTURA -->
-							* <select name="unidad_cantidad_total_factura" required><!-- #unidad de medida -->
+							<select name="unidad_cantidad_total_factura" required><!-- #unidad de medida -->
 								<option value="Qq">Qq</option>
 								<option value="Lb">Lb</option>
 								<option value="Kg">Kg</option>
+								<option value="Unidad">Unidad</option>
 							</select>
 						</td>
 						<td class="success">
-							* <input type="number" step="any" id="cantidad_total_factura" name="cantidad_total_factura" onChange="calcular();" required><!-- #cantidad total -->
+							<input type="number" step="any" id="cantidad_total_factura" name="cantidad_total_factura" onChange="calcular();" onBlur=" ponerMayusculas(this)" required><!-- #cantidad total -->
 						</td><!-- CANTIDAD TOTAL CONFORME FACTURA -->
 
 						<td class="info"><!-- precio sustentable minimo -->
@@ -513,7 +516,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>
 
 						<td class="success"><!-- precio total unitario pagado -->
-							* <input type="number" step="any" id="precio_total_unitario" name="precio_total_unitario" id="precio_total_unitario" onChange="calcular();" value="0" placeholder="Ej: 40" required>
+							<input type="number" step="any" id="precio_total_unitario" name="precio_total_unitario" id="precio_total_unitario" onChange="calcular();" value="0" placeholder="Ej: 40" required>
 						</td>
 
 						<td class="warning"><!-- valor total contrato -->
@@ -572,6 +575,10 @@ function buscar() {
 </script>
 
 <script>
+function ponerMayusculas(nombre) 
+{ 
+nombre.value=nombre.value.toUpperCase(); 
+} 
 var contador=0;
 var cuota_fija_anual = 0.01;
 	function calcular(){
@@ -580,6 +587,7 @@ var cuota_fija_anual = 0.01;
 
 		//calculamos el valor total contrato
 		valor_total_contrato = parseFloat(cantidad_total_factura) * parseFloat(precio_total_unitario);
+		total_contrato_redondeado = parseFloat(valor_total_contrato.toFixed(2));
 		//calculamos el valor de la cuota de uso reglamento
 		//cuota_uso_reglamento = valor_total_contrato * cuota_fija_anual;
 		//calculamos el total a pagar
@@ -592,7 +600,7 @@ var cuota_fija_anual = 0.01;
 		//21_07_2017 valor_total_contrato_redondeado = parseFloat(valor_total_contrato.toFixed(2));
 		/* se redondea el resultado a 2 decimales */
 		//valor_total_contrato = parseFloat(Math.round((precio_total_unitario * peso_cantidad_total_contrato) * 100) / 100).toFixed(2);
-		document.getElementById("valor_total_contrato").value = valor_total_contrato; 
+		document.getElementById("valor_total_contrato").value = total_contrato_redondeado; 
 		document.getElementById("cuota_uso_reglamento").value = '1%'; 
 		document.getElementById("total_a_pagar").value = total_redondeado; 
 

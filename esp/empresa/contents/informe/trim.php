@@ -68,17 +68,40 @@ if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'SI'){
 	echo "<script>alert('Se ha creado un nuevo formato trimestral $idtrim');</script>";
 }
 if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
+	if(isset($_POST['monto_total']) || $_POST['monto_total'] != 0 || $_POST['monto_total'] != NULL){
+		$monto_total = $_POST['monto_total'];
+	}else{
+		$monto_total = 0;
+	}
+	$total_general = $informe_general['total_general'] + $monto_total;
 	$txt_idtrim = 'idtrim'.$_GET['trim'];
 	$txt_numero_trim = 'trim'.$_GET['trim'];
 	$txt_estado_trim = 'estado_'.$txt_numero_trim;
 	$txt_total_trim = 'total_'.$txt_numero_trim;
 	$estatus_trim = 'FINALIZADO';
+	
+
 	$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_estado_trim = %s, fecha_fin = %s, $txt_total_trim = %s WHERE $txt_idtrim = %s",
 		GetSQLValueString($estatus_trim, "text"),
 		GetSQLValueString($_POST['fecha'], "int"),
-		GetSQLValueString($_POST['monto_total'], "double"),
+		GetSQLValueString($monto_total, "double"),
 		GetSQLValueString($_POST['idtrim'], "text"));
 	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+	$updateSQL = sprintf("UPDATE informe_general SET total_informe = %s WHERE idinforme_general = %s",
+		GetSQLValueString($total_general, "text"),
+		GetSQLValueString($informe_general['idinforme_general']));
+	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+	
+	if($txt_numero_trim == 'trim4'){
+		//revisamos si el trim4 ha finalizado, entonces cambiamos el estatus del INFORME GENERAL a FINALIZADO ya que se han concluido los 4 trimestres
+		//Tambien se agregar el monto de los 4 informes trimestrales dentro del TOTAL DEL INFORME GENERAL
+		$updateSQL = sprintf("UPDATE informe_general SET estado_informe = %s WHERE idinforme_general = %s",
+			GetSQLValueString('FINALIZADO', "text"),
+			GetSQLValueString($informe_general['idinforme_general'], "text"));
+		$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+	}
 }
 
 if(isset($_GET['trim'])){
@@ -97,7 +120,8 @@ if(isset($_GET['trim'])){
 			$pregunta = "
 				<p class='alert alert-info' style='padding:7px;margin-bottom:0px;'>
 					<b style='color:red'>¿Desear Concluir el Formato de Trimestre actual?</b>
-					<input class='btn btn-success' type='submit' name='finalizar_trim' value='SI'>
+					<button class='btn btn-success' type='subtmit' value='SI'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='Finalizar trimestre actual' onclick='return confirm(\"¿Desea finalizar la captura del trimestre actual?\");' >SI</button>
+					<!--<input class='btn btn-success' type='submit' name='finalizar_trim' value='SI'>-->
 					<input type='text' name='idtrim' value='".$trim[$idtrim]."'>
 					<input type='text' name='fecha' value='".time()."'>
 				</p>
@@ -196,13 +220,13 @@ if(isset($_GET['trim'])){
 							<td><?php echo $informe['precio_total_unitario']; ?></td>
 							<td><?php echo $informe['valor_total_contrato']; ?></td>
 							<td><?php echo $informe['cuota_uso_reglamento']; ?></td>
-							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $informe['total_a_pagar']; ?></td>
+							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $informe['total_a_pagar'].' USD'; ?></td>
 						</tr>
 					<?php
 					$monto_total = $informe['total_a_pagar'] + $monto_total; 
 					$contador++;
 					}
-						echo "<tr class='info'><td class='text-right' colspan='26'>Total a Pagar: <b style='color:red'>$ $monto_total</b></td></tr>";
+						echo "<tr class='info'><td class='text-right' colspan='26'>Total a Pagar: <b style='color:red'>$monto_total USD</b></td></tr>";
 						//EL TOTAL A PAGAR AL FINALIZAR EL TRIMESTRE
 						echo "<input type='hidden' name='monto_total' value='$monto_total'>";
 					 ?>
