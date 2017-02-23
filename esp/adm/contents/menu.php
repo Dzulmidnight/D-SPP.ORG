@@ -37,6 +37,11 @@ if (!function_exists("GetSQLValueString")) {
 <ul class="nav nav-sidebar">
   <li <?php if(isset($_GET['CRM'])){echo "class='active'"; } ?>>
     <a href="?CRM&inicio">CRM</a>
+  </li>
+  <li <?php if(isset($_GET['REPORTES'])){echo "class='active'"; } ?>>
+    <a href="?REPORTES&select">Reportes Comerciales</a>
+    <!--<a href="?ESTADISTICAS&select">Estadisticas</a>-->
+  </li>
   <li <?php if(isset($_GET['FINANZAS'])){echo "class='active'"; } ?>>
     <a href="?FINANZAS&select">Reportes Comerciales</a>
     <!--<a href="?ESTADISTICAS&select">Estadisticas</a>-->
