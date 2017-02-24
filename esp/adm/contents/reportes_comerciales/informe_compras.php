@@ -49,11 +49,10 @@ function redondear_dos_decimal($valor) {
    return $float_redondeado; 
 }
 ?>
-
-<h4 style="color:#2c3e50">Informe Compras</h4>
+<hr>
 <div class="row">
 	<div class="col-md-6">
-		<table class="table table-bordered table-condensed" style="font-size:12px;">
+		<table class="table table-bordered table-hover table-condensed" style="font-size:12px;">
 			<thead>
 				<tr class="warning">
 					<th>	
@@ -64,7 +63,7 @@ function redondear_dos_decimal($valor) {
 							<option>2016</option>
 						</select>
 					</th>
-					<th class="text-center" colspan="8">EMPRESAS</th>
+					<th class="text-center" colspan="8">Informe general compras</th>
 				</tr>
 				<tr>
 					<th class="text-center">Año</th>
@@ -95,16 +94,7 @@ function redondear_dos_decimal($valor) {
 						$total_trim3 += $informes['total_trim3'];
 						$total_trim4 += $informes['total_trim4'];
 						
-						if(isset($_GET['detalle_total']) && $informes['idinforme_general'] == $_GET['detalle_total']){
-							$clase = 'background-color:#3498db;color:#ecf0f1';
-						}else{
-							if($informes['estado_informe'] == 'FINALIZADO'){
-								$clase = 'background-color:#2ecc71;color:#2980b9;font-weight:bold';
-							}else{
-								$clase = 'background-color:#fff';
-							}
-						}
-						echo "<tr style='".$clase."'>";
+						echo "<tr>";
 							echo '<td>'.date('Y',$informes['ano']).'</td>';
 							echo '<td><a href="?REPORTES&informe_compras='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-list-alt"></span> '.$informes['idinforme_general'].'</a></td>';
 							echo '<td>'.$informes['estado_informe'].'</td>';
