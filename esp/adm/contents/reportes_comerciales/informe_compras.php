@@ -84,16 +84,17 @@ function redondear_dos_decimal($valor) {
 				$total_trim2 = 0;
 				$total_trim3 = 0;
 				$total_trim4 = 0;
+				$total_final = 0;
 				if($total_informes == 0){
 					echo '<tr><td colspan="8">No se encontraron registros</td></tr>';
 				}else{
 					while($informes = mysql_fetch_assoc($row_informes)){
-						$total += $informes['total_informe'];
+						
 						$total_trim1 += $informes['total_trim1'];
 						$total_trim2 += $informes['total_trim2'];
 						$total_trim3 += $informes['total_trim3'];
 						$total_trim4 += $informes['total_trim4'];
-						
+						//$total_final = $total_trim1 + $total_trim2 + $total_trim3 + $total_trim4;
 						echo "<tr>";
 							echo '<td>'.date('Y',$informes['ano']).'</td>';
 							echo '<td><a href="?REPORTES&informe_compras='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-list-alt"></span> '.$informes['idinforme_general'].'</a></td>';

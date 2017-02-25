@@ -4,8 +4,8 @@
 		<a href="?REPORTES&distribucion_p" <?php if(isset($_GET['distribucion_p'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Distribucion plataformas</a>
 		<a href="?REPORTES&plataformas" <?php if(isset($_GET['plataformas'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Plataformas SPP</a>
 
-	  <a href="?FINANZAS&f_informe" <?php if(isset($_GET['f_informe'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Formato Informes</a>
-	  <a href="?FINANZAS&f_producto" <?php if(isset($_GET['f_producto'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Formato Producto Terminado</a>
+	  <a href="#" <?php if(isset($_GET['f_informe'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Informes</a>
+	  <!--24_02_2017<a href="?FINANZAS&f_producto" <?php if(isset($_GET['f_producto'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Producto Terminado</a>24_02_2017-->
 	</div>	
 </div>
 

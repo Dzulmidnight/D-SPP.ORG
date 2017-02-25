@@ -42,10 +42,10 @@ if (!function_exists("GetSQLValueString")) {
     <a href="?REPORTES&select">Reportes Comerciales</a>
     <!--<a href="?ESTADISTICAS&select">Estadisticas</a>-->
   </li>
-  <li <?php if(isset($_GET['FINANZAS'])){echo "class='active'"; } ?>>
+  <!--24_02_2017<li <?php if(isset($_GET['FINANZAS'])){echo "class='active'"; } ?>>
     <a href="?FINANZAS&select">Reportes Comerciales</a>
     <!--<a href="?ESTADISTICAS&select">Estadisticas</a>-->
-  </li>
+  <!--24_02_2017</li>24_02_2017-->
   <li <?php if(isset($_GET['ESTADISTICAS'])){echo "class='active'"; } ?>>
     <a href="?ESTADISTICAS&select">Concentrado Procesos</a>
     <!--<a href="?ESTADISTICAS&select">Estadisticas</a>-->

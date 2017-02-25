@@ -109,7 +109,14 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['primer_intermediario']; ?></td>
 					<td><?php echo $formato['segundo_intermediario']; ?></td>
 					<td><?php echo $formato['clave_contrato']; ?></td>
-					<td><?php echo $formato['fecha_contrato']; ?></td>
+					<td>
+						<?php 
+						if(isset($formato['fecha_contrato'])){
+							echo date('d/m/Y', $formato['fecha_contrato']);
+						}
+					
+						?>
+					</td>
 					<td><?php echo $formato['producto_general']; ?></td>
 					<td><?php echo $formato['producto_especifico']; ?></td>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
@@ -150,7 +157,14 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['primer_intermediario']; ?></td>
 					<td><?php echo $formato['segundo_intermediario']; ?></td>
 					<td><?php echo $formato['clave_contrato']; ?></td>
-					<td><?php echo $formato['fecha_contrato']; ?></td>
+					<td>
+						<?php 
+						if(isset($formato['fecha_contrato'])){
+							echo date('d/m/Y', $formato['fecha_contrato']);
+						}
+					
+						?>
+					</td>
 					<td><?php echo $formato['producto_general']; ?></td>
 					<td><?php echo $formato['producto_especifico']; ?></td>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
@@ -190,7 +204,14 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['primer_intermediario']; ?></td>
 					<td><?php echo $formato['segundo_intermediario']; ?></td>
 					<td><?php echo $formato['clave_contrato']; ?></td>
-					<td><?php echo $formato['fecha_contrato']; ?></td>
+					<td>
+						<?php 
+						if(isset($formato['fecha_contrato'])){
+							echo date('d/m/Y', $formato['fecha_contrato']);
+						}
+					
+						?>
+					</td>
 					<td><?php echo $formato['producto_general']; ?></td>
 					<td><?php echo $formato['producto_especifico']; ?></td>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
@@ -228,7 +249,14 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['primer_intermediario']; ?></td>
 					<td><?php echo $formato['segundo_intermediario']; ?></td>
 					<td><?php echo $formato['clave_contrato']; ?></td>
-					<td><?php echo $formato['fecha_contrato']; ?></td>
+					<td>
+						<?php 
+						if(isset($formato['fecha_contrato'])){
+							echo date('d/m/Y', $formato['fecha_contrato']);
+						}
+					
+						?>
+					</td>
 					<td><?php echo $formato['producto_general']; ?></td>
 					<td><?php echo $formato['producto_especifico']; ?></td>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
@@ -255,7 +283,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 		?>
 		<tr>
 			<td class="text-right" colspan="27">
-				<h5>Total actual: <span style="color:#c0392b"><?php echo $informe_general['balance_final']; ?> USD</span></h5>
+				<h5>Total actual: <span style="color:#c0392b"><?php echo round($informe_general['total_informe'],2); ?> USD</span></h5>
 			</td>
 		</tr>
 	</tbody>

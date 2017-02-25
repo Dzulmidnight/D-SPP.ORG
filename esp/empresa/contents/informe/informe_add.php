@@ -408,7 +408,13 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 									<td><?php echo $formato['primer_intermediario']; ?></td>
 									<td><?php echo $formato['segundo_intermediario']; ?></td>
 									<td><?php echo $formato['clave_contrato']; ?></td>
-									<td><?php echo date('d/m/Y',$formato['fecha_contrato']); ?></td>
+									<td>
+										<?php
+										if(isset($formato['fecha_contrato'])){
+											echo date('d/m/Y',$formato['fecha_contrato']); 
+										}
+										?>
+									</td>
 									<td><?php echo $formato['producto_general']; ?></td>
 									<td><?php echo $formato['producto_especifico']; ?></td>
 									<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
