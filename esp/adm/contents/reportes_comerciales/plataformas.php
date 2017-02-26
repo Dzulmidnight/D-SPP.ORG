@@ -41,9 +41,8 @@ if (isset($_SERVER['QUERY_STRING'])) {
 }
 
 if(isset($_POST['agregar_plataforma']) && $_POST['agregar_plataforma'] == 1){
-	$insertSQL = sprintf("INSERT INTO plataformas_spp(pais, porcentaje) VALUES(%s, %s)",
-		GetSQLValueString($_POST['pais'], "text"),
-		GetSQLValueString($_POST['porcentaje'], "text"));
+	$insertSQL = sprintf("INSERT INTO plataformas_spp(pais) VALUES(%s)",
+		GetSQLValueString($_POST['pais'], "text"));
 	$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 }
 ?>
@@ -108,7 +107,7 @@ if(isset($_POST['agregar_plataforma']) && $_POST['agregar_plataforma'] == 1){
 						</select>
 					</td>
 				</tr>
-				<tr>
+				<!--<tr>
 					<td>% asignado a la nueva plataforma</td>
 					<td>
 						<div class="input-group">
@@ -116,7 +115,7 @@ if(isset($_POST['agregar_plataforma']) && $_POST['agregar_plataforma'] == 1){
 					      <input type="number" step="any" class="form-control" id="porcentaje" name="porcentaje" placeholder="Ej: 10" required>
 					    </div>
 					</td>
-				</tr>
+				</tr>-->
 				<tr>
 					<td colspan="2">
 						<button type="submit" class="btn btn-sm btn-warning" name="agregar_plataforma" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Agregar nueva plataforma</button>

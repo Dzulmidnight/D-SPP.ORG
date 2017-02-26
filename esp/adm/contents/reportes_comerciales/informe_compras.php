@@ -63,7 +63,7 @@ function redondear_dos_decimal($valor) {
 							<option>2016</option>
 						</select>
 					</th>
-					<th class="text-center" colspan="8">Informe general compras</th>
+					<th class="text-center" colspan="8">Resumen cuota de uso</th>
 				</tr>
 				<tr>
 					<th class="text-center">Año</th>
@@ -74,7 +74,7 @@ function redondear_dos_decimal($valor) {
 					<th class="text-center">Trim2</th>
 					<th class="text-center">Trim3</th>
 					<th class="text-center">Trim4</th>
-					<th class="text-center">Total a pagar</th>
+					<th class="text-center">Total</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -94,7 +94,7 @@ function redondear_dos_decimal($valor) {
 						$total_trim2 += $informes['total_trim2'];
 						$total_trim3 += $informes['total_trim3'];
 						$total_trim4 += $informes['total_trim4'];
-						//$total_final = $total_trim1 + $total_trim2 + $total_trim3 + $total_trim4;
+						$total_final = $total_trim1 + $total_trim2 + $total_trim3 + $total_trim4;
 						echo "<tr>";
 							echo '<td>'.date('Y',$informes['ano']).'</td>';
 							echo '<td><a href="?REPORTES&informe_compras='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-list-alt"></span> '.$informes['idinforme_general'].'</a></td>';
@@ -113,7 +113,7 @@ function redondear_dos_decimal($valor) {
 						echo '<td style="color:#e74c3c;">'.$total_trim2.'</td>';
 						echo '<td style="color:#e74c3c;">'.$total_trim3.'</td>';
 						echo '<td style="color:#e74c3c;">'.$total_trim4.'</td>';
-						echo '<td style="color:#e74c3c;">'.$total.' USD</td>';
+						echo '<td style="color:#e74c3c;">'.$total_final.' USD</td>';
 					echo '</tr>';
 					//echo '<tr><td colspan="9"><b>Suma total: <span style="color:#e74c3c">'.$total.'</span> USD</b></td></tr>';
 				}

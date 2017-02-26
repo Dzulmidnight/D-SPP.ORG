@@ -100,13 +100,14 @@ function redondear_dos_decimal($valor) {
 	<tr>
 		<th class="text-center" rowspan="2">Plataforma SPP</th>
 		<th class="text-center" colspan="5">Nº Transacciones</th>
-		<th class="text-center" style="background-color:#2980B9;color:#ECF0F1" colspan="5">Valor compras</th>
-		<th class="text-center" style="background-color:#E74C3C;color:#ECF0F1" colspan="5">Reembolso(10%)</th>
+		<th class="text-center" style="background-color:#2980B9;color:#ECF0F1" colspan="5">Cuota uso</th>
+		<th class="text-center" style="background-color:#2980B9;color:#ECF0F1" colspan="5">Valor contrato</th>
+		<th class="text-center" style="background-color:#E74C3C;color:#ECF0F1" colspan="5">Calculos</th>
 
 	</tr>
 	<tr>
 		<?php 
-		for ($i=0; $i < 3; $i++) { 
+		for ($i=0; $i < 4; $i++) { 
 		?>
 			<td class="text-center">Trim1</td>
 			<td class="text-center">Trim2</td>
@@ -139,7 +140,8 @@ function redondear_dos_decimal($valor) {
 		<?php
 		$idtrim = '';
 		$total_transacciones = 0;
-		$total_compras = 0;
+		$total_contrato = 0;
+		$total_cuota_uso = 0;
 		$total_reembolso = 0;
 		$sql_empresa = '';
 		if(isset($_POST['consultar_empresa']) && $_POST['consultar_empresa'] != 'todos'){
@@ -155,19 +157,28 @@ function redondear_dos_decimal($valor) {
 			$total_transacciones += $transacciones['transacciones'];
 		}
 			echo '<td>'.$total_transacciones.'</td>';
-		//compras totales
+		//total_cuota_uso
 		for ($i=1; $i <= 4; $i++) { 
 			$idtrim = 'T'.$i;
-			$row_compras = mysql_query("SELECT ROUND(SUM(total_a_pagar),2) AS 'compras' FROM formato_compras WHERE pais = '$value' AND idtrim LIKE '%$idtrim%' $sql_empresa", $dspp) or die(mysql_error());
-			$compras = mysql_fetch_assoc($row_compras);
-			echo '<td style="background-color:#2980B9;color:#ECF0F1">'.$compras['compras'].'</td>';
-			$total_compras += $compras['compras'];
+			$row_contrato = mysql_query("SELECT ROUND(SUM(valor_total_contrato),2) AS 'contrato' FROM formato_compras WHERE pais = '$value' AND idtrim LIKE '%$idtrim%' $sql_empresa", $dspp) or die(mysql_error());
+			$contrato = mysql_fetch_assoc($row_contrato);
+			echo '<td style="background-color:#2980B9;color:#ECF0F1">'.$contrato['contrato'].'</td>';
+			$total_contrato += $contrato['contrato'];
 		}
-			echo '<td style="background-color:#ecf0f1;color:#c0392b;font-weight:bold">'.$total_compras.' USD</td>';
+			echo '<td style="background-color:#ecf0f1;color:#c0392b;font-weight:bold">'.$total_contrato.' USD</td>';
+		//total_valor_contrato
+		for ($i=1; $i <= 4; $i++) { 
+			$idtrim = 'T'.$i;
+			$row_cuota_uso = mysql_query("SELECT ROUND(SUM(total_a_pagar),2) AS 'cuota_uso' FROM formato_compras WHERE pais = '$value' AND idtrim LIKE '%$idtrim%' $sql_empresa", $dspp) or die(mysql_error());
+			$cuota_uso = mysql_fetch_assoc($row_cuota_uso);
+			echo '<td style="background-color:#2980B9;color:#ECF0F1">'.$cuota_uso['cuota_uso'].'</td>';
+			$total_cuota_uso += $cuota_uso['cuota_uso'];
+		}
+			echo '<td style="background-color:#ecf0f1;color:#c0392b;font-weight:bold">'.$total_cuota_uso.' USD</td>';
 		//reembolso
 		for ($i=1; $i <= 4; $i++) {
 			$idtrim = 'T'.$i;
-			$row_reembolso = mysql_query("SELECT ROUND(SUM(total_a_pagar),2) AS 'compras' FROM formato_compras WHERE pais = '$value' AND idtrim LIKE '%$idtrim%' $sql_empresa", $dspp) or die(mysql_error());
+			$row_reembolso = mysql_query("SELECT ROUND(SUM(valor_total_contrato),2) AS 'compras' FROM formato_compras WHERE pais = '$value' AND idtrim LIKE '%$idtrim%' $sql_empresa", $dspp) or die(mysql_error());
 			$reembolso = mysql_fetch_assoc($row_reembolso);
 			$porcentaje = round(($reembolso['compras'] * 0.10),2);
 			echo '<td style="background-color:#E74C3C;color:#ECF0F1;">'.$porcentaje.'</td>';

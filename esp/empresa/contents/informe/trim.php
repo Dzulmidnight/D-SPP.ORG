@@ -68,31 +68,43 @@ if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'SI'){
 	echo "<script>alert('Se ha creado un nuevo formato trimestral $idtrim');</script>";
 }
 if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
-	if(isset($_POST['monto_total']) || $_POST['monto_total'] != 0 || $_POST['monto_total'] != NULL){
-		$monto_total = $_POST['monto_total'];
+	if(isset($_POST['suma_cuota_uso']) || $_POST['suma_cuota_uso'] != 0 || $_POST['suma_cuota_uso'] != NULL){
+		$suma_cuota_uso = $_POST['suma_cuota_uso'];
 	}else{
-		$monto_total = 0;
+		$suma_cuota_uso = 0;
 	}
-	$query = mysql_query("SELECT total_informe FROM informe_general WHERE idinforme_general = '$informe_general[idinforme_general]'", $dspp) or die(mysql_error());
-	$row_query = mysql_fetch_assoc($query);
+	if(isset($_POST['suma_valor_contrato']) || $_POST['suma_valor_contrato'] != 0 || $_POST['suma_valor_contrato'] != NULL){
+		$suma_valor_contrato = $_POST['suma_valor_contrato'];
+	}else{
+		$suma_valor_contrato = 0;
+	}
 
-	$total_general = $row_query['total_informe'] + $monto_total;
+	$row_informe = mysql_query("SELECT total_informe, total_cuota_uso, total_valor_contrato FROM informe_general WHERE idinforme_general = '$informe_general[idinforme_general]'", $dspp) or die(mysql_error());
+	$informe = mysql_fetch_assoc($row_informe);
+
+	$total_cuota_uso = $informe['total_cuota_uso'] + $suma_cuota_uso;
+	$total_valor_contrato = $informe['total_valor_contrato'] + $suma_valor_contrato;
 	$txt_idtrim = 'idtrim'.$_GET['trim'];
 	$txt_numero_trim = 'trim'.$_GET['trim'];
 	$txt_estado_trim = 'estado_'.$txt_numero_trim;
 	$txt_total_trim = 'total_'.$txt_numero_trim;
+	$txt_valor_contrato = 'valor_contrato_'.$txt_numero_trim;
+	$txt_cuota_uso = 'cuota_uso_'.$txt_numero_trim;
 	$estatus_trim = 'FINALIZADO';
 	
 
-	$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_estado_trim = %s, fecha_fin = %s, $txt_total_trim = %s WHERE $txt_idtrim = %s",
+	$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_estado_trim = %s, fecha_fin = %s, $txt_total_trim = %s, $txt_valor_contrato = %s, $txt_cuota_uso = %s WHERE $txt_idtrim = %s",
 		GetSQLValueString($estatus_trim, "text"),
 		GetSQLValueString($_POST['fecha'], "int"),
-		GetSQLValueString($monto_total, "double"),
+		GetSQLValueString($suma_cuota_uso, "double"),
+		GetSQLValueString($suma_valor_contrato, "double"),
+		GetSQLValueString($suma_cuota_uso, "double"),
 		GetSQLValueString($_POST['idtrim'], "text"));
 	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
-	$updateSQL = sprintf("UPDATE informe_general SET total_informe = %s WHERE idinforme_general = %s",
-		GetSQLValueString($total_general, "text"),
+	$updateSQL = sprintf("UPDATE informe_general SET total_valor_contrato = %s, total_cuota_uso = %s WHERE idinforme_general = %s",
+		GetSQLValueString($total_valor_contrato, "double"),
+		GetSQLValueString($total_cuota_uso, "double"),
 		GetSQLValueString($informe_general['idinforme_general'], "text"));
 	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
@@ -159,8 +171,8 @@ if(isset($_GET['trim'])){
 
 	echo $titulo_trim;
 	if($total_trim == 1){
-		$query_informe = "SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim = '$trim[$idtrim]' AND idempresa = $idempresa";
-		$row_informe = mysql_query($query_informe, $dspp) or die(mysql_error());
+		$query_formato = "SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim = '$trim[$idtrim]' AND idempresa = $idempresa";
+		$row_formato = mysql_query($query_formato, $dspp) or die(mysql_error());
 
 		if(isset($_GET['add'])){
 			include('informe_add.php');
@@ -200,45 +212,52 @@ if(isset($_GET['trim'])){
 				<tbody>
 					<?php 
 					$contador = 1;
-					$monto_total = '';
-					while($informe = mysql_fetch_assoc($row_informe)){
+					$suma_cuota_uso = '';
+					$suma_valor_contrato = 0;
+					while($formato = mysql_fetch_assoc($row_formato)){
 					?>
 						<tr>
 							<td><?php echo $contador; ?></td>
-							<td><?php echo $informe['spp']; ?></td>
-							<td><?php echo $informe['opp']; ?></td>
-							<td><?php echo $informe['pais']; ?></td>
-							<td><?php echo date('d/m/Y',$informe['fecha_facturacion']); ?></td>
-							<td><?php echo $informe['primer_intermediario']; ?></td>
-							<td><?php echo $informe['segundo_intermediario']; ?></td>
-							<td><?php echo $informe['clave_contrato']; ?></td>
+							<td><?php echo $formato['spp']; ?></td>
+							<td><?php echo $formato['opp']; ?></td>
+							<td><?php echo $formato['pais']; ?></td>
+							<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
+							<td><?php echo $formato['primer_intermediario']; ?></td>
+							<td><?php echo $formato['segundo_intermediario']; ?></td>
+							<td><?php echo $formato['clave_contrato']; ?></td>
 							<td>
 								<?php
-								if(isset($informe['fecha_contrato'])){
-									echo date('d/m/Y',$informe['fecha_contrato']);
+								if(isset($formato['fecha_contrato'])){
+									echo date('d/m/Y',$formato['fecha_contrato']);
 								}
 								?>
 							</td>
-							<td><?php echo $informe['producto_general']; ?></td>
-							<td><?php echo $informe['producto_especifico']; ?></td>
-							<td><?php echo $informe['unidad_cantidad_factura']; ?></td>
-							<td><?php echo $informe['cantidad_total_factura']; ?></td>
-							<td><?php echo $informe['precio_sustentable_minimo']; ?></td>
-							<td><?php echo $informe['reconocimiento_organico']; ?></td>
-							<td><?php echo $informe['incentivo_spp']; ?></td>
-							<td><?php echo $informe['otros_premios']; ?></td>
-							<td><?php echo $informe['precio_total_unitario']; ?></td>
-							<td><?php echo $informe['valor_total_contrato']; ?></td>
-							<td><?php echo $informe['cuota_uso_reglamento']; ?></td>
-							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $informe['total_a_pagar'].' USD'; ?></td>
+							<td><?php echo $formato['producto_general']; ?></td>
+							<td><?php echo $formato['producto_especifico']; ?></td>
+							<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
+							<td><?php echo $formato['cantidad_total_factura']; ?></td>
+							<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
+							<td><?php echo $formato['reconocimiento_organico']; ?></td>
+							<td><?php echo $formato['incentivo_spp']; ?></td>
+							<td><?php echo $formato['otros_premios']; ?></td>
+							<td><?php echo $formato['precio_total_unitario']; ?></td>
+							<td><?php echo $formato['valor_total_contrato']; ?></td>
+							<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
+							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar'].' USD'; ?></td>
 						</tr>
 					<?php
-					$monto_total = $informe['total_a_pagar'] + $monto_total; 
+					$suma_cuota_uso = $formato['total_a_pagar'] + $suma_cuota_uso;
+					$suma_valor_contrato = $formato['valor_total_contrato'] + $suma_valor_contrato; 
 					$contador++;
 					}
-						echo "<tr class='info'><td class='text-right' colspan='26'>Total a Pagar: <b style='color:red'>$monto_total USD</b></td></tr>";
+						
+						echo "<tr class='info'>
+							<td class='text-right' colspan='18'>Total valor contrato: <b style='color:red'>$suma_valor_contrato USD</b></td>
+							<td class='text-right' colspan='3'>Total a Pagar: <b style='color:red'>$suma_cuota_uso USD</b></td>
+						</tr>";
 						//EL TOTAL A PAGAR AL FINALIZAR EL TRIMESTRE
-						echo "<input type='text' name='monto_total' value='$monto_total'>";
+						echo "<input type='text' name='suma_cuota_uso' value='$suma_cuota_uso'>";
+						echo "<input type='text' name='suma_valor_contrato' value='$suma_valor_contrato'>";
 					 ?>
 				</tbody>
 			</table>
