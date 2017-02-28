@@ -47,6 +47,15 @@ $row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(my
 while($array_plataformas = mysql_fetch_assoc($row_plataformas)){
 	$plataformas_spp[] = $array_plataformas['pais'];
 }
+
+$anio_actual = date('Y',time());
+$txt_idtrim = 'T1-'.$anio_actual;
+$clave_distribucion = 0;
+///calculamos las claves de distribucion, esto sumando el valor del contrato de cada formato del primer trimestre
+$row_formato_compras = mysql_query("SELECT SUM(valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%'", $dspp) or die(mysql_error());
+$formato_compras = mysql_fetch_assoc($row_formato_compras);
+$porcentaje_anual = 10;
+$cuota_uso = round(($formato_compras['total_contrato'] * $porcentaje_anual) / 100, 2);
 //$plataformas_spp = mysql_fetch_assoc($row_plataformas);
 //$plataformas_spp = array('Ecuador', 'Perú', 'Colombia', 'Guatemala');
 
@@ -56,6 +65,60 @@ function redondear_dos_decimal($valor) {
 }
 ?>
 <h4>Distribución plataformas SPP</h4>
+
+<table class="table table-bordered" style="font-size:12px;">
+	<thead>
+		<tr>
+			<th>Trimestre 1</th>
+			<th>Estatus: <?php echo $ ?></th>
+			<th colspan="2">Valor total contratos: <span style="color:red"><?php echo $formato_compras['total_contrato'].' (10% = '.$cuota_uso.')'; ?></span></th>
+		</tr>
+		<tr>
+			<th>Plataforma</th>
+			<th>Valor total contratos</th>
+			<th>Porcentaje Clave distribución</th>
+			<th>Valor clave distribución</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php 
+		$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_error());
+		while($plataformas = mysql_fetch_assoc($row_plataformas)){
+			$row_formatos = mysql_query("SELECT COUNT(idformato_compras) AS 'total_formatos', SUM(formato_compras.valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'", $dspp) or die(mysql_error());
+			$formatos = mysql_fetch_assoc($row_formatos);
+			$num_formatos = mysql_num_rows($row_plataformas);
+			$query = "SELECT * FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'";
+
+			$clave_distribucion = round(($formatos['total_contrato'] * 100) / $formato_compras['total_contrato'], 2);
+			$valor_clave_distribucion = round(($cuota_uso * $clave_distribucion) / 100,2);
+		?>
+		<tr>
+			<td><?php echo $plataformas['pais']; ?></td>
+			<td><?php echo $formatos['total_contrato'].' USD'; ?></td>
+			<td><?php echo $clave_distribucion.' %'; ?></td>
+			<td><?php echo $valor_clave_distribucion.' USD'; ?></td>
+			
+			<!--<td>
+				<?php echo "Num formatos: ".$formatos['total_formatos']." - Total contrato: ".$formatos['total_contrato']; ?>
+				<?php
+
+			
+				echo "Clave: <span style='color:red'>".$clave_distribucion." %</span>";
+				 ?>
+			</td>
+			<td>
+				<?php 
+
+				echo $cuota_uso.' ('.$clave_distribucion.' %) = '.$valor_clave_distribucion; 
+				?>
+			</td>
+			<td></td>-->
+		</tr>
+		<?php
+		}
+		 ?>
+	</tbody>
+</table>
 
 <table class="table table-bordered table-condensed" style="font-size:12px;">
 	<tr class="info">
