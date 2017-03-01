@@ -122,7 +122,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 	if(isset($_POST['op_preg13'])){
-		$op_preg13 = $_POST['op_preg13'];
+		$op_preg13 = $_POST['op_preg13_1'];
 	}else{
 		$op_preg13 = "";
 	}

@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="btn-group" role="group" aria-label="...">
-		<a href="?REPORTES&informe_compras" <?php if(isset($_GET['informe_compras'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Informes compras</a>
+		<a href="?REPORTES&informe_compras" <?php if(isset($_GET['informe_compras'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Informe compras</a>
 		<a href="?REPORTES&distribucion_p" <?php if(isset($_GET['distribucion_p'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Distribucion plataformas</a>
 		<a href="?REPORTES&plataformas" <?php if(isset($_GET['plataformas'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Plataformas SPP</a>
 

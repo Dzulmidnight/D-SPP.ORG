@@ -40,9 +40,11 @@ if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
 
-$row_informes = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, empresa.abreviacion FROM informe_general INNER JOIN empresa ON informe_general.idempresa = empresa.idempresa LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
+$row_informes = mysql_query("SELECT informe_general.*, trim1.valor_contrato_trim1, trim1.cuota_uso_trim1, trim2.valor_contrato_trim2, trim2.cuota_uso_trim2, trim3.valor_contrato_trim3, trim3.cuota_uso_trim3, trim4.valor_contrato_trim4, trim4.cuota_uso_trim4, empresa.abreviacion FROM informe_general INNER JOIN empresa ON informe_general.idempresa = empresa.idempresa LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
 $total_informes = mysql_num_rows($row_informes);
-$plataformas_spp = array('Ecuador', 'Perú', 'Colombia', 'Guatemala');
+//$plataformas_spp = array('Ecuador', 'Perú', 'Colombia', 'Guatemala');
+
+$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_errno());
 
 function redondear_dos_decimal($valor) { 
    $float_redondeado=round($valor * 100) / 100; 
@@ -51,7 +53,7 @@ function redondear_dos_decimal($valor) {
 ?>
 <hr>
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-12">
 		<table class="table table-bordered table-hover table-condensed" style="font-size:12px;">
 			<thead>
 				<tr class="warning">
@@ -70,49 +72,49 @@ function redondear_dos_decimal($valor) {
 					<th class="text-center">ID informe general</th>
 					<th class="text-center">Estado</th>
 					<th class="text-center">Empresa</th>
-					<th class="text-center">Trim1</th>
-					<th class="text-center">Trim2</th>
-					<th class="text-center">Trim3</th>
-					<th class="text-center">Trim4</th>
+					<th class="text-center">Trimestre 1</th>
+					<th class="text-center">Trimestre 2</th>
+					<th class="text-center">Trimestre 3</th>
+					<th class="text-center">Trimestre 4</th>
 					<th class="text-center">Total</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
 				$total = 0;
-				$total_trim1 = 0;
-				$total_trim2 = 0;
-				$total_trim3 = 0;
-				$total_trim4 = 0;
+				$cuota_uso_trim1 = 0;
+				$cuota_uso_trim2 = 0;
+				$cuota_uso_trim3 = 0;
+				$cuota_uso_trim4 = 0;
 				$total_final = 0;
 				if($total_informes == 0){
 					echo '<tr><td colspan="8">No se encontraron registros</td></tr>';
 				}else{
 					while($informes = mysql_fetch_assoc($row_informes)){
 						
-						$total_trim1 += $informes['total_trim1'];
-						$total_trim2 += $informes['total_trim2'];
-						$total_trim3 += $informes['total_trim3'];
-						$total_trim4 += $informes['total_trim4'];
-						$total_final = $total_trim1 + $total_trim2 + $total_trim3 + $total_trim4;
+						$cuota_uso_trim1 += $informes['cuota_uso_trim1'];
+						$cuota_uso_trim2 += $informes['cuota_uso_trim2'];
+						$cuota_uso_trim3 += $informes['cuota_uso_trim3'];
+						$cuota_uso_trim4 += $informes['cuota_uso_trim4'];
+						$total_final = $cuota_uso_trim1 + $cuota_uso_trim2 + $cuota_uso_trim3 + $cuota_uso_trim4;
 						echo "<tr>";
 							echo '<td>'.date('Y',$informes['ano']).'</td>';
 							echo '<td><a href="?REPORTES&informe_compras='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-list-alt"></span> '.$informes['idinforme_general'].'</a></td>';
 							echo '<td>'.$informes['estado_informe'].'</td>';
 							echo '<td>'.$informes['abreviacion'].'</td>';
-							echo '<td>'.$informes['total_trim1'].'</td>';
-							echo '<td>'.$informes['total_trim2'].'</td>';
-							echo '<td>'.$informes['total_trim3'].'</td>';
-							echo '<td>'.$informes['total_trim4'].'</td>';
-							echo '<td><a href="?REPORTES&informe_compras&detalle_total='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-search"></span> '.$informes['total_informe'].' USD</a></td>';
+							echo '<td>'.$informes['cuota_uso_trim1'].'</td>';
+							echo '<td>'.$informes['cuota_uso_trim2'].'</td>';
+							echo '<td>'.$informes['cuota_uso_trim3'].'</td>';
+							echo '<td>'.$informes['cuota_uso_trim4'].'</td>';
+							echo '<td><a href="?REPORTES&informe_compras&detalle_total='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-search"></span> '.$informes['total_cuota_uso'].' USD</a></td>';
 						echo '</tr>';
 					}
 					echo '<tr>';
 						echo '<td colspan="4" style="text-align:right"><b>Suma total</b></td>';
-						echo '<td style="color:#e74c3c;">'.$total_trim1.'</td>';
-						echo '<td style="color:#e74c3c;">'.$total_trim2.'</td>';
-						echo '<td style="color:#e74c3c;">'.$total_trim3.'</td>';
-						echo '<td style="color:#e74c3c;">'.$total_trim4.'</td>';
+						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim1.'</td>';
+						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim2.'</td>';
+						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim3.'</td>';
+						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim4.'</td>';
 						echo '<td style="color:#e74c3c;">'.$total_final.' USD</td>';
 					echo '</tr>';
 					//echo '<tr><td colspan="9"><b>Suma total: <span style="color:#e74c3c">'.$total.'</span> USD</b></td></tr>';
@@ -121,7 +123,8 @@ function redondear_dos_decimal($valor) {
 			</tbody>
 		</table>
 	</div>
-	<div class="col-md-6">
+	<!--
+	<div class="col-md-12">
 
 		<?php 
 		if(!empty($_GET['informe_compras'])){
@@ -237,4 +240,4 @@ function redondear_dos_decimal($valor) {
 		}
 		 ?>
 	</div>
-</div>
+</div>-->

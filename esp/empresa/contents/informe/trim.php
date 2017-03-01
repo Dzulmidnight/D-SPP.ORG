@@ -241,7 +241,7 @@ if(isset($_GET['trim'])){
 							<td><?php echo $formato['incentivo_spp']; ?></td>
 							<td><?php echo $formato['otros_premios']; ?></td>
 							<td><?php echo $formato['precio_total_unitario']; ?></td>
-							<td><?php echo $formato['valor_total_contrato']; ?></td>
+							<td><?php echo $formato['valor_total_contrato'].' USD'; ?></td>
 							<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
 							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar'].' USD'; ?></td>
 						</tr>
@@ -252,8 +252,10 @@ if(isset($_GET['trim'])){
 					}
 						
 						echo "<tr class='info'>
-							<td class='text-right' colspan='18'>Total valor contrato: <b style='color:red'>$suma_valor_contrato USD</b></td>
-							<td class='text-right' colspan='3'>Total a Pagar: <b style='color:red'>$suma_cuota_uso USD</b></td>
+							<td colspan='18'></td>
+							<td class='text-right'><b style='color:red'>$suma_valor_contrato USD</b></td>
+							<td></td>
+							<td class='text-right'><b style='color:red'>$suma_cuota_uso USD</b></td>
 						</tr>";
 						//EL TOTAL A PAGAR AL FINALIZAR EL TRIMESTRE
 						echo "<input type='text' name='suma_cuota_uso' value='$suma_cuota_uso'>";

@@ -60,7 +60,7 @@ function redondear_dos_decimal($valor) {
 $row_anio = mysql_query("SELECT FROM_UNIXTIME(ano,'%Y') AS 'anio' FROM informe_general GROUP BY FROM_UNIXTIME(ano,'%Y')", $dspp) or die(mysql_error());
 ?>
 <h4>
-	Distribución plataformas SPP | 
+	Distribución plataformas SPP | Año
 	<select name="anio">
 		<?php 
 		while($anio = mysql_fetch_assoc($row_anio)){
@@ -96,69 +96,89 @@ for ($i=1; $i <= 4; $i++) {
 	$num_finalizado = mysql_num_rows($row_trim);
 	//echo '<br>TOTAL TRIMS finalizados: '.$num_finalizado;
 
-?>
-	<table class="table table-bordered" style="font-size:12px;">
-		<thead>
-			<tr>
-				<th class="success"><b>Trimestre <?php echo $i; ?></b></th>
-				<th class="info">Informes trimestrales (<?php echo $num_trim; ?>)</th>
-				<th class="info"><?php echo 'Activos: '.$num_activo.' Finalizado: '.$num_finalizado; ?></th>
-				<th class="info">Valor total contratos: <span style="color:red"><?php echo $formato_compras['total_contrato'].' (10% = '.$cuota_uso.')'; ?></span></th>
-			</tr>
-			<tr>
-				<th>Plataforma</th>
-				<th>Valor total contratos</th>
-				<th>Porcentaje Clave distribución</th>
-				<th>Valor clave distribución</th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php 
-			$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_error());
-			while($plataformas = mysql_fetch_assoc($row_plataformas)){
-				$row_formatos = mysql_query("SELECT COUNT(idformato_compras) AS 'total_formatos', SUM(formato_compras.valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'", $dspp) or die(mysql_error());
-				$formatos = mysql_fetch_assoc($row_formatos);
-				$num_formatos = mysql_num_rows($row_plataformas);
-				$query = "SELECT * FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'";
+	if($num_trim != 0){
+	?>
+		<table class="table table-bordered" style="font-size:12px;">
+			<thead>
+				<tr>
+					<th class="success"><b>Trimestre <?php echo $i; ?></b></th>
+					<th class="info">Numero de informes: <span style="color:#e74c3c"><?php echo $num_trim; ?></span></th>
+					<th class="info"><?php echo 'Activos: <span style="color:#e74c3c">'.$num_activo.'</span> Finalizados: <span style="color:#e74c3c">'.$num_finalizado.'</span>'; ?></th>
+					<th class="info">Valor total contratos: <span style="color:red"><?php echo round($formato_compras['total_contrato'],2).' (10% = '.$cuota_uso.')'; ?></span></th>
+				</tr>
+				<tr>
+					<th>Plataforma</th>
+					<th>Valor total contratos</th>
+					<th>Porcentaje Clave distribución</th>
+					<th>Valor clave distribución</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php 
+				$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_error());
+				while($plataformas = mysql_fetch_assoc($row_plataformas)){
+					$row_formatos = mysql_query("SELECT COUNT(idformato_compras) AS 'total_formatos', SUM(formato_compras.valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'", $dspp) or die(mysql_error());
+					$formatos = mysql_fetch_assoc($row_formatos);
+					$num_formatos = mysql_num_rows($row_plataformas);
+					$query = "SELECT * FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'";
 
-				$clave_distribucion = round(($formatos['total_contrato'] * 100) / $formato_compras['total_contrato'], 2);
-				$valor_clave_distribucion = round(($cuota_uso * $clave_distribucion) / 100,2);
-			?>
-			<tr>
-				<td style="background-color:#34495e;color:#ecf0f1"><?php echo $plataformas['pais']; ?></td>
-				<td><?php echo $formatos['total_contrato'].' USD'; ?></td>
-				<td><?php echo $clave_distribucion.' %'; ?></td>
-				<td><?php echo $valor_clave_distribucion.' USD'; ?></td>
-				
-				<!--<td>
-					<?php echo "Num formatos: ".$formatos['total_formatos']." - Total contrato: ".$formatos['total_contrato']; ?>
-					<?php
+					$clave_distribucion = round(($formatos['total_contrato'] * 100) / $formato_compras['total_contrato'], 2);
+					$valor_clave_distribucion = round(($cuota_uso * $clave_distribucion) / 100,2);
+				?>
+				<tr>
+					<td style="background-color:#27ae60;color:#ecf0f1"><?php echo $plataformas['pais']; ?></td>
+					<td>
+						<?php 
+						if(isset($formatos['total_contrato'])){
+							echo round($formatos['total_contrato'],2).' USD';
+						}else{
+							echo "0 USD";
+						}
+						?>
+					</td>
+					<td><?php echo $clave_distribucion.' %'; ?></td>
+					<td><?php echo $valor_clave_distribucion.' USD'; ?></td>
+					
+					<!--<td>
+						<?php echo "Num formatos: ".$formatos['total_formatos']." - Total contrato: ".$formatos['total_contrato']; ?>
+						<?php
 
-				
-					echo "Clave: <span style='color:red'>".$clave_distribucion." %</span>";
-					 ?>
-				</td>
-				<td>
-					<?php 
+					
+						echo "Clave: <span style='color:red'>".$clave_distribucion." %</span>";
+						 ?>
+					</td>
+					<td>
+						<?php 
 
-					echo $cuota_uso.' ('.$clave_distribucion.' %) = '.$valor_clave_distribucion; 
-					?>
-				</td>
-				<td></td>-->
-			</tr>
-			<?php
-			}
-			 ?>
-		</tbody>
-	</table>
-<?php
+						echo $cuota_uso.' ('.$clave_distribucion.' %) = '.$valor_clave_distribucion; 
+						?>
+					</td>
+					<td></td>-->
+				</tr>
+				<?php
+				}
+				 ?>
+			</tbody>
+		</table>
+	<?php
+	}else{
+	?>
+		<table class="table">
+			<thead>
+				<tr>
+					<th class="warning"><b>No se encontraron registros sobre el Trimestre <?php echo $i; ?></b></th>
+				</tr>
+			</thead>
+		</table>
+	<?php
+	}
 }
  ?>
 
 
 
 
-<table class="table table-bordered table-condensed" style="font-size:12px;">
+<!--<table class="table table-bordered table-condensed" style="font-size:12px;">
 	<tr class="info">
 		<th style="background-color:#ECF0F1;color:#2980B9">
 			Año:
@@ -344,4 +364,4 @@ for ($i=1; $i <= 4; $i++) {
 				 		<td><?php echo round(($total_compras * 0.10),2); ?> USD</td>
 				 	</tr>
 				</tbody>
-			</table>
+			</table>-->

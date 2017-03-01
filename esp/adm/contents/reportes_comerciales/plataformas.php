@@ -60,7 +60,6 @@ if(isset($_POST['agregar_plataforma']) && $_POST['agregar_plataforma'] == 1){
 				<tr>
 					<th>#</th>
 					<th>País</th>
-					<th>% asignado</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -77,7 +76,6 @@ if(isset($_POST['agregar_plataforma']) && $_POST['agregar_plataforma'] == 1){
 						<tr>
 							<td><?php echo $contador; ?></td>
 							<td><?php echo $plataformas['pais']; ?></td>
-							<td><?php echo $plataformas['porcentaje']; ?></td>
 						</tr>
 					<?php
 					$contador++;

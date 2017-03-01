@@ -283,7 +283,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 		?>
 		<tr>
 			<td class="text-right" colspan="27">
-				<h5>Total actual: <span style="color:#c0392b"><?php echo round($informe_general['total_informe'],2); ?> USD</span></h5>
+				<h5>Total actual: <span style="color:#c0392b"><?php echo $informe_general['total_cuota_uso']; ?> USD</span></h5>
 			</td>
 		</tr>
 	</tbody>
