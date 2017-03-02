@@ -76,7 +76,7 @@ function redondear_dos_decimal($valor) {
 					<th class="text-center">Trimestre 2</th>
 					<th class="text-center">Trimestre 3</th>
 					<th class="text-center">Trimestre 4</th>
-					<th class="text-center">Total</th>
+					<th class="text-center">Total Cuota de uso</th>
 				</tr>
 			</thead>
 			<tbody>

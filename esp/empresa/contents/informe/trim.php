@@ -133,12 +133,12 @@ if(isset($_GET['trim'])){
 		if($estatus == 'ACTIVO'){
 			$estatus = $trim[$estado_trim];
 			$pregunta = "
-				<p class='alert alert-info' style='padding:7px;margin-bottom:0px;'>
-					<b style='color:red'>¿Desear Concluir el Formato de Trimestre actual?</b>
-					<button class='btn btn-success' type='subtmit' value='SI'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='Finalizar trimestre actual' onclick='return confirm(\"¿Desea finalizar la captura del trimestre actual?\");' >SI</button>
+				<p class='alert alert-info' style='padding:5px;margin-bottom:0px;'>
+					<b style='color:red'>¿Desea concluir la captura de registros en el formato de trimestre actual? </b>
+					<button class='' type='subtmit' value='SI'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='Finalizar trimestre actual' onclick='return confirm(\"¿Desea finalizar la captura del trimestre actual?\");' >SI</button>
 					<!--<input class='btn btn-success' type='submit' name='finalizar_trim' value='SI'>-->
-					<input type='text' name='idtrim' value='".$trim[$idtrim]."'>
-					<input type='text' name='fecha' value='".time()."'>
+					<input type='hidden' name='idtrim' value='".$trim[$idtrim]."'>
+					<input type='hidden' name='fecha' value='".time()."'>
 					
 				</p>
 			";
@@ -169,7 +169,7 @@ if(isset($_GET['trim'])){
 			break;
 	}
 
-	echo $titulo_trim;
+	//echo $titulo_trim;
 	if($total_trim == 1){
 		$query_formato = "SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim = '$trim[$idtrim]' AND idempresa = $idempresa";
 		$row_formato = mysql_query($query_formato, $dspp) or die(mysql_error());
@@ -179,14 +179,22 @@ if(isset($_GET['trim'])){
 		}else{
 		?>
 		<form action="" method="POST">
-		
-			<?php 
-			if(isset($pregunta)){
-				echo $pregunta;
-			}
-			?>
 			<table class="table table-bordered" style="font-size:11px;">
 				<thead>
+					<tr>
+						<th colspan="8">
+						<?php 
+						echo $titulo_trim;
+						 ?>
+						</th>
+						<th colspan="13">
+							<?php 
+							if(isset($pregunta)){
+								echo $pregunta;
+							}
+							?>			
+						</th>
+					</tr>
 					<tr class="success">
 						<th class="text-center">#</th>
 						<th class="text-center">#SPP</th>
@@ -258,8 +266,8 @@ if(isset($_GET['trim'])){
 							<td class='text-right'><b style='color:red'>$suma_cuota_uso USD</b></td>
 						</tr>";
 						//EL TOTAL A PAGAR AL FINALIZAR EL TRIMESTRE
-						echo "<input type='text' name='suma_cuota_uso' value='$suma_cuota_uso'>";
-						echo "<input type='text' name='suma_valor_contrato' value='$suma_valor_contrato'>";
+						echo "<input type='hidden' name='suma_cuota_uso' value='$suma_cuota_uso'>";
+						echo "<input type='hidden' name='suma_valor_contrato' value='$suma_valor_contrato'>";
 					 ?>
 				</tbody>
 			</table>

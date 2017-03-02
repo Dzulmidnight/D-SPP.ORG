@@ -52,6 +52,9 @@ if (isset($_SERVER['QUERY_STRING'])) {
 
 $idempresa = $_SESSION['idempresa'];
 $idtrim = $_GET['idtrim'];
+$anio_actual = date('Y',time());
+$row_configuracion = mysql_query("SELECT * FROM porcentaje_ajuste WHERE anio = $anio_actual", $dspp) or die(mysql_error());
+$configuracion = mysql_fetch_assoc($row_configuracion);
 
 if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	
@@ -586,7 +589,8 @@ function ponerMayusculas(nombre)
 nombre.value=nombre.value.toUpperCase(); 
 } 
 var contador=0;
-var cuota_fija_anual = 0.01;
+var cuota_fija_anual = <?php echo $configuracion['cuota_compradores']; ?>;
+//var cuota_fija_anual = 0.01;
 	function calcular(){
 		cantidad_total_factura = document.getElementById("cantidad_total_factura").value;
 		precio_total_unitario = document.getElementById("precio_total_unitario").value;
@@ -597,7 +601,7 @@ var cuota_fija_anual = 0.01;
 		//calculamos el valor de la cuota de uso reglamento
 		//cuota_uso_reglamento = valor_total_contrato * cuota_fija_anual;
 		//calculamos el total a pagar
-		total_a_pagar = valor_total_contrato * cuota_fija_anual;
+		total_a_pagar = (valor_total_contrato * cuota_fija_anual) / 100;
 
 		total_redondeado = parseFloat(total_a_pagar.toFixed(2));
 
@@ -607,7 +611,7 @@ var cuota_fija_anual = 0.01;
 		/* se redondea el resultado a 2 decimales */
 		//valor_total_contrato = parseFloat(Math.round((precio_total_unitario * peso_cantidad_total_contrato) * 100) / 100).toFixed(2);
 		document.getElementById("valor_total_contrato").value = total_contrato_redondeado; 
-		document.getElementById("cuota_uso_reglamento").value = '1%'; 
+		document.getElementById("cuota_uso_reglamento").value = "<?php echo $configuracion['cuota_compradores']; ?> %"; 
 		document.getElementById("total_a_pagar").value = total_redondeado; 
 
 		//calculamos el total a pagar

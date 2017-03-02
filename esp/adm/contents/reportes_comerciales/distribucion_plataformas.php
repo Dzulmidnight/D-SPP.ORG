@@ -49,14 +49,13 @@ while($array_plataformas = mysql_fetch_assoc($row_plataformas)){
 }
 
 $anio_actual = date('Y',time());
+$row_configuracion = mysql_query("SELECT * FROM porcentaje_ajuste WHERE anio = $anio_actual", $dspp) or die(mysql_error());
+$configuracion = mysql_fetch_assoc($row_configuracion);
 
 //$plataformas_spp = mysql_fetch_assoc($row_plataformas);
 //$plataformas_spp = array('Ecuador', 'Perú', 'Colombia', 'Guatemala');
 
-function redondear_dos_decimal($valor) { 
-   $float_redondeado=round($valor * 100) / 100; 
-   return $float_redondeado; 
-}
+
 $row_anio = mysql_query("SELECT FROM_UNIXTIME(ano,'%Y') AS 'anio' FROM informe_general GROUP BY FROM_UNIXTIME(ano,'%Y')", $dspp) or die(mysql_error());
 ?>
 <h4>
@@ -82,7 +81,7 @@ for ($i=1; $i <= 4; $i++) {
 	///calculamos las claves de distribucion, esto sumando el valor del contrato de cada formato del primer trimestre
 	$row_formato_compras = mysql_query("SELECT SUM(valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%'", $dspp) or die(mysql_error());
 	$formato_compras = mysql_fetch_assoc($row_formato_compras);
-	$porcentaje_anual = 10;
+	$porcentaje_anual = $configuracion['distribucion_plataforma_origen'];
 	$cuota_uso = round(($formato_compras['total_contrato'] * $porcentaje_anual) / 100, 2);
 
 
@@ -104,7 +103,7 @@ for ($i=1; $i <= 4; $i++) {
 					<th class="success"><b>Trimestre <?php echo $i; ?></b></th>
 					<th class="info">Numero de informes: <span style="color:#e74c3c"><?php echo $num_trim; ?></span></th>
 					<th class="info"><?php echo 'Activos: <span style="color:#e74c3c">'.$num_activo.'</span> Finalizados: <span style="color:#e74c3c">'.$num_finalizado.'</span>'; ?></th>
-					<th class="info">Valor total contratos: <span style="color:red"><?php echo round($formato_compras['total_contrato'],2).' (10% = '.$cuota_uso.')'; ?></span></th>
+					<th class="info">Valor total contratos: <span style="color:red"><?php echo round($formato_compras['total_contrato'],2).' ('.$configuracion['distribucion_plataforma_origen'].'% = '.$cuota_uso.')'; ?></span></th>
 				</tr>
 				<tr>
 					<th>Plataforma</th>
