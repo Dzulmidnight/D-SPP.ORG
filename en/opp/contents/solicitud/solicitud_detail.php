@@ -902,9 +902,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					    <td>
 					      <?php 
 					        if($row_producto['terminado'] == 'SI'){
-					          echo "SI <input type='radio'  name='terminado_actual".$contador."' value='SI' checked><br>";
+					          echo "YES <input type='radio'  name='terminado_actual".$contador."' value='SI' checked><br>";
 					        }else{
-					          echo "SI <input type='radio'  name='terminado_actual".$contador."' value='SI'><br>";
+					          echo "YES <input type='radio'  name='terminado_actual".$contador."' value='SI'><br>";
 					        } 
 					        if($row_producto['terminado'] == 'NO'){
 					          echo "NO <input type='radio'  name='terminado_actual".$contador."' value='NO' checked>";
@@ -922,9 +922,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					    <td>
 					      <?php 
 					        if($row_producto['marca_propia'] == 'SI'){
-					          echo "SI <input type='radio'  name='marca_propia_actual".$contador."' value='SI' checked><br>";
+					          echo "YES <input type='radio'  name='marca_propia_actual".$contador."' value='SI' checked><br>";
 					        }else{
-					          echo "SI <input type='radio'  name='marca_propia_actual".$contador."' value='SI'><br>";
+					          echo "YES <input type='radio'  name='marca_propia_actual".$contador."' value='SI'><br>";
 					        } 
 					        if($row_producto['marca_propia'] == 'NO'){
 					          echo "NO <input type='radio'  name='marca_propia_actual".$contador."' value='NO' checked>";
@@ -936,9 +936,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					    <td>
 					      <?php 
 					        if($row_producto['marca_cliente'] == 'SI'){
-					          echo "SI <input type='radio'  name='marca_cliente_actual".$contador."' value='SI' checked><br>";
+					          echo "YES <input type='radio'  name='marca_cliente_actual".$contador."' value='SI' checked><br>";
 					        }else{
-					          echo "SI <input type='radio'  name='marca_cliente_actual".$contador."' value='SI'><br>";
+					          echo "YES <input type='radio'  name='marca_cliente_actual".$contador."' value='SI'><br>";
 					        } 
 					        if($row_producto['marca_cliente'] == 'NO'){
 					          echo "NO <input type='radio'  name='marca_cliente_actual".$contador."' value='NO' checked>";
@@ -950,7 +950,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					    <td>
 					      <?php 
 					        if($row_producto['sin_cliente'] == 'SI'){
-					          echo "SI <input type='radio'  name='sin_cliente_actual".$contador."' value='SI' checked><br>";
+					          echo "YES <input type='radio'  name='sin_cliente_actual".$contador."' value='SI' checked><br>";
 					        }else{
 					          echo "SI <input type='radio'  name='sin_cliente_actual".$contador."' value='SI'><br>";
 					        }

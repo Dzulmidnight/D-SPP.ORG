@@ -110,11 +110,12 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
                   <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
 
                   <br><br>
-                  <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> has sent the quotation corresponding to the Certification Application for Small producers organizations.
-                    <br><br>Please log in to the following link <a href="http://d-spp.org/?OPP">www.d-spp.org/</a> as OPP to access the quotation.
+                  <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> has sent the updated price quote corresponding to the Certification Application for Small Producers’ Organizations (SPOs).
+                    Please open a session as an SPO at the following link <a href="http://d-spp.org/">www.d-spp.org/</a> in order to access the price quote.
 
                   </td>
                 </tr>
+
 
                 <tr>
                   <td colspan="2">
@@ -248,7 +249,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $archivo_dictamen = NULL;
     }
 
-    $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN";
+    $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN (NOTIFICATION OF RESOLUTION)";
 
     if($_POST['tipo_solicitud'] == 'RENOVACION'){
       if(isset($_POST['mensaje_renovacion'])){
@@ -386,6 +387,27 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         <hr>
                       </td>
                     </tr>
+
+                    <tr>
+                      <td colspan="2">
+                        <p>
+                          1. We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a <span style="color:red">“positive”</span> result.
+                        </p>
+                        <p>
+                          2.  In order to complete the process, you are asked to <span style="color:red">please proceed with payment of the membership fee to SPP Global</span>, in the following amount: <strong style="color:red">'.$_POST['total_membresia'].'</strong>. (Bank information is attached. Please read the General Payment Provisions to avoid interest charges.) After payment has been made, please enter your account in the D-SPP system and upload the bank receipt.
+                        </p>
+                        <p>
+                          3.  After SPP Global has confirmed through the System that payment has been received in the SPP Global account, your Certificate will be made available to you.
+                        </p>
+                        <p>
+                          <b>
+                            NOTE: Payment of membership fee is considered as ratification of the signing of the User’s Contract, and it is thus not necessary to sign the contract each year in order to renew your certificate.
+                          </b>
+                        </p>
+                        <hr>
+                      </td>
+                    </tr>
+
                     <tr>
                       <td><p><strong>Datos Bancarios</strong></p></td>
                     </tr>
@@ -393,6 +415,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                       <td>
                         <ul>
                           Datos Bancarios Anexos en el correo.
+                          <br>
+                          Bank Information attached to email.
                         </ul>
                       </td>
                     </tr>
@@ -506,7 +530,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       $documentacion = mysql_fetch_assoc($row_documentacion);
 
-      $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN";
+      $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN (NOTIFICATION OF RESOLUTION)";
 
       if(!empty($_POST['mensajeOPP'])){
         $cuerpo_mensaje = '
@@ -519,7 +543,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   <tbody>
                     <tr>
                       <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN / NOTIFICATION OF RESOLUTION</span></p></th>
 
                     </tr>
                     <tr>
@@ -577,7 +601,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   <tbody>
                     <tr>
                       <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN / NOTIFICATION OF RESOLUTION </span></p></th>
 
                     </tr>
                     <tr>
@@ -592,6 +616,16 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         </p>
                       </td>
                     </tr>
+                    <tr>
+                      <td colspan="2" style="text-align:justify">
+
+                        <p>1. We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a “positive” result.</p>
+                        <p>
+                          2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente <span style="color:red">firmar el Contrato de Uso y Acuse de Recibo</span>. Favor de completar los datos de su organización y del representante legal en los <span style="color:red">textos marcados en color rojo dentro del Contrato de Uso</span>.
+                        </p>
+                      </td>
+                    </tr>
+
                     <tr>
                       <td><p><strong>DOCUMENTOS ANEXOS</strong></p></td>
                     </tr>
@@ -1277,7 +1311,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $estatus_dspp = 13; //certificada
   $estatus_interno = 8; //dictamen_positivo
   $estatus_publico = 2; //certificado
-  $estatus_opp = "CERTITICADO";
+  $estatus_opp = "CERTIFICADO";
   $updateSQL = sprintf("UPDATE opp SET estatus_opp = %s, estatus_publico = %s, estatus_interno = %s, estatus_dspp = %s WHERE idopp = %s",
     GetSQLValueString($estatus_opp, "text"),
     GetSQLValueString($estatus_publico, "int"),
@@ -1384,7 +1418,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
   <?php
   }
   ?>
-
+<p>Date: <input type="text" id="datepicker"></p>
   <div class="col-md-12">
     <table class="table table-condensed table-bordered" style="font-size:12px;">
       <thead>

@@ -876,7 +876,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $estatus_dspp = 13; //certificada
   $estatus_interno = 8; //dictamen_positivo
   $estatus_publico = 2; //certificado
-  $estatus_empresa = "CERTITICADO";
+  $estatus_empresa = "CERTIFICADO";
   $updateSQL = sprintf("UPDATE empresa SET estatus_empresa = %s, estatus_publico = %s, estatus_interno = %s, estatus_dspp = %s WHERE idempresa = %s",
     GetSQLValueString($estatus_empresa, "text"),
     GetSQLValueString($estatus_publico, "int"),
@@ -1541,27 +1541,29 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 $dictamen = mysql_fetch_assoc($row_dictamen);
 
                                 if($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO'){
-                                  if(isset($solicitud['idcertificado'])){
-                                    $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
+                                    $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado] AND idsolicitud_registro = $solicitud[idsolicitud_registro]", $dspp) or die(mysql_error());
                                     $certificado = mysql_fetch_assoc($row_certificado);
+
+                                  if(isset($certificado['idcertificado'])){
                                     $inicio = strtotime($certificado['vigencia_inicio']);
                                     $fin = strtotime($certificado['vigencia_fin']);
                                   ?>
-                                    <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
+                                    <p class="alert alert-info"><?php echo $certificado['idcertificado']; ?> Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
                                     <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
                                   <?php
                                   }else{
                                   ?>
                                     <div class="col-md-12">
                                       <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
+                                      <p class="alert alert-warning" style="padding:5px;">En caso de que no se despliegue el calendario, por favor definir la fecha con el siguiente formato <span style="color:red">dd-mm-aaaa</span></p>
                                     </div>
                                     <div class="col-md-6">
                                       <label for="fecha_inicio">Fecha Inicio</label> 
-                                      <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd/mm/aaaa" required> 
+                                      <input type="text" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd-mm-aaaa" required> 
                                     </div>
                                     <div class="col-md-6">
                                       <label for="fecha_fin">Fecha Fin</label>
-                                      <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd/mm/aaaa" required>
+                                      <input type="text" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd-mm-aaaa" required>
                                     </div>
                                     
                                     <label for="certificado">Por favor seleccione el Certificado</label>

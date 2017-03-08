@@ -412,14 +412,14 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		          <tbody>
 		                <tr>
 		                  <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-		                  <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Application for Small Producers\' Organization Certification </strong></th>
+		                  <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Certification Application for Small Producers’ Organizations </strong></th>
 		                </tr>
 		                <tr>
 		                  <td style="padding-top:10px;">
 		       
 		                    Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
 		                  <br>
-		                    To consult the application, please log in to your CE(Certification Entity) account, in the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+		                    In order to consult the application, please open a session in your  Certification Entity (CE) account at the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
 		                  </td>
 		                </tr>
 		            <tr>
@@ -477,6 +477,18 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		                </ol>
 		              </td>
 		            </tr> 
+		            <tr>
+		              <td colspan="2">
+		                <span style="color:red">What should I do now? You should review the application and upload a price quote.</span>
+		                <ol>
+		                  <li>•	You should open a session in the D-SPP system as a Certification Entity (CE).</li>
+		                  <li>•	Within your account, you should select ApplicationsSolicitudes > SPO Applications Solicitudes OPP</li>
+		                  <li>•	In the applications table, you should locate the column entitled “Actions” and select the Blue Consult button.  </li>
+		                  <li>•	To send your price quote, you should select “Certification Procedure” and upload your price quote.</li>
+		                </ol>
+		              </td>
+		            </tr> 
+
 
 				  </tbody>
 				</table>

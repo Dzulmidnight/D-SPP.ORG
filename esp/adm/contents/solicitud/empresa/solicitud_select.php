@@ -1363,7 +1363,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                                   <?php 
                                   if($dictamen['estatus_dictamen'] != "ACEPTADO" && $informe['estatus_informe'] != "ACEPTADO"){
                                   ?>
-                                    <button type="submit" class="btn btn-primary" name="documentos_evaluacion" value="1" onclick="return validar()">Actualizar Documentos</button>
+                                    <button type="submit" class="btn btn-primary" name="documentos_evaluacion" value="1" onclick="return validar()">ACEPTAR DOCUMENTOS</button>
                                   <?php
                                   }
                                    ?>

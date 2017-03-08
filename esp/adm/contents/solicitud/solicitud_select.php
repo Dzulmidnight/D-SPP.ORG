@@ -195,7 +195,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
     //// termina envio a correo Empresas
 
     //// inicia envio a correo OC
-      $query_oc = "SELECT email1, email2 FROM oc WHERE email1 !=''";
+      $query_oc = "SELECT email1, email2 FROM oc";
       $ejecutar = mysql_query($query_oc,$dspp) or die(mysql_error());
 
 
@@ -1674,7 +1674,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                                 <?php 
                                 if($dictamen['estatus_dictamen'] != "ACEPTADO" && $informe['estatus_informe'] != "ACEPTADO"){
                                 ?>
-                                  <button type="submit" class="form-control btn btn-primary" style="color:white" name="documentos_evaluacion" value="1" onclick="return validar()">Enviar Resultados</button>
+                                  <button type="submit" class="form-control btn btn-primary" style="color:white" name="documentos_evaluacion" value="1" onclick="return validar()">ACEPTAR DOCUMENTOS</button>
                                 <?php
                                 }
                                  ?>

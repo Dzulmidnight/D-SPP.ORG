@@ -88,15 +88,14 @@ if(isset($_POST['cotizacion']) ){
               <tbody>
                 <tr>
                   <th rowspan="6" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><strong>Notificación de Propuesta / Notification of Proposal ('.date('d/m/Y', $fecha).')</strong></th>
+                  <th scope="col" align="left" width="280"><strong>Cotización de Solicitud Aceptada / Application Price Quote Accepted ('.date('d/m/Y', $fecha).')</strong></th>
                 </tr>
 
                 <tr>
                   <td align="left" style="color:#ff738a;">
-                  Felicidades se ha aceptado su cotización, ahora <span style="color:red">puede iniciar el Proceso de Certificación</span>, ya que esta solicitud se encuentra en proceso de \" RENOVACIÓN DEL REGISTRO\" :
-                  <br><br>
-                  Congratulations! Your quotation has been accepted, <span style="color:red">Now you can start the certification process</span>, as this application is in the process of renewal of registration:
-
+                    Felicidades se ha aceptado su cotización, ahora <span style="color:red">puede iniciar el Proceso de Certificación</span>, ya que esta solicitud se encuentra en proceso de \" RENOVACIÓN DEL REGISTRO\" :
+                    <br><br>
+                    Congratulations. Your price quote has been accepted. <span style="color:red">You may now begin the Certification Process</span>, since your application is in the REGISTRATION RENEWAL process.
                   </td>
                 </tr>
 
@@ -215,15 +214,14 @@ if(isset($_POST['cotizacion']) ){
             <tbody>
               <tr>
                 <th rowspan="6" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                <th scope="col" align="left" width="280"><strong>Notificación de Propuesta / Notification of Proposal ('.date('d/m/Y', $fecha).')</strong></th>
+                <th scope="col" align="left" width="280"><strong>Notificación de Propuesta / Application Price Quote Accepted ('.date('d/m/Y', $fecha).')</strong></th>
               </tr>
 
               <tr>
                 <td align="left" style="color:#ff738a;">
-                Felicidades se ha aceptado su cotización, será informado una vez que inicie el período de objeción:
-                <br><br>
-                Congratulations! Your quotation has been accepted. You will be notified once the objection period begins:
-
+                  Felicidades se ha aceptado su cotización, será informado una vez que inicie el período de objeción:
+                  <br><br>
+                  Congratulations. Your price quote has been accepted. You will be informed as soon as the objection period begins.
                 </td>
               </tr>
 

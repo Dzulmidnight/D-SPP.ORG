@@ -130,6 +130,9 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $_SESSION['MM_Usern
       <script src="../bootstrap-switch-master/bootstrap-switch.js"></script>
 
     <!------------------- bootstrap-switch -------------->
+
+
+    
   </head>
 
   <body>
@@ -176,6 +179,14 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $_SESSION['MM_Usern
       $('[data-toggle="tooltip"]').tooltip()
     })
     </script>
+
+
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+<script>
+$(function () {
+$("#datepicker").datepicker();
+});
+</script>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
