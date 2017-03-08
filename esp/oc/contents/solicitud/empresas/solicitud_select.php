@@ -85,7 +85,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
         $row_empresa = mysql_query("SELECT empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais AS 'empresa_pais', empresa.spp, empresa.password, empresa.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, solicitud_registro.adm1_email FROM empresa INNER JOIN solicitud_registro ON empresa.idempresa = solicitud_registro.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $idsolicitud_registro", $dspp) or die(mysql_error());
         $empresa_detail = mysql_fetch_assoc($row_empresa);
 
-        $asunto = "D-SPP Cotización - actualizada (Solicitud de Registro para Compradores y Otros Actores)";
+        $asunto = "D-SPP Cotización actualizada / updated Price Quote ";
 
         $cuerpo_mensaje = '
           <html>
@@ -306,17 +306,24 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               <tbody>
                 <tr>
                   <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen</span></p></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen / Notification of resolution</span></p></th>
 
                 </tr>
                 <tr>
-                 <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].' - ('.$detalle_empresa['abreviacion_empresa'].')</span></p></th>
+                 <th scope="col" align="left" width="280"><p>EMPRESA / COMPANY: <span style="color:red">'.$detalle_empresa['nombre'].' - ('.$detalle_empresa['abreviacion_empresa'].')</span></p></th>
                 </tr>
 
                 <tr>
                   <td colspan="2">
                       <p>
                         1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo. En breve sera contactado.
+                      </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                      <p>
+                        1. We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a “positive” result. You will be contacted soon.
                       </p>
                   </td>
                 </tr>
@@ -375,11 +382,11 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
             <tbody>
               <tr>
                 <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación</span></p></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación / Upload Evaluation Form, Resolution and Report</span></p></th>
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$detalle_empresa['nombre'].' - ('.$detalle_empresa['abreviacion_empresa'].')</span></p></th>
+               <th scope="col" align="left" width="280"><p>EMPRESA / COMPANY: <span style="color:red">'.$detalle_empresa['nombre'].' - ('.$detalle_empresa['abreviacion_empresa'].')</span></p></th>
               </tr>
 
               <tr>
@@ -410,6 +417,40 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   </p>
                 </td>
               </tr>
+
+
+              <tr>
+                <td colspan="2">
+                 <p>
+                  SPP Global hereby notifies that the '.$detalle_empresa['nombre'].' company has concluded its Registration Renewal and should thus carry out the following actions:
+                 </p>
+                 <p>
+                  Please proceed to enter your CE account in the D-SPP system in order to upload the following documents:
+                     <ul style="color:red">
+                       <li>•  Evaluation Form</li>
+                       <li>•  Evaluation Report</li>
+                       <li>•  Evaluation Resolution</li>
+                     </ul>
+
+                 </p>
+                </td>
+              </tr>
+              <tr>
+                <td coslpan="2">
+                  Steps to upload documents? In order to upload documents, these steps should be followed:
+                  <ol>
+                    <li>• Click on the “APPLICATIONS” option.</li>
+                    <li>• Select “COMPANY Applications.”</li>
+                    <li>• Go to the “Certificate” column and click on the “Upload Certificate” button.</li>
+                    <li>• A window will open and documents may be uploaded there.</li>
+                  </ol>
+                  <p style="color:red">
+                    • When documents have been approved, you will be notified that the certificate may be uploaded.
+                  </p>
+                </td>
+              </tr>
+
+
               <tr>
                 <td colspan="2">
                   <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">'.$oc['email1'].', '.$oc['email2'].'</span></p>
@@ -562,7 +603,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               <tbody>
                 <tr>
                   <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen</span></p></th>
+                  <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Dictamen / Notification of resolution</span></p></th>
 
                 </tr>
                 <tr>
@@ -585,8 +626,26 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     </p>
                   </td>
                 </tr>
+
                 <tr>
-                  <td><p><strong>Documentos Anexos</strong></p></td>
+                  <td colspan="2" style="text-align:justify">
+                    <p>
+                      1.  We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a “positive” result.
+                    </p>
+                    <p>
+                      2. <span style="color:red">In order to complete the process, the most careful request is to read the attached documents and subsequently sign the User´s Contract and Acknowledgment of Receipt.</span>
+                    </p>
+                    <p>
+                      Once you have signed the indicated documents, enter your Company account in the system <a href="http://d-spp.org/">d-spp.org</a> and load the documents so that they are reviewed by SPP Global.
+                    </p>
+                    <p>
+                      4. Once SPP Global confirms through the System the receipt of the documents, the Certification Entity will deliver the Certificate.
+                    </p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><p><strong>Documentos Anexos / Attached documents</strong></p></td>
                 </tr>
                 <tr>
                   <td>
@@ -598,7 +657,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 <tr>
                   <td colspan="2" style="text-align:justify">
                       <p>
-                        DESPUÉS DE FIRMAR EL <span style="color:red">CONTRATO DE USO</span> PROCEDA A CARGAR EL MISMO POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE EMPRESA EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>.
+                        AFTER MAKING PAYMENT, PLEASE UPLOAD “SIGNED <span style="color:red">USER’S CONTRACT</span> AND <span style="color:red">ACKNOWLEDGEMENT OF RECEIPT</span>.”  THROUGH THE D-SPP SYSTEM, BY ENTERING YOUR ACCOUNT AS A COMPANY.
                       </p>
                   </td>
                 </tr>
@@ -892,7 +951,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $fin = strtotime($_POST['fecha_fin']);
   $formato_inicio = date('d/m/Y', $inicio);
   $formato_fin = date('d/m/Y', $fin);
-  $asunto = "D-SPP | Certificado Disponible para Descargar";
+  $asunto = "D-SPP | Certificado Disponible para Descargar / Certificate Ready to be Downloaded";
 
   $cuerpo_mensaje = '
       <html>
@@ -905,7 +964,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
               <tr>
                 <th rowspan="2" scope="col" align="center" valign="middle
                 " width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Certificado Disponible para descargar</span></p></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Certificado Disponible para descargar / Certificate Ready to be Downloaded</span></p></th>
 
               </tr>
               <tr>
@@ -921,6 +980,16 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
                  
                 </td>
               </tr>
+              <tr>
+                <td colspan="2">
+                 <p>
+                  Congratulations!!! Your Certificate has been issued and can now be downloaded.
+                 </p>
+                 <p>
+                  The Certificate is in effect from <span style="color:red">'.$formato_inicio.'</span> to <span style="color:red">'.$formato_fin.'</span>, and is attached to this email.
+                </td>
+              </tr>
+
               <tr>
                 <td colspan="2">
                   <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>

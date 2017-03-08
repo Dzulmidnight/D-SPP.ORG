@@ -336,7 +336,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
   $oc = mysql_fetch_assoc($row_oc);
 
-  $asunto = "D-SPP Cotización (Solicitud de Registro para Compradores y otros Actores)";
+  $asunto = "D-SPP Cotización (Solicitud de Registro para Compradores y otros Actores) / Price Quote (Registration Application for Buyers and other Stakeholders)";
 
   $cuerpo_mensaje = '
     <html>
@@ -360,13 +360,13 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
           </tr>
           <tr>
             <td aling="left" style="text-align:justify">
-            Se ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
-            <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
+              Se ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
+              <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
 
-            <br><br>
-            The quotation corresponding to the Certification Application for Small producers organizations has been sent.
-              <br><br>Please log in to the following link <a href="http://d-spp.org/?OPP">www.d-spp.org/</a> as OPP to access the quotation.
-
+              <br><br>
+              The price quote corresponding to the Certification Application for Small Producers’ Organizations has been sent.
+                <br><br>
+              Please open a session as an SPO (Small Producers’ Organization) at the following link: <a href="http://d-spp.org/?OPP">www.d-spp.org/</a> in order to access the price quote.
             </td>
           </tr>
 
