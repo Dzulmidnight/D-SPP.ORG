@@ -81,7 +81,7 @@ if(isset($_POST['actualizar_ajuste']) && $_POST['actualizar_ajuste'] == 1){
 <div class="row">
 	<!-- SECCIÓN PLATAFORMAS SPP -->
 	<div id="div_central" class="col-md-4">
-		<table class="table table-bordered table-condensed" style="font-size:12px;">
+		<table class="table table-bordered table-condensed" style="font-size:11px;">
 			<thead>
 				<tr>
 					<th class="info text-center" colspan="2">Plataformas SPP actuales</th>
@@ -111,7 +111,7 @@ if(isset($_POST['actualizar_ajuste']) && $_POST['actualizar_ajuste'] == 1){
 				?>
 				<form action="" method="POST">
 					<tr>
-						<td><button type="submit" class="btn btn-sm btn-success" name="agregar_plataforma" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> nueva plataforma</button></td>
+						<td><button type="submit" class="btn btn-sm btn-success" name="agregar_plataforma" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> nueva <br>plataforma</button></td>
 						<td>
 							<select name="pais" id="" required>
 								<option value="">- - -</option>
@@ -140,8 +140,8 @@ if(isset($_POST['actualizar_ajuste']) && $_POST['actualizar_ajuste'] == 1){
 				<tr style="font-size:10px;text-align: center;">
 					<th></th>
 					<th>Año de aplicación</th>
-					<th>Cuota Compradores sobre ventas SPP</th>
-					<th>Cuota Productores sobre ventas SPP</th>
+					<th>Cuota Compradores(empresa) sobre ventas SPP</th>
+					<th>Cuota Productores(opp) sobre ventas SPP</th>
 					<th>Membresía Compradores(promedio)</th>
 					<th>Distribución Cuotas de Uso a Plataformas SPP Locales(Destino)</th>
 					<th>Distribución Cuotas de Uso a Plataformas SPP Locales(Origen)</th>

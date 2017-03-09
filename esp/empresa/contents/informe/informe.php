@@ -66,14 +66,16 @@ $informe_general = mysql_fetch_assoc($row_informe_general);
 	// si se ha creado un informe general con el "IDEMRESA" y el año del informe corresponde al año se muestra el boton "Informe General"
 	if($total_informe == 1){
 	?>
-		<a <?php if(isset($_GET['general_detail'])){ echo "class='btn btn-sm btn-primary'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&general_detail"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Informe General:</a>
+		<a <?php if(isset($_GET['general_detail'])){ echo "class='btn btn-sm btn-primary'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&general_detail"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Informe General de Compras</a>
 	<?php
 	}else{ // si no se ha creado un informe general del año en curso, se muestra el boton "Crear Nuevo Informe General"
 	?>
-		<a <?php if(isset($_GET['add_general'])){ echo "class='btn btn-sm btn-primary'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&add_general"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Crear Nuevo Informe General</a>
+		<a <?php if(isset($_GET['add_general'])){ echo "class='btn btn-sm btn-primary'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&add_general"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Crear Nuevo Informe General de Compras</a>
 	<?php
 	}
 	?>
+		<a class="btn btn-sm <?php if(isset($_GET['producto'])){ echo 'btn-success';}else{ echo 'btn-default';} ?>" href="?INFORME&producto"><span class="glyphicon glyphicon-apple" aria-hidden="true"></span> Informe Productos Terminados</a>
+
 </h4>
 
 
@@ -87,7 +89,13 @@ if(isset($_GET['general_detail'])){
 	include ("informe_detail.php");
 }else if(isset($_GET['add'])){
 	include ("informe_add.php");
+}else if(isset($_GET['add_producto'])){
+	include('informe_productos/informe_add_producto.php');
+}else if(isset($_GET['producto'])){
+	include('informe_productos/informe_general.php');
 }else{
 	include ('listado_informes.php');
 }
+
+
 ?>
