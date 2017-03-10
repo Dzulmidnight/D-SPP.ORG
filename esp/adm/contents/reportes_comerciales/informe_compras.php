@@ -101,7 +101,7 @@ function redondear_dos_decimal($valor) {
 							echo '<td>'.date('Y',$informes['ano']).'</td>';
 							echo '<td><a href="?REPORTES&informe_compras='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-list-alt"></span> '.$informes['idinforme_general'].'</a></td>';
 							echo '<td>'.$informes['estado_informe'].'</td>';
-							echo '<td>'.$informes['abreviacion'].'</td>';
+							echo '<td><a href="?EMPRESAS&detail&idempresa='.$informes['idempresa'].'">'.$informes['abreviacion'].'</a></td>';
 							echo '<td>'.$informes['cuota_uso_trim1'].'</td>';
 							echo '<td>'.$informes['cuota_uso_trim2'].'</td>';
 							echo '<td>'.$informes['cuota_uso_trim3'].'</td>';

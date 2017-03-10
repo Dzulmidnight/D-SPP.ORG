@@ -165,9 +165,19 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		}else{
 			$total_a_pagar = 0;
 		}
+		if(isset($_POST['producto_terminado'])){
+			$producto_terminado = $_POST['producto_terminado'];
+		}else{
+			$producto_terminado = NULL;
+		}
+		if(isset($_POST['se_exporta'])){
+			$se_exporta = $_POST['se_exporta'];
+		}else{
+			$se_exporta = NULL;
+		}
 
 		//Iniciamos insertar formato_compras
-			$insertSQL = sprintf("INSERT INTO formato_compras(idtrim, idempresa, spp, opp, pais, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+			$insertSQL = sprintf("INSERT INTO formato_compras(idtrim, idempresa, spp, opp, pais, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 				GetSQLValueString($idtrim, "text"),
 				GetSQLValueString($idempresa, "int"),
 				GetSQLValueString($spp, "text"),
@@ -180,6 +190,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 				GetSQLValueString($fecha_contrato, "text"),
 				GetSQLValueString($producto_general, "text"),
 				GetSQLValueString($producto_especifico, "text"),
+				GetSQLValueString($producto_terminado, "text"),
+				GetSQLValueString($se_exporta, "text"),
 				GetSQLValueString($unidad_cantidad_total_factura, "text"),
 				GetSQLValueString($cantidad_total_factura, "text"),
 				GetSQLValueString($precio_sustentable_minimo, "text"),
@@ -246,6 +258,9 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<th colspan="2" class="text-center">Referencia Contrato Original con OPP</th>
 						<th class="text-center">Producto General</th>
 						<th class="text-center">Producto Especifico</th>
+						<th colspan="2" class="text-center">
+							Producto Terminado
+						</th>
 						<th colspan="2" class="text-center">Cantidad Total Conforme Factura</th>
 						<th class="text-center">Precio Sustentable Mínimo</th>
 						<th class="text-center">Reconocimiento Orgánico</th>
@@ -318,6 +333,9 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 		 				<td>
 		 					Producto especifico. Ej: Café verde arábica, Miel tipo A, Chips de platano, Azúcar blanco refinado.
+		 				</td>
+		 				<td colspan="2">
+		 					¿Producto terminado?
 		 				</td>
 		 				<!-- INICIA CANTIDAD TOTAL CONFORME FACTURA -->
 			 				<td>
@@ -420,6 +438,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 									</td>
 									<td><?php echo $formato['producto_general']; ?></td>
 									<td><?php echo $formato['producto_especifico']; ?></td>
+									<td><?php echo $formato['producto_terminado']; ?></td>
+									<td><?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
 									<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 									<td><?php echo $formato['cantidad_total_factura']; ?></td>
 									<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -441,7 +461,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<td>
 							
 							<!--<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" />-->
-								<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" required />
+								<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur=" ponerMayusculas(this)" required />
 													
 						</td>
 
@@ -495,6 +515,29 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<td class="success"><!-- producto especifico -->
 							<input type="text" name="producto_especifico" id="" placeholder="Ej: café verde, miel de abeja, azucar refinada" onBlur=" ponerMayusculas(this)" required>
 						</td>
+						<td>
+							¿Es producto terminado?
+							<label class="radio-inline">
+							  <input type="radio" name="producto_terminado" id="inlineRadio1" value="SI" onchange="mostrar()"> SI
+							</label>
+							<br>
+							<label class="radio-inline">
+							  <input type="radio" name="producto_terminado" id="inlineRadio2" value="NO" onchange="ocultar()"> NO
+							</label>
+						</td>
+						<td style="border-left-style:hidden;">
+							<div id="div_oculto" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
+								<b>¿El producto se exporta</b>
+								<label class="radio-inline">
+								  <input type="radio" name="se_exporta" id="" value="DIRECTAMENTE"> <b>Directamente?</b>
+								</label>
+								<br>
+								<label class="radio-inline">
+								  <input type="radio" name="se_exporta" id="" value="INTERMEDIARIO"> <b>A travez de un intermediario?</b>
+								</label>
+							</div>							
+						
+						</td>
 
 						<td class="success"><!-- CANTIDAD TOTAL CONFORME FACTURA -->
 							<select name="unidad_cantidad_total_factura" required><!-- #unidad de medida -->
@@ -504,6 +547,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 								<option value="Unidad">Unidad</option>
 							</select>
 						</td>
+
 						<td class="success">
 							<input type="number" step="any" id="cantidad_total_factura" name="cantidad_total_factura" onChange="calcular();" onBlur=" ponerMayusculas(this)" required><!-- #cantidad total -->
 						</td><!-- CANTIDAD TOTAL CONFORME FACTURA -->
@@ -542,7 +586,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 					</tr>
 		 			<tr>
-		 				<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1">Guardar Registro</button></td>
+		 				<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1" onclick="return validar()">Guardar Registro</button></td>
 		 			</tr>
 		 		</tbody>
 		 	</table>
@@ -552,6 +596,53 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	?>	
 	</div>
 </div>
+
+<script>
+	
+  function validar(){
+
+    producto_terminado = document.getElementsByName("producto_terminado");
+    // INICIA SELECCION TIPO SOLICITUD
+    var valor_campo = '';
+    var seleccionado = false;
+    for(var i=0; i<producto_terminado.length; i++) {    
+      if(producto_terminado[i].checked) {
+      	valor_campo = producto_terminado[i].value;
+        seleccionado = true;
+        break;
+      }
+    }
+    if(!seleccionado) {
+      alert("Debe seleccionar SI es un producto terminado o NO");
+      return false;
+    }
+
+    se_exporta = document.getElementsByName("se_exporta");
+    if(valor_campo == 'SI'){
+	    var pregunta = false;
+	    for(var i=0; i<se_exporta.length; i++) {    
+	      if(se_exporta[i].checked) {
+	        pregunta = true;
+	        break;
+	      }
+	    }
+	    if(!pregunta) {
+	      alert("Debes contestar si el producto se exporta \"Directamente\" ó \"a travez de un intermediario\" ");
+	      return false;
+	    }
+    }
+    return true
+  }
+
+	function mostrar(){
+		document.getElementById('div_oculto').style.display = 'block';
+	}
+	function ocultar()
+	{
+		document.getElementById('div_oculto').style.display = 'none';
+	}
+</script>
+
 
 <script>
 $(document).ready(function() {

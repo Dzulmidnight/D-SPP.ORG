@@ -1,7 +1,8 @@
 <div class="row">
 	<div class="btn-group" role="group" aria-label="...">
-		<a href="?REPORTES&informe_compras" <?php if(isset($_GET['informe_compras'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Informe compras</a>
-		<a href="?REPORTES&distribucion_p" <?php if(isset($_GET['distribucion_p'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Distribucion plataformas</a>
+		<a href="?REPORTES&informe_compras" <?php if(isset($_GET['informe_compras'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Ingresos cuota de uso</a>
+		<a href="?REPORTES&distribucion_p" <?php if(isset($_GET['distribucion_p'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Distribucion plataformas origen</a>
+		<a href="?REPORTES&membresias" <?php if(isset($_GET['membresias'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Ingreso por membresias</a>
 		<!--<a href="?REPORTES&plataformas" <?php if(isset($_GET['plataformas'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Plataformas SPP</a>-->
 		<a href="?REPORTES&configuracion" <?php if(isset($_GET['configuracion'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configuración</a>
 	  <a href="#" <?php if(isset($_GET['f_informe'])){echo 'class="btn btn-sm btn-primary"';}else{echo 'class="btn btn-sm btn-default"';} ?>>Informes</a>

@@ -2139,7 +2139,12 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 }
 
                               }else{
-                                echo "<p class='alert alert-danger'>Aun no se ha \"Cargado\" el Contrato de Uso</p>";
+                                if(!isset($solicitud['idcontrato'])){
+                                  echo "<p class='alert alert-danger'>Aun no se ha \"Cargado\" el Contrato de Uso</p>";
+                                }else{
+                                  echo "<p class='alert alert-warning'>Aun no se ha APROBADO el Contrato de Uso</p>";
+                                }
+                                
                               }
                             }
                              ?>

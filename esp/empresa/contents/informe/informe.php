@@ -58,6 +58,17 @@ $row_informe_general = mysql_query("SELECT informe_general.*, trim1.total_trim1,
 $total_informe = mysql_num_rows($row_informe_general);
 $informe_general = mysql_fetch_assoc($row_informe_general);
 
+
+
+//////// INFORME GENERAL DE PRODUCTOS
+
+$row_informe_general_producto = mysql_query("SELECT informe_general_producto.*, trim1_producto.total_trim1, trim2_producto.total_trim2, trim3_producto.total_trim3, trim4_producto.total_trim4, ROUND(SUM(trim1_producto.total_trim1 + trim2_producto.total_trim2 + trim3_producto.total_trim3 + trim4_producto.total_trim4), 2) AS 'balance_final' FROM informe_general_producto LEFT JOIN trim1_producto ON informe_general_producto.trim1_producto = trim1_producto.idtrim1_producto LEFT JOIN trim2_producto ON informe_general_producto.trim2_producto = trim2_producto.idtrim2_producto LEFT JOIN trim3_producto ON informe_general_producto.trim3_producto = trim3_producto.idtrim3_producto LEFT JOIN trim4_producto ON informe_general_producto.trim4_producto = trim4_producto.idtrim4_producto WHERE informe_general_producto.idempresa = $idempresa AND FROM_UNIXTIME(informe_general_producto.ano, '%Y') = '$ano_actual'", $dspp) or die(mysql_error());
+
+//$row_informe_general_producto = mysql_query("SELECT idinforme_general, FROM_UNIXTIME(ano, '%Y') AS 'ano_informe', total_informe FROM informe_general WHERE idempresa = ".$idempresa." AND FROM_UNIXTIME(ano, '%Y') = '".$ano_actual."'", $dspp) or die(mysql_error());
+$total_informe_producto = mysql_num_rows($row_informe_general_producto);
+$informe_general_producto = mysql_fetch_assoc($row_informe_general_producto);
+
+
  ?>
 
 <h4>
@@ -77,7 +88,6 @@ $informe_general = mysql_fetch_assoc($row_informe_general);
 		<a class="btn btn-sm <?php if(isset($_GET['producto'])){ echo 'btn-success';}else{ echo 'btn-default';} ?>" href="?INFORME&producto"><span class="glyphicon glyphicon-apple" aria-hidden="true"></span> Informe Productos Terminados</a>
 
 </h4>
-
 
 
 <?php 

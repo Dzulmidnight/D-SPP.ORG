@@ -45,88 +45,79 @@ if (!function_exists("GetSQLValueString")) {
 	}
 }
 if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'SI'){
-	$txt_num_trim = 'trim'.$_GET['trim'];
-	$txt_idtrim = 'idtrim'.$_GET['trim'];
+	$txt_num_trim = 'trim'.$_GET['trim'].'_producto';
+	$txt_idtrim_producto = 'idtrim'.$_GET['trim'].'_producto';
 	$txt_estatus_trim = 'estado_trim'.$_GET['trim'];
-	$idinforme_general = $_POST['idinforme_general'];
+	$idinforme_general_producto = $_POST['idinforme_general_producto'];
 	$ano = date('Y', time());
-	$idtrim = 'T'.$_GET['trim'].'-'.$ano.'-'.$idempresa;
+	$idtrim_producto = 'TE'.$_GET['trim'].'-'.$ano.'-'.$idempresa;
 	$estado_trim = "ACTIVO";
 
-	$insertSQL = sprintf("INSERT INTO $txt_num_trim ($txt_idtrim, idempresa, fecha_inicio, $txt_estatus_trim) VALUES (%s, %s, %s, %s)",
-		GetSQLValueString($idtrim, "text"),
+	$insertSQL = sprintf("INSERT INTO $txt_num_trim ($txt_idtrim_producto, idempresa, fecha_inicio, $txt_estatus_trim) VALUES (%s, %s, %s, %s)",
+		GetSQLValueString($idtrim_producto, "text"),
 		GetSQLValueString($idempresa, "int"),
 		GetSQLValueString($fecha_actual, "int"),
 		GetSQLValueString($estado_trim, "text"));
 	$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
-	$updateSQL = sprintf("UPDATE informe_general SET $txt_num_trim = %s WHERE idinforme_general = %s",
-		GetSQLValueString($idtrim, "text"),
-		GetSQLValueString($idinforme_general, "text"));
+	$updateSQL = sprintf("UPDATE informe_general_producto SET $txt_num_trim = %s WHERE idinforme_general_producto = %s",
+		GetSQLValueString($idtrim_producto, "text"),
+		GetSQLValueString($idinforme_general_producto, "text"));
 	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
-	echo "<script>alert('Se ha creado un nuevo formato trimestral $idtrim');</script>";
+	echo "<script>alert('Se ha creado un nuevo formato trimestral $idtrim_producto');</script>";
 }
 if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
-	if(isset($_POST['suma_cuota_uso']) || $_POST['suma_cuota_uso'] != 0 || $_POST['suma_cuota_uso'] != NULL){
-		$suma_cuota_uso = $_POST['suma_cuota_uso'];
+	if(isset($_POST['suma_total']) || $_POST['suma_total'] != 0 || $_POST['suma_total'] != NULL){
+		$suma_total = $_POST['suma_total'];
 	}else{
-		$suma_cuota_uso = 0;
-	}
-	if(isset($_POST['suma_valor_contrato']) || $_POST['suma_valor_contrato'] != 0 || $_POST['suma_valor_contrato'] != NULL){
-		$suma_valor_contrato = $_POST['suma_valor_contrato'];
-	}else{
-		$suma_valor_contrato = 0;
+		$suma_total = 0;
 	}
 
-	$row_informe = mysql_query("SELECT total_informe, total_cuota_uso, total_valor_contrato FROM informe_general WHERE idinforme_general = '$informe_general[idinforme_general]'", $dspp) or die(mysql_error());
+
+	$row_informe = mysql_query("SELECT total_informe FROM informe_general_producto WHERE idinforme_general_producto = '$informe_general_producto[idinforme_general_producto]'", $dspp) or die(mysql_error());
 	$informe = mysql_fetch_assoc($row_informe);
 
-	$total_cuota_uso = $informe['total_cuota_uso'] + $suma_cuota_uso;
-	$total_valor_contrato = $informe['total_valor_contrato'] + $suma_valor_contrato;
-	$txt_idtrim = 'idtrim'.$_GET['trim'];
-	$txt_numero_trim = 'trim'.$_GET['trim'];
-	$txt_estado_trim = 'estado_'.$txt_numero_trim;
-	$txt_total_trim = 'total_'.$txt_numero_trim;
-	$txt_valor_contrato = 'valor_contrato_'.$txt_numero_trim;
-	$txt_cuota_uso = 'cuota_uso_'.$txt_numero_trim;
+	$total_informe = $informe['total_informe'] + $suma_total;
+	$txt_idtrim_producto = 'idtrim'.$_GET['trim'].'_producto';
+	$txt_numero_trim = 'trim'.$_GET['trim'].'_producto';
+	$num_trim = 'trim'.$_GET['trim'];
+	$txt_estado_trim = 'estado_'.$num_trim;
+	$txt_total_trim = 'total_'.$num_trim;
 	$estatus_trim = 'FINALIZADO';
 	
 
-	$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_estado_trim = %s, fecha_fin = %s, $txt_total_trim = %s, $txt_valor_contrato = %s, $txt_cuota_uso = %s WHERE $txt_idtrim = %s",
+	$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_estado_trim = %s, fecha_fin = %s, $txt_total_trim = %s WHERE $txt_idtrim_producto = %s",
 		GetSQLValueString($estatus_trim, "text"),
 		GetSQLValueString($_POST['fecha'], "int"),
-		GetSQLValueString($suma_cuota_uso, "double"),
-		GetSQLValueString($suma_valor_contrato, "double"),
-		GetSQLValueString($suma_cuota_uso, "double"),
+		GetSQLValueString($suma_total, "double"),
 		GetSQLValueString($_POST['idtrim'], "text"));
 	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
-	$updateSQL = sprintf("UPDATE informe_general SET total_valor_contrato = %s, total_cuota_uso = %s WHERE idinforme_general = %s",
-		GetSQLValueString($total_valor_contrato, "double"),
-		GetSQLValueString($total_cuota_uso, "double"),
-		GetSQLValueString($informe_general['idinforme_general'], "text"));
+	$updateSQL = sprintf("UPDATE informe_general_producto SET total_informe = %s WHERE idinforme_general_producto = %s",
+		GetSQLValueString($total_informe, "double"),
+		GetSQLValueString($informe_general_producto['idinforme_general_producto'], "text"));
 	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
 	
 	if($txt_numero_trim == 'trim4'){
 		//revisamos si el trim4 ha finalizado, entonces cambiamos el estatus del INFORME GENERAL a FINALIZADO ya que se han concluido los 4 trimestres
 		//Tambien se agregar el monto de los 4 informes trimestrales dentro del TOTAL DEL INFORME GENERAL
-		$updateSQL = sprintf("UPDATE informe_general SET estado_informe = %s WHERE idinforme_general = %s",
+		$updateSQL = sprintf("UPDATE informe_general_producto SET estado_informe = %s WHERE idinforme_general_producto = %s",
 			GetSQLValueString('FINALIZADO', "text"),
-			GetSQLValueString($informe_general['idinforme_general'], "text"));
+			GetSQLValueString($informe_general_producto['idinforme_general_producto'], "text"));
 		$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 	}
 }
 
 if(isset($_GET['trim'])){
 
-	$num_trim = "trim".$_GET['trim'];
+	$num_trim = "trim".$_GET['trim'].'_producto';
 	$ano_actual = date('Y', time());
 	$row_trim = mysql_query("SELECT * FROM $num_trim WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 	$total_trim = mysql_num_rows($row_trim);
 	$trim = mysql_fetch_assoc($row_trim);
-	$idtrim = "id".$num_trim;
+	$idtrim_producto = "id".$num_trim;
 	$estado_trim = "estado_trim".$_GET['trim'];
 	$estatus = $trim[$estado_trim];
 	if(isset($estatus)){
@@ -137,7 +128,7 @@ if(isset($_GET['trim'])){
 					<b style='color:red'>¿Desea concluir la captura de registros en el formato de trimestre actual? </b>
 					<button class='' type='subtmit' value='SI'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='Finalizar trimestre actual' onclick='return confirm(\"¿Desea finalizar la captura del trimestre actual?\");' >SI</button>
 					<!--<input class='btn btn-success' type='submit' name='finalizar_trim' value='SI'>-->
-					<input type='hidden' name='idtrim' value='".$trim[$idtrim]."'>
+					<input type='hidden' name='idtrim' value='".$trim[$idtrim_producto]."'>
 					<input type='hidden' name='fecha' value='".time()."'>
 					
 				</p>
@@ -171,7 +162,7 @@ if(isset($_GET['trim'])){
 
 	//echo $titulo_trim;
 	if($total_trim == 1){
-		$query_formato = "SELECT formato_producto_empresa.* FROM formato_producto_empresa WHERE formato_producto_empresa.idtrim = '$trim[$idtrim]' AND idempresa = $idempresa";
+		$query_formato = "SELECT formato_producto_empresa.* FROM formato_producto_empresa WHERE formato_producto_empresa.idtrim = '$trim[$idtrim_producto]' AND idempresa = $idempresa";
 		$row_formato = mysql_query($query_formato, $dspp) or die(mysql_error());
 
 		if(isset($_GET['add'])){
@@ -198,38 +189,38 @@ if(isset($_GET['trim'])){
 					<tr class="success">
 						<th class="text-center">#</th>
 						<th class="text-center">País destino del producto terminado</th>
-						<th class="text-center">Valor de ventas totales SPP</th>
 						<th class="text-center">Tipo moneda</th>
+						<th class="text-center">Valor de ventas totales SPP</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php 
 					$contador = 1;
-					$suma_cuota_uso = '';
+					$suma_total = '';
 					$suma_valor_contrato = 0;
 					while($formato = mysql_fetch_assoc($row_formato)){
 					?>
 						<tr>
 							<td><?php echo $contador; ?></td>
 							<td><?php echo $formato['pais']; ?></td>
-							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['ventas_totales']; ?></td>
 							<td><?php echo $formato['tipo_moneda']; ?></td>
+							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['ventas_totales']; ?></td>
 						</tr>
 					<?php
-					$suma_cuota_uso = $formato['ventas_totales'] + $suma_cuota_uso;
+					$suma_total = $formato['ventas_totales'] + $suma_total;
 					//$suma_valor_contrato = $formato['valor_total_contrato'] + $suma_valor_contrato; 
 					$contador++;
 					}
 						
-						//echo "<tr class='info'>
-							/*<td colspan='18'></td>
-							<td class='text-right'><b style='color:red'>$suma_valor_contrato USD</b></td>
+						echo "<tr class='info'>
 							<td></td>
-							<td class='text-right'><b style='color:red'>$suma_cuota_uso USD</b></td>
+							<td></td>
+							<td class='text-right'><b style='color:red'>USD</b></td>
+							<td class='text-left'><b style='color:red'>$suma_total</b></td>
 						</tr>";
 						//EL TOTAL A PAGAR AL FINALIZAR EL TRIMESTRE
-						echo "<input type='hidden' name='suma_cuota_uso' value='$suma_cuota_uso'>";
-						echo "<input type='hidden' name='suma_valor_contrato' value='$suma_valor_contrato'>";*/
+						echo "<input type='hidden' name='suma_total' value='$suma_total'>";
+						echo "<input type='hidden' name='suma_valor_contrato' value='$suma_valor_contrato'>";
 					 ?>
 				</tbody>
 			</table>
@@ -246,20 +237,20 @@ if(isset($_GET['trim'])){
 	}
 
 	/////
-	$row_trim1 = mysql_query("SELECT idtrim1, estado_trim1 FROM trim1 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
-	$trim1 = mysql_fetch_assoc($row_trim1);
+	$row_trim1_producto = mysql_query("SELECT idtrim1_producto, estado_trim1 FROM trim1_producto WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+	$trim1_producto = mysql_fetch_assoc($row_trim1_producto);
 
-	if(isset($trim1['idtrim1'])){ //confirmamos que se ha creado el primer trim (TRIM1)
+	if(isset($trim1_producto['idtrim1_producto'])){ //confirmamos que se ha creado el primer trim (TRIM1)
 		$num_trim = $_GET['trim'];
-		$trim_actual = 'trim'.$num_trim;
-		$txt_idtrim = 'idtrim'.$num_trim;
+		$trim_actual = 'trim'.$num_trim.'_producto';
+		$txt_idtrim_producto = 'idtrim'.$num_trim.'_producto';
 
-		if($trim1['estado_trim1'] == 'FINALIZADO'){ // SI EL TRIM1 HA FINALIZADO, REVISAREMOS QUE LOS TRIMS SIGUIENTES CONCLUYAN PARA PODER CREAR UNO NUEVO
+		if($trim1_producto['estado_trim1'] == 'FINALIZADO'){ // SI EL TRIM1 HA FINALIZADO, REVISAREMOS QUE LOS TRIMS SIGUIENTES CONCLUYAN PARA PODER CREAR UNO NUEVO
 			if($num_trim != 1){
 				//checamos que el trim anterior haya finalizado
 				//// iniciamos VARIABLES DEL TRIM ANTERIOR
-					$trim_anterior = 'trim'.($num_trim - 1); //restamos 1 al trim actual para poder consultar el anterio
-					$idtrim_anterior = 'idtrim'.($num_trim - 1);
+					$trim_anterior = 'trim'.($num_trim - 1).'_producto'; //restamos 1 al trim actual para poder consultar el anterio
+					$idtrim_producto_anterior = 'idtrim'.($num_trim - 1).'_producto';
 					$estado_trim = 'estado_trim'.($num_trim - 1);
 				// terminamos VARIABLES DEL TRIM ANTERIOR
 
@@ -267,8 +258,8 @@ if(isset($_GET['trim'])){
 				$row_trim_anterior = mysql_query("SELECT * FROM $trim_anterior WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 				$informacion_trim_anterior = mysql_fetch_assoc($row_trim_anterior);
 
-				if(isset($informacion_trim_anterior[$idtrim_anterior]) && $informacion_trim_anterior[$estado_trim] == 'FINALIZADO'){ /// SI EL TRIM ANTERIOR HA FINALIZADO, MOSTRAREMOS LA OPCIÓN PARA PODER CREAR UN NUEVO TRIM
-					$num_trim_actual = 'trim'.$_GET['trim'];
+				if(isset($informacion_trim_anterior[$idtrim_producto_anterior]) && $informacion_trim_anterior[$estado_trim] == 'FINALIZADO'){ /// SI EL TRIM ANTERIOR HA FINALIZADO, MOSTRAREMOS LA OPCIÓN PARA PODER CREAR UN NUEVO TRIM
+					$num_trim_actual = 'trim'.$_GET['trim'].'_producto';
 					$row_trim_actual = mysql_query("SELECT * FROM $trim_actual WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 					$total_trim_actual = mysql_num_rows($row_trim_actual);
 					if($total_trim_actual != 1){ // si ya se ha iniciado el nuevo trim, ya no mostraremos la opción
@@ -277,7 +268,7 @@ if(isset($_GET['trim'])){
 								<p class="alert alert-info">
 									<strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
 									<input class="btn btn-success" type="submit" name="nuevo_trim" value="SI">
-									<input type="hidden" name="idinforme_general" value="'.$informe_general['idinforme_general'].'">
+									<input type="hidden" name="idinforme_general_producto" value="'.$informe_general_producto['idinforme_general_producto'].'">
 								</p>
 							</form>
 						';

@@ -59,7 +59,7 @@ $configuracion = mysql_fetch_assoc($row_configuracion);
 $row_anio = mysql_query("SELECT FROM_UNIXTIME(ano,'%Y') AS 'anio' FROM informe_general GROUP BY FROM_UNIXTIME(ano,'%Y')", $dspp) or die(mysql_error());
 ?>
 <h4>
-	Distribución plataformas SPP | Año
+	Distribución plataformas de origen SPP | Año
 	<select name="anio">
 		<?php 
 		while($anio = mysql_fetch_assoc($row_anio)){
@@ -103,7 +103,7 @@ for ($i=1; $i <= 4; $i++) {
 					<th class="success"><b>Trimestre <?php echo $i; ?></b></th>
 					<th class="info">Numero de informes: <span style="color:#e74c3c"><?php echo $num_trim; ?></span></th>
 					<th class="info"><?php echo 'Activos: <span style="color:#e74c3c">'.$num_activo.'</span> Finalizados: <span style="color:#e74c3c">'.$num_finalizado.'</span>'; ?></th>
-					<th class="info">Valor total contratos: <span style="color:red"><?php echo round($formato_compras['total_contrato'],2).' ('.$configuracion['distribucion_plataforma_origen'].'% = '.$cuota_uso.')'; ?></span></th>
+					<th class="info">Valor total contratos: <span style="color:red"><?php echo round($formato_compras['total_contrato'],2).' (<span style="color:#2c3e50">'.$configuracion['distribucion_plataforma_origen'].'%</span> = '.$cuota_uso.')'; ?></span></th>
 				</tr>
 				<tr>
 					<th>Plataforma</th>
