@@ -133,7 +133,7 @@ if(isset($_GET['trim'])){
 		if($estatus == 'ACTIVO'){
 			$estatus = $trim[$estado_trim];
 			$pregunta = "
-				<p class='alert alert-info' style='padding:5px;margin-bottom:0px;'>
+				<p style='font-size:13px;'>
 					<b style='color:red'>¿Desea concluir la captura de registros en el formato de trimestre actual? </b>
 					<button class='' type='subtmit' value='SI'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='Finalizar trimestre actual' onclick='return confirm(\"¿Desea finalizar la captura del trimestre actual?\");' >SI</button>
 					<!--<input class='btn btn-success' type='submit' name='finalizar_trim' value='SI'>-->
@@ -178,21 +178,30 @@ if(isset($_GET['trim'])){
 			include('informe_add.php');
 		}else{
 		?>
+		<div style="margin-top:10px;">
+			<a class="btn btn-default" href="?INFORME&general_detail&trim=1&add&idtrim=<?php echo $informacion_trim['idtrim1']; ?>"><span class="glyphicon glyphicon-plus"></span> Agregar nuevos registros</a>
+			<a class="btn btn-default" href="?INFORME&general_detail&trim=1&add&idtrim=<?php echo $informacion_trim['idtrim1']; ?>"><span class="glyphicon glyphicon-pencil"></span> Editar registro actuales</a>
+		</div>
+
 		<form action="" method="POST">
+
 			<table class="table table-bordered" style="font-size:11px;">
 				<thead>
 					<tr>
-						<th colspan="8">
+						<th colspan="6">
 						<?php 
 						echo $titulo_trim;
 						 ?>
 						</th>
-						<th colspan="13">
+						<th colspan="4">
+							<?php echo $empresa['abreviacion'].' - '.$tipo_empresa; ?>
+						</th>
+						<th colspan="13" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
 							<?php 
 							if(isset($pregunta)){
 								echo $pregunta;
 							}
-							?>			
+							?>
 						</th>
 					</tr>
 					<tr class="success">
@@ -206,6 +215,8 @@ if(isset($_GET['trim'])){
 						<th colspan="2" class="text-center">Referencia Contrato Original con OPP</th>
 						<th class="text-center">Producto General</th>
 						<th class="text-center">Producto Especifico</th>
+						<th class="warning text-center">¿Producto terminado?</th>
+						<th class="warning text-center">Se exporta a travez de:</th>
 						<th colspan="2" class="text-center">Cantidad Total Conforme Factura</th>
 						<th class="text-center">Precio Sustentable Mínimo</th>
 						<th class="text-center">Reconocimiento Orgánico</th>
@@ -242,6 +253,8 @@ if(isset($_GET['trim'])){
 							</td>
 							<td><?php echo $formato['producto_general']; ?></td>
 							<td><?php echo $formato['producto_especifico']; ?></td>
+							<td><?php echo $formato['producto_terminado']; ?></td>
+							<td><?php echo $formato['se_exporta']; ?></td>
 							<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 							<td><?php echo $formato['cantidad_total_factura']; ?></td>
 							<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -260,7 +273,7 @@ if(isset($_GET['trim'])){
 					}
 						
 						echo "<tr class='info'>
-							<td colspan='18'></td>
+							<td colspan='20'></td>
 							<td class='text-right'><b style='color:red'>$suma_valor_contrato USD</b></td>
 							<td></td>
 							<td class='text-right'><b style='color:red'>$suma_cuota_uso USD</b></td>

@@ -1252,7 +1252,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
   //inicia enviar correo a ADM sobre documentacion de Evaluación
-  $row_informacion = mysql_query("SELECT solicitud_certificacion.idsolicitud_certificacion, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp' oc.nombre AS 'nombre_oc' FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $row_informacion = mysql_query("SELECT solicitud_certificacion.idsolicitud_certificacion, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', oc.nombre AS 'nombre_oc' FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
   $asunto = "D-SPP | Se ha cargado el Formato, Dictamen e Informe de Evaluación";
 

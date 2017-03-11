@@ -78,6 +78,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			<th colspan="2" class="text-center">Referencia Contrato Original con OPP</th>
 			<th class="text-center">Producto General</th>
 			<th class="text-center">Producto Especifico</th>
+			<th class="text-center">¿Producto terminado?</th>
+			<th class="text-center">¿Se exporta?</th>
 			<th colspan="2" class="text-center">Cantidad Total Conforme Factura</th>
 			<th class="text-center">Precio Sustentable Mínimo</th>
 			<th class="text-center">Reconocimiento Orgánico</th>
@@ -119,6 +121,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					</td>
 					<td><?php echo $formato['producto_general']; ?></td>
 					<td><?php echo $formato['producto_especifico']; ?></td>
+					<td><?php echo $formato['producto_terminado']; ?></td>
+					<td><?php echo $formato['se_exporta']; ?></td>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 					<td><?php echo $formato['cantidad_total_factura']; ?></td>
 					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -135,7 +139,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim1 = $total_trim1 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='20' class='text-right warning'><h5>PRIMER TRIMESTRE</h5></td>
+				<td colspan='22' class='text-right warning'><h5>PRIMER TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim1</td>
 			</tr>";
 
@@ -167,6 +171,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					</td>
 					<td><?php echo $formato['producto_general']; ?></td>
 					<td><?php echo $formato['producto_especifico']; ?></td>
+					<td><?php echo $formato['producto_terminado']; ?></td>
+					<td><?php echo $formato['se_exporta']; ?></td>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 					<td><?php echo $formato['cantidad_total_factura']; ?></td>
 					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -183,7 +189,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim2 = $total_trim2 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='20' class='text-right warning'><h5>SEGUNDO TRIMESTRE</h5></td>
+				<td colspan='22' class='text-right warning'><h5>SEGUNDO TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim2</td>
 			</tr>";
 
@@ -214,6 +220,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					</td>
 					<td><?php echo $formato['producto_general']; ?></td>
 					<td><?php echo $formato['producto_especifico']; ?></td>
+					<td><?php echo $formato['producto_terminado']; ?></td>
+					<td><?php echo $formato['se_exporta']; ?></td>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 					<td><?php echo $formato['cantidad_total_factura']; ?></td>
 					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -230,7 +238,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim3 = $total_trim3 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='20' class='text-right warning'><h5>TERCER TRIMESTRE</h5></td>
+				<td colspan='22' class='text-right warning'><h5>TERCER TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim3</td>
 			</tr>";
 		}
@@ -259,6 +267,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					</td>
 					<td><?php echo $formato['producto_general']; ?></td>
 					<td><?php echo $formato['producto_especifico']; ?></td>
+					<td><?php echo $formato['producto_terminado']; ?></td>
+					<td><?php echo $formato['se_exporta']; ?></td>>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 					<td><?php echo $formato['cantidad_total_factura']; ?></td>
 					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -275,7 +285,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim4 = $total_trim4 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='20' class='text-right warning'><h5>CUARTO TRIMESTRE</h5></td>
+				<td colspan='22' class='text-right warning'><h5>CUARTO TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim4</td>
 			</tr>";
 		}

@@ -202,6 +202,20 @@ $empresa = mysql_fetch_assoc($row_empresa);
           </td>
         </tr>
         <tr>
+          <td>Tipo de Empresa</td>
+          <td>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="maquilador" id="" <?php if($empresa['maquilador']){ echo 'checked'; } ?> value="<?php echo $comprador['maquilador']; ?>"> MAQUILADOR
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="comprador" id="" <?php if($empresa['comprador']){ echo 'checked'; } ?> value="<?php echo $comprador['comprador']; ?>"> COMPRADOR FINAL
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="intermediario" id="" <?php if($empresa['intermediario']){ echo 'checked'; } ?> value="<?php echo $comprador['intermediario']; ?>"> INTERMEDIARIO
+            </label>
+          </td>
+        </tr>
+        <tr>
           <td>Password</td>
           <td>
             <input class="form-control" id="" name="password" value="<?php echo $empresa['password']; ?>">

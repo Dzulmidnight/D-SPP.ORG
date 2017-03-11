@@ -49,7 +49,7 @@ $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
-
+$tipo_de_empresa = $empresa['comprador'];
 $idempresa = $_SESSION['idempresa'];
 $idtrim = $_GET['idtrim'];
 $anio_actual = date('Y',time());
@@ -258,9 +258,16 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<th colspan="2" class="text-center">Referencia Contrato Original con OPP</th>
 						<th class="text-center">Producto General</th>
 						<th class="text-center">Producto Especifico</th>
-						<th colspan="2" class="text-center">
-							Producto Terminado
-						</th>
+						<?php 
+						if($tipo_de_empresa){
+						?>
+							<th colspan="2" class="text-center">
+								Producto Terminado
+							</th>
+
+						<?php
+						}
+						 ?>
 						<th colspan="2" class="text-center">Cantidad Total Conforme Factura</th>
 						<th class="text-center">Precio Sustentable Mínimo</th>
 						<th class="text-center">Reconocimiento Orgánico</th>
@@ -334,9 +341,15 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 				<td>
 		 					Producto especifico. Ej: Café verde arábica, Miel tipo A, Chips de platano, Azúcar blanco refinado.
 		 				</td>
-		 				<td colspan="2">
-		 					¿Producto terminado?
-		 				</td>
+		 				<?php 
+		 				if($tipo_de_empresa){
+		 				?>
+			 				<td colspan="2">
+			 					¿Producto terminado?
+			 				</td>
+		 				<?php
+		 				}
+		 				 ?>
 		 				<!-- INICIA CANTIDAD TOTAL CONFORME FACTURA -->
 			 				<td>
 			 					Unidad de medida utilizada (kg, t, lb, qq, etc)
@@ -438,8 +451,14 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 									</td>
 									<td><?php echo $formato['producto_general']; ?></td>
 									<td><?php echo $formato['producto_especifico']; ?></td>
-									<td><?php echo $formato['producto_terminado']; ?></td>
-									<td><?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
+									<?php 
+									if($tipo_de_empresa){
+									?>
+										<td><?php echo $formato['producto_terminado']; ?></td>
+										<td><?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
+									<?php
+									}
+									 ?>
 									<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 									<td><?php echo $formato['cantidad_total_factura']; ?></td>
 									<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -515,28 +534,34 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<td class="success"><!-- producto especifico -->
 							<input type="text" name="producto_especifico" id="" placeholder="Ej: café verde, miel de abeja, azucar refinada" onBlur=" ponerMayusculas(this)" required>
 						</td>
-						<td>
-							¿Es producto terminado?
-							<label class="radio-inline">
-							  <input type="radio" name="producto_terminado" id="inlineRadio1" value="SI" onchange="mostrar()"> SI
-							</label>
-							<br>
-							<label class="radio-inline">
-							  <input type="radio" name="producto_terminado" id="inlineRadio2" value="NO" onchange="ocultar()"> NO
-							</label>
-						</td>
-						<td style="border-left-style:hidden;">
-							<div id="div_oculto" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
-								<b>¿El producto se exporta</b>
+						<?php 
+						if($tipo_de_empresa){
+						?>
+							<td>
+								¿Es producto terminado?
 								<label class="radio-inline">
-								  <input type="radio" name="se_exporta" id="" value="DIRECTAMENTE"> <b>Directamente?</b>
+								  <input type="radio" name="producto_terminado" id="inlineRadio1" value="SI" onchange="mostrar()"> SI
 								</label>
 								<br>
 								<label class="radio-inline">
-								  <input type="radio" name="se_exporta" id="" value="INTERMEDIARIO"> <b>A travez de un intermediario?</b>
+								  <input type="radio" name="producto_terminado" id="inlineRadio2" value="NO" onchange="ocultar()"> NO
 								</label>
-							</div>							
-						
+							</td>
+							<td style="border-left-style:hidden;">
+								<div id="div_oculto" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
+									Se compra directamente a la organización o a travez de un intermediario 
+									<label class="radio-inline">
+									  <input type="radio" name="se_exporta" id="" value="DIRECTAMENTE"> Directamente
+									</label>
+									<br>
+									<label class="radio-inline">
+									  <input type="radio" name="se_exporta" id="" value="INTERMEDIARIO"> A travez de un intermediario
+									</label>
+								</div>							
+							
+						<?php
+						}
+						 ?>
 						</td>
 
 						<td class="success"><!-- CANTIDAD TOTAL CONFORME FACTURA -->
@@ -586,7 +611,17 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 					</tr>
 		 			<tr>
-		 				<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1" onclick="return validar()">Guardar Registro</button></td>
+		 				<?php 
+		 				if($tipo_de_empresa){
+		 				?>
+		 					<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1" onclick="return validar()">Guardar Registro</button></td>
+		 				<?php
+		 				}else{
+		 				?>
+		 					<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1">Guardar Registro</button></td>
+		 				<?php
+		 				}
+		 				 ?>
 		 			</tr>
 		 		</tbody>
 		 	</table>
