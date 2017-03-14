@@ -67,7 +67,8 @@ if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'SI'){
 
 	echo "<script>alert('Se ha creado un nuevo formato trimestral $idtrim');</script>";
 }
-if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
+/*if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
+
 	if(isset($_POST['suma_cuota_uso']) || $_POST['suma_cuota_uso'] != 0 || $_POST['suma_cuota_uso'] != NULL){
 		$suma_cuota_uso = $_POST['suma_cuota_uso'];
 	}else{
@@ -117,7 +118,10 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 			GetSQLValueString($informe_general['idinforme_general'], "text"));
 		$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 	}
-}
+
+	///se envia correo al area de certificacion para corroborar la informacion
+
+}*/
 
 if(isset($_GET['trim'])){
 
@@ -133,6 +137,7 @@ if(isset($_GET['trim'])){
 		if($estatus == 'ACTIVO'){
 			$estatus = $trim[$estado_trim];
 			$pregunta = "
+			<form action='../../reportes/reporte_trimestral.php' method='POST'>
 				<p style='font-size:13px;'>
 					<b style='color:red'>¿Desea concluir la captura de registros en el formato de trimestre actual? </b>
 					<button class='' type='subtmit' value='SI'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='Finalizar trimestre actual' onclick='return confirm(\"¿Desea finalizar la captura del trimestre actual?\");' >SI</button>
@@ -141,6 +146,7 @@ if(isset($_GET['trim'])){
 					<input type='hidden' name='fecha' value='".time()."'>
 					
 				</p>
+			</form>
 			";
 		}else{
 			$estatus = $trim[$estado_trim];
@@ -183,16 +189,18 @@ if(isset($_GET['trim'])){
 			<a class="btn btn-default" href="?INFORME&general_detail&trim=1&add&idtrim=<?php echo $informacion_trim['idtrim1']; ?>"><span class="glyphicon glyphicon-pencil"></span> Editar registro actuales</a>
 		</div>
 
-		<form action="" method="POST">
+
 
 			<table class="table table-bordered" style="font-size:11px;">
 				<thead>
 					<tr>
 						<th colspan="6">
-						<?php 
-						echo $titulo_trim;
-						 ?>
+							<?php 
+							echo $titulo_trim;
+							 ?>
 						</th>
+
+
 						<th colspan="4">
 							<?php echo $empresa['abreviacion'].' - '.$tipo_empresa; ?>
 						</th>
@@ -204,6 +212,9 @@ if(isset($_GET['trim'])){
 							?>
 						</th>
 					</tr>
+
+		<form action="" method="POST">
+					
 					<tr class="success">
 						<th class="text-center">#</th>
 						<th class="text-center">#SPP</th>

@@ -116,19 +116,19 @@ if(isset($_POST['informe_trimestral'])){
 					<div class="btn-group" role="group" aria-label="...">
 						<div class="btn-group">
 						  <a type="button" <?php if(isset($_GET['trim']) && $_GET['trim'] == 1){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&general_detail&trim=1" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 1</a>
-						  <button type="button" <?php if(isset($_GET['trim1'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <!--<button type="button" <?php if(isset($_GET['trim1'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
 						  <ul class="dropdown-menu">
 						    <li><a href="?INFORME&general_detail&trim=1&add&idtrim=<?php echo $informacion_trim['idtrim1']; ?>">Agregar</a></li>
 						    <li><a href="?INFORME&general_detail&trim=1&edit&idtrim=<?php echo $informacion_trim['idtrim1']; ?>">Editar</a></li>
-						  </ul>
+						  </ul>-->
 						</div>
 
 						<div class="btn-group">
 						  <a type="button" <?php if(isset($_GET['trim']) && $_GET['trim'] == 2){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&general_detail&trim=2" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 2</a>
-						  <button type="button" <?php if(isset($_GET['trim2'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <!--13_03_2017<button type="button" <?php if(isset($_GET['trim2'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
@@ -138,16 +138,16 @@ if(isset($_POST['informe_trimestral'])){
 						  	$informacion_trim2 = mysql_fetch_assoc($row_trim2);
 
 						  	if(isset($informacion_trim2['idtrim2'])){
-						  		echo '<li><a href="?INFORME&general_detail&trim=2&add&idtrim='.$informacion_trim2['idtrim2'].'">Agregar</a></li>';
+						  	/*	echo '<li><a href="?INFORME&general_detail&trim=2&add&idtrim='.$informacion_trim2['idtrim2'].'">Agregar</a></li>';
 						  		echo '<li><a href="?INFORME&general_detail&trim=2&edit&idtrim='.$informacion_trim2['idtrim2'].'">Editar</a></li>';
-						  	}
+						  	*/}
 						  	 ?>
-						  </ul>
+						  </ul>13_03_2017-->
 						</div>
 
 						<div class="btn-group">
 						  <a type="button" <?php if(isset($_GET['trim']) && $_GET['trim'] == 3){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&general_detail&trim=3" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 3</a>
-						  <button type="button" <?php if(isset($_GET['trim3'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <!--13:_03_2017<button type="button" <?php if(isset($_GET['trim3'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
@@ -156,17 +156,17 @@ if(isset($_POST['informe_trimestral'])){
 						  	$row_trim3 = mysql_query("SELECT * FROM trim3 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual");
 						  	$informacion_trim3 = mysql_fetch_assoc($row_trim3);
 
-						  	if(isset($informacion_trim3['idtrim3'])){
+						  	if(isset($informacion_trim3['idtrim3'])){ /*
 						  		echo '<li><a href="?INFORME&general_detail&trim=3&add&idtrim='.$informacion_trim3['idtrim3'].'">Agregar</a></li>';
 						  		echo '<li><a href="?INFORME&general_detail&trim=3&edit&idtrim='.$informacion_trim3['idtrim3'].'">Editar</a></li>';
-						  	}
+						  	*/}
 						  	 ?>
-						  </ul>
+						  </ul>13_03_2017-->
 						</div>
 
 						<div class="btn-group">
 						  <a type="button" <?php if(isset($_GET['trim']) && $_GET['trim'] == 4){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&general_detail&trim=4" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 4</a>
-						  <button type="button" <?php if(isset($_GET['trim4'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <!--13_03_2017<button type="button" <?php if(isset($_GET['trim4'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
@@ -175,12 +175,12 @@ if(isset($_POST['informe_trimestral'])){
 						  	$row_trim4 = mysql_query("SELECT * FROM trim4 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual");
 						  	$informacion_trim4 = mysql_fetch_assoc($row_trim4);
 
-						  	if(isset($informacion_trim4['idtrim4'])){
+						  	if(isset($informacion_trim4['idtrim4'])){/*
 						  		echo '<li><a href="?INFORME&general_detail&trim=4&add&idtrim='.$informacion_trim4['idtrim4'].'">Agregar</a></li>';
 						  		echo '<li><a href="?INFORME&general_detail&trim=4&edit&idtrim='.$informacion_trim4['idtrim4'].'">Editar</a></li>';
-						  	}
+						  	*/}
 						  	 ?>
-						  </ul>
+						  </ul>13_03_2017-->
 						</div>
 
 					</div>
