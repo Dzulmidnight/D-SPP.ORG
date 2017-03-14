@@ -31,8 +31,148 @@ $mail->AddAttachment($nombre_archivo,"nombre_adjunto.pdf");
 
 /********  SE ENVIA CORREO SOBRE REPORTE TRIMESTRAL  ************/
     $html = '
+      <div>
+        <table style="border: 1px solid #ddd;border-collapse: collapse;font-family: Tahoma, Geneva, sans-serif;font-size:12px;">
+          <tr style="background-color:#B8D186">
+            <td style="">
+              Fecha de Elaboracion
+            </td>
+            <td style="">
+              #SPP
+            </td>
+            <td style="">
+              Abreviación de la Empresa
+            </td>
+            <td style="">
+              Tipo de Empresa
+            </td>
+            <td style="">
+              País
+            </td>
+            <td style="">
+              Trimestre
+            </td>
+          </tr>
 
-      tabla
+          <tr>
+            <td style="">
+              '.date('d/m/Y', time()).'
+            </td>
+            <td style="">
+              
+            </td>
+            <td style="">
+              ALCE NERO
+            </td>
+            <td style="">
+              COMPRADOR FINAL
+            </td>
+            <td style="">
+              
+            </td>
+            <td style="">
+              1
+            </td>
+          </tr>
+
+
+        </table>
+      </div>
+
+      <div>
+        <table style="border: 1px solid #ddd;border-collapse: collapse;font-family: Tahoma, Geneva, sans-serif;font-size:12px;">
+          <tr style="background-color:#B8D186">
+            <th>
+              #
+            </th>
+            <th>
+              #SPP
+            </th>
+            <th>
+              Nombre OPP proovedora
+            </th>
+            <th>
+              País de OPP proveedora
+            </th>
+            <th>
+              Fecha de Facturación
+            </th>
+            <th>
+              Primer Intermediario
+            </th>
+            <th>
+              Segundo Intermediario
+            </th>
+            <th colspan="2">
+              Referencia Contrato Original con OPP
+            </th>
+            <th>
+              Producto General
+            </th>
+            <th>
+              Producto Especifico
+            </th>
+            <th colspan="2">
+              Producto Terminado
+            </th>
+            <th colspan="2">
+              Cantidad Total Conforme Factura
+            </th>
+            <th>
+              Precio Sustentable Mínimo
+            </th>
+            <th>
+              Reconocimiento Orgánico
+            </th>
+            <th>
+              Incentivo SPP
+            </th>
+            <th>
+              Otros premios
+            </th>
+            <th>
+              Precio Total Unitario pagado
+            </th>
+            <th>
+              Valor Total Contrato
+            </th>
+            <th>
+              Cuota de Uso Reglamento
+            </th>
+            <th>
+              Total a pagar
+            </th>
+          </tr>
+
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+
+        </table>
+      </div>
+
     ';
     $contador = 1;
     
@@ -40,7 +180,7 @@ $mail->AddAttachment($nombre_archivo,"nombre_adjunto.pdf");
 
 
 
-    $mpdf = new mPDF('c', 'Letter');
+    $mpdf = new mPDF('c', 'Legal');
     $mpdf->setAutoTopMargin = 'pad';
     $mpdf->keep_table_proportions = TRUE;
     $mpdf->SetHTMLHeader('
@@ -56,7 +196,7 @@ $mail->AddAttachment($nombre_archivo,"nombre_adjunto.pdf");
             <td style="text-align:right;font-size:12px;">
                   <div>
                 <h2>
-                  Lista de Compradores Registrados / List of Buyers Registered
+                  Detalle Reporte Trimestral de Compras
                 </h2>             
                   </div>
                   <div>Símbolo de Pequeños Productores</div>
@@ -67,7 +207,7 @@ $mail->AddAttachment($nombre_archivo,"nombre_adjunto.pdf");
       </div>
     </header>
       ');
-    $css = file_get_contents('css/style.css');  
+    $css = file_get_contents('css/style_reporte.css');  
     $mpdf->AddPage('L');
     $mpdf->pagenumPrefix = 'Página / Page ';
     $mpdf->pagenumSuffix = ' - ';
@@ -76,13 +216,15 @@ $mail->AddAttachment($nombre_archivo,"nombre_adjunto.pdf");
     $mpdf->SetFooter('{PAGENO}{nbpg}');
     $mpdf->writeHTML($css,1);
     $mpdf->writeHTML($html);
-    $mpdf->Output('reporte.pdf', 'I');
-    $pdf_listo = chunk_split(base64_encode($mpdf));
+    //$pdf_listo = $mpdf->Output('reporte.pdf', 'I');
+    $pdf_listo = $mpdf->Output('reporte.pdf', 'I'); //reemplazamos la I por S(regresa el documento como string)
+
+    //$pdf_listo = chunk_split(base64_encode($mpdf));
    // $nombre_archivo = 'reporte.pdf';
 
 /********/
 
-		$cuerpo_correo = '
+	/*	$cuerpo_correo = '
 			<html>
 			<head>
 				<meta charset="utf-8">

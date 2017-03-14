@@ -51,7 +51,7 @@ if (isset($_SERVER['QUERY_STRING'])) {
 }
 $idempresa = $_SESSION['idempresa'];
 $ano_actual = date('Y', time());
-$row_empresa = mysql_query("SELECT abreviacion, maquilador, comprador, intermediario FROM empresa WHERE idempresa = $idempresa", $dspp) or die(mysql_error());
+$row_empresa = mysql_query("SELECT spp, abreviacion, pais, maquilador, comprador, intermediario FROM empresa WHERE idempresa = $idempresa", $dspp) or die(mysql_error());
 $empresa = mysql_fetch_assoc($row_empresa);
 $tipo_empresa = '';
 if($empresa['maquilador']){
@@ -61,6 +61,9 @@ if($empresa['maquilador']){
 }else if($empresa['intermediario']){
 	$tipo_empresa = 'INTERMEDIARIO';
 }
+
+$row_configuracion = mysql_query("SELECT * FROM porcentaje_ajuste WHERE anio = $ano_actual", $dspp) or die(mysql_error());
+$configuracion = mysql_fetch_assoc($row_configuracion);
 
 
 
