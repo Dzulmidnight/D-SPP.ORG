@@ -1617,7 +1617,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                     $inicio = strtotime($certificado['vigencia_inicio']);
                                     $fin = strtotime($certificado['vigencia_fin']);
                                   ?>
-                                    <p class="alert alert-info"><?php echo $certificado['idcertificado']; ?> Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
+                                    <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
                                     <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
                                   <?php
                                   }else{

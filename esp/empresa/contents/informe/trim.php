@@ -102,9 +102,9 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 		GetSQLValueString($suma_valor_contrato, "double"),
 		GetSQLValueString($suma_cuota_uso, "double"),
 		GetSQLValueString($_POST['idtrim'], "text"));
-	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());14_03_2017*/
 
-	$updateSQL = sprintf("UPDATE informe_general SET total_valor_contrato = %s, total_cuota_uso = %s WHERE idinforme_general = %s",
+	/*14_03_2017$updateSQL = sprintf("UPDATE informe_general SET total_valor_contrato = %s, total_cuota_uso = %s WHERE idinforme_general = %s",
 		GetSQLValueString($total_valor_contrato, "double"),
 		GetSQLValueString($total_cuota_uso, "double"),
 		GetSQLValueString($informe_general['idinforme_general'], "text"));
@@ -239,40 +239,42 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
               Total a pagar
             </th>
           </tr>
-          ';
-          $contador = 1;
-          $row_formato_compras = mysql_query("SELECT * FROM formato_compras WHERE idtrim = '$dtrimestre'", $dspp) or die(mysql_error());
 
-          while($formato_compras = mysql_fetch_assoc($row_formato_compras)){
-	          $html .= '
-	          <tr>
-	            <td>$contador</td>
-	            <td>'.$formato_compras['spp'].'</td>
-	            <td>'.$formato_compras['opp'].'</td>
-	            <td>'.$formato_compras['pais'].'</td>
-	            <td>'.$formato_compras['fecha_facturacion'].'</td>
-	            <td>'.$formato_compras['primer_intermediario'].'</td>
-	            <td>'.$formato_compras['segundo_intermediario'].'</td>
-	            <td>'.$formato_compras['clave_contrato'].'</td>
-	            <td>'.$formato_compras['fecha_contrato'].'</td>
-	            <td>'.$formato_compras['producto_general'].'</td>
-	            <td>'.$formato_compras['producto_especifico'].'</td>
-	            <td>'.$formato_compras['producto_terminado'].'</td>
-	            <td>'.$formato_compras['se_exporta'].'</td>
-	            <td>'.$formato_compras['unidad_cantidad_factura'].'</td>
-	            <td>'.$formato_compras['cantidad_total_factura'].'</td>
-	            <td>'.$formato_compras['precio_sustentable_minimo'].'</td>
-	            <td>'.$formato_compras['reconocimiento_organico'].'</td>
-	            <td>'.$formato_compras['incentivo_spp'].'</td>
-	            <td>'.$formato_compras['otros_premios'].'</td>
-	            <td>'.$formato_compras['precio_total_unitario'].'</td>
-	            <td>'.$formato_compras['valor_total_contrato'].'</td>
-	            <td>'.$formato_compras['cuota_uso_reglamento'].'</td>
-	            <td>'.$formato_compras['total_a_pagar'].'</td>
-	          </tr>
-	          ';
-	         $contador++;
-          }
+
+          ';
+          	$contador = 1;
+			$row_formato_compras = mysql_query("SELECT * FROM formato_compras WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+			$num_contratos = mysql_num_rows($row_formato_compras);
+			while($formato_compras = mysql_fetch_assoc($row_formato_compras)){
+			  $html .= '
+				<tr>
+				    <td>'.$contador.'</td>
+				    <td>'.$formato_compras['spp'].'</td>
+				    <td>'.$formato_compras['opp'].'</td>
+				    <td>'.$formato_compras['pais'].'</td>
+				    <td>'.$formato_compras['fecha_facturacion'].'</td>
+				    <td>'.$formato_compras['primer_intermediario'].'</td>
+				    <td>'.$formato_compras['segundo_intermediario'].'</td>
+				    <td>'.$formato_compras['clave_contrato'].'</td>
+				    <td>'.$formato_compras['fecha_contrato'].'</td>
+				    <td>'.$formato_compras['producto_general'].'</td>
+				    <td>'.$formato_compras['producto_especifico'].'</td>
+				    <td>'.$formato_compras['producto_terminado'].'</td>
+				    <td>Se exporta: '.$formato_compras['se_exporta'].'</td>
+				    <td>'.$formato_compras['unidad_cantidad_factura'].'</td>
+				    <td>'.$formato_compras['cantidad_total_factura'].'</td>
+				    <td>'.$formato_compras['precio_sustentable_minimo'].'</td>
+				    <td>'.$formato_compras['reconocimiento_organico'].'</td>
+				    <td>'.$formato_compras['incentivo_spp'].'</td>
+				    <td>'.$formato_compras['otros_premios'].'</td>
+				    <td>'.$formato_compras['precio_total_unitario'].'</td>
+				    <td>'.$formato_compras['valor_total_contrato'].'</td>
+				    <td>'.$formato_compras['cuota_uso_reglamento'].'</td>
+				    <td>'.$formato_compras['total_a_pagar'].'</td>
+				</tr>
+			  ';
+			 $contador++;
+			}
 
     $html .= '
         </table>
@@ -292,7 +294,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
           <tr>
             <td style="text-align:left;margin-bottom:0px;font-size:12px;">
                   <div>
-                <img src="img/FUNDEPPO.jpg" >
+                <img src="../../reportes/img/FUNDEPPO.jpg" >
                   </div>
             </td>
             <td style="text-align:right;font-size:12px;">
@@ -328,7 +330,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
    // $nombre_archivo = 'reporte.pdf';
 
 /********/
-
+	$asunto = 'D-SPP - Informe Trimestral Compras';
 	$mensaje_correo = '
 		<html>
 		<head>
@@ -337,46 +339,50 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 		<body>
 		
 			<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-			<tbody>
-			      <tr>
-			        <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-			        <th scope="col" align="left" width="280">Detalle Reporte Trimestral de Compras SPP</th>
-			      </tr>
-			      <tr>
-			        <td style="padding-top:10px;">           
-			          La empresa <span style="color:red">'.$empresa['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestran una tabla con el resumen de las operaciones.
-			        </td>
-			      </tr>
-			      <tr>
-			        <table style="border: 1px solid #ddd;border-collapse: collapse;font-family: Tahoma, Geneva, sans-serif;font-size:12px;">
-			          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-			            <td colspan="6" style="text-align:center">Resumen de operaciones</td>
-			          </tr>
-			          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Empresa</td>
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Tipo de Empresa</td>
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Informe</td>
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Valor total de los contratos</td>
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Cuota de uso aplicada acorde al año en curso</td>
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Total cuota de uso</td>
-			          </tr>
-			          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$empresa['abreviacion'].'</td>
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">COMPRADOR FINAL</td>
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$total_valor_contrato.'</td>
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$porcetaje_cuota.'%</td>
-			            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$total_cuota_uso.'</td>
-			          </tr>
-
-			        </table>
-			      </tr>
-			      <tr>
-			        <td style="padding-top:10px;">
-			          Se adjunta el PDF con los registro correspondientes al trimestre finalizado.
-			        </td>
-			      </tr>
-			</tbody>
+				<tbody>
+				    <tr>
+				      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+				      <th scope="col" align="left" width="280">Detalle Reporte Trimestral de Compras SPP</th>
+				    </tr>
+				    <tr>
+				      <td style="padding-top:10px;">           
+				        La empresa <span style="color:red">'.$empresa['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestran una tabla con el resumen de las operaciones.
+				      </td>
+				    </tr>
+				    <tr>
+				      <td colspan="2">
+				        <table style="border: 1px solid #ddd;border-collapse: collapse;font-size:12px;">
+				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
+				            <td colspan="7" style="text-align:center">Resumen de operaciones</td>
+				          </tr>
+				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Empresa</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Tipo de Empresa</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Informe</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Num. de Contratos</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Valor total de los contratos</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Cuota de uso aplicada acorde al año en curso</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Total cuota de uso</td>
+				          </tr>
+				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$empresa['abreviacion'].'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">COMPRADOR FINAL</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$num_contratos.'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$total_valor_contrato.'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$porcetaje_cuota.'%</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$total_cuota_uso.'</td>
+				          </tr>
+				        </table>
+				      </td>
+				    </tr>
+				    <tr>
+				      <td style="padding-top:10px;" colspan="2">
+				        Se adjunta el PDF con los registro correspondientes al trimestre finalizado. Por favor verificar la información, en caso de que la información sea correcta, dar clic en el siguiente enlace para poder autorizar el informe trimestral.
+				        <a href="http://localhost/D-SPP.ORG_2/procesar/verificacion.php?num='.$_GET['trim'].'&trim='.$idtrimestre.'&informe='.$informe_general['idinforme_general'].'" style="color:#e74c3c"><b>Clic para Autorizar informe trimestral</b></a>
+				      </td>
+				    </tr>
+				</tbody>
 			</table>
 
 		</body>
