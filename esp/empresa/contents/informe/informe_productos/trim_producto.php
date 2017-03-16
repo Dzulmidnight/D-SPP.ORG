@@ -165,10 +165,21 @@ if(isset($_GET['trim'])){
 		$query_formato = "SELECT formato_producto_empresa.* FROM formato_producto_empresa WHERE formato_producto_empresa.idtrim = '$trim[$idtrim_producto]' AND idempresa = $idempresa";
 		$row_formato = mysql_query($query_formato, $dspp) or die(mysql_error());
 
+		$ano_actual = date('Y', time());
+		$idtrim_txt = 'idtrim'.$_GET['trim'].'_producto';
+		$txt_trim = 'trim'.$_GET['trim'].'_producto';
+		$row_trim_menu = mysql_query("SELECT * FROM $txt_trim WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual");
+	  	$trim_options = mysql_fetch_assoc($row_trim_menu);
 		if(isset($_GET['add'])){
 			include('informe_add.php');
 		}else{
 		?>
+
+		<div style="margin-top:10px;">
+			<a class="btn btn-default" href="?INFORME&producto&trim=<?php echo $_GET['trim']; ?>&add_producto&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-plus"></span> Agregar nuevos registros</a>
+			<a class="btn btn-default" href="?INFORME&producto&trim=<?php echo $_GET['trim']; ?>&add_producto&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-pencil"></span> Editar registro actuales</a>
+		</div>
+
 		<form action="" method="POST">
 			<table class="table table-bordered" style="font-size:11px;">
 				<thead>
@@ -232,8 +243,6 @@ if(isset($_GET['trim'])){
 
 
 	<?php
-	}else{
-		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> AUN NO SE PUEDE INICIAR ESTE INFORME TRIMESTRAL, <b>DEBE FINALIZAR EL INFORME ANTERIOR</b></p>";
 	}
 
 	/////
@@ -273,6 +282,8 @@ if(isset($_GET['trim'])){
 							</form>
 						';
 					}
+				}else{
+					echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> AUN NO SE PUEDE INICIAR ESTE INFORME TRIMESTRAL, <b>DEBE FINALIZAR EL INFORME ANTERIOR</b></p>";
 				}
 				$row_trim = mysql_query("SELECT * FROM $trim_actual WHERE idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual",$dspp) or die(mysql_error());
 				$informacion_trim = mysql_fetch_assoc($row_trim);

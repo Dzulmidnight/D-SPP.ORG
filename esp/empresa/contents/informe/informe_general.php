@@ -204,7 +204,7 @@ if(isset($_POST['informe_trimestral'])){
 				Paso 2: No se ha iniciado ningun <b style="color:red">"Formato Trimestral"</b> en el <b style="color:red">Informe general <?php echo $ano_actual ?></b> , <strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
 				<input class="btn btn-success" type="submit" name="informe_trimestral" value="SI">
 				<input class="btn btn-danger" type="submit" name="informe_trimestral" value="NO">
-				<input type="text" name="idinforme_general" value="<?php echo $informe_general['idinforme_general']; ?>">
+				<input type="hidden" name="idinforme_general" value="<?php echo $informe_general['idinforme_general']; ?>">
 				</p>
 			</form>
 		<?php

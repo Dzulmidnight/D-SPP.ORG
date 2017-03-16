@@ -143,7 +143,11 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		$preg13 = "";
 	}
 	if(isset($_POST['preg14'])){
-		$preg14 = $_POST['preg14'];
+		if($_POST['preg14'] == 'mayor'){
+			$preg14 = $_POST['preg14_1'];
+		}else{
+			$preg14 = $_POST['preg14'];
+		}
 	}else{
 		$preg14 = "";
 	}

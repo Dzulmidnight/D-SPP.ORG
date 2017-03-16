@@ -117,19 +117,20 @@ if(isset($_POST['informe_trimestral'])){
 					<div class="btn-group" role="group" aria-label="...">
 						<div class="btn-group">
 						  <a type="button" <?php if(isset($_GET['trim1_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=1" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 1</a>
-						  <button type="button" <?php if(isset($_GET['trim1_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  
+						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim1_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
 						  <ul class="dropdown-menu">
 						    <li><a href="?INFORME&producto&trim=1&add_producto&idtrim=<?php echo $informacion_trim['idtrim1_producto']; ?>">Agregar</a></li>
 						    <li><a href="?INFORME&producto&trim=1&edit&idtrim=<?php echo $informacion_trim['idtrim1_producto']; ?>">Editar</a></li>
-						  </ul>
+						  </ul>15_03_2017-->
 						</div>
 
 						<div class="btn-group">
 						  <a type="button" <?php if(isset($_GET['trim2_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=2" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 2</a>
-						  <button type="button" <?php if(isset($_GET['trim2_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim2_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
@@ -143,12 +144,12 @@ if(isset($_POST['informe_trimestral'])){
 						  		echo '<li><a href="?INFORME&producto&trim=2&edit&idtrim='.$informacion_trim2_producto['idtrim2_producto'].'">Editar</a></li>';
 						  	}
 						  	 ?>
-						  </ul>
+						  </ul>15_03_2017-->
 						</div>
 
 						<div class="btn-group">
 						  <a type="button" <?php if(isset($_GET['trim3_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=3" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 3</a>
-						  <button type="button" <?php if(isset($_GET['trim3_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim3_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
@@ -162,12 +163,12 @@ if(isset($_POST['informe_trimestral'])){
 						  		echo '<li><a href="?INFORME&producto&trim=3&edit&idtrim='.$informacion_trim3_producto['idtrim3_producto'].'">Editar</a></li>';
 						  	}
 						  	 ?>
-						  </ul>
+						  </ul>15_03_2017-->
 						</div>
 
 						<div class="btn-group">
 						  <a type="button" <?php if(isset($_GET['trim4_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=4" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 4</a>
-						  <button type="button" <?php if(isset($_GET['trim4_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim4_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
@@ -181,7 +182,7 @@ if(isset($_POST['informe_trimestral'])){
 						  		echo '<li><a href="?INFORME&producto&trim=4&edit&idtrim='.$informacion_trim4_producto['idtrim4_producto'].'">Editar</a></li>';
 						  	}
 						  	 ?>
-						  </ul>
+						  </ul>15_03_2017-->
 						</div>
 
 					</div>

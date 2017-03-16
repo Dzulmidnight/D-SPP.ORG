@@ -461,16 +461,21 @@ if(isset($_GET['trim'])){
 
 	//echo $titulo_trim;
 	if($total_trim == 1){
+		$ano_actual = date('Y', time());
 		$query_formato = "SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim = '$trim[$idtrim]' AND idempresa = $idempresa";
 		$row_formato = mysql_query($query_formato, $dspp) or die(mysql_error());
+		$idtrim_txt = 'idtrim'.$_GET['trim'];
+		$txt_trim = 'trim'.$_GET['trim'];
+		$row_trim_menu = mysql_query("SELECT * FROM $txt_trim WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual");
+	  	$trim_options = mysql_fetch_assoc($row_trim_menu);
 
 		if(isset($_GET['add'])){
 			include('informe_add.php');
 		}else{
 		?>
 		<div style="margin-top:10px;">
-			<a class="btn btn-default" href="?INFORME&general_detail&trim=1&add&idtrim=<?php echo $informacion_trim['idtrim1']; ?>"><span class="glyphicon glyphicon-plus"></span> Agregar nuevos registros</a>
-			<a class="btn btn-default" href="?INFORME&general_detail&trim=1&add&idtrim=<?php echo $informacion_trim['idtrim1']; ?>"><span class="glyphicon glyphicon-pencil"></span> Editar registro actuales</a>
+			<a class="btn btn-default" href="?INFORME&general_detail&trim=<?php echo $_GET['trim']; ?>&add&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-plus"></span> Agregar nuevos registros</a>
+			<a class="btn btn-default" href="?INFORME&general_detail&trim=<?php echo $_GET['trim']; ?>&add&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-pencil"></span> Editar registro actuales</a>
 		</div>
 
 
@@ -586,51 +591,52 @@ if(isset($_GET['trim'])){
 
 	<?php
 	}else{
-		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> AUN NO SE PUEDE INICIAR ESTE INFORME TRIMESTRAL, <b>DEBE FINALIZAR EL INFORME ANTERIOR</b></p>";
-	}
+		/////
+		$row_trim1 = mysql_query("SELECT idtrim1, estado_trim1 FROM trim1 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+		$trim1 = mysql_fetch_assoc($row_trim1);
 
-	/////
-	$row_trim1 = mysql_query("SELECT idtrim1, estado_trim1 FROM trim1 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
-	$trim1 = mysql_fetch_assoc($row_trim1);
+		if(isset($trim1['idtrim1'])){ //confirmamos que se ha creado el primer trim (TRIM1)
+			$num_trim = $_GET['trim'];
+			$trim_actual = 'trim'.$num_trim;
+			$txt_idtrim = 'idtrim'.$num_trim;
 
-	if(isset($trim1['idtrim1'])){ //confirmamos que se ha creado el primer trim (TRIM1)
-		$num_trim = $_GET['trim'];
-		$trim_actual = 'trim'.$num_trim;
-		$txt_idtrim = 'idtrim'.$num_trim;
-
-		if($trim1['estado_trim1'] == 'FINALIZADO'){ // SI EL TRIM1 HA FINALIZADO, REVISAREMOS QUE LOS TRIMS SIGUIENTES CONCLUYAN PARA PODER CREAR UNO NUEVO
-			if($num_trim != 1){
-				//checamos que el trim anterior haya finalizado
-				//// iniciamos VARIABLES DEL TRIM ANTERIOR
-					$trim_anterior = 'trim'.($num_trim - 1); //restamos 1 al trim actual para poder consultar el anterio
-					$idtrim_anterior = 'idtrim'.($num_trim - 1);
-					$estado_trim = 'estado_trim'.($num_trim - 1);
-				// terminamos VARIABLES DEL TRIM ANTERIOR
+			if($trim1['estado_trim1'] == 'FINALIZADO'){ // SI EL TRIM1 HA FINALIZADO, REVISAREMOS QUE LOS TRIMS SIGUIENTES CONCLUYAN PARA PODER CREAR UNO NUEVO
+				if($num_trim != 1){
+					//checamos que el trim anterior haya finalizado
+					//// iniciamos VARIABLES DEL TRIM ANTERIOR
+						$trim_anterior = 'trim'.($num_trim - 1); //restamos 1 al trim actual para poder consultar el anterio
+						$idtrim_anterior = 'idtrim'.($num_trim - 1);
+						$estado_trim = 'estado_trim'.($num_trim - 1);
+					// terminamos VARIABLES DEL TRIM ANTERIOR
 
 
-				$row_trim_anterior = mysql_query("SELECT * FROM $trim_anterior WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
-				$informacion_trim_anterior = mysql_fetch_assoc($row_trim_anterior);
+					$row_trim_anterior = mysql_query("SELECT * FROM $trim_anterior WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+					$informacion_trim_anterior = mysql_fetch_assoc($row_trim_anterior);
 
-				if(isset($informacion_trim_anterior[$idtrim_anterior]) && $informacion_trim_anterior[$estado_trim] == 'FINALIZADO'){ /// SI EL TRIM ANTERIOR HA FINALIZADO, MOSTRAREMOS LA OPCIÓN PARA PODER CREAR UN NUEVO TRIM
-					$num_trim_actual = 'trim'.$_GET['trim'];
-					$row_trim_actual = mysql_query("SELECT * FROM $trim_actual WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
-					$total_trim_actual = mysql_num_rows($row_trim_actual);
-					if($total_trim_actual != 1){ // si ya se ha iniciado el nuevo trim, ya no mostraremos la opción
-						echo '
-							<form action="" method="POST">
-								<p class="alert alert-info">
-									<strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
-									<input class="btn btn-success" type="submit" name="nuevo_trim" value="SI">
-									<input type="hidden" name="idinforme_general" value="'.$informe_general['idinforme_general'].'">
-								</p>
-							</form>
-						';
+					if(isset($informacion_trim_anterior[$idtrim_anterior]) && $informacion_trim_anterior[$estado_trim] == 'FINALIZADO'){ /// SI EL TRIM ANTERIOR HA FINALIZADO, MOSTRAREMOS LA OPCIÓN PARA PODER CREAR UN NUEVO TRIM
+						$num_trim_actual = 'trim'.$_GET['trim'];
+						$row_trim_actual = mysql_query("SELECT * FROM $trim_actual WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+						$total_trim_actual = mysql_num_rows($row_trim_actual);
+						if($total_trim_actual != 1){ // si ya se ha iniciado el nuevo trim, ya no mostraremos la opción
+							echo '
+								<form action="" method="POST">
+									<p class="alert alert-info">
+										<strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
+										<input class="btn btn-success" type="submit" name="nuevo_trim" value="SI">
+										<input type="hidden" name="idinforme_general" value="'.$informe_general['idinforme_general'].'">
+									</p>
+								</form>
+							';
+						}
+					}else{
+						echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> AUN NO SE PUEDE INICIAR ESTE INFORME TRIMESTRAL, <b>DEBE FINALIZAR EL INFORME ANTERIOR</b></p>";
 					}
+					$row_trim = mysql_query("SELECT * FROM $trim_actual WHERE idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual",$dspp) or die(mysql_error());
+					$informacion_trim = mysql_fetch_assoc($row_trim);
 				}
-				$row_trim = mysql_query("SELECT * FROM $trim_actual WHERE idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual",$dspp) or die(mysql_error());
-				$informacion_trim = mysql_fetch_assoc($row_trim);
 			}
 		}
 	}
+
 }
  ?>

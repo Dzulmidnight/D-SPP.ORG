@@ -121,7 +121,11 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 	if(isset($_POST['op_preg13'])){
-		$op_preg13 = $_POST['op_preg13'];
+		if($_POST['op_preg13'] == 'mayor'){
+			$op_preg13 = $_POST['op_preg13_1'];
+		}else{
+			$op_preg13 = $_POST['op_preg13'];
+		}
 	}else{
 		$op_preg13 = "";
 	}
@@ -892,7 +896,7 @@ $opp = mysql_fetch_assoc($row_opp);
 					
 						<div class="col-xs-6"><p>Más de $25,000 USD <sup>*</sup><br><h6><sup>*</sup>Especifique la cantidad.</h6></p></div>
 						<div class="col-xs-6"><input type="radio" name="op_preg13" class="form-control" id="exampleInputEmail1" onclick="mostrar()" value="mayor">
-							<input type="text" name="op_resp13_1" class="form-control" id="oculto" style='display:none;' placeholder="Especifique la Cantidad">
+							<input type="text" name="op_preg13_1" class="form-control" id="oculto" style='display:none;' placeholder="Especifique la Cantidad">
 						</div>
 
 					</div>

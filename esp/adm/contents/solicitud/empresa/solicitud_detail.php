@@ -823,8 +823,11 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           <label for="preg12">
             12. DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?</label>
           <textarea name="preg12" id="preg12" class="form-control"><?php echo $solicitud['preg12']; ?></textarea>
-
-
+  
+          <?php 
+          $row_porcentaje_ventas = mysql_query("SELECT * FROM porcentaje_productoVentas WHERE idsolicitud_registro = $solicitud[idsolicitud_registro]", $dspp) or die(mysql_error());
+          $porcentaje_ventas = mysql_fetch_assoc($row_porcentaje_ventas);
+           ?>
           <p for="op_preg11">
             <b>13 - 14. DEL TOTAL DE SUS COMPRAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?</b>
             <i>(* Introducir solo cantidad, entero o decimales)</i>
@@ -832,19 +835,19 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
               <div class="row">
                 <div class="col-xs-3">
                   <label for="organico">% ORGÁNICO</label>
-                  <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
+                  <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $porcentaje_ventas['organico']; ?>" placeholder="Ej: 0.0">
                 </div>
                 <div class="col-xs-3">
                   <label for="comercio_justo">% COMERCIO JUSTO</label>
-                  <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
+                  <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $porcentaje_ventas['comercio_justo']; ?>" placeholder="Ej: 0.0">
                 </div>
                 <div class="col-xs-3">
                   <label for="spp">SÍMBOLO DE PEQUEÑOS PRODUCTORES</label>
-                  <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
+                  <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $porcentaje_ventas['spp']; ?>" placeholder="Ej: 0.0">
                 </div>
                 <div class="col-xs-3">
                   <label for="otro">SIN CERTIFICADO</label>
-                  <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
+                  <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $porcentaje_ventas['sin_certificado']; ?>" placeholder="Ej: 0.0">
                 </div> 
               </div>
             </div>
