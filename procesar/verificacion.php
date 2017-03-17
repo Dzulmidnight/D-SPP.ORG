@@ -53,7 +53,7 @@ mysql_select_db($database_dspp, $dspp);
 
 	$row_trim = mysql_query("SELECT * FROM $txt_trim WHERE $txt_idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 
-	$row_formatos = mysql_query("SELECT empresa.spp, empresa.abreviacion, empresa.pais, COUNT(idformato_compras) AS 'num_contratos', SUM(valor_total_contrato) AS 'total_contrato', SUM(total_a_pagar) AS 'total_cuota' FROM formato_compras INNER JOIN empresa ON formato_compras.idempresa = empresa.idempresa WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+	$row_formatos = mysql_query("SELECT empresa.spp, empresa.abreviacion, empresa.pais, COUNT(idformato_compras) AS 'num_contratos', ROUND(SUM(valor_total_contrato),2) AS 'total_contrato', SUM(total_a_pagar) AS 'total_cuota' FROM formato_compras INNER JOIN empresa ON formato_compras.idempresa = empresa.idempresa WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 	$formatos = mysql_fetch_assoc($row_formatos);
 	$valor_total_contratos = $formatos['total_contrato'];
 	$valor_cuota_de_uso = $formatos['total_cuota'];
@@ -447,7 +447,7 @@ mysql_select_db($database_dspp, $dspp);
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;" colspan="2">           
-				        La empresa <span style="color:red"><?php echo $formatos['abreviacion']; ?></span> ha finalizado el <span style="color:red">TRIMESTRE <?php echo $num_trim; ?></span>, a continuación se muestran una tabla con el resumen de las operaciones.
+				        La empresa <span style="color:red"><?php echo $formatos['abreviacion']; ?></span> ha finalizado el <span style="color:red">TRIMESTRE <?php echo $num_trim; ?></span>, a continuación se muestra una tabla con el resumen de las operaciones.
 				      </td>
 				    </tr>
 				    <tr>

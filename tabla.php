@@ -2,14 +2,25 @@
             <tbody>
                 <tr>
                   <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280">Detalle Reporte Trimestral de Compras SPP</th>
+                  <th scope="col" align="left" width="280">Factura - Reporte Trimestral de Compras SPP</th>
                 </tr>
                 <tr>
                   <td style="padding-top:10px;">           
-                    La empresa <span style="color:red">'.$empresa['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestran una tabla con el resumen de las operaciones.
-                    <hr>
-                    <p style="color:#2c3e50;font-weight:bold">El Area de Certificación y Calidad SPP ha autorizado el siguiente Informe Trimestral de Compras, por favor proceda a generar la factura correspondiente(<small style="color:#7f8c8d">Se adjunta el PDF con los registro correspondientes al trimestre finalizado</small>).</p>
-                    <p style="color:#2c3e50;font-weight:bold">Una vez creada la factura dar clic en el siguiente enlace para poder adjuntarla. <a href="http://localhost/D-SPP.ORG_2/procesar/facturacion.php?num='.$_GET['trim'].'&trim='.$idtrimestre.'" style="color:red">Clic para poder adjuntar factura</a></p>
+                    <p style="color:#2c3e50;font-weight:bold">El Área de Adminsitración de SPP Global ha cargado la factura correspondiente al Informe Trimestral de Compras, por favor proceda a realizar el pago correspondiente por la cantidad de: '.$valor_cuota_de_uso.' USD</small>).</p>
+                <p>
+                  Se anexan los siguiente documentos:
+                  <ol>
+                    <li>Factura</li>
+                    <li>Reglamento de Costos</li>
+                    <li>Datos bancarios</li>
+                  </ol>
+                </p>
+                    <p style="color:#2c3e50;font-weight:bold">Una vez realizado el pago por favor proceda a realizar las siguientes acciones</p>
+                     <ol>
+                       <li>Ingresar en su cuenta de Empresa dentro del sistema D-SPP.</li>
+                       <li></li>
+                       <li></li>
+                     </ol>
                   </td>
 
                 </tr>

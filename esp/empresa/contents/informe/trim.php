@@ -92,17 +92,13 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	$txt_total_trim = 'total_'.$txt_numero_trim;
 	$txt_valor_contrato = 'valor_contrato_'.$txt_numero_trim;
 	$txt_cuota_uso = 'cuota_uso_'.$txt_numero_trim;
-	$estatus_trim = 'FINALIZADO';
+	$estatus_trim = 'EN ESPERA';
 	
 
-	/*14_03_2017$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_estado_trim = %s, fecha_fin = %s, $txt_total_trim = %s, $txt_valor_contrato = %s, $txt_cuota_uso = %s WHERE $txt_idtrim = %s",
+	$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_estado_trim = %s WHERE $txt_idtrim = %s",
 		GetSQLValueString($estatus_trim, "text"),
-		GetSQLValueString($_POST['fecha'], "int"),
-		GetSQLValueString($suma_cuota_uso, "double"),
-		GetSQLValueString($suma_valor_contrato, "double"),
-		GetSQLValueString($suma_cuota_uso, "double"),
 		GetSQLValueString($_POST['idtrim'], "text"));
-	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());14_03_2017*/
+	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
 	/*14_03_2017$updateSQL = sprintf("UPDATE informe_general SET total_valor_contrato = %s, total_cuota_uso = %s WHERE idinforme_general = %s",
 		GetSQLValueString($total_valor_contrato, "double"),
@@ -499,6 +495,9 @@ if(isset($_GET['trim'])){
 								echo $pregunta;
 							}
 							?>
+							Dar clic en el siguiente boton para poder cargar el comprobante de pago correspondiente al Informe Trimestral.
+							<input type="file" name="comprabante_pago">
+							<button class="btn btn-sm btn-warning" type="submit" name="enviar_comprobante" value="1">Enviar Comprobante</button>
 						</th>
 					</tr>
 
@@ -591,11 +590,12 @@ if(isset($_GET['trim'])){
 
 	<?php
 	}else{
+		echo "AUN NO HA CONCLUIDO EL TRIMESTRE ANTERIOR";
 		/////
 		$row_trim1 = mysql_query("SELECT idtrim1, estado_trim1 FROM trim1 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 		$trim1 = mysql_fetch_assoc($row_trim1);
 
-		if(isset($trim1['idtrim1'])){ //confirmamos que se ha creado el primer trim (TRIM1)
+		if(!empty($trim1['idtrim1'])){ //confirmamos que se ha creado el primer trim (TRIM1)
 			$num_trim = $_GET['trim'];
 			$trim_actual = 'trim'.$num_trim;
 			$txt_idtrim = 'idtrim'.$num_trim;
@@ -637,6 +637,7 @@ if(isset($_GET['trim'])){
 			}
 		}
 	}
+
 
 }
  ?>
