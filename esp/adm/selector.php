@@ -1,6 +1,8 @@
 <?
 if(isset($_GET['CRM'])){
 	include ("contents/crm/crm.php");
+}else if(isset($_GET['MEMBRESIAS'])){
+	include ("contents/membresias/membresias.php");
 }else if(isset($_GET['REPORTES'])){
 	include ("contents/reportes_comerciales/menu.php");
 }else if(isset($_GET['FINANZAS'])){
