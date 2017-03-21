@@ -417,7 +417,7 @@ if(isset($_GET['trim'])){
 		if($estatus == 'ACTIVO'){
 			$estatus = $trim[$estado_trim];
 			$pregunta = "
-
+			<form action='' method='POST'>
 				<p style='font-size:13px;'>
 					<b style='color:red'>¿Desea concluir la captura de registros en el formato de trimestre actual? </b>
 					<button class='' type='subtmit' value='SI'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='Finalizar trimestre actual' onclick='return confirm(\"¿Desea finalizar la captura del trimestre actual?\");' >SI</button>
@@ -426,7 +426,7 @@ if(isset($_GET['trim'])){
 					<input type='hidden' name='fecha' value='".time()."'>
 					
 				</p>
-
+			</form>
 			";
 		}else{
 			$estatus = $trim[$estado_trim];
@@ -475,7 +475,7 @@ if(isset($_GET['trim'])){
 		</div>
 
 
-		<form action="" method="POST">	
+
 			<table class="table table-bordered" style="font-size:11px;">
 				<thead>
 					<tr>
@@ -495,12 +495,15 @@ if(isset($_GET['trim'])){
 								echo $pregunta;
 							}
 							?>
-							Dar clic en el siguiente boton para poder cargar el comprobante de pago correspondiente al Informe Trimestral.
-							<input type="file" name="comprabante_pago">
-							<button class="btn btn-sm btn-warning" type="submit" name="enviar_comprobante" value="1">Enviar Comprobante</button>
+							<form action="" method="POST" enctype="multipart/form-data">
+								Dar clic en el siguiente boton para poder cargar el comprobante de pago correspondiente al Informe Trimestral.
+								<input type="file" name="comprabante_pago">
+								<button class="btn btn-sm btn-warning" type="submit" name="enviar_comprobante" value="1">Enviar Comprobante</button>								
+							</form>
+
 						</th>
 					</tr>
-
+		<form action="" method="POST">	
 					<tr class="success">
 						<th class="text-center">#</th>
 						<th class="text-center">#SPP</th>

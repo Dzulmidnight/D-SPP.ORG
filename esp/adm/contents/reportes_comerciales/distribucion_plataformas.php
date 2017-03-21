@@ -121,8 +121,13 @@ for ($i=1; $i <= 4; $i++) {
 					$num_formatos = mysql_num_rows($row_plataformas);
 					$query = "SELECT * FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'";
 
-					$clave_distribucion = round(($formatos['total_contrato'] * 100) / $formato_compras['total_contrato'], 2);
-					$valor_clave_distribucion = round(($cuota_uso * $clave_distribucion) / 100,2);
+					if($formatos['total_contrato'] > 0){
+						$clave_distribucion = round(($formatos['total_contrato'] * 100) / $formato_compras['total_contrato'], 2);
+						$valor_clave_distribucion = round(($cuota_uso * $clave_distribucion) / 100,2);
+					}else{
+						$clave_distribucion = 0;
+						$valor_clave_distribucion = 0;
+					}
 				?>
 				<tr>
 					<td style="background-color:#27ae60;color:#ecf0f1"><?php echo $plataformas['pais']; ?></td>

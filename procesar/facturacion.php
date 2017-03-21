@@ -1,6 +1,7 @@
 <?php 
 require_once('../Connections/dspp.php'); 
-
+require_once('../Connections/mail.php');
+require_once('../mpdf/mpdf.php');
 mysql_select_db($database_dspp, $dspp);
 
 
@@ -36,6 +37,7 @@ mysql_select_db($database_dspp, $dspp);
 	}
 	//$aprobado = '';
 	//$fecha_fin = time();
+	$fecha = time();
 	$anio_actual = date('Y', time());
 	//$idinforme_general = $_GET['informe'];
 	$num_trim = $_GET['num'];
@@ -69,7 +71,7 @@ mysql_select_db($database_dspp, $dspp);
 	$estatus_trim = 'FINALIZADO';
 	*/
 	$estatus_trim = 'FINALIZADO';
-	if(isset($_POST['finalizar']) && $_POST['finalizar'] == 'SI'){
+	/*17_03_2017if(isset($_POST['finalizar']) && $_POST['finalizar'] == 'SI'){
 		$updateSQL = sprintf("UPDATE $txt_trim SET $txt_estado_trim = %s, fecha_fin = %s, $txt_valor_contrato = %s, $txt_cuota_uso = %s WHERE $txt_idtrim = %s",
 			GetSQLValueString($estatus_trim, "text"),
 			GetSQLValueString($fecha_fin, "int"),
@@ -86,12 +88,12 @@ mysql_select_db($database_dspp, $dspp);
 
 		/********  SE ENVIA CORREO SOBRE REPORTE TRIMESTRAL  ************/
 			//$idtrimestre = $_POST['idtrim'];
-			$porcetaje_cuota = $configuracion['cuota_compradores'];
+		/*17_03_2017	$porcetaje_cuota = $configuracion['cuota_compradores'];
 			$tipo_empresa = $tipo_empresa;
 
 
 		/********/
-			$asunto = 'D-SPP - Factura Informe Trimestral Compras';
+		/*17_03_2017	$asunto = 'D-SPP - Factura Informe Trimestral Compras';
 			$mensaje_correo = '
 				<html>
 				<head>
@@ -176,11 +178,11 @@ mysql_select_db($database_dspp, $dspp);
 			$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 		}
 
-	}
+	}17_03_2017*/
 	if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 		$num = $_GET['num'];
 		$txt_idtrim = 'idtrim'.$num;
-		$idtrim = 'trim'.$num;
+		$num_trim = 'trim'.$num;
 		$txt_factura = 'factura_trim'.$num;
 		$txt_estatus = 'estatus_factura_trim'.$num;
 
@@ -198,7 +200,7 @@ mysql_select_db($database_dspp, $dspp);
 		$updateSQL = sprintf("UPDATE $num_trim SET $txt_factura = %s, $txt_estatus = %s WHERE $txt_idtrim = %s",
 			GetSQLValueString($archivo_factura, "text"),
 			GetSQLValueString($estatus_factura, "text"), 
-			GetSQLValueString($idtrim, "text"));
+			GetSQLValueString($_GET['trim'], "text"));
 		$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
 
@@ -253,13 +255,13 @@ mysql_select_db($database_dspp, $dspp);
 					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Total cuota de uso</td>
 					          </tr>
 					          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$empresa['abreviacion'].'</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$formatos['abreviacion'].'</td>
 					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">COMPRADOR FINAL</td>
 					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
-					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$num_contratos.'</td>
-					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$total_valor_contrato.'</td>
-					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$porcetaje_cuota.'%</td>
-					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$total_cuota_uso.'</td>
+							    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$formatos['num_contratos'].'</td>
+							    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$valor_total_contratos.'</td>
+							    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$configuracion['cuota_compradores'].'%'.'</td>
+							    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$valor_cuota_de_uso.'</td>
 					          </tr>
 					        </table>
 					      </td>
@@ -271,7 +273,11 @@ mysql_select_db($database_dspp, $dspp);
 				</html>
 			';
 			///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
-			$mail->AddAttachment();
+			$row_documentacion = mysql_query("SELECT * FROM documentacion WHERE nombre = 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
+			$documentacion = mysql_fetch_assoc($row_documentacion);
+
+			$mail->AddAttachment($archivo_factura);
+			$mail->AddAttachment('procesar/'.$documentacion['archivo']);
 			$mail->AddAddress('yasser.midnight@gmail.com');
 
 
@@ -282,7 +288,7 @@ mysql_select_db($database_dspp, $dspp);
 		    $mail->MsgHTML(utf8_decode($mensaje_correo));
 		    //$mail->AddAttachment($pdf_listo, 'reporte.pdf');
 
-		    $mail->addStringAttachment($pdf_listo, 'reporte_trimestral.pdf');
+		    //$mail->addStringAttachment($pdf_listo, 'reporte_trimestral.pdf');
 		    $mail->Send();
 		    $mail->ClearAddresses();
 			///se envia correo al area de certificacion para corroborar la informacion
@@ -387,7 +393,7 @@ mysql_select_db($database_dspp, $dspp);
 							Debe dar clic en el siguiente botón para poder cargar la factura correspondiente al informe trimestral
 						</td>
 				    	<td>
-					    	<form action="" method="POST">
+					    	<form action="" method="POST" enctype="multipart/form-data">
 					    		<input type="file" name="factura_trimestre" required>
 					    		<hr>
 					    		<button class="mybutton" type="submit" name="enviar_factura" value="1">Enviar factura</button>
