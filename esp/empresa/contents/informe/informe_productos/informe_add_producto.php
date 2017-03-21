@@ -90,6 +90,13 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			//$idformato_producto_empresa = mysql_insert_id($dspp);
 		//Termina insertar formato compras
 }
+if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
+	$idregistro = $_POST['eliminar_registro'];
+
+	$deleteSQL = sprintf("DELETE FROM formato_producto_empresa WHERE idformato_producto_empresa = $idregistro",
+		GetSQLValueString($idregistro, "int"));
+	$eliminar = mysql_query($deleteSQL, $dspp) or die(mysql_error());
+}
 
 ?>
 
@@ -125,7 +132,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		<!--<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color azul son opcionales, dicha informacion será de utilitdad para la evaluación de la certificación.</p>
 		<p class="alert alert-success" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color verde son obligatorios.</p>-->
 	
-		<form class="form-horizontal" method="POST">
+
 			<p class="alert alert-danger" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> El valor de ventas totales debe ser expresado en dolares americanos(USD)</p>
 		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
 		 		<thead>
@@ -164,16 +171,21 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 							$contador = 1;
 							while($formato = mysql_fetch_assoc($row_registro)){
 							?>
-								<tr class="active">
-									<td><?php echo $contador; ?></td>
-									<td><?php echo $formato['pais']; ?></td>
-									<td><?php echo $formato['ventas_totales']; ?></td>
-									<td><?php echo $formato['tipo_moneda']; ?></td>
-								</tr>
+								<form action="" method="POST">
+									<tr class="active">
+										<td>
+											<?php echo $contador; ?> <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar registro" name="eliminar_registro" value="<?php echo $formato['idformato_producto_empresa']; ?>" onclick="return confirm('¿Está seguro de eliminar el registro?');"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+										</td>
+										<td><?php echo $formato['pais']; ?></td>
+										<td><?php echo $formato['ventas_totales']; ?></td>
+										<td><?php echo $formato['tipo_moneda']; ?></td>
+									</tr>
+								</form>
 							<?php
 							$contador++;
 							}
 		 				 ?>
+		<form class="form-horizontal" method="POST">
 					<tr class="success">
 						<td class="warning"></td> <!-- # -->
 

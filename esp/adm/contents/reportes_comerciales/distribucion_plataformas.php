@@ -40,13 +40,7 @@ if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
 
-$row_informes = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, empresa.abreviacion FROM informe_general INNER JOIN empresa ON informe_general.idempresa = empresa.idempresa LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
-$plataformas_spp = array();
-$total_informes = mysql_num_rows($row_informes);
-$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_error());
-while($array_plataformas = mysql_fetch_assoc($row_plataformas)){
-	$plataformas_spp[] = $array_plataformas['pais'];
-}
+
 
 $anio_actual = date('Y',time());
 $row_configuracion = mysql_query("SELECT * FROM porcentaje_ajuste WHERE anio = $anio_actual", $dspp) or die(mysql_error());
@@ -58,129 +52,259 @@ $configuracion = mysql_fetch_assoc($row_configuracion);
 
 $row_anio = mysql_query("SELECT FROM_UNIXTIME(ano,'%Y') AS 'anio' FROM informe_general GROUP BY FROM_UNIXTIME(ano,'%Y')", $dspp) or die(mysql_error());
 ?>
-<h4>
-	Distribución plataformas de origen SPP | Año
-	<select name="anio">
-		<?php 
-		while($anio = mysql_fetch_assoc($row_anio)){
-			$fecha = $anio['anio'];
-			echo "<option value='$fecha'>$fecha</option>";
+<hr style="margin-bottom:0;">
+<a href="?REPORTES&distribucion_p=compras" class="btn btn-sm <?php if($_GET['distribucion_p'] == 'compras'){echo 'btn-primary'; }else{echo 'btn-default';} ?>">Compras</a>
+<a href="?REPORTES&distribucion_p=producto" class="btn btn-sm <?php if($_GET['distribucion_p'] == 'producto'){echo 'btn-primary'; }else{echo 'btn-default';} ?>">Producto Terminado</a>
+
+<?php 
+if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
+	$row_informes_producto = mysql_query("SELECT informe_general_producto.*, trim1_producto.total_trim1, trim2_producto.total_trim2, trim3_producto.total_trim3, trim4_producto.total_trim4, empresa.abreviacion FROM informe_general_producto INNER JOIN empresa ON informe_general_producto.idempresa = empresa.idempresa LEFT JOIN trim1_producto ON informe_general_producto.trim1_producto = trim1_producto.idtrim1_producto LEFT JOIN trim2_producto ON informe_general_producto.trim2_producto = trim2_producto.idtrim2_producto LEFT JOIN trim3_producto ON informe_general_producto.trim3_producto = trim3_producto.idtrim3_producto LEFT JOIN trim4_producto ON informe_general_producto.trim4_producto = trim4_producto.idtrim4_producto", $dspp) or die(mysql_error());
+	//$plataformas_spp = array();
+	$total_informes = mysql_num_rows($row_informes_producto);
+	//$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_error());
+	/*while($array_plataformas = mysql_fetch_assoc($row_plataformas)){
+		$plataformas_spp[] = $array_plataformas['pais'];
+	}*/
+
+?>
+	<h4>
+		Distribución plataformas Producto Terminado | Año
+		<select name="anio">
+			<?php 
+			while($anio = mysql_fetch_assoc($row_anio)){
+				$fecha = $anio['anio'];
+				echo "<option value='$fecha'>$fecha</option>";
+			}
+			 ?>
+		</select>
+	</h4>
+
+	<?php
+	for ($i=1; $i <= 4; $i++) {
+		$txt_id = 'idtrim'.$i.'_producto';
+		$txt_trim = 'trim'.$i.'_producto';
+		$txt_idtrim = 'TE'.$i.'-'.$anio_actual;
+		$txt_estado = 'estado_trim'.$i;
+
+		$clave_distribucion = 0;
+		///calculamos las claves de distribucion, esto sumando el valor del contrato de cada formato del primer trimestre
+		$row_formato_producto = mysql_query("SELECT SUM(ventas_totales) AS 'total_ventas' FROM formato_producto_empresa WHERE idtrim LIKE '%$txt_idtrim%'", $dspp) or die(mysql_error());
+		$formato_producto = mysql_fetch_assoc($row_formato_producto);
+		//$porcentaje_anual = $configuracion['distribucion_plataforma_origen'];
+		$porcentaje_anual = 10;
+		$cuota_uso = round(($formato_producto['total_ventas'] * $porcentaje_anual) / 100, 2);
+
+
+		$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%'", $dspp) or die(mysql_error());
+		$num_trim = mysql_num_rows($row_trim);
+		//echo '<br>TOTAL TRIMS: '.$num_trim;
+		$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%' AND $txt_estado = 'ACTIVO'", $dspp) or die(mysql_error());
+		$num_activo = mysql_num_rows($row_trim);
+		//echo '<br>TOTAL TRIMS activos: '.$num_activo;
+		$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%' AND $txt_estado = 'FINALIZADO'", $dspp) or die(mysql_error());
+		$num_finalizado = mysql_num_rows($row_trim);
+		//echo '<br>TOTAL TRIMS finalizados: '.$num_finalizado;
+
+		if($num_trim != 0){
+		?>
+			<table class="table table-bordered" style="font-size:12px;">
+				<thead>
+					<tr>
+						<th class="success"><b>Trimestre <?php echo $i; ?></b></th>
+						<th class="info">Numero de informes: <span style="color:#e74c3c"><?php echo $num_trim; ?></span></th>
+						<th class="info"><?php echo 'Activos: <span style="color:#e74c3c">'.$num_activo.'</span> Finalizados: <span style="color:#e74c3c">'.$num_finalizado.'</span>'; ?></th>
+						<th class="info">Ventas totales: <span style="color:red"><?php echo round($formato_producto['total_ventas'],2).' (<span style="color:#2c3e50">'.$porcentaje_anual.'%</span> = '.$cuota_uso.')'; ?></span></th>
+					</tr>
+					<tr>
+						<th>Plataforma</th>
+						<th>Valor total contratos</th>
+						<th>Porcentaje Clave distribución</th>
+						<th>Valor clave distribución</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php 
+
+						$row_producto = mysql_query("SELECT COUNT(idformato_producto_empresa) AS 'total_formatos', SUM(formato_producto_empresa.ventas_totales) AS 'total' FROM formato_producto_empresa WHERE idtrim LIKE '%$txt_idtrim%' AND pais = 'Francia'", $dspp) or die(mysql_error());
+						$formatos = mysql_fetch_assoc($row_producto);
+						//$num_formatos = mysql_num_rows($row_plataformas);
+						//$query = "SELECT * FROM formatos_empresa WHERE idtrim LIKE '%$txt_idtrim%' AND pais = 'Francia'";
+
+						if($formatos['total'] > 0){
+							$clave_distribucion = round(($formatos['total'] * 100) / $formato_producto['total_ventas'], 2);
+							$valor_clave_distribucion = round(($cuota_uso * $clave_distribucion) / 100,2);
+						}else{
+							$clave_distribucion = 0;
+							$valor_clave_distribucion = 0;
+						}
+					?>
+					<tr>
+						<td style="background-color:#27ae60;color:#ecf0f1"><?php echo 'Francia'; ?></td>
+						<td>
+							<?php 
+							if(isset($formatos['total'])){
+								echo round($formatos['total'],2).' USD';
+							}else{
+								echo "0 USD";
+							}
+							?>
+						</td>
+						<td><?php echo $clave_distribucion.' %'; ?></td>
+						<td><?php echo $valor_clave_distribucion.' USD'; ?></td>
+						
+					</tr>
+
+				</tbody>
+			</table>
+		<?php
+		}else{
+		?>
+			<table class="table">
+				<thead>
+					<tr>
+						<th class="warning"><b>No se encontraron registros sobre el Trimestre <?php echo $i; ?></b></th>
+					</tr>
+				</thead>
+			</table>
+		<?php
 		}
-		 ?>
-	</select>
-</h4>
+	}
+	 ?>
 
 <?php
-for ($i=1; $i <= 4; $i++) {
-	$txt_id = 'idtrim'.$i;
-	$txt_trim = 'trim'.$i;
-	$txt_idtrim = 'T'.$i.'-'.$anio_actual;
-	$txt_estado = 'estado_trim'.$i;
-
-	$clave_distribucion = 0;
-	///calculamos las claves de distribucion, esto sumando el valor del contrato de cada formato del primer trimestre
-	$row_formato_compras = mysql_query("SELECT SUM(valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%'", $dspp) or die(mysql_error());
-	$formato_compras = mysql_fetch_assoc($row_formato_compras);
-	$porcentaje_anual = $configuracion['distribucion_plataforma_origen'];
-	$cuota_uso = round(($formato_compras['total_contrato'] * $porcentaje_anual) / 100, 2);
-
-
-	$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%'", $dspp) or die(mysql_error());
-	$num_trim = mysql_num_rows($row_trim);
-	//echo '<br>TOTAL TRIMS: '.$num_trim;
-	$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%' AND $txt_estado = 'ACTIVO'", $dspp) or die(mysql_error());
-	$num_activo = mysql_num_rows($row_trim);
-	//echo '<br>TOTAL TRIMS activos: '.$num_activo;
-	$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%' AND $txt_estado = 'FINALIZADO'", $dspp) or die(mysql_error());
-	$num_finalizado = mysql_num_rows($row_trim);
-	//echo '<br>TOTAL TRIMS finalizados: '.$num_finalizado;
-
-	if($num_trim != 0){
-	?>
-		<table class="table table-bordered" style="font-size:12px;">
-			<thead>
-				<tr>
-					<th class="success"><b>Trimestre <?php echo $i; ?></b></th>
-					<th class="info">Numero de informes: <span style="color:#e74c3c"><?php echo $num_trim; ?></span></th>
-					<th class="info"><?php echo 'Activos: <span style="color:#e74c3c">'.$num_activo.'</span> Finalizados: <span style="color:#e74c3c">'.$num_finalizado.'</span>'; ?></th>
-					<th class="info">Valor total contratos: <span style="color:red"><?php echo round($formato_compras['total_contrato'],2).' (<span style="color:#2c3e50">'.$configuracion['distribucion_plataforma_origen'].'%</span> = '.$cuota_uso.')'; ?></span></th>
-				</tr>
-				<tr>
-					<th>Plataforma</th>
-					<th>Valor total contratos</th>
-					<th>Porcentaje Clave distribución</th>
-					<th>Valor clave distribución</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php 
-				$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_error());
-				while($plataformas = mysql_fetch_assoc($row_plataformas)){
-					$row_formatos = mysql_query("SELECT COUNT(idformato_compras) AS 'total_formatos', SUM(formato_compras.valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'", $dspp) or die(mysql_error());
-					$formatos = mysql_fetch_assoc($row_formatos);
-					$num_formatos = mysql_num_rows($row_plataformas);
-					$query = "SELECT * FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'";
-
-					if($formatos['total_contrato'] > 0){
-						$clave_distribucion = round(($formatos['total_contrato'] * 100) / $formato_compras['total_contrato'], 2);
-						$valor_clave_distribucion = round(($cuota_uso * $clave_distribucion) / 100,2);
-					}else{
-						$clave_distribucion = 0;
-						$valor_clave_distribucion = 0;
-					}
-				?>
-				<tr>
-					<td style="background-color:#27ae60;color:#ecf0f1"><?php echo $plataformas['pais']; ?></td>
-					<td>
-						<?php 
-						if(isset($formatos['total_contrato'])){
-							echo round($formatos['total_contrato'],2).' USD';
-						}else{
-							echo "0 USD";
-						}
-						?>
-					</td>
-					<td><?php echo $clave_distribucion.' %'; ?></td>
-					<td><?php echo $valor_clave_distribucion.' USD'; ?></td>
-					
-					<!--<td>
-						<?php echo "Num formatos: ".$formatos['total_formatos']." - Total contrato: ".$formatos['total_contrato']; ?>
-						<?php
-
-					
-						echo "Clave: <span style='color:red'>".$clave_distribucion." %</span>";
-						 ?>
-					</td>
-					<td>
-						<?php 
-
-						echo $cuota_uso.' ('.$clave_distribucion.' %) = '.$valor_clave_distribucion; 
-						?>
-					</td>
-					<td></td>-->
-				</tr>
-				<?php
-				}
-				 ?>
-			</tbody>
-		</table>
-	<?php
-	}else{
-	?>
-		<table class="table">
-			<thead>
-				<tr>
-					<th class="warning"><b>No se encontraron registros sobre el Trimestre <?php echo $i; ?></b></th>
-				</tr>
-			</thead>
-		</table>
-	<?php
+}else{ //// SECCIÓN INFORMES COMPRAS
+	$row_informes = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, empresa.abreviacion FROM informe_general INNER JOIN empresa ON informe_general.idempresa = empresa.idempresa LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
+	$plataformas_spp = array();
+	$total_informes = mysql_num_rows($row_informes);
+	$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_error());
+	while($array_plataformas = mysql_fetch_assoc($row_plataformas)){
+		$plataformas_spp[] = $array_plataformas['pais'];
 	}
+
+?>
+	<h4>
+		Distribución plataformas de origen SPP | Año
+		<select name="anio">
+			<?php 
+			while($anio = mysql_fetch_assoc($row_anio)){
+				$fecha = $anio['anio'];
+				echo "<option value='$fecha'>$fecha</option>";
+			}
+			 ?>
+		</select>
+	</h4>
+
+	<?php
+	for ($i=1; $i <= 4; $i++) {
+		$txt_id = 'idtrim'.$i;
+		$txt_trim = 'trim'.$i;
+		$txt_idtrim = 'T'.$i.'-'.$anio_actual;
+		$txt_estado = 'estado_trim'.$i;
+
+		$clave_distribucion = 0;
+		///calculamos las claves de distribucion, esto sumando el valor del contrato de cada formato del primer trimestre
+		$row_formato_compras = mysql_query("SELECT SUM(valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%'", $dspp) or die(mysql_error());
+		$formato_compras = mysql_fetch_assoc($row_formato_compras);
+		$porcentaje_anual = $configuracion['distribucion_plataforma_origen'];
+		$cuota_uso = round(($formato_compras['total_contrato'] * $porcentaje_anual) / 100, 2);
+
+
+		$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%'", $dspp) or die(mysql_error());
+		$num_trim = mysql_num_rows($row_trim);
+		//echo '<br>TOTAL TRIMS: '.$num_trim;
+		$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%' AND $txt_estado = 'ACTIVO'", $dspp) or die(mysql_error());
+		$num_activo = mysql_num_rows($row_trim);
+		//echo '<br>TOTAL TRIMS activos: '.$num_activo;
+		$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%' AND $txt_estado = 'FINALIZADO'", $dspp) or die(mysql_error());
+		$num_finalizado = mysql_num_rows($row_trim);
+		//echo '<br>TOTAL TRIMS finalizados: '.$num_finalizado;
+
+		if($num_trim != 0){
+		?>
+			<table class="table table-bordered" style="font-size:12px;">
+				<thead>
+					<tr>
+						<th class="success"><b>Trimestre <?php echo $i; ?></b></th>
+						<th class="info">Numero de informes: <span style="color:#e74c3c"><?php echo $num_trim; ?></span></th>
+						<th class="info"><?php echo 'Activos: <span style="color:#e74c3c">'.$num_activo.'</span> Finalizados: <span style="color:#e74c3c">'.$num_finalizado.'</span>'; ?></th>
+						<th class="info">Valor total contratos: <span style="color:red"><?php echo round($formato_compras['total_contrato'],2).' (<span style="color:#2c3e50">'.$configuracion['distribucion_plataforma_origen'].'%</span> = '.$cuota_uso.')'; ?></span></th>
+					</tr>
+					<tr>
+						<th>Plataforma</th>
+						<th>Valor total contratos</th>
+						<th>Porcentaje Clave distribución</th>
+						<th>Valor clave distribución</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php 
+					$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_error());
+					while($plataformas = mysql_fetch_assoc($row_plataformas)){
+						$row_formatos = mysql_query("SELECT COUNT(idformato_compras) AS 'total_formatos', SUM(formato_compras.valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'", $dspp) or die(mysql_error());
+						$formatos = mysql_fetch_assoc($row_formatos);
+						$num_formatos = mysql_num_rows($row_plataformas);
+						$query = "SELECT * FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'";
+
+						if($formatos['total_contrato'] > 0){
+							$clave_distribucion = round(($formatos['total_contrato'] * 100) / $formato_compras['total_contrato'], 2);
+							$valor_clave_distribucion = round(($cuota_uso * $clave_distribucion) / 100,2);
+						}else{
+							$clave_distribucion = 0;
+							$valor_clave_distribucion = 0;
+						}
+					?>
+					<tr>
+						<td style="background-color:#27ae60;color:#ecf0f1"><?php echo $plataformas['pais']; ?></td>
+						<td>
+							<?php 
+							if(isset($formatos['total_contrato'])){
+								echo round($formatos['total_contrato'],2).' USD';
+							}else{
+								echo "0 USD";
+							}
+							?>
+						</td>
+						<td><?php echo $clave_distribucion.' %'; ?></td>
+						<td><?php echo $valor_clave_distribucion.' USD'; ?></td>
+						
+						<!--<td>
+							<?php echo "Num formatos: ".$formatos['total_formatos']." - Total contrato: ".$formatos['total_contrato']; ?>
+							<?php
+
+						
+							echo "Clave: <span style='color:red'>".$clave_distribucion." %</span>";
+							 ?>
+						</td>
+						<td>
+							<?php 
+
+							echo $cuota_uso.' ('.$clave_distribucion.' %) = '.$valor_clave_distribucion; 
+							?>
+						</td>
+						<td></td>-->
+					</tr>
+					<?php
+					}
+					 ?>
+				</tbody>
+			</table>
+		<?php
+		}else{
+		?>
+			<table class="table">
+				<thead>
+					<tr>
+						<th class="warning"><b>No se encontraron registros sobre el Trimestre <?php echo $i; ?></b></th>
+					</tr>
+				</thead>
+			</table>
+		<?php
+		}
+	}
+	 ?>
+<?php
 }
  ?>
-
-
-
 
 <!--<table class="table table-bordered table-condensed" style="font-size:12px;">
 	<tr class="info">
