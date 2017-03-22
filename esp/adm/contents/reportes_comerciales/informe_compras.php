@@ -57,16 +57,16 @@ function redondear_dos_decimal($valor) {
 		<table class="table table-bordered table-hover table-condensed" style="font-size:12px;">
 			<thead>
 				<tr>
-					<td>
-						<span class="glyphicon glyphicon-time" aria-hidden="true"></span> Aun no se ha cargado comprobante de pago
+					<td style="border-style:hidden;">
+						<span class="btn btn-xs btn-info glyphicon glyphicon-time" aria-hidden="true"></span> = Aun no se ha cargado comprobante de pago
 					</td>
-					<td><img src="../../img/circulo_verde.jpg" alt=""> Activo</td>
+					<td style="border-style:hidden;"><img src="../../img/circulo_verde.jpg" alt=""> Activo</td>
 				</tr>
 				<tr>
-					<td>
-						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Pagado
+					<td style="border-style:hidden;">
+						<span class="btn btn-xs btn-info glyphicon glyphicon-ok" aria-hidden="true"></span> Pagado
 					</td>
-					<td><img src="../../img/circulo_rojo.jpg" alt=""> Finalizado</span></td>
+					<td style="border-style:hidden;"><img src="../../img/circulo_rojo.jpg" alt=""> Finalizado</span></td>
 				</tr>
 
 				<tr class="warning">
@@ -120,10 +120,84 @@ function redondear_dos_decimal($valor) {
 							//echo '<td><a href="?REPORTES&informe_compras='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-list-alt"></span> '.$informes['idinforme_general'].'</a></td>';
 							//echo '<td>'.$informes['estado_informe'].'</td>';
 							echo '<td><a href="?EMPRESAS&detail&idempresa='.$informes['idempresa'].'">'.$informes['abreviacion'].'</a></td>';
-							echo '<td>'.$informes['cuota_uso_trim1'].'</td>';
-							echo '<td>'.$informes['cuota_uso_trim2'].'</td>';
-							echo '<td>'.$informes['cuota_uso_trim3'].'</td>';
-							echo '<td>'.$informes['cuota_uso_trim4'].'</td>';
+							echo '<td>'; //// TRIMESTRE 1
+							?>
+								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim1".$informes['trim1']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+
+								<div id="<?php echo "trim1".$informes['trim1']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+									<div class="modal-dialog modal-lg" role="document">
+									  <div class="modal-content">
+									    <div class="modal-header">
+									      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									      <h4 class="modal-title" id="myModalLabel">Administración Trimestre 1</h4>
+									    </div>
+									    <div class="modal-body">
+											<div class="row">
+												<div class="col-md-6">
+													<p>Factura</p>
+													<?php 
+													if($informes['estado_trim1'] == 'APROBADO'){
+													?>
+														<div class="form-group">
+														    <label for="exampleInputEmail1">Cargar Factura</label>
+															<input type="file" class="form-control" id="factura" name="factura">
+														</div>
+														<button type="submit" name="enviar_factura" value="1" class="btn btn-primary">Enviar Factura</button>
+													<?php
+													}else{
+													?>
+														Aun no se ha aprobado
+													<?php
+													}
+													 ?>
+
+												</div>
+												<div class="col-md-6">
+													<p>Acreditar pago</p>
+												</div>
+											</div>
+									    </div>
+									    <div class="modal-footer">
+									      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+									      <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
+									    </div>
+									  </div>
+									</div>
+								</div>
+
+							<?php
+								
+								if($informes['estado_trim1'] == 'ACTIVO' || $informes['estado_trim1'] == 'EN ESPERA'){
+									echo '<img src="../../img/circulo_verde.jpg"> $'.$informes['cuota_uso_trim1'].' USD';
+								}else if($informes['estado_trim1'] == 'FINALIZADO'){
+									echo '<img src="../../img/circulo_rojo.jpg"> $'.$informes['cuota_uso_trim1'].' USD';
+								}
+							echo '</td>';
+
+							echo '<td>'; //// TRIMESTRE 2
+								if($informes['estado_trim2'] == 'ACTIVO' || $informes['estado_trim2'] == 'EN ESPERA'){
+									echo '<img src="../../img/circulo_verde.jpg"> $'.$informes['cuota_uso_trim2'].' USD';
+								}else if($informes['estado_trim2'] == 'FINALIZADO'){
+									echo '<img src="../../img/circulo_rojo.jpg"> $'.$informes['cuota_uso_trim2'].' USD';
+								}
+							echo '</td>';
+
+							echo '<td>'; /// TRIMESTRE 3
+								if($informes['estado_trim3'] == 'ACTIVO' || $informes['estado_trim3'] == 'EN ESPERA'){
+									echo '<img src="../../img/circulo_verde.jpg"> $'.$informes['cuota_uso_trim3'].' USD';
+								}else if($informes['estado_trim3'] == 'FINALIZADO'){
+									echo '<img src="../../img/circulo_rojo.jpg"> $'.$informes['cuota_uso_trim3'].' USD';
+								}
+							echo '</td>';
+
+							echo '<td>';  /// TRIMESTRE 4
+								if($informes['estado_trim4'] == 'ACTIVO' || $informes['estado_trim4'] == 'EN ESPERA'){
+									echo '<img src="../../img/circulo_verde.jpg"> $'.$informes['cuota_uso_trim4'].' USD';
+								}else if($informes['estado_trim4'] == 'FINALIZADO'){
+									echo '<img src="../../img/circulo_rojo.jpg"> $'.$informes['cuota_uso_trim4'].' USD';
+								}
+							echo '</td>';
+
 							echo '<td><a href="?REPORTES&informe_compras&detalle_total='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-search"></span> '.$informes['total_cuota_uso'].' USD</a></td>';
 						echo '</tr>';
 					}

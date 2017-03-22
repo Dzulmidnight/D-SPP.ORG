@@ -53,9 +53,9 @@ $idempresa = $_SESSION['idempresa'];
 $ano_actual = date('Y', time());
 
 //24_02_2017$row_informes = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, ROUND(SUM(trim1.total_trim1 + trim2.total_trim2 + trim3.total_trim3 + trim4.total_trim4), 2) AS 'balance_final' FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa", $dspp) or die(mysql_error());
-$row_informes = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4 FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa", $dspp) or die(mysql_error());
+$row_informes = mysql_query("SELECT informe_general.*, trim1.cuota_uso_trim1, trim2.cuota_uso_trim2, trim3.cuota_uso_trim3, trim4.cuota_uso_trim4 FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa", $dspp) or die(mysql_error());
 
-//$row_informes = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4 FROM informe_general INNER JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 INNER JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 INNER JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 INNER JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa", $dspp) or die(mysql_error());
+//$row_informes = mysql_query("SELECT informe_general.*, trim1.cuota_uso_trim1, trim2.cuota_uso_trim2, trim3.cuota_uso_trim3, trim4.cuota_uso_trim4 FROM informe_general INNER JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 INNER JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 INNER JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 INNER JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa", $dspp) or die(mysql_error());
 $numero_informes = mysql_num_rows($row_informes);
 
 echo "<h4>Numero de informes actuales: $numero_informes</h4>";
@@ -77,15 +77,15 @@ echo "<h4>Numero de informes actuales: $numero_informes</h4>";
 		<?php
 		if($numero_informes >= 1){
 			while($listado = mysql_fetch_assoc($row_informes)){
-				$balance_final = $listado['total_trim1'] + $listado['total_trim2'] + $listado['total_trim3'] + $listado['total_trim4'];
+				$balance_final = $listado['cuota_uso_trim1'] + $listado['cuota_uso_trim2'] + $listado['cuota_uso_trim3'] + $listado['cuota_uso_trim4'];
 			?>
 			<tr>
 				<td><?php echo $listado['idinforme_general']; ?></td>
 				<td><?php echo date('Y',$listado['ano']); ?></td>
-				<td><?php echo $listado['total_trim1']; ?></td>
-				<td><?php echo $listado['total_trim2']; ?></td>
-				<td><?php echo $listado['total_trim3']; ?></td>
-				<td><?php echo $listado['total_trim4']; ?></td>
+				<td><?php echo $listado['cuota_uso_trim1']; ?></td>
+				<td><?php echo $listado['cuota_uso_trim2']; ?></td>
+				<td><?php echo $listado['cuota_uso_trim3']; ?></td>
+				<td><?php echo $listado['cuota_uso_trim4']; ?></td>
 				<td><?php echo round($balance_final,2); ?></td>
 				<td><?php echo $listado['estado_informe']; ?></td>
 			</tr>

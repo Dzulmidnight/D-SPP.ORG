@@ -74,7 +74,7 @@ mysql_select_db($database_dspp, $dspp);
 	$txt_cuota_uso = 'cuota_uso_'.$txt_numero_trim;
 	$estatus_trim = 'FINALIZADO';
 	*/
-	$estatus_trim = 'FINALIZADO';
+	$estatus_trim = 'APROBADO';
 	if(isset($_POST['finalizar']) && $_POST['finalizar'] == 'SI'){
 		$updateSQL = sprintf("UPDATE $txt_trim SET $txt_estado_trim = %s, fecha_fin = %s, $txt_valor_contrato = %s, $txt_cuota_uso = %s WHERE $txt_idtrim = %s",
 			GetSQLValueString($estatus_trim, "text"),
@@ -373,7 +373,7 @@ mysql_select_db($database_dspp, $dspp);
 			///se envia correo al area de certificacion para corroborar la informacion
 
 
-		echo "<script>alert('Se ha enviado la información al area de ADMINSITRACIÓN para poder generar la factura');</script>";
+		echo "<script>alert('Se ha enviado la información al area de ADMINISTRACIÓN para poder generar la factura');</script>";
 		$aprobado = 1;
 		if($txt_trim == 'trim4'){
 			//revisamos si el trim4 ha finalizado, entonces cambiamos el estatus del INFORME GENERAL a FINALIZADO ya que se han concluido los 4 trimestres

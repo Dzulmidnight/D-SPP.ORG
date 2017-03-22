@@ -69,8 +69,16 @@ if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'SI'){
 	echo "<script>alert('Se ha creado un nuevo formato trimestral $idtrim');</script>";
 }
 if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
+	$idtrimestre = $_POST['idtrim'];
 
-	if(isset($_POST['suma_cuota_uso']) || $_POST['suma_cuota_uso'] != 0 || $_POST['suma_cuota_uso'] != NULL){
+	$row_valor_total_contrato = mysql_query("SELECT ROUND(SUM(valor_total_contrato), 2) AS 'total_contrato' FROM formato_compras WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+	$valor_total_contrato = mysql_fetch_assoc($row_valor_total_contrato);
+
+	$row_total_a_pagar = mysql_query("SELECT ROUND(SUM(total_a_pagar), 2) AS 'total_a_pagar' FROM formato_compras WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+	$total_a_pagar = mysql_fetch_assoc($row_total_a_pagar);
+
+
+	/*if(isset($_POST['suma_cuota_uso']) || $_POST['suma_cuota_uso'] != 0 || $_POST['suma_cuota_uso'] != NULL){
 		$suma_cuota_uso = $_POST['suma_cuota_uso'];
 	}else{
 		$suma_cuota_uso = 0;
@@ -79,7 +87,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 		$suma_valor_contrato = $_POST['suma_valor_contrato'];
 	}else{
 		$suma_valor_contrato = 0;
-	}
+	}*/
 
 	$row_informe = mysql_query("SELECT total_informe, total_cuota_uso, total_valor_contrato FROM informe_general WHERE idinforme_general = '$informe_general[idinforme_general]'", $dspp) or die(mysql_error());
 	$informe = mysql_fetch_assoc($row_informe);
@@ -95,7 +103,9 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	$estatus_trim = 'EN ESPERA';
 	
 
-	$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_estado_trim = %s WHERE $txt_idtrim = %s",
+	$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_valor_contrato = %s, $txt_cuota_uso = %s, $txt_estado_trim = %s WHERE $txt_idtrim = %s",
+		GetSQLValueString($valor_total_contrato['total_contrato'], "text"),
+		GetSQLValueString($total_a_pagar['total_a_pagar'], "text"),
 		GetSQLValueString($estatus_trim, "text"),
 		GetSQLValueString($_POST['idtrim'], "text"));
 	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
@@ -118,16 +128,23 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 
 
 /********  SE ENVIA CORREO SOBRE REPORTE TRIMESTRAL  ************/
-	$idtrimestre = $_POST['idtrim'];
+
 	$porcetaje_cuota = $configuracion['cuota_compradores'];
 	$tipo_empresa = $tipo_empresa;
+
+	$txt_cuota = 'cuota_uso_trim'.$_GET['trim'];
+	$txt_trim = 'trim'.$_GET['trim'];
+	$txt_id = 'idtrim'.$_GET['trim'];
+	$row_total = mysql_query("SELECT $txt_cuota AS 'total_cuota_uso' FROM $txt_trim WHERE $txt_id = '$idtrimestre'", $dspp) or die(mysql_error());
+	$total = mysql_fetch_assoc($row_total);
+
 
     $html = '
       <div>
         <table style="border: 1px solid #ddd;border-collapse: collapse;font-family: Tahoma, Geneva, sans-serif;font-size:12px;">
           <tr style="background-color:#B8D186">
             <td style="">
-              Fecha de Elaboracion
+              Fecha de Elaboración
             </td>
             <td style="">
               #SPP
@@ -143,6 +160,9 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
             </td>
             <td style="">
               Trimestre
+            </td>
+            <td>
+				Total a pagar
             </td>
           </tr>
 
@@ -164,6 +184,9 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
             </td>
             <td style="">
               '.$idtrimestre.'
+            </td>
+            <td style="background-color:#e74c3c;color:#ecf0f1">
+              '.$total['total_cuota_uso'].'
             </td>
           </tr>
 
@@ -365,9 +388,9 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">COMPRADOR FINAL</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$num_contratos.'</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$total_valor_contrato.'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$valor_total_contrato['total_contrato'].'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$porcetaje_cuota.'%</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$total_cuota_uso.'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$total_a_pagar['total_a_pagar'].'</td>
 				          </tr>
 				        </table>
 				      </td>

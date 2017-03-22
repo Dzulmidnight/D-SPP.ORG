@@ -1,5 +1,6 @@
 <?php
-
+require_once('../Connections/dspp.php');
+mysql_select_db($database_dspp, $dspp);
 if (!isset($_SESSION)) {
   session_start();
 	
@@ -34,6 +35,20 @@ if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
     header("Location: $logoutGoTo");
     exit;
   }
+}
+
+
+$idempresa = $_SESSION['idempresa'];
+
+$row_empresa = mysql_query("SELECT spp, abreviacion, pais, maquilador, comprador, intermediario FROM empresa WHERE idempresa = $idempresa", $dspp) or die(mysql_error());
+$empresa = mysql_fetch_assoc($row_empresa);
+$tipo_empresa = '';
+if($empresa['maquilador']){
+  $tipo_empresa = 'MAQUILADOR';
+}else if($empresa['comprador']){
+  $tipo_empresa = 'COMPRADOR FINAL';
+}else if($empresa['intermediario']){
+  $tipo_empresa = 'INTERMEDIARIO';
 }
 
 ?>

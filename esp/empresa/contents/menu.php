@@ -1,5 +1,4 @@
 <?php
-require_once('../../Connections/dspp.php');
 
 if (!function_exists("GetSQLValueString")) {
   function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
@@ -38,9 +37,15 @@ if (!function_exists("GetSQLValueString")) {
   <li <? if(isset($_GET['SOLICITUD'])){?> class="active" <? }?>>
     <a href="?SOLICITUD&select">Solicitudes</a>
   </li>
-  <li <? if(isset($_GET['INFORME'])){?> class="active" <? }?>>
-    <a href="?INFORME&select">Informe Trimestral</a>
-  </li>
+  <?php 
+  if($tipo_empresa == 'COMPRADOR FINAL'){
+  ?>
+    <li <? if(isset($_GET['INFORME'])){?> class="active" <? }?>>
+      <a href="?INFORME&select">Informe Trimestral</a>
+    </li>
+  <?php
+  }
+   ?>
   <li <? if(isset($_GET['EMPRESA'])){?> class="active" <?}?>>
     <a href="?EMPRESA&detail">Información Empresa</a>
   </li>
