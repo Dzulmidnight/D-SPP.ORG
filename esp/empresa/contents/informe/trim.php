@@ -425,6 +425,83 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	///se envia correo al area de certificacion para corroborar la informacion
 
 }
+//// INICIA ENVIO COMPROBANTE DE PAGO
+if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
+	$fecha = time();
+	$trim = 'trim'.$_POST['num_trimestre'];
+	$txt_idtrim = 'idtrim'.$_POST['num_trimestre'];
+	$idtrimestre = $_POST['idtrimestre'];
+	$comprobante_pago = $_POST['comprobante_pago'];
+	$estatus_comprobante = 'ENVIADO';
+	$num_trimestre = $_POST['num_trimestre'];
+
+	///cargamos y guardamos el comprobante de pago
+	$rutaArchivo = "../../archivos/admArchivos/facturas/comprobante/";
+	if(!empty($_FILES['comprobante_pago']['name'])){
+	  $_FILES["comprobante_pago"]["name"];
+	    move_uploaded_file($_FILES["comprobante_pago"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["comprobante_pago"]["name"]);
+	    $archivo_comprobante = $rutaArchivo.basename($fecha."_".$_FILES["comprobante_pago"]["name"]);
+	}else{
+		$archivo_comprobante = NULL;
+	}
+
+	$txt_comprobante = 'comprobante_pago_trim'.$num_trimestre;
+	$txt_estatus_comprobante = 'estatus_comprobante_trim'.$num_trimestre;
+
+	$updateSQL = sprintf("UPDATE $trim SET $txt_comprobante = %s, $txt_estatus_comprobante = %s WHERE $txt_idtrim = %s",
+		GetSQLValueString($archivo_comprobante, "text"),
+		GetSQLValueString($estatus_comprobante, "text"),
+		GetSQLValueString($idtrimestre, "text"));
+	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+	$asunto = 'D-SPP - Pago Informe Trimestral Compras';
+	$mensaje_correo = '
+		<html>
+		<head>
+			<meta charset="utf-8">
+		</head>
+		<body>
+		
+			<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+				<tbody>
+				    <tr>
+				      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+				      <th scope="col" align="left" width="280">Detalle Reporte Trimestral de Compras SPP</th>
+				    </tr>
+				    <tr>
+				      <td style="padding-top:10px;">           
+				        Se ha cargado el comprobante de pago del trimestre
+				      </td>
+				    </tr>
+
+
+				</tbody>
+			</table>
+
+		</body>
+		</html>
+	';
+	///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
+
+	$mail->AddAddress('soporteinforganic@gmail.com');
+
+	$mail->AddAttachment($archivo_comprobante);
+    //$mail->Username = "soporte@d-spp.org";
+    //$mail->Password = "/aung5l6tZ";
+    $mail->Subject = utf8_decode($asunto);
+    $mail->Body = utf8_decode($mensaje_correo);
+    $mail->MsgHTML(utf8_decode($mensaje_correo));
+
+    if($mail->Send()){
+    	$mail->ClearAddresses();
+		echo "<script>alert('Se ha enviado y notificado el pago a SPP Global');</script>";
+    }else{
+		echo "<script>alert('No se pudo enviar el correo, por favor ponerse en contacto con el area de soporte);</script>";
+    }
+
+
+}
+//// TERMINA ENVIO COMPROBANTE DE PAGO
 
 if(isset($_GET['trim'])){
 
@@ -512,19 +589,46 @@ if(isset($_GET['trim'])){
 						<th colspan="4">
 							<?php echo $empresa['abreviacion'].' - '.$tipo_empresa; ?>
 						</th>
-						<th colspan="13" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
+						<th colspan="4" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
 							<?php 
 							if(isset($pregunta)){
 								echo $pregunta;
 							}
-							?>
-							<!--
-							<form action="" method="POST" enctype="multipart/form-data">
-								Dar clic en el siguiente boton para poder cargar el comprobante de pago correspondiente al Informe Trimestral.
-								<input type="file" name="comprabante_pago">
-								<button class="btn btn-sm btn-warning" type="submit" name="enviar_comprobante" value="1">Enviar Comprobante</button>								
-							</form>-->
 
+							$txt_trim = 'trim'.$_GET['trim'];
+							$txt_id = 'idtrim'.$_GET['trim'];
+							$txt_estatus_factura = 'estatus_factura_trim'.$_GET['trim'];
+							$txt_factura = 'factura_trim'.$_GET['trim'];
+							$txt_estatus_comprobante = 'estatus_comprobante_trim'.$_GET['trim'];
+							$row_trim = mysql_query("SELECT * FROM $txt_trim WHERE $txt_id = '$trim[$idtrim]'", $dspp) or die(mysql_error());
+							$trim = mysql_fetch_assoc($row_trim); 
+							if($trim[$txt_estatus_factura] == 'ENVIADA'){
+								echo "<div>";
+									echo "<span style='color:red'>SE HA ENVIADO LA FACTURA</span><br>";
+									echo "<a class='btn btn-success' href='".$trim[$txt_factura]."' target='_new'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descargar Factura</a>";
+								echo "</div>";
+							}
+							//echo 'asfasfds'.$trim[$txt_estatus_factura];
+							 ?>
+						</th>
+						<th colspan="9">
+							<?php
+							if($trim[$txt_estatus_factura] == 'ENVIADA'){
+								if(isset($trim[$txt_estatus_comprobante]) && $trim[$txt_estatus_comprobante] == 'ENVIADO'){
+									echo "<span style='color:red'>SE HA ENVIADO EL COMPROBANTE DE PAGO</span>";
+								}else{
+								?>
+									<form action="" method="POST" enctype="multipart/form-data">
+										<p style="font-size:12px;">Dar clic en el siguiente botón para poder cargar el comprobante de pago correspondiente al Informe Trimestral.</p>
+										<input type="file" class="form-control" name="comprobante_pago">
+										<input type="text" name="num_trimestre" value="<?php echo $_GET['trim']; ?>">
+										<input type="text" name="idtrimestre" value="<?php echo $trim[$txt_id]; ?>">
+										<button class="btn btn-warning" type="submit" name="enviar_comprobante" value="1">Enviar Comprobante</button>								
+									</form>
+								<?php
+								}
+							}
+							 ?>
 						</th>
 					</tr>
 		<form action="" method="POST">	

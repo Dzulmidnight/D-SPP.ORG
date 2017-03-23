@@ -431,6 +431,7 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 	$num_trim = 'trim'.$_POST['num_trim'];
 	$txt_factura = 'factura_trim'.$_POST['num_trim'];
 	$txt_estatus = 'estatus_factura_trim'.$_POST['num_trim'];
+	$idtrimestre = $_POST['idtrimestre'];
 
 	///cargamos y guardamos la factura
 	$rutaArchivo = "../../archivos/admArchivos/facturas/";
@@ -446,7 +447,7 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 	$updateSQL = sprintf("UPDATE $num_trim SET $txt_factura = %s, $txt_estatus = %s WHERE $txt_idtrim = %s",
 		GetSQLValueString($archivo_factura, "text"),
 		GetSQLValueString($estatus_factura, "text"), 
-		GetSQLValueString($_GET['trim'], "text"));
+		GetSQLValueString($idtrimestre, "text"));
 	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
 
@@ -546,7 +547,7 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 
 //// TERMINA ENVIAR FACTURA ////
 
-$row_informes = mysql_query("SELECT informe_general.*, trim1.estado_trim1, trim1.valor_contrato_trim1, trim1.cuota_uso_trim1, trim1.estatus_factura_trim1, trim2.estado_trim2, trim2.valor_contrato_trim2, trim2.cuota_uso_trim2, trim2.estatus_factura_trim2, trim3.estado_trim3, trim3.valor_contrato_trim3, trim3.cuota_uso_trim3, trim3.estatus_factura_trim3, trim4.estado_trim4, trim4.valor_contrato_trim4, trim4.cuota_uso_trim4, trim4.estatus_factura_trim4, empresa.abreviacion FROM informe_general INNER JOIN empresa ON informe_general.idempresa = empresa.idempresa LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
+$row_informes = mysql_query("SELECT informe_general.*, trim1.estado_trim1, trim1.valor_contrato_trim1, trim1.cuota_uso_trim1, trim1.factura_trim1, trim1.estatus_factura_trim1, trim2.estado_trim2, trim2.valor_contrato_trim2, trim2.cuota_uso_trim2, trim2.factura_trim2, trim2.estatus_factura_trim2, trim3.estado_trim3, trim3.valor_contrato_trim3, trim3.cuota_uso_trim3, trim3.factura_trim3, trim3.estatus_factura_trim3, trim4.estado_trim4, trim4.valor_contrato_trim4, trim4.cuota_uso_trim4, trim4.factura_trim4, trim4.estatus_factura_trim4, empresa.abreviacion FROM informe_general INNER JOIN empresa ON informe_general.idempresa = empresa.idempresa LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
 $total_informes = mysql_num_rows($row_informes);
 //$plataformas_spp = array('Ecuador', 'Perú', 'Colombia', 'Guatemala');
 
@@ -563,9 +564,6 @@ function redondear_dos_decimal($valor) {
 		<table class="table table-bordered table-hover table-condensed" style="font-size:12px;">
 			<thead>
 				<tr>
-					<td style="border-style:hidden;">
-						<span class="btn btn-xs btn-info glyphicon glyphicon-time" aria-hidden="true"></span> = Aun no se ha cargado comprobante de pago
-					</td>
 					<td style="border-style:hidden;"><span class="btn btn-xs btn-info glyphicon glyphicon-open-file"></span> = Factura enviada</td>
 					<td style="border-style:hidden;"><img src="../../img/circulo_verde.jpg" alt=""> Activo</td>
 				</tr>
@@ -666,21 +664,27 @@ function redondear_dos_decimal($valor) {
 													<h4 class="alert alert-warning" style="padding:5px;">Factura</h4>
 													<?php
 													if($informes['estado_trim1'] == 'APROBADO'){
-													?>
-														<form action="" method="POST">
-															<div class="form-group">
-															    <label for="exampleInputEmail1">Cargar Factura</label>
-																<input type="file" class="form-control" id="factura" name="factura">
-															</div>
-															<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="enviar_factura" value="1">Enviar Factura</button>
-															<input type="text" name="num_trim" value="1">
-															<input type="text" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
-															<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
-														</form>
-													<?php
+														if(isset($informes['estatus_factura_trim1'])){
+														?>
+															<a class="btn btn-sm btn-success" style="width:100%" href="<?php echo $informes['factura_trim1']; ?>" target="_new">Descargar Factura</a>
+														<?php
+														}else{
+														?>
+															<form action="" method="POST" enctype="multipart/form-data">
+																<div class="form-group">
+																    <label for="exampleInputEmail1">Cargar Factura</label>
+																	<input type="file" class="form-control" id="factura" name="factura_trimestre">
+																</div>
+																<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="enviar_factura" value="1">Enviar Factura</button>
+																<input type="text" name="num_trim" value="1">
+																<input type="text" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
+																<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+															</form>
+														<?php
+														}
 													}else{
 													?>
-														Aun no se ha aprobado
+														Se debe de aprobar primero el reporte trimestral.
 													<?php
 													}
 													 ?>
