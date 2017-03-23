@@ -476,6 +476,82 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }*/
       $mail->Send();
       $mail->ClearAddresses();
+
+
+      /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
+
+      $asunto = "D-SPP | Formatos de Evaluación";
+
+      $cuerpo_mensaje = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p>
+                  Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
+                     <ul style="color:red">
+                       <li>Formato de Evaluación</li>
+                       <li>Informe de Evaluación</li>
+                       <li>Dictamen de Evaluación</li>
+                     </ul>
+
+                 </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
+                  <ol>
+                    <li>Dar clic en la opción "SOLICITUDES"</li>
+                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
+                    <li>Se desplegara una ventan donde podra cargar la documentación</li>
+                  </ol>
+                  <p style="color:red">
+                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+        </html>
+      ';
+      if(isset($correos_oc['email1'])){
+        $mail->AddCC($correos_oc['email1']);
+      }
+      if(isset($correos_oc['email2'])){
+        $mail->AddCC($correos_oc['email2']);
+      }
+
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+
+      /// TERMINA MENSAJE "CARGAR DOCUEMENTOS DE EVALUACIÓN"
+
       ///termina envio de mensaje dictamen positivo
     ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
     }else{ 
@@ -720,7 +796,79 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->ClearAddresses();
         echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
       }*/
+      /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
 
+      $asunto = "D-SPP | Formatos de Evaluación";
+
+      $cuerpo_mensaje = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p>
+                  Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
+                     <ul style="color:red">
+                       <li>Formato de Evaluación</li>
+                       <li>Informe de Evaluación</li>
+                       <li>Dictamen de Evaluación</li>
+                     </ul>
+
+                 </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
+                  <ol>
+                    <li>Dar clic en la opción "SOLICITUDES"</li>
+                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
+                    <li>Se desplegara una ventan donde podra cargar la documentación</li>
+                  </ol>
+                  <p style="color:red">
+                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+        </html>
+      ';
+      if(isset($correos_oc['email1'])){
+        $mail->AddCC($correos_oc['email1']);
+      }
+      if(isset($correos_oc['email2'])){
+        $mail->AddCC($correos_oc['email2']);
+      }
+
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+
+      /// TERMINA MENSAJE "CARGAR DOCUEMENTOS DE EVALUACIÓN"
           
       ///termina envio de mensaje dictamen positivo
     }
@@ -1136,6 +1284,81 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->ClearAddresses();
         echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
       }*/
+
+      /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
+
+      $asunto = "D-SPP | Formatos de Evaluación";
+
+      $cuerpo_mensaje = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p>
+                  Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
+                     <ul style="color:red">
+                       <li>Formato de Evaluación</li>
+                       <li>Informe de Evaluación</li>
+                       <li>Dictamen de Evaluación</li>
+                     </ul>
+
+                 </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
+                  <ol>
+                    <li>Dar clic en la opción "SOLICITUDES"</li>
+                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
+                    <li>Se desplegara una ventan donde podra cargar la documentación</li>
+                  </ol>
+                  <p style="color:red">
+                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+        </html>
+      ';
+      if(isset($correos_oc['email1'])){
+        $mail->AddCC($correos_oc['email1']);
+      }
+      if(isset($correos_oc['email2'])){
+        $mail->AddCC($correos_oc['email2']);
+      }
+
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+
+      /// TERMINA MENSAJE "CARGAR DOCUEMENTOS DE EVALUACIÓN"
+      
           
       ///termina envio de mensaje dictamen positivo
     }
@@ -1489,7 +1712,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
   <?php
   }
   ?>
-<p>Date: <input type="text" id="datepicker"></p>
+
   <div class="col-md-12">
     <table class="table table-condensed table-bordered" style="font-size:12px;">
       <thead>
@@ -2056,7 +2279,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           <div class="col-md-6">
                             <?php 
                             if($solicitud['tipo_solicitud'] == 'RENOVACION'){
-                              if($proceso_certificacion['estatus_membresia'] == "APROBADA"){
+                              //22_03_2017if($proceso_certificacion['estatus_membresia'] == "APROBADA"){
+                              if(isset($proceso_certificacion['estatus_membresia'])){  
                                 if(isset($solicitud['idformato_evaluacion']) && isset($solicitud['idinforme_evaluacion']) && isset($solicitud['iddictamen_evaluacion'])){
 
                                   $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
@@ -2099,7 +2323,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" la membresia</p>";
                               }
                             }else{
-                              if($solicitud['estatus_contrato'] == 'ACEPTADO' && $proceso_certificacion['estatus_membresia'] == "APROBADA"){
+                              //22_03_2017if($solicitud['estatus_contrato'] == 'ACEPTADO' && $proceso_certificacion['estatus_membresia'] == "APROBADA"){
+                              if(isset($proceso_certificacion['estatus_membresia'])){
                                 if(isset($solicitud['idformato_evaluacion']) && isset($solicitud['idinforme_evaluacion']) && isset($solicitud['iddictamen_evaluacion'])){
 
                                   $row_formato = mysql_query("SELECT * FROM formato_evaluacion WHERE idformato_evaluacion = $solicitud[idformato_evaluacion]", $dspp) or die(mysql_error());
@@ -2162,46 +2387,93 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 $row_dictamen = mysql_query("SELECT * FROM dictamen_evaluacion WHERE iddictamen_evaluacion = $solicitud[iddictamen_evaluacion]", $dspp) or die(mysql_error());
                                 $dictamen = mysql_fetch_assoc($row_dictamen);
 
-                                if($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO'){
-                                  if(isset($solicitud['idcertificado'])){
-                                    $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
-                                    $certificado = mysql_fetch_assoc($row_certificado);
-                                    $inicio = strtotime($certificado['vigencia_inicio']);
-                                    $fin = strtotime($certificado['vigencia_fin']);
-                                  ?>
-                                    <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
-                                    <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
-                                  <?php
+                                if($solicitud['tipo_solicitud'] == 'RENOVACION'){ // EN CASO DE QUE SEA UNA SOLICITUD EN RENOVACIÓN
+                                  // inicia validación ///
+                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($proceso_certificacion['estatus_membresia'] == "APROBADA")){
+                                    if(isset($solicitud['idcertificado'])){
+                                      $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
+                                      $certificado = mysql_fetch_assoc($row_certificado);
+                                      $inicio = strtotime($certificado['vigencia_inicio']);
+                                      $fin = strtotime($certificado['vigencia_fin']);
+                                    ?>
+                                      <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
+                                      <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
+                                    <?php
+                                    }else{
+                                    ?>
+                                      <div class="col-md-12">
+                                        <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
+                                        <p class="alert alert-warning" style="padding:5px;">En caso de que no se despliegue el calendario, por favor definir la fecha con el siguiente formato <span style="color:red">dd-mm-aaaa</span></p>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label for="fecha_inicio">Fecha Inicio</label> 
+                                        <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd-mm-aaaa" required> 
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label for="fecha_fin">Fecha Fin</label>
+                                        <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd-mm-aaaa" required>
+                                      </div>
+                                      
+                                      <label for="certificado">Por favor seleccione el Certificado</label>
+                                      <input type="file" name="certificado" id="certificado" class="form-control" required>
+                                      <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>  
+                                    <?php
+                                    }
                                   }else{
-                                  ?>
-                                    <div class="col-md-12">
-                                      <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
-                                      <p class="alert alert-warning" style="padding:5px;">En caso de que no se despliegue el calendario, por favor definir la fecha con el siguiente formato <span style="color:red">dd-mm-aaaa</span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <label for="fecha_inicio">Fecha Inicio</label> 
-                                      <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd-mm-aaaa" required> 
-                                    </div>
-                                    <div class="col-md-6">
-                                      <label for="fecha_fin">Fecha Fin</label>
-                                      <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd-mm-aaaa" required>
-                                    </div>
-                                    
-                                    <label for="certificado">Por favor seleccione el Certificado</label>
-                                    <input type="file" name="certificado" id="certificado" class="form-control" required>
-                                    <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>  
-                                  <?php
+                                    echo '<p class="alert alert-warning">
+                                    Una vez aprobada la "Membresia SPP" podra cargar el Certificado correspondiente.
+                                    </p> ';
                                   }
-                                }else{
-                                  echo '<p class="alert alert-warning">
-                                  Una vez aprobado el "Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
-                              </p> ';
+                                  // termina validación //
+                                }else{ /// EN CASO DE QUE SEA UNA NUEVA SOLICITUD
+                                  // inicia validación ///
+                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO' && $proceso_certificacion['estatus_membresia'] == "APROBADA")){
+                                    if(isset($solicitud['idcertificado'])){
+                                      $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
+                                      $certificado = mysql_fetch_assoc($row_certificado);
+                                      $inicio = strtotime($certificado['vigencia_inicio']);
+                                      $fin = strtotime($certificado['vigencia_fin']);
+                                    ?>
+                                      <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
+                                      <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
+                                    <?php
+                                    }else{
+                                    ?>
+                                      <div class="col-md-12">
+                                        <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
+                                        <p class="alert alert-warning" style="padding:5px;">En caso de que no se despliegue el calendario, por favor definir la fecha con el siguiente formato <span style="color:red">dd-mm-aaaa</span></p>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label for="fecha_inicio">Fecha Inicio</label> 
+                                        <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd-mm-aaaa" required> 
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label for="fecha_fin">Fecha Fin</label>
+                                        <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd-mm-aaaa" required>
+                                      </div>
+                                      
+                                      <label for="certificado">Por favor seleccione el Certificado</label>
+                                      <input type="file" name="certificado" id="certificado" class="form-control" required>
+                                      <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>  
+                                    <?php
+                                    }
+                                  }else{
+                                    echo '<p class="alert alert-warning">
+                                    Una vez aprobado el "Contrato de Uso" y la "Membresia SPP" podra cargar el Certificado correspondiente.
+                                    </p> ';
+                                  }
+                                  // termina validación //
                                 }
-
                             }else{
-                              echo '<p class="alert alert-warning">
-                                Una vez aprobado el "Informe de Evaluación" y el "Dictamen de Evaluación" podra cargar el Certificado
-                              </p> ';
+                              if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+                                echo '<p class="alert alert-warning">
+                                  Una vez que se ha aprobado la "Membresia SPP" podrá cargar el certificado correspondiente.
+                                </p> ';
+                              }else{
+                                echo '<p class="alert alert-warning">
+                                  Una vez que se ha aprobado el "Contrato de Uso" y la "Membresia SPP" podrá cargar el certificado correspondiente.
+                                </p> ';
+                              }
                             }
                             ?>
                           </div>

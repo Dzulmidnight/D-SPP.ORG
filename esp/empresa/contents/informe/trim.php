@@ -271,11 +271,11 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    <td>'.$formato_compras['spp'].'</td>
 				    <td>'.$formato_compras['opp'].'</td>
 				    <td>'.$formato_compras['pais'].'</td>
-				    <td>'.$formato_compras['fecha_facturacion'].'</td>
+				    <td>'.date('d/m/Y', $formato_compras['fecha_facturacion']).'</td>
 				    <td>'.$formato_compras['primer_intermediario'].'</td>
 				    <td>'.$formato_compras['segundo_intermediario'].'</td>
 				    <td>'.$formato_compras['clave_contrato'].'</td>
-				    <td>'.$formato_compras['fecha_contrato'].'</td>
+				    <td>'.date('d/m(Y', $formato_compras['fecha_contrato']).'</td>
 				    <td>'.$formato_compras['producto_general'].'</td>
 				    <td>'.$formato_compras['producto_especifico'].'</td>
 				    <td>'.$formato_compras['producto_terminado'].'</td>
@@ -518,11 +518,12 @@ if(isset($_GET['trim'])){
 								echo $pregunta;
 							}
 							?>
+							<!--
 							<form action="" method="POST" enctype="multipart/form-data">
 								Dar clic en el siguiente boton para poder cargar el comprobante de pago correspondiente al Informe Trimestral.
 								<input type="file" name="comprabante_pago">
 								<button class="btn btn-sm btn-warning" type="submit" name="enviar_comprobante" value="1">Enviar Comprobante</button>								
-							</form>
+							</form>-->
 
 						</th>
 					</tr>
