@@ -7,7 +7,7 @@ mysql_select_db($database_dspp, $dspp);
 if (!isset($_SESSION)) {
   session_start();
 	
-	$redireccion = "../index.php?OPP";
+	$redireccion = "../index.php?opp";
 
 	if(!$_SESSION["autentificado"]){
 		header("Location:".$redireccion);
@@ -56,75 +56,90 @@ $idopp = $_SESSION['idopp'];
 //$query_informe = "SELECT * FROM "
 //$row_informe = mysql_query($query_informe, $dspp) or die(mysql_error());
 
-$row_informe = mysql_query("SELECT * FROM informe_general WHERE idopp = $idopp AND FROM_UNIXTIME(ano, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+$row_informe = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, SUM(trim1.total_trim1 + trim2.total_trim2 + trim3.total_trim3 + trim4.total_trim4) AS 'balance_final' FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idopp = $idopp AND FROM_UNIXTIME(informe_general.ano, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 $informe_general = mysql_fetch_assoc($row_informe);
+
 
 
 ?>
 
-<h3>INFORME TRIMESTRAL GENERAL</h3>
+<h4>INFORMES TRIMESTRALES <span style="color:#e74c3c"><?php echo date('Y',$informe_general['ano']); ?></span></h4>
 
 <table class="table table-bordered" style="font-size:11px;">
 	<thead>
 		<tr class="success">
-		<th class="text-center">#</th>
-		<th class="text-center">OPP</th>
-		<th class="text-center">País de la OPP</th>
-		<th class="text-center">Fecha de Compra</th>
-		<th class="text-center">Primer Intermediario</th>
-		<th class="text-center">Segundo Intermediario</th>
-		<th class="text-center">Tipo de Producto</th>
-		<th colspan="2" class="text-center">Referencia Contrato Original con OPP</th>
-		<th class="text-center">Producto Especifico de acuerdo al contrato original</th>
-		<th colspan="2" class="text-center">Cantidad Total Conforme Contrato</th>
-		<th colspan="2" class="text-center">Peso Total Conforme Unidad de Medida Reglamento de Uso</th>
-		<th colspan="2" class="text-center">Precio Total Unitario</th>
-		<th colspan="2" class="text-center">Precio Sustentable Minimo</th>
-		<th colspan="2" class="text-center">Reconocimiento Orgánico</th>
-		<th colspan="2" class="text-center">Incentivo SPP</th>
-		<th class="text-center">Valor Total Contrato</th>
+			<th class="text-center">#</th>
+			<th class="text-center">#SPP</th>
+			<th class="text-center">Nombre opp proovedora</th>
+			<th class="text-center">País de opp proveedora</th>
+			<th class="text-center">Fecha de Facturación</th>
+			<th class="text-center">Primer Intermediario</th>
+			<th class="text-center">Segundo Intermediario</th>
+			<th colspan="2" class="text-center">Referencia Contrato Original con opp</th>
+			<th class="text-center">Producto General</th>
+			<th class="text-center">Producto Especifico</th>
+			<th class="text-center">¿Producto terminado?</th>
+			<th class="text-center">¿Se exporta?</th>
+			<th colspan="2" class="text-center">Cantidad Total Conforme Factura</th>
+			<th class="text-center">Precio Sustentable Mínimo</th>
+			<th class="text-center">Reconocimiento Orgánico</th>
+			<th class="text-center">Incentivo SPP</th>
+			<th class="text-center">Otros premios</th>
+			<th class="text-center">Precio Total Unitario pagado</th>
+			<th class="text-center">Valor Total Contrato</th>
+			<th class="text-center">Cuota de Uso Reglamento</th>
+			<th class="text-center">Total a pagar</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php 
-		$total_final = 0;
+		$balance_final = 0;
+
 		if(isset($informe_general['trim1'])){
-			$row_registro = mysql_query("SELECT formato_ventas.idtrim, formato_ventas.comprador, formato_ventas.pais, formato_ventas.fecha_compra, formato_ventas.producto_general, formato_ventas.producto_especifico, formato_ventas.total_contrato, intermediarios.primero, intermediarios.segundo, referencia_contrato.clave, referencia_contrato.fecha AS 'fecha_contrato', cantidad_total_contrato.peso AS 'ctc_peso', cantidad_total_contrato.unidad AS 'ctc_unidad', peso_total_reglamento.peso AS 'ptr_peso', peso_total_reglamento.unidad AS 'ptr_unidad', precio_total_unitario.precio AS 'ptu_precio', precio_total_unitario.unidad AS 'ptu_unidad', precio_sustentable.precio AS 'ps_precio', precio_sustentable.unidad AS 'ps_unidad', reconocimiento_organico.precio AS 'ro_precio', reconocimiento_organico.unidad AS 'ro_unidad', incentivo_spp.precio AS 'incentivo_precio', incentivo_spp.unidad AS 'incentivo_unidad' FROM formato_ventas INNER JOIN intermediarios ON formato_ventas.idformato_ventas = intermediarios.idformato_ventas INNER JOIN referencia_contrato ON formato_ventas.idformato_ventas = referencia_contrato.idformato_ventas INNER JOIN cantidad_total_contrato ON formato_ventas.idformato_ventas = cantidad_total_contrato.idformato_ventas INNER JOIN peso_total_reglamento ON formato_ventas.idformato_ventas = peso_total_reglamento.idformato_ventas INNER JOIN precio_total_unitario ON formato_ventas.idformato_ventas = precio_total_unitario.idformato_ventas INNER JOIN precio_sustentable ON formato_ventas.idformato_ventas = precio_sustentable.idformato_ventas INNER JOIN reconocimiento_organico ON formato_ventas.idformato_ventas = reconocimiento_organico.idformato_ventas INNER JOIN incentivo_spp ON formato_ventas.idformato_ventas = incentivo_spp.idformato_ventas WHERE formato_ventas.idtrim  = '$informe_general[trim1]'");
+			$row_registro = mysql_query("SELECT formato_ventas.* FROM formato_ventas WHERE formato_ventas.idtrim = '$informe_general[trim1]'", $dspp) or die(mysql_error());
+
 			$contador = 1;
 			$total_trim1 = 0;
-			while($informacion_formato = mysql_fetch_assoc($row_registro)){
+			while($formato = mysql_fetch_assoc($row_registro)){
 			?>
 				<tr>
 					<td><?php echo $contador; ?></td>
-					<td><?php echo $informacion_formato['comprador']; ?></td>
-					<td><?php echo $informacion_formato['pais']; ?></td>
-					<td><?php echo date('d/m/Y',$informacion_formato['fecha_compra']); ?></td>
-					<td><?php echo $informacion_formato['primero']; ?></td>
-					<td><?php echo $informacion_formato['segundo']; ?></td>
-					<td><?php echo $informacion_formato['producto_general']; ?></td>
-					<td><?php echo $informacion_formato['clave']; ?></td>
-					<td><?php echo date('d/m/Y',$informacion_formato['fecha_contrato']); ?></td>
-					<td><?php echo $informacion_formato['producto_especifico']; ?></td>
-					<td><?php echo $informacion_formato['ctc_peso']; ?></td>
-					<td><?php echo $informacion_formato['ctc_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ptr_peso']; ?></td>
-					<td><?php echo $informacion_formato['ptr_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ptu_precio']; ?></td>
-					<td><?php echo $informacion_formato['ptu_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ps_precio']; ?></td>
-					<td><?php echo $informacion_formato['ps_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ro_precio']; ?></td>
-					<td><?php echo $informacion_formato['ro_unidad']; ?></td>
-					<td><?php echo $informacion_formato['incentivo_precio']; ?></td>
-					<td><?php echo $informacion_formato['incentivo_unidad']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $informacion_formato['total_contrato']; ?></td>
+					<td><?php echo $formato['spp']; ?></td>
+					<td><?php echo $formato['opp']; ?></td>
+					<td><?php echo $formato['pais']; ?></td>
+					<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
+					<td><?php echo $formato['primer_intermediario']; ?></td>
+					<td><?php echo $formato['segundo_intermediario']; ?></td>
+					<td><?php echo $formato['clave_contrato']; ?></td>
+					<td>
+						<?php 
+						if(isset($formato['fecha_contrato'])){
+							echo date('d/m/Y', $formato['fecha_contrato']);
+						}
+					
+						?>
+					</td>
+					<td><?php echo $formato['producto_general']; ?></td>
+					<td><?php echo $formato['producto_especifico']; ?></td>
+					<td><?php echo $formato['producto_terminado']; ?></td>
+					<td><?php echo $formato['se_exporta']; ?></td>
+					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
+					<td><?php echo $formato['cantidad_total_factura']; ?></td>
+					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
+					<td><?php echo $formato['reconocimiento_organico']; ?></td>
+					<td><?php echo $formato['incentivo_spp']; ?></td>
+					<td><?php echo $formato['otros_premios']; ?></td>
+					<td><?php echo $formato['precio_total_unitario']; ?></td>
+					<td><?php echo $formato['valor_total_contrato']; ?></td>
+					<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar']; ?></td>
 				</tr>
 			<?php
 			$contador++;
-			$total_trim1 = $total_trim1 + $informacion_formato['total_contrato'];
+			$total_trim1 = $total_trim1 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='22' class='text-right warning'>Primer Trimestre</td>
+				<td colspan='22' class='text-right warning'><h5>PRIMER TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim1</td>
 			</tr>";
 
@@ -132,131 +147,153 @@ $informe_general = mysql_fetch_assoc($row_informe);
 
 		}
 		if(isset($informe_general['trim2'])){
-			$row_registro = mysql_query("SELECT formato_ventas.idtrim, formato_ventas.comprador, formato_ventas.pais, formato_ventas.fecha_compra, formato_ventas.producto_general, formato_ventas.producto_especifico, formato_ventas.total_contrato, intermediarios.primero, intermediarios.segundo, referencia_contrato.clave, referencia_contrato.fecha AS 'fecha_contrato', cantidad_total_contrato.peso AS 'ctc_peso', cantidad_total_contrato.unidad AS 'ctc_unidad', peso_total_reglamento.peso AS 'ptr_peso', peso_total_reglamento.unidad AS 'ptr_unidad', precio_total_unitario.precio AS 'ptu_precio', precio_total_unitario.unidad AS 'ptu_unidad', precio_sustentable.precio AS 'ps_precio', precio_sustentable.unidad AS 'ps_unidad', reconocimiento_organico.precio AS 'ro_precio', reconocimiento_organico.unidad AS 'ro_unidad', incentivo_spp.precio AS 'incentivo_precio', incentivo_spp.unidad AS 'incentivo_unidad' FROM formato_ventas INNER JOIN intermediarios ON formato_ventas.idformato_ventas = intermediarios.idformato_ventas INNER JOIN referencia_contrato ON formato_ventas.idformato_ventas = referencia_contrato.idformato_ventas INNER JOIN cantidad_total_contrato ON formato_ventas.idformato_ventas = cantidad_total_contrato.idformato_ventas INNER JOIN peso_total_reglamento ON formato_ventas.idformato_ventas = peso_total_reglamento.idformato_ventas INNER JOIN precio_total_unitario ON formato_ventas.idformato_ventas = precio_total_unitario.idformato_ventas INNER JOIN precio_sustentable ON formato_ventas.idformato_ventas = precio_sustentable.idformato_ventas INNER JOIN reconocimiento_organico ON formato_ventas.idformato_ventas = reconocimiento_organico.idformato_ventas INNER JOIN incentivo_spp ON formato_ventas.idformato_ventas = incentivo_spp.idformato_ventas WHERE formato_ventas.idtrim  = '$informe_general[trim2]'");
+			$row_registro = mysql_query("SELECT formato_ventas.* FROM formato_ventas WHERE formato_ventas.idtrim = '$informe_general[trim2]'");
 			$contador = 1;
 			$total_trim2 = 0;
-			while($informacion_formato = mysql_fetch_assoc($row_registro)){
+			while($formato = mysql_fetch_assoc($row_registro)){
 			?>
 				<tr>
 					<td><?php echo $contador; ?></td>
-					<td><?php echo $informacion_formato['comprador']; ?></td>
-					<td><?php echo $informacion_formato['pais']; ?></td>
-					<td><?php echo date('d/m/Y',$informacion_formato['fecha_compra']); ?></td>
-					<td><?php echo $informacion_formato['primero']; ?></td>
-					<td><?php echo $informacion_formato['segundo']; ?></td>
-					<td><?php echo $informacion_formato['producto_general']; ?></td>
-					<td><?php echo $informacion_formato['clave']; ?></td>
-					<td><?php echo date('d/m/Y',$informacion_formato['fecha_contrato']); ?></td>
-					<td><?php echo $informacion_formato['producto_especifico']; ?></td>
-					<td><?php echo $informacion_formato['ctc_peso']; ?></td>
-					<td><?php echo $informacion_formato['ctc_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ptr_peso']; ?></td>
-					<td><?php echo $informacion_formato['ptr_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ptu_precio']; ?></td>
-					<td><?php echo $informacion_formato['ptu_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ps_precio']; ?></td>
-					<td><?php echo $informacion_formato['ps_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ro_precio']; ?></td>
-					<td><?php echo $informacion_formato['ro_unidad']; ?></td>
-					<td><?php echo $informacion_formato['incentivo_precio']; ?></td>
-					<td><?php echo $informacion_formato['incentivo_unidad']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $informacion_formato['total_contrato']; ?></td>
+					<td><?php echo $formato['spp']; ?></td>
+					<td><?php echo $formato['opp']; ?></td>
+					<td><?php echo $formato['pais']; ?></td>
+					<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
+					<td><?php echo $formato['primer_intermediario']; ?></td>
+					<td><?php echo $formato['segundo_intermediario']; ?></td>
+					<td><?php echo $formato['clave_contrato']; ?></td>
+					<td>
+						<?php 
+						if(isset($formato['fecha_contrato'])){
+							echo date('d/m/Y', $formato['fecha_contrato']);
+						}
+					
+						?>
+					</td>
+					<td><?php echo $formato['producto_general']; ?></td>
+					<td><?php echo $formato['producto_especifico']; ?></td>
+					<td><?php echo $formato['producto_terminado']; ?></td>
+					<td><?php echo $formato['se_exporta']; ?></td>
+					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
+					<td><?php echo $formato['cantidad_total_factura']; ?></td>
+					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
+					<td><?php echo $formato['reconocimiento_organico']; ?></td>
+					<td><?php echo $formato['incentivo_spp']; ?></td>
+					<td><?php echo $formato['otros_premios']; ?></td>
+					<td><?php echo $formato['precio_total_unitario']; ?></td>
+					<td><?php echo $formato['valor_total_contrato']; ?></td>
+					<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar']; ?></td>
 				</tr>
 			<?php
 			$contador++;
-			$total_trim2 = $total_trim2 + $informacion_formato['total_contrato'];
+			$total_trim2 = $total_trim2 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='22' class='text-right warning'>Segundo Trimestre</td>
+				<td colspan='22' class='text-right warning'><h5>SEGUNDO TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim2</td>
 			</tr>";
 
 
 		}
 		if(isset($informe_general['trim3'])){
-			$row_registro = mysql_query("SELECT formato_ventas.idtrim, formato_ventas.comprador, formato_ventas.pais, formato_ventas.fecha_compra, formato_ventas.producto_general, formato_ventas.producto_especifico, formato_ventas.total_contrato, intermediarios.primero, intermediarios.segundo, referencia_contrato.clave, referencia_contrato.fecha AS 'fecha_contrato', cantidad_total_contrato.peso AS 'ctc_peso', cantidad_total_contrato.unidad AS 'ctc_unidad', peso_total_reglamento.peso AS 'ptr_peso', peso_total_reglamento.unidad AS 'ptr_unidad', precio_total_unitario.precio AS 'ptu_precio', precio_total_unitario.unidad AS 'ptu_unidad', precio_sustentable.precio AS 'ps_precio', precio_sustentable.unidad AS 'ps_unidad', reconocimiento_organico.precio AS 'ro_precio', reconocimiento_organico.unidad AS 'ro_unidad', incentivo_spp.precio AS 'incentivo_precio', incentivo_spp.unidad AS 'incentivo_unidad' FROM formato_ventas INNER JOIN intermediarios ON formato_ventas.idformato_ventas = intermediarios.idformato_ventas INNER JOIN referencia_contrato ON formato_ventas.idformato_ventas = referencia_contrato.idformato_ventas INNER JOIN cantidad_total_contrato ON formato_ventas.idformato_ventas = cantidad_total_contrato.idformato_ventas INNER JOIN peso_total_reglamento ON formato_ventas.idformato_ventas = peso_total_reglamento.idformato_ventas INNER JOIN precio_total_unitario ON formato_ventas.idformato_ventas = precio_total_unitario.idformato_ventas INNER JOIN precio_sustentable ON formato_ventas.idformato_ventas = precio_sustentable.idformato_ventas INNER JOIN reconocimiento_organico ON formato_ventas.idformato_ventas = reconocimiento_organico.idformato_ventas INNER JOIN incentivo_spp ON formato_ventas.idformato_ventas = incentivo_spp.idformato_ventas WHERE formato_ventas.idtrim  = '$informe_general[trim3]'");
+			$row_registro = mysql_query("SELECT formato_ventas.* FROM formato_ventas WHERE formato_ventas.idtrim = '$informe_general[trim3]'");
 			$contador = 1;
 			$total_trim3 = 0;
-			while($informacion_formato = mysql_fetch_assoc($row_registro)){
+			while($formato = mysql_fetch_assoc($row_registro)){
 			?>
 				<tr>
 					<td><?php echo $contador; ?></td>
-					<td><?php echo $informacion_formato['comprador']; ?></td>
-					<td><?php echo $informacion_formato['pais']; ?></td>
-					<td><?php echo date('d/m/Y',$informacion_formato['fecha_compra']); ?></td>
-					<td><?php echo $informacion_formato['primero']; ?></td>
-					<td><?php echo $informacion_formato['segundo']; ?></td>
-					<td><?php echo $informacion_formato['producto_general']; ?></td>
-					<td><?php echo $informacion_formato['clave']; ?></td>
-					<td><?php echo date('d/m/Y',$informacion_formato['fecha_contrato']); ?></td>
-					<td><?php echo $informacion_formato['producto_especifico']; ?></td>
-					<td><?php echo $informacion_formato['ctc_peso']; ?></td>
-					<td><?php echo $informacion_formato['ctc_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ptr_peso']; ?></td>
-					<td><?php echo $informacion_formato['ptr_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ptu_precio']; ?></td>
-					<td><?php echo $informacion_formato['ptu_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ps_precio']; ?></td>
-					<td><?php echo $informacion_formato['ps_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ro_precio']; ?></td>
-					<td><?php echo $informacion_formato['ro_unidad']; ?></td>
-					<td><?php echo $informacion_formato['incentivo_precio']; ?></td>
-					<td><?php echo $informacion_formato['incentivo_unidad']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $informacion_formato['total_contrato']; ?></td>
+					<td><?php echo $formato['spp']; ?></td>
+					<td><?php echo $formato['opp']; ?></td>
+					<td><?php echo $formato['pais']; ?></td>
+					<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
+					<td><?php echo $formato['primer_intermediario']; ?></td>
+					<td><?php echo $formato['segundo_intermediario']; ?></td>
+					<td><?php echo $formato['clave_contrato']; ?></td>
+					<td>
+						<?php 
+						if(isset($formato['fecha_contrato'])){
+							echo date('d/m/Y', $formato['fecha_contrato']);
+						}
+					
+						?>
+					</td>
+					<td><?php echo $formato['producto_general']; ?></td>
+					<td><?php echo $formato['producto_especifico']; ?></td>
+					<td><?php echo $formato['producto_terminado']; ?></td>
+					<td><?php echo $formato['se_exporta']; ?></td>
+					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
+					<td><?php echo $formato['cantidad_total_factura']; ?></td>
+					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
+					<td><?php echo $formato['reconocimiento_organico']; ?></td>
+					<td><?php echo $formato['incentivo_spp']; ?></td>
+					<td><?php echo $formato['otros_premios']; ?></td>
+					<td><?php echo $formato['precio_total_unitario']; ?></td>
+					<td><?php echo $formato['valor_total_contrato']; ?></td>
+					<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar']; ?></td>
 				</tr>
 			<?php
 			$contador++;
-			$total_trim3 = $total_trim3 + $informacion_formato['total_contrato'];
+			$total_trim3 = $total_trim3 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='22' class='text-right warning'>Tercer Trimestre</td>
+				<td colspan='22' class='text-right warning'><h5>TERCER TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim3</td>
 			</tr>";
 		}
 		if(isset($informe_general['trim4'])){
-			$row_registro = mysql_query("SELECT formato_ventas.idtrim, formato_ventas.comprador, formato_ventas.pais, formato_ventas.fecha_compra, formato_ventas.producto_general, formato_ventas.producto_especifico, formato_ventas.total_contrato, intermediarios.primero, intermediarios.segundo, referencia_contrato.clave, referencia_contrato.fecha AS 'fecha_contrato', cantidad_total_contrato.peso AS 'ctc_peso', cantidad_total_contrato.unidad AS 'ctc_unidad', peso_total_reglamento.peso AS 'ptr_peso', peso_total_reglamento.unidad AS 'ptr_unidad', precio_total_unitario.precio AS 'ptu_precio', precio_total_unitario.unidad AS 'ptu_unidad', precio_sustentable.precio AS 'ps_precio', precio_sustentable.unidad AS 'ps_unidad', reconocimiento_organico.precio AS 'ro_precio', reconocimiento_organico.unidad AS 'ro_unidad', incentivo_spp.precio AS 'incentivo_precio', incentivo_spp.unidad AS 'incentivo_unidad' FROM formato_ventas INNER JOIN intermediarios ON formato_ventas.idformato_ventas = intermediarios.idformato_ventas INNER JOIN referencia_contrato ON formato_ventas.idformato_ventas = referencia_contrato.idformato_ventas INNER JOIN cantidad_total_contrato ON formato_ventas.idformato_ventas = cantidad_total_contrato.idformato_ventas INNER JOIN peso_total_reglamento ON formato_ventas.idformato_ventas = peso_total_reglamento.idformato_ventas INNER JOIN precio_total_unitario ON formato_ventas.idformato_ventas = precio_total_unitario.idformato_ventas INNER JOIN precio_sustentable ON formato_ventas.idformato_ventas = precio_sustentable.idformato_ventas INNER JOIN reconocimiento_organico ON formato_ventas.idformato_ventas = reconocimiento_organico.idformato_ventas INNER JOIN incentivo_spp ON formato_ventas.idformato_ventas = incentivo_spp.idformato_ventas WHERE formato_ventas.idtrim  = '$informe_general[trim4]'");
+			$row_registro = mysql_query("SELECT formato_ventas.* FROM formato_ventas WHERE formato_ventas.idtrim = '$informe_general[trim4]'");
 			$contador = 1;
 			$total_trim4 = 0;
-			while($informacion_formato = mysql_fetch_assoc($row_registro)){
+			while($formato = mysql_fetch_assoc($row_registro)){
 			?>
 				<tr>
 					<td><?php echo $contador; ?></td>
-					<td><?php echo $informacion_formato['comprador']; ?></td>
-					<td><?php echo $informacion_formato['pais']; ?></td>
-					<td><?php echo date('d/m/Y',$informacion_formato['fecha_compra']); ?></td>
-					<td><?php echo $informacion_formato['primero']; ?></td>
-					<td><?php echo $informacion_formato['segundo']; ?></td>
-					<td><?php echo $informacion_formato['producto_general']; ?></td>
-					<td><?php echo $informacion_formato['clave']; ?></td>
-					<td><?php echo date('d/m/Y',$informacion_formato['fecha_contrato']); ?></td>
-					<td><?php echo $informacion_formato['producto_especifico']; ?></td>
-					<td><?php echo $informacion_formato['ctc_peso']; ?></td>
-					<td><?php echo $informacion_formato['ctc_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ptr_peso']; ?></td>
-					<td><?php echo $informacion_formato['ptr_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ptu_precio']; ?></td>
-					<td><?php echo $informacion_formato['ptu_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ps_precio']; ?></td>
-					<td><?php echo $informacion_formato['ps_unidad']; ?></td>
-					<td><?php echo $informacion_formato['ro_precio']; ?></td>
-					<td><?php echo $informacion_formato['ro_unidad']; ?></td>
-					<td><?php echo $informacion_formato['incentivo_precio']; ?></td>
-					<td><?php echo $informacion_formato['incentivo_unidad']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $informacion_formato['total_contrato']; ?></td>
+					<td><?php echo $formato['spp']; ?></td>
+					<td><?php echo $formato['opp']; ?></td>
+					<td><?php echo $formato['pais']; ?></td>
+					<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
+					<td><?php echo $formato['primer_intermediario']; ?></td>
+					<td><?php echo $formato['segundo_intermediario']; ?></td>
+					<td><?php echo $formato['clave_contrato']; ?></td>
+					<td>
+						<?php 
+						if(isset($formato['fecha_contrato'])){
+							echo date('d/m/Y', $formato['fecha_contrato']);
+						}
+					
+						?>
+					</td>
+					<td><?php echo $formato['producto_general']; ?></td>
+					<td><?php echo $formato['producto_especifico']; ?></td>
+					<td><?php echo $formato['producto_terminado']; ?></td>
+					<td><?php echo $formato['se_exporta']; ?></td>>
+					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
+					<td><?php echo $formato['cantidad_total_factura']; ?></td>
+					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
+					<td><?php echo $formato['reconocimiento_organico']; ?></td>
+					<td><?php echo $formato['incentivo_spp']; ?></td>
+					<td><?php echo $formato['otros_premios']; ?></td>
+					<td><?php echo $formato['precio_total_unitario']; ?></td>
+					<td><?php echo $formato['valor_total_contrato']; ?></td>
+					<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar']; ?></td>
 				</tr>
 			<?php
 			$contador++;
-			$total_trim4 = $total_trim4 + $informacion_formato['total_contrato'];
+			$total_trim4 = $total_trim4 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='22' class='text-right warning'>Cuarto Trimestre</td>
+				<td colspan='22' class='text-right warning'><h5>CUARTO TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim4</td>
 			</tr>";
 		}
+		//$balance_final = $total_trim1 + $total_trim2 + $total_trim3 + $total_trim4;
 		?>
 		<tr>
 			<td class="text-right" colspan="27">
-				
+				<h5>Total actual: <span style="color:#c0392b"><?php echo $informe_general['total_cuota_uso']; ?> USD</span></h5>
 			</td>
 		</tr>
 	</tbody>

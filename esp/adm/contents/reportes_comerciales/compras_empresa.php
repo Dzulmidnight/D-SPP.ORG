@@ -1,47 +1,4 @@
-<?php 
-require_once('../Connections/dspp.php'); 
-require_once('../Connections/mail.php');
-require_once('../../mpdf/mpdf.php');
-
-mysql_select_db($database_dspp, $dspp);
-
-if (!function_exists("GetSQLValueString")) {
-	function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-	{
-	  if (PHP_VERSION < 6) {
-	    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-	  }
-
-	  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
-
-	  switch ($theType) {
-	    case "text":
-	      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-	      break;    
-	    case "long":
-	    case "int":
-	      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-	      break;
-	    case "double":
-	      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-	      break;
-	    case "date":
-	      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-	      break;
-	    case "defined":
-	      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-	      break;
-	  }
-	  return $theValue;
-	}
-}
-
-$editFormAction = $_SERVER['PHP_SELF'];
-if (isset($_SERVER['QUERY_STRING'])) {
-  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
-}
-
-
+<?php
 //// INICIA APROBAR REPORTE  ////
 if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 	$num_trim = $_POST['num_trim'];
@@ -544,10 +501,79 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 	    }
 		///se envia correo al area de certificacion para corroborar la informacion
 }
-
 //// TERMINA ENVIAR FACTURA ////
 
-$row_informes = mysql_query("SELECT informe_general.*, trim1.estado_trim1, trim1.valor_contrato_trim1, trim1.cuota_uso_trim1, trim1.factura_trim1, trim1.estatus_factura_trim1, trim2.estado_trim2, trim2.valor_contrato_trim2, trim2.cuota_uso_trim2, trim2.factura_trim2, trim2.estatus_factura_trim2, trim3.estado_trim3, trim3.valor_contrato_trim3, trim3.cuota_uso_trim3, trim3.factura_trim3, trim3.estatus_factura_trim3, trim4.estado_trim4, trim4.valor_contrato_trim4, trim4.cuota_uso_trim4, trim4.factura_trim4, trim4.estatus_factura_trim4, empresa.abreviacion FROM informe_general INNER JOIN empresa ON informe_general.idempresa = empresa.idempresa LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
+//// INICIA APROBAR O DENEGAR COMPROBANTE PAGO
+if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
+
+	$idtrimestre = $_POST['idtrimestre'];	
+	$num = $_POST['num_trimestre'];
+	$txt_id = 'idtrim'.$num;
+	$txt_trim = 'trim'.$num;
+	$txt_estatus_trim = 'estado_trim'.$num;
+	$txt_estatus_factura = 'estatus_factura_trim'.$num;
+	$txt_estatus_comprobante = 'estatus_comprobante_trim'.$num;
+	$estatus_trim = 'FINALIZADO';
+	$estatus_factura = 'PAGADA';
+	$estatus_comprobante = 'APROBADO';
+
+	$updateSQL = sprintf("UPDATE $txt_trim SET $txt_estatus_trim = %s, $txt_estatus_factura = %s, $txt_estatus_comprobante = %s WHERE $txt_id = %s",
+		GetSQLValueString($estatus_trim, "text"),
+		GetSQLValueString($estatus_factura, "text"),
+		GetSQLValueString($estatus_comprobante, "text"),
+		GetSQLValueString($idtrimestre, "text"));
+	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+	/// se envia mensaje a la empresa
+	/********/
+		$asunto = 'D-SPP - Pago Informe Trimestral Compras';
+		$mensaje_correo = '
+			<html>
+			<head>
+				<meta charset="utf-8">
+			</head>
+			<body>
+			
+			<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+				<tbody>
+				    <tr>
+				      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+				      <th scope="col" align="left" width="280">Factura - Reporte Trimestral de Compras SPP</th>
+				    </tr>
+				    <tr>
+				      <td style="padding-top:10px;">           
+				        <p style="color:#2c3e50;font-weight:bold">Se ha aprobado el comprobante de pago.</p>
+				      </td>
+				    </tr>
+				</tbody>
+			</table>
+
+			</body>
+			</html>
+		';
+
+		$mail->AddAddress('yasser.midnight@gmail.com');
+	    //$mail->Username = "soporte@d-spp.org";
+	    //$mail->Password = "/aung5l6tZ";
+	    $mail->Subject = utf8_decode($asunto);
+	    $mail->Body = utf8_decode($mensaje_correo);
+	    $mail->MsgHTML(utf8_decode($mensaje_correo));
+	    //$mail->AddAttachment($pdf_listo, 'reporte.pdf');
+
+	    //$mail->addStringAttachment($pdf_listo, 'reporte_trimestral.pdf');
+	    if($mail->Send()){
+	    	$mail->ClearAddresses();
+			echo "<script>alert('Se ha notificado a la empresa');</script>";
+	    }else{
+			echo "<script>alert('No se pudo enviar el correo, por favor ponerse en contacto con el area de soporte);</script>";
+	    }
+
+
+}
+//// TERMINA APROBAR O DENEGAR COMPROBANTE PAGO
+
+
+$row_informes = mysql_query("SELECT informe_general.*, trim1.*, trim2.*, trim3.*, trim4.*, empresa.abreviacion FROM informe_general INNER JOIN empresa ON informe_general.idempresa = empresa.idempresa LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
 $total_informes = mysql_num_rows($row_informes);
 //$plataformas_spp = array('Ecuador', 'Perú', 'Colombia', 'Guatemala');
 
@@ -558,18 +584,19 @@ function redondear_dos_decimal($valor) {
    return $float_redondeado; 
 }
 ?>
-<hr>
+
 <div class="row">
 	<div class="col-md-12">
 		<table class="table table-bordered table-hover table-condensed" style="font-size:12px;">
 			<thead>
 				<tr>
-					<td style="border-style:hidden;"><span class="btn btn-xs btn-info glyphicon glyphicon-open-file"></span> = Factura enviada</td>
+					<td style="border-style:hidden;"><span class="disabled btn btn-xs btn-info glyphicon glyphicon-open-file"></span> = Factura enviada</td>
 					<td style="border-style:hidden;"><img src="../../img/circulo_verde.jpg" alt=""> Activo</td>
+					<td style="border-style:hidden;"><span class="disabled btn btn-xs btn-info glyphicon glyphicon-picture" aria-hidden="true"></span> = Comprobante de pago cargado</td>
 				</tr>
 				<tr>
 					<td style="border-style:hidden;">
-						<span class="btn btn-xs btn-info glyphicon glyphicon-ok" aria-hidden="true"></span> Pagado
+						<span class="disabled btn btn-xs btn-info glyphicon glyphicon-ok" aria-hidden="true"></span> Pagado
 					</td>
 					<td style="border-style:hidden;"><img src="../../img/circulo_rojo.jpg" alt=""> Finalizado</span></td>
 				</tr>
@@ -583,7 +610,7 @@ function redondear_dos_decimal($valor) {
 							<option>2016</option>
 						</select>
 					</th>
-					<th class="text-center" colspan="7">Resumen cuota de uso</th>
+					<th class="text-center" colspan="7"><h4>Resumen Cuota de Uso - Informes Compras</h4></th>
 				</tr>
 				<tr>
 					<th class="text-center">Año</th>
@@ -639,7 +666,7 @@ function redondear_dos_decimal($valor) {
 									    <div class="modal-body">
 											<div class="row">
 												<div class="col-md-4">
-													<h4 class="alert alert-info" style="padding:5px;">Reporte Trimestral</h4>
+													<h4 class="text-center alert alert-info" style="padding:5px;">Reporte Trimestral</h4>
 													<form action="" method="POST">
 														<?php 
 														if($informes['estado_trim1'] == 'EN ESPERA'){
@@ -650,7 +677,7 @@ function redondear_dos_decimal($valor) {
 															<input type="text" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
 															<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
 														<?php
-														}else if($informes['estado_trim1'] == 'APROBADO'){
+														}else if($informes['estado_trim1'] == 'APROBADO' || $informes['estado_trim1'] == 'FINALIZADO'){
 															echo "El informe trimestral ha sido aprobado";
 														}else{
 															echo "Aun no esta disponible esta sección";
@@ -661,11 +688,12 @@ function redondear_dos_decimal($valor) {
 													
 												</div>
 												<div class="col-md-4">
-													<h4 class="alert alert-warning" style="padding:5px;">Factura</h4>
+													<h4 class="text-center alert alert-warning" style="padding:5px;">Factura</h4>
 													<?php
-													if($informes['estado_trim1'] == 'APROBADO'){
+													if($informes['estado_trim1'] == 'APROBADO' || $informes['estado_trim1'] == 'FINALIZADO'){
 														if(isset($informes['estatus_factura_trim1'])){
 														?>
+															<p>Se ha enviado la factura</p>
 															<a class="btn btn-sm btn-success" style="width:100%" href="<?php echo $informes['factura_trim1']; ?>" target="_new">Descargar Factura</a>
 														<?php
 														}else{
@@ -690,8 +718,29 @@ function redondear_dos_decimal($valor) {
 													 ?>
 
 												</div>
-												<div class="col-md-4" style="padding:5px;">
-													<h4 class="alert alert-info">Acreditar pago</h4>
+												<div class="col-md-4">
+													<h4 class="text-center alert alert-info" style="padding:5px;">Acreditar pago</h4>
+													<?php 
+													if(isset($informes['estatus_comprobante_trim1']) && $informes['estatus_comprobante_trim1'] == 'ENVIADO'){
+													?>
+													<form action="" method="POST">
+														<div class="row">
+															<div class="col-xs-6"><button class="btn btn-sm btn-success" style="width:100%" type="submit" name="aprobar_pago" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar pago</button></div>
+															<div class="col-xs-6"><button class="btn btn-sm btn-danger" style="width:100%" type="submit" name="rechazar_pago" value="2"><span class="glyphicon glyphicon-remove" aria-hidden="trie"></span> Rechazar pago</button></div>
+															<input type="text" name="num_trimestre" value="1">
+															<input type="text" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
+															<input type="hidden" name="aprobar_comprobante" value="1">
+														</div>
+
+													</form>
+													<?php
+													}else if($informes['estatus_comprobante_trim1'] == 'APROBADO'){
+														echo "<p>Se ha aprobado el comprobante de pago</p>";
+														echo "<a href='".$informes['comprobante_pago_trim1']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+													}else{
+														echo "Aun no se ha cargado el comprobante de pago";
+													}
+													 ?>
 												</div>
 											</div>
 									    </div>
@@ -703,17 +752,23 @@ function redondear_dos_decimal($valor) {
 									</div>
 								</div>
 
-							<?php
-								
+							<?php	
+								if($informes['estatus_factura_trim1'] == 'ENVIADA'){
+									///boton para descargar factura
+									echo "<a href='$informes[factura_trim1]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
+									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
+								}
+								if($informes['estatus_comprobante_trim1'] == 'ENVIADO' || $informes['estatus_comprobante_trim1'] == 'APROBADO'){
+									/// boton para descargar comprobante de pago
+									echo "<a href='$informes[comprobante_pago_trim1]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
+								}
 								if($informes['estado_trim1'] == 'ACTIVO' || $informes['estado_trim1'] == 'EN ESPERA' || $informes['estado_trim1'] == 'APROBADO'){
 									echo '<img src="../../img/circulo_verde.jpg">';
-									if($informes['estatus_factura_trim1'] == 'ENVIADA'){
-										echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
-									}
-									echo ' $'.$informes['cuota_uso_trim1'].' USD';
-								}else if($informes['estado_trim1'] == 'FINALIZADO'){
-									echo '<img src="../../img/circulo_rojo.jpg"> $'.$informes['cuota_uso_trim1'].' USD';
+								}else{
+									echo '<img src="../../img/circulo_rojo.jpg">';
 								}
+								
+								echo ' $'.$informes['cuota_uso_trim1'].' USD';
 							echo '</td>';
 
 							echo '<td>'; //// TRIMESTRE 2

@@ -436,7 +436,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 	$num_trimestre = $_POST['num_trimestre'];
 
 	///cargamos y guardamos el comprobante de pago
-	$rutaArchivo = "../../archivos/admArchivos/facturas/comprobante/";
+	$rutaArchivo = "../../archivos/admArchivos/facturas/comprobante_pago/";
 	if(!empty($_FILES['comprobante_pago']['name'])){
 	  $_FILES["comprobante_pago"]["name"];
 	    move_uploaded_file($_FILES["comprobante_pago"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["comprobante_pago"]["name"]);
@@ -600,6 +600,7 @@ if(isset($_GET['trim'])){
 							$txt_estatus_factura = 'estatus_factura_trim'.$_GET['trim'];
 							$txt_factura = 'factura_trim'.$_GET['trim'];
 							$txt_estatus_comprobante = 'estatus_comprobante_trim'.$_GET['trim'];
+							$txt_comprobante = 'comprobante_pago_trim'.$_GET['trim'];
 							$row_trim = mysql_query("SELECT * FROM $txt_trim WHERE $txt_id = '$trim[$idtrim]'", $dspp) or die(mysql_error());
 							$trim = mysql_fetch_assoc($row_trim); 
 							if($trim[$txt_estatus_factura] == 'ENVIADA'){
@@ -616,6 +617,9 @@ if(isset($_GET['trim'])){
 							if($trim[$txt_estatus_factura] == 'ENVIADA'){
 								if(isset($trim[$txt_estatus_comprobante]) && $trim[$txt_estatus_comprobante] == 'ENVIADO'){
 									echo "<span style='color:red'>SE HA ENVIADO EL COMPROBANTE DE PAGO</span>";
+								}else if($trim[$txt_estatus_comprobante] == 'APROBADO'){
+									echo "<p>Se ha APROBADO el comprobante de pago</p>";
+									echo "<a href='".$trim[$txt_comprobante]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga comproban de pago</a>";
 								}else{
 								?>
 									<form action="" method="POST" enctype="multipart/form-data">
@@ -721,7 +725,6 @@ if(isset($_GET['trim'])){
 
 	<?php
 	}else{
-		echo "AUN NO HA CONCLUIDO EL TRIMESTRE ANTERIOR";
 		/////
 		$row_trim1 = mysql_query("SELECT idtrim1, estado_trim1 FROM trim1 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 		$trim1 = mysql_fetch_assoc($row_trim1);
