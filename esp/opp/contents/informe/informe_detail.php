@@ -105,7 +105,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 				<tr>
 					<td><?php echo $contador; ?></td>
 					<td><?php echo $formato['spp']; ?></td>
-					<td><?php echo $formato['opp']; ?></td>
+					<td><?php echo $formato['empresa']; ?></td>
 					<td><?php echo $formato['pais']; ?></td>
 					<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
 					<td><?php echo $formato['primer_intermediario']; ?></td>

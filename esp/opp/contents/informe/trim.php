@@ -129,7 +129,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 
 /********  SE ENVIA CORREO SOBRE REPORTE TRIMESTRAL  ************/
 
-	$porcetaje_cuota = $configuracion['cuota_compradores'];
+	$porcetaje_cuota = $configuracion['cuota_productores'];
 	$tipo_opp = $tipo_opp;
 
 	$txt_cuota = 'cuota_uso_trim'.$_GET['trim'];
@@ -150,10 +150,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
               #SPP
             </td>
             <td style="">
-              Abreviación de la Empresa
-            </td>
-            <td style="">
-              Tipo de Empresa
+              Abreviación de la OPP
             </td>
             <td style="">
               País
@@ -175,9 +172,6 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
             </td>
             <td style="">
               '.$opp['abreviacion'].'
-            </td>
-            <td style="">
-              COMPRADOR FINAL
             </td>
             <td style="">
               '.$opp['pais'].'
@@ -204,10 +198,10 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
               #SPP
             </th>
             <th>
-              Nombre OPP proovedora
+              Nombre del Comprador Final
             </th>
             <th>
-              País de OPP proveedora
+              País de la Empresa
             </th>
             <th>
               Fecha de Facturación
@@ -269,7 +263,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				<tr>
 				    <td>'.$contador.'</td>
 				    <td>'.$formato_ventas['spp'].'</td>
-				    <td>'.$formato_ventas['opp'].'</td>
+				    <td>'.$formato_ventas['empresa'].'</td>
 				    <td>'.$formato_ventas['pais'].'</td>
 				    <td>'.date('d/m/Y', $formato_ventas['fecha_facturacion']).'</td>
 				    <td>'.$formato_ventas['primer_intermediario'].'</td>
@@ -375,8 +369,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				            <td colspan="7" style="text-align:center">Resumen de operaciones</td>
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Empresa</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Tipo de Empresa</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">OPP</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Informe</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Num. de Contratos</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Valor total de los contratos</td>
@@ -385,7 +378,6 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$opp['abreviacion'].'</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">COMPRADOR FINAL</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$num_contratos.'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$valor_total_contrato['total_contrato'].'</td>
@@ -505,6 +497,8 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 
 if(isset($_GET['trim'])){
 	$idopp = $_SESSION['idopp'];
+	$row_opp = mysql_query("SELECT * FROM opp WHERE idopp = $idopp", $dspp) or die(mysql_error());
+	$opp = mysql_fetch_assoc($row_opp);
 	$num_trim = "trim".$_GET['trim'];
 	$ano_actual = date('Y', time());
 	$row_trim = mysql_query("SELECT * FROM $num_trim WHERE idopp = $idopp AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
@@ -587,7 +581,7 @@ if(isset($_GET['trim'])){
 
 
 						<th colspan="4">
-							<?php echo $opp['abreviacion'].' - '.$tipo_opp; ?>
+							<?php echo 'OPP: '.$opp['abreviacion']; ?>
 						</th>
 						<th colspan="4" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
 							<?php 
@@ -638,6 +632,7 @@ if(isset($_GET['trim'])){
 		<form action="" method="POST">	
 					<tr class="success">
 						<th class="text-center">#</th>
+						<th class="text-center">País OPP</th>
 						<th class="text-center">#SPP del Comprador Final</th>
 						<th class="text-center"><span style="color:red">Nombre de la Empresa</span></th>
 						<th class="text-center"><spans style="color:red">País de la Empresa</span></th>
@@ -669,8 +664,9 @@ if(isset($_GET['trim'])){
 					?>
 						<tr>
 							<td><?php echo $contador; ?></td>
+							<td><?php echo $opp['pais']; ?></td>
 							<td><?php echo $formato['spp']; ?></td>
-							<td><?php echo $formato['opp']; ?></td>
+							<td><?php echo $formato['empresa']; ?></td>
 							<td><?php echo $formato['pais']; ?></td>
 							<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
 							<td><?php echo $formato['primer_intermediario']; ?></td>

@@ -130,7 +130,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 /********  SE ENVIA CORREO SOBRE REPORTE TRIMESTRAL  ************/
 
 	$porcetaje_cuota = $configuracion['cuota_compradores'];
-	$tipo_empresa = $tipo_empresa;
+	//$tipo_empresa = $tipo_empresa;
 
 	$txt_cuota = 'cuota_uso_trim'.$_GET['trim'];
 	$txt_trim = 'trim'.$_GET['trim'];

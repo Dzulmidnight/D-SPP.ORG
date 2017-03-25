@@ -61,6 +61,11 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	$fecha_registro = time();
 	$tipo_moneda = 'USD';
 
+		if(isset($_POST['pais_opp'])){
+			$pais_opp = $_POST['pais_opp'];
+		}else{
+			$pais_opp = NULL;
+		}
 		if(isset($_POST['spp'])){
 			$spp = $_POST['spp'];
 		}else{
@@ -71,10 +76,10 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		}else{
 			$nombre_empresa = NULL;
 		}
-		if(isset($_POST['pais'])){
-			$pais = $_POST['pais'];
+		if(isset($_POST['pais_empresa'])){
+			$pais_empresa = $_POST['pais_empresa'];
 		}else{
-			$pais = NULL;
+			$pais_empresa = NULL;
 		}
 		if(isset($_POST['fecha_facturacion'])){
 			$fecha_facturacion = strtotime($_POST['fecha_facturacion']);
@@ -177,12 +182,13 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		}
 
 		//Iniciamos insertar formato_ventas
-			$insertSQL = sprintf("INSERT INTO formato_ventas(idtrim, idopp, spp, empresa, pais, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+			$insertSQL = sprintf("INSERT INTO formato_ventas(idtrim, idopp, pais_opp, spp, empresa, pais_empresa, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 				GetSQLValueString($idtrim, "text"),
 				GetSQLValueString($idopp, "int"),
+				GetSQLValueString($pais_opp, "text"),
 				GetSQLValueString($spp, "text"),
 				GetSQLValueString($nombre_empresa, "text"),
-				GetSQLValueString($pais, "text"),
+				GetSQLValueString($pais_empresa, "text"),
 				GetSQLValueString($fecha_facturacion, "int"),
 				GetSQLValueString($primer_intermediario, "text"),
 				GetSQLValueString($segundo_intermediario, "text"),
@@ -250,6 +256,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 				<th class="text-center">
 							#
 		 				</th>
+		 				<th class="text-center">País de la OPP</th>
 						<th class="text-center"><span style="color:red">#SPP del Comprador Final</span></th>
 						<th class="text-center"><span style="color:red">Nombre de la Empresa</span></th>
 						<th class="text-center"><span style="color:red">País de la Empresa</span></th>
@@ -287,6 +294,12 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 					Número Consecutivo
 		 				</td>
 		 				<!-- TERMINA NUMERO CONSECUTIVO -->
+
+		 				<!-- INICIA PAIS DE LA OPP(definido por el sistema) -->
+		 				<td>
+		 					Definido por el sistema
+		 				</td>
+		 				<!-- TERMINA PAIS DE LA OPP(definido por el sistema) -->
 
 		 				<!-- INICIA #SPP -->
 		 				<td>
@@ -436,9 +449,10 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 							?>
 								<tr class="active">
 									<td><?php echo $contador; ?></td>
+									<td><?php echo $formato['pais_opp']; ?></td>
 									<td><?php echo $formato['spp']; ?></td>
-									<td><?php echo $formato['opp']; ?></td>
-									<td><?php echo $formato['pais']; ?></td>
+									<td><?php echo $formato['empresa']; ?></td>
+									<td><?php echo $formato['pais_empresa']; ?></td>
 									<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
 									<td><?php echo $formato['primer_intermediario']; ?></td>
 									<td><?php echo $formato['segundo_intermediario']; ?></td>
@@ -477,6 +491,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 				 ?>
 					<tr class="success">
 						<td class="warning"></td> <!-- # -->
+						<td><input type="text" name="pais_opp" value="<?php echo $opp['pais']; ?>" readonly></td>
 
 						<td>
 							
@@ -506,7 +521,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			                }
 			                 ?>
 			              </select>-->
-			              <input id="pais" name="pais" value="" placeholder="pais">
+			              <input id="pais_empresa" name="pais_empresa" value="" placeholder="Pais de la empresa">
 						</td>
 
 						<td class="success"><!-- fecha de facturación -->
