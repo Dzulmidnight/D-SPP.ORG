@@ -764,7 +764,7 @@ function redondear_dos_decimal($valor) {
 								}
 								if($informes['estado_trim1'] == 'ACTIVO' || $informes['estado_trim1'] == 'EN ESPERA' || $informes['estado_trim1'] == 'APROBADO'){
 									echo '<img src="../../img/circulo_verde.jpg">';
-								}else{
+								}else if($informes['estado_trim1'] == 'FINALIZADO'){
 									echo '<img src="../../img/circulo_rojo.jpg">';
 								}
 								

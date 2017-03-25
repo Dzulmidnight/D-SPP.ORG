@@ -54,7 +54,8 @@ if(isset($_POST['crear_informe'])){
 	if($_POST['crear_informe'] == 'SI'){
 
 		$ano = date('Y', time());
-		$idinforme_general = 'IFC-'.$idopp.'-'.$ano;
+		// Informe General Ventas = IGV
+		$idinforme_general = 'IGV-'.$idopp.'-'.$ano;
 		$estado_informe = "ACTIVO";
 
 		$insertSQL = sprintf("INSERT INTO informe_general(idinforme_general, idopp, ano, estado_informe) VALUES (%s, %s, %s, %s)",
@@ -73,7 +74,8 @@ if(isset($_POST['informe_trimestral'])){
 	if($_POST['informe_trimestral'] == 'SI'){
 		$idinforme_general = $_POST['idinforme_general'];
 		$ano = date('Y', time());
-		$idtrim1 = 'T1-'.$ano.'-'.$idopp;
+		/// Trimestre Opp = TO
+		$idtrim1 = 'TO1-'.$ano.'-'.$idopp;
 		$estado_trim1 = "ACTIVO";
 
 		$insertSQL = sprintf("INSERT INTO trim1 (idtrim1, idopp, fecha_inicio, estado_trim1) VALUES (%s, %s, %s, %s)",
@@ -201,7 +203,7 @@ if(isset($_POST['informe_trimestral'])){
 		?>
 			<form action="" method="POST">
 				<p class="alert alert-info">
-				Paso 2: No se ha iniciado ningun <b style="color:red">"Formato Trimestral"</b> en el <b style="color:red">Informe general <?php echo $ano_actual ?></b> , <strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
+				Paso 2: No se ha iniciado ningun <b style="color:red">"Formato Trimestral"</b> en el <b style="color:red">Informe General de Ventas <?php echo $ano_actual ?></b> , <strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
 				<input class="btn btn-success" type="submit" name="informe_trimestral" value="SI">
 				<input class="btn btn-danger" type="submit" name="informe_trimestral" value="NO">
 				<input type="hidden" name="idinforme_general" value="<?php echo $informe_general['idinforme_general']; ?>">
@@ -216,7 +218,7 @@ if(isset($_POST['informe_trimestral'])){
 	?>		
 		<form action="" method="POST">
 			<p class="alert alert-warning">
-			Paso 1: No se encontraron Informes Generales, <strong>¿Desea crear un nuevo Informe General?</strong>
+			Paso 1: No se encontraron Informes Generales de Ventas, <strong>¿Desea crear un nuevo Informe General de Ventas?</strong>
 			<input class="btn btn-success" type="submit" name="crear_informe" value="SI">
 			<input class="btn btn-danger" type="submit" name="crear_informe" value="NO">
 			</p>

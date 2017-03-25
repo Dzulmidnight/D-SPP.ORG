@@ -51,8 +51,7 @@ if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'SI'){
 	$txt_estatus_trim = 'estado_trim'.$_GET['trim'];
 	$idinforme_general = $_POST['idinforme_general'];
 	$ano = date('Y', time());
-	//Trimestre Opp = TO
-	$idtrim = 'TO'.$_GET['trim'].'-'.$ano.'-'.$idopp;
+	$idtrim = 'T'.$_GET['trim'].'-'.$ano.'-'.$idopp;
 	$estado_trim = "ACTIVO";
 
 	$insertSQL = sprintf("INSERT INTO $txt_num_trim ($txt_idtrim, idopp, fecha_inicio, $txt_estatus_trim) VALUES (%s, %s, %s, %s)",
@@ -72,10 +71,10 @@ if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'SI'){
 if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	$idtrimestre = $_POST['idtrim'];
 
-	$row_valor_total_contrato = mysql_query("SELECT ROUND(SUM(valor_total_contrato), 2) AS 'total_contrato' FROM formato_compras WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+	$row_valor_total_contrato = mysql_query("SELECT ROUND(SUM(valor_total_contrato), 2) AS 'total_contrato' FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 	$valor_total_contrato = mysql_fetch_assoc($row_valor_total_contrato);
 
-	$row_total_a_pagar = mysql_query("SELECT ROUND(SUM(total_a_pagar), 2) AS 'total_a_pagar' FROM formato_compras WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+	$row_total_a_pagar = mysql_query("SELECT ROUND(SUM(total_a_pagar), 2) AS 'total_a_pagar' FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 	$total_a_pagar = mysql_fetch_assoc($row_total_a_pagar);
 
 
@@ -263,34 +262,34 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 
           ';
           	$contador = 1;
-			$row_formato_compras = mysql_query("SELECT * FROM formato_compras WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
-			$num_contratos = mysql_num_rows($row_formato_compras);
-			while($formato_compras = mysql_fetch_assoc($row_formato_compras)){
+			$row_formato_ventas = mysql_query("SELECT * FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+			$num_contratos = mysql_num_rows($row_formato_ventas);
+			while($formato_ventas = mysql_fetch_assoc($row_formato_ventas)){
 			  $html .= '
 				<tr>
 				    <td>'.$contador.'</td>
-				    <td>'.$formato_compras['spp'].'</td>
-				    <td>'.$formato_compras['opp'].'</td>
-				    <td>'.$formato_compras['pais'].'</td>
-				    <td>'.date('d/m/Y', $formato_compras['fecha_facturacion']).'</td>
-				    <td>'.$formato_compras['primer_intermediario'].'</td>
-				    <td>'.$formato_compras['segundo_intermediario'].'</td>
-				    <td>'.$formato_compras['clave_contrato'].'</td>
-				    <td>'.date('d/m(Y', $formato_compras['fecha_contrato']).'</td>
-				    <td>'.$formato_compras['producto_general'].'</td>
-				    <td>'.$formato_compras['producto_especifico'].'</td>
-				    <td>'.$formato_compras['producto_terminado'].'</td>
-				    <td>Se exporta: '.$formato_compras['se_exporta'].'</td>
-				    <td>'.$formato_compras['unidad_cantidad_factura'].'</td>
-				    <td>'.$formato_compras['cantidad_total_factura'].'</td>
-				    <td>'.$formato_compras['precio_sustentable_minimo'].'</td>
-				    <td>'.$formato_compras['reconocimiento_organico'].'</td>
-				    <td>'.$formato_compras['incentivo_spp'].'</td>
-				    <td>'.$formato_compras['otros_premios'].'</td>
-				    <td>'.$formato_compras['precio_total_unitario'].'</td>
-				    <td>'.$formato_compras['valor_total_contrato'].'</td>
-				    <td>'.$formato_compras['cuota_uso_reglamento'].'</td>
-				    <td>'.$formato_compras['total_a_pagar'].'</td>
+				    <td>'.$formato_ventas['spp'].'</td>
+				    <td>'.$formato_ventas['opp'].'</td>
+				    <td>'.$formato_ventas['pais'].'</td>
+				    <td>'.date('d/m/Y', $formato_ventas['fecha_facturacion']).'</td>
+				    <td>'.$formato_ventas['primer_intermediario'].'</td>
+				    <td>'.$formato_ventas['segundo_intermediario'].'</td>
+				    <td>'.$formato_ventas['clave_contrato'].'</td>
+				    <td>'.date('d/m(Y', $formato_ventas['fecha_contrato']).'</td>
+				    <td>'.$formato_ventas['producto_general'].'</td>
+				    <td>'.$formato_ventas['producto_especifico'].'</td>
+				    <td>'.$formato_ventas['producto_terminado'].'</td>
+				    <td>Se exporta: '.$formato_ventas['se_exporta'].'</td>
+				    <td>'.$formato_ventas['unidad_cantidad_factura'].'</td>
+				    <td>'.$formato_ventas['cantidad_total_factura'].'</td>
+				    <td>'.$formato_ventas['precio_sustentable_minimo'].'</td>
+				    <td>'.$formato_ventas['reconocimiento_organico'].'</td>
+				    <td>'.$formato_ventas['incentivo_spp'].'</td>
+				    <td>'.$formato_ventas['otros_premios'].'</td>
+				    <td>'.$formato_ventas['precio_total_unitario'].'</td>
+				    <td>'.$formato_ventas['valor_total_contrato'].'</td>
+				    <td>'.$formato_ventas['cuota_uso_reglamento'].'</td>
+				    <td>'.$formato_ventas['total_a_pagar'].'</td>
 				</tr>
 			  ';
 			 $contador++;
@@ -505,7 +504,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 //// TERMINA ENVIO COMPROBANTE DE PAGO
 
 if(isset($_GET['trim'])){
-
+	$idopp = $_SESSION['idopp'];
 	$num_trim = "trim".$_GET['trim'];
 	$ano_actual = date('Y', time());
 	$row_trim = mysql_query("SELECT * FROM $num_trim WHERE idopp = $idopp AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
@@ -559,7 +558,7 @@ if(isset($_GET['trim'])){
 	//echo $titulo_trim;
 	if($total_trim == 1){
 		$ano_actual = date('Y', time());
-		$query_formato = "SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim = '$trim[$idtrim]' AND idopp = $idopp";
+		$query_formato = "SELECT formato_ventas.* FROM formato_ventas WHERE formato_ventas.idtrim = '$trim[$idtrim]' AND idopp = $idopp";
 		$row_formato = mysql_query($query_formato, $dspp) or die(mysql_error());
 		$idtrim_txt = 'idtrim'.$_GET['trim'];
 		$txt_trim = 'trim'.$_GET['trim'];
@@ -639,9 +638,9 @@ if(isset($_GET['trim'])){
 		<form action="" method="POST">	
 					<tr class="success">
 						<th class="text-center">#</th>
-						<th class="text-center">#SPP</th>
-						<th class="text-center">Nombre OPP proovedora</th>
-						<th class="text-center">País de OPP proveedora</th>
+						<th class="text-center">#SPP del Comprador Final</th>
+						<th class="text-center"><span style="color:red">Nombre de la Empresa</span></th>
+						<th class="text-center"><spans style="color:red">País de la Empresa</span></th>
 						<th class="text-center">Fecha de Facturación</th>
 						<th class="text-center">Primer Intermediario</th>
 						<th class="text-center">Segundo Intermediario</th>

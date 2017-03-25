@@ -54,7 +54,8 @@ if(isset($_POST['crear_informe'])){
 	if($_POST['crear_informe'] == 'SI'){
 
 		$ano = date('Y', time());
-		$idinforme_general = 'IFC-'.$idempresa.'-'.$ano;
+		/// Informe General Compras = IGC
+		$idinforme_general = 'IGC-'.$idempresa.'-'.$ano;
 		$estado_informe = "ACTIVO";
 
 		$insertSQL = sprintf("INSERT INTO informe_general(idinforme_general, idempresa, ano, estado_informe) VALUES (%s, %s, %s, %s)",
