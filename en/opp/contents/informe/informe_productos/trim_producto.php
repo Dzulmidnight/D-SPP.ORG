@@ -44,7 +44,7 @@ if (!function_exists("GetSQLValueString")) {
 	  return $theValue;
 	}
 }
-if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'YES'){
+if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'SI'){
 	$txt_num_trim = 'trim'.$_GET['trim'].'_producto';
 	$txt_idtrim_producto = 'idtrim'.$_GET['trim'].'_producto';
 	$txt_estatus_trim = 'estado_trim'.$_GET['trim'];
@@ -65,7 +65,7 @@ if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'YES'){
 		GetSQLValueString($idinforme_general_producto, "text"));
 	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
-	echo "<script>alert('A new quarterly format has been created $idtrim_producto');</script>";
+	echo "<script>alert('Se ha creado un nuevo formato trimestral $idtrim_producto');</script>";
 }
 if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	if(isset($_POST['suma_total']) || $_POST['suma_total'] != 0 || $_POST['suma_total'] != NULL){
@@ -125,8 +125,8 @@ if(isset($_GET['trim'])){
 			$estatus = $trim[$estado_trim];
 			$pregunta = "
 				<p class='alert alert-info' style='padding:5px;margin-bottom:0px;'>
-					<b style='color:red'>Do you want to complete the capture of records in the current quarter format?</b>
-					<button class='' type='subtmit' value='SI'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='End current trimester' onclick='return confirm(\"Do you want to end the capture of records for the current trimester?\");' >YES</button>
+					<b style='color:red'>¿Desea concluir la captura de registros en el formato de trimestre actual? </b>
+					<button class='' type='subtmit' value='SI'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='Finalizar trimestre actual' onclick='return confirm(\"¿Desea finalizar la captura del trimestre actual?\");' >SI</button>
 					<!--<input class='btn btn-success' type='submit' name='finalizar_trim' value='SI'>-->
 					<input type='hidden' name='idtrim' value='".$trim[$idtrim_producto]."'>
 					<input type='hidden' name='fecha' value='".time()."'>
@@ -137,26 +137,26 @@ if(isset($_GET['trim'])){
 			$estatus = $trim[$estado_trim];
 		}
 	}else{
-		$estatus = 'Not available';
+		$estatus = 'No Disponible';
 	}
 	$titulo_trim = '';
 
 
 	switch ($_GET['trim']) {
 		case '1':
-			$titulo_trim = "<h4>FIRST TRIMESTER | <small>Estatus:  $estatus</small></h4>";
+			$titulo_trim = "<h4>PRIMER TRIMESTRE | <small>Estatus:  $estatus</small></h4>";
 			break;
 		case '2':
-			$titulo_trim = "<h4>SECOND TRIMESTER | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>SEGUNDO TRIMESTRE | <small>Estatus: $estatus</small></h4>";
 			break;
 		case '3':
-			$titulo_trim = "<h4>THIRD TRIMESTER | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>TERCER TRIMESTRE | <small>Estatus: $estatus</small></h4>";
 			break;
 		case '4':
-			$titulo_trim = "<h4>FOURTH TRIMESTER | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>CUARTO TRIMESTRE | <small>Estatus: $estatus</small></h4>";
 			break;		
 		default:
-			$titulo_trim = "<h4>TRIMESTER NOT AVAILABLE</small></h4>";
+			$titulo_trim = "<h4>TRIMESTRE NO DISPONIBLE</small></h4>";
 			break;
 	}
 
@@ -176,8 +176,8 @@ if(isset($_GET['trim'])){
 		?>
 
 		<div style="margin-top:10px;">
-			<a class="btn btn-default" href="?INFORME&producto&trim=<?php echo $_GET['trim']; ?>&add_producto&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-plus"></span> Add new records</a>
-			<a class="btn btn-default" href="?INFORME&producto&trim=<?php echo $_GET['trim']; ?>&add_producto&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-pencil"></span> Edit current record</a>
+			<a class="btn btn-default" href="?INFORME&producto&trim=<?php echo $_GET['trim']; ?>&add_producto&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-plus"></span> Agregar nuevos registros</a>
+			<a class="btn btn-default" href="?INFORME&producto&trim=<?php echo $_GET['trim']; ?>&add_producto&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-pencil"></span> Editar registro actuales</a>
 		</div>
 
 		<form action="" method="POST">
@@ -199,9 +199,9 @@ if(isset($_GET['trim'])){
 					</tr>
 					<tr class="success">
 						<th class="text-center">#</th>
-						<th class="text-center">Country of destination of finished product</th>
-						<th class="text-center">Type of currency</th>
-						<th class="text-center">SPP Total Sales Value</th>
+						<th class="text-center">País destino del producto terminado</th>
+						<th class="text-center">Tipo moneda</th>
+						<th class="text-center">Valor de ventas totales SPP</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -275,15 +275,15 @@ if(isset($_GET['trim'])){
 						echo '
 							<form action="" method="POST">
 								<p class="alert alert-info">
-									<strong>Do you want to create a new Format for Quarterly Report?</strong>
-									<input class="btn btn-success" type="submit" name="nuevo_trim" value="YES">
+									<strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
+									<input class="btn btn-success" type="submit" name="nuevo_trim" value="SI">
 									<input type="hidden" name="idinforme_general_producto" value="'.$informe_general_producto['idinforme_general_producto'].'">
 								</p>
 							</form>
 						';
 					}
 				}else{
-					echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> YOU CAN NOT START THIS QUARTERLY REPORT, <b>YOU MUST END THE PREVIOUS REPORT</b></p>";
+					echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> AUN NO SE PUEDE INICIAR ESTE INFORME TRIMESTRAL, <b>DEBE FINALIZAR EL INFORME ANTERIOR</b></p>";
 				}
 				$row_trim = mysql_query("SELECT * FROM $trim_actual WHERE idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual",$dspp) or die(mysql_error());
 				$informacion_trim = mysql_fetch_assoc($row_trim);

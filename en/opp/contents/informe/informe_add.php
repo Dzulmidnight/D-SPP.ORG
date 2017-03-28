@@ -7,7 +7,7 @@ mysql_select_db($database_dspp, $dspp);
 if (!isset($_SESSION)) {
   session_start();
 	
-	$redireccion = "../index.php?EMPRESA";
+	$redireccion = "../index.php?OPP";
 
 	if(!$_SESSION["autentificado"]){
 		header("Location:".$redireccion);
@@ -49,8 +49,8 @@ $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
-$tipo_de_empresa = $empresa['comprador'];
-$idempresa = $_SESSION['idempresa'];
+
+$idopp = $_SESSION['idopp'];
 $idtrim = $_GET['idtrim'];
 $anio_actual = date('Y',time());
 $row_configuracion = mysql_query("SELECT * FROM porcentaje_ajuste WHERE anio = $anio_actual", $dspp) or die(mysql_error());
@@ -61,20 +61,25 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	$fecha_registro = time();
 	$tipo_moneda = 'USD';
 
+		if(isset($_POST['pais_opp'])){
+			$pais_opp = $_POST['pais_opp'];
+		}else{
+			$pais_opp = NULL;
+		}
 		if(isset($_POST['spp'])){
 			$spp = $_POST['spp'];
 		}else{
 			$spp = NULL;
 		}
-		if(isset($_POST['nombre_opp'])){
-			$opp = $_POST['nombre_opp'];
+		if(isset($_POST['nombre_empresa'])){
+			$nombre_empresa = $_POST['nombre_empresa'];
 		}else{
-			$opp = NULL;
+			$nombre_empresa = NULL;
 		}
-		if(isset($_POST['pais'])){
-			$pais = $_POST['pais'];
+		if(isset($_POST['pais_empresa'])){
+			$pais_empresa = $_POST['pais_empresa'];
 		}else{
-			$pais = NULL;
+			$pais_empresa = NULL;
 		}
 		if(isset($_POST['fecha_facturacion'])){
 			$fecha_facturacion = strtotime($_POST['fecha_facturacion']);
@@ -176,13 +181,14 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			$se_exporta = NULL;
 		}
 
-		//Iniciamos insertar formato_compras
-			$insertSQL = sprintf("INSERT INTO formato_compras(idtrim, idempresa, spp, opp, pais, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+		//Iniciamos insertar formato_ventas
+			$insertSQL = sprintf("INSERT INTO formato_ventas(idtrim, idopp, pais_opp, spp, empresa, pais_empresa, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 				GetSQLValueString($idtrim, "text"),
-				GetSQLValueString($idempresa, "int"),
+				GetSQLValueString($idopp, "int"),
+				GetSQLValueString($pais_opp, "text"),
 				GetSQLValueString($spp, "text"),
-				GetSQLValueString($opp, "text"),
-				GetSQLValueString($pais, "text"),
+				GetSQLValueString($nombre_empresa, "text"),
+				GetSQLValueString($pais_empresa, "text"),
 				GetSQLValueString($fecha_facturacion, "int"),
 				GetSQLValueString($primer_intermediario, "text"),
 				GetSQLValueString($segundo_intermediario, "text"),
@@ -204,7 +210,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 				GetSQLValueString($total_a_pagar, "text"),
 				GetSQLValueString($fecha_registro, "int"));
 			$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
-			//$idformato_compras = mysql_insert_id($dspp);
+			//$idformato_ventas = mysql_insert_id($dspp);
 		//Termina insertar formato compras
 }
 
@@ -233,13 +239,13 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	<div class="col-md-12">
 	<?php
 	if($trim[$txt_estatus] == 'FINALIZADO'){
-		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> You can no longer add more records to the Quarterly Format, since the quarter has ended.</p>";
+		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> No more records can be added to the <b>quarterly format</b> since it was completed.</p>";
 	}else{
 	?>
 
 
 		<!--<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>-->
-		<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Fields marked in blue are optional, this information will be useful for the evaluation of certification.</p>
+		<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> The fields marked in blue are optional, this information will be useful for the assessment of certification.</p>
 		<p class="alert alert-success" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> The fields marked in green are mandatory.</p>
 		<p class="alert alert-warning" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> The fields marked in yellow are completed automatically.</p>
 	
@@ -250,9 +256,10 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 				<th class="text-center">
 							#
 		 				</th>
-						<th class="text-center">#SPP</th>
-						<th class="text-center">Provider SPO Name</th>
-						<th class="text-center">Provider SPO country</th>
+		 				<th class="text-center">Country of the SPO</th>
+						<th class="text-center"><span style="color:red">#SPP of the Final Buyer</span></th>
+						<th class="text-center"><span style="color:red">Name of the buyer</span></th>
+						<th class="text-center"><span style="color:red">Buyer's Country</span></th>
 						<th class="text-center">Billing Date</th>
 						<th class="text-center">First Intermediate</th>
 						<th class="text-center">Second Intermediate</th>
@@ -260,7 +267,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<th class="text-center">General Product</th>
 						<th class="text-center">Specific Product</th>
 						<?php 
-						if($tipo_de_empresa){
+						if($tipo_de_opp){
 						?>
 							<th colspan="2" class="text-center">
 								Finished product
@@ -269,7 +276,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<?php
 						}
 						 ?>
-						<th colspan="2" class="text-center">Invoice total amount</th>
+						<th colspan="2" class="text-center">Total Amount Due Invoice</th>
 						<th class="text-center">Minimum Sustainable Price</th>
 						<th class="text-center">Organic Recognition</th>
 						<th class="text-center">SPP incentive</th>
@@ -288,6 +295,12 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 				</td>
 		 				<!-- TERMINA NUMERO CONSECUTIVO -->
 
+		 				<!-- INICIA PAIS DE LA OPP(definido por el sistema) -->
+		 				<td>
+		 					Defined by the system
+		 				</td>
+		 				<!-- TERMINA PAIS DE LA OPP(definido por el sistema) -->
+
 		 				<!-- INICIA #SPP -->
 		 				<td>
 		 					SPP identification code
@@ -302,19 +315,19 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 		 				<!-- INICIA PAIS DE LA OPP -->
 		 				<td>
-		 					Country where the SPO originates the products
+		 					Host country of the SPO where the products originate
 		 				</td>
 		 				<!-- TERMINA PAIS DE LA OPP -->
 
 		 				<!-- INICIA FECHA DE LA FACTURACION -->
 		 				<td>
-		 					The date of the purchase of the product by the Final Purchaser, SPP user (from the OPP directly or through an intermediary).
+		 					The date of the purchase of the product by the Final Purchaser, SPP user (from the SPO directly or through an intermediary).
 		 				</td>
 		 				<!-- TERMINA FECHA DE LA FACTURACION -->
 
 		 				<!-- INICIA PRIMER INTERMEDIARIO -->
 		 				<td>
-		 					Name of the commercial counterpart who makes the purchase of the product to the SPO, if not the Final Purchaser. If it is the Final Buyer put the script
+		 					Name of the commercial counterpart who makes the purchase of the product to the OPP, if not the Final Purchaser. If it is the Final Buyer put the script.
 		 				</td>
 		 				<!-- TERMINA PRIMER INTERMEDIARIO -->
 
@@ -326,7 +339,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 		 				<!-- INICIA REFERENCIA CONTRATO -->
 			 				<td>
-			 					Number or key of the Original Contract, ie the contract of sale of the OPP to the Buyer or First Intermediary.
+			 					Number or key of the Original Contract, ie the contract of sale of the SPO to the Buyer or First Intermediary.
 			 				</td>
 			 				<td>
 			 					Date of the Original Sale Agreement of the SPO.
@@ -343,7 +356,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 					Specific product. Eg: Green Arabica coffee, Honey type A, Banana chips, Refined white sugar.
 		 				</td>
 		 				<?php 
-		 				if($tipo_de_empresa){
+		 				if($tipo_de_opp){
 		 				?>
 			 				<td colspan="2">
 			 					Finished product?
@@ -356,7 +369,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			 					Unit of measure used (kg, to, lb, qq, etc.)
 			 				</td>
 			 				<td>
-			 					Total quantity of product in final unit of measure indicated in the original contract
+			 					Total quantity of product in final unit of measure indicated in the original contract.
 			 				</td>
 		 				<!-- TERMINA CANTIDAD TOTAL CONFORME FACTURA -->
 
@@ -429,16 +442,17 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 							# code...
 		 							break;
 		 					}
-							$row_registro = mysql_query("SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim  = '$informe_general[$num_trim]'");
+							$row_registro = mysql_query("SELECT formato_ventas.* FROM formato_ventas WHERE formato_ventas.idtrim  = '$informe_general[$num_trim]'");
 							$contador = 1;
 
 							while($formato = mysql_fetch_assoc($row_registro)){
 							?>
 								<tr class="active">
 									<td><?php echo $contador; ?></td>
+									<td><?php echo $formato['pais_opp']; ?></td>
 									<td><?php echo $formato['spp']; ?></td>
-									<td><?php echo $formato['opp']; ?></td>
-									<td><?php echo $formato['pais']; ?></td>
+									<td><?php echo $formato['empresa']; ?></td>
+									<td><?php echo $formato['pais_empresa']; ?></td>
 									<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
 									<td><?php echo $formato['primer_intermediario']; ?></td>
 									<td><?php echo $formato['segundo_intermediario']; ?></td>
@@ -453,7 +467,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 									<td><?php echo $formato['producto_general']; ?></td>
 									<td><?php echo $formato['producto_especifico']; ?></td>
 									<?php 
-									if($tipo_de_empresa){
+									if($tipo_de_opp){
 									?>
 										<td><?php echo $formato['producto_terminado']; ?></td>
 										<td><?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
@@ -477,6 +491,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 				 ?>
 					<tr class="success">
 						<td class="warning"></td> <!-- # -->
+						<td><input type="text" name="pais_opp" value="<?php echo $opp['pais']; ?>" readonly></td>
 
 						<td>
 							
@@ -491,9 +506,9 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>-->
 
 						<td class="warning"><!-- nombre de la opp -->
-							<textarea id="nombre_opp" name="nombre_opp" value="" placeholder="Name of SPO"></textarea>
+							<textarea id="nombre_empresa" name="nombre_empresa" value="" placeholder="Name of the buyer"></textarea>
 
-							<!--<input type="text" name="nombre_opp" id="" placeholder="Nombre de la OPP">-->
+							<!--<input type="text" name="nombre_empresa" id="" placeholder="Nombre de la OPP">-->
 						</td>
 
 						<td class="warning"><!-- pais de la opp proveedora -->
@@ -506,7 +521,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			                }
 			                 ?>
 			              </select>-->
-			              <input id="pais" name="pais" value="" placeholder="pais">
+			              <input id="pais_empresa" name="pais_empresa" value="" placeholder="Buyer's Country">
 						</td>
 
 						<td class="success"><!-- fecha de facturación -->
@@ -536,7 +551,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 							<input type="text" name="producto_especifico" id="" placeholder="Eg: green coffee, honey, refined sugar" onBlur=" ponerMayusculas(this)" required>
 						</td>
 						<?php 
-						if($tipo_de_empresa){
+						if($tipo_de_opp){
 						?>
 							<td>
 								Is it a finished product?
@@ -587,7 +602,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>
 
 						<td class="info"><!-- incentivo spp -->
-							<input type="number" step="any" name="incentivo_spp" id="" placeholder="amount paid">
+							<input type="number" step="any" name="incentivo_spp" id="" placeholder="iamount paid">
 						</td>
 
 						<td class="info"><!-- otros premios -->
@@ -595,7 +610,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>
 
 						<td class="success"><!-- precio total unitario pagado -->
-							<input type="number" step="any" id="precio_total_unitario" name="precio_total_unitario" id="precio_total_unitario" onChange="calcular();" value="0" placeholder="Ej: 40" required>
+							<input type="number" step="any" id="precio_total_unitario" name="precio_total_unitario" id="precio_total_unitario" onChange="calcular();" value="0" placeholder="Eg: 40" required>
 						</td>
 
 						<td class="warning"><!-- valor total contrato -->
@@ -613,7 +628,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 					</tr>
 		 			<tr>
 		 				<?php 
-		 				if($tipo_de_empresa){
+		 				if($tipo_de_opp){
 		 				?>
 		 					<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1" onclick="return validar()">Save Record</button></td>
 		 				<?php
@@ -680,23 +695,23 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 </script>
 
 
-<script>
+<script>/*24_03_2017
 $(document).ready(function() {
 //    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
-    $("#nombre_opp").val('Name of SPO');
+    $("#nombre_empresa").val('Nombre de la OPP');
 //    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
-    $("#pais").val('Country of the SPO');
+    $("#pais").val('Pais de la OPP');
 });
 
 function buscar() {
     var textoBusqueda = $("input#spp").val();
  
      if (textoBusqueda != "") {
-        $.post("../../nombre_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_opp) {
-            $("#nombre_opp").val(nombre_opp);
+        $.post("../../nombre_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_empresa) {
+            $("#nombre_empresa").val(nombre_empresa);
          }); 
      } else { 
-        $("#nombre_opp").val('Name of SPO');
+        $("#nombre_empresa").val('Nombre de la OPP');
      };
 
      if (textoBusqueda != "") {
@@ -704,7 +719,7 @@ function buscar() {
             $("#pais").val(nombre_pais);
          }); 
      } else { 
-        $("#pais").val('Country of the SPO');
+        $("#pais").val('País de la OPP');
      };
 
 };
@@ -716,7 +731,7 @@ function ponerMayusculas(nombre)
 nombre.value=nombre.value.toUpperCase(); 
 } 
 var contador=0;
-var cuota_fija_anual = <?php echo $configuracion['cuota_compradores']; ?>;
+var cuota_fija_anual = <?php echo $configuracion['cuota_productores']; ?>;
 //var cuota_fija_anual = 0.01;
 	function calcular(){
 		cantidad_total_factura = document.getElementById("cantidad_total_factura").value;
@@ -738,7 +753,7 @@ var cuota_fija_anual = <?php echo $configuracion['cuota_compradores']; ?>;
 		/* se redondea el resultado a 2 decimales */
 		//valor_total_contrato = parseFloat(Math.round((precio_total_unitario * peso_cantidad_total_contrato) * 100) / 100).toFixed(2);
 		document.getElementById("valor_total_contrato").value = total_contrato_redondeado; 
-		document.getElementById("cuota_uso_reglamento").value = "<?php echo $configuracion['cuota_compradores']; ?> %"; 
+		document.getElementById("cuota_uso_reglamento").value = "<?php echo $configuracion['cuota_productores']; ?> %"; 
 		document.getElementById("total_a_pagar").value = total_redondeado; 
 
 		//calculamos el total a pagar

@@ -195,7 +195,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
     //// termina envio a correo Empresas
 
     //// inicia envio a correo OC
-      $query_oc = "SELECT email1, email2 FROM oc WHERE email1 !=''";
+      $query_oc = "SELECT email1, email2 FROM oc";
       $ejecutar = mysql_query($query_oc,$dspp) or die(mysql_error());
 
 
@@ -619,7 +619,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
   }
 
   //termina enviar mensaje aprobacion de membresia
-  if($_POST['tipo_solicitud'] == 'RENOVACION'){
+  /*22_03_2017if($_POST['tipo_solicitud'] == 'RENOVACION'){
     $asunto = "D-SPP | Formatos de Evaluación";
 
     $cuerpo_mensaje = '
@@ -689,17 +689,19 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
     $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
       /*$mail->Send();
       $mail->ClearAddresses();*/
+    /*22_03_2017  
     if($mail->Send()){
       $mail->ClearAddresses();
       echo "<script>alert('Se ha aprobado la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación.');location.href ='javascript:history.back()';</script>";
     }else{
       $mail->ClearAddresses();
       echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-    }
+    }22_03_2017*/
       //$mensaje = "Se ha aprobado la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
-  }else{
+  }
+  /*22_03_2017else{
     //revisamos el el contrato de uso ya fue aprobado, esto para enviar la notificación al OC de que suba sus archivos
-    if(!empty($_POST['idcontrato'])){
+    /*22_03_2017if(!empty($_POST['idcontrato'])){
       $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $_POST[idcontrato]", $dspp) or die(mysql_error());
       $contrato = mysql_fetch_assoc($row_contrato);
       if($contrato['estatus_contrato'] == 'ACEPTADO'){ //si el contrato fue aceptado entonces enviamos el correo al OC
@@ -768,7 +770,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
           $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
           /*$mail->Send();
           $mail->ClearAddresses();*/
-        if($mail->Send()){
+      /*22_03_2017  if($mail->Send()){
           $mail->ClearAddresses();
           echo "<script>alert('Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación');location.href ='javascript:history.back()';</script>";
         }else{
@@ -785,8 +787,8 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
     }
   }
 
+}22_03_2017*/
 
-}
 //SE RECHAZA EL COMPROBANTE DE PAGO
 if(isset($_POST['rechazar_comprobante']) && $_POST['rechazar_comprobante'] == 2){
   $estatus_comprobante = "RECHAZADO"; //se rechaza el comprobante
@@ -830,7 +832,7 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
 
-  if(!empty($_POST['idmembresia'])){
+  /*22_03_2017if(!empty($_POST['idmembresia'])){
 
     $row_membresia = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, opp.nombre, oc.email1, oc.email2, membresia.idsolicitud_certificacion, membresia.estatus_membresia FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion WHERE membresia.idmembresia = $_POST[idmembresia]", $dspp) or die(mysql_error());
     $membresia = mysql_fetch_assoc($row_membresia);
@@ -909,19 +911,19 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
       //$mail->ClearAddresses();
       if($mail->Send()){
         $mail->ClearAddresses();
-        echo "<script>alert('Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación');location.href ='javascript:history.back()';</script>";
+        //22_03_2017echo "<script>alert('Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación');location.href ='javascript:history.back()';</script>";
       }else{
         $mail->ClearAddresses();
         echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-      }
+      }22_03_2017*/
         //$mensaje = "Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
 
-    }else{
+   /*22_03_2017 }else{
       $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
     } 
   }
 
-  $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
+  $mensaje = "Se ha aprobado el \"Contrato de Uso\"";22_03_2017*/
 
 }
 
@@ -1021,9 +1023,13 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
       </body>
       </html>
     ';
-
+    if(!empty($informacion['email1'])){
       $mail->AddAddress($informacion['email1']); 
+    }
+    if(!empty($informacion['email2'])){
       $mail->AddAddress($informacion['email2']); 
+    }
+      $mail->AddCC($spp_global);
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -1670,7 +1676,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                                 <?php 
                                 if($dictamen['estatus_dictamen'] != "ACEPTADO" && $informe['estatus_informe'] != "ACEPTADO"){
                                 ?>
-                                  <button type="submit" class="form-control btn btn-primary" style="color:white" name="documentos_evaluacion" value="1" onclick="return validar()">Enviar Resultados</button>
+                                  <button type="submit" class="form-control btn btn-primary" style="color:white" name="documentos_evaluacion" value="1" onclick="return validar()">ACEPTAR DOCUMENTOS</button>
                                 <?php
                                 }
                                  ?>

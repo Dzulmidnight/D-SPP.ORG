@@ -123,7 +123,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 	<div class="col-md-12">
 	<?php
 	if($trim[$txt_estatus] == 'FINALIZADO'){
-		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> You can no longer add more record to the <b>Quarterly Format $idtrim</b>, since it was completed.</p>";
+		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se puede agregar más registro al <b>Formato Trimestral $idtrim</b>, ya que fue concluido.</p>";
 	}else{
 	?>
 
@@ -133,16 +133,16 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 		<p class="alert alert-success" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color verde son obligatorios.</p>-->
 	
 
-			<p class="alert alert-danger" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> The total sales value must be expressed in US Dollars (USD)</p>
+			<p class="alert alert-danger" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> El valor de ventas totales debe ser expresado en dolares americanos(USD)</p>
 		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
 		 		<thead>
 		 			<tr class="success">
 		 				<th class="text-center">
 							#
 		 				</th>
-						<th class="text-center">Country of destination of finished product</th>
-						<th class="text-center">Total sales value SPP</th>
-						<th class="text-center">Type of currency</th>
+						<th class="text-center">País destino del producto terminado</th>
+						<th class="text-center">Valor de ventas totales SPP</th>
+						<th class="text-center">Tipo moneda</th>
 		 			</tr>
 		 		</thead>
 		 		<tbody>
@@ -174,7 +174,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 								<form action="" method="POST">
 									<tr class="active">
 										<td>
-											<?php echo $contador; ?> <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete record" name="eliminar_registro" value="<?php echo $formato['idformato_producto_empresa']; ?>" onclick="return confirm('Are you sure to delete the record?');"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+											<?php echo $contador; ?> <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar registro" name="eliminar_registro" value="<?php echo $formato['idformato_producto_empresa']; ?>" onclick="return confirm('¿Está seguro de eliminar el registro?');"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 										</td>
 										<td><?php echo $formato['pais']; ?></td>
 										<td><?php echo $formato['ventas_totales']; ?></td>
@@ -191,7 +191,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 
 						<td class="warning"><!-- pais de la opp proveedora -->
 			              <select name="pais" id="pais" class="form-control" required>
-			                <option value="">Destination country</option>
+			                <option value="">País destino</option>
 			                <?php 
 			                $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 			                while($pais = mysql_fetch_assoc($row_pais)){
@@ -201,14 +201,14 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 			              </select>
 						</td>
 						<td>
-							<input name="ventas_totales" type="number" step="any" class="form-control" placeholder="TOTAL SALES" required>
+							<input name="ventas_totales" type="number" step="any" class="form-control" placeholder="VENTAS TOTALES" required>
 						</td>
 						<td>
 							<input name="tipo_moneda" type="text" class="form-control" value="USD" readonly>
 						</td>
 					</tr>
 		 			<tr>
-		 				<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1">Save Record</button></td>
+		 				<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1">Guardar Registro</button></td>
 		 			</tr>
 		 		</tbody>
 		 	</table>

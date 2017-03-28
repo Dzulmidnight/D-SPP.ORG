@@ -8,7 +8,7 @@ mysql_select_db($database_dspp, $dspp);
 if (!isset($_SESSION)) {
   session_start();
 	
-	$redireccion = "../index.php?EMPRESA";
+	$redireccion = "../index.php?OPP";
 
 	if(!$_SESSION["autentificado"]){
 		header("Location:".$redireccion);
@@ -51,12 +51,12 @@ if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'YES'){
 	$txt_estatus_trim = 'estado_trim'.$_GET['trim'];
 	$idinforme_general = $_POST['idinforme_general'];
 	$ano = date('Y', time());
-	$idtrim = 'T'.$_GET['trim'].'-'.$ano.'-'.$idempresa;
+	$idtrim = 'T'.$_GET['trim'].'-'.$ano.'-'.$idopp;
 	$estado_trim = "ACTIVO";
 
-	$insertSQL = sprintf("INSERT INTO $txt_num_trim ($txt_idtrim, idempresa, fecha_inicio, $txt_estatus_trim) VALUES (%s, %s, %s, %s)",
+	$insertSQL = sprintf("INSERT INTO $txt_num_trim ($txt_idtrim, idopp, fecha_inicio, $txt_estatus_trim) VALUES (%s, %s, %s, %s)",
 		GetSQLValueString($idtrim, "text"),
-		GetSQLValueString($idempresa, "int"),
+		GetSQLValueString($idopp, "int"),
 		GetSQLValueString($fecha_actual, "int"),
 		GetSQLValueString($estado_trim, "text"));
 	$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -68,13 +68,13 @@ if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'YES'){
 
 	echo "<script>alert('A new quarterly format has been created - $idtrim');</script>";
 }
-if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
+if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	$idtrimestre = $_POST['idtrim'];
 
-	$row_valor_total_contrato = mysql_query("SELECT ROUND(SUM(valor_total_contrato), 2) AS 'total_contrato' FROM formato_compras WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+	$row_valor_total_contrato = mysql_query("SELECT ROUND(SUM(valor_total_contrato), 2) AS 'total_contrato' FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 	$valor_total_contrato = mysql_fetch_assoc($row_valor_total_contrato);
 
-	$row_total_a_pagar = mysql_query("SELECT ROUND(SUM(total_a_pagar), 2) AS 'total_a_pagar' FROM formato_compras WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+	$row_total_a_pagar = mysql_query("SELECT ROUND(SUM(total_a_pagar), 2) AS 'total_a_pagar' FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 	$total_a_pagar = mysql_fetch_assoc($row_total_a_pagar);
 
 
@@ -129,8 +129,8 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 
 /********  SE ENVIA CORREO SOBRE REPORTE TRIMESTRAL  ************/
 
-	$porcetaje_cuota = $configuracion['cuota_compradores'];
-	//$tipo_empresa = $tipo_empresa;
+	$porcetaje_cuota = $configuracion['cuota_productores'];
+	$tipo_opp = $tipo_opp;
 
 	$txt_cuota = 'cuota_uso_trim'.$_GET['trim'];
 	$txt_trim = 'trim'.$_GET['trim'];
@@ -150,10 +150,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
               #SPP
             </td>
             <td style="">
-              Abreviación de la Empresa
-            </td>
-            <td style="">
-              Tipo de Empresa
+              Abreviación de la OPP
             </td>
             <td style="">
               País
@@ -171,16 +168,13 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
               '.date('d/m/Y', time()).'
             </td>
             <td style="">
-              '.$empresa['spp'].'
+              '.$opp['spp'].'
             </td>
             <td style="">
-              '.$empresa['abreviacion'].'
+              '.$opp['abreviacion'].'
             </td>
             <td style="">
-              COMPRADOR FINAL
-            </td>
-            <td style="">
-              '.$empresa['pais'].'
+              '.$opp['pais'].'
             </td>
             <td style="">
               '.$idtrimestre.'
@@ -204,10 +198,10 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
               #SPP
             </th>
             <th>
-              Nombre OPP proovedora
+              Nombre del Comprador Final
             </th>
             <th>
-              País de OPP proveedora
+              País de la Empresa
             </th>
             <th>
               Fecha de Facturación
@@ -262,34 +256,34 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 
           ';
           	$contador = 1;
-			$row_formato_compras = mysql_query("SELECT * FROM formato_compras WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
-			$num_contratos = mysql_num_rows($row_formato_compras);
-			while($formato_compras = mysql_fetch_assoc($row_formato_compras)){
+			$row_formato_ventas = mysql_query("SELECT * FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+			$num_contratos = mysql_num_rows($row_formato_ventas);
+			while($formato_ventas = mysql_fetch_assoc($row_formato_ventas)){
 			  $html .= '
 				<tr>
 				    <td>'.$contador.'</td>
-				    <td>'.$formato_compras['spp'].'</td>
-				    <td>'.$formato_compras['opp'].'</td>
-				    <td>'.$formato_compras['pais'].'</td>
-				    <td>'.date('d/m/Y', $formato_compras['fecha_facturacion']).'</td>
-				    <td>'.$formato_compras['primer_intermediario'].'</td>
-				    <td>'.$formato_compras['segundo_intermediario'].'</td>
-				    <td>'.$formato_compras['clave_contrato'].'</td>
-				    <td>'.date('d/m(Y', $formato_compras['fecha_contrato']).'</td>
-				    <td>'.$formato_compras['producto_general'].'</td>
-				    <td>'.$formato_compras['producto_especifico'].'</td>
-				    <td>'.$formato_compras['producto_terminado'].'</td>
-				    <td>Se exporta: '.$formato_compras['se_exporta'].'</td>
-				    <td>'.$formato_compras['unidad_cantidad_factura'].'</td>
-				    <td>'.$formato_compras['cantidad_total_factura'].'</td>
-				    <td>'.$formato_compras['precio_sustentable_minimo'].'</td>
-				    <td>'.$formato_compras['reconocimiento_organico'].'</td>
-				    <td>'.$formato_compras['incentivo_spp'].'</td>
-				    <td>'.$formato_compras['otros_premios'].'</td>
-				    <td>'.$formato_compras['precio_total_unitario'].'</td>
-				    <td>'.$formato_compras['valor_total_contrato'].'</td>
-				    <td>'.$formato_compras['cuota_uso_reglamento'].'</td>
-				    <td>'.$formato_compras['total_a_pagar'].'</td>
+				    <td>'.$formato_ventas['spp'].'</td>
+				    <td>'.$formato_ventas['empresa'].'</td>
+				    <td>'.$formato_ventas['pais'].'</td>
+				    <td>'.date('d/m/Y', $formato_ventas['fecha_facturacion']).'</td>
+				    <td>'.$formato_ventas['primer_intermediario'].'</td>
+				    <td>'.$formato_ventas['segundo_intermediario'].'</td>
+				    <td>'.$formato_ventas['clave_contrato'].'</td>
+				    <td>'.date('d/m(Y', $formato_ventas['fecha_contrato']).'</td>
+				    <td>'.$formato_ventas['producto_general'].'</td>
+				    <td>'.$formato_ventas['producto_especifico'].'</td>
+				    <td>'.$formato_ventas['producto_terminado'].'</td>
+				    <td>Se exporta: '.$formato_ventas['se_exporta'].'</td>
+				    <td>'.$formato_ventas['unidad_cantidad_factura'].'</td>
+				    <td>'.$formato_ventas['cantidad_total_factura'].'</td>
+				    <td>'.$formato_ventas['precio_sustentable_minimo'].'</td>
+				    <td>'.$formato_ventas['reconocimiento_organico'].'</td>
+				    <td>'.$formato_ventas['incentivo_spp'].'</td>
+				    <td>'.$formato_ventas['otros_premios'].'</td>
+				    <td>'.$formato_ventas['precio_total_unitario'].'</td>
+				    <td>'.$formato_ventas['valor_total_contrato'].'</td>
+				    <td>'.$formato_ventas['cuota_uso_reglamento'].'</td>
+				    <td>'.$formato_ventas['total_a_pagar'].'</td>
 				</tr>
 			  ';
 			 $contador++;
@@ -365,7 +359,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
-				        La empresa <span style="color:red">'.$empresa['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestran una tabla con el resumen de las operaciones.
+				        La OPP <span style="color:red">'.$opp['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestran una tabla con el resumen de las operaciones.
 				      </td>
 				    </tr>
 				    <tr>
@@ -375,8 +369,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 				            <td colspan="7" style="text-align:center">Resumen de operaciones</td>
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Empresa</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Tipo de Empresa</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">OPP</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Informe</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Num. de Contratos</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Valor total de los contratos</td>
@@ -384,8 +377,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Total cuota de uso</td>
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$empresa['abreviacion'].'</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">COMPRADOR FINAL</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$opp['abreviacion'].'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$num_contratos.'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$valor_total_contrato['total_contrato'].'</td>
@@ -504,10 +496,12 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 //// TERMINA ENVIO COMPROBANTE DE PAGO
 
 if(isset($_GET['trim'])){
-
+	$idopp = $_SESSION['idopp'];
+	$row_opp = mysql_query("SELECT * FROM opp WHERE idopp = $idopp", $dspp) or die(mysql_error());
+	$opp = mysql_fetch_assoc($row_opp);
 	$num_trim = "trim".$_GET['trim'];
 	$ano_actual = date('Y', time());
-	$row_trim = mysql_query("SELECT * FROM $num_trim WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+	$row_trim = mysql_query("SELECT * FROM $num_trim WHERE idopp = $idopp AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 	$total_trim = mysql_num_rows($row_trim);
 	$trim = mysql_fetch_assoc($row_trim);
 	$idtrim = "id".$num_trim;
@@ -520,7 +514,7 @@ if(isset($_GET['trim'])){
 			<form action='' method='POST'>
 				<p style='font-size:13px;'>
 					<b style='color:red'>Do you want to complete the capture of records in the current quarter format? </b>
-					<button class='' type='subtmit' value='YES'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='Finalizar trimestre actual' onclick='return confirm(\"Do you want to complete the capture of records in the current quarter format?\");' >YES</button>
+					<button class='' type='subtmit' value='SI'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='End current trimester' onclick='return confirm(\"Do you want to end the current quarter's catch?\");' >YES</button>
 					<!--<input class='btn btn-success' type='submit' name='finalizar_trim' value='SI'>-->
 					<input type='hidden' name='idtrim' value='".$trim[$idtrim]."'>
 					<input type='hidden' name='fecha' value='".time()."'>
@@ -548,7 +542,7 @@ if(isset($_GET['trim'])){
 			$titulo_trim = "<h4>THIRD TRIMESTER | <small>Estatus: $estatus</small></h4>";
 			break;
 		case '4':
-			$titulo_trim = "<h4>FOURTH TRIMESTER | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>FOURD TRIMESTER | <small>Estatus: $estatus</small></h4>";
 			break;		
 		default:
 			$titulo_trim = "<h4>TRIMESTER NOT AVAILABLE</small></h4>";
@@ -558,11 +552,11 @@ if(isset($_GET['trim'])){
 	//echo $titulo_trim;
 	if($total_trim == 1){
 		$ano_actual = date('Y', time());
-		$query_formato = "SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim = '$trim[$idtrim]' AND idempresa = $idempresa";
+		$query_formato = "SELECT formato_ventas.* FROM formato_ventas WHERE formato_ventas.idtrim = '$trim[$idtrim]' AND idopp = $idopp";
 		$row_formato = mysql_query($query_formato, $dspp) or die(mysql_error());
 		$idtrim_txt = 'idtrim'.$_GET['trim'];
 		$txt_trim = 'trim'.$_GET['trim'];
-		$row_trim_menu = mysql_query("SELECT * FROM $txt_trim WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual");
+		$row_trim_menu = mysql_query("SELECT * FROM $txt_trim WHERE idopp = $idopp AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual");
 	  	$trim_options = mysql_fetch_assoc($row_trim_menu);
 
 		if(isset($_GET['add'])){
@@ -579,7 +573,7 @@ if(isset($_GET['trim'])){
 			<table class="table table-bordered" style="font-size:11px;">
 				<thead>
 					<tr>
-						<th colspan="6">
+						<th colspan="7">
 							<?php 
 							echo $titulo_trim;
 							 ?>
@@ -587,7 +581,7 @@ if(isset($_GET['trim'])){
 
 
 						<th colspan="4">
-							<?php echo $empresa['abreviacion'].' - '.$tipo_empresa; ?>
+							<?php echo 'OPP: '.$opp['abreviacion']; ?>
 						</th>
 						<th colspan="4" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
 							<?php 
@@ -623,7 +617,7 @@ if(isset($_GET['trim'])){
 								}else{
 								?>
 									<form action="" method="POST" enctype="multipart/form-data">
-										<p style="font-size:12px;">Click on the button below to load the payment slip corresponding to the Quarterly Report.</p>
+										<p style="font-size:12px;">Click on the following button to load the proof of payment corresponding to the Quarterly Report.</p>
 										<input type="file" class="form-control" name="comprobante_pago">
 										<input type="text" name="num_trimestre" value="<?php echo $_GET['trim']; ?>">
 										<input type="text" name="idtrimestre" value="<?php echo $trim[$txt_id]; ?>">
@@ -638,18 +632,19 @@ if(isset($_GET['trim'])){
 		<form action="" method="POST">	
 					<tr class="success">
 						<th class="text-center">#</th>
-						<th class="text-center">#SPP</th>
-						<th class="text-center">Provider SPO Name</th>
-						<th class="text-center">Provider SPO country</th>
+						<th class="text-center">Country of the SPO</th>
+						<th class="text-center">#SPP of the Final Buyer</th>
+						<th class="text-center"><span style="color:red">Name of the buyer</span></th>
+						<th class="text-center"><spans style="color:red">Buyer Country</span></th>
 						<th class="text-center">Billing Date</th>
 						<th class="text-center">First Intermediate</th>
-						<th class="text-center">econd Intermediate</th>
-						<th colspan="2" class="text-center">Reference Original Contract with SPO</th>
+						<th class="text-center">Second Intermediate</th>
+						<th colspan="2" class="text-center">Reference to Original Contract with the Final buyer</th>
 						<th class="text-center">General Product</th>
 						<th class="text-center">Specific Product</th>
 						<th class="warning text-center">Finished product?</th>
 						<th class="warning text-center">It is exported through:</th>
-						<th colspan="2" class="text-center">Invoice total amount</th>
+						<th colspan="2" class="text-center">Total Amount Due Invoice</th>
 						<th class="text-center">Minimum Sustainable Price</th>
 						<th class="text-center">Organic Recognition</th>
 						<th class="text-center">SPP incentive</th>
@@ -669,8 +664,9 @@ if(isset($_GET['trim'])){
 					?>
 						<tr>
 							<td><?php echo $contador; ?></td>
+							<td><?php echo $opp['pais']; ?></td>
 							<td><?php echo $formato['spp']; ?></td>
-							<td><?php echo $formato['opp']; ?></td>
+							<td><?php echo $formato['empresa']; ?></td>
 							<td><?php echo $formato['pais']; ?></td>
 							<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
 							<td><?php echo $formato['primer_intermediario']; ?></td>
@@ -705,7 +701,7 @@ if(isset($_GET['trim'])){
 					}
 						
 						echo "<tr class='info'>
-							<td colspan='20'></td>
+							<td colspan='21'></td>
 							<td class='text-right'><b style='color:red'>$suma_valor_contrato USD</b></td>
 							<td></td>
 							<td class='text-right'><b style='color:red'>$suma_cuota_uso USD</b></td>
@@ -726,7 +722,7 @@ if(isset($_GET['trim'])){
 	<?php
 	}else{
 		/////
-		$row_trim1 = mysql_query("SELECT idtrim1, estado_trim1 FROM trim1 WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+		$row_trim1 = mysql_query("SELECT idtrim1, estado_trim1 FROM trim1 WHERE idopp = $idopp AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 		$trim1 = mysql_fetch_assoc($row_trim1);
 
 		if(!empty($trim1['idtrim1'])){ //confirmamos que se ha creado el primer trim (TRIM1)
@@ -744,12 +740,12 @@ if(isset($_GET['trim'])){
 					// terminamos VARIABLES DEL TRIM ANTERIOR
 
 
-					$row_trim_anterior = mysql_query("SELECT * FROM $trim_anterior WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+					$row_trim_anterior = mysql_query("SELECT * FROM $trim_anterior WHERE idopp = $idopp AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 					$informacion_trim_anterior = mysql_fetch_assoc($row_trim_anterior);
 
 					if(isset($informacion_trim_anterior[$idtrim_anterior]) && $informacion_trim_anterior[$estado_trim] == 'FINALIZADO'){ /// SI EL TRIM ANTERIOR HA FINALIZADO, MOSTRAREMOS LA OPCIÓN PARA PODER CREAR UN NUEVO TRIM
 						$num_trim_actual = 'trim'.$_GET['trim'];
-						$row_trim_actual = mysql_query("SELECT * FROM $trim_actual WHERE idempresa = $idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
+						$row_trim_actual = mysql_query("SELECT * FROM $trim_actual WHERE idopp = $idopp AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 						$total_trim_actual = mysql_num_rows($row_trim_actual);
 						if($total_trim_actual != 1){ // si ya se ha iniciado el nuevo trim, ya no mostraremos la opción
 							echo '
@@ -763,9 +759,9 @@ if(isset($_GET['trim'])){
 							';
 						}
 					}else{
-						echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> YOU CAN NOT START THIS QUARTERLY REPORT, <b>YOU MUST END THE PREVIOUS REPORT</b></p>";
+						echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> UNTIL THIS QUARTERLY REPORT CAN NOT BE BEGUN, <b>YOU SHOULD FINISH THE PREVIOUS REPORT</b></p>";
 					}
-					$row_trim = mysql_query("SELECT * FROM $trim_actual WHERE idempresa AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual",$dspp) or die(mysql_error());
+					$row_trim = mysql_query("SELECT * FROM $trim_actual WHERE idopp AND FROM_UNIXTIME(fecha_inicio, '%Y') = $ano_actual",$dspp) or die(mysql_error());
 					$informacion_trim = mysql_fetch_assoc($row_trim);
 				}
 			}

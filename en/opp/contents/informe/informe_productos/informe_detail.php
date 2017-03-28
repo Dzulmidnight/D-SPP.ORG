@@ -63,15 +63,15 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 
 ?>
 
-<h4>QUARTERLY REPORTS <span style="color:#e74c3c"><?php echo date('Y',$informe_general_producto['ano']); ?></span></h4>
+<h4>INFORMES TRIMESTRALES <span style="color:#e74c3c"><?php echo date('Y',$informe_general_producto['ano']); ?></span></h4>
 
 <table class="table table-bordered" style="font-size:11px;">
 	<thead>
 		<tr class="success">
 			<th class="text-center">#</th>
-			<th class="text-center">Country of destination of finished product</th>
-			<th class="text-center">Type of currency</th>
-			<th class="text-center">SPP Total Sales Value</th>
+			<th class="text-center">País destino del producto terminado</th>
+			<th class="text-center">Tipo moneda</th>
+			<th class="text-center">Valor de ventas totales SPP</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -96,7 +96,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 			$total_trim1 = $total_trim1 + $formato['ventas_totales'];
 			}
 			echo "<tr>
-				<td colspan='3' class='text-right warning'><h5>FIRST TRIMESTER</h5></td>
+				<td colspan='3' class='text-right warning'><h5>PRIMER TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim1</td>
 			</tr>";
 
@@ -121,7 +121,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 			$total_trim2 = $total_trim2 + $formato['ventas_totales'];
 			}
 			echo "<tr>
-				<td colspan='3' class='text-right warning'><h5>SECOND TRIMESTER</h5></td>
+				<td colspan='3' class='text-right warning'><h5>SEGUNDO TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim2</td>
 			</tr>";
 
@@ -145,7 +145,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 			$total_trim3 = $total_trim3 + $formato['ventas_totales'];
 			}
 			echo "<tr>
-				<td colspan='3' class='text-right warning'><h5>THIRD TRIMESTER</h5></td>
+				<td colspan='3' class='text-right warning'><h5>TERCER TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim3</td>
 			</tr>";
 		}
@@ -167,7 +167,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 			$total_trim4 = $total_trim4 + $formato['ventas_totales'];
 			}
 			echo "<tr>
-				<td colspan='3' class='text-right warning'><h5>FOURTH TRIMESTER</h5></td>
+				<td colspan='3' class='text-right warning'><h5>CUARTO TRIMESTRE</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim4</td>
 			</tr>";
 		}
@@ -175,7 +175,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 		?>
 		<tr>
 			<td class="text-right" colspan="4">
-				<h5>Current total: <span style="color:#c0392b"><?php echo $informe_general_producto['total_informe']; ?></span></h5>
+				<h5>Total actual: <span style="color:#c0392b"><?php echo $informe_general_producto['total_informe']; ?></span></h5>
 			</td>
 		</tr>
 	</tbody>

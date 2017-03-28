@@ -51,7 +51,7 @@ $ano_actual = date('Y', time());
 //IFC = Informe General Compras
 
 if(isset($_POST['crear_informe'])){
-	if($_POST['crear_informe'] == 'YES'){
+	if($_POST['crear_informe'] == 'SI'){
 		//IFP = InForme Producto Empresa = IFPE
 		$ano = date('Y', time());
 		$idinforme_general_producto = 'IFPE-'.$idempresa.'-'.$ano;
@@ -64,13 +64,13 @@ if(isset($_POST['crear_informe'])){
 			GetSQLValueString($estado_informe, "text"));
 		$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
-		echo "<script>alert('The quarterly report $idinforme_general_producto has been created Se ha creado el informe $idinforme_general_producto, corresponding to the year $ano');</script>";
+		echo "<script>alert('Se ha creado el informe $idinforme_general_producto, correspondiente al año $ano');</script>";
 	}else{
-		echo "<script>alert('No new report created');</script>";
+		echo "<script>alert('no se ha creado un nuevo informe');</script>";
 	}
 }
 if(isset($_POST['informe_trimestral'])){
-	if($_POST['informe_trimestral'] == 'YES'){
+	if($_POST['informe_trimestral'] == 'SI'){
 		// Trimestre Empresa = TE
 		$idinforme_general_producto = $_POST['idinforme_general_producto'];
 		$ano = date('Y', time());
@@ -89,7 +89,7 @@ if(isset($_POST['informe_trimestral'])){
 			GetSQLValueString($idinforme_general_producto, "text"));
 		$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
-		echo "<script>alert('A new quarterly format has been created - $idtrim1_producto');</script>";
+		echo "<script>alert('Se ha creado un nuevo formato trimestral $idtrim1_producto');</script>";
 	}else{
 		echo "<script>alert('No');</script>";
 	}
@@ -116,7 +116,7 @@ if(isset($_POST['informe_trimestral'])){
 				<div class="col-md-12">
 					<div class="btn-group" role="group" aria-label="...">
 						<div class="btn-group">
-						  <a type="button" <?php if(isset($_GET['trim1_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=1" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimester 1</a>
+						  <a type="button" <?php if(isset($_GET['trim1_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=1" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 1</a>
 						  
 						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim1_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
@@ -129,7 +129,7 @@ if(isset($_POST['informe_trimestral'])){
 						</div>
 
 						<div class="btn-group">
-						  <a type="button" <?php if(isset($_GET['trim2_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=2" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimester 2</a>
+						  <a type="button" <?php if(isset($_GET['trim2_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=2" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 2</a>
 						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim2_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
@@ -148,7 +148,7 @@ if(isset($_POST['informe_trimestral'])){
 						</div>
 
 						<div class="btn-group">
-						  <a type="button" <?php if(isset($_GET['trim3_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=3" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimester 3</a>
+						  <a type="button" <?php if(isset($_GET['trim3_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=3" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 3</a>
 						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim3_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
@@ -167,7 +167,7 @@ if(isset($_POST['informe_trimestral'])){
 						</div>
 
 						<div class="btn-group">
-						  <a type="button" <?php if(isset($_GET['trim4_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=4" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimester 4</a>
+						  <a type="button" <?php if(isset($_GET['trim4_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=4" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimestre 4</a>
 						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim4_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
@@ -203,10 +203,10 @@ if(isset($_POST['informe_trimestral'])){
 		?>
 			<form action="" method="POST">
 				<p class="alert alert-info">
-				Step 2: No <b style="color:red">"Quarterly Format"</b> has been started in the <b style="color:red">"General Product Report - <?php echo $ano_actual ?>"</b>, <strong>Do you want to create a new Format for Quarterly Report?</strong>
-				<input class="btn btn-success" type="submit" name="informe_trimestral" value="YES">
+				Paso 2: No se ha iniciado ningun <b style="color:red">"Formato Trimestral"</b> en el <b style="color:red">Informe General de Productos <?php echo $ano_actual ?></b> , <strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
+				<input class="btn btn-success" type="submit" name="informe_trimestral" value="SI">
 				<input class="btn btn-danger" type="submit" name="informe_trimestral" value="NO">
-				<input type="hidden" name="idinforme_general_producto" value="<?php echo $informe_general_producto['idinforme_general_producto']; ?>">
+				<input type="text" name="idinforme_general_producto" value="<?php echo $informe_general_producto['idinforme_general_producto']; ?>">
 				</p>
 			</form>
 		<?php
@@ -218,8 +218,8 @@ if(isset($_POST['informe_trimestral'])){
 	?>		
 		<form action="" method="POST">
 			<p class="alert alert-warning">
-			Step 1: No finished Product Reports were found, <strong>Do you want to create a new Product Report?</strong>
-			<input class="btn btn-success" type="submit" name="crear_informe" value="YES">
+			Paso 1: No se encontraron Informes sobre productos terminados, <strong>¿Desea crear un nuevo Informe de Productos?</strong>
+			<input class="btn btn-success" type="submit" name="crear_informe" value="SI">
 			<input class="btn btn-danger" type="submit" name="crear_informe" value="NO">
 			</p>
 		</form>

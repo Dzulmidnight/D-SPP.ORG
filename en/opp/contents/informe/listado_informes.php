@@ -7,7 +7,7 @@ mysql_select_db($database_dspp, $dspp);
 if (!isset($_SESSION)) {
   session_start();
 	
-	$redireccion = "../index.php?EMPRESA";
+	$redireccion = "../index.php?OPP";
 
 	if(!$_SESSION["autentificado"]){
 		header("Location:".$redireccion);
@@ -49,13 +49,13 @@ $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
-$idempresa = $_SESSION['idempresa'];
+$idopp = $_SESSION['idopp'];
 $ano_actual = date('Y', time());
 
-//24_02_2017$row_informes = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, ROUND(SUM(trim1.total_trim1 + trim2.total_trim2 + trim3.total_trim3 + trim4.total_trim4), 2) AS 'balance_final' FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa", $dspp) or die(mysql_error());
-$row_informes = mysql_query("SELECT informe_general.*, trim1.cuota_uso_trim1, trim2.cuota_uso_trim2, trim3.cuota_uso_trim3, trim4.cuota_uso_trim4 FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa", $dspp) or die(mysql_error());
+//24_02_2017$row_informes = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, ROUND(SUM(trim1.total_trim1 + trim2.total_trim2 + trim3.total_trim3 + trim4.total_trim4), 2) AS 'balance_final' FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idopp = $idopp", $dspp) or die(mysql_error());
+$row_informes = mysql_query("SELECT informe_general.*, trim1.cuota_uso_trim1, trim2.cuota_uso_trim2, trim3.cuota_uso_trim3, trim4.cuota_uso_trim4 FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idopp = $idopp", $dspp) or die(mysql_error());
 
-//$row_informes = mysql_query("SELECT informe_general.*, trim1.cuota_uso_trim1, trim2.cuota_uso_trim2, trim3.cuota_uso_trim3, trim4.cuota_uso_trim4 FROM informe_general INNER JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 INNER JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 INNER JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 INNER JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa", $dspp) or die(mysql_error());
+//$row_informes = mysql_query("SELECT informe_general.*, trim1.cuota_uso_trim1, trim2.cuota_uso_trim2, trim3.cuota_uso_trim3, trim4.cuota_uso_trim4 FROM informe_general INNER JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 INNER JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 INNER JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 INNER JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idopp = $idopp", $dspp) or die(mysql_error());
 $numero_informes = mysql_num_rows($row_informes);
 
 echo "<h4>Number of current reports: $numero_informes</h4>";

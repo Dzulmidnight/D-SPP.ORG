@@ -28,7 +28,21 @@
 </div>	
 
 <?php 
-switch ($_GET['po_clientes']) {
+$menu = $_GET['po_clientes'];
+if($menu == 'add'){
+	include('clientes/add_cliente.php');
+}else if($menu == 'add_tarea'){
+	include('clientes/add_tarea.php');
+}else if($menu == 'add_nota'){
+	include('clientes/add_nota.php');
+}else if($menu == 'add_reunion'){
+	include('clientes/add_reunion.php');
+}else if(isset($_GET['detalle_cliente'])){
+	include('clientes/detalle_cliente.php');
+}else{
+	include('clientes/tabla_posibles_clientes.php');
+}
+/*switch ($_GET['po_clientes']) {
 	case 'add':
 		include('clientes/add_cliente.php');
 		break;
@@ -44,5 +58,6 @@ switch ($_GET['po_clientes']) {
 	default:
 		include('clientes/tabla_posibles_clientes.php');
 		break;
-}
+}*/
+
  ?>

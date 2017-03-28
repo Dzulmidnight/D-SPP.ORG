@@ -65,33 +65,33 @@ $informe_general = mysql_fetch_assoc($row_informe);
 
 ?>
 
-<h4>INFORMES TRIMESTRALES <span style="color:#e74c3c"><?php echo date('Y',$informe_general['ano']); ?></span></h4>
+<h4>QUARTERLY REPORTS <span style="color:#e74c3c"><?php echo date('Y',$informe_general['ano']); ?></span></h4>
 
 <table class="table table-bordered" style="font-size:11px;">
 	<thead>
 		<tr class="success">
 			<th class="text-center">#</th>
-			<th class="text-center">País de la OPP</th>
+			<th class="text-center">Country of the SPO</th>
 			<th class="text-center">#SPP</th>
-			<th class="text-center"><span style="color:red">Nombre del Comprador</span></th>
-			<th class="text-center"><span style="color:red">País del Comprador</span></th>
-			<th class="text-center">Fecha de Facturación</th>
-			<th class="text-center">Primer Intermediario</th>
-			<th class="text-center">Segundo Intermediario</th>
-			<th colspan="2" class="text-center"><span style="color:red">Referencia del Contrato Original con el Comprador</span></th>
-			<th class="text-center">Producto General</th>
-			<th class="text-center">Producto Especifico</th>
-			<th class="text-center">¿Producto terminado?</th>
-			<th class="text-center">¿Se exporta?</th>
-			<th colspan="2" class="text-center">Cantidad Total Conforme Factura</th>
-			<th class="text-center">Precio Sustentable Mínimo</th>
-			<th class="text-center">Reconocimiento Orgánico</th>
-			<th class="text-center">Incentivo SPP</th>
-			<th class="text-center">Otros premios</th>
-			<th class="text-center">Precio Total Unitario pagado</th>
-			<th class="text-center">Valor Total Contrato</th>
-			<th class="text-center">Cuota de Uso Reglamento</th>
-			<th class="text-center">Total a pagar</th>
+			<th class="text-center">Name of the buyer</th>
+			<th class="text-center">Buyer Country</th>
+			<th class="text-center">Billing Date</th>
+			<th class="text-center">First Intermediate</th>
+			<th class="text-center">Second Intermediate</th>
+			<th colspan="2" class="text-center"><span style="color:red">Reference Original Contract with the Buyer</span></th>
+			<th class="text-center">General Product</th>
+			<th class="text-center">Specific Product</th>
+			<th class="text-center">Finished product?</th>
+			<th class="text-center">Is it exported?</th>
+			<th colspan="2" class="text-center">Total Amount Due Invoice</th>
+			<th class="text-center">Minimum Sustainable Price</th>
+			<th class="text-center">Organic Recognition</th>
+			<th class="text-center">SPP incentive</th>
+			<th class="text-center">Other prizes</th>
+			<th class="text-center">Total Unit Price Paid</th>
+			<th class="text-center">Total Contract Value</th>
+			<th class="text-center">Usage Fee Regulation</th>
+			<th class="text-center">Total to pay</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -144,7 +144,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim1 = $total_trim1 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='21' class='text-right warning'><h5>PRIMER TRIMESTRE</h5></td>
+				<td colspan='21' class='text-right warning'><h5>FIRST TRIMESTER</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim1</td>
@@ -200,7 +200,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			}
 
 			echo "<tr>
-				<td colspan='21' class='text-right warning'><h5>SEGUNDO TRIMESTRE</h5></td>
+				<td colspan='21' class='text-right warning'><h5>SECOND TRIMESTER</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim2</td>
@@ -256,7 +256,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			}
 
 			echo "<tr>
-				<td colspan='21' class='text-right warning'><h5>TERCER TRIMESTRE</h5></td>
+				<td colspan='21' class='text-right warning'><h5>THIRD TRIMESTER </h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim3</td>
@@ -310,7 +310,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			}
 
 			echo "<tr>
-				<td colspan='21' class='text-right warning'><h5>CUARTO TRIMESTRE</h5></td>
+				<td colspan='21' class='text-right warning'><h5>FOURD TRIMESTER</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim4</td>
@@ -321,7 +321,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 		?>
 		<tr>
 			<td class="text-right" colspan="27">
-				<h5>Total actual: <span style="color:#c0392b"><?php echo $informe_general['total_cuota_uso']; ?> USD</span></h5>
+				<h5>Current total: <span style="color:#c0392b"><?php echo $informe_general['total_cuota_uso']; ?> USD</span></h5>
 			</td>
 		</tr>
 	</tbody>
