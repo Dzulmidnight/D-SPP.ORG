@@ -51,7 +51,7 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 
 	/********  SE ENVIA CORREO SOBRE REPORTE TRIMESTRAL  ************/
 		//$idtrimestre = $_POST['idtrim'];
-		$porcetaje_cuota = $configuracion['cuota_compradores'];
+		$porcetaje_cuota = $configuracion['cuota_productores'];
 		//$tipo_opp = $tipo_opp;
 
 	    $html = '
@@ -228,7 +228,7 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 	            <td style="text-align:right;font-size:12px;">
 	                  <div>
 	                <h2>
-	                  Detalle Reporte Trimestral de Compras
+	                  Detalle Reporte Trimestral de Ventas
 	                </h2>             
 	                  </div>
 	                  <div>Símbolo de Pequeños Productores</div>
@@ -258,7 +258,7 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 	   // $nombre_archivo = 'reporte.pdf';
 
 	/********/
-		$asunto = 'D-SPP - Factura Informe Trimestral Compras';
+		$asunto = 'D-SPP - Factura Informe Trimestral Ventas';
 		$mensaje_correo = '
 			<html>
 			<head>
@@ -464,7 +464,7 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
 						    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$formatos['num_contratos'].'</td>
 						    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$valor_total_contratos.'</td>
-						    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$configuracion['cuota_compradores'].'%'.'</td>
+						    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$configuracion['cuota_productores'].'%'.'</td>
 						    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$valor_cuota_de_uso.'</td>
 				          </tr>
 				        </table>
@@ -753,12 +753,12 @@ function redondear_dos_decimal($valor) {
 								</div>
 
 							<?php	
-								if($informes['estatus_factura_trim1'] == 'ENVIADA'){
+								if($informes['estatus_factura_trim1'] == 'ENVIADA' || $informes['estatus_factura_trim1'] == 'PAGADA'){
 									///boton para descargar factura
 									echo "<a href='$informes[factura_trim1]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
 									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
 								}
-								if($informes['estatus_comprobante_trim1'] == 'ENVIADO' || $informes['estatus_comprobante_trim1'] == 'APROBADO'){
+								if($informes['estatus_comprobante_trim1'] == 'ENVIADO' || $informes['estatus_comprobante_trim1'] == 'APROBADO' || $informes['estatus_comprobante_trim1'] == 'FINALIZADO'){
 									/// boton para descargar comprobante de pago
 									echo "<a href='$informes[comprobante_pago_trim1]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
 								}
@@ -769,6 +769,9 @@ function redondear_dos_decimal($valor) {
 								}
 								
 								echo ' $'.$informes['cuota_uso_trim1'].' USD';
+								if($informes['estatus_factura_trim1'] == 'PAGADA'){
+									echo "<span class='disabled btn btn-xs btn-info glyphicon glyphicon-ok' aria-hidden='true'></span>";
+								}
 							echo '</td>';
 
 							echo '<td>'; //// TRIMESTRE 2

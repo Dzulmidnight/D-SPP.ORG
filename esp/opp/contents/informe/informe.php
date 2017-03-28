@@ -91,8 +91,6 @@ $informe_general = mysql_fetch_assoc($row_informe_general);
 	<?php
 	}
 	?>
-		<a class="btn btn-sm <?php if(isset($_GET['producto'])){ echo 'btn-success';}else{ echo 'btn-default';} ?>" href="?INFORME&producto"><span class="glyphicon glyphicon-apple" aria-hidden="true"></span> Informe Productos Terminados</a>
-
 </h4>
 
 
@@ -105,10 +103,6 @@ if(isset($_GET['general_detail'])){
 	include ("informe_detail.php");
 }else if(isset($_GET['add'])){
 	include ("informe_add.php");
-}else if(isset($_GET['add_producto'])){
-	include('informe_productos/informe_add_producto.php');
-}else if(isset($_GET['producto'])){
-	include('informe_productos/informe_general.php');
 }else{
 	include ('listado_informes.php');
 }

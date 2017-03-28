@@ -97,7 +97,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 
 		if(isset($informe_general['trim1'])){
 			$row_registro = mysql_query("SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim = '$informe_general[trim1]'", $dspp) or die(mysql_error());
-
+			$total_contrato = 0;
 			$contador = 1;
 			$total_trim1 = 0;
 			while($formato = mysql_fetch_assoc($row_registro)){
@@ -136,10 +136,13 @@ $informe_general = mysql_fetch_assoc($row_informe);
 				</tr>
 			<?php
 			$contador++;
+			$total_contrato = $total_contrato + $formato['valor_total_contrato'];
 			$total_trim1 = $total_trim1 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='22' class='text-right warning'><h5>PRIMER TRIMESTRE</h5></td>
+				<td colspan='20' class='text-right warning'><h5>PRIMER TRIMESTRE</h5></td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
+				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim1</td>
 			</tr>";
 
@@ -149,6 +152,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 		if(isset($informe_general['trim2'])){
 			$row_registro = mysql_query("SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim = '$informe_general[trim2]'");
 			$contador = 1;
+			$total_contrato = 0;
 			$total_trim2 = 0;
 			while($formato = mysql_fetch_assoc($row_registro)){
 			?>
@@ -186,18 +190,22 @@ $informe_general = mysql_fetch_assoc($row_informe);
 				</tr>
 			<?php
 			$contador++;
+			$total_contrato = $total_contrato + $formato['valor_total_contrato'];
 			$total_trim2 = $total_trim2 + $formato['total_a_pagar'];
 			}
+
 			echo "<tr>
-				<td colspan='22' class='text-right warning'><h5>SEGUNDO TRIMESTRE</h5></td>
+				<td colspan='20' class='text-right warning'><h5>SEGUNDO TRIMESTRE</h5></td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
+				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim2</td>
 			</tr>";
-
 
 		}
 		if(isset($informe_general['trim3'])){
 			$row_registro = mysql_query("SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim = '$informe_general[trim3]'");
 			$contador = 1;
+			$total_contrato = 0;
 			$total_trim3 = 0;
 			while($formato = mysql_fetch_assoc($row_registro)){
 			?>
@@ -235,16 +243,22 @@ $informe_general = mysql_fetch_assoc($row_informe);
 				</tr>
 			<?php
 			$contador++;
+			$total_contrato = $total_contrato + $formato['valor_total_contrato'];
 			$total_trim3 = $total_trim3 + $formato['total_a_pagar'];
 			}
+
 			echo "<tr>
-				<td colspan='22' class='text-right warning'><h5>TERCER TRIMESTRE</h5></td>
+				<td colspan='20' class='text-right warning'><h5>TERCER TRIMESTRE</h5></td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
+				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim3</td>
 			</tr>";
+
 		}
 		if(isset($informe_general['trim4'])){
 			$row_registro = mysql_query("SELECT formato_compras.* FROM formato_compras WHERE formato_compras.idtrim = '$informe_general[trim4]'");
 			$contador = 1;
+			$total_contrato = 0;
 			$total_trim4 = 0;
 			while($formato = mysql_fetch_assoc($row_registro)){
 			?>
@@ -282,10 +296,13 @@ $informe_general = mysql_fetch_assoc($row_informe);
 				</tr>
 			<?php
 			$contador++;
+			$total_contrato = $total_contrato + $formato['valor_total_contrato'];
 			$total_trim4 = $total_trim4 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='22' class='text-right warning'><h5>CUARTO TRIMESTRE</h5></td>
+				<td colspan='20' class='text-right warning'><h5>CUARTO TRIMESTRE</h5></td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
+				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim4</td>
 			</tr>";
 		}

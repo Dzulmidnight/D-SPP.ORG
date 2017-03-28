@@ -233,15 +233,15 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	<div class="col-md-12">
 	<?php
 	if($trim[$txt_estatus] == 'FINALIZADO'){
-		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se pueden agregar más registro al <b>Formato Trimestral $idtrim</b>, ya que el trimestre ha concluido.</p>";
+		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> You can no longer add more records to the Quarterly Format, since the quarter has ended.</p>";
 	}else{
 	?>
 
 
 		<!--<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>-->
-		<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color azul son opcionales, dicha informacion será de utilidad para la evaluación de la certificación.</p>
-		<p class="alert alert-success" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color verde son obligatorios.</p>
-		<p class="alert alert-warning" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color amarillo son completados de manera automatica.</p>
+		<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Fields marked in blue are optional, this information will be useful for the evaluation of certification.</p>
+		<p class="alert alert-success" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> The fields marked in green are mandatory.</p>
+		<p class="alert alert-warning" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> The fields marked in yellow are completed automatically.</p>
 	
 		<form class="form-horizontal" method="POST">
 		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
@@ -251,160 +251,160 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 							#
 		 				</th>
 						<th class="text-center">#SPP</th>
-						<th class="text-center">Nombre OPP proovedora</th>
-						<th class="text-center">País de OPP proveedora</th>
-						<th class="text-center">Fecha de Facturación</th>
-						<th class="text-center">Primer Intermediario</th>
-						<th class="text-center">Segundo Intermediario</th>
-						<th colspan="2" class="text-center">Referencia Contrato Original con OPP</th>
-						<th class="text-center">Producto General</th>
-						<th class="text-center">Producto Especifico</th>
+						<th class="text-center">Provider SPO Name</th>
+						<th class="text-center">Provider SPO country</th>
+						<th class="text-center">Billing Date</th>
+						<th class="text-center">First Intermediate</th>
+						<th class="text-center">Second Intermediate</th>
+						<th colspan="2" class="text-center">Reference Original Contract with SPO</th>
+						<th class="text-center">General Product</th>
+						<th class="text-center">Specific Product</th>
 						<?php 
 						if($tipo_de_empresa){
 						?>
 							<th colspan="2" class="text-center">
-								Producto Terminado
+								Finished product
 							</th>
 
 						<?php
 						}
 						 ?>
-						<th colspan="2" class="text-center">Cantidad Total Conforme Factura</th>
-						<th class="text-center">Precio Sustentable Mínimo</th>
-						<th class="text-center">Reconocimiento Orgánico</th>
-						<th class="text-center">Incentivo SPP</th>
-						<th class="text-center">Otros premios</th>
-						<th class="text-center">Precio Total Unitario pagado</th>
-						<th class="text-center">Valor Total Contrato</th>
-						<th class="text-center">Cuota de Uso Reglamento</th>
-						<th class="text-center">Total a pagar</th>
+						<th colspan="2" class="text-center">Total Amount Due Invoice</th>
+						<th class="text-center">Minimum Sustainable Price</th>
+						<th class="text-center">Organic Recognition</th>
+						<th class="text-center">SPP incentive</th>
+						<th class="text-center">Other prizes</th>
+						<th class="text-center">Total Unit Price Paid</th>
+						<th class="text-center">Total Contract Value</th>
+						<th class="text-center">Usage Fee Regulation</th>
+						<th class="text-center">Total to pay</th>
 		 			</tr>
 		 		</thead>
 		 		<tbody>
 		 			<tr>
 		 				<!-- INICIA NUMERO CONSECUTIVO -->
 		 				<td>
-		 					Número Consecutivo
+		 					Consecutive number
 		 				</td>
 		 				<!-- TERMINA NUMERO CONSECUTIVO -->
 
 		 				<!-- INICIA #SPP -->
 		 				<td>
-		 					Codigo de identificación SPP
+		 					SPP identification code
 		 				</td>
 		 				<!-- TERMINA #SPP -->
 						
 						<!-- INICIA NOMBRE DE LA OPP -->
 		 				<td>
-		 					Nombre de la OPP de donde proviene el producto.
+		 					Name of the SPO where the product comes from.
 		 				</td>
 		 				<!-- TERMINA NOMBRE DE A OPP
 
 		 				<!-- INICIA PAIS DE LA OPP -->
 		 				<td>
-		 					País sede la OPP de donde proviene el productos
+		 					Country where the SPO originates the products
 		 				</td>
 		 				<!-- TERMINA PAIS DE LA OPP -->
 
 		 				<!-- INICIA FECHA DE LA FACTURACION -->
 		 				<td>
-		 					La fecha de la compra del producto por el Comprador Final, usuario del SPP(de la OPP directamente o a través de algún intermediario).
+		 					The date of the purchase of the product by the Final Purchaser, SPP user (from the OPP directly or through an intermediary).
 		 				</td>
 		 				<!-- TERMINA FECHA DE LA FACTURACION -->
 
 		 				<!-- INICIA PRIMER INTERMEDIARIO -->
 		 				<td>
-		 					Nombre de la contraparte comercial que hace la compra del prodcuto a la OPP, si no es el Comprador Final. Si es el Comprador Final poner guión
+		 					Name of the commercial counterpart who makes the purchase of the product to the SPO, if not the Final Purchaser. If it is the Final Buyer put the script
 		 				</td>
 		 				<!-- TERMINA PRIMER INTERMEDIARIO -->
 
 		 				<!-- INICIA SEGUNDO INTERMEDIARIO -->
 		 				<td>
-		 					Nombre de la contraparte comercial que hace la compra del producto al Primer Intermediario, si no es el Comprador Final. Si no existe o es el Comprador Final, poner guión.
+		 					Name of the commercial counterpart who makes the purchase of the product to the First Intermediary, if not the Final Purchaser. If it does not exist or is the Final Buyer, put a hyphen.
 		 				</td>
 		 				<!-- TERMINA SEGUNDO INTERMEDIARIO -->
 
 		 				<!-- INICIA REFERENCIA CONTRATO -->
 			 				<td>
-			 					Número o la clave del Contrato Original, es decir, el contrato de venta de la OPP al Comprador o al Primer Intermediario.
+			 					Number or key of the Original Contract, ie the contract of sale of the OPP to the Buyer or First Intermediary.
 			 				</td>
 			 				<td>
-			 					Fecha del Contrato Original de venta de la OPP.
+			 					Date of the Original Sale Agreement of the SPO.
 			 				</td>
 		 				<!-- TERMINA REFERENCIA CONTRATO -->
 
 		 				<!-- INICIA PRODUCTO GENERAL -->
 		 				<td>
-		 					Producto general. Ej: Café, Miel, Platano, Azúcar.
+		 					General product. Eg: Coffee, Honey, Platano, Sugar.
 		 				</td>
 		 				<!-- TERMINA PRODUCTO GENERAL -->
 
 		 				<td>
-		 					Producto especifico. Ej: Café verde arábica, Miel tipo A, Chips de platano, Azúcar blanco refinado.
+		 					Specific product. Eg: Green Arabica coffee, Honey type A, Banana chips, Refined white sugar.
 		 				</td>
 		 				<?php 
 		 				if($tipo_de_empresa){
 		 				?>
 			 				<td colspan="2">
-			 					¿Producto terminado?
+			 					Finished product?
 			 				</td>
 		 				<?php
 		 				}
 		 				 ?>
 		 				<!-- INICIA CANTIDAD TOTAL CONFORME FACTURA -->
 			 				<td>
-			 					Unidad de medida utilizada (kg, t, lb, qq, etc)
+			 					Unit of measure used (kg, to, lb, qq, etc.)
 			 				</td>
 			 				<td>
-			 					Cantidad total del producto en unidad de medida final indicada en el contrato original
+			 					Total quantity of product in final unit of measure indicated in the original contract
 			 				</td>
 		 				<!-- TERMINA CANTIDAD TOTAL CONFORME FACTURA -->
 
 		 				<!-- INICIA PRECIO SUSTENTABLE MINIMO -->
 		 				<td>
-		 					Importe pagado por unidad(USD)
+		 					Amount paid per unit (USD)
 		 				</td>
 						<!-- TERMINA PRECIO SUSTENTABLE MINIMO -->
 
 		 				<!-- INICIA RECONOCIMIENTO ORGANICO -->
 		 				<td>
-		 					Importe pagado por unidad(USD)
+		 					Amount paid per unit (USD)
 		 				</td>
 						<!-- TERMINA RECONOCIMIENTO ORGANICO -->
 
 		 				<!-- INICIA INCENTIVO SPP -->
 		 				<td>
-		 					Importe pagado por unidad(USD)
+		 					Amount paid per unit (USD)
 		 				</td>
 						<!-- TERMINA INCENTIVO SPP -->
 
 		 				<!-- INICIA OTROS PREMIOS -->
 		 				<td>
-		 					Importe pagado por unidad(USD)
+		 					Amount paid per unit (USD)
 		 				</td>
 						<!-- TERMINA OTROS PREMIOS -->
 
 		 				<!-- INICIA PRECIO TOTAL UNITARIO PAGADO -->
 		 				<td>
-		 					Importe pagado por unidad(USD)
+		 					Amount paid per unit (USD)
 		 				</td>
 						<!-- TERMINA PRECIO TOTAL UNITARIO PAGADO -->
 
 		 				<!-- INICIA VALOR TOTAL CONTRATO -->
 		 				<td>
-		 					Valor total del contrato (en divisa conforme Lista de Precios Sustentables del SPP)
+		 					Total contract value (in accordance with the SPP Sustainable Price List)
 		 				</td>
 						<!-- TERMINA VALOR TOTAL CONTRATO -->
 
 		 				<!-- INICIA CUOTA DE USO REGLAMENTO -->
 		 				<td>
-		 					Cuota vigente establecida conforme Reglamento de Costos de SPP
+		 					Current quota established according to SPP Cost Regulation
 		 				</td>
 						<!-- TERMINA CUOTA DE USO REGLAMENTO -->
 
 		 				<!-- INICIA TOTAL A PAGAR -->
 		 				<td>
-		 					Total a pagar a SPP Global conforme cuota de uso y volumen de lote
+		 					Total to be paid to SPP Global according to usage quota and lot volume
 		 				</td>
 						<!-- TERMINA TOTAL A PAGAR -->
 		 			</tr>
@@ -491,7 +491,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>-->
 
 						<td class="warning"><!-- nombre de la opp -->
-							<textarea id="nombre_opp" name="nombre_opp" value="" placeholder="Nombre de la OPP"></textarea>
+							<textarea id="nombre_opp" name="nombre_opp" value="" placeholder="Name of SPO"></textarea>
 
 							<!--<input type="text" name="nombre_opp" id="" placeholder="Nombre de la OPP">-->
 						</td>
@@ -514,34 +514,34 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>
 
 						<td class="info"><!-- primer intermediario -->
-							<input type="text" name="primer_intermediario" id="" placeholder="primer intermediario" onBlur=" ponerMayusculas(this)">
+							<input type="text" name="primer_intermediario" id="" placeholder="First intermediary" onBlur=" ponerMayusculas(this)">
 						</td>
 
 						<td class="info"><!-- segundo intermediario -->
-							<input type="text" name="segundo_intermediario" id="" placeholder="segundo intermediario" onBlur=" ponerMayusculas(this)">
+							<input type="text" name="segundo_intermediario" id="" placeholder="Second intermediary" onBlur=" ponerMayusculas(this)">
 						</td>
 
 						<td class="info"><!-- REFERENCIA CONTRATO ORIGINAL -->
-							<input type="text" name="clave_contrato" id="" placeholder="clave del contrato" onBlur=" ponerMayusculas(this)"><!-- #clave del contrato -->
+							<input type="text" name="clave_contrato" id="" placeholder="Contract key" onBlur=" ponerMayusculas(this)"><!-- #clave del contrato -->
 						</td>
 						<td class="info">
 							<input type="date" name="fecha_contrato" id="" placeholder="dd-mm-aaaa"><!-- #fecha del contrato -->
 						</td><!-- REFERENCIA CONTRATO ORIGINAL -->
 
 						<td><!-- producto general -->
-							<input type="text" name="producto_general" id="" placeholder="Ej: café, miel, azucar" onBlur=" ponerMayusculas(this)" required>
+							<input type="text" name="producto_general" id="" placeholder="Eg: coffee, honey, sugar" onBlur=" ponerMayusculas(this)" required>
 						</td>
 
 						<td class="success"><!-- producto especifico -->
-							<input type="text" name="producto_especifico" id="" placeholder="Ej: café verde, miel de abeja, azucar refinada" onBlur=" ponerMayusculas(this)" required>
+							<input type="text" name="producto_especifico" id="" placeholder="Eg: green coffee, honey, refined sugar" onBlur=" ponerMayusculas(this)" required>
 						</td>
 						<?php 
 						if($tipo_de_empresa){
 						?>
 							<td>
-								¿Es producto terminado?
+								Is it a finished product?
 								<label class="radio-inline">
-								  <input type="radio" name="producto_terminado" id="inlineRadio1" value="SI" onchange="mostrar()"> SI
+								  <input type="radio" name="producto_terminado" id="inlineRadio1" value="SI" onchange="mostrar()"> YES
 								</label>
 								<br>
 								<label class="radio-inline">
@@ -550,13 +550,13 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 							</td>
 							<td style="border-left-style:hidden;">
 								<div id="div_oculto" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
-									Se compra directamente a la organización o a través de un intermediario 
+									Purchased directly from the organization or through an intermediary
 									<label class="radio-inline">
-									  <input type="radio" name="se_exporta" id="" value="DIRECTAMENTE"> Directamente
+									  <input type="radio" name="se_exporta" id="" value="DIRECTAMENTE"> Directly
 									</label>
 									<br>
 									<label class="radio-inline">
-									  <input type="radio" name="se_exporta" id="" value="INTERMEDIARIO"> A través de un intermediario
+									  <input type="radio" name="se_exporta" id="" value="INTERMEDIARIO"> Through an intermediary
 									</label>
 								</div>							
 							
@@ -570,7 +570,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 								<option value="Qq">Qq</option>
 								<option value="Lb">Lb</option>
 								<option value="Kg">Kg</option>
-								<option value="Unidad">Unidad</option>
+								<option value="Unidad">Unity</option>
 							</select>
 						</td>
 
@@ -579,19 +579,19 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td><!-- CANTIDAD TOTAL CONFORME FACTURA -->
 
 						<td class="info"><!-- precio sustentable minimo -->
-							<input type="number" step="any" name="precio_sustentable_minimo" id="" placeholder="importe pagado">
+							<input type="number" step="any" name="precio_sustentable_minimo" id="" placeholder="amount paid">
 						</td>
 
 						<td class="info"><!-- reconocimiento organico -->
-							<input type="number" step="any" name="reconocimiento_organico" id="" placeholder="importe pagado">
+							<input type="number" step="any" name="reconocimiento_organico" id="" placeholder="amount paid">
 						</td>
 
 						<td class="info"><!-- incentivo spp -->
-							<input type="number" step="any" name="incentivo_spp" id="" placeholder="importe pagado">
+							<input type="number" step="any" name="incentivo_spp" id="" placeholder="amount paid">
 						</td>
 
 						<td class="info"><!-- otros premios -->
-							<input type="number" step="any" name="otros_premios" id="" placeholder="importe pagado">
+							<input type="number" step="any" name="otros_premios" id="" placeholder="amount paid">
 						</td>
 
 						<td class="success"><!-- precio total unitario pagado -->
@@ -599,15 +599,15 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>
 
 						<td class="warning"><!-- valor total contrato -->
-							<input type="text" id="valor_total_contrato" name="valor_total_contrato" id="" placeholder="Valor total del Contrato" readonly>
+							<input type="text" id="valor_total_contrato" name="valor_total_contrato" id="" placeholder="Total Contract Value" readonly>
 						</td>
 
 						<td class="warning"><!-- cuota de uso reglamento -->
-							<input type="text" id="cuota_uso_reglamento" name="cuota_uso_reglamento" id="cuota_uso_reglamento" value="0" placeholder="Cuota uso reglamento" readonly>
+							<input type="text" id="cuota_uso_reglamento" name="cuota_uso_reglamento" id="cuota_uso_reglamento" value="0" placeholder="Usage fee" readonly>
 						</td>
 
 						<td class="warning"><!-- total a pagar -->
-							<input type="text" name="total_a_pagar" id="total_a_pagar" placeholder="Total a pagar" readonly>
+							<input type="text" name="total_a_pagar" id="total_a_pagar" placeholder="Total to pay" readonly>
 						</td>
 
 					</tr>
@@ -615,11 +615,11 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 				<?php 
 		 				if($tipo_de_empresa){
 		 				?>
-		 					<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1" onclick="return validar()">Guardar Registro</button></td>
+		 					<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1" onclick="return validar()">Save Record</button></td>
 		 				<?php
 		 				}else{
 		 				?>
-		 					<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1">Guardar Registro</button></td>
+		 					<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1">Save Record</button></td>
 		 				<?php
 		 				}
 		 				 ?>
@@ -649,7 +649,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
       }
     }
     if(!seleccionado) {
-      alert("Debe seleccionar SI es un producto terminado o NO");
+      alert("Must select YES is a finished product or NO");
       return false;
     }
 
@@ -663,7 +663,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	      }
 	    }
 	    if(!pregunta) {
-	      alert("Debes contestar si el producto se exporta \"Directamente\" ó \"a través de un intermediario\" ");
+	      alert("You must answer if the product is exported \"Directly\" or \"through an intermediary\" ");
 	      return false;
 	    }
     }
@@ -683,9 +683,9 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 <script>
 $(document).ready(function() {
 //    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
-    $("#nombre_opp").val('Nombre de la OPP');
+    $("#nombre_opp").val('Name of SPO');
 //    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
-    $("#pais").val('Pais de la OPP');
+    $("#pais").val('Country of the SPO');
 });
 
 function buscar() {
@@ -696,7 +696,7 @@ function buscar() {
             $("#nombre_opp").val(nombre_opp);
          }); 
      } else { 
-        $("#nombre_opp").val('Nombre de la OPP');
+        $("#nombre_opp").val('Name of SPO');
      };
 
      if (textoBusqueda != "") {
@@ -704,7 +704,7 @@ function buscar() {
             $("#pais").val(nombre_pais);
          }); 
      } else { 
-        $("#pais").val('País de la OPP');
+        $("#pais").val('Country of the SPO');
      };
 
 };

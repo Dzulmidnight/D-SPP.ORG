@@ -117,7 +117,7 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 					</tr>
 					<tr>
 						<th>Plataforma</th>
-						<th>Valor total contratos</th>
+						<th>Ventas totales</th>
 						<th>Porcentaje Clave distribución</th>
 						<th>Valor clave distribución</th>
 					</tr>
@@ -172,8 +172,10 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 	 ?>
 
 <?php
+////********************************************************** INICIA SECCIÓN DISTRIBUCIÓN COMPRAS ******************************************************************//////////////////
+////****************************************************************************************************************************//////////////////
 }else{ //// SECCIÓN INFORMES COMPRAS
-	$row_informes = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, empresa.abreviacion FROM informe_general INNER JOIN empresa ON informe_general.idempresa = empresa.idempresa LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
+	$row_informes = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4 FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
 	$plataformas_spp = array();
 	$total_informes = mysql_num_rows($row_informes);
 	$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_error());
@@ -199,35 +201,61 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 		$txt_id = 'idtrim'.$i;
 		$txt_trim = 'trim'.$i;
 		$txt_idtrim = 'T'.$i.'-'.$anio_actual;
+		$txt_idtrim_opp = 'TO'.$i.'_'.$anio_actual;
 		$txt_estado = 'estado_trim'.$i;
+
+
 
 		$clave_distribucion = 0;
 		///calculamos las claves de distribucion, esto sumando el valor del contrato de cada formato del primer trimestre
 		$row_formato_compras = mysql_query("SELECT SUM(valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%'", $dspp) or die(mysql_error());
 		$formato_compras = mysql_fetch_assoc($row_formato_compras);
+
+		$row_formato_ventas = mysql_query("SELECT SUM(valor_total_contrato) AS 'total_contrato_ventas' FROM formato_ventas WHERE idtrim LIKE '%$txt_idtrim_opp%'", $dspp) or die(mysql_error());
+		$formato_ventas = mysql_fetch_assoc($row_formato_ventas);
+
+		$sum_total_contrato = $formato_compras['total_contrato'] + $formato_ventas['total_contrato_ventas'];
+
 		$porcentaje_anual = $configuracion['distribucion_plataforma_origen'];
-		$cuota_uso = round(($formato_compras['total_contrato'] * $porcentaje_anual) / 100, 2);
+		$cuota_uso = round(($sum_total_contrato * $porcentaje_anual) / 100, 2);
 
-
+		/// resultados de empresas
 		$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%'", $dspp) or die(mysql_error());
 		$num_trim = mysql_num_rows($row_trim);
-		//echo '<br>TOTAL TRIMS: '.$num_trim;
+		/// resultados de OPPs
+		$row_trim_opp = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim_opp%'", $dspp) or die(mysql_error());
+		$num_trim_opp = mysql_num_rows($row_trim_opp);
+
+		$sum_num_trim = $num_trim + $num_trim_opp;
+
+
+		//TRIMESTRE EMPRESA
 		$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%' AND $txt_estado = 'ACTIVO'", $dspp) or die(mysql_error());
 		$num_activo = mysql_num_rows($row_trim);
-		//echo '<br>TOTAL TRIMS activos: '.$num_activo;
+
 		$row_trim = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%' AND $txt_estado = 'FINALIZADO'", $dspp) or die(mysql_error());
 		$num_finalizado = mysql_num_rows($row_trim);
-		//echo '<br>TOTAL TRIMS finalizados: '.$num_finalizado;
 
-		if($num_trim != 0){
+		/// TRIMESTRE OPP
+		$row_trim_opp = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim_opp%' AND $txt_estado = 'ACTIVO'", $dspp) or die(mysql_error());
+		$num_activo_opp = mysql_num_rows($row_trim_opp);
+
+		$row_trim_opp = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim_opp%' AND $txt_estado = 'FINALIZADO'", $dspp) or die(mysql_error());
+		$num_finalizado_opp = mysql_num_rows($row_trim_opp);
+		///	SUMA DEL NUMERO DE INFORMES TRIMESTRALES
+		$sum_num_activo = $num_activo + $num_activo_opp;
+		$sum_num_finalizado = $num_finalizado + $num_finalizado_opp;
+
+
+		if($sum_num_trim != 0){
 		?>
 			<table class="table table-bordered" style="font-size:12px;">
 				<thead>
 					<tr>
 						<th class="success"><b>Trimestre <?php echo $i; ?></b></th>
-						<th class="info">Numero de informes: <span style="color:#e74c3c"><?php echo $num_trim; ?></span></th>
-						<th class="info"><?php echo 'Activos: <span style="color:#e74c3c">'.$num_activo.'</span> Finalizados: <span style="color:#e74c3c">'.$num_finalizado.'</span>'; ?></th>
-						<th class="info">Valor total contratos: <span style="color:red"><?php echo round($formato_compras['total_contrato'],2).' (<span style="color:#2c3e50">'.$configuracion['distribucion_plataforma_origen'].'%</span> = '.$cuota_uso.')'; ?></span></th>
+						<th class="info">Numero de informes Globales(<span style="color:red">opp + empresas</span>): <span style="color:#e74c3c"><?php echo $sum_num_trim; ?></span></th>
+						<th class="info"><?php echo 'Activos: <span style="color:#e74c3c">'.$sum_num_activo.'</span> Finalizados: <span style="color:#e74c3c">'.$sum_num_finalizado.'</span>'; ?></th>
+						<th class="info">Valor Global Contratos(<span style="color:red">opp + empresas</span>): <span style="color:red"><?php echo round($sum_total_contrato,2).' (<span style="color:#2c3e50">'.$configuracion['distribucion_plataforma_origen'].'%</span> = '.$cuota_uso.')'; ?></span></th>
 					</tr>
 					<tr>
 						<th>Plataforma</th>
@@ -240,13 +268,20 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 					<?php 
 					$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_error());
 					while($plataformas = mysql_fetch_assoc($row_plataformas)){
+						//FORMATO COMPRAS(empresa)
 						$row_formatos = mysql_query("SELECT COUNT(idformato_compras) AS 'total_formatos', SUM(formato_compras.valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'", $dspp) or die(mysql_error());
 						$formatos = mysql_fetch_assoc($row_formatos);
 						$num_formatos = mysql_num_rows($row_plataformas);
-						$query = "SELECT * FROM formato_compras WHERE idtrim LIKE '%$txt_idtrim%' AND pais = '$plataformas[pais]'";
+						///FORMATO VENTAS(opp)
+						$row_formatos_opp = mysql_query("SELECT COUNT(idformato_ventas) AS 'total_formatos', SUM(formato_ventas.valor_total_contrato) AS 'total_contrato' FROM formato_ventas WHERE idtrim LIKE '%$txt_idtrim_opp%' AND pais_opp = '$plataformas[pais]'", $dspp) or die(mysql_error());
+						$formatos_opp = mysql_fetch_assoc($row_formatos_opp);
+						$num_formatos_opp = mysql_num_rows($row_plataformas);
 
-						if($formatos['total_contrato'] > 0){
-							$clave_distribucion = round(($formatos['total_contrato'] * 100) / $formato_compras['total_contrato'], 2);
+						$sum_formatos = $formatos['total_contrato'] + $formatos_opp['total_contrato'];
+ 
+
+						if($sum_formatos > 0){
+							$clave_distribucion = round(($sum_formatos * 100) / $sum_total_contrato, 2);
 							$valor_clave_distribucion = round(($cuota_uso * $clave_distribucion) / 100,2);
 						}else{
 							$clave_distribucion = 0;
@@ -257,15 +292,15 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 						<td style="background-color:#27ae60;color:#ecf0f1"><?php echo $plataformas['pais']; ?></td>
 						<td>
 							<?php 
-							if(isset($formatos['total_contrato'])){
-								echo round($formatos['total_contrato'],2).' USD';
+							if(isset($sum_formatos)){
+								echo round($sum_formatos,2).' USD';
 							}else{
 								echo "0 USD";
 							}
 							?>
 						</td>
 						<td><?php echo $clave_distribucion.' %'; ?></td>
-						<td><?php echo $valor_clave_distribucion.' USD'; ?></td>
+						<td><span style="background-color:#A4FFF1;font-weight:bold"><?php echo $valor_clave_distribucion.' USD'; ?></span></td>
 						
 						<!--<td>
 							<?php echo "Num formatos: ".$formatos['total_formatos']." - Total contrato: ".$formatos['total_contrato']; ?>
@@ -304,6 +339,8 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 	 ?>
 <?php
 }
+////********************************************************* TERMINA SECCION DISTRIBUCIÓN COMPRAS *******************************************************************//////////////////
+////****************************************************************************************************************************//////////////////
  ?>
 
 <!--<table class="table table-bordered table-condensed" style="font-size:12px;">
