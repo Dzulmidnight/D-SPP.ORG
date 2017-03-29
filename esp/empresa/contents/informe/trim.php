@@ -100,13 +100,18 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	$txt_total_trim = 'total_'.$txt_numero_trim;
 	$txt_valor_contrato = 'valor_contrato_'.$txt_numero_trim;
 	$txt_cuota_uso = 'cuota_uso_'.$txt_numero_trim;
+	$txt_reporte_trim = 'reporte_trim'.$_GET['trim'];
 	$estatus_trim = 'EN ESPERA';
+	$ruta_pdf = '../../archivos/admArchivos/facturas/reportes_com/';
+	$nombre_pdf = 'reporte_comprador_'.time().'.pdf';
+	$reporte = $ruta_pdf.$nombre_pdf;
 	
 
-	$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_valor_contrato = %s, $txt_cuota_uso = %s, $txt_estado_trim = %s WHERE $txt_idtrim = %s",
+	$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_valor_contrato = %s, $txt_cuota_uso = %s, $txt_estado_trim = %s, $txt_reporte_trim = %s WHERE $txt_idtrim = %s",
 		GetSQLValueString($valor_total_contrato['total_contrato'], "text"),
 		GetSQLValueString($total_a_pagar['total_a_pagar'], "text"),
 		GetSQLValueString($estatus_trim, "text"),
+		GetSQLValueString($reporte, "text"),
 		GetSQLValueString($_POST['idtrim'], "text"));
 	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
@@ -300,7 +305,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
       </div>
 
     ';
-   
+
     $mpdf = new mPDF('c', 'Legal');
 	ob_start();
 
@@ -343,8 +348,11 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 
     $mpdf->writeHTML($html);
     //$pdf_listo = $mpdf->Output('reporte.pdf', 'I');
-    $pdf_listo = $mpdf->Output('reporte_trimestral.pdf', 'S'); //reemplazamos la I por S(regresa el documento como string)
-
+    
+    /// CON LA LINEA DE ABAJO GENERAMOS EL PDF Y LO ENVIAMOS POR EMAIL, PERO NO LO GUARDAMOS
+    //28_03_2017 $pdf_listo = $mpdf->Output('reporte_trimestral.pdf', 'S'); //reemplazamos la I por S(regresa el documento como string)
+	/// CON LA LINEA DE ABAJO GENERAMOS EL PDF Y LO GUARDAMOS EN UNA CARPETA
+	$mpdf->Output(''.$ruta_pdf.''.$nombre_pdf.'', 'F'); //reemplazamos la I por S(regresa el documento como string)
     //$pdf_listo = chunk_split(base64_encode($mpdf));
    // $nombre_archivo = 'reporte.pdf';
 
@@ -419,7 +427,8 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
     $mail->MsgHTML(utf8_decode($mensaje_correo));
     //$mail->AddAttachment($pdf_listo, 'reporte.pdf');
 
-    $mail->addStringAttachment($pdf_listo, 'reporte_trimestral.pdf');
+    //28_03_2017$mail->addStringAttachment($pdf_listo, 'reporte_trimestral.pdf'); // SE ENVIA LA CADENA DE TEXTO DEL PDF POR EMAIL
+    $mail->AddAttachment($reporte);
     $mail->Send();
     $mail->ClearAddresses();
 	///se envia correo al area de certificacion para corroborar la informacion
