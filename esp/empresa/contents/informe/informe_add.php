@@ -56,6 +56,15 @@ $anio_actual = date('Y',time());
 $row_configuracion = mysql_query("SELECT * FROM porcentaje_ajuste WHERE anio = $anio_actual", $dspp) or die(mysql_error());
 $configuracion = mysql_fetch_assoc($row_configuracion);
 
+
+if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
+	$idregistro = $_POST['eliminar_registro'];
+
+	$deleteSQL = sprintf("DELETE FROM formato_compras WHERE idformato_compras = $idregistro",
+		GetSQLValueString($idregistro, "int"));
+	$eliminar = mysql_query($deleteSQL, $dspp) or die(mysql_error());
+}
+
 if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	
 	$fecha_registro = time();
@@ -434,43 +443,48 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 							while($formato = mysql_fetch_assoc($row_registro)){
 							?>
-								<tr class="active">
-									<td><?php echo $contador; ?></td>
-									<td><?php echo $formato['spp']; ?></td>
-									<td><?php echo $formato['opp']; ?></td>
-									<td><?php echo $formato['pais']; ?></td>
-									<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
-									<td><?php echo $formato['primer_intermediario']; ?></td>
-									<td><?php echo $formato['segundo_intermediario']; ?></td>
-									<td><?php echo $formato['clave_contrato']; ?></td>
-									<td>
-										<?php
-										if(isset($formato['fecha_contrato'])){
-											echo date('d/m/Y',$formato['fecha_contrato']); 
-										}
+								<form action="" method="POST">
+									<tr class="active">
+										<td>
+											<button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar registro" name="eliminar_registro" value="<?php echo $formato['idformato_compras']; ?>" onclick="return confirm('¿Está seguro de eliminar el registro?');"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+											<?php echo $contador; ?>
+										</td>
+										<td><?php echo $formato['spp']; ?></td>
+										<td><?php echo $formato['opp']; ?></td>
+										<td><?php echo $formato['pais']; ?></td>
+										<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
+										<td><?php echo $formato['primer_intermediario']; ?></td>
+										<td><?php echo $formato['segundo_intermediario']; ?></td>
+										<td><?php echo $formato['clave_contrato']; ?></td>
+										<td>
+											<?php
+											if(isset($formato['fecha_contrato'])){
+												echo date('d/m/Y',$formato['fecha_contrato']); 
+											}
+											?>
+										</td>
+										<td><?php echo $formato['producto_general']; ?></td>
+										<td><?php echo $formato['producto_especifico']; ?></td>
+										<?php 
+										if($tipo_de_empresa){
 										?>
-									</td>
-									<td><?php echo $formato['producto_general']; ?></td>
-									<td><?php echo $formato['producto_especifico']; ?></td>
-									<?php 
-									if($tipo_de_empresa){
-									?>
-										<td><?php echo $formato['producto_terminado']; ?></td>
-										<td><?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
-									<?php
-									}
-									 ?>
-									<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
-									<td><?php echo $formato['cantidad_total_factura']; ?></td>
-									<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
-									<td><?php echo $formato['reconocimiento_organico']; ?></td>
-									<td><?php echo $formato['incentivo_spp']; ?></td>
-									<td><?php echo $formato['otros_premios']; ?></td>
-									<td><?php echo $formato['precio_total_unitario']; ?></td>
-									<td><?php echo $formato['valor_total_contrato']; ?></td>
-									<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
-									<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar']; ?></td>
-								</tr>
+											<td><?php echo $formato['producto_terminado']; ?></td>
+											<td><?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
+										<?php
+										}
+										 ?>
+										<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
+										<td><?php echo number_format($formato['cantidad_total_factura']); ?></td>
+										<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
+										<td><?php echo $formato['reconocimiento_organico']; ?></td>
+										<td><?php echo $formato['incentivo_spp']; ?></td>
+										<td><?php echo $formato['otros_premios']; ?></td>
+										<td><?php echo $formato['precio_total_unitario']; ?></td>
+										<td><?php echo number_format($formato['valor_total_contrato']); ?></td>
+										<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
+										<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar']); ?></td>
+									</tr>
+								</form>
 							<?php
 							$contador++;
 							}

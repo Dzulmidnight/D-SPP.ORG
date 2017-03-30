@@ -689,10 +689,10 @@ if(isset($_GET['trim'])){
 							<td><?php echo $formato['reconocimiento_organico']; ?></td>
 							<td><?php echo $formato['incentivo_spp']; ?></td>
 							<td><?php echo $formato['otros_premios']; ?></td>
-							<td><?php echo $formato['precio_total_unitario']; ?></td>
-							<td><?php echo $formato['valor_total_contrato'].' USD'; ?></td>
+							<td><?php echo number_format($formato['precio_total_unitario'],2); ?></td>
+							<td><?php echo number_format($formato['valor_total_contrato'],2).' USD'; ?></td>
 							<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
-							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar'].' USD'; ?></td>
+							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar'],2).' USD'; ?></td>
 						</tr>
 					<?php
 					$suma_cuota_uso = $formato['total_a_pagar'] + $suma_cuota_uso;

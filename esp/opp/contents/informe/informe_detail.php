@@ -133,10 +133,10 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['reconocimiento_organico']; ?></td>
 					<td><?php echo $formato['incentivo_spp']; ?></td>
 					<td><?php echo $formato['otros_premios']; ?></td>
-					<td><?php echo $formato['precio_total_unitario']; ?></td>
-					<td><?php echo $formato['valor_total_contrato']; ?></td>
+					<td><?php echo number_format($formato['precio_total_unitario'],2); ?></td>
+					<td><?php echo number_format($formato['valor_total_contrato'],2); ?></td>
 					<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar'],2); ?></td>
 				</tr>
 			<?php
 			$contador++;
@@ -145,9 +145,9 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			}
 			echo "<tr>
 				<td colspan='21' class='text-right warning'><h5>PRIMER TRIMESTRE</h5></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_contrato,2)."</td>
 				<td class='warning'></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim1</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim1,2)."</td>
 			</tr>";
 
 
@@ -188,10 +188,10 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['reconocimiento_organico']; ?></td>
 					<td><?php echo $formato['incentivo_spp']; ?></td>
 					<td><?php echo $formato['otros_premios']; ?></td>
-					<td><?php echo $formato['precio_total_unitario']; ?></td>
-					<td><?php echo $formato['valor_total_contrato']; ?></td>
+					<td><?php echo number_format($formato['precio_total_unitario'],2); ?></td>
+					<td><?php echo number_format($formato['valor_total_contrato'],2); ?></td>
 					<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar'],2); ?></td>
 				</tr>
 			<?php
 			$contador++;
@@ -201,9 +201,9 @@ $informe_general = mysql_fetch_assoc($row_informe);
 
 			echo "<tr>
 				<td colspan='21' class='text-right warning'><h5>SEGUNDO TRIMESTRE</h5></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_contrato,2)."</td>
 				<td class='warning'></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim2</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim2,2)."</td>
 			</tr>";
 
 
@@ -244,10 +244,10 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['reconocimiento_organico']; ?></td>
 					<td><?php echo $formato['incentivo_spp']; ?></td>
 					<td><?php echo $formato['otros_premios']; ?></td>
-					<td><?php echo $formato['precio_total_unitario']; ?></td>
-					<td><?php echo $formato['valor_total_contrato']; ?></td>
+					<td><?php echo number_format($formato['precio_total_unitario'],2); ?></td>
+					<td><?php echo number_format($formato['valor_total_contrato'],2); ?></td>
 					<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar'],2); ?></td>
 				</tr>
 			<?php
 			$contador++;
@@ -257,9 +257,9 @@ $informe_general = mysql_fetch_assoc($row_informe);
 
 			echo "<tr>
 				<td colspan='21' class='text-right warning'><h5>TERCER TRIMESTRE</h5></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_contrato,2)."</td>
 				<td class='warning'></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim3</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim3,2)."</td>
 			</tr>";
 
 		}
@@ -298,10 +298,10 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['reconocimiento_organico']; ?></td>
 					<td><?php echo $formato['incentivo_spp']; ?></td>
 					<td><?php echo $formato['otros_premios']; ?></td>
-					<td><?php echo $formato['precio_total_unitario']; ?></td>
-					<td><?php echo $formato['valor_total_contrato']; ?></td>
+					<td><?php echo number_format($formato['precio_total_unitario']); ?></td>
+					<td><?php echo number_format($formato['valor_total_contrato']); ?></td>
 					<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar'],2); ?></td>
 				</tr>
 			<?php
 			$contador++;
@@ -311,9 +311,9 @@ $informe_general = mysql_fetch_assoc($row_informe);
 
 			echo "<tr>
 				<td colspan='21' class='text-right warning'><h5>CUARTO TRIMESTRE</h5></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_contrato,2)."</td>
 				<td class='warning'></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim4</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim4,2)."</td>
 			</tr>";
 
 		}
@@ -321,7 +321,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 		?>
 		<tr>
 			<td class="text-right" colspan="27">
-				<h5>Total actual: <span style="color:#c0392b"><?php echo $informe_general['total_cuota_uso']; ?> USD</span></h5>
+				<h5>Total actual: <span style="color:#c0392b"><?php echo number_format($informe_general['total_cuota_uso'],2); ?> USD</span></h5>
 			</td>
 		</tr>
 	</tbody>

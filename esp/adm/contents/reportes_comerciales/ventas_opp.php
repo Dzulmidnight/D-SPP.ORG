@@ -573,7 +573,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
 //// TERMINA APROBAR O DENEGAR COMPROBANTE PAGO
 
 
-$row_informes = mysql_query("SELECT informe_general.*, trim1.*, trim2.*, trim3.*, trim4.*, opp.abreviacion FROM informe_general INNER JOIN opp ON informe_general.idopp = opp.idopp LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
+$row_informes = mysql_query("SELECT informe_general.*, trim1.*, trim2.*, trim3.*, trim4.*, opp.idopp, opp.abreviacion FROM informe_general INNER JOIN opp ON informe_general.idopp = opp.idopp LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
 $total_informes = mysql_num_rows($row_informes);
 //$plataformas_spp = array('Ecuador', 'Perú', 'Colombia', 'Guatemala');
 
@@ -651,7 +651,7 @@ function redondear_dos_decimal($valor) {
 							}
 							//echo '<td><a href="?REPORTES&informe_compras='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-list-alt"></span> '.$informes['idinforme_general'].'</a></td>';
 							//echo '<td>'.$informes['estado_informe'].'</td>';
-							echo '<td><a href="?EMPRESAS&detail&idopp='.$informes['idopp'].'">'.$informes['abreviacion'].'</a></td>';
+							echo '<td><a href="?OPP&detail&idopp='.$informes['idopp'].'">'.$informes['abreviacion'].'</a></td>';
 							echo '<td>'; //// TRIMESTRE 1
 							?>
 								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim1".$informes['trim1']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>

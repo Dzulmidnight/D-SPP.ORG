@@ -287,14 +287,14 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 
 
 		//NUMERO DE TRIMESTRES ACTIVOS - FINALIZADOS DE LOS COMPRADORES
-			$row_trim_activo = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%' AND $txt_estado = 'ACTIVO'", $dspp) or die(mysql_error());
+			$row_trim_activo = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%' AND ($txt_estado = 'ACTIVO' OR $txt_estado = 'EN ESPERA' OR $txt_estado = 'APROBADO')", $dspp) or die(mysql_error());
 			$num_activo = mysql_num_rows($row_trim_activo);
 
 			$row_trim_finalizado = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim%' AND $txt_estado = 'FINALIZADO'", $dspp) or die(mysql_error());
 			$num_finalizado = mysql_num_rows($row_trim_finalizado);
 
 		/// NUMERO DE TRIMESTRES ACTIVOS - FINALIZADOS DE LOS OPPS
-			$row_trim_opp_activo = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim_opp%' AND $txt_estado = 'ACTIVO'", $dspp) or die(mysql_error());
+			$row_trim_opp_activo = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim_opp%' AND ($txt_estado = 'ACTIVO' OR $txt_estado = 'EN ESPERA' OR $txt_estado = 'APROBADO')", $dspp) or die(mysql_error());
 			$num_activo_opp = mysql_num_rows($row_trim_opp_activo);
 
 			$row_trim_opp_finalizado = mysql_query("SELECT $txt_id FROM $txt_trim WHERE $txt_id LIKE '%$txt_idtrim_opp%' AND $txt_estado = 'FINALIZADO'", $dspp) or die(mysql_error());
@@ -354,7 +354,11 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 						<th class="info" colspan="2">
 							Informes Finalizados = <span style="color:red"><?php echo $sum_num_finalizado; ?></span>
 						</th>
-						<th class="info" colspan="2">Valor Global Contratos: ( <?php echo $configuracion['distribucion_plataforma_origen']; ?> % <?php echo number_format(round($sum_total_contrato,2)).' ) = $ <span style="color:red;font-size:16px;">'.number_format($cuota_uso).'</span> USD'; ?></th>
+						<th class="info" colspan="2">
+							<span style="background-color:#A4FFF1">
+								Valor Global Contratos: ( <?php echo $configuracion['distribucion_plataforma_origen']; ?> % <?php echo number_format(round($sum_total_contrato,2)).' ) = $ <span style="color:red;font-size:16px;">'.number_format($cuota_uso).'</span> USD'; ?>
+							</span>
+						</th>
 
 					</tr>
 					<tr>

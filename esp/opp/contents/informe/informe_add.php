@@ -213,6 +213,13 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			//$idformato_ventas = mysql_insert_id($dspp);
 		//Termina insertar formato compras
 }
+if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
+	$idregistro = $_POST['eliminar_registro'];
+
+	$deleteSQL = sprintf("DELETE FROM formato_ventas WHERE idformato_ventas = $idregistro",
+		GetSQLValueString($idregistro, "int"));
+	$eliminar = mysql_query($deleteSQL, $dspp) or die(mysql_error());
+}
 
 ?>
 
@@ -266,16 +273,11 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<th colspan="2" class="text-center">Referencia Contrato Original con OPP</th>
 						<th class="text-center">Producto General</th>
 						<th class="text-center">Producto Especifico</th>
-						<?php 
-						if($tipo_de_opp){
-						?>
+
 							<th colspan="2" class="text-center">
 								Producto Terminado
 							</th>
 
-						<?php
-						}
-						 ?>
 						<th colspan="2" class="text-center">Cantidad Total Conforme Factura</th>
 						<th class="text-center">Precio Sustentable Mínimo</th>
 						<th class="text-center">Reconocimiento Orgánico</th>
@@ -355,15 +357,11 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 				<td>
 		 					Producto especifico. Ej: Café verde arábica, Miel tipo A, Chips de platano, Azúcar blanco refinado.
 		 				</td>
-		 				<?php 
-		 				if($tipo_de_opp){
-		 				?>
+		 		
 			 				<td colspan="2">
 			 					¿Producto terminado?
 			 				</td>
-		 				<?php
-		 				}
-		 				 ?>
+		 			
 		 				<!-- INICIA CANTIDAD TOTAL CONFORME FACTURA -->
 			 				<td>
 			 					Unidad de medida utilizada (kg, t, lb, qq, etc)
@@ -447,8 +445,12 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 							while($formato = mysql_fetch_assoc($row_registro)){
 							?>
+							<form action="" method="POST">
 								<tr class="active">
-									<td><?php echo $contador; ?></td>
+									<td>
+										<button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar registro" name="eliminar_registro" value="<?php echo $formato['idformato_ventas']; ?>" onclick="return confirm('¿Está seguro de eliminar el registro?');"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+										<?php echo $contador; ?>
+									</td>
 									<td><?php echo $formato['pais_opp']; ?></td>
 									<td><?php echo $formato['spp']; ?></td>
 									<td><?php echo $formato['empresa']; ?></td>
@@ -466,25 +468,22 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 									</td>
 									<td><?php echo $formato['producto_general']; ?></td>
 									<td><?php echo $formato['producto_especifico']; ?></td>
-									<?php 
-									if($tipo_de_opp){
-									?>
+
 										<td><?php echo $formato['producto_terminado']; ?></td>
 										<td><?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
-									<?php
-									}
-									 ?>
+						
 									<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 									<td><?php echo $formato['cantidad_total_factura']; ?></td>
 									<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
 									<td><?php echo $formato['reconocimiento_organico']; ?></td>
 									<td><?php echo $formato['incentivo_spp']; ?></td>
 									<td><?php echo $formato['otros_premios']; ?></td>
-									<td><?php echo $formato['precio_total_unitario']; ?></td>
-									<td><?php echo $formato['valor_total_contrato']; ?></td>
+									<td><?php echo number_format($formato['precio_total_unitario'],2); ?></td>
+									<td><?php echo number_format($formato['valor_total_contrato'], 2); ?></td>
 									<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
-									<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar']; ?></td>
+									<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar'], 2); ?></td>
 								</tr>
+							</form>
 							<?php
 							$contador++;
 							}
@@ -550,9 +549,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<td class="success"><!-- producto especifico -->
 							<input type="text" name="producto_especifico" id="" placeholder="Ej: café verde, miel de abeja, azucar refinada" onBlur=" ponerMayusculas(this)" required>
 						</td>
-						<?php 
-						if($tipo_de_opp){
-						?>
+
 							<td>
 								¿Es producto terminado?
 								<label class="radio-inline">
@@ -573,12 +570,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 									<label class="radio-inline">
 									  <input type="radio" name="se_exporta" id="" value="INTERMEDIARIO"> A travez de un intermediario
 									</label>
-								</div>							
-							
-						<?php
-						}
-						 ?>
-						</td>
+								</div>
+							</td>
 
 						<td class="success"><!-- CANTIDAD TOTAL CONFORME FACTURA -->
 							<select name="unidad_cantidad_total_factura" required><!-- #unidad de medida -->
@@ -627,17 +620,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 					</tr>
 		 			<tr>
-		 				<?php 
-		 				if($tipo_de_opp){
-		 				?>
-		 					<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1" onclick="return validar()">Guardar Registro</button></td>
-		 				<?php
-		 				}else{
-		 				?>
-		 					<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1">Guardar Registro</button></td>
-		 				<?php
-		 				}
-		 				 ?>
+		 				<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1" onclick="return validar()">Guardar Registro</button></td>
 		 			</tr>
 		 		</tbody>
 		 	</table>

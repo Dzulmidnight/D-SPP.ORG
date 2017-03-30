@@ -658,7 +658,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
       <div class="col-md-12 alert alert-info">
         <div>
-          <label for="alcance_opp">
+          <label for="alcance">
             SELECCIONE EL TIPO DE EMPRESA SPP PARA EL CUAL SE SOLICITA EL REGISTRO. UN INTERMEDIARIO NO PUEDE REGISTRARSE SPP SI NO CUENTA CON UN COMPRADOR FINAL REGISTRADO SPP O EN PROCESO DE REGISTRO. 
           </label>
         </div>
@@ -701,7 +701,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           <textarea name="preg4" id="preg4" class="form-control"><?php echo $solicitud['preg4']; ?></textarea>
 
           <div >
-            <label for="alcance_opp">
+            <label for="alcance">
               5. SELECCIONE EL ALCANCE QUE TIENE LA EMPRESA:
             </label>
           </div>
@@ -849,25 +849,25 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
                   </div>
                   <div class="col-xs-6">
                     <?php 
-                      if(empty($solicitud['op_preg14'])){
+                      if(empty($solicitud['preg14'])){
                      ?>
                       <p class="alert alert-danger">No se proporciono ninguna respuesta.</p>
                     <?php 
-                      }else if($solicitud['op_preg14'] == "HASTA $3,000 USD"){
+                      }else if($solicitud['preg14'] == "HASTA $3,000 USD"){
                      ?>
                       <p class="alert alert-info">HASTA $3,000 USD</p>
                     <?php 
-                      }else if($solicitud['op_preg14'] == "ENTRE $3,000 Y $10,000 USD"){
+                      }else if($solicitud['preg14'] == "ENTRE $3,000 Y $10,000 USD"){
                      ?>
                      <p class="alert alert-info">ENTRE $3,000 Y $10,000 USD</p>
                     <?php 
-                      }else if($solicitud['op_preg14'] == "ENTRE $10,000 A $25,000 USD"){
+                      }else if($solicitud['preg14'] == "ENTRE $10,000 A $25,000 USD"){
                      ?>
                      <p class="alert alert-info">ENTRE $10,000 A $25,000 USD</p>
                     <?php 
-                      }else if($solicitud['op_preg14'] != "HASTA $3,000 USD" && $solicitud['op_preg14'] != "ENTRE $3,000 Y $10,000 USD" && $solicitud['op_preg14'] != "ENTRE $10,000 A $25,000 USD"){
+                      }else if($solicitud['preg14'] != "HASTA $3,000 USD" && $solicitud['preg14'] != "ENTRE $3,000 Y $10,000 USD" && $solicitud['preg14'] != "ENTRE $10,000 A $25,000 USD"){
                      ?>
-                     <p class="alert alert-info"><?php echo $solicitud['op_preg14']; ?></p>
+                     <p class="alert alert-info"><?php echo $solicitud['preg14']; ?></p>
                      
                     <?php 
                       }
