@@ -89,7 +89,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 					<td><?php echo $contador; ?></td>
 					<td><?php echo $formato['pais']; ?></td>
 					<td><?php echo $formato['tipo_moneda']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['ventas_totales']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['ventas_totales'],2); ?></td>
 				</tr>
 			<?php
 			$contador++;
@@ -97,7 +97,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 			}
 			echo "<tr>
 				<td colspan='3' class='text-right warning'><h5>PRIMER TRIMESTRE</h5></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim1</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($formato['ventas_totales'],2)."</td>
 			</tr>";
 
 
@@ -114,7 +114,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 					<td><?php echo $formato['pais']; ?></td>
 					
 					<td><?php echo $formato['tipo_moneda']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['ventas_totales']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['ventas_totales'],2); ?></td>
 				</tr>
 			<?php
 			$contador++;
@@ -122,7 +122,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 			}
 			echo "<tr>
 				<td colspan='3' class='text-right warning'><h5>SEGUNDO TRIMESTRE</h5></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim2</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim2,2)."</td>
 			</tr>";
 
 
@@ -138,7 +138,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 					<td><?php echo $formato['pais']; ?></td>
 					
 					<td><?php echo $formato['tipo_moneda']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['ventas_totales']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['ventas_totales'],2); ?></td>
 				</tr>
 			<?php
 			$contador++;
@@ -146,7 +146,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 			}
 			echo "<tr>
 				<td colspan='3' class='text-right warning'><h5>TERCER TRIMESTRE</h5></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim3</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim3,2)."</td>
 			</tr>";
 		}
 		if(isset($informe_general_producto['trim4_producto'])){
@@ -160,7 +160,7 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 					<td><?php echo $formato['pais']; ?></td>
 					
 					<td><?php echo $formato['tipo_moneda']; ?></td>
-					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['ventas_totales']; ?></td>
+					<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['ventas_totales'],2); ?></td>
 				</tr>
 			<?php
 			$contador++;
@@ -168,14 +168,14 @@ $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 			}
 			echo "<tr>
 				<td colspan='3' class='text-right warning'><h5>CUARTO TRIMESTRE</h5></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim4</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim4,2)."</td>
 			</tr>";
 		}
 		//$balance_final = $total_trim1 + $total_trim2 + $total_trim3 + $total_trim4;
 		?>
 		<tr>
 			<td class="text-right" colspan="4">
-				<h5>Total actual: <span style="color:#c0392b"><?php echo $informe_general_producto['total_informe']; ?></span></h5>
+				<h5>Total actual: <span style="color:#c0392b"><?php echo number_format($informe_general_producto['total_informe'],2); ?></span></h5>
 			</td>
 		</tr>
 	</tbody>

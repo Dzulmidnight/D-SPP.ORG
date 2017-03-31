@@ -191,7 +191,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
               '.$idtrimestre.'
             </td>
             <td style="background-color:#e74c3c;color:#ecf0f1">
-              '.number_format($total['total_cuota_uso']).' USD
+              '.number_format($total['total_cuota_uso'],2).' USD
             </td>
           </tr>
 
@@ -286,15 +286,15 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    <td>'.$formato_compras['producto_terminado'].'</td>
 				    <td>Se exporta: '.$formato_compras['se_exporta'].'</td>
 				    <td>'.$formato_compras['unidad_cantidad_factura'].'</td>
-				    <td>'.number_format($formato_compras['cantidad_total_factura']).' USD</td>
+				    <td>'.number_format($formato_compras['cantidad_total_factura'],2).' USD</td>
 				    <td>'.$formato_compras['precio_sustentable_minimo'].' USD</td>
 				    <td>'.$formato_compras['reconocimiento_organico'].' USD</td>
 				    <td>'.$formato_compras['incentivo_spp'].' USD</td>
 				    <td>'.$formato_compras['otros_premios'].' USD</td>
 				    <td>'.$formato_compras['precio_total_unitario'].' USD</td>
-				    <td>'.number_format($formato_compras['valor_total_contrato']).' USD</td>
+				    <td>'.number_format($formato_compras['valor_total_contrato'],2).' USD</td>
 				    <td>'.$formato_compras['cuota_uso_reglamento'].'</td>
-				    <td>'.number_format($formato_compras['total_a_pagar']).' USD</td>
+				    <td>'.number_format($formato_compras['total_a_pagar'],2).' USD</td>
 				</tr>
 			  ';
 			 $contador++;
@@ -396,9 +396,9 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">COMPRADOR FINAL</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$num_contratos.'</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($valor_total_contrato['total_contrato']).'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($valor_total_contrato['total_contrato'],2).'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$porcetaje_cuota.'%</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($total_a_pagar['total_a_pagar']).'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($total_a_pagar['total_a_pagar'],2).'</td>
 				          </tr>
 				        </table>
 				      </td>

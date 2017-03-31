@@ -215,7 +215,7 @@ if(isset($_GET['trim'])){
 							<td><?php echo $contador; ?></td>
 							<td><?php echo $formato['pais']; ?></td>
 							<td><?php echo $formato['tipo_moneda']; ?></td>
-							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['ventas_totales']; ?></td>
+							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['ventas_totales'],2); ?></td>
 						</tr>
 					<?php
 					$suma_total = $formato['ventas_totales'] + $suma_total;
@@ -227,7 +227,7 @@ if(isset($_GET['trim'])){
 							<td></td>
 							<td></td>
 							<td class='text-right'><b style='color:red'>USD</b></td>
-							<td class='text-left'><b style='color:red'>$suma_total</b></td>
+							<td class='text-left'><b style='color:red'>".number_format($suma_total,2)."</b></td>
 						</tr>";
 						//EL TOTAL A PAGAR AL FINALIZAR EL TRIMESTRE
 						echo "<input type='hidden' name='suma_total' value='$suma_total'>";

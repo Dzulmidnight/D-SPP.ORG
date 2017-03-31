@@ -197,9 +197,29 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
 }
 /****************************** FIN FORMULARIO INSERTAR OPP **************************************************/
 
-/****************************** INICIA FORMULARIO INSERTAR COM **************************************************/
+/****************************** INICIA FORMULARIO INSERTAR EMPRESA **************************************************/
 if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) {
   mysql_select_db($database_dspp, $dspp);
+
+  $tipo_empresa = '';
+  if(isset($_POST['maquilador'])){
+    $maquilador = $_POST['maquilador'];
+    $tipo_empresa = 'MAQ-';
+  }else{
+    $maquilador = '';
+  }
+  if(isset($_POST['comprador'])){
+    $comprador = $_POST['comprador'];
+    $tipo_empresa = 'COM-';
+  }else{
+    $comprador = '';
+  }
+  if(isset($_POST['intermediario'])){
+    $intermediario = $_POST['intermediario'];
+    $tipo_empresa = 'INT-';
+  }else{
+    $intermediario = '';
+  }
 
   $pais = $_POST['pais'];
 
@@ -224,14 +244,14 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
     $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
     //$numero =  strlen($contador);
 
-    $spp = "COM-".$paisDigitos."-".$fechaDigitos."-".$contador;
+    $spp = $tipo_empresa.$paisDigitos."-".$fechaDigitos."-".$contador;
 
     while ($datos_empresa = mysql_fetch_assoc($ejecutar_spp)) {
       if($datos_empresa['spp'] == $spp){
         //echo "<b style='color:red'>es igual el OPP con id: $datos_empresa[idf]</b><br>";
         $contador++;
         $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
-        $spp = "COM-".$paisDigitos."-".$fechaDigitos."-".$contador;
+        $spp = $tipo_empresa.$paisDigitos."-".$fechaDigitos."-".$contador;
       }/*else{
         echo "el id encontrado es: $datos_empresa[idf]<br>";
       }*/
@@ -242,23 +262,6 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
 
   $logitud = 8;
   $psswd = substr( md5(microtime()), 1, $logitud);
-
-  if(isset($_POST['maquilador'])){
-    $maquilador = $_POST['maquilador'];
-  }else{
-    $maquilador = '';
-  }
-  if(isset($_POST['comprador'])){
-    $comprador = $_POST['comprador'];
-  }else{
-    $comprador = '';
-  }
-  if(isset($_POST['intermediario'])){
-    $intermediario = $_POST['intermediario'];
-  }else{
-    $intermediario = '';
-  }
-
 
 
 
@@ -345,7 +348,7 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
     $mensaje = "<strong>Datos Registrados Correctamente, por favor revisa tu bandeja de correo electronico, si no encuentras tus datos revisa tu bandeja de spam</strong>";
 }
 
-/****************************** FIN FORMULARIO INSERTAR COM **************************************************/
+/****************************** FIN FORMULARIO INSERTAR EMPRESA **************************************************/
 
 
 /************************************* INICIO DE SESION ADMINISTRADOR **************************************************************/
@@ -516,11 +519,11 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_error());
 $alerta = '
            <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center">
-            SI YA ES O FUE UNA ORGANIZACIÓN o EMPRESA CERTIFICADA CON EL SPP, DEBE DE SOLICITAR SU USUARIO Y CONTRASEÑA EN EL SIGUIENTE CORREO: <a href="mailto:soporte@d-spp.org" style="color:#2c3e50">soporte@d-spp.org</a> Y OMITIR EL SIGUIENTE FORMULARIO.
+            SI YA ES O FUE UNA ORGANIZACIÓN o EMPRESA CERTIFICADA CON EL SPP, DEBE DE SOLICITAR SU USUARIO Y CONTRASEÑA EN EL SIGUIENTE CORREO: <a href="mailto:soporte@d-spp.org" style="color:#ecf0f1;background-color:#2980b9">soporte@d-spp.org</a> Y OMITIR EL SIGUIENTE FORMULARIO.
           </p>';
 $alerta2 = '
            <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center">
-            SI YA ES O FUE UNA ORGANIZACIÓN o EMPRESA CERTIFICADA CON EL SPP, DEBE DE SOLICITAR SU USUARIO Y CONTRASEÑA EN EL SIGUIENTE CORREO: <a href="mailto:soporte@d-spp.org" style="color:#2c3e50">soporte@d-spp.org</a>.
+            SI YA ES O FUE UNA ORGANIZACIÓN o EMPRESA CERTIFICADA CON EL SPP, DEBE DE SOLICITAR SU USUARIO Y CONTRASEÑA EN EL SIGUIENTE CORREO: <a href="mailto:soporte@d-spp.org" style="color:#ecf0f1;background-color:#2980b9">soporte@d-spp.org</a>.
           </p>';
 
 ?>
@@ -852,16 +855,14 @@ $alerta2 = '
                         <div class="col-sm-10">
                           <div class="checkbox">
                             <label class="col-sm-4">
-                              <input type="checkbox"name="maquilador" value="1"> MAQUILADOR
+                              <input type="checkbox" id="maquilador" name="maquilador" value="1"> MAQUILADOR
                             </label>
                             <label class="col-sm-4">
-                              <input type="checkbox"name="comprador" value="1"> COMPRADOR
+                              <input type="checkbox" id="comprador" name="comprador" value="1"> COMPRADOR
                             </label>
                             <label class="col-sm-4">
-                              <input type="checkbox"name="intermediario" value="1"> INTERMEDIARIO
+                              <input type="checkbox" id="intermediario" name="intermediario" value="1"> INTERMEDIARIO
                             </label>
-
-
                           </div>
                         </div>
                       </div>
@@ -950,7 +951,7 @@ $alerta2 = '
                       </div>
                     </div>
                     <input type="hidden" name="registro_empresa" value="1">
-                    <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Registrarse</button>
+                    <button type="submit" class="btn btn-success form-control" onclick="return validar();"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Registrarse</button>
 
                   </div>
                 </div>
@@ -1019,6 +1020,47 @@ $alerta2 = '
 
     </div>
   </div>
+
+  <script>
+    function validar(){
+      /*tipo_solicitud = document.getElementsByName("tipo_solicitud");
+
+       if(){
+
+       }
+      // INICIA SELECCION TIPO SOLICITUD
+      var seleccionado = false;
+      for(var i=0; i<tipo_solicitud.length; i++) {    
+        if(tipo_solicitud[i].checked) {
+          seleccionado = true;
+          break;
+        }
+      }
+       
+      if(!seleccionado) {
+        alert("Debes de seleccionar un Tipo de Solicitud");
+        return false;
+      }*/
+      var maquilador = document.getElementById('maquilador').checked;
+      var intermediario = document.getElementById('intermediario').checked;
+      var comprador = document.getElementById('comprador').checked;
+      var seleccionado = false;
+      if(maquilador){
+        seleccionado = true;
+      }
+      if(intermediario){
+        seleccionado = true;
+      }
+      if(comprador){
+        seleccionado = true;
+      }
+
+      if(seleccionado == false){
+        alert('Debes seleccionar el Tipo de Empresa');
+      }
+      
+    }
+  </script>
 
     <script>
       $(function () {

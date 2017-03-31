@@ -177,7 +177,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 											<?php echo $contador; ?> <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar registro" name="eliminar_registro" value="<?php echo $formato['idformato_producto_empresa']; ?>" onclick="return confirm('¿Está seguro de eliminar el registro?');"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 										</td>
 										<td><?php echo $formato['pais']; ?></td>
-										<td><?php echo $formato['ventas_totales']; ?></td>
+										<td><?php echo number_format($formato['ventas_totales'],2); ?></td>
 										<td><?php echo $formato['tipo_moneda']; ?></td>
 									</tr>
 								</form>

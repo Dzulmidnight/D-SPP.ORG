@@ -474,15 +474,15 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 										}
 										 ?>
 										<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
-										<td><?php echo number_format($formato['cantidad_total_factura']); ?></td>
+										<td><?php echo number_format($formato['cantidad_total_factura'],2); ?></td>
 										<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
 										<td><?php echo $formato['reconocimiento_organico']; ?></td>
 										<td><?php echo $formato['incentivo_spp']; ?></td>
 										<td><?php echo $formato['otros_premios']; ?></td>
 										<td><?php echo $formato['precio_total_unitario']; ?></td>
-										<td><?php echo number_format($formato['valor_total_contrato']); ?></td>
+										<td><?php echo number_format($formato['valor_total_contrato'],2); ?></td>
 										<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
-										<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar']); ?></td>
+										<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar'],2); ?></td>
 									</tr>
 								</form>
 							<?php

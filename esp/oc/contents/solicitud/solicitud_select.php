@@ -185,6 +185,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
         $mail->Send();
         $mail->ClearAddresses();
+        $mail->ClearAttachments();
 
 
         echo "<script>alert('Se ha actualizado la cotización');</script>";
@@ -204,6 +205,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
   $query_opp = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE solicitud_certificacion.idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $detalle_opp = mysql_fetch_assoc($query_opp);
 
+  $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2', solicitud_certificacion.contacto1_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $informacion = mysql_fetch_assoc($row_informacion);
 
   $estatus_dspp = 8; //INICIA PROCESO DE CERTIFICACION
   //ESTATUS INTERNO
@@ -476,7 +479,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }*/
       $mail->Send();
       $mail->ClearAddresses();
-
+      $mail->ClearAttachments();
 
       /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
 
@@ -549,6 +552,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
       $mail->Send();
       $mail->ClearAddresses();
+      $mail->ClearAttachments();
 
       /// TERMINA MENSAJE "CARGAR DOCUEMENTOS DE EVALUACIÓN"
 
@@ -593,12 +597,20 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
       ///inicia envio de mensaje dictamen positivo
-
-      $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]'", $dspp) or die(mysql_error());
-      while($documentacion = mysql_fetch_assoc($row_documentacion)){
-          $mail->AddAttachment($documentacion['archivo']);
-          $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+      if(isset($_POST['idioma'])){
+        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]'", $dspp) or die(mysql_error());
+        while($documentacion = mysql_fetch_assoc($row_documentacion)){
+            $mail->AddAttachment($documentacion['archivo']);
+            $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+        }
+      }else{
+        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = 'ESP'", $dspp) or die(mysql_error());
+        while($documentacion = mysql_fetch_assoc($row_documentacion)){
+            $mail->AddAttachment($documentacion['archivo']);
+            $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+        }
       }
+
       if(isset($archivo_dictamen)){
         $documentacion_nombres .= '<li>'.$_POST['nombre_archivo_dictamen'].'</li>';
         $mail->AddAttachment($archivo_dictamen);
@@ -789,6 +801,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
       $mail->Send();
       $mail->ClearAddresses();
+      $mail->ClearAttachments();
       /*if($mail->Send()){
         $mail->ClearAddresses();
         echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
@@ -814,12 +827,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_opp'].'</span></p></th>
               </tr>
 
               <tr>
                 <td colspan="2">
-                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre_opp'].' ha cumplido con la documentación necesaria.</p>
                  <p>
                   Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
                      <ul style="color:red">
@@ -867,6 +880,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
       $mail->Send();
       $mail->ClearAddresses();
+      $mail->ClearAttachments();
 
       /// TERMINA MENSAJE "CARGAR DOCUEMENTOS DE EVALUACIÓN"
           
@@ -1040,6 +1054,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }
       //$mail->Send();
       $mail->ClearAddresses();
+      $mail->ClearAttachments();
       ///termina envio de mensaje dictamen positivo
     }else{
       $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
@@ -1079,12 +1094,20 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
       ///inicia envio de mensaje dictamen positivo
-
-      $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]'", $dspp) or die(mysql_error());
-      while($documentacion = mysql_fetch_assoc($row_documentacion)){
-          $mail->AddAttachment($documentacion['archivo']);
-          $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+      if(isset($_POST['idioma'])){
+        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]'", $dspp) or die(mysql_error());
+        while($documentacion = mysql_fetch_assoc($row_documentacion)){
+            $mail->AddAttachment($documentacion['archivo']);
+            $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+        }
+      }else{
+        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = 'ESP'", $dspp) or die(mysql_error());
+        while($documentacion = mysql_fetch_assoc($row_documentacion)){
+            $mail->AddAttachment($documentacion['archivo']);
+            $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+        }
       }
+
       if(!empty($archivo)){
         $documentacion_nombres .= '<li>'.$_POST['nombreArchivo'].'</li>';
         $mail->AddAttachment($archivo);
@@ -1277,6 +1300,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
       $mail->Send();
       $mail->ClearAddresses();
+      $mail->ClearAttachments();
       /*if($mail->Send()){
         $mail->ClearAddresses();
         echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
@@ -1356,6 +1380,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
       $mail->Send();
       $mail->ClearAddresses();
+      $mail->ClearAttachments();
 
       /// TERMINA MENSAJE "CARGAR DOCUEMENTOS DE EVALUACIÓN"
       
@@ -1539,6 +1564,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
       $mail->ClearAddresses();
       echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
     }
+    $mail->ClearAttachments();
   //termina enviar correo a ADM sobre documentación de Evaluación
 
   //$mensaje = "Se ha enviado el Formato, Dictamen e Informe de Evaluación";
@@ -1675,6 +1701,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
     $mail->Send();
     $mail->ClearAddresses();
+    $mail->ClearAttachments();
 
 
 

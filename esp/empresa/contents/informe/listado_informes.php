@@ -82,11 +82,11 @@ echo "<h4>Numero de informes actuales: $numero_informes</h4>";
 			<tr>
 				<td><?php echo $listado['idinforme_general']; ?></td>
 				<td><?php echo date('Y',$listado['ano']); ?></td>
-				<td><?php echo number_format($listado['cuota_uso_trim1']); ?></td>
-				<td><?php echo number_format($listado['cuota_uso_trim2']); ?></td>
-				<td><?php echo number_format($listado['cuota_uso_trim3']); ?></td>
-				<td><?php echo number_format($listado['cuota_uso_trim4']); ?></td>
-				<td><?php echo number_format(round($balance_final,2)); ?></td>
+				<td><?php echo number_format($listado['cuota_uso_trim1'],2); ?></td>
+				<td><?php echo number_format($listado['cuota_uso_trim2'],2); ?></td>
+				<td><?php echo number_format($listado['cuota_uso_trim3'],2); ?></td>
+				<td><?php echo number_format($listado['cuota_uso_trim4'],2); ?></td>
+				<td><?php echo number_format(round($balance_final,2),2); ?></td>
 				<td><?php echo $listado['estado_informe']; ?></td>
 			</tr>
 			<?php
