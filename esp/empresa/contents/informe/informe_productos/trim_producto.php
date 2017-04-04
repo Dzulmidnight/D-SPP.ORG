@@ -207,7 +207,7 @@ if(isset($_GET['trim'])){
 				<tbody>
 					<?php 
 					$contador = 1;
-					$suma_total = '';
+					$suma_total = 0;
 					$suma_valor_contrato = 0;
 					while($formato = mysql_fetch_assoc($row_formato)){
 					?>

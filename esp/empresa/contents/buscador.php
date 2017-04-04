@@ -55,9 +55,6 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 }
 
 ?>
-
-<h4>Menú principal OPP</h4>
-
 <p class="alert alert-info" style="padding:5px;">
 	Para poder consultar mas información sobre una Organización o Empresa, por favor ingresar el #SPP ó la abreviación ó el nombre de la misma
 </p>

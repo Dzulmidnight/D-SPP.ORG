@@ -478,9 +478,9 @@ function redondear_dos_decimal($valor) {
 														?>
 															<p>Para poder aprobar el reporte trimestral debe dar clic en el siguiente boton</p>
 															<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="aprobar_reporte" value="SI">Aprobar Reporte</button>
-															<input type="text" name="num_trim" value="1">
-															<input type="text" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
-															<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+															<input type="hidden" name="num_trim" value="1">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
+															<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
 														<?php
 														}else if($informes['estado_trim1'] == 'APROBADO' || $informes['estado_trim1'] == 'FINALIZADO'){
 															echo "El informe trimestral ha sido aprobado";
@@ -509,9 +509,9 @@ function redondear_dos_decimal($valor) {
 																	<input type="file" class="form-control" id="factura" name="factura_trimestre">
 																</div>
 																<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="enviar_factura" value="1">Enviar Factura</button>
-																<input type="text" name="num_trim" value="1">
-																<input type="text" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
-																<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+																<input type="hidden" name="num_trim" value="1">
+																<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
+																<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
 															</form>
 														<?php
 														}
@@ -532,8 +532,8 @@ function redondear_dos_decimal($valor) {
 														<div class="row">
 															<div class="col-xs-6"><button class="btn btn-sm btn-success" style="width:100%" type="submit" name="aprobar_pago" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar pago</button></div>
 															<div class="col-xs-6"><button class="btn btn-sm btn-danger" style="width:100%" type="submit" name="rechazar_pago" value="2"><span class="glyphicon glyphicon-remove" aria-hidden="trie"></span> Rechazar pago</button></div>
-															<input type="text" name="num_trimestre" value="1">
-															<input type="text" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
+															<input type="hidden" name="num_trimestre" value="1">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
 															<input type="hidden" name="aprobar_comprobante" value="1">
 														</div>
 
@@ -573,7 +573,7 @@ function redondear_dos_decimal($valor) {
 									echo '<img src="../../img/circulo_rojo.jpg">';
 								}
 								
-								echo ' $'.$informes['cuota_uso_trim1'].' USD';
+								echo ' $'.number_format($informes['cuota_uso_trim1'],2).' USD';
 								if(isset($informes['reporte_trim1'])){
 									echo '<a href="'.$informes['reporte_trim1'].'" target="_new"><img height="25px;" src="../../img/pdf.png" alt=""></a>';
 								}
@@ -603,9 +603,9 @@ function redondear_dos_decimal($valor) {
 														?>
 															<p>Para poder aprobar el reporte trimestral debe dar clic en el siguiente boton</p>
 															<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="aprobar_reporte" value="SI">Aprobar Reporte</button>
-															<input type="text" name="num_trim" value="1">
-															<input type="text" name="idtrimestre" value="<?php echo $informes['trim2']; ?>">
-															<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+															<input type="hidden" name="num_trim" value="1">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim2']; ?>">
+															<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
 														<?php
 														}else if($informes['estado_trim2'] == 'APROBADO' || $informes['estado_trim2'] == 'FINALIZADO'){
 															echo "El informe trimestral ha sido aprobado";
@@ -634,9 +634,9 @@ function redondear_dos_decimal($valor) {
 																	<input type="file" class="form-control" id="factura" name="factura_trimestre">
 																</div>
 																<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="enviar_factura" value="1">Enviar Factura</button>
-																<input type="text" name="num_trim" value="1">
-																<input type="text" name="idtrimestre" value="<?php echo $informes['trim2']; ?>">
-																<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+																<input type="hidden" name="num_trim" value="1">
+																<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim2']; ?>">
+																<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
 															</form>
 														<?php
 														}
@@ -657,8 +657,8 @@ function redondear_dos_decimal($valor) {
 														<div class="row">
 															<div class="col-xs-6"><button class="btn btn-sm btn-success" style="width:100%" type="submit" name="aprobar_pago" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar pago</button></div>
 															<div class="col-xs-6"><button class="btn btn-sm btn-danger" style="width:100%" type="submit" name="rechazar_pago" value="2"><span class="glyphicon glyphicon-remove" aria-hidden="trie"></span> Rechazar pago</button></div>
-															<input type="text" name="num_trimestre" value="1">
-															<input type="text" name="idtrimestre" value="<?php echo $informes['trim2']; ?>">
+															<input type="hidden" name="num_trimestre" value="1">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim2']; ?>">
 															<input type="hidden" name="aprobar_comprobante" value="1">
 														</div>
 
@@ -698,7 +698,7 @@ function redondear_dos_decimal($valor) {
 									echo '<img src="../../img/circulo_rojo.jpg">';
 								}
 								
-								echo ' $'.$informes['cuota_uso_trim2'].' USD';
+								echo ' $'.number_format($informes['cuota_uso_trim2'],2).' USD';
 								if(isset($informes['reporte_trim2'])){
 									echo '<a href="'.$informes['reporte_trim1'].'" target="_new"><img height="25px;" src="../../img/pdf.png" alt=""></a>';
 								}
@@ -730,9 +730,9 @@ function redondear_dos_decimal($valor) {
 														?>
 															<p>Para poder aprobar el reporte trimestral debe dar clic en el siguiente boton</p>
 															<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="aprobar_reporte" value="SI">Aprobar Reporte</button>
-															<input type="text" name="num_trim" value="1">
-															<input type="text" name="idtrimestre" value="<?php echo $informes['trim3']; ?>">
-															<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+															<input type="hidden" name="num_trim" value="1">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim3']; ?>">
+															<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
 														<?php
 														}else if($informes['estado_trim3'] == 'APROBADO' || $informes['estado_trim3'] == 'FINALIZADO'){
 															echo "El informe trimestral ha sido aprobado";
@@ -761,9 +761,9 @@ function redondear_dos_decimal($valor) {
 																	<input type="file" class="form-control" id="factura" name="factura_trimestre">
 																</div>
 																<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="enviar_factura" value="1">Enviar Factura</button>
-																<input type="text" name="num_trim" value="1">
-																<input type="text" name="idtrimestre" value="<?php echo $informes['trim3']; ?>">
-																<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+																<input type="hidden" name="num_trim" value="1">
+																<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim3']; ?>">
+																<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
 															</form>
 														<?php
 														}
@@ -784,8 +784,8 @@ function redondear_dos_decimal($valor) {
 														<div class="row">
 															<div class="col-xs-6"><button class="btn btn-sm btn-success" style="width:100%" type="submit" name="aprobar_pago" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar pago</button></div>
 															<div class="col-xs-6"><button class="btn btn-sm btn-danger" style="width:100%" type="submit" name="rechazar_pago" value="2"><span class="glyphicon glyphicon-remove" aria-hidden="trie"></span> Rechazar pago</button></div>
-															<input type="text" name="num_trimestre" value="1">
-															<input type="text" name="idtrimestre" value="<?php echo $informes['trim3']; ?>">
+															<input type="hidden" name="num_trimestre" value="1">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim3']; ?>">
 															<input type="hidden" name="aprobar_comprobante" value="1">
 														</div>
 
@@ -825,7 +825,7 @@ function redondear_dos_decimal($valor) {
 									echo '<img src="../../img/circulo_rojo.jpg">';
 								}
 								
-								echo ' $'.$informes['cuota_uso_trim3'].' USD';
+								echo ' $'.number_format($informes['cuota_uso_trim3'],2).' USD';
 								if(isset($informes['reporte_trim3'])){
 									echo '<a href="'.$informes['reporte_trim3'].'" target="_new"><img height="25px;" src="../../img/pdf.png" alt=""></a>';
 								}
@@ -856,9 +856,9 @@ function redondear_dos_decimal($valor) {
 														?>
 															<p>Para poder aprobar el reporte trimestral debe dar clic en el siguiente boton</p>
 															<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="aprobar_reporte" value="SI">Aprobar Reporte</button>
-															<input type="text" name="num_trim" value="1">
-															<input type="text" name="idtrimestre" value="<?php echo $informes['trim4']; ?>">
-															<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+															<input type="hidden" name="num_trim" value="1">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim4']; ?>">
+															<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
 														<?php
 														}else if($informes['estado_trim4'] == 'APROBADO' || $informes['estado_trim4'] == 'FINALIZADO'){
 															echo "El informe trimestral ha sido aprobado";
@@ -887,9 +887,9 @@ function redondear_dos_decimal($valor) {
 																	<input type="file" class="form-control" id="factura" name="factura_trimestre">
 																</div>
 																<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="enviar_factura" value="1">Enviar Factura</button>
-																<input type="text" name="num_trim" value="1">
-																<input type="text" name="idtrimestre" value="<?php echo $informes['trim4']; ?>">
-																<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+																<input type="hidden" name="num_trim" value="1">
+																<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim4']; ?>">
+																<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
 															</form>
 														<?php
 														}
@@ -910,8 +910,8 @@ function redondear_dos_decimal($valor) {
 														<div class="row">
 															<div class="col-xs-6"><button class="btn btn-sm btn-success" style="width:100%" type="submit" name="aprobar_pago" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar pago</button></div>
 															<div class="col-xs-6"><button class="btn btn-sm btn-danger" style="width:100%" type="submit" name="rechazar_pago" value="2"><span class="glyphicon glyphicon-remove" aria-hidden="trie"></span> Rechazar pago</button></div>
-															<input type="text" name="num_trimestre" value="1">
-															<input type="text" name="idtrimestre" value="<?php echo $informes['trim4']; ?>">
+															<input type="hidden" name="num_trimestre" value="1">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim4']; ?>">
 															<input type="hidden" name="aprobar_comprobante" value="1">
 														</div>
 
@@ -951,54 +951,25 @@ function redondear_dos_decimal($valor) {
 									echo '<img src="../../img/circulo_rojo.jpg">';
 								}
 								
-								echo ' $'.$informes['cuota_uso_trim4'].' USD';
+								echo ' $'.number_format($informes['cuota_uso_trim4'],2).' USD';
 								if(isset($informes['reporte_trim4'])){
 									echo '<a href="'.$informes['reporte_trim4'].'" target="_new"><img height="25px;" src="../../img/pdf.png" alt=""></a>';
 								}
 
 							echo '</td>';
 
-						/// INICIA TRIMESTRE 4
 
-
-
-
-
-
-							/*echo '<td>'; //// TRIMESTRE 2
-								if($informes['estado_trim2'] == 'ACTIVO' || $informes['estado_trim2'] == 'EN ESPERA' || $informes['estado_trim1'] == 'APROBADO'){
-									echo '<img src="../../img/circulo_verde.jpg"> $'.$informes['cuota_uso_trim2'].' USD';
-								}else if($informes['estado_trim2'] == 'FINALIZADO'){
-									echo '<img src="../../img/circulo_rojo.jpg"> $'.$informes['cuota_uso_trim2'].' USD';
-								}
-							echo '</td>';
-
-							echo '<td>'; /// TRIMESTRE 3
-								if($informes['estado_trim3'] == 'ACTIVO' || $informes['estado_trim3'] == 'EN ESPERA' || $informes['estado_trim1'] == 'APROBADO'){
-									echo '<img src="../../img/circulo_verde.jpg"> $'.$informes['cuota_uso_trim3'].' USD';
-								}else if($informes['estado_trim3'] == 'FINALIZADO'){
-									echo '<img src="../../img/circulo_rojo.jpg"> $'.$informes['cuota_uso_trim3'].' USD';
-								}
-							echo '</td>';
-
-							echo '<td>';  /// TRIMESTRE 4
-								if($informes['estado_trim4'] == 'ACTIVO' || $informes['estado_trim4'] == 'EN ESPERA' || $informes['estado_trim1'] == 'APROBADO'){
-									echo '<img src="../../img/circulo_verde.jpg"> $'.$informes['cuota_uso_trim4'].' USD';
-								}else if($informes['estado_trim4'] == 'FINALIZADO'){
-									echo '<img src="../../img/circulo_rojo.jpg"> $'.$informes['cuota_uso_trim4'].' USD';
-								}
-							echo '</td>';*/
 
 							echo '<td><a href="?REPORTES&informe_compras&detalle_total='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-search"></span> '.$informes['total_cuota_uso'].' USD</a></td>';
 						echo '</tr>';
 					}
 					echo '<tr>';
 						echo '<td colspan="3" style="text-align:right"><b>Suma total</b></td>';
-						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim1.'</td>';
-						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim2.'</td>';
-						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim3.'</td>';
-						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim4.'</td>';
-						echo '<td style="color:#e74c3c;">'.$total_final.' USD</td>';
+						echo '<td style="color:#e74c3c;">'.number_format($cuota_uso_trim1,2).'</td>';
+						echo '<td style="color:#e74c3c;">'.number_format($cuota_uso_trim2,2).'</td>';
+						echo '<td style="color:#e74c3c;">'.number_format($cuota_uso_trim3,2).'</td>';
+						echo '<td style="color:#e74c3c;">'.number_format($cuota_uso_trim4,2).'</td>';
+						echo '<td style="color:#e74c3c;">'.number_format($total_final,2).' USD</td>';
 					echo '</tr>';
 					//echo '<tr><td colspan="9"><b>Suma total: <span style="color:#e74c3c">'.$total.'</span> USD</b></td></tr>';
 				}

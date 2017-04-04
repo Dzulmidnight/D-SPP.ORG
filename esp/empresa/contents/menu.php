@@ -34,6 +34,9 @@ if (!function_exists("GetSQLValueString")) {
 
 
 <ul class="nav nav-sidebar">
+  <li <? if(isset($_GET['buscador'])){?> class="active" <? }?>>
+    <a href="?buscador">Buscador de Organizaciones</a>
+  </li>
   <li <? if(isset($_GET['SOLICITUD'])){?> class="active" <? }?>>
     <a href="?SOLICITUD&select">Solicitudes</a>
   </li>

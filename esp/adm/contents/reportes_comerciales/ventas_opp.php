@@ -673,9 +673,9 @@ function redondear_dos_decimal($valor) {
 														?>
 															<p>Para poder aprobar el reporte trimestral debe dar clic en el siguiente boton</p>
 															<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="aprobar_reporte" value="SI">Aprobar Reporte</button>
-															<input type="text" name="num_trim" value="1">
-															<input type="text" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
-															<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+															<input type="hidden" name="num_trim" value="1">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
+															<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
 														<?php
 														}else if($informes['estado_trim1'] == 'APROBADO' || $informes['estado_trim1'] == 'FINALIZADO'){
 															echo "El informe trimestral ha sido aprobado";
@@ -704,9 +704,9 @@ function redondear_dos_decimal($valor) {
 																	<input type="file" class="form-control" id="factura" name="factura_trimestre">
 																</div>
 																<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="enviar_factura" value="1">Enviar Factura</button>
-																<input type="text" name="num_trim" value="1">
-																<input type="text" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
-																<input type="text" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+																<input type="hidden" name="num_trim" value="1">
+																<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
+																<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
 															</form>
 														<?php
 														}
@@ -727,8 +727,8 @@ function redondear_dos_decimal($valor) {
 														<div class="row">
 															<div class="col-xs-6"><button class="btn btn-sm btn-success" style="width:100%" type="submit" name="aprobar_pago" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar pago</button></div>
 															<div class="col-xs-6"><button class="btn btn-sm btn-danger" style="width:100%" type="submit" name="rechazar_pago" value="2"><span class="glyphicon glyphicon-remove" aria-hidden="trie"></span> Rechazar pago</button></div>
-															<input type="text" name="num_trimestre" value="1">
-															<input type="text" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
+															<input type="hidden" name="num_trimestre" value="1">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim1']; ?>">
 															<input type="hidden" name="aprobar_comprobante" value="1">
 														</div>
 

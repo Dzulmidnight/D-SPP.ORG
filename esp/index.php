@@ -855,12 +855,15 @@ $alerta2 = '
                         <div class="col-sm-10">
                           <div class="checkbox">
                             <label class="col-sm-4">
+                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae aut, voluptatum laboriosam vitae, facilis in id suscipit eligendi natus vel! In beatae itaque ducimus iure. Dolorem, suscipit maiores totam aperiam!</p>
                               <input type="checkbox" id="maquilador" name="maquilador" value="1"> MAQUILADOR
                             </label>
                             <label class="col-sm-4">
+                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo laborum quisquam amet officia autem consequatur excepturi fugit, tempore ex ipsam maxime, non culpa provident ea dolorum voluptatum dolorem veniam quis.</p>
                               <input type="checkbox" id="comprador" name="comprador" value="1"> COMPRADOR
                             </label>
                             <label class="col-sm-4">
+                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum numquam maxime, repudiandae corporis quam placeat, expedita consequatur impedit earum ipsum recusandae enim alias dolores distinctio quis explicabo rem itaque eligendi!</p>
                               <input type="checkbox" id="intermediario" name="intermediario" value="1"> INTERMEDIARIO
                             </label>
                           </div>

@@ -252,7 +252,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		<p class="alert alert-success" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color verde son obligatorios.</p>
 		<p class="alert alert-warning" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color amarillo son completados de manera automatica.</p>
 	
-		<form class="form-horizontal" method="POST">
+
 		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
 		 		<thead>
 		 			<tr class="success">
@@ -489,6 +489,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 							$contador++;
 							}
 		 				 ?>
+		<form class="form-horizontal" method="POST">
+		 				 
 					<tr class="success">
 						<td class="warning"></td> <!-- # -->
 
