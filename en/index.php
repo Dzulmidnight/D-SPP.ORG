@@ -194,9 +194,29 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
 }
 /****************************** FIN FORMULARIO INSERTAR OPP **************************************************/
 
-/****************************** INICIA FORMULARIO INSERTAR COM **************************************************/
+/****************************** INICIA FORMULARIO INSERTAR EMPRESA **************************************************/
 if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) {
   mysql_select_db($database_dspp, $dspp);
+
+  $tipo_empresa = '';
+  if(isset($_POST['maquilador'])){
+    $maquilador = $_POST['maquilador'];
+    $tipo_empresa = 'MAQ-';
+  }else{
+    $maquilador = '';
+  }
+  if(isset($_POST['comprador'])){
+    $comprador = $_POST['comprador'];
+    $tipo_empresa = 'COM-';
+  }else{
+    $comprador = '';
+  }
+  if(isset($_POST['intermediario'])){
+    $intermediario = $_POST['intermediario'];
+    $tipo_empresa = 'INT-';
+  }else{
+    $intermediario = '';
+  }
 
   $pais = $_POST['pais'];
 
@@ -221,14 +241,14 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
     $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
     //$numero =  strlen($contador);
 
-    $spp = "COM-".$paisDigitos."-".$fechaDigitos."-".$contador;
+    $spp = $tipo_empresa.$paisDigitos."-".$fechaDigitos."-".$contador;
 
     while ($datos_empresa = mysql_fetch_assoc($ejecutar_spp)) {
       if($datos_empresa['spp'] == $spp){
         //echo "<b style='color:red'>es igual el OPP con id: $datos_empresa[idf]</b><br>";
         $contador++;
         $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
-        $spp = "COM-".$paisDigitos."-".$fechaDigitos."-".$contador;
+        $spp = $tipo_empresa.$paisDigitos."-".$fechaDigitos."-".$contador;
       }/*else{
         echo "el id encontrado es: $datos_empresa[idf]<br>";
       }*/
@@ -239,23 +259,6 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
 
   $logitud = 8;
   $psswd = substr( md5(microtime()), 1, $logitud);
-
-  if(isset($_POST['maquilador'])){
-    $maquilador = $_POST['maquilador'];
-  }else{
-    $maquilador = '';
-  }
-  if(isset($_POST['comprador'])){
-    $comprador = $_POST['comprador'];
-  }else{
-    $comprador = '';
-  }
-  if(isset($_POST['intermediario'])){
-    $intermediario = $_POST['intermediario'];
-  }else{
-    $intermediario = '';
-  }
-
 
 
 
@@ -338,7 +341,7 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
     $mail->Send();
     $mail->ClearAddresses();
     
-    $mensaje = "<strong>Datos Registrados Correctamente, por favor revisa tu bandeja de correo electronico, si no encuentras tus datos revisa tu bandeja de spam</strong>";
+    $mensaje = "<strong>Data registered correctly, please check your email tray, if you do not find your data check your spam tray</strong>";
 }
 
 /****************************** FIN FORMULARIO INSERTAR COM **************************************************/
@@ -831,13 +834,22 @@ $alerta2 = '
                         <div class="col-sm-10">
                           <div class="checkbox">
                             <label class="col-sm-4">
-                              <input type="checkbox"name="maquilador" value="1"> Maquila Company
+                              <input type="checkbox" id="maquilador" name="maquilador" value="1"> MAQUILA COMPANY
+                              <p style="color:#7f8c8d;">
+                                Service providers that intervene in the trading or processing of products, but do not buy or sell these products.
+                              </p>
                             </label>
                             <label class="col-sm-4">
-                              <input type="checkbox"name="comprador" value="1"> Final Buyer
+                              <input type="checkbox" id="comprador" name="comprador" value="1"> FINAL BUYER
+                              <p style="color:#7f8c8d;">
+                                A company that buys products certified with the Small Producers’ Symbol to place them on the final consumer market under its own name or trademark, and that complies with the respective criteria in the applicable Standards of the Small Producer’s Symbol.
+                              </p>
                             </label>
                             <label class="col-sm-4">
-                              <input type="checkbox"name="intermediario" value="1"> Intermediary
+                              <input type="checkbox" id="intermediario" name="intermediario" value="1"> INTERMEDIARY
+                              <p style="color:#7f8c8d;">
+                                Trading companies that buy and sell Small Producers’ Symbol products, and do not place these products on the final consumer market under their own name or trademark.
+                              </p>
                             </label>
 
 
@@ -929,7 +941,7 @@ $alerta2 = '
                       </div>
                     </div>
                     <input type="hidden" name="registro_empresa" value="1">
-                    <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Create account</button>
+                    <button type="submit" class="btn btn-success form-control" onclick="return validar();"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Create account</button>
 
                   </div>
                 </div>
@@ -998,7 +1010,46 @@ $alerta2 = '
 
     </div>
   </div>
+  <script>
+    function validar(){
+      /*tipo_solicitud = document.getElementsByName("tipo_solicitud");
 
+       if(){
+
+       }
+      // INICIA SELECCION TIPO SOLICITUD
+      var seleccionado = false;
+      for(var i=0; i<tipo_solicitud.length; i++) {    
+        if(tipo_solicitud[i].checked) {
+          seleccionado = true;
+          break;
+        }
+      }
+       
+      if(!seleccionado) {
+        alert("Debes de seleccionar un Tipo de Solicitud");
+        return false;
+      }*/
+      var maquilador = document.getElementById('maquilador').checked;
+      var intermediario = document.getElementById('intermediario').checked;
+      var comprador = document.getElementById('comprador').checked;
+      var seleccionado = false;
+      if(maquilador){
+        seleccionado = true;
+      }
+      if(intermediario){
+        seleccionado = true;
+      }
+      if(comprador){
+        seleccionado = true;
+      }
+
+      if(seleccionado == false){
+        alert('Debes seleccionar el Tipo de Empresa');
+      }
+      
+    }
+  </script>
     <script>
       $(function () {
       $('[data-toggle="tooltip"]').tooltip()

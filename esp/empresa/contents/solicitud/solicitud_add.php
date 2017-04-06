@@ -165,8 +165,9 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
 
-	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro, estatus_interno ) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, total_ventas, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro, estatus_interno ) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 		   GetSQLValueString($_POST['tipo_solicitud'], "text"),
+		   GetSQLValueString($_POST['total_ventas'], "double"),
 		   GetSQLValueString($idempresa, "int"),
            GetSQLValueString($_POST['idoc'], "int"),
            GetSQLValueString($comprador, "int"),
@@ -534,7 +535,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 						<ul>
 							<li>
 								<b>
-									SI CONTARON CON CERTITICACION DE SPP ANTERIORMENTE (CON EL ORGANISMO DE CERTIFICACIÓN ACTUAL ó CON OTRO ORGANISMO DE CERTIFICACIÓN)DEBEN ELEGIR <span style="color:red">"RENOVACION DEL CERTIFICADO"</span>
+									SI CONTARON CON CERTIFICACIÓN DE SPP ANTERIORMENTE (CON EL ORGANISMO DE CERTIFICACIÓN ACTUAL ó CON OTRO ORGANISMO DE CERTIFICACIÓN) DEBEN ELEGIR <span style="color:red">"RENOVACION DEL CERTIFICADO"</span>
 								</b>
 							</li>
 							<li><b>SI ES LA PRIMERA VEZ QUE SE CERTIFICAN DEBEN ELEGIR <span style="color:red">"PRIMERA VEZ"</span></b></li>
@@ -577,6 +578,21 @@ $empresa = mysql_fetch_assoc($row_empresa);
 					</div>
 				</div>
 			</div>
+			<?php 
+			if($empresa['comprador']){
+			?>
+				<div class="row">
+					<div class="col-md-12 alert alert-info">
+						<b>VALOR TOTAL DE VENTAS (<i>independientemente de si se trata de ventas SPP o no</i>)</b>
+						<br>
+						Nota: <i>Este dato es necesario para determinar la membresia a pagar por parte del Comprador Final.   <a href="#">Reglamento de Costos V8_2017-02-03, 4.3 (descargar</a>) "Los Compradores Finales pagan una cuota de Membresía Anual (en USD) equivalente a  un porcentaje del total de facturación de la empresa, independientemente de si se trata de ventas SPP o no"</i>
+
+						<input type="number" step="any" class="form-control" id="total_ventas" name="total_ventas" placeholder="Valor de ventas, ingresar solo numeros" required>
+					</div>
+				</div>
+			<?php
+			}
+			 ?>
 
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
 			<div class="row">
@@ -693,13 +709,13 @@ $empresa = mysql_fetch_assoc($row_empresa);
 
                   <div class="checkbox">
                     <label class="col-sm-4">
-                      <input type="checkbox"name="comprador" <?php if($empresa['comprador']){echo "checked"; } ?> value="1"> COMPRADOR-FINAL
+                      <input type="checkbox" name="comprador" <?php if($empresa['comprador']){echo "checked"; } ?> value="1"> COMPRADOR-FINAL
                     </label>
                     <label class="col-sm-4">
-                      <input type="checkbox"name="intermediario" <?php if($empresa['intermediario']){echo "checked"; } ?> value="1"> INTERMEDIARIO
+                      <input type="checkbox" name="intermediario" <?php if($empresa['intermediario']){echo "checked"; } ?> value="1"> INTERMEDIARIO
                     </label>
                     <label class="col-sm-4">
-                      <input type="checkbox"name="maquilador" <?php if($empresa['maquilador']){echo "checked"; } ?> value="1"> MAQUILADOR
+                      <input type="checkbox" name="maquilador" <?php if($empresa['maquilador']){echo "checked"; } ?> value="1"> MAQUILADOR
                     </label>
                   </div>
 			</div>

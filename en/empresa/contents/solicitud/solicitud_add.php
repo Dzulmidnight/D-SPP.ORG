@@ -161,8 +161,9 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
 
-	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro, estatus_interno ) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, total_ventas, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro, estatus_interno ) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 		   GetSQLValueString($_POST['tipo_solicitud'], "text"),
+		   GetSQLValueString($_POST['total_ventas'], "double"),
 		   GetSQLValueString($idempresa, "int"),
            GetSQLValueString($_POST['idoc'], "int"),
            GetSQLValueString($comprador, "int"),
@@ -201,7 +202,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
            GetSQLValueString($_POST['responsable'], "text"),
            GetSQLValueString($fecha, "int"),
            GetSQLValueString($estatus_dspp, "int"));
-
 
 		  $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
 		 
@@ -574,6 +574,20 @@ $empresa = mysql_fetch_assoc($row_empresa);
 				</div>
 			</div>
 
+			<?php 
+			if($empresa['comprador']){
+			?>
+				<div class="row">
+					<div class="col-md-12 alert alert-info">
+						<b>TOTAL VALUE OF SALES <i>(regardless of whether it is SPP sales or not)</i></b>
+						<br>
+						Note: <i>This data is necessary to determine the membership to be paid by the Final Buyer. <a href="#">Reglamento de Costos V8_2017-02-03, 4.3 (descargar</a>) "End Buyers pay an Annual Membership Fee (in USD) equivalent to a percentage of the company's total billing regardless of whether it is SPP sales or not"</i>
+						<input type="number" step="any" class="form-control" id="total_ventas" name="total_ventas" placeholder="Sales value, enter numbers only" required>
+					</div>
+				</div>
+			<?php
+			}
+			 ?>
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
 			<div class="col-lg-12">
 				<div class="col-md-6">

@@ -855,16 +855,19 @@ $alerta2 = '
                         <div class="col-sm-10">
                           <div class="checkbox">
                             <label class="col-sm-4">
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae aut, voluptatum laboriosam vitae, facilis in id suscipit eligendi natus vel! In beatae itaque ducimus iure. Dolorem, suscipit maiores totam aperiam!</p>
                               <input type="checkbox" id="maquilador" name="maquilador" value="1"> MAQUILADOR
+                              <p style="color:#7f8c8d;">Proveedores de servicios que intervienenen en la comercialización o el acondicionamiento del producto, sin que haya de por medio un proceso de compra venta del mismo.</p>
+                              
                             </label>
                             <label class="col-sm-4">
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo laborum quisquam amet officia autem consequatur excepturi fugit, tempore ex ipsam maxime, non culpa provident ea dolorum voluptatum dolorem veniam quis.</p>
-                              <input type="checkbox" id="comprador" name="comprador" value="1"> COMPRADOR
+                              <input type="checkbox" id="comprador" name="comprador" value="1"> COMPRADOR FINAL
+                              <p style="color:#7f8c8d;">Una empresa que compra productos certificados bajo el Símbolo de Pequeños Productores para ponerlos en el mercado de consumo final bajo su nombre o marca y que cumple con los criterios respectivos de la Norma General del Símbolo de Pequeños Productores.</p>
+                              
                             </label>
                             <label class="col-sm-4">
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum numquam maxime, repudiandae corporis quam placeat, expedita consequatur impedit earum ipsum recusandae enim alias dolores distinctio quis explicabo rem itaque eligendi!</p>
                               <input type="checkbox" id="intermediario" name="intermediario" value="1"> INTERMEDIARIO
+                              <p style="color:#7f8c8d;">Empresas comercializadoras que compran y venden los productos del Símbolo de Pequeños Productores sin que pongan el producto bajo su nombre o marca en el mercado de consumo final.</p>
+                              
                             </label>
                           </div>
                         </div>
