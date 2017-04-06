@@ -8,7 +8,7 @@ mysql_select_db($database_dspp, $dspp);
 if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
   $palabra = $_POST['palabra'];
 
-  $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.spp LIKE '%$palabra%' OR empresa.nombre LIKE '%$palabra%' OR empresa.abreviacion LIKE '%$palabra%' OR empresa.pais LIKE '%$palabra%' OR oc.abreviacion LIKE '%$palabra%' OR empresa.email LIKE '%$palabra%' OR empresa.telefono LIKE '%$palabra%') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY certificado.idempresa ORDER BY fecha_fin  DESC";
+  $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.spp LIKE '%$palabra%' OR empresa.nombre LIKE '%$palabra%' OR empresa.abreviacion LIKE '%$palabra%' OR empresa.pais LIKE '%$palabra%' OR oc.abreviacion LIKE '%$palabra%' OR empresa.email LIKE '%$palabra%' OR empresa.telefono LIKE '%$palabra%') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10";
 }else if(isset($_POST['busqueda_filtros']) && $_POST['busqueda_filtros'] == 1){
   $idoc = $_POST['idoc'];
   $pais = $_POST['pais'];
@@ -29,14 +29,14 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idempresa++;
     }
 
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin', productos.idproducto, productos.producto FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE (empresa.idoc = '$idoc' AND empresa.pais = '$pais' AND $idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY certificado.idempresa ORDER BY fecha_fin  DESC";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.idoc = '$idoc' AND empresa.pais = '$pais' AND $idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10 GROUP BY empresa.idempresa";
 
   }else if(!empty($pais) && !empty($idoc) && empty($producto)){ ///BUSQUEDA DE PAIS Y OC
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.idoc = '$idoc' AND empresa.pais = '$pais') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY certificado.idempresa ORDER BY fecha_fin  DESC";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.idoc = '$idoc' AND empresa.pais = '$pais') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10 GROUP BY empresa.idempresa";
   }else if(empty($pais) && !empty($idoc) && empty($producto)){ ///BUSQUEDA DE OC
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.idoc = '$idoc') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY certificado.idempresa ORDER BY fecha_fin  DESC";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.idoc = '$idoc') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10 GROUP BY empresa.idempresa";
   }else if(!empty($pais) && empty($idoc) && empty($producto)){///BUSQUEDA DE PAIS
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.pais = '$pais') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY certificado.idempresa ORDER BY fecha_fin  DESC";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.pais = '$pais') AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10 GROUP BY empresa.idempresa";
   }else if(!empty($pais) && !empty($producto) && empty($idoc)){///BUSQUEDA PAIS Y PRODUCTO
     //$query_productos = mysql_query("SELECT idempresa FROM productos WHERE producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
     $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE pais = '$pais' AND producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
@@ -50,7 +50,7 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idempresa++;
     }
 
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin', productos.idproducto, productos.producto FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE ( empresa.pais = '$pais' AND $idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY certificado.idempresa ORDER BY fecha_fin  DESC";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE ( empresa.pais = '$pais' AND $idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10 GROUP BY empresa.idempresa";
   }else if(!empty($producto) && empty($idoc) && empty($pais)){///BUSQUEDA DE PRODUCTO
     $query_productos = mysql_query("SELECT idempresa FROM productos WHERE producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
     $total_idempresa = mysql_num_rows($query_productos);
@@ -63,25 +63,41 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idempresa++;
     }
 
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE ($idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY certificado.idempresa ORDER BY fecha_fin  DESC";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE ($idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10 GROUP BY empresa.idempresa";
 
+  }else if(!empty($producto) && !empty($idoc) && empty($pais)){
+    //$query_productos = mysql_query("SELECT idempresa FROM productos WHERE producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
+    $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE idoc = $idoc  AND producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
+    $total_idempresa = mysql_num_rows($query_productos);
+    $cont_idempresa = 1;
+    while($producto_empresa = mysql_fetch_assoc($query_productos)){
+      $idempresa_producto .= "empresa.idempresa = '$producto_empresa[idempresa]'";
+      if($cont_idempresa < $total_idempresa){
+        $idempresa_producto .= " OR ";
+      }
+      $cont_idempresa++;
+    }
+
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE (empresa.idoc = '$idoc' AND $idempresa_producto) AND empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10 GROUP BY empresa.idempresa";
   }else{
-    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY certificado.idempresa ORDER BY fecha_fin  DESC";
+    //$query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10 GROUP BY empresa.idempresa";
+    $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10 GROUP BY certificado.idempresa ORDER BY fecha_fin  DESC";
+
   }
 
-
 }else{
-  $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' GROUP BY certificado.idempresa ORDER BY fecha_fin  DESC";
+  $query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND (empresa.estatus_interno != 10  OR empresa.estatus_interno = 0) GROUP BY certificado.idempresa ORDER BY fecha_fin  DESC";
+  //$query_empresa = "SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10 GROUP BY empresa.idempresa ORDER BY certificado.vigencia_fin DESC";
 }
 
+
 $row_empresa = mysql_query($query_empresa, $dspp) or die(mysql_error());
-//$row_empresa = mysql_query("SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA'", $dspp) or die(mysql_error());
+//$row_empresa = mysql_query("SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10", $dspp) or die(mysql_error());
 $total_empresa = mysql_num_rows($row_empresa);
 
 $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT * FROM oc", $dspp) or die(mysql_error());
 $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempresa IS NOT NULL GROUP BY producto",$dspp) or die(mysql_error());
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -125,7 +141,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
 
       <!-- (PRIMERA)INICIA SECCIÓN PRINCIPAL -->
       <div class="col-md-6">
-        <p class="alert alert-default" style="padding:9px;"><a href="lista_opp.php"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Revisar Lista de Organizaciones de Pequeños Productores</a></p>
+        <p class="alert alert-default" style="padding:9px;"><a href="lista_empresa.php"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Revisar Lista de Organizaciones de Pequeños Productores</a></p>
       </div>
       <div class="col-md-6">
         <p class="alert alert-success" style="padding:9px;"><a href="lista_empresas.php"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Revisar Lista de Compradores y otros Actores</a></p>
@@ -207,23 +223,30 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
             <tr>
               <th colspan="2">
                 Exportar: 
-                <a href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
-                <form name="formulario1" method="POST" action="../reportes/lista_empresas.php">
+                <!--<a href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>-->
+
+                <a href="#" onclick="document.formulario2.submit()"><img src="../img/excel.png"></a>
+                <form name="formulario1" method="POST" action="../reportes/lista_empresa.php">
                   <input type="hidden" name="lista_publica_pdf" value="1">
                   <input type="hidden" name="query_pdf" value="<?php echo $query_empresa; ?>">
                 </form> 
 
+                <form name="formulario2" method="POST" action="../reportes/lista_empresa.php">
+                  <input type="hidden" name="lista_publica_excel" value="2">
+                  <input type="hidden" name="query_excel" value="<?php echo $query_empresa; ?>">
+                </form>
               </th>
 
-              <th class="text-center warning" colspan="10">Lista de Compradores Registrados / List of Buyers Registered (Total: <?php echo $total_empresa; ?>)</th>
+              <th class="text-center warning" colspan="10">Lista de Organizaciones de Pequeños Productores (Total: <?php echo $total_empresa; ?>)</th>
             </tr>
+
             <tr style="font-size:11px;">
               <th class="text-center">Nº</th>
-              <th class="text-center">NOMBRE DE LA EMPRESA/COMPANY´S NAME</th>
+              <th class="text-center">NOMBRE DE LA ORGANIZACIÓN / ORGANIZATION´S NAME</th>
               <th class="text-center">ABREVIACIÓN/ SHORT NAME</th>
-              <th class="text-center">PAÍS/COUNTRY</th>
-              <th class="text-center">PRODUCTO(s)/PRODUCTS (s)</th>
-              <th class="text-center">VIGENCIA DEL REGISTRO / EFFECTIVE DATE OF REGISTRATION</th>
+              <th class="text-center">PAÍS</th>
+              <th class="text-center">PRODUCTO(S) CERTIFICADO/ CERTIFIED PRODUCTS</th>
+              <th class="text-center">FECHA SIGUIENTE EVALUACIÓN/ NEXT EVALUATION DATE</th>
               <!--<th class="text-center">ESTATUS/STATUS</th>-->
               <th class="text-center">ENTIDAD QUE OTORGÓ EL CERTIFICADO/ENTITY THAT GRANTED CERTIFICATE</th>
               <th class="text-center">#SPP</th>
@@ -231,16 +254,18 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
               <th class="text-center">SITIO WEB / WEB SITE</th>
               <th class="text-center">TELÉFONO/TELEPHONE</th>
             </tr>
+
+
           </thead>
+
           <tbody style="font-size:11px;">
+
             <?php 
             if($total_empresa == 0){
               echo "<tr><td class='info' colspan='12'>No se encontraron registros</td></tr>";
             }else{
               $contador = 1;
               while($empresa = mysql_fetch_assoc($row_empresa)){
-                //$row_certificado = mysql_query("SELECT * FROM certificado WHERE idempresa = $empresa[idempresa] ORDER BY certificado.vigencia_fin DESC LIMIT 1", $dspp) or die(mysql_error());
-                //$certificado = mysql_fetch_assoc($row_certificado);
                 $vigencia = strtotime($empresa['fecha_fin']);
               ?>
                 <tr>
@@ -255,9 +280,9 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
                     $cont = 1;
                     while($producto = mysql_fetch_assoc($row_productos)){
                       if($total_producto == 1){
-                        echo $producto['producto']."(<i style='color:#7f8c8d'>".$producto['producto_ingles']."</i>)";
+                        echo $producto['producto']."(<i style='color:#7f8c8d;'>".$producto['producto_ingles']."</i>) ";
                       }else{
-                        echo $producto['producto']."(<i style='color:#7f8c8d'>".$producto['producto_ingles']."</i>)";
+                        echo $producto['producto']."(<i style='color:#7f8c8d;'>".$producto['producto_ingles']."</i>)";
                         if($cont < $total_producto){
                           echo "<span style='color:red'>, </span>";
                         }else{
@@ -281,14 +306,8 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
               }
             }
              ?>
-             <!--<tr>
-               <td colspan="12" class="info">
-                <p>NOTAS:</p>
-                <p>1. El estatus de 'En Revisión' significa que la OPP puede encontrarse en cualquiera de los siguientes sub estatus: 'En proceso de renovación', 'Certificado expirado' o 'Suspendido'</p>
-                <p>2. Es responsabilidad de los interesados verificar si la OPP se encuentran en proceso de renovación del certificado, cuando en la presente lista se indica que el estatus es "En Revisión"</p>
-                <p>3. El estatus de 'Cancelado' siginifica que la OPP ya no esta certificada por Incumplimiento con el Marco Regulatorio SPP o por renuncia voluntaria. Si fue cancelado por incumpliento con el marco regulatorio, deberá esperar dos años a partir de la cancelación para volver a solicitar la certificación.</p>
-              </td>
-             </tr>-->
+
+
           </tbody>
         </table>
       </div>      

@@ -266,6 +266,8 @@ mysql_select_db($database_dspp, $dspp);
 
 </div>
 
+<!------------------------------------------------------------------  SECCIÓN SOLICITUDES REGISTRO -------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------                               -------------------------------------------------------------------------------------------->
 <div class="col-md-12">
   <div class="row">
 
@@ -277,8 +279,7 @@ mysql_select_db($database_dspp, $dspp);
     <table class="table table-bordered table-hover table-condensed">
       <thead>
         <tr class="warning">
-          <th>#</th>
-          <th style="font-size:11px;" class="text-center">País</th>
+          <!--04_05_2017<th style="font-size:11px;" class="text-center">País</th>
           <th style="font-size:11px;" class="text-center">Solicitud Inicial(<small>Son empresas que han ingresado por primera vez y solo han cargado la solicitud</small>)</th>
           <th style="font-size:11px;" class="text-center">Solicitud(<small>Son empresas nuevas que han ingresado su solicitud y se les ha enviado una cotizacion</small>)</th>
           <th style="font-size:11px;" class="text-center">En Proceso(<small>empresa que han aceptado la cotización y ha iniciado su proceso de certificacion</small>)</th>
@@ -290,7 +291,23 @@ mysql_select_db($database_dspp, $dspp);
           <th style="font-size:11px;" class="text-center">Expirado(empresas, que ha expirado las fechas de sus certificados)</th>
           <th style="font-size:11px;" class="text-center">Subtotal Certificación</th>
           <th style="font-size:11px;" class="text-center">Total</th>
-          <!--<th class="text-center" style="background-color:#e74c3c;color:#ecf0f1" colspan="3">Total</th>-->
+          <!--<th class="text-center" style="background-color:#e74c3c;color:#ecf0f1" colspan="3">Total</th> 04_05_2017-->
+          <th>#</th>
+          <th style="font-size:11px;" class="text-center">País</th>
+          <th style="font-size:11px;" class="text-center">Solicitud Inicial</th>
+          <th style="font-size:11px;" class="text-center">Solicitud</th>
+          <th style="font-size:11px;" class="text-center">En Proceso</th>
+          <th style="font-size:11px;" class="text-center">Evaluación Positiva</th>
+          <th style="font-size:11px;" class="text-center">Subtotal Proceso</th>
+          <th style="font-size:11px;" class="text-center">Certificada</th>
+          <!--<th style="font-size:11px;" class="text-center">En Renovación</th>-->
+          <!---- faltaria agregar las inactivas ---->
+          <!--<th style="font-size:11px;" class="text-center">Canceladas(pero no se debian poner)</th>-->
+          <th style="font-size:11px;" class="text-center">Expirado</th>
+          <th style="font-size:11px;" class="text-center">Inactivas</th>
+          <th style="font-size:11px;" class="text-center">Suspendida</th>
+          <th style="font-size:11px;" class="text-center">Subtotal Certificación</th>
+          <th style="font-size:11px;" class="text-center">Total</th>
         </tr>
 
 
@@ -304,6 +321,7 @@ mysql_select_db($database_dspp, $dspp);
         $total_ev_positiva = 0;
         $total_sub_total_proceso = 0;
         $total_certificada = 0;
+        $total_en_renovacion = 0;
         $total_inactiva = 0;
         $total_suspendida = 0;
         $total_expirado = 0;
@@ -314,23 +332,23 @@ mysql_select_db($database_dspp, $dspp);
           $num_sub_total_certificacion = 0;
           $num_total = 0;
           //query SOLCITIUD INICIAL
-          $row_solicitud_inicial = mysql_query("SELECT solicitud_registro.idsolicitud_registro, solicitud_registro.idempresa FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE solicitud_registro.tipo_solicitud = 'NUEVA' AND solicitud_registro.cotizacion_empresa IS NULL AND empresa.pais = '$pais[pais]'", $dspp);
+          $row_solicitud_inicial = mysql_query("SELECT solicitud_registro.idsolicitud_registro, solicitud_registro.idempresa FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE solicitud_registro.tipo_solicitud = 'NUEVA' AND solicitud_registro.cotizacion_empresa IS NULL AND empresa.estatus_empresa = 0 AND empresa.pais = '$pais[pais]' GROUP BY solicitud_registro.idempresa", $dspp);
           $num_solicitud_inicial = mysql_num_rows($row_solicitud_inicial);
           $total_solicitud_inicial += $num_solicitud_inicial;
 
           //query SOLICITUD
-          $row_solicitud = mysql_query("SELECT solicitud_registro.idsolicitud_registro, solicitud_registro.idempresa FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE solicitud_registro.tipo_solicitud = 'NUEVA' AND solicitud_registro.cotizacion_empresa IS NOT NULL AND solicitud_registro.estatus_dspp = 4 AND empresa.pais = '$pais[pais]'", $dspp);
+          $row_solicitud = mysql_query("SELECT solicitud_registro.idsolicitud_registro, solicitud_registro.idempresa FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE solicitud_registro.tipo_solicitud = 'NUEVA' AND solicitud_registro.cotizacion_empresa IS NOT NULL AND solicitud_registro.estatus_dspp = 4 AND empresa.estatus_empresa = 0 AND empresa.estatus_dspp != 13 AND empresa.pais = '$pais[pais]'", $dspp);
           $num_solicitud = mysql_num_rows($row_solicitud);
           $total_solicitud += $num_solicitud;
 
 
           //query EN PROCESO,que han aceptado la cotizacion y estan en proceso de certificacion, por lo tanto no pueden tener dictamen positivo, negativo
-          $row_en_proceso = mysql_query("SELECT solicitud_registro.idsolicitud_registro, solicitud_registro.idempresa FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE solicitud_registro.tipo_solicitud = 'NUEVA' AND solicitud_registro.fecha_aceptacion IS NOT NULL AND (solicitud_registro.estatus_dspp = 5 || solicitud_registro.estatus_dspp = 6 || solicitud_registro.estatus_dspp = 7 || solicitud_registro.estatus_dspp = 8 || solicitud_registro.estatus_dspp = 9) AND (solicitud_registro.estatus_interno != 8 || solicitud_registro.estatus_interno IS NULL) AND empresa.pais = '$pais[pais]'", $dspp);
+          $row_en_proceso = mysql_query("SELECT solicitud_registro.idsolicitud_registro, solicitud_registro.idempresa FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE solicitud_registro.tipo_solicitud = 'NUEVA' AND solicitud_registro.fecha_aceptacion IS NOT NULL AND (solicitud_registro.estatus_dspp = 5 || solicitud_registro.estatus_dspp = 6 || solicitud_registro.estatus_dspp = 7 || solicitud_registro.estatus_dspp = 8 || solicitud_registro.estatus_dspp = 9) AND (solicitud_registro.estatus_interno != 8 || solicitud_registro.estatus_interno IS NULL) AND empresa.estatus_empresa = 0 AND empresa.estatus_dspp != 13 AND empresa.pais = '$pais[pais]'", $dspp);
           $num_en_proceso = mysql_num_rows($row_en_proceso); 
           $total_en_proceso += $num_en_proceso; 
 
           //query EVALUACION POSITIVA
-          $row_ev_positiva = mysql_query("SELECT solicitud_registro.idsolicitud_registro, solicitud_registro.idempresa FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE solicitud_registro.tipo_solicitud = 'NUEVA' AND (solicitud_registro.estatus_interno = 8 AND solicitud_registro.estatus_dspp != 12) AND empresa.pais = '$pais[pais]'", $dspp);
+          $row_ev_positiva = mysql_query("SELECT solicitud_registro.idsolicitud_registro, solicitud_registro.idempresa FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa WHERE solicitud_registro.tipo_solicitud = 'NUEVA' AND (solicitud_registro.estatus_interno = 8 AND solicitud_registro.estatus_dspp != 12) AND empresa.estatus_empresa = 0 AND empresa.pais = '$pais[pais]'", $dspp);
           $num_ev_positiva = mysql_num_rows($row_ev_positiva);
           $total_ev_positiva += $num_ev_positiva;  
 
@@ -339,28 +357,39 @@ mysql_select_db($database_dspp, $dspp);
           $total_sub_total_proceso += $num_sub_total_proceso;
 
           //query CERTIFICADAS
-          $row_certificadas = mysql_query("SELECT empresa.idempresa, certificado.idempresa FROM empresa INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais[pais]' AND (empresa.estatus_dspp != 16 AND empresa.estatus_interno != 10 AND empresa.estatus_interno != 11)", $dspp);
+          $row_certificadas = mysql_query("SELECT empresa.idempresa, certificado.idempresa FROM empresa INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais[pais]' AND (empresa.estatus_dspp != 16 AND empresa.estatus_interno != 10 AND empresa.estatus_interno != 11 OR empresa.estatus_interno = 15) GROUP BY certificado.idempresa", $dspp);
           $num_certificadas = mysql_num_rows($row_certificadas);
           $total_certificada += $num_certificadas;
 
-          //query INACTIVA, en inactivas estamo contando las opp con estatus cancelado(10)
-          $row_inactiva = mysql_query("SELECT empresa.idempresa, certificado.idempresa FROM empresa INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais[pais]' AND empresa.estatus_interno = 10", $dspp);
-          $num_inactiva = mysql_num_rows($row_inactiva);
-          $total_inactiva += $num_inactiva;
+          //query EN RENOVACION, se cuentan las OPP con estatus_dspp = certificado expirado y que no tengan estatus_interno "CANCELADA"
+          $row_en_renovacion = mysql_query("SELECT empresa.idempresa, certificado.idempresa FROM empresa  INNER JOIN certificado ON empresa.idempresa = certificado.idempresa INNER JOIN solicitud_registro ON empresa.idempresa = solicitud_registro.idempresa WHERE empresa.pais = '$pais[pais]' AND (empresa.estatus_dspp = 16 AND empresa.estatus_interno != 10 AND empresa.estatus_interno != 11) AND (empresa.estatus_interno = 1 OR empresa.estatus_interno = 2 OR empresa.estatus_interno = 3 OR empresa.estatus_interno = 4 OR empresa.estatus_interno = 5 OR empresa.estatus_interno = 6 OR empresa.estatus_interno = 7 OR empresa.estatus_interno = 8 OR empresa.estatus_interno = 9)", $dspp);
+          $num_en_renovacion = mysql_num_rows($row_en_renovacion);
+          $total_en_renovacion += $num_en_renovacion;
 
+          //query INACTIVA, en inactivas estamo contando las opp con estatus cancelado(10)
+          //$row_inactiva = mysql_query("SELECT opp.idopp, certificado.idopp FROM opp INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.pais = '$pais[pais]' AND opp.estatus_interno = 10", $dspp);
+          //$num_inactiva = mysql_num_rows($row_inactiva);
+          //$total_inactiva += $num_inactiva;
+
+          //query EXPIRADO, se cuentan las OPP con estatus_dspp = certificado expirado y que no tengan estatus_interno "CANCELADA"
+          $row_expirado = mysql_query("SELECT empresa.idempresa, certificado.idempresa FROM empresa  INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais[pais]' AND (empresa.estatus_dspp = 16 AND empresa.estatus_interno != 10 AND estatus_interno != 11 AND empresa.estatus_interno != 12) AND (empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO')  GROUP BY certificado.idempresa", $dspp);
+          $num_expirado = mysql_num_rows($row_expirado);
+
+          //$total_expirado = $num_expirado - $num_en_renovacion;
+          $total_expirado += $num_expirado;
 
           //query SUSPENDIDA, en inactivas estamo contando las opp con estatus suspendido(11), falta ver con alejandra si se dejan esta, ya que falta checar lo de "suspencion formal"
           $row_suspendida = mysql_query("SELECT empresa.idempresa, certificado.idempresa FROM empresa INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais[pais]' AND empresa.estatus_interno = 11", $dspp);
           $num_suspendida = mysql_num_rows($row_suspendida);
           $total_suspendida += $num_suspendida;
 
-          //query EXPIRADO, se cuentan las empresa con estatus_dspp = certificado expirado y que no tengan estatus_interno "CANCELADO"
-          $row_expirado = mysql_query("SELECT empresa.idempresa, certificado.idempresa FROM empresa INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais[pais]' AND (empresa.estatus_dspp = 16 AND empresa.estatus_interno != 10)", $dspp);
-          $num_expirado = mysql_num_rows($row_expirado);
-          $total_expirado += $num_expirado;
 
+          $row_inactiva = mysql_query("SELECT empresa.idempresa FROM empresa WHERE empresa.pais = '$pais[pais]' AND empresa.estatus_interno = 12", $dspp) or die(mysql_error());
+          $num_inactiva = mysql_num_rows($row_inactiva);
+
+          $total_inactiva += $num_inactiva;
           // num subtotal certificacion
-          $num_sub_total_certificacion = $num_certificadas + $num_inactiva + $num_suspendida + $num_expirado;
+          $num_sub_total_certificacion = $num_certificadas + $num_suspendida + $num_expirado + $num_inactiva;
           $total_sub_certificacion += $num_sub_total_certificacion;
 
           //num TOTAL
@@ -388,14 +417,18 @@ mysql_select_db($database_dspp, $dspp);
           <!--INICIA CERTIFICAD-->
           <td class="text-center"><?php echo $num_certificadas; ?></td>
 
-          <!--INICIA INACTIVA-->
-          <td class="text-center"><?php echo $num_inactiva; ?></td>
+          <!--<td class="text-center"><?php echo $num_en_renovacion; ?></td>-->
 
-          <!--INICIA SUSPENDIDA-->
-          <td class="text-center"><?php echo $num_suspendida; ?></td>
+          <!--INICIA CANCELADAS-->
+          <!--<td class="text-center"><?php echo $num_inactiva; ?></td>-->
 
           <!--INICIA EXPIRADO-->
           <td class="text-center"><?php echo $num_expirado; ?></td>
+          
+          <!-- INICIA INACTIVAS -->
+          <td class="text-center"><?php echo $num_inactiva; ?></td>
+          <!--INICIA SUSPENDIDA-->
+          <td class="text-center"><?php echo $num_suspendida; ?></td>
 
           <!--INICIA SUBTOTAL CERTIFICACION-->
           <td class="success text-center"><?php echo $num_sub_total_certificacion; ?></td>
@@ -408,16 +441,29 @@ mysql_select_db($database_dspp, $dspp);
         }
          ?>
          <tr>
-           <td colspan="2">Total</td>
-           <td class="text-center"><?php echo $total_solicitud_inicial; ?></td>
-           <td class="text-center"><?php echo $total_solicitud; ?></td>
-           <td class="text-center"><?php echo $total_en_proceso; ?></td>
-           <td class="text-center"><?php echo $total_ev_positiva; ?></td>
+            <!-- TOTAL -->
+           <td style="background-color:#27ae60;color:#ecf0f1" colspan="2" class="text-center"><b>Total</b></td>
+           <!-- NUMERO DE SOLICITUD INICIAL -->
+           <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_solicitud_inicial; ?></td>
+           <!-- NUMERO DE SOLICITUD -->
+           <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_solicitud; ?></td>
+           <!-- NUMERO DE EN PROCESO -->
+           <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_en_proceso; ?></td>
+           <!-- NUMERO DE EVALUACIÓN POSITIVA -->
+           <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_ev_positiva; ?></td>
+           <!-- NUMERO DE SUB-TOTAL PROCESO -->
            <td class="success text-center"><?php echo $total_sub_total_proceso; ?></td>
-           <td class="text-center"><?php echo $total_certificada; ?></td>
-           <td class="text-center"><?php echo $total_inactiva; ?></td>
-           <td class="text-center"><?php echo $total_suspendida; ?></td>
-           <td class="text-center"><?php echo $total_expirado; ?></td>
+           <!-- NUMERO DE CERTIFICADA -->
+           <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_certificada; ?></td>
+           <!-- NUMERO EN RENOVACIÓN -->
+           <!--<td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_en_renovacion; ?></td>-->
+           <!-- NUMERO DE EXPIRADO -->
+           <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo ($total_expirado); ?></td>
+           <!-- INACTIVAS -->
+           <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_inactiva; ?></td>
+            <!-- NUMERO DE EXPIRADO -->
+           <td style="background-color:#27ae60;color:#ecf0f1" class="text-center"><?php echo $total_suspendida; ?></td>
+
            <td class="success text-center"><?php echo $total_sub_certificacion ?></td>
            <td style="background-color:#e74c3c;color:#ecf0f1" class="text-center"><?php echo $total; ?></td>
          </tr>
