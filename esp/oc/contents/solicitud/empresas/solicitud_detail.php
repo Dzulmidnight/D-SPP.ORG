@@ -336,6 +336,9 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
   $oc = mysql_fetch_assoc($row_oc);
 
+  $row_empresa = mysql_query("SELECT spp, abreviacion, password FROM empresa WHERE idempresa = $_POST[idempresa]", $dspp) or die(mysql_error());
+  $empresa = mysql_fetch_assoc($row_empresa);
+
   $asunto = "D-SPP Cotización (Solicitud de Registro para Compradores y otros Actores) / Price Quote (Registration Application for Buyers and other Stakeholders)";
 
   $cuerpo_mensaje = '
@@ -361,12 +364,12 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
           <tr>
             <td aling="left" style="text-align:justify">
               Se ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
-              <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
+              <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como Empresa, para poder acceder a la cotización.
 
               <br><br>
               The price quote corresponding to the Certification Application for Small Producers’ Organizations has been sent.
                 <br><br>
-              Please open a session as an SPO (Small Producers’ Organization) at the following link: <a href="http://d-spp.org/?OPP">www.d-spp.org/</a> in order to access the price quote.
+              Please open a session as a Company at the following link: <a href="http://d-spp.org/?Empresa">www.d-spp.org/</a> in order to access the price quote.
             </td>
           </tr>
 
@@ -375,7 +378,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
               <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
                 <tbody>
                   <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                    <td width="130px">Nombre de la organización/Organization name</td>
+                    <td width="130px">Nombre de la Empresa/Company name</td>
                     <td width="130px">País / Country</td>
                     <td width="130px">Organismo de Certificación / Certification Entity</td>
                     <td width="130px">Fecha de envío / Shipping Date</td>
@@ -401,23 +404,59 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
               </table>        
             </td>
           </tr>
+          <tr>
+            <td colspan="2">
+              <span style="color:red">¿Qué es lo de debo realizar ahora?. Debes "Aceptar" o "Rechazar" la cotización</span>
+              <ol>
+
+                <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Empresa.</li>
+                <li>Tu Usuario: <b style="color:red">'.$empresa['spp'].'</b> y Contraseña: <b style="color:red">'.$empresa['password'].'</b></li>
+                <li>Dentro de tu cuenta debes seleccionar Solicitudes > Listado Solicitudes.</li>
+                <li>Dentro de la tabla solicitudes debes localizar la columna "Cotización" Y seleccionar el botón Verde (aceptar cotización) ó el botón Rojo (rechazar cotización)</li>
+                <li>En caso de aceptar la cotización debes esperar a que finalice el "Periodo de Objeción"(en caso de que sea la primera vez que solicitas la certificación SPP)</li>
+              </ol>
+            </td>
+          </tr> 
+          <tr>
+            <td colspan="2">
+              <span style="color:red">What should I do now? You should “Accept” or “Reject” the price quote.</span>
+              <ol>
+
+                <li>
+                  You should open a session in the <a href="http://d-spp.org/">D-SPP (clic aquí)</a> system as a Company.
+                </li>
+                <li>Your User (SPP#): <b style="color:red">'.$empresa['spp'].'</b> and your Password is:  <b style="color:red">'.$empresa['password'].'</b></li>
+                <li>Within your account you should select Applications  >  Applications List.</li>
+                <li>In the Applications table, you should locate the column entitled “Price Quote” and select the Green button (accept price quote) or the Red button (reject price quote).</li>
+                <li>If you accept the price quote, you will need to wait until the “Objection Period” is over (if this is the first time you are applying for SPP certification).</li>
+              </ol>
+            </td>
+          </tr> 
+
         </tbody>
       </table>
 
     </body>
     </html>
   ';
-
-  $mail->AddAddress($_POST['email']);
-  $mail->AddAddress($_POST['contacto1_email']);
-  $mail->AddBCC($administrador);
+  if(isset($_POST['email'])){
+    $mail->AddAddress($_POST['email']);
+  }
+  if(isset($_POST['contacto1_email'])){
+    $mail->AddAddress($_POST['contacto1_email']);
+  }
+  if(isset($_POST['contacto2_email'])){
+    $mail->AddAddress($_POST['contacto2_email']);
+  }
   $mail->AddBCC($spp_global);
+
   if(!empty($oc['email1'])){
     $mail->AddCC($oc['email1']);
   }
   if(!empty($oc['email2'])){
     $mail->AddCC($oc['email2']);
   }
+
   
   //se adjunta la cotización
   $mail->AddAttachment($cotizacion_empresa);
@@ -431,7 +470,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $mail->ClearAddresses();
 
 
-  $mensaje = "Se ha enviado la cotizacion al OPP";
+  $mensaje = "Se ha enviado la cotizacion a la empresa";
 }
 //****** TERMINA ENVIAR COTIZACION *******///
 
