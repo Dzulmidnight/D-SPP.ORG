@@ -165,9 +165,9 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
 
-	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, total_ventas, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro, estatus_interno ) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, facturacion_total, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro, estatus_interno ) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 		   GetSQLValueString($_POST['tipo_solicitud'], "text"),
-		   GetSQLValueString($_POST['total_ventas'], "double"),
+		   GetSQLValueString($_POST['facturacion_total'], "double"),
 		   GetSQLValueString($idempresa, "int"),
            GetSQLValueString($_POST['idoc'], "int"),
            GetSQLValueString($comprador, "int"),
@@ -587,7 +587,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 						<br>
 						Nota: <i>Este dato es necesario para determinar la membresia a pagar por parte del Comprador Final.   <a href="#">Reglamento de Costos V8_2017-02-03, 4.3 (descargar</a>) "Los Compradores Finales pagan una cuota de Membresía Anual (en USD) equivalente a  un porcentaje del total de facturación de la empresa, independientemente de si se trata de ventas SPP o no"</i>
 
-						<input type="number" step="any" class="form-control" id="total_ventas" name="total_ventas" placeholder="Valor de ventas, ingresar solo numeros" required>
+						<input type="number" step="any" class="form-control" id="facturacion_total" name="facturacion_total" placeholder="Valor de ventas, ingresar solo numeros" required>
 					</div>
 				</div>
 			<?php

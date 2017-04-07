@@ -170,12 +170,12 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
       while($email_empresa = mysql_fetch_assoc($ejecutar)){
         if(!empty($email_empresa['email'])){
           
-          $token = strtok($email_empresa['email'], "\/\,");
+          $token = strtok($email_empresa['email'], "\/\,\;");
 
           while ($token !== false)
           {
             $mail->AddAddress($token);
-            $token = strtok('\/\,');
+            $token = strtok('\/\,\;');
           }
 
           //$limpio = str_replace($reemplazar, ',', $email_empresa['email']);
@@ -201,12 +201,12 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
       while($email_opp = mysql_fetch_assoc($ejecutar)){
         if(!empty($email_opp['email'])){
           
-          $token = strtok($email_opp['email'], "\/\,");
+          $token = strtok($email_opp['email'], "\/\,\;");
 
           while ($token !== false)
           {
             $mail->AddAddress($token);
-            $token = strtok('\/\,');
+            $token = strtok('\/\,\;');
           }
           //$limpio = str_replace($reemplazar, ' ', $email_opp['email']);
           //$mail->AddAddress($limpio);
@@ -231,23 +231,23 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         if(!empty($email_oc['email1'])){
           //$limpio = str_replace($reemplazar, ' ', $email_oc['email1']);
           //$mail->AddAddress($limpio);
-          $token = strtok($email_oc['email1'], "\/\,");
+          $token = strtok($email_oc['email1'], "\/\,\;");
 
           while ($token !== false)
           {
             $mail->AddAddress($token);
-            $token = strtok('\/\,');
+            $token = strtok('\/\,\;');
           }
         }
         if(!empty($email_oc['email2'])){
           //$limpio = str_replace($reemplazar, ' ', $email_oc['email2']);
           //$mail->AddAddress($limpio);
-          $token = strtok($email_oc['email2'], "\/\,");
+          $token = strtok($email_oc['email2'], "\/\,\;");
 
           while ($token !== false)
           {
             $mail->AddAddress($token);
-            $token = strtok('\/\,');
+            $token = strtok('\/\,\;');
           }
         }
       }
@@ -268,23 +268,23 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         if(!empty($lista_contactos['email1'])){
           //$limpio = str_replace($reemplazar, ' ', $lista_contactos['email1']);
           //$mail->AddAddress($limpio);
-          $token = strtok($lista_contactos['email1'], "\/\,");
+          $token = strtok($lista_contactos['email1'], "\/\,\;");
 
           while ($token !== false)
           {
             $mail->AddAddress($token);
-            $token = strtok('\/\,');
+            $token = strtok('\/\,\;');
           }
         }
         if(!empty($lista_contactos['email2'])){
           //$limpio = str_replace($reemplazar, ' ', $lista_contactos['email2']);
           //$mail->AddAddress($limpio);
-          $token = strtok($lista_contactos['email2'], "\/\,");
+          $token = strtok($lista_contactos['email2'], "\/\,\;");
 
           while ($token !== false)
           {
             $mail->AddAddress($token);
-            $token = strtok('\/\,');
+            $token = strtok('\/\,\;');
           }
 
         }
@@ -1282,7 +1282,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
               <!---- inicia FECHA SOLICITUD ---->
               <td>
                 <?php echo date('d/m/Y',$solicitud['fecha_registro']); ?>
-                <a class="btn btn-xs btn-primary" href="?SOLICITUD&idsolicitud=<?php echo $solicitud['idsolicitud']; ?>">consultar</a>
+                <a class="btn btn-xs btn-primary" href="?SOLICITUD&idsolicitud_empresa=<?php echo $solicitud['idsolicitud']; ?>">consultar</a>
               </td>
               <!---- termina FECHA SOLICITUD ---->
 
@@ -1388,16 +1388,6 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                                 <button type="submit" class="btn btn-success" style="width:100%" name="aprobar_periodo" value="1">
                                   <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar Período
                                 </button>
-                                <?php 
-$string = "Hello /world. Beautiful, day today.";
- $token = strtok($string, "\/\,");
- 
-  while ($token !== false)
-   {
-   echo "$token<br>";
-   $token = strtok('\/\,');
-   }
-                                 ?>
                                 <input type="hidden" name="idperiodo_objecion2" value="<?php echo $periodo_objecion['idperiodo_objecion']; ?>">
                               <?php
                               }
