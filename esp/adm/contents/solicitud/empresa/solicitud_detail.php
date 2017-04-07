@@ -563,7 +563,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             <br>
             Nota: <i>Este dato es necesario para determinar la membresia a pagar por parte del Comprador Final.   <a href="#">Reglamento de Costos V8_2017-02-03, 4.3 (descargar</a>) "Los Compradores Finales pagan una cuota de Membresía Anual (en USD) equivalente a  un porcentaje del total de facturación de la empresa, independientemente de si se trata de ventas SPP o no"</i>
         </p>
-        <input type="text" class="form-control" name="total_ventas" value="<?php echo number_format($solicitud['total_ventas'],2); ?>" readonly>
+        <input type="text" class="form-control" name="facturacion_total" value="<?php echo number_format($solicitud['facturacion_total'],2); ?>" readonly>
       </div>
       <!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
       <div class="row">

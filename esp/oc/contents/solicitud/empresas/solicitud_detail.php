@@ -363,11 +363,11 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
           </tr>
           <tr>
             <td aling="left" style="text-align:justify">
-              Se ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
+              Se ha enviado la cotización correspondiente a la Solicitud de Registro para Compradores y otros Actores.
               <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como Empresa, para poder acceder a la cotización.
 
               <br><br>
-              The price quote corresponding to the Certification Application for Small Producers’ Organizations has been sent.
+              The price quote corresponding to the Application for Buyers’, Registration has been sent.
                 <br><br>
               Please open a session as a Company at the following link: <a href="http://d-spp.org/?Empresa">www.d-spp.org/</a> in order to access the price quote.
             </td>
