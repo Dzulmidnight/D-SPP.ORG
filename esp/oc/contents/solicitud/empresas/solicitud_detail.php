@@ -419,7 +419,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
           </tr> 
           <tr>
             <td colspan="2">
-              <span style="color:red">What should I do now? You should “Accept” or “Reject” the price quote.</span>
+              <span style="color:red">What should I do now? You should "Accept" or "Reject" the price quote.</span>
               <ol>
 
                 <li>

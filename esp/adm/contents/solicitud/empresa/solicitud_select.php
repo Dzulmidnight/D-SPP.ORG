@@ -49,6 +49,7 @@ $spp_global = "cert@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 
 if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
+  $reemplazar = array("/",";"); /// caracteres que se reemplazaran de los correos
   $idperiodo_objecion = $_POST['idperiodo_objecion2'];
 
   $estatus_dspp = 6; //INICIA PERIODO DE OBJECIÓN
@@ -77,10 +78,18 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
   /// se consultan los datos de de solicitud, empresa, oc para el mensaje
   //$row_empresa = mysql_query("SELECT solicitud_registro.*, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.telefono, empresa.email, empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
 
-  $row_empresa = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.telefono, empresa.email, empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc', oc.email2 AS 'email_oc2' FROM periodo_objecion LEFT JOIN solicitud_registro ON periodo_objecion.idsolicitud_registro = solicitud_registro.idsolicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE periodo_objecion.idperiodo_objecion = $idperiodo_objecion", $dspp) or die(mysql_error());
+  $row_empresa = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.telefono, empresa.email, empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc', oc.email2 AS 'email_oc2' FROM periodo_objecion LEFT JOIN solicitud_registro ON periodo_objecion.idsolicitud_registro = solicitud_registro.idsolicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE periodo_objecion.idperiodo_objecion = $idperiodo_objecion", $dspp) or die(mysql_error());
 
   $detalle_empresa = mysql_fetch_assoc($row_empresa);
 
+  $tipo = '';
+  if(isset($detalle_empresa['maquilador'])){
+    $tipo = 'MAQUILADOR';
+  }else if(isset($detalle_empresa['intermediario'])){
+    $tipo = 'INTERMEDIARIO';
+  }else if(isset($detalle_empresa['comprador'])){
+    $tipo = 'COMPRADOR FINAL';
+  }
 
  ///INICIA ENVIAR MENSAJE PERIODO DE OBJECIÓN
   $row_periodo = mysql_query("SELECT fecha_inicio, fecha_fin FROM periodo_objecion WHERE idperiodo_objecion = $idperiodo_objecion",$dspp) or die(mysql_error());
@@ -124,7 +133,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
                       <td style="text-align:center">Fin período de objeción/Objection period end</td>
                     </tr>
                     <tr style="font-size:12px">
-                      <td>OPP</td>
+                      <td>'.$tipo.'</td>
                       <td>'.$detalle_empresa['nombre_empresa'].'</td>
                       <td>'.$detalle_empresa['abreviacion_empresa'].'</td>
                       <td>'.$detalle_empresa['pais'].'</td>
@@ -154,14 +163,24 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
       </html>
     ';
 
-    ///// inicia envio a correos OPP
+    ///// inicia envio a correos Empresas
       $query_empresa = "SELECT email FROM empresa WHERE email !=''";
       $ejecutar = mysql_query($query_empresa,$dspp) or die(mysql_error());
 
-
       while($email_empresa = mysql_fetch_assoc($ejecutar)){
         if(!empty($email_empresa['email'])){
-          $mail->AddAddress($email_empresa['email']);
+          
+          $token = strtok($email_empresa['email'], "\/\,");
+
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,');
+          }
+
+          //$limpio = str_replace($reemplazar, ',', $email_empresa['email']);
+          //$limpio2 = $limpio;
+          //$mail->AddAddress($limpio2);
         }
       }
 
@@ -172,16 +191,25 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->Send();
         $mail->ClearAddresses();
 
-    ///// termina envio a correo OPP
+    ///// termina envio a correo Empresas
 
-    //// inicia envio a correo Empresas
-      $query_empresa = "SELECT email FROM empresa WHERE email !=''";
-      $ejecutar = mysql_query($query_empresa,$dspp) or die(mysql_error());
+    //// inicia envio a correo OPP
+      $query_opp = "SELECT email FROM opp WHERE email !=''";
+      $ejecutar = mysql_query($query_opp,$dspp) or die(mysql_error());
 
 
-      while($email_empresa = mysql_fetch_assoc($ejecutar)){
-        if(!empty($email_empresa['email'])){
-          $mail->AddAddress($email_empresa['email']);
+      while($email_opp = mysql_fetch_assoc($ejecutar)){
+        if(!empty($email_opp['email'])){
+          
+          $token = strtok($email_opp['email'], "\/\,");
+
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,');
+          }
+          //$limpio = str_replace($reemplazar, ' ', $email_opp['email']);
+          //$mail->AddAddress($limpio);
         }
       }
 
@@ -192,7 +220,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->Send();
         $mail->ClearAddresses();
 
-    //// termina envio a correo Empresas
+    //// termina envio a correo OPP
 
     //// inicia envio a correo OC
       $query_oc = "SELECT email1, email2 FROM oc";
@@ -201,10 +229,26 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
 
       while($email_oc = mysql_fetch_assoc($ejecutar)){
         if(!empty($email_oc['email1'])){
-          $mail->AddAddress($email_oc['email1']);
+          //$limpio = str_replace($reemplazar, ' ', $email_oc['email1']);
+          //$mail->AddAddress($limpio);
+          $token = strtok($email_oc['email1'], "\/\,");
+
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,');
+          }
         }
         if(!empty($email_oc['email2'])){
-          $mail->AddAddress($email_oc['email2']);
+          //$limpio = str_replace($reemplazar, ' ', $email_oc['email2']);
+          //$mail->AddAddress($limpio);
+          $token = strtok($email_oc['email2'], "\/\,");
+
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,');
+          }
         }
       }
 
@@ -222,10 +266,27 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
 
       while($lista_contactos = mysql_fetch_assoc($query_contactos)){
         if(!empty($lista_contactos['email1'])){
-          $mail->AddAddress($lista_contactos['email1']);
+          //$limpio = str_replace($reemplazar, ' ', $lista_contactos['email1']);
+          //$mail->AddAddress($limpio);
+          $token = strtok($lista_contactos['email1'], "\/\,");
+
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,');
+          }
         }
         if(!empty($lista_contactos['email2'])){
-          $mail->AddAddress($lista_contactos['email2']);
+          //$limpio = str_replace($reemplazar, ' ', $lista_contactos['email2']);
+          //$mail->AddAddress($limpio);
+          $token = strtok($lista_contactos['email2'], "\/\,");
+
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,');
+          }
+
         }
       }
 
@@ -245,7 +306,6 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
             $mail->AddAddress($email_adm['email']);
           }
         }
-
 
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -1325,7 +1385,19 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                               <?php 
                               if($periodo_objecion['estatus_objecion'] == 'EN ESPERA'){
                               ?>
-                                <button type="submit" class="btn btn-success" name="aprobar_periodo" value="1">Aprobar Periodo</button>
+                                <button type="submit" class="btn btn-success" style="width:100%" name="aprobar_periodo" value="1">
+                                  <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar Período
+                                </button>
+                                <?php 
+$string = "Hello /world. Beautiful, day today.";
+ $token = strtok($string, "\/\,");
+ 
+  while ($token !== false)
+   {
+   echo "$token<br>";
+   $token = strtok('\/\,');
+   }
+                                 ?>
                                 <input type="hidden" name="idperiodo_objecion2" value="<?php echo $periodo_objecion['idperiodo_objecion']; ?>">
                               <?php
                               }

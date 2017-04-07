@@ -346,7 +346,7 @@ if(isset($_POST['cotizacion']) ){
 
                               <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
                                 <td style="text-align:center">Tipo / Type</td>
-                                <td style="text-align:center">Nombre de la organización/Organization name</td>
+                                <td style="text-align:center">Nombre de la Empresa/Company name</td>
                                 <td style="text-align:center">Abreviación / Short name</td>
                                 <td style="text-align:center">País / Country</td>
                                 <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
