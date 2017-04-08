@@ -349,7 +349,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
     GetSQLValueString($_POST['idsolicitud_registro'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
-  $row_empresa = mysql_query("SELECT solicitud_registro.idoc, solicitud_registro.idempresa, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', solicitud_registro.produccion, solicitud_registro.procesamiento, solicitud_registro.exportacion, empresa.telefono, empresa.email AS 'email_empresa', empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc', oc.email2 AS 'email_oc2' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+  $row_empresa = mysql_query("SELECT solicitud_registro.idoc, solicitud_registro.idempresa, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', solicitud_registro.comprador_final, solicitud_registro.intermediario, solicitud_registro.maquilador, empresa.telefono, empresa.email AS 'email_empresa', empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc', oc.email2 AS 'email_oc2' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $detalle_empresa = mysql_fetch_assoc($row_empresa);
 
   $row_periodo = mysql_query("SELECT fecha_inicio, fecha_fin FROM periodo_objecion WHERE idperiodo_objecion = $_POST[idperiodo_objecion]",$dspp) or die(mysql_error());
@@ -629,7 +629,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
 
                 </tr>
                 <tr>
-                 <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+                 <th scope="col" align="left" width="280"><p>EMPRESA: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
                 </tr>
 
                 <tr>
@@ -662,14 +662,14 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
   $mail->ClearAddresses();*/
   if($mail->Send()){
     $mail->ClearAddresses();
-    echo "<script>alert('Se ha aprobado el pago de la membresia, la OPP sera noticada en breve.');location.href ='javascript:history.back()';</script>";
+    echo "<script>alert('Se ha aprobado el pago de la membresia, la EMPRESA sera noticada en breve.');location.href ='javascript:history.back()';</script>";
   }else{
     $mail->ClearAddresses();
     echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
   }
 
   //termina enviar mensaje aprobacion de membresia
-  /*22_03_2017if($_POST['tipo_solicitud'] == 'RENOVACION'){
+  if($_POST['tipo_solicitud'] == 'RENOVACION'){
     $asunto = "D-SPP | Formatos de Evaluación";
 
     $cuerpo_mensaje = '
@@ -739,19 +739,19 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
     $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
       /*$mail->Send();
       $mail->ClearAddresses();*/
-    /*22_03_2017  
+     
     if($mail->Send()){
       $mail->ClearAddresses();
       echo "<script>alert('Se ha aprobado la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación.');location.href ='javascript:history.back()';</script>";
     }else{
       $mail->ClearAddresses();
       echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-    }22_03_2017*/
+    }
       //$mensaje = "Se ha aprobado la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
   }
-  /*22_03_2017else{
+  else{
     //revisamos el el contrato de uso ya fue aprobado, esto para enviar la notificación al OC de que suba sus archivos
-    /*22_03_2017if(!empty($_POST['idcontrato'])){
+    if(!empty($_POST['idcontrato'])){
       $row_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = $_POST[idcontrato]", $dspp) or die(mysql_error());
       $contrato = mysql_fetch_assoc($row_contrato);
       if($contrato['estatus_contrato'] == 'ACEPTADO'){ //si el contrato fue aceptado entonces enviamos el correo al OC
@@ -820,7 +820,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
           $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
           /*$mail->Send();
           $mail->ClearAddresses();*/
-      /*22_03_2017  if($mail->Send()){
+        if($mail->Send()){
           $mail->ClearAddresses();
           echo "<script>alert('Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación');location.href ='javascript:history.back()';</script>";
         }else{
@@ -837,7 +837,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
     }
   }
 
-}22_03_2017*/
+}
 
 //SE RECHAZA EL COMPROBANTE DE PAGO
 if(isset($_POST['rechazar_comprobante']) && $_POST['rechazar_comprobante'] == 2){
@@ -855,7 +855,7 @@ if(isset($_POST['rechazar_comprobante']) && $_POST['rechazar_comprobante'] == 2)
     GetSQLValueString($_POST['idmembresia'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
-  $mensaje = "Se ha rechaza la membresia y el OPP ha sido notificado";
+  $mensaje = "Se ha rechaza la membresia y la Empresa ha sido notificado";
 }
 
 //SE APRUEBA EL CONTRATO DE USO
@@ -882,14 +882,14 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
 
-  /*22_03_2017if(!empty($_POST['idmembresia'])){
+  if(!empty($_POST['idmembresia'])){
 
     $row_membresia = mysql_query("SELECT solicitud_registro.idempresa, solicitud_registro.idoc, empresa.nombre, oc.email1, oc.email2, membresia.idsolicitud_registro, membresia.estatus_membresia FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro WHERE membresia.idmembresia = $_POST[idmembresia]", $dspp) or die(mysql_error());
     $membresia = mysql_fetch_assoc($row_membresia);
 
     if ($membresia['estatus_membresia'] == 'APROBADA') {
 
-      $asunto = "D-SPP | Formatos de Evaluación";
+      /*07_04_2017 $asunto = "D-SPP | Formatos de Evaluación";
 
       $cuerpo_mensaje = '
         <html>
@@ -945,7 +945,7 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
           </table>
         </body>
         </html>
-      ';
+      '; 07_04_2017*/
 
       if(!empty($membresia['email1'])){
         $mail->AddAddress($membresia['email1']);
@@ -965,15 +965,15 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
       }else{
         $mail->ClearAddresses();
         echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
-      }22_03_2017*/
+      }
         //$mensaje = "Se ha aprobado el \"Contrato de Uso\" y la \"Membresía SPP\", se le ha notificado al OC para que cargue Formato, Dictamen e Informe de Evaluación";
 
-   /*22_03_2017 }else{
+   }else{
       $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
     } 
   }
 
-  $mensaje = "Se ha aprobado el \"Contrato de Uso\"";22_03_2017*/
+  $mensaje = "Se ha aprobado el \"Contrato de Uso\"";
 
 }
 
@@ -1022,7 +1022,7 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 
     $asunto = "D-SPP | Notificación Certificado";
 
-    $cuerpo_mensaje = '
+    /*$cuerpo_mensaje = '
       <html>
       <head>
         <meta charset="utf-8">
@@ -1036,7 +1036,7 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 
             </tr>
             <tr>
-             <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_empresa'].'</span></p></th>
+             <th scope="col" align="left" width="280"><p>Empresa: <span style="color:red">'.$informacion['nombre_empresa'].'</span></p></th>
             </tr>
 
             <tr>
@@ -1055,7 +1055,7 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
                  Pasos que debe seguir para cargar el certificado:
                  <ol>
                    <li>Ingrese en su cuenta de OC.</li>
-                   <li>Seleccione la pestaña "Solicitudes" y de clic en la opción "Solicitudes OPP".</li>
+                   <li>Seleccione la pestaña "Solicitudes" y de clic en la opción "Solicitudes Empresas".</li>
                    <li>Localice la solicitud de la Organización '.$informacion['nombre_empresa'].'</li>
                    <li>Debe posicionarse en la columna "Certificado" y dar clic en la opción "Cargar Certificado".</li>
                  </ol>
@@ -1072,7 +1072,52 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
         </table>
       </body>
       </html>
+    ';*/
+
+    $cuerpo_mensaje = '
+      <html>
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+          <tbody>
+            <tr>
+              <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+              <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación Certificado</span></p></th>
+
+            </tr>
+            <tr>
+             <th scope="col" align="left" width="280"><p>Empresa: <span style="color:red">'.$informacion['nombre_empresa'].'</span></p></th>
+            </tr>
+
+            <tr>
+              <td colspan="2">
+               <p>
+                Se ha revisado y aprobado la siguiente documentación: 
+                   <ul style="color:red">
+                     <li>Formato de Evaluación</li>
+                     <li>Informe de Evaluación</li>
+                     <li>Dictamen de Evaluación</li>
+                   </ul>
+
+               </p>
+              
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </body>
+      </html>
     ';
+
+
     if(!empty($informacion['email1'])){
       $mail->AddAddress($informacion['email1']); 
     }
@@ -1564,7 +1609,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                                 }else{
                                 ?>
                                   <p class="alert alert-info">
-                                    Para aprobar la membresia debe de "APROBAR" el comprobante de pago, si se "RECHAZA" se le notificara al OPP para que pueda revisarlo y cargar nuevamente uno nuevo.
+                                    Para aprobar la membresia debe de "APROBAR" el comprobante de pago, si se "RECHAZA" se le notificara a la Empresa para que pueda revisarlo y cargar nuevamente uno nuevo.
                                   </p>
                                     <div class="text-center">
                                       <label for="observaciones">Observaciones(<span style="color:red">en caso de ser rechazado</span>)</label>

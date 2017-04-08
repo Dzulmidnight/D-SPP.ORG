@@ -90,7 +90,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
         $row_empresa = mysql_query("SELECT empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais AS 'empresa_pais', empresa.spp, empresa.password, empresa.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, solicitud_registro.adm1_email FROM empresa INNER JOIN solicitud_registro ON empresa.idempresa = solicitud_registro.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $idsolicitud_registro", $dspp) or die(mysql_error());
         $empresa_detail = mysql_fetch_assoc($row_empresa);
 
-        $asunto = "D-SPP Cotización - actualizada (Solicitud de Certificación para Organizaciones de Pequeños Productores)";
+        $asunto = "D-SPP Cotización - actualizada (Solicitud de Registro para Compradores y otros Actores)";
 
         $cuerpo_mensaje = '
           <html>
@@ -110,12 +110,12 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
                 </tr>
                 <tr>
                   <td aling="left" style="text-align:justify">
-                  <b style="color:red">'.$empresa_detail['abreviacion_oc'].'</b> ha enviado la cotización actualizada correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
-                  <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
+                  <b style="color:red">'.$empresa_detail['abreviacion_oc'].'</b> ha enviado la cotización actualizada correspondiente a la Solicitud de Registro para Compradores y otros Actores.
+                  <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como Empresa, para poder acceder a la cotización.
 
                   <br><br>
-                  <b style="color:red">'.$empresa_detail['abreviacion_oc'].'</b> has sent the updated price quote corresponding to the Certification Application for Small Producers’ Organizations (SPOs).
-                    Please open a session as an SPO at the following link <a href="http://d-spp.org/">www.d-spp.org/</a> in order to access the price quote.
+                  <b style="color:red">'.$empresa_detail['abreviacion_oc'].'</b> has sent the updated price quote corresponding to the Application for Buyers’, Registration .
+                    Please open a session as a COMPANY at the following link <a href="http://d-spp.org/">www.d-spp.org/</a> in order to access the price quote.
 
                   </td>
                 </tr>
@@ -503,12 +503,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+               <th scope="col" align="left" width="280"><p>Empresa: <span style="color:red">'.$informacion['nombre_empresa'].'</span></p></th>
               </tr>
 
               <tr>
                 <td colspan="2">
-                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p>SPP GLOBLA notifica que la Empresa: '.$informacion['nombre_empresa'].' ha cumplido con la documentación necesaria.</p>
                  <p>
                   Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
                      <ul style="color:red">
@@ -525,7 +525,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
                   <ol>
                     <li>Dar clic en la opción "SOLICITUDES"</li>
-                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Seleccionar "Solicitudes Empresa"</li>
                     <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
                     <li>Se desplegara una ventan donde podra cargar la documentación</li>
                   </ol>
@@ -667,7 +667,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                           LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
                         </p>
                         <p>
-                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO y ACUSE DE RECIBO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
+                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO y ACUSE DE RECIBO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE EMPRESA EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>.
                         </p>
                       </td>
                     </tr>
@@ -738,7 +738,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                           LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
                         </p>
                         <p>
-                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO y ACUSE DE RECIBO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
+                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO y ACUSE DE RECIBO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE EMPRESA EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>.
                         </p>
                         <p>
                           3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
@@ -757,7 +757,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                           BANK INFORMATION ATTACHED TO EMAIL
                         </p>
                         <p>
-                          AFTER MAKING PAYMENT, PLEASE <span style="color:red">UPLOAD “SIGNED USER’S CONTRACT AND ACKNOWLEDGEMENT OF RECEIPT</span> AND ALSO <span style="color:red">THE “RECEIPT OF PAYMENT”</span> THROUGH THE D-SPP SYSTEM, BY ENTERING YOUR ACCOUNT AS AN SPO (Small Producers’ Organization) IN THE FOLLOWING LINK: <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>
+                          AFTER MAKING PAYMENT, PLEASE <span style="color:red">UPLOAD “SIGNED USER’S CONTRACT AND ACKNOWLEDGEMENT OF RECEIPT</span> AND ALSO <span style="color:red">THE “RECEIPT OF PAYMENT”</span> THROUGH THE D-SPP SYSTEM, BY ENTERING YOUR ACCOUNT AS A COMPANY IN THE FOLLOWING LINK: <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>
                         </p>
                         <p>
                           3.  After SPP Global has confirmed through the System that payment has been received in the SPP Global account, your Certificate will be made available to you.
@@ -831,12 +831,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_empresa'].'</span></p></th>
+               <th scope="col" align="left" width="280"><p>Empresa: <span style="color:red">'.$informacion['nombre_empresa'].'</span></p></th>
               </tr>
 
               <tr>
                 <td colspan="2">
-                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre_empresa'].' ha cumplido con la documentación necesaria.</p>
+                 <p>SPP GLOBLA notifica que la Empresa: '.$informacion['nombre_empresa'].' ha cumplido con la documentación necesaria.</p>
                  <p>
                   Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
                      <ul style="color:red">
@@ -853,7 +853,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
                   <ol>
                     <li>Dar clic en la opción "SOLICITUDES"</li>
-                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Seleccionar "Solicitudes Empresas"</li>
                     <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
                     <li>Se desplegara una ventan donde podra cargar la documentación</li>
                   </ol>
@@ -1164,7 +1164,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                           LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
                         </p>
                         <p>
-                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
+                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE EMPRESA EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>.
                         </p>
                       </td>
                     </tr>
@@ -1237,7 +1237,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
                         <p>
-                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
+                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE EMPRESA EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>.
                         </p>
                         <p>
                           3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
@@ -1258,7 +1258,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
                         <p>
-                          AFTER MAKING PAYMENT, PLEASE <span style="color:red">UPLOAD “SIGNED USER’S CONTRACT AND ACKNOWLEDGEMENT OF RECEIPT.”</span> AND ALSO <span style="color:red">THE “RECEIPT OF PAYMENT”</span> THROUGH THE D-SPP SYSTEM, BY ENTERING YOUR ACCOUNT AS AN SPO (Small Producers’ Organization) IN THE FOLLOWING LINK: <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>. 
+                          AFTER MAKING PAYMENT, PLEASE <span style="color:red">UPLOAD “SIGNED USER’S CONTRACT AND ACKNOWLEDGEMENT OF RECEIPT.”</span> AND ALSO <span style="color:red">THE “RECEIPT OF PAYMENT”</span> THROUGH THE D-SPP SYSTEM, BY ENTERING YOUR ACCOUNT AS A COMPANY IN THE FOLLOWING LINK: <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>. 
                         </p>
                         <p>
                           3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
@@ -1331,12 +1331,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+               <th scope="col" align="left" width="280"><p>Empresa: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
               </tr>
 
               <tr>
                 <td colspan="2">
-                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p>SPP GLOBLA notifica que la Empresa: '.$informacion['nombre'].' ha cumplido con la documentación necesaria.</p>
                  <p>
                   Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
                      <ul style="color:red">
@@ -1353,7 +1353,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
                   <ol>
                     <li>Dar clic en la opción "SOLICITUDES"</li>
-                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Seleccionar "Solicitudes Empresas"</li>
                     <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
                     <li>Se desplegara una ventan donde podra cargar la documentación</li>
                   </ol>
@@ -1522,12 +1522,12 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
             </tr>
             <tr>
-             <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_empresa'].' - ('.$informacion['abreviacion_empresa'].')</span></p></th>
+             <th scope="col" align="left" width="280"><p>Empresa: <span style="color:red">'.$informacion['nombre_empresa'].' - ('.$informacion['abreviacion_empresa'].')</span></p></th>
             </tr>
 
             <tr>
               <td colspan="2">
-               <p>El OC: <span style="color:red">'.$informacion['nombre_oc'].'</span> ha cargado la documentación de evaluación correspondiente al proceso de certificación de la OPP: '.$informacion['nombre_empresa'].'
+               <p>El OC: <span style="color:red">'.$informacion['nombre_oc'].'</span> ha cargado la documentación de evaluación correspondiente al proceso de certificación de la Empresa: '.$informacion['nombre_empresa'].'
                <p>
                 Por favor proceda a ingresar en su cuenta de ADMINISTRADOR dentro del sistema D-SPP para poder revisar los siguientes documento: 
                    <ul style="color:red">
@@ -1653,7 +1653,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_empresa'].' - ('.$informacion['abreviacion_empresa'].')</span></p></th>
+               <th scope="col" align="left" width="280"><p>Empresa: <span style="color:red">'.$informacion['nombre_empresa'].' - ('.$informacion['abreviacion_empresa'].')</span></p></th>
               </tr>
 
               <tr>
@@ -1785,7 +1785,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <?php echo $solicitud['abreviacionOC']; ?>
           </td>
           <td>
-            <a href="?OPP&detail&idempresa=<?php echo $solicitud['idempresa']; ?>"><?php echo $solicitud['abreviacion_empresa']; ?></a>
+            <a href="?EMPRESAS&detail&idempresa=<?php echo $solicitud['idempresa']; ?>"><?php echo $solicitud['abreviacion_empresa']; ?></a>
           </td>
           <td>
             <?php 
@@ -1945,7 +1945,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   <?php 
                                   if($solicitud['tipo_solicitud'] == 'RENOVACION'){ ///  RENOVACIÓN
                                   ?>
-                                    <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP</p>
+                                    <p class="alert alert-info">El siguiente formato sera enviado en breve a la Empresa</p>
                                     <div class="col-xs-12">
                                       
                                       <div class="col-xs-12">
@@ -1959,7 +1959,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         </div>
                                       </div>
                                       <div class="col-xs-12">
-                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>&renovacion_positivo&oc=<?php echo $solicitud['idoc']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
+                                        <h4 style="font-size:14px;padding:5px;">Mensaje para la Empresa( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>&renovacion_positivo&oc=<?php echo $solicitud['idoc']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
                                         <textarea name="mensaje_renovacion" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé"></textarea>
 
                                       </div>
@@ -1971,7 +1971,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         <?php 
                                           echo '<h5 style="font-size:12px;" class="alert alert-warning">
                                           <ul>
-                                            <li>Está Organización se encuentra en "Proceso de Renovación del Certificado", por lo tanto no se enviara "Contrato de Uso".</li>
+                                            <li>Está Empresa se encuentra en "Proceso de Renovación del Registro", por lo tanto no se enviara "Contrato de Uso".</li>
                                             <li style="color:red;">El pago de la Membresia SPP se considera una ratificación de la firma del contrato.</li>
                                           </ul>
                                           </h5>';
@@ -2010,7 +2010,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   <?php
                                   }else{ ///// PRIMERA VEZ
                                   ?>
-                                    <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP 1: <?php echo $solicitud['idsolicitud'] ?> 2: <?php echo $solicitud['idsolicitud_registro']; ?></p>
+                                    <p class="alert alert-info">El siguiente formato sera enviado en breve a la Empresa</p>
                                     <div class="col-xs-12">
                                       
                                       <div class="col-xs-12">
@@ -2024,7 +2024,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         </div>
                                       </div>
                                       <div class="col-xs-12">
-                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>&oc=<?php echo $solicitud['idoc']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
+                                        <h4 style="font-size:14px;padding:5px;">Mensaje para la Empresa( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>&oc=<?php echo $solicitud['idoc']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
                                         <textarea name="mensajeOPP" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé" ></textarea>
 
                                       </div>
@@ -2096,7 +2096,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   <?php 
                                   if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                                   ?>
-                                    <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP 1: <?php echo $proceso_certificacion['idsolicitud_registro'] ?> 2: <?php echo $proceso_certificacion['idsolicitud_registro']; ?></p>
+                                    <p class="alert alert-info">El siguiente formato sera enviado en breve a la Empresa</p>
                                     <div class="col-xs-12">
                                       
                                       <div class="col-xs-12">
@@ -2110,7 +2110,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         </div>
                                       </div>
                                       <div class="col-xs-12">
-                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>&renovacion_negativo&oc=<?php echo $solicitud['idoc'] ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
+                                        <h4 style="font-size:14px;padding:5px;">Mensaje para la Empresa ( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>&renovacion_negativo&oc=<?php echo $solicitud['idoc'] ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
                                         <textarea name="mensaje_renovacion" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé"></textarea>
 
                                       </div>
@@ -2133,7 +2133,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   <?php
                                   }else{
                                   ?>
-                                    <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP 1: <?php echo $proceso_certificacion['idsolicitud_registro'] ?> 2: <?php echo $proceso_certificacion['idsolicitud_registro']; ?></p>
+                                    <p class="alert alert-info">El siguiente formato sera enviado en breve a la Empresa</p>
                                     <div class="col-xs-12">
                                       
                                       <div class="col-xs-12">
@@ -2147,7 +2147,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         </div>
                                       </div>
                                       <div class="col-xs-12">
-                                        <h4 style="font-size:14px;padding:5px;">MENSAJE OPP( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>&negativo&oc=<?php echo $solicitud['idoc']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
+                                        <h4 style="font-size:14px;padding:5px;">Mensaje para la Empresa( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>&negativo&oc=<?php echo $solicitud['idoc']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
                                         <textarea name="mensajeOPP" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé" ></textarea>
 
                                       </div>
