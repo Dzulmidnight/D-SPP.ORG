@@ -1669,10 +1669,10 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
               <tr>
                 <td colspan="2">
                  <p>
-                  • Congratulations!!! Your Certificate has been issued and can now be downloaded.
+                  Congratulations!!! Your Certificate has been issued and can now be downloaded.
                  </p>
                  <p>
-                 •  The Certificate is in effect from <span style="color:red">'.date('d/m/Y', $fecha_inicio).'</span> to <span style="color:red">'.date('d/m/Y', $fecha_fin).'</span>, and is attached to this email.
+                  The Certificate is in effect from <span style="color:red">'.date('d/m/Y', $fecha_inicio).'</span> to <span style="color:red">'.date('d/m/Y', $fecha_fin).'</span>, and is attached to this email.
                 </td>
               </tr>
 

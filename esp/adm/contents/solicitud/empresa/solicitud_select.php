@@ -349,7 +349,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
     GetSQLValueString($_POST['idsolicitud_registro'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
-  $row_empresa = mysql_query("SELECT solicitud_registro.idoc, solicitud_registro.idempresa, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', solicitud_registro.comprador_final, solicitud_registro.intermediario, solicitud_registro.maquilador, empresa.telefono, empresa.email AS 'email_empresa', empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc', oc.email2 AS 'email_oc2' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+  $row_empresa = mysql_query("SELECT solicitud_registro.idoc, solicitud_registro.idempresa, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', solicitud_registro.comprador_final, solicitud_registro.intermediario, solicitud_registro.maquilador, empresa.telefono, empresa.email AS 'email_empresa', empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc1', oc.email2 AS 'email_oc2' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $detalle_empresa = mysql_fetch_assoc($row_empresa);
 
   $row_periodo = mysql_query("SELECT fecha_inicio, fecha_fin FROM periodo_objecion WHERE idperiodo_objecion = $_POST[idperiodo_objecion]",$dspp) or die(mysql_error());
@@ -454,9 +454,13 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
       </body>
     </html>
   ';
+  if(!empty($detalle_empresa['email_oc1'])){
+    $mail->AddAddress($detalle_empresa['email_oc1']);
+  }
+  if(!empty($detalle_empresa['email_oc2'])){
+    $mail->AddAddress($detalle_empresa['email_oc2']);
+  }
 
-  $mail->AddAddress($detalle_empresa['email_oc']);
-  $mail->AddAddress($detalle_empresa['email_oc2']);
   $mail->AddBCC($spp_global);  
   $mail->AddAttachment($resolucion);
 
@@ -465,6 +469,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   $mail->MsgHTML(utf8_decode($mensaje_oc));
   $mail->Send();
   $mail->ClearAddresses();
+  $mail->clearAttachments();
 
   /// termina envio correo "periodo de objeción finalizado" a OC
 
@@ -506,7 +511,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
                 
                 <p>Organismo de Certificación: <span style="color:red">'.$detalle_empresa['nombre_oc'].'</span></p>
                 
-                <p>Email: <span style="color:red">'.$detalle_empresa['email_oc'].'</span></p>
+                <p>Email: <span style="color:red">'.$detalle_empresa['email_oc1'].'</span></p>
               </td>
             </tr>
             <tr style="width:100%">
@@ -561,22 +566,23 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
     $mail->AddAddress($detalle_empresa['email_empresa']);
   }
 
-  $mail->AddBCC($spp_global);  
+  $mail->AddBCC($spp_global);
+
   $mail->AddAttachment($resolucion);
   $mail->Subject = utf8_decode($asunto);
   $mail->Body = utf8_decode($mensaje_opp);
   $mail->MsgHTML(utf8_decode($mensaje_opp));
+
   if($mail->Send()){
-    $mail->ClearAddresses();   
+    $mail->ClearAddresses();
+    $mail->clearAttachments();
     echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
   }else{
     $mail->ClearAddresses();
+    $mail->clearAttachments();
     echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
   }
- 
   /// termina envio correo "periodo de objeción finalizado" a empresa
-
-
   $mensaje = "Se ha enviado correctamente la resolucion de objeción";
 
 }
@@ -946,6 +952,52 @@ if(isset($_POST['aprobar_contrato']) && $_POST['aprobar_contrato'] == 1){
         </body>
         </html>
       '; 07_04_2017*/
+
+      $asunto = "D-SPP | Notificación de Certificado";
+
+      $cuerpo_mensaje = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Notificación de Certificado</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>Empresa: <span style="color:red">'.$membresia['nombre'].'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                  <p>SPP GLOBLA notifica que la Empresa: '.$membresia['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p><span style="color:red">Se encuentra autorizado para poder cargar el Certificado dentro del sistema D-SPP</span> (<a href="http://d-spp.org/">www.d-spp.org</a>)</p>
+                 <p>
+                   Pasos que debe seguir para cargar el certificado:
+                   <ol>
+                     <li>Ingrese en su cuenta de OC.</li>
+                     <li>Seleccione la pestaña "Solicitudes" y de clic en la opción "Solicitudes Empresas".</li>
+                     <li>Localice la solicitud de la Organización '.$membresia['nombre'].'</li>
+                     <li>Debe posicionarse en la columna "Certificado" y dar clic en la opción "Cargar Certificado".</li>
+                   </ol>
+                 </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </body>
+        </html>
+      ';
 
       if(!empty($membresia['email1'])){
         $mail->AddAddress($membresia['email1']);
