@@ -889,13 +889,22 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
 
-  }else if($_POST['estatus_interno'] == 9){ // EL DICTAMEN ES NEGATIVO **********************************************************************/
+  }//***********************************************************************************************//
+   // EL DICTAMEN ES NEGATIVO **********************************************************************/
+   //***************************************************************************************************/
+  else if($_POST['estatus_interno'] == 9){
       $query_oc = mysql_query("SELECT nombre FROM oc WHERE idoc = $detalle_opp[idoc]", $dspp) or die(mysql_error());
       $detalle_oc = mysql_fetch_assoc($query_oc);
 
     $documentacion_nombres = '';
     $estatus_dspp = 9; //Termina proceso de certificación
     //creamos la variable del archivo extra
+    if(isset($_POST['nombre_archivo'])){
+      $nombre_archivo = $_POST['nombre_archivo'];
+    }else{
+      $nombre_archivo = '';
+    }
+
     if(!empty($_FILES['archivo_extra']['name'])){
         $_FILES["archivo_extra"]["name"];
           move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["archivo_extra"]["name"]);
@@ -904,9 +913,11 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $archivo = NULL;
     }
 
-    $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN";
+    $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN NEGATIVO";
 
-    if($_POST['tipo_solicitud'] == 'RENOVACION'){
+    ///*******************************                              ***********************************************
+    ///****************************** DICTAMEN NEGATIVO (RENOVACION)************************************************
+    //09_04_2017if($_POST['tipo_solicitud'] == 'RENOVACION'){
       if(isset($_POST['mensaje_renovacion'])){
         $mensaje_renovacion = $_POST['mensaje_renovacion'];
       }else{
@@ -917,6 +928,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         GetSQLValueString($_POST['estatus_interno'], "int"),
         GetSQLValueString($estatus_dspp, "int"),
         GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+      $estatus_opp = 8;// dictamen negativo
+      $updateSQL = sprintf("UPDATE opp SET estatus_opp = %s WHERE idopp = %s",
+        GetSQLValueString($estatus_opp, "int"),
+        GetSQLValueString($_POST['idopp'], "int"));
       $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
@@ -1056,8 +1073,13 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->ClearAddresses();
       $mail->ClearAttachments();
       ///termina envio de mensaje dictamen positivo
-    }else{
-      $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+    //09_04_2017}
+    ///********************************* TERMINA DICTAMEN NEGATIVO RENOVACION*********************************************
+    ///*********************************                                     *********************************************
+    //09_04_2017else if($_POST['tipo_solicitud'] == 'NUEVA'){
+    ///********************************* TERMINA DICTAMEN POSITIVO RENOVACION*********************************************
+    ///*********************************                                     *********************************************
+      /*09_04_2017$updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
         GetSQLValueString($_POST['estatus_interno'], "int"),
         GetSQLValueString($estatus_dspp, "int"),
         GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
@@ -1311,7 +1333,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
 
-      $asunto = "D-SPP | Formatos de Evaluación";
+/*09_04_2017      $asunto = "D-SPP | Formatos de Evaluación";
 
       $cuerpo_mensaje = '
         <html>
@@ -1386,7 +1408,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       
           
       ///termina envio de mensaje dictamen positivo
-    }
+    //09_04_2017}  09_04_2017*/
   }else{
     $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
       GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -1722,7 +1744,7 @@ $startRow_opp = $pageNum_opp * $maxRows_opp;
 
 //$query = "SELECT solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.fecha_registro, solicitud_certificacion.fecha_aceptacion, solicitud_certificacion.cotizacion_opp, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion, informe_evaluacion.idinforme_evaluacion FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN proceso_certificacion ON solicitud_certificacion.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idopp = certificado.idopp LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc GROUP BY proceso_certificacion.estatus_dspp ORDER BY proceso_certificacion.estatus_dspp DESC";
 
-$query = "SELECT solicitud_certificacion.*, solicitud_certificacion.idopp, solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', oc.abreviacion AS 'abreviacionOC', opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, informe_evaluacion.idinforme_evaluacion, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc GROUP BY solicitud_certificacion.idsolicitud_certificacion  ORDER BY solicitud_certificacion.fecha_registro DESC";
+$query = "SELECT solicitud_certificacion.*, solicitud_certificacion.idopp, solicitud_certificacion.idsolicitud_certificacion AS 'idsolicitud', oc.abreviacion AS 'abreviacionOC', opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email, opp.estatus_opp, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, informe_evaluacion.idinforme_evaluacion, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp LEFT JOIN periodo_objecion ON solicitud_certificacion.idsolicitud_certificacion  = periodo_objecion.idsolicitud_certificacion LEFT JOIN membresia ON solicitud_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion LEFT JOIN contratos ON solicitud_certificacion.idsolicitud_certificacion = contratos.idsolicitud_certificacion LEFT JOIN informe_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = informe_evaluacion.idsolicitud_certificacion LEFT JOIN formato_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = formato_evaluacion.idsolicitud_certificacion LEFT JOIN dictamen_evaluacion ON solicitud_certificacion.idsolicitud_certificacion = dictamen_evaluacion.idsolicitud_certificacion WHERE solicitud_certificacion.idoc = $idoc GROUP BY solicitud_certificacion.idsolicitud_certificacion  ORDER BY solicitud_certificacion.fecha_registro DESC";
 
 $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
@@ -1767,7 +1789,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
       ?>
         <tr <?php if($proceso_certificacion['estatus_dspp'] == 12){ echo "class='success'"; }else if($proceso_certificacion['estatus_interno'] == 9){ echo "class='danger'"; } ?>>
           <td>
-            <?php echo $solicitud['idsolicitud']; ?>
+            <?php echo $solicitud['estatus_interno']; ?>
             <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
             <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
           </td>
@@ -2013,7 +2035,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   <?php
                                   }else{ ///// PRIMERA VEZ
                                   ?>
-                                    <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP 1: <?php echo $solicitud['idsolicitud'] ?> 2: <?php echo $solicitud['idsolicitud_certificacion']; ?></p>
+                                    <p class="alert alert-info">El siguiente formato sera enviado en breve al OPP</p>
                                     <div class="col-xs-12">
                                       
                                       <div class="col-xs-12">
@@ -2127,8 +2149,6 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                     </div>
 
                                     <div class="col-xs-12">
-   
-
                                       <div class="col-xs-12">
                                         <h4 style="font-size:14px;">ARCHIVO EXTRA( <small><span style="color:red">*opcional</span>. Anexar algun otro archivo en diferente a los enviados por SPP GLOBAL</small>)</h4>
                                         <div class="col-xs-12">
@@ -2162,6 +2182,18 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                                       </div>
                                     </div>
+                                    <div class="col-xs-12">
+                                      <div class="col-xs-12">
+                                        <h4 style="font-size:14px;">ARCHIVO EXTRA( <small><span style="color:red">*opcional</span>. Anexar algun otro archivo en diferente a los enviados por SPP GLOBAL</small>)</h4>
+                                        <div class="col-xs-12">
+                                          <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
+                                        </div>
+                                        <div class="col-xs-12">
+                                          <input type="file" class="form-control" name="archivo_extra">
+                                        </div>
+                                      </div>
+                                    </div>
+
                                   <?php
                                   }
                                   ?>
@@ -2249,7 +2281,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                         <?php 
-                        if(empty($solicitud['idmembresia'])){
+                        if(empty($solicitud['idmembresia']) && $solicitud['estatus_opp'] != '8'){
                         ?>
                         <button type="submit" class="btn btn-success" style="width:100%" id="<?php echo 'boton1'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1">Guardar Proceso</button>
                         <?php 

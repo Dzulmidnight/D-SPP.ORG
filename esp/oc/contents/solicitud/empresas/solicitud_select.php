@@ -910,7 +910,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
     $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN";
 
-    if($_POST['tipo_solicitud'] == 'RENOVACION'){
+    //09_04_2017if($_POST['tipo_solicitud'] == 'RENOVACION'){
       if(isset($_POST['mensaje_renovacion'])){
         $mensaje_renovacion = $_POST['mensaje_renovacion'];
       }else{
@@ -923,6 +923,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         GetSQLValueString($_POST['idsolicitud_registro'], "int"));
       $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
+      $estatus_empresa = 8; //dictamen negativo
+      $updateSQL = sprintf("UPDATE empresa SET estatus_empresa = %s WHERE idempresa = %s",
+        GetSQLValueString($estatus_empresa, "int"),
+        GetSQLValueString($_POST['idempresa'], "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+      
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
         GetSQLValueString($_POST['idsolicitud_registro'], "int"),
         GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -1059,8 +1065,8 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       //$mail->Send();
       $mail->ClearAddresses();
       $mail->ClearAttachments();
-      ///termina envio de mensaje dictamen positivo
-    }else{
+      
+    /*09_04_2017}else{
       $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
         GetSQLValueString($_POST['estatus_interno'], "int"),
         GetSQLValueString($estatus_dspp, "int"),
@@ -1315,7 +1321,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
 
-      $asunto = "D-SPP | Formatos de Evaluación";
+      /*09_04_2017$asunto = "D-SPP | Formatos de Evaluación";
 
       $cuerpo_mensaje = '
         <html>
@@ -1390,7 +1396,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       
           
       ///termina envio de mensaje dictamen positivo
-    }
+    } 09_04_2017*/
   }else{
     $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
       GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -1726,7 +1732,7 @@ $startRow_empresa = $pageNum_empresa * $maxRows_empresa;
 
 //$query = "SELECT solicitud_registro.idsolicitud_registro AS 'idsolicitud', solicitud_registro.tipo_solicitud, solicitud_registro.idempresa, solicitud_registro.idoc, solicitud_registro.fecha_registro, solicitud_registro.fecha_aceptacion, solicitud_registro.cotizacion_empresa, solicitud_registro.contacto1_email, solicitud_registro.contacto2_email, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.estatus_publico, proceso_certificacion.estatus_interno, proceso_certificacion.estatus_dspp, estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre AS 'nombre_interno', estatus_dspp.nombre AS 'nombre_dspp', periodo_objecion.*, membresia.idmembresia, membresia.estatus_membresia, contratos.idcontrato, contratos.estatus_contrato, certificado.idcertificado, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion, informe_evaluacion.idinforme_evaluacion FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN proceso_certificacion ON solicitud_registro.idsolicitud_registro = proceso_certificacion.idsolicitud_registro LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro WHERE solicitud_registro.idoc = $idoc GROUP BY proceso_certificacion.estatus_dspp ORDER BY proceso_certificacion.estatus_dspp DESC";
 
-$query = "SELECT solicitud_registro.*, solicitud_registro.idempresa, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.abreviacion AS 'abreviacionOC', empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, informe_evaluacion.idinforme_evaluacion, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idsolicitud_registro = certificado.idsolicitud_registro LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE solicitud_registro.idoc = $idoc GROUP BY solicitud_registro.idsolicitud_registro  ORDER BY solicitud_registro.fecha_registro DESC";
+$query = "SELECT solicitud_registro.*, solicitud_registro.idempresa, solicitud_registro.idsolicitud_registro AS 'idsolicitud', oc.abreviacion AS 'abreviacionOC', empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.email, empresa.estatus_empresa, periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato, contratos.estatus_contrato, informe_evaluacion.idinforme_evaluacion, formato_evaluacion.idformato_evaluacion, dictamen_evaluacion.iddictamen_evaluacion FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idsolicitud_registro = certificado.idsolicitud_registro LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro LEFT JOIN informe_evaluacion ON solicitud_registro.idsolicitud_registro = informe_evaluacion.idsolicitud_registro LEFT JOIN formato_evaluacion ON solicitud_registro.idsolicitud_registro = formato_evaluacion.idsolicitud_registro LEFT JOIN dictamen_evaluacion ON solicitud_registro.idsolicitud_registro = dictamen_evaluacion.idsolicitud_registro WHERE solicitud_registro.idoc = $idoc GROUP BY solicitud_registro.idsolicitud_registro  ORDER BY solicitud_registro.fecha_registro DESC";
 
 $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
@@ -2117,8 +2123,6 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                     </div>
 
                                     <div class="col-xs-12">
-   
-
                                       <div class="col-xs-12">
                                         <h4 style="font-size:14px;">ARCHIVO EXTRA( <small><span style="color:red">*opcional</span>. Anexar algun otro archivo en diferente a los enviados por SPP GLOBAL</small>)</h4>
                                         <div class="col-xs-12">
@@ -2149,8 +2153,18 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       <div class="col-xs-12">
                                         <h4 style="font-size:14px;padding:5px;">Mensaje para la Empresa( <small style="font-size:13px;">EL OC debe escribir  en el campo debajo, el texto sobre la Notificación del dictamen y en caso de que el dictamen sea positivo, debe explicar que el actor debe leer los  documentos anexos y firmar el Contrato de Uso y Acuse de Recibo. <span style="color:red">Si no escribe ningun mensaje el sistema mandara un mensaje predeterminado <a href="dictamen_positivo.php?empresa=<?php echo $solicitud['nombre_empresa'];?>&negativo&oc=<?php echo $solicitud['idoc']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');">ver mensaje</a></span></small>)</h4>
                                         <textarea name="mensajeOPP" class="form-control textareaMensaje" id="" cols="30" rows="10" placeholder="Ingrese un mensaje en caso de que lo deseé" ></textarea>
-
                                       </div>
+
+                                      <div class="col-xs-12">
+                                        <h4 style="font-size:14px;">ARCHIVO EXTRA( <small><span style="color:red">*opcional</span>. Anexar algun otro archivo en diferente a los enviados por SPP GLOBAL</small>)</h4>
+                                        <div class="col-xs-12">
+                                          <input type="text" class="form-control" name="nombreArchivo" placeholder="Nombre Archivo">
+                                        </div>
+                                        <div class="col-xs-12">
+                                          <input type="file" class="form-control" name="archivo_extra">
+                                        </div>
+                                      </div>
+                                      
                                     </div>
                                   <?php
                                   }
@@ -2239,7 +2253,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="hidden" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                         <?php 
-                        if(empty($solicitud['idmembresia'])){
+                        if(empty($solicitud['idmembresia']) && $solicitud['estatus_empresa'] != 8){
                         ?>
                         <button type="submit" class="btn btn-success" style="width:100%" id="<?php echo 'boton1'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1">Guardar Proceso</button>
                         <?php 
