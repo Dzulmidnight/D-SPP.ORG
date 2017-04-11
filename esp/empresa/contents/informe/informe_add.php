@@ -495,9 +495,18 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<td class="warning"></td> <!-- # -->
 
 						<td>
-							
+							<select name="spp" id="spp" onChange="buscar();" required>
+								<option>Listado de Organizaciones</option>
+								<?php 
+								$row_opp = mysql_query("SELECT spp, abreviacion FROM opp", $dspp) or die(mysql_error());
+
+								while($opp = mysql_fetch_assoc($row_opp)){
+									echo "<option value='".$opp['spp']."'>".$opp['spp']." | ".$opp['abreviacion']."</option>";
+								}
+								 ?>
+							</select>
 							<!--<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" />-->
-								<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur=" ponerMayusculas(this)" required />
+								<!--<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur="ponerMayusculas(this)" required />-->
 													
 						</td>
 
@@ -611,7 +620,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>
 
 						<td class="success"><!-- precio total unitario pagado -->
-							<input type="number" step="any" id="precio_total_unitario" name="precio_total_unitario" id="precio_total_unitario" onChange="calcular();" value="0" placeholder="Ej: 40" required>
+							<input type="number" step="any" id="precio_total_unitario" name="precio_total_unitario" onChange="calcular();" value="" required>
 						</td>
 
 						<td class="warning"><!-- valor total contrato -->
@@ -651,40 +660,48 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 <script>
 	
-  function validar(){
+	function validar(){
 
-    producto_terminado = document.getElementsByName("producto_terminado");
-    // INICIA SELECCION TIPO SOLICITUD
-    var valor_campo = '';
-    var seleccionado = false;
-    for(var i=0; i<producto_terminado.length; i++) {    
-      if(producto_terminado[i].checked) {
-      	valor_campo = producto_terminado[i].value;
-        seleccionado = true;
-        break;
-      }
-    }
-    if(!seleccionado) {
-      alert("Debe seleccionar SI es un producto terminado o NO");
-      return false;
-    }
+		producto_terminado = document.getElementsByName("producto_terminado");
+		// INICIA SELECCION TIPO SOLICITUD
+		var valor_campo = '';
+		var seleccionado = false;
 
-    se_exporta = document.getElementsByName("se_exporta");
-    if(valor_campo == 'SI'){
-	    var pregunta = false;
-	    for(var i=0; i<se_exporta.length; i++) {    
-	      if(se_exporta[i].checked) {
-	        pregunta = true;
-	        break;
-	      }
-	    }
-	    if(!pregunta) {
-	      alert("Debes contestar si el producto se exporta \"Directamente\" ó \"a través de un intermediario\" ");
-	      return false;
-	    }
-    }
-    return true
-  }
+		var precio_total_unitario = document.getElementById('precio_total_unitario').value;
+
+		if(precio_total_unitario <= 0){
+			alert('El precio total unitario debe ser mayor a 0');
+			return false;
+		}
+
+		for(var i=0; i<producto_terminado.length; i++) {    
+		  if(producto_terminado[i].checked) {
+		  	valor_campo = producto_terminado[i].value;
+		    seleccionado = true;
+		    break;
+		  }
+		}
+		if(!seleccionado) {
+		  alert("Debe seleccionar SI es un producto terminado o NO");
+		  return false;
+		}
+
+		se_exporta = document.getElementsByName("se_exporta");
+		if(valor_campo == 'SI'){
+		    var pregunta = false;
+		    for(var i=0; i<se_exporta.length; i++) {    
+		      if(se_exporta[i].checked) {
+		        pregunta = true;
+		        break;
+		      }
+		    }
+		    if(!pregunta) {
+		      alert("Debes contestar si el producto se exporta \"Directamente\" ó \"a través de un intermediario\" ");
+		      return false;
+		    }
+		}
+		return true
+	}
 
 	function mostrar(){
 		document.getElementById('div_oculto').style.display = 'block';
@@ -705,7 +722,7 @@ $(document).ready(function() {
 });
 
 function buscar() {
-    var textoBusqueda = $("input#spp").val();
+    var textoBusqueda = $("select#spp").val();
  
      if (textoBusqueda != "") {
         $.post("../../nombre_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_opp) {

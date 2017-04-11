@@ -66,7 +66,10 @@ $total_informe = mysql_num_rows($row_informe_general);
 $informe_general = mysql_fetch_assoc($row_informe_general);
 
 
-
+function mayus($variable) {
+	$variable = strtr(strtoupper($variable),"àèìòùáéíóúçñäëïöü","ÀÈÌÒÙÁÉÍÓÚÇÑÄËÏÖÜ");
+	return $variable;
+}
  ?>
 
 <h4>

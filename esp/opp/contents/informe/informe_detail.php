@@ -73,12 +73,12 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			<th class="text-center">#</th>
 			<th class="text-center">País de la OPP</th>
 			<th class="text-center">#SPP</th>
-			<th class="text-center"><span style="color:red">Nombre del Comprador</span></th>
-			<th class="text-center"><span style="color:red">País del Comprador</span></th>
+			<th class="text-center"><span style="color:red">Nombre del Comprador Final</span></th>
+			<th class="text-center"><span style="color:red">País del Comprador Final</span></th>
 			<th class="text-center">Fecha de Facturación</th>
 			<th class="text-center">Primer Intermediario</th>
 			<th class="text-center">Segundo Intermediario</th>
-			<th colspan="2" class="text-center"><span style="color:red">Referencia del Contrato Original con el Comprador</span></th>
+			<th colspan="2" class="text-center"><span style="color:red">Referencia del Contrato Original con el Comprador Final</span></th>
 			<th class="text-center">Producto General</th>
 			<th class="text-center">Producto Especifico</th>
 			<th class="text-center">¿Producto terminado?</th>

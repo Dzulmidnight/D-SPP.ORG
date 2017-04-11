@@ -257,8 +257,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 		<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color azul son opcionales, dicha informacion será de utilitdad para la evaluación de la certificación.</p>
 		<p class="alert alert-success" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color verde son obligatorios.</p>
 		<p class="alert alert-warning" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color amarillo son completados de manera automatica.</p>
-	
-		<form class="form-horizontal" method="POST">
+
 		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
 		 		<thead>
 		 			<tr class="success">
@@ -313,13 +312,13 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 						
 						<!-- INICIA NOMBRE DE LA OPP -->
 		 				<td>
-		 					Nombre de la OPP de donde proviene el producto.
+		 					Nombre del Comprador Final.
 		 				</td>
 		 				<!-- TERMINA NOMBRE DE A OPP
 
 		 				<!-- INICIA PAIS DE LA OPP -->
 		 				<td>
-		 					País sede la OPP de donde proviene el productos
+		 					País del Comprador Final
 		 				</td>
 		 				<!-- TERMINA PAIS DE LA OPP -->
 
@@ -490,14 +489,29 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 							$contador++;
 							}
 		 				 ?>
+
+		<form class="form-horizontal" method="POST">
 					<tr class="success">
 						<td class="warning"></td> <!-- # -->
 						<td><input type="text" name="pais_opp" value="<?php echo $opp['pais']; ?>" readonly></td>
 
 						<td>
-							
+							<?php 
+							$row_empresa = mysql_query("SELECT * FROM empresa", $dspp) or die(mysql_error());
+							 ?>
+							 <select name="spp" id="spp" onChange="buscar();" required>
+							 	<option>Listado de Empresas</option>
+							 	<?php 
+							 	while($empresa = mysql_fetch_assoc($row_empresa)){
+							 		echo "<option value='".$empresa['spp']."'>".$empresa['spp']." | ".mayus($empresa['abreviacion'])."</option>";
+							 	}
+							 	 ?>
+							 </select>
+
+							 	<!--<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur="ponerMayusculas(this)" required />
+
 							<!--<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" />-->
-								<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur=" ponerMayusculas(this)" required />
+								<!--<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur=" ponerMayusculas(this)" required />-->
 													
 						</td>
 
@@ -605,7 +619,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 						</td>
 
 						<td class="success"><!-- precio total unitario pagado -->
-							<input type="number" step="any" id="precio_total_unitario" name="precio_total_unitario" id="precio_total_unitario" onChange="calcular();" value="" placeholder="Ej: 40" required>
+							<input type="number" step="any" id="precio_total_unitario" name="precio_total_unitario" onChange="calcular();" value="" required>
 						</td>
 
 						<td class="warning"><!-- valor total contrato -->
@@ -635,40 +649,49 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 
 <script>
 	
-  function validar(){
+	function validar(){
 
-    producto_terminado = document.getElementsByName("producto_terminado");
-    // INICIA SELECCION TIPO SOLICITUD
-    var valor_campo = '';
-    var seleccionado = false;
-    for(var i=0; i<producto_terminado.length; i++) {    
-      if(producto_terminado[i].checked) {
-      	valor_campo = producto_terminado[i].value;
-        seleccionado = true;
-        break;
-      }
-    }
-    if(!seleccionado) {
-      alert("Debe seleccionar SI es un producto terminado o NO");
-      return false;
-    }
+		producto_terminado = document.getElementsByName("producto_terminado");
+		// INICIA SELECCION TIPO SOLICITUD
+		var valor_campo = '';
+		var seleccionado = false;
+		var precio_total_unitario = document.getElementById('precio_total_unitario').value;
 
-    se_exporta = document.getElementsByName("se_exporta");
-    if(valor_campo == 'SI'){
-	    var pregunta = false;
-	    for(var i=0; i<se_exporta.length; i++) {    
-	      if(se_exporta[i].checked) {
-	        pregunta = true;
-	        break;
-	      }
-	    }
-	    if(!pregunta) {
-	      alert("Debes contestar si el producto se exporta \"Directamente\" ó \"a travez de un intermediario\" ");
-	      return false;
-	    }
-    }
-    return true
-  }
+		if(precio_total_unitario <= 0){
+			alert('El precio total unitario debe ser mayor a 0');
+			return false;
+		}
+
+		for(var i=0; i<producto_terminado.length; i++) {    
+		  if(producto_terminado[i].checked) {
+		  	valor_campo = producto_terminado[i].value;
+		    seleccionado = true;
+		    break;
+		  }
+		}
+		if(!seleccionado) {
+		  alert("Debe seleccionar SI es un producto terminado o NO");
+		  return false;
+		}
+
+		se_exporta = document.getElementsByName("se_exporta");
+
+		if(valor_campo == 'SI'){
+		    var pregunta = false;
+		    for(var i=0; i<se_exporta.length; i++) {    
+		      if(se_exporta[i].checked) {
+		        pregunta = true;
+		        break;
+		      }
+		    }
+		    if(!pregunta) {
+		      alert("Debes contestar si el producto se exporta \"Directamente\" ó \"a travez de un intermediario\" ");
+		      return false;
+		    }
+		}
+		return true
+
+	}
 
 	function mostrar(){
 		document.getElementById('div_oculto').style.display = 'block';
@@ -680,34 +703,34 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 </script>
 
 
-<script>/*24_03_2017
-$(document).ready(function() {
-//    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
-    $("#nombre_empresa").val('Nombre de la OPP');
-//    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
-    $("#pais").val('Pais de la OPP');
-});
+<script>
+	$(document).ready(function() {
+	//    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
+	    $("#nombre_empresa").val('Nombre del Comprador Final');
+	//    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
+	    $("#pais_empresa").val('Pais del Comprador Final');
+	});
 
-function buscar() {
-    var textoBusqueda = $("input#spp").val();
- 
-     if (textoBusqueda != "") {
-        $.post("../../nombre_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_empresa) {
-            $("#nombre_empresa").val(nombre_empresa);
-         }); 
-     } else { 
-        $("#nombre_empresa").val('Nombre de la OPP');
-     };
+	function buscar() {
+	    var textoBusqueda = $("select#spp").val();
+	 
+	     if (textoBusqueda != "") {
+	        $.post("../../nombre_empresa_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_empresa) {
+	            $("#nombre_empresa").val(nombre_empresa);
+	         }); 
+	     } else { 
+	        $("#nombre_empresa").val('Nombre del Comprador Final');
+	     };
 
-     if (textoBusqueda != "") {
-        $.post("../../pais_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_pais) {
-            $("#pais").val(nombre_pais);
-         }); 
-     } else { 
-        $("#pais").val('País de la OPP');
-     };
+	     if (textoBusqueda != "") {
+	        $.post("../../pais_empresa_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_pais) {
+	            $("#pais_empresa").val(nombre_pais);
+	         }); 
+	     } else { 
+	        $("#pais_empresa").val('País del Comprador Final');
+	     };
 
-};
+	};
 </script>
 
 <script>
