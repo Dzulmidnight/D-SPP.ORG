@@ -247,6 +247,8 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 	<?php
 	if($trim[$txt_estatus] == 'FINALIZADO'){
 		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se puede agregar más registro al <b>Formato Trimestral $idtrim</b>, ya que fue concluido.</p>";
+	}else if($trim[$txt_estatus] == 'EN ESPERA'){
+		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se puede agregar más registro al <b>Formato Trimestral $idtrim</b>, ya que se encuentra en proceso de revisión.</p>";
 	}else{
 	?>
 
@@ -265,12 +267,12 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 		 				</th>
 		 				<th class="text-center">País de la OPP</th>
 						<th class="text-center"><span style="color:red">#SPP del Comprador Final</span></th>
-						<th class="text-center"><span style="color:red">Nombre de la Empresa</span></th>
-						<th class="text-center"><span style="color:red">País de la Empresa</span></th>
+						<th class="text-center"><span style="color:red">Nombre del Comprador Final</span></th>
+						<th class="text-center"><span style="color:red">País del Comprador Final</span></th>
 						<th class="text-center">Fecha de Facturación</th>
 						<th class="text-center">Primer Intermediario</th>
 						<th class="text-center">Segundo Intermediario</th>
-						<th colspan="2" class="text-center">Referencia Contrato Original con OPP</th>
+						<th colspan="2" class="text-center">Referencia Contrato Original con el Comprador Final</th>
 						<th class="text-center">Producto General</th>
 						<th class="text-center">Producto Especifico</th>
 
@@ -505,7 +507,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 						</td>-->
 
 						<td class="warning"><!-- nombre de la opp -->
-							<textarea id="nombre_empresa" name="nombre_empresa" value="" placeholder="Nombre de la Empresa"></textarea>
+							<textarea id="nombre_empresa" name="nombre_empresa" value="" placeholder="Nombre del Comprador Final"></textarea>
 
 							<!--<input type="text" name="nombre_empresa" id="" placeholder="Nombre de la OPP">-->
 						</td>
@@ -603,7 +605,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 						</td>
 
 						<td class="success"><!-- precio total unitario pagado -->
-							<input type="number" step="any" id="precio_total_unitario" name="precio_total_unitario" id="precio_total_unitario" onChange="calcular();" value="0" placeholder="Ej: 40" required>
+							<input type="number" step="any" id="precio_total_unitario" name="precio_total_unitario" id="precio_total_unitario" onChange="calcular();" value="" placeholder="Ej: 40" required>
 						</td>
 
 						<td class="warning"><!-- valor total contrato -->

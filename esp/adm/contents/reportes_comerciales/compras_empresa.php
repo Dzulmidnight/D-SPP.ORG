@@ -419,7 +419,7 @@ function redondear_dos_decimal($valor) {
 					<th class="text-center">Año</th>
 					<th class="text-center">ID informe general</th>
 					<!--<th class="text-center">Estado</th>-->
-					<th class="text-center">Empresa</th>
+					<th class="text-center">Comprador Final</th>
 					<th class="text-center">Trimestre 1</th>
 					<th class="text-center">Trimestre 2</th>
 					<th class="text-center">Trimestre 3</th>

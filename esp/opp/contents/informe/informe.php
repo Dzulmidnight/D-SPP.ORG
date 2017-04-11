@@ -51,17 +51,9 @@ if (isset($_SERVER['QUERY_STRING'])) {
 }
 $idopp = $_SESSION['idopp'];
 $ano_actual = date('Y', time());
-/*$row_opp = mysql_query("SELECT spp, abreviacion, pais, maquilador, comprador, intermediario FROM opp WHERE idopp = $idopp", $dspp) or die(mysql_error());
+$row_opp = mysql_query("SELECT spp, abreviacion, pais FROM opp WHERE idopp = $idopp", $dspp) or die(mysql_error());
 $opp = mysql_fetch_assoc($row_opp);
-$tipo_opp = '';
-if($opp['maquilador']){
-	$tipo_opp = 'MAQUILADOR';
-}else if($opp['comprador']){
-	$tipo_opp = 'COMPRADOR FINAL';
-}else if($opp['intermediario']){
-	$tipo_opp = 'INTERMEDIARIO';
-}
-*/
+
 $row_configuracion = mysql_query("SELECT * FROM porcentaje_ajuste WHERE anio = $ano_actual", $dspp) or die(mysql_error());
 $configuracion = mysql_fetch_assoc($row_configuracion);
 
@@ -103,6 +95,8 @@ if(isset($_GET['general_detail'])){
 	include ("informe_detail.php");
 }else if(isset($_GET['add'])){
 	include ("informe_add.php");
+}else if(isset($_GET['edit'])){
+	include ("informe_edit.php");
 }else{
 	include ('listado_informes.php');
 }
