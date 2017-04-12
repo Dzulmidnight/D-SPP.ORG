@@ -54,209 +54,12 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 		$porcetaje_cuota = $configuracion['cuota_productores'];
 		//$tipo_opp = $tipo_opp;
 
-	    $html = '
-	      <div>
-	        <table style="border: 1px solid #ddd;border-collapse: collapse;font-family: Tahoma, Geneva, sans-serif;font-size:12px;">
-	          <tr style="background-color:#B8D186">
-	            <td style="">
-	              Fecha de Elaboracion
-	            </td>
-	            <td style="">
-	              #SPP
-	            </td>
-	            <td style="">
-	              Abreviación de la Empresa
-	            </td>
-	            <td style="">
-	              Tipo de Empresa
-	            </td>
-	            <td style="">
-	              País
-	            </td>
-	            <td style="">
-	              Trimestre
-	            </td>
-	          </tr>
-
-	          <tr>
-	            <td style="">
-	              '.date('d/m/Y', time()).'
-	            </td>
-	            <td style="">
-	              '.$formatos['spp'].'
-	            </td>
-	            <td style="">
-	              '.$formatos['abreviacion'].'
-	            </td>
-	            <td style="">
-	              COMPRADOR FINAL
-	            </td>
-	            <td style="">
-	              '.$formatos['pais'].'
-	            </td>
-	            <td style="">
-	              '.$idtrimestre.'
-	            </td>
-	          </tr>
-
-
-	        </table>
-	      </div>
-
-	      <div>
-	        <table style="border: 1px solid #ddd;border-collapse: collapse;font-family: Tahoma, Geneva, sans-serif;font-size:12px;">
-	          <tr style="background-color:#B8D186">
-	            <th>
-	              #
-	            </th>
-	            <th>
-	              #SPP
-	            </th>
-	            <th>
-	              Nombre OPP proovedora
-	            </th>
-	            <th>
-	              País de OPP proveedora
-	            </th>
-	            <th>
-	              Fecha de Facturación
-	            </th>
-	            <th>
-	              Primer Intermediario
-	            </th>
-	            <th>
-	              Segundo Intermediario
-	            </th>
-	            <th colspan="2">
-	              Referencia Contrato Original con OPP
-	            </th>
-	            <th>
-	              Producto General
-	            </th>
-	            <th>
-	              Producto Especifico
-	            </th>
-	            <th colspan="2">
-	              Producto Terminado
-	            </th>
-	            <th colspan="2">
-	              Cantidad Total Conforme Factura
-	            </th>
-	            <th>
-	              Precio Sustentable Mínimo
-	            </th>
-	            <th>
-	              Reconocimiento Orgánico
-	            </th>
-	            <th>
-	              Incentivo SPP
-	            </th>
-	            <th>
-	              Otros premios
-	            </th>
-	            <th>
-	              Precio Total Unitario pagado
-	            </th>
-	            <th>
-	              Valor Total Contrato
-	            </th>
-	            <th>
-	              Cuota de Uso Reglamento
-	            </th>
-	            <th>
-	              Total a pagar
-	            </th>
-	          </tr>
-
-
-	          ';
-	          	$contador = 1;
-				$row_formato_ventas = mysql_query("SELECT * FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
-				$num_contratos = mysql_num_rows($row_formato_ventas);
-				while($formato_ventas = mysql_fetch_assoc($row_formato_ventas)){
-				  $html .= '
-					<tr>
-					    <td>'.$contador.'</td>
-					    <td>'.$formato_ventas['spp'].'</td>
-					    <td>'.$formato_ventas['opp'].'</td>
-					    <td>'.$formato_ventas['pais'].'</td>
-					    <td>'.$formato_ventas['fecha_facturacion'].'</td>
-					    <td>'.$formato_ventas['primer_intermediario'].'</td>
-					    <td>'.$formato_ventas['segundo_intermediario'].'</td>
-					    <td>'.$formato_ventas['clave_contrato'].'</td>
-					    <td>'.$formato_ventas['fecha_contrato'].'</td>
-					    <td>'.$formato_ventas['producto_general'].'</td>
-					    <td>'.$formato_ventas['producto_especifico'].'</td>
-					    <td>'.$formato_ventas['producto_terminado'].'</td>
-					    <td>Se exporta: '.$formato_ventas['se_exporta'].'</td>
-					    <td>'.$formato_ventas['unidad_cantidad_factura'].'</td>
-					    <td>'.$formato_ventas['cantidad_total_factura'].'</td>
-					    <td>'.$formato_ventas['precio_sustentable_minimo'].'</td>
-					    <td>'.$formato_ventas['reconocimiento_organico'].'</td>
-					    <td>'.$formato_ventas['incentivo_spp'].'</td>
-					    <td>'.$formato_ventas['otros_premios'].'</td>
-					    <td>'.$formato_ventas['precio_total_unitario'].'</td>
-					    <td>'.$formato_ventas['valor_total_contrato'].'</td>
-					    <td>'.$formato_ventas['cuota_uso_reglamento'].'</td>
-					    <td>'.$formato_ventas['total_a_pagar'].'</td>
-					</tr>
-				  ';
-				 $contador++;
-				}
-
-	    $html .= '
-	        </table>
-	      </div>
-
-	    ';
-	   
-	    $mpdf = new mPDF('c', 'Legal');
-		ob_start();
-
-	    $mpdf->setAutoTopMargin = 'pad';
-	    $mpdf->keep_table_proportions = TRUE;
-	    $mpdf->SetHTMLHeader('
-	    <header class="clearfix">
-	      <div>
-	        <table style="padding:0px;margin-top:-20px;">
-	          <tr>
-	            <td style="text-align:left;margin-bottom:0px;font-size:12px;">
-	                  <div>
-	                <img src="../../reportes/img/FUNDEPPO.jpg" >
-	                  </div>
-	            </td>
-	            <td style="text-align:right;font-size:12px;">
-	                  <div>
-	                <h2>
-	                  Detalle Reporte Trimestral de Ventas
-	                </h2>             
-	                  </div>
-	                  <div>Símbolo de Pequeños Productores</div>
-	                  <div>'.date('d/m/Y', time()).'</div>
-	            </td>
-	          </tr>
-	        </table>
-	      </div>
-	    </header>
-	      ');
-	    $css = file_get_contents('../../reportes/css/style_reporte.css');  
-	    $mpdf->AddPage('L'); //se cambia la orientacion de la pagina
-	    $mpdf->pagenumPrefix = 'Página / Page ';
-	    $mpdf->pagenumSuffix = ' - ';
-	    $mpdf->nbpgPrefix = ' de ';
-	    //$mpdf->nbpgSuffix = ' pages';
-	    $mpdf->SetFooter('{PAGENO}{nbpg}');
-	    $mpdf->writeHTML($css,1);
-
-		ob_end_clean();
-
-	    $mpdf->writeHTML($html);
-	    //$pdf_listo = $mpdf->Output('reporte.pdf', 'I');
-	    $pdf_listo = $mpdf->Output('reporte_trimestral.pdf', 'S'); //reemplazamos la I por S(regresa el documento como string)
-
 	    //$pdf_listo = chunk_split(base64_encode($mpdf));
 	   // $nombre_archivo = 'reporte.pdf';
-
+		$txt_reporte = 'reporte_trim'.$num_trim;
+		$row_trim = mysql_query("SELECT * FROM $txt_trim WHERE $txt_idtrim = '".$idtrimestre."'",$dspp) or die(mysql_error());
+		$info_trim = mysql_fetch_assoc($row_trim);
+		$reporte = $info_trim[$txt_reporte];
 	/********/
 		$asunto = 'D-SPP - Factura Informe Trimestral Ventas';
 		$mensaje_correo = '
@@ -270,13 +73,13 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 				<tbody>
 				    <tr>
 				      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-				      <th scope="col" align="left" width="280">Detalle Reporte Trimestral de Compras SPP</th>
+				      <th scope="col" align="left" width="280">Detalle Reporte Trimestral de Ventas SPP</th>
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
 				        La opp <span style="color:red">'.$formatos['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$num_trim.'</span>, a continuación se muestran una tabla con el resumen de las operaciones.
 				        <hr>
-				        <p style="color:#2c3e50;font-weight:bold">El Área de Certificación y Calidad SPP ha autorizado el siguiente Informe Trimestral de Compras, por favor proceda a generar la factura correspondiente(<small style="color:#7f8c8d">Se adjunta el PDF con los registro correspondientes al trimestre finalizado</small>).</p>
+				        <p style="color:#2c3e50;font-weight:bold">El Área de Certificación y Calidad SPP ha autorizado el siguiente Informe Trimestral de Ventas, por favor proceda a generar la factura correspondiente(<small style="color:#7f8c8d">Se adjunta el PDF con los registro correspondientes al trimestre finalizado</small>).</p>
 				        <p style="color:#2c3e50;font-weight:bold">Una vez creada la factura dar clic en el siguiente enlace para poder adjuntarla. <a href="http://localhost/D-SPP.ORG_2/procesar/facturacion.php?num='.$num_trim.'&trim='.$idtrimestre.'" style="color:red">Clic para poder adjuntar factura</a></p>
 				      </td>
 
@@ -288,8 +91,7 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 				            <td colspan="7" style="text-align:center">Resumen de operaciones</td>
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Empresa</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Tipo de Empresa</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Organización</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Informe</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Num. de Contratos</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Valor total de los contratos</td>
@@ -298,12 +100,11 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$formatos['abreviacion'].'</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">COMPRADOR FINAL</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$num_contratos.'</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$total_valor_contrato.'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($formatos['total_contrato'],2).'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$porcetaje_cuota.'%</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$total_cuota_uso.'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($formatos['total_cuota'],2).'</td>
 				          </tr>
 				        </table>
 				      </td>
@@ -326,7 +127,7 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 	    $mail->MsgHTML(utf8_decode($mensaje_correo));
 	    //$mail->AddAttachment($pdf_listo, 'reporte.pdf');
 
-	    $mail->addStringAttachment($pdf_listo, 'reporte_trimestral.pdf');
+	    $mail->AddAttachment($reporte);
 	    $mail->Send();
 	    $mail->ClearAddresses();
 		///se envia correo al area de certificacion para corroborar la informacion
@@ -409,7 +210,7 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 
 
 	/********/
-		$asunto = 'D-SPP - Factura Informe Trimestral Compras';
+		$asunto = 'D-SPP - Factura Informe Trimestral Ventas';
 		$mensaje_correo = '
 			<html>
 			<head>
@@ -421,11 +222,11 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 				<tbody>
 				    <tr>
 				      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-				      <th scope="col" align="left" width="280">Factura - Reporte Trimestral de Compras SPP</th>
+				      <th scope="col" align="left" width="280">Factura - Reporte Trimestral de Ventas SPP</th>
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
-				        <p style="color:#2c3e50;font-weight:bold">El Área de Adminsitración de SPP Global ha cargado la factura correspondiente al Informe Trimestral de Compras, por favor proceda a realizar el pago correspondiente por la cantidad de: '.$valor_cuota_de_uso.' USD</small>).</p>
+				        <p style="color:#2c3e50;font-weight:bold">El Área de Adminsitración de SPP Global ha cargado la factura correspondiente al Informe Trimestral de Ventas, por favor proceda a realizar el pago correspondiente por la cantidad de: <span style="color:red">'.number_format($valor_cuota_de_uso,2).' USD</span></small>).</p>
 				    <p>
 				      Se anexan los siguiente documentos:
 				      <ol>
@@ -450,8 +251,7 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 				            <td colspan="7" style="text-align:center">Resumen de operaciones</td>
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Empresa</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Tipo de Empresa</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Organización</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Informe</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Num. de Contratos</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Valor total de los contratos</td>
@@ -460,12 +260,11 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$formatos['abreviacion'].'</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">COMPRADOR FINAL</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
 						    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$formatos['num_contratos'].'</td>
-						    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$valor_total_contratos.'</td>
+						    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($valor_total_contratos,2).'</td>
 						    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$configuracion['cuota_productores'].'%'.'</td>
-						    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$valor_cuota_de_uso.'</td>
+						    <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($valor_cuota_de_uso,2).'</td>
 				          </tr>
 				        </table>
 				      </td>
@@ -526,7 +325,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
 
 	/// se envia mensaje a la opp
 	/********/
-		$asunto = 'D-SPP - Pago Informe Trimestral Compras';
+		$asunto = 'D-SPP - Pago Informe Trimestral de Ventas';
 		$mensaje_correo = '
 			<html>
 			<head>
@@ -538,7 +337,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
 				<tbody>
 				    <tr>
 				      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-				      <th scope="col" align="left" width="280">Factura - Reporte Trimestral de Compras SPP</th>
+				      <th scope="col" align="left" width="280">Factura - Reporte Trimestral de Ventas SPP</th>
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
@@ -616,7 +415,7 @@ function redondear_dos_decimal($valor) {
 					<th class="text-center">Año</th>
 					<th class="text-center">ID informe general</th>
 					<!--<th class="text-center">Estado</th>-->
-					<th class="text-center">Empresa</th>
+					<th class="text-center">Organización</th>
 					<th class="text-center">Trimestre 1</th>
 					<th class="text-center">Trimestre 2</th>
 					<th class="text-center">Trimestre 3</th>
@@ -633,7 +432,7 @@ function redondear_dos_decimal($valor) {
 				$cuota_uso_trim4 = 0;
 				$total_final = 0;
 				if($total_informes == 0){
-					echo '<tr><td colspan="7">No se encontraron registros</td></tr>';
+					echo '<tr><td colspan="8">No se encontraron registros</td></tr>';
 				}else{
 					while($informes = mysql_fetch_assoc($row_informes)){
 						
@@ -768,46 +567,400 @@ function redondear_dos_decimal($valor) {
 									echo '<img src="../../img/circulo_rojo.jpg">';
 								}
 								
-								echo ' $'.$informes['cuota_uso_trim1'].' USD';
+								echo ' $'.number_format($informes['cuota_uso_trim1'],2).' USD';
 								if($informes['estatus_factura_trim1'] == 'PAGADA'){
 									echo "<span class='disabled btn btn-xs btn-info glyphicon glyphicon-ok' aria-hidden='true'></span>";
+								}
+								if(isset($informes['reporte_trim1'])){
+									echo '<a href="'.$informes['reporte_trim1'].'" target="_new"><img height="25px;" src="../../img/pdf.png" alt=""></a>';
 								}
 							echo '</td>';
 
 							echo '<td>'; //// TRIMESTRE 2
-								if($informes['estado_trim2'] == 'ACTIVO' || $informes['estado_trim2'] == 'EN ESPERA' || $informes['estado_trim1'] == 'APROBADO'){
-									echo '<img src="../../img/circulo_verde.jpg"> $'.$informes['cuota_uso_trim2'].' USD';
+							?>
+								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim2".$informes['trim2']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+
+								<div id="<?php echo "trim2".$informes['trim2']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+									<div class="modal-dialog modal-lg" role="document">
+									  <div class="modal-content">
+									    <div class="modal-header">
+									      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									      <h4 class="text-center modal-title" id="myModalLabel">Administración Trimestre 2</h4>
+									    </div>
+									    <div class="modal-body">
+											<div class="row">
+												<div class="col-md-4">
+													<h4 class="text-center alert alert-info" style="padding:5px;">Reporte Trimestral</h4>
+													<form action="" method="POST">
+														<?php 
+														if($informes['estado_trim2'] == 'EN ESPERA'){
+														?>
+															<p>Para poder aprobar el reporte trimestral debe dar clic en el siguiente boton</p>
+															<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="aprobar_reporte" value="SI">Aprobar Reporte</button>
+															<input type="hidden" name="num_trim" value="2">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim2']; ?>">
+															<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+														<?php
+														}else if($informes['estado_trim2'] == 'APROBADO' || $informes['estado_trim2'] == 'FINALIZADO'){
+															echo "El informe trimestral ha sido aprobado";
+														}else{
+															echo "Aun no esta disponible esta sección";
+														}
+														 ?>
+
+													</form>
+													
+												</div>
+												<div class="col-md-4">
+													<h4 class="text-center alert alert-warning" style="padding:5px;">Factura</h4>
+													<?php
+													if($informes['estado_trim2'] == 'APROBADO' || $informes['estado_trim2'] == 'FINALIZADO'){
+														if(isset($informes['estatus_factura_trim2'])){
+														?>
+															<p>Se ha enviado la factura</p>
+															<a class="btn btn-sm btn-success" style="width:100%" href="<?php echo $informes['factura_trim2']; ?>" target="_new">Descargar Factura</a>
+														<?php
+														}else{
+														?>
+															<form action="" method="POST" enctype="multipart/form-data">
+																<div class="form-group">
+																    <label for="exampleInputEmail1">Cargar Factura</label>
+																	<input type="file" class="form-control" id="factura" name="factura_trimestre">
+																</div>
+																<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="enviar_factura" value="1">Enviar Factura</button>
+																<input type="hidden" name="num_trim" value="2">
+																<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim2']; ?>">
+																<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+															</form>
+														<?php
+														}
+													}else{
+													?>
+														Se debe de aprobar primero el reporte trimestral.
+													<?php
+													}
+													 ?>
+
+												</div>
+												<div class="col-md-4">
+													<h4 class="text-center alert alert-info" style="padding:5px;">Acreditar pago</h4>
+													<?php 
+													if(isset($informes['estatus_comprobante_trim2']) && $informes['estatus_comprobante_trim2'] == 'ENVIADO'){
+													?>
+													<form action="" method="POST">
+														<div class="row">
+															<div class="col-xs-6"><button class="btn btn-sm btn-success" style="width:100%" type="submit" name="aprobar_pago" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar pago</button></div>
+															<div class="col-xs-6"><button class="btn btn-sm btn-danger" style="width:100%" type="submit" name="rechazar_pago" value="2"><span class="glyphicon glyphicon-remove" aria-hidden="trie"></span> Rechazar pago</button></div>
+															<input type="hidden" name="num_trimestre" value="2">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim2']; ?>">
+															<input type="hidden" name="aprobar_comprobante" value="1">
+														</div>
+
+													</form>
+													<?php
+													}else if($informes['estatus_comprobante_trim2'] == 'APROBADO'){
+														echo "<p>Se ha aprobado el comprobante de pago</p>";
+														echo "<a href='".$informes['comprobante_pago_trim2']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+													}else{
+														echo "Aun no se ha cargado el comprobante de pago";
+													}
+													 ?>
+												</div>
+											</div>
+									    </div>
+									    <div class="modal-footer">
+									      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+									      <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
+									    </div>
+									  </div>
+									</div>
+								</div>
+
+							<?php	
+								if($informes['estatus_factura_trim2'] == 'ENVIADA' || $informes['estatus_factura_trim2'] == 'PAGADA'){
+									///boton para descargar factura
+									echo "<a href='$informes[factura_trim2]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
+									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
+								}
+								if($informes['estatus_comprobante_trim2'] == 'ENVIADO' || $informes['estatus_comprobante_trim2'] == 'APROBADO' || $informes['estatus_comprobante_trim2'] == 'FINALIZADO'){
+									/// boton para descargar comprobante de pago
+									echo "<a href='$informes[comprobante_pago_trim2]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
+								}
+								if($informes['estado_trim2'] == 'ACTIVO' || $informes['estado_trim2'] == 'EN ESPERA' || $informes['estado_trim2'] == 'APROBADO'){
+									echo '<img src="../../img/circulo_verde.jpg">';
 								}else if($informes['estado_trim2'] == 'FINALIZADO'){
-									echo '<img src="../../img/circulo_rojo.jpg"> $'.$informes['cuota_uso_trim2'].' USD';
+									echo '<img src="../../img/circulo_rojo.jpg">';
+								}
+								
+								echo ' $'.number_format($informes['cuota_uso_trim2'],2).' USD';
+								if($informes['estatus_factura_trim2'] == 'PAGADA'){
+									echo "<span class='disabled btn btn-xs btn-info glyphicon glyphicon-ok' aria-hidden='true'></span>";
+								}
+								if(isset($informes['reporte_trim2'])){
+									echo '<a href="'.$informes['reporte_trim2'].'" target="_new"><img height="25px;" src="../../img/pdf.png" alt=""></a>';
 								}
 							echo '</td>';
 
 							echo '<td>'; /// TRIMESTRE 3
-								if($informes['estado_trim3'] == 'ACTIVO' || $informes['estado_trim3'] == 'EN ESPERA' || $informes['estado_trim1'] == 'APROBADO'){
-									echo '<img src="../../img/circulo_verde.jpg"> $'.$informes['cuota_uso_trim3'].' USD';
+							?>
+								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim3".$informes['trim3']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+
+								<div id="<?php echo "trim3".$informes['trim3']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+									<div class="modal-dialog modal-lg" role="document">
+									  <div class="modal-content">
+									    <div class="modal-header">
+									      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									      <h4 class="text-center modal-title" id="myModalLabel">Administración Trimestre 3</h4>
+									    </div>
+									    <div class="modal-body">
+											<div class="row">
+												<div class="col-md-4">
+													<h4 class="text-center alert alert-info" style="padding:5px;">Reporte Trimestral</h4>
+													<form action="" method="POST">
+														<?php 
+														if($informes['estado_trim3'] == 'EN ESPERA'){
+														?>
+															<p>Para poder aprobar el reporte trimestral debe dar clic en el siguiente boton</p>
+															<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="aprobar_reporte" value="SI">Aprobar Reporte</button>
+															<input type="hidden" name="num_trim" value="3">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim3']; ?>">
+															<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+														<?php
+														}else if($informes['estado_trim3'] == 'APROBADO' || $informes['estado_trim3'] == 'FINALIZADO'){
+															echo "El informe trimestral ha sido aprobado";
+														}else{
+															echo "Aun no esta disponible esta sección";
+														}
+														 ?>
+
+													</form>
+													
+												</div>
+												<div class="col-md-4">
+													<h4 class="text-center alert alert-warning" style="padding:5px;">Factura</h4>
+													<?php
+													if($informes['estado_trim3'] == 'APROBADO' || $informes['estado_trim3'] == 'FINALIZADO'){
+														if(isset($informes['estatus_factura_trim3'])){
+														?>
+															<p>Se ha enviado la factura</p>
+															<a class="btn btn-sm btn-success" style="width:100%" href="<?php echo $informes['factura_trim3']; ?>" target="_new">Descargar Factura</a>
+														<?php
+														}else{
+														?>
+															<form action="" method="POST" enctype="multipart/form-data">
+																<div class="form-group">
+																    <label for="exampleInputEmail1">Cargar Factura</label>
+																	<input type="file" class="form-control" id="factura" name="factura_trimestre">
+																</div>
+																<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="enviar_factura" value="1">Enviar Factura</button>
+																<input type="hidden" name="num_trim" value="3">
+																<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim3']; ?>">
+																<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+															</form>
+														<?php
+														}
+													}else{
+													?>
+														Se debe de aprobar primero el reporte trimestral.
+													<?php
+													}
+													 ?>
+
+												</div>
+												<div class="col-md-4">
+													<h4 class="text-center alert alert-info" style="padding:5px;">Acreditar pago</h4>
+													<?php 
+													if(isset($informes['estatus_comprobante_trim3']) && $informes['estatus_comprobante_trim3'] == 'ENVIADO'){
+													?>
+													<form action="" method="POST">
+														<div class="row">
+															<div class="col-xs-6"><button class="btn btn-sm btn-success" style="width:100%" type="submit" name="aprobar_pago" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar pago</button></div>
+															<div class="col-xs-6"><button class="btn btn-sm btn-danger" style="width:100%" type="submit" name="rechazar_pago" value="2"><span class="glyphicon glyphicon-remove" aria-hidden="trie"></span> Rechazar pago</button></div>
+															<input type="hidden" name="num_trimestre" value="3">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim3']; ?>">
+															<input type="hidden" name="aprobar_comprobante" value="1">
+														</div>
+
+													</form>
+													<?php
+													}else if($informes['estatus_comprobante_trim3'] == 'APROBADO'){
+														echo "<p>Se ha aprobado el comprobante de pago</p>";
+														echo "<a href='".$informes['comprobante_pago_trim3']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+													}else{
+														echo "Aun no se ha cargado el comprobante de pago";
+													}
+													 ?>
+												</div>
+											</div>
+									    </div>
+									    <div class="modal-footer">
+									      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+									      <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
+									    </div>
+									  </div>
+									</div>
+								</div>
+
+							<?php	
+								if($informes['estatus_factura_trim3'] == 'ENVIADA' || $informes['estatus_factura_trim3'] == 'PAGADA'){
+									///boton para descargar factura
+									echo "<a href='$informes[factura_trim3]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
+									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
+								}
+								if($informes['estatus_comprobante_trim3'] == 'ENVIADO' || $informes['estatus_comprobante_trim3'] == 'APROBADO' || $informes['estatus_comprobante_trim3'] == 'FINALIZADO'){
+									/// boton para descargar comprobante de pago
+									echo "<a href='$informes[comprobante_pago_trim3]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
+								}
+								if($informes['estado_trim3'] == 'ACTIVO' || $informes['estado_trim3'] == 'EN ESPERA' || $informes['estado_trim3'] == 'APROBADO'){
+									echo '<img src="../../img/circulo_verde.jpg">';
 								}else if($informes['estado_trim3'] == 'FINALIZADO'){
-									echo '<img src="../../img/circulo_rojo.jpg"> $'.$informes['cuota_uso_trim3'].' USD';
+									echo '<img src="../../img/circulo_rojo.jpg">';
+								}
+								
+								echo ' $'.number_format($informes['cuota_uso_trim3'],2).' USD';
+								if($informes['estatus_factura_trim3'] == 'PAGADA'){
+									echo "<span class='disabled btn btn-xs btn-info glyphicon glyphicon-ok' aria-hidden='true'></span>";
+								}
+								if(isset($informes['reporte_trim3'])){
+									echo '<a href="'.$informes['reporte_trim3'].'" target="_new"><img height="25px;" src="../../img/pdf.png" alt=""></a>';
 								}
 							echo '</td>';
 
 							echo '<td>';  /// TRIMESTRE 4
-								if($informes['estado_trim4'] == 'ACTIVO' || $informes['estado_trim4'] == 'EN ESPERA' || $informes['estado_trim1'] == 'APROBADO'){
-									echo '<img src="../../img/circulo_verde.jpg"> $'.$informes['cuota_uso_trim4'].' USD';
+							?>
+								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim4".$informes['trim4']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+
+								<div id="<?php echo "trim4".$informes['trim4']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+									<div class="modal-dialog modal-lg" role="document">
+									  <div class="modal-content">
+									    <div class="modal-header">
+									      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									      <h4 class="text-center modal-title" id="myModalLabel">Administración Trimestre 4</h4>
+									    </div>
+									    <div class="modal-body">
+											<div class="row">
+												<div class="col-md-4">
+													<h4 class="text-center alert alert-info" style="padding:5px;">Reporte Trimestral</h4>
+													<form action="" method="POST">
+														<?php 
+														if($informes['estado_trim4'] == 'EN ESPERA'){
+														?>
+															<p>Para poder aprobar el reporte trimestral debe dar clic en el siguiente boton</p>
+															<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="aprobar_reporte" value="SI">Aprobar Reporte</button>
+															<input type="hidden" name="num_trim" value="4">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim4']; ?>">
+															<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+														<?php
+														}else if($informes['estado_trim4'] == 'APROBADO' || $informes['estado_trim4'] == 'FINALIZADO'){
+															echo "El informe trimestral ha sido aprobado";
+														}else{
+															echo "Aun no esta disponible esta sección";
+														}
+														 ?>
+
+													</form>
+													
+												</div>
+												<div class="col-md-4">
+													<h4 class="text-center alert alert-warning" style="padding:5px;">Factura</h4>
+													<?php
+													if($informes['estado_trim4'] == 'APROBADO' || $informes['estado_trim4'] == 'FINALIZADO'){
+														if(isset($informes['estatus_factura_trim4'])){
+														?>
+															<p>Se ha enviado la factura</p>
+															<a class="btn btn-sm btn-success" style="width:100%" href="<?php echo $informes['factura_trim4']; ?>" target="_new">Descargar Factura</a>
+														<?php
+														}else{
+														?>
+															<form action="" method="POST" enctype="multipart/form-data">
+																<div class="form-group">
+																    <label for="exampleInputEmail1">Cargar Factura</label>
+																	<input type="file" class="form-control" id="factura" name="factura_trimestre">
+																</div>
+																<button type="submit" class="btn btn-sm btn-success" style="width:100%" name="enviar_factura" value="1">Enviar Factura</button>
+																<input type="hidden" name="num_trim" value="4">
+																<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim4']; ?>">
+																<input type="hidden" name="idinforme_general" value="<?php echo $informes['idinforme_general']; ?>">
+															</form>
+														<?php
+														}
+													}else{
+													?>
+														Se debe de aprobar primero el reporte trimestral.
+													<?php
+													}
+													 ?>
+
+												</div>
+												<div class="col-md-4">
+													<h4 class="text-center alert alert-info" style="padding:5px;">Acreditar pago</h4>
+													<?php 
+													if(isset($informes['estatus_comprobante_trim4']) && $informes['estatus_comprobante_trim4'] == 'ENVIADO'){
+													?>
+													<form action="" method="POST">
+														<div class="row">
+															<div class="col-xs-6"><button class="btn btn-sm btn-success" style="width:100%" type="submit" name="aprobar_pago" value="1"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Aprobar pago</button></div>
+															<div class="col-xs-6"><button class="btn btn-sm btn-danger" style="width:100%" type="submit" name="rechazar_pago" value="2"><span class="glyphicon glyphicon-remove" aria-hidden="trie"></span> Rechazar pago</button></div>
+															<input type="hidden" name="num_trimestre" value="4">
+															<input type="hidden" name="idtrimestre" value="<?php echo $informes['trim4']; ?>">
+															<input type="hidden" name="aprobar_comprobante" value="1">
+														</div>
+
+													</form>
+													<?php
+													}else if($informes['estatus_comprobante_trim4'] == 'APROBADO'){
+														echo "<p>Se ha aprobado el comprobante de pago</p>";
+														echo "<a href='".$informes['comprobante_pago_trim4']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+													}else{
+														echo "Aun no se ha cargado el comprobante de pago";
+													}
+													 ?>
+												</div>
+											</div>
+									    </div>
+									    <div class="modal-footer">
+									      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+									      <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
+									    </div>
+									  </div>
+									</div>
+								</div>
+
+							<?php	
+								if($informes['estatus_factura_trim4'] == 'ENVIADA' || $informes['estatus_factura_trim4'] == 'PAGADA'){
+									///boton para descargar factura
+									echo "<a href='$informes[factura_trim4]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
+									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
+								}
+								if($informes['estatus_comprobante_trim4'] == 'ENVIADO' || $informes['estatus_comprobante_trim4'] == 'APROBADO' || $informes['estatus_comprobante_trim4'] == 'FINALIZADO'){
+									/// boton para descargar comprobante de pago
+									echo "<a href='$informes[comprobante_pago_trim4]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
+								}
+								if($informes['estado_trim4'] == 'ACTIVO' || $informes['estado_trim4'] == 'EN ESPERA' || $informes['estado_trim4'] == 'APROBADO'){
+									echo '<img src="../../img/circulo_verde.jpg">';
 								}else if($informes['estado_trim4'] == 'FINALIZADO'){
-									echo '<img src="../../img/circulo_rojo.jpg"> $'.$informes['cuota_uso_trim4'].' USD';
+									echo '<img src="../../img/circulo_rojo.jpg">';
+								}
+								
+								echo ' $'.number_format($informes['cuota_uso_trim4'],2).' USD';
+								if($informes['estatus_factura_trim4'] == 'PAGADA'){
+									echo "<span class='disabled btn btn-xs btn-info glyphicon glyphicon-ok' aria-hidden='true'></span>";
+								}
+								if(isset($informes['reporte_trim4'])){
+									echo '<a href="'.$informes['reporte_trim1'].'" target="_new"><img height="25px;" src="../../img/pdf.png" alt=""></a>';
 								}
 							echo '</td>';
 
-							echo '<td><a href="?REPORTES&informe_compras&detalle_total='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-search"></span> '.$informes['total_cuota_uso'].' USD</a></td>';
+							echo '<td><a href="?REPORTES&informe_compras&detalle_total='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-search"></span> '.number_format($informes['total_cuota_uso'],2).' USD</a></td>';
 						echo '</tr>';
 					}
 					echo '<tr>';
 						echo '<td colspan="3" style="text-align:right"><b>Suma total</b></td>';
-						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim1.'</td>';
-						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim2.'</td>';
-						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim3.'</td>';
-						echo '<td style="color:#e74c3c;">'.$cuota_uso_trim4.'</td>';
-						echo '<td style="color:#e74c3c;">'.$total_final.' USD</td>';
+						echo '<td style="color:#e74c3c;">'.number_format($cuota_uso_trim1,2).'</td>';
+						echo '<td style="color:#e74c3c;">'.number_format($cuota_uso_trim2,2).'</td>';
+						echo '<td style="color:#e74c3c;">'.number_format($cuota_uso_trim3,2).'</td>';
+						echo '<td style="color:#e74c3c;">'.number_format($cuota_uso_trim4,2).'</td>';
+						echo '<td style="color:#e74c3c;">'.number_format($total_final,2).' USD</td>';
 					echo '</tr>';
 					//echo '<tr><td colspan="9"><b>Suma total: <span style="color:#e74c3c">'.$total.'</span> USD</b></td></tr>';
 				}

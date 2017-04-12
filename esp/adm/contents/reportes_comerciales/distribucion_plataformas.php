@@ -53,11 +53,12 @@ $configuracion = mysql_fetch_assoc($row_configuracion);
 $row_anio = mysql_query("SELECT FROM_UNIXTIME(ano,'%Y') AS 'anio' FROM informe_general GROUP BY FROM_UNIXTIME(ano,'%Y')", $dspp) or die(mysql_error());
 ?>
 <hr style="margin-bottom:0;">
-<div class="col-md-12">
-	<a href="?REPORTES&distribucion_p=compras" class="btn btn-sm <?php if($_GET['distribucion_p'] == 'compras'){echo 'btn-primary'; }else{echo 'btn-default';} ?>">Compras</a>
-	<a href="?REPORTES&distribucion_p=producto" class="btn btn-sm <?php if($_GET['distribucion_p'] == 'producto'){echo 'btn-primary'; }else{echo 'btn-default';} ?>">Producto Terminado</a>	
+<div class="row">
+	<div class="col-md-12">
+		<a href="?REPORTES&distribucion_p=compras" class="btn btn-sm <?php if($_GET['distribucion_p'] == 'compras'){echo 'btn-primary'; }else{echo 'btn-default';} ?>">Compras</a>
+		<a href="?REPORTES&distribucion_p=producto" class="btn btn-sm <?php if($_GET['distribucion_p'] == 'producto'){echo 'btn-primary'; }else{echo 'btn-default';} ?>">Producto Terminado</a>	
+	</div>	
 </div>
-
 
 <?php 
 if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
@@ -163,7 +164,7 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 							</tbody>
 						</table>						
 					</div>
-					<div class="col-md-4" id="chart_div" style="margin-top:-2em;">
+					<div class="col-md-4" id="<?php echo 'chart_div'.$i; ?>" style="margin-top:-2em;">
 						<?php 
 						$anio = date('Y',time());
 						$id = 'TE'.$i.'-'.$anio;
@@ -205,7 +206,7 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 							'width':400,
 							'height':300};
 
-							var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+							var chart = new google.visualization.PieChart(document.getElementById('<?php echo "chart_div".$i; ?>'));
 							chart.draw(data, opciones);
 							}
 						</script>
@@ -234,6 +235,7 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 	$plataformas_spp = array();
 	$total_informes = mysql_num_rows($row_informes);
 	$row_plataformas = mysql_query("SELECT * FROM plataformas_spp", $dspp) or die(mysql_error());
+
 	while($array_plataformas = mysql_fetch_assoc($row_plataformas)){
 		$plataformas_spp[] = $array_plataformas['pais'];
 	}
@@ -381,8 +383,10 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 					</table>
 				</div>
 				<!---- INICIA ESTADISTICA PAISES DE LOS COMPRADORES ---->
-				<div class="col-md-4" id="div_grafica" style="margin-top:-2em;">
+				<div class="col-md-4" id="<?php echo 'div_grafica'.$i; ?>" style="margin-top:-2em;">
+
 					<?php 
+					echo 'EL NUMERO ES: '.$i;
 					$anio = date('Y',time());
 					$id = 'T'.$i.'-'.$anio;
 					$row_total_trim_productos = mysql_query("SELECT pais, SUM(valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$id%' GROUP BY pais", $dspp) or die(mysql_error());
@@ -423,7 +427,7 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 						'width':400,
 						'height':300};
 
-						var chart = new google.visualization.PieChart(document.getElementById('div_grafica'));
+						var chart = new google.visualization.PieChart(document.getElementById('<?php echo "div_grafica".$i; ?>'));
 						chart.draw(data, opciones);
 						}
 					</script>

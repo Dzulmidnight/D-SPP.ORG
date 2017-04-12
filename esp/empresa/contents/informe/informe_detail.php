@@ -141,9 +141,9 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			}
 			echo "<tr>
 				<td colspan='20' class='text-right warning'><h5>PRIMER TRIMESTRE</h5></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_contrato)."</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_contrato,2)."</td>
 				<td class='warning'></td>
-				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim1)."</td>
+				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim1,2)."</td>
 			</tr>";
 
 

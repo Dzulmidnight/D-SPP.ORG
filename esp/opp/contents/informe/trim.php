@@ -72,10 +72,10 @@ if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'SI'){
 if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	$idtrimestre = $_POST['idtrim'];
 
-	$row_valor_total_contrato = mysql_query("SELECT ROUND(SUM(valor_total_contrato), 2) AS 'total_contrato' FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+	$row_valor_total_contrato = mysql_query("SELECT SUM(valor_total_contrato) AS 'total_contrato' FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 	$valor_total_contrato = mysql_fetch_assoc($row_valor_total_contrato);
 
-	$row_total_a_pagar = mysql_query("SELECT ROUND(SUM(total_a_pagar), 2) AS 'total_a_pagar' FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+	$row_total_a_pagar = mysql_query("SELECT ROUND(SUM(total_a_pagar),2) AS 'total_a_pagar' FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 	$total_a_pagar = mysql_fetch_assoc($row_total_a_pagar);
 
 
@@ -110,7 +110,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 
 	$updateSQL = sprintf("UPDATE $txt_numero_trim SET $txt_valor_contrato = %s, $txt_cuota_uso = %s, $txt_estado_trim = %s, $txt_reporte_trim = %s WHERE $txt_idtrim = %s",
 		GetSQLValueString($valor_total_contrato['total_contrato'], "text"),
-		GetSQLValueString($total_a_pagar['total_a_pagar'], "text"),
+		GetSQLValueString($total_a_pagar['total_a_pagar'], "double"),
 		GetSQLValueString($estatus_trim, "text"),
 		GetSQLValueString($reporte, "text"),
 		GetSQLValueString($_POST['idtrim'], "text"));
@@ -186,7 +186,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
               '.$idtrimestre.'
             </td>
             <td style="background-color:#e74c3c;color:#ecf0f1">
-              '.number_format($total['total_cuota_uso'],2).' USD
+              '.number_format($total_a_pagar['total_a_pagar'],2).' USD
             </td>
           </tr>
 
@@ -279,7 +279,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    <td>'.$formato_ventas['primer_intermediario'].'</td>
 				    <td>'.$formato_ventas['segundo_intermediario'].'</td>
 				    <td>'.$formato_ventas['clave_contrato'].'</td>
-				    <td>'.date('d/m(Y', $formato_ventas['fecha_contrato']).'</td>
+				    <td>'.date('d/m/Y', $formato_ventas['fecha_contrato']).'</td>
 				    <td>'.$formato_ventas['producto_general'].'</td>
 				    <td>'.$formato_ventas['producto_especifico'].'</td>
 				    <td>'.$formato_ventas['producto_terminado'].'</td>
@@ -372,7 +372,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
-				        La OPP <span style="color:red">'.$opp['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestran una tabla con el resumen de las operaciones.
+				        La OPP <span style="color:red">'.$opp['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestra una tabla con el resumen de las operaciones.
 				      </td>
 				    </tr>
 				    <tr>
@@ -595,7 +595,7 @@ if(isset($_GET['trim'])){
 						<th colspan="4">
 							<?php echo "<h4>".$opp['abreviacion']."</h4>"; ?>
 						</th>
-						<th colspan="4" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
+						<th colspan="5" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
 							<?php 
 							if(isset($pregunta)){
 								echo $pregunta;
@@ -608,6 +608,7 @@ if(isset($_GET['trim'])){
 							$txt_factura = 'factura_trim'.$_GET['trim'];
 							$txt_estatus_comprobante = 'estatus_comprobante_trim'.$_GET['trim'];
 							$txt_comprobante = 'comprobante_pago_trim'.$_GET['trim'];
+							$txt_reporte_trim = 'reporte_trim'.$_GET['trim'];
 							$row_trim = mysql_query("SELECT * FROM $txt_trim WHERE $txt_id = '$trim[$idtrim]'", $dspp) or die(mysql_error());
 							$trim = mysql_fetch_assoc($row_trim); 
 							if($trim[$txt_estatus_factura] == 'ENVIADA'){
@@ -617,6 +618,8 @@ if(isset($_GET['trim'])){
 								echo "</div>";
 							}else if($trim[$txt_estado_trim] == 'EN ESPERA'){
 								echo "<p style='color:red;font-size:12px;'>El Informe trimestral está en proceso de revisión</p>";
+							}else if($trim[$txt_estado_trim] == 'FINALIZADO'){
+								echo "<p style='color:red;font-size:12px;'>Ha concluido el Informe Trimestral</p>";
 							}
 							//echo 'asfasfds'.$trim[$txt_estatus_factura];
 							 ?>
@@ -640,6 +643,9 @@ if(isset($_GET['trim'])){
 									</form>
 								<?php
 								}
+							}else if($trim[$txt_estado_trim] == 'FINALIZADO'){
+								echo "<a href='".$trim[$txt_factura]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga Factura</a>";
+								echo "<a href='".$trim[$txt_reporte_trim]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga Reporte Trimestral</a>";
 							}
 							 ?>
 						</th>

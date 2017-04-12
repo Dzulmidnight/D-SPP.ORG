@@ -280,7 +280,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    <td>'.$formato_compras['primer_intermediario'].'</td>
 				    <td>'.$formato_compras['segundo_intermediario'].'</td>
 				    <td>'.$formato_compras['clave_contrato'].'</td>
-				    <td>'.date('d/m(Y', $formato_compras['fecha_contrato']).'</td>
+				    <td>'.date('d/m/Y', $formato_compras['fecha_contrato']).'</td>
 				    <td>'.$formato_compras['producto_general'].'</td>
 				    <td>'.$formato_compras['producto_especifico'].'</td>
 				    <td>'.$formato_compras['producto_terminado'].'</td>
@@ -373,7 +373,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
-				        La empresa <span style="color:red">'.$empresa['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestran una tabla con el resumen de las operaciones.
+				        La empresa <span style="color:red">'.$empresa['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestra una tabla con el resumen de las operaciones.
 				      </td>
 				    </tr>
 				    <tr>
@@ -611,6 +611,7 @@ if(isset($_GET['trim'])){
 							$txt_factura = 'factura_trim'.$_GET['trim'];
 							$txt_estatus_comprobante = 'estatus_comprobante_trim'.$_GET['trim'];
 							$txt_comprobante = 'comprobante_pago_trim'.$_GET['trim'];
+							$txt_reporte_trim = 'reporte_trim'.$_GET['trim'];
 							$row_trim = mysql_query("SELECT * FROM $txt_trim WHERE $txt_id = '$trim[$idtrim]'", $dspp) or die(mysql_error());
 							$trim = mysql_fetch_assoc($row_trim); 
 							if($trim[$txt_estatus_factura] == 'ENVIADA'){
@@ -620,6 +621,8 @@ if(isset($_GET['trim'])){
 								echo "</div>";
 							}else if($trim[$txt_estado_trim] == 'EN ESPERA'){
 								echo "<p style='color:red;font-size:12px;'>El Informe trimestral está en proceso de revisión</p>";
+							}else if($trim[$txt_estado_trim] == 'FINALIZADO'){
+								echo "<p style='color:red;font-size:12px;'>Ha concluido el Informe Trimestral</p>";
 							}
 							//echo 'asfasfds'.$trim[$txt_estatus_factura];
 							 ?>
@@ -643,6 +646,9 @@ if(isset($_GET['trim'])){
 									</form>
 								<?php
 								}
+							}else if($trim[$txt_estado_trim] == 'FINALIZADO'){
+								echo "<a href='".$trim[$txt_factura]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga Factura</a>";
+								echo "<a href='".$trim[$txt_reporte_trim]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga Reporte Trimestral</a>";
 							}
 							 ?>
 						</th>
@@ -700,15 +706,15 @@ if(isset($_GET['trim'])){
 							<td><?php echo $formato['producto_terminado']; ?></td>
 							<td><?php echo $formato['se_exporta']; ?></td>
 							<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
-							<td><?php echo number_format($formato['cantidad_total_factura']); ?></td>
+							<td><?php echo number_format($formato['cantidad_total_factura'],2); ?></td>
 							<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
 							<td><?php echo $formato['reconocimiento_organico']; ?></td>
 							<td><?php echo $formato['incentivo_spp']; ?></td>
 							<td><?php echo $formato['otros_premios']; ?></td>
 							<td><?php echo $formato['precio_total_unitario']; ?></td>
-							<td><?php echo number_format($formato['valor_total_contrato']).' USD'; ?></td>
+							<td><?php echo number_format($formato['valor_total_contrato'],2).' USD'; ?></td>
 							<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
-							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar']).' USD'; ?></td>
+							<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar'],2).' USD'; ?></td>
 						</tr>
 					<?php
 					$suma_cuota_uso = $formato['total_a_pagar'] + $suma_cuota_uso;
@@ -718,9 +724,9 @@ if(isset($_GET['trim'])){
 						
 						echo "<tr class='info'>
 							<td colspan='20'></td>
-							<td class='text-right'><b style='color:red'>".number_format($suma_valor_contrato)." USD</b></td>
+							<td class='text-right'><b style='color:red'>".number_format($suma_valor_contrato,2)." USD</b></td>
 							<td></td>
-							<td class='text-right'><b style='color:red'>".number_format($suma_cuota_uso)." USD</b></td>
+							<td class='text-right'><b style='color:red'>".number_format($suma_cuota_uso,2)." USD</b></td>
 						</tr>";
 						//EL TOTAL A PAGAR AL FINALIZAR EL TRIMESTRE
 						echo "<input type='hidden' name='suma_cuota_uso' value='$suma_cuota_uso'>";
