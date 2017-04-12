@@ -150,8 +150,6 @@ $informe_general = mysql_fetch_assoc($row_informe);
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim1,2)."</td>
 			</tr>";
 
-
-
 		}
 		if(isset($informe_general['trim2'])){
 			$row_registro = mysql_query("SELECT formato_ventas.* FROM formato_ventas WHERE formato_ventas.idtrim = '$informe_general[trim2]'", $dspp) or die(mysql_error());

@@ -65,10 +65,10 @@ echo "<h4>Number of current reports: $numero_informes</h4>";
 		<tr>
 			<th>Id general report</th>
 			<th>Year general report</th>
-			<th>Trimester 1</th>
-			<th>Trimester 2</th>
-			<th>Trimester 3</th>
-			<th>Trimester 4</th>
+			<th>Quarter 1</th>
+			<th>Quarter 2</th>
+			<th>Quarter 3</th>
+			<th>Quarter 4</th>
 			<th>Total</th>
 			<th>Status</th>
 		</tr>
