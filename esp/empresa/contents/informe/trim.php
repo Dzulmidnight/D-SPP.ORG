@@ -45,6 +45,8 @@ if (!function_exists("GetSQLValueString")) {
 	  return $theValue;
 	}
 }
+/// PORCENTAJE ACORDE AL AÑO
+$porcetaje_cuota = $configuracion['cuota_compradores'];
 if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'SI'){
 	$txt_num_trim = 'trim'.$_GET['trim'];
 	$txt_idtrim = 'idtrim'.$_GET['trim'];
@@ -134,7 +136,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 
 /********  SE ENVIA CORREO SOBRE REPORTE TRIMESTRAL  ************/
 
-	$porcetaje_cuota = $configuracion['cuota_compradores'];
+	//$porcetaje_cuota = $configuracion['cuota_compradores'];
 	//$tipo_empresa = $tipo_empresa;
 
 	$txt_cuota = 'cuota_uso_trim'.$_GET['trim'];
@@ -270,6 +272,11 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 			$row_formato_compras = mysql_query("SELECT * FROM formato_compras WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 			$num_contratos = mysql_num_rows($row_formato_compras);
 			while($formato_compras = mysql_fetch_assoc($row_formato_compras)){
+				if(isset($formato_compras['fecha_contrato'])){
+					$fecha_contrato = date('d/m/Y', $formato_compras['fecha_contrato']);
+				}else{
+					$fecha_contrato = '';
+				}
 			  $html .= '
 				<tr>
 				    <td>'.$contador.'</td>
@@ -280,7 +287,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    <td>'.$formato_compras['primer_intermediario'].'</td>
 				    <td>'.$formato_compras['segundo_intermediario'].'</td>
 				    <td>'.$formato_compras['clave_contrato'].'</td>
-				    <td>'.date('d/m/Y', $formato_compras['fecha_contrato']).'</td>
+				    <td>'.$fecha_contrato.'</td>
 				    <td>'.$formato_compras['producto_general'].'</td>
 				    <td>'.$formato_compras['producto_especifico'].'</td>
 				    <td>'.$formato_compras['producto_terminado'].'</td>
@@ -373,7 +380,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
-				        La empresa <span style="color:red">'.$empresa['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestra una tabla con el resumen de las operaciones.
+				        La Empresa <span style="color:red">'.$empresa['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestra una tabla con el resumen de las operaciones.
 				      </td>
 				    </tr>
 				    <tr>
@@ -403,12 +410,26 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				        </table>
 				      </td>
 				    </tr>
-				    <tr>
+				    <!--12_04_2017<tr>
 				      <td style="padding-top:10px;" colspan="2">
 				        Se adjunta el PDF con los registro correspondientes al trimestre finalizado. Por favor verificar la información, en caso de que la información sea correcta, dar clic en el siguiente enlace para poder autorizar el informe trimestral.
 				        <a href="http://localhost/D-SPP.ORG_2/procesar/verificacion.php?num='.$_GET['trim'].'&trim='.$idtrimestre.'&informe='.$informe_general['idinforme_general'].'" style="color:#e74c3c"><b>Clic para Autorizar informe trimestral</b></a>
 				      </td>
+				    </tr>-->
+				    <tr>
+				      <td style="padding-top:10px;" colspan="2">
+				        Se adjunta el PDF con los registro correspondientes al trimestre finalizado. Por favor verificar la información, en caso de que la información sea correcta realizar los siguientes pasos para poder "APROBAR" el reporte:
+				        <ol>
+				        	<li>Debe de ingresar en su cuenta como Administrador dentro del sistema D-SPP</li>
+				        	<li>Seleccionar la opción "Reportes Comerciales"</li>
+				        	<li>Dar clic en la pestaña "Ingreso Cuota de Uso"</li>
+				        	<li>Seleccionar la pestaña "Empresas"</li>
+				        	<li>Localizar la Empresa y el trimestre correspondiente y dar clic en el boton "+"(más)</li>
+				        </ol>
+				        
+				      </td>
 				    </tr>
+
 				</tbody>
 			</table>
 
@@ -417,8 +438,8 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	';
 	///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
 
-	$mail->AddAddress('soporteinforganic@gmail.com');
-
+		$mail->AddAddress('cert@spp.coop');
+	//$mail->AddAddress($correo_adm);
 
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
@@ -437,12 +458,27 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 //// INICIA ENVIO COMPROBANTE DE PAGO
 if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 	$fecha = time();
-	$trim = 'trim'.$_POST['num_trimestre'];
+	$idempresa = $_POST['idempresa'];
+
+	$num_trimestre = $_POST['num_trimestre'];
+
 	$txt_idtrim = 'idtrim'.$_POST['num_trimestre'];
+	$trim = 'trim'.$_POST['num_trimestre'];
+	//$txt_idtrim = 'idtrim'.$_POST['num_trimestre'];
 	$idtrimestre = $_POST['idtrimestre'];
 	$comprobante_pago = $_POST['comprobante_pago'];
 	$estatus_comprobante = 'ENVIADO';
 	$num_trimestre = $_POST['num_trimestre'];
+	$txt_valor_contrato = 'valor_contrato_trim'.$_POST['num_trimestre'];
+	$txt_cuota_uso = 'cuota_uso_trim'.$_POST['num_trimestre'];
+	$txt_reporte = 'reporte_trim'.$_POST['num_trimestre'];
+
+	$row_empresa = mysql_query("SELECT spp, abreviacion FROM empresa WHERE idempresa = $idempresa", $dspp) or die(mysql_error());
+	$empresa = mysql_fetch_assoc($row_empresa);
+
+	$row_trim = mysql_query("SELECT $txt_valor_contrato, $txt_cuota_uso, $txt_reporte FROM $trim WHERE $txt_idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+	$detalle_trim = mysql_fetch_assoc($row_trim);
+
 
 	///cargamos y guardamos el comprobante de pago
 	$rutaArchivo = "../../archivos/admArchivos/facturas/comprobante_pago/";
@@ -479,11 +515,33 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
-				        Se ha cargado el comprobante de pago del trimestre
+				        La Empresa '.$empresa['abreviacion'].' ha cargado el comprobante de pago del Trimestre '.$_POST['num_trimestre'].'.
 				      </td>
 				    </tr>
 
-
+				    <tr>
+				      <td colspan="2">
+				        <table style="border: 1px solid #ddd;border-collapse: collapse;font-size:12px;">
+				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
+				            <td colspan="7" style="text-align:center">Resumen de operaciones</td>
+				          </tr>
+				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Empresa</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Informe</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Valor total de los contratos</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Cuota de uso aplicada acorde al año en curso</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Total cuota de uso</td>
+				          </tr>
+				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$empresa['abreviacion'].'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($detalle_trim[$txt_valor_contrato],2).'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$porcetaje_cuota.'%</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($detalle_trim[$txt_cuota_uso],2).'</td>
+				          </tr>
+				        </table>
+				      </td>
+				    </tr>
 				</tbody>
 			</table>
 
@@ -492,8 +550,10 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 	';
 	///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
 
-	$mail->AddAddress('soporteinforganic@gmail.com');
-
+	$mail->AddBCC('soporteinforganic@gmail.com');
+		$mail->AddAddress('adm@spp.coop');
+		$mail->AddAddress('cert@spp.coop');
+	$mail->AddAttachment($detalle_trim[$txt_reporte]);
 	$mail->AddAttachment($archivo_comprobante);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
@@ -640,8 +700,9 @@ if(isset($_GET['trim'])){
 									<form action="" method="POST" enctype="multipart/form-data">
 										<p style="font-size:12px;">Dar clic en el siguiente botón para poder cargar el comprobante de pago correspondiente al Informe Trimestral.</p>
 										<input type="file" class="form-control" name="comprobante_pago">
-										<input type="text" name="num_trimestre" value="<?php echo $_GET['trim']; ?>">
-										<input type="text" name="idtrimestre" value="<?php echo $trim[$txt_id]; ?>">
+										<input type="hidden" name="num_trimestre" value="<?php echo $_GET['trim']; ?>">
+										<input type="hidden" name="idtrimestre" value="<?php echo $trim[$txt_id]; ?>">
+										<input type="hidden" name="idempresa" value="<?php echo $trim['idempresa']; ?>">
 										<button class="btn btn-warning" type="submit" name="enviar_comprobante" value="1">Enviar Comprobante</button>								
 									</form>
 								<?php

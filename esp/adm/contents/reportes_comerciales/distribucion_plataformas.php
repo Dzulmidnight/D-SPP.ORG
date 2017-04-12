@@ -386,7 +386,7 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 				<div class="col-md-4" id="<?php echo 'div_grafica'.$i; ?>" style="margin-top:-2em;">
 
 					<?php 
-					echo 'EL NUMERO ES: '.$i;
+
 					$anio = date('Y',time());
 					$id = 'T'.$i.'-'.$anio;
 					$row_total_trim_productos = mysql_query("SELECT pais, SUM(valor_total_contrato) AS 'total_contrato' FROM formato_compras WHERE idtrim LIKE '%$id%' GROUP BY pais", $dspp) or die(mysql_error());

@@ -59,7 +59,7 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 	   // $nombre_archivo = 'reporte.pdf';
 
 	/********/
-		$asunto = 'D-SPP - Factura Informe Trimestral Compras';
+		$asunto = 'D-SPP - Generar Factura Informe Trimestral Compras';
 		$mensaje_correo = '
 			<html>
 			<head>
@@ -67,7 +67,7 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 			</head>
 			<body>
 			
-				<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+				<!--12_04_2017 <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
 				<tbody>
 				    <tr>
 				      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
@@ -101,7 +101,7 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$formatos['abreviacion'].'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">COMPRADOR FINAL</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$num_contratos.'</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$formatos['num_contratos'].'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($formatos['total_contrato'],2).'</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$porcetaje_cuota.'%</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($formatos['total_cuota'],2).'</td>
@@ -110,14 +110,73 @@ if(isset($_POST['aprobar_reporte']) && $_POST['aprobar_reporte'] == 'SI'){
 				      </td>
 				    </tr>
 				</tbody>
+				</table> 12_04_2017-->
+
+				<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+					<tbody>
+					    <tr>
+					      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+					      <th scope="col" align="left" width="280">Detalle Reporte Trimestral de Compras SPP</th>
+					    </tr>
+					    <tr>
+					      <td style="padding-top:10px;">           
+					        La Empresa <span style="color:red">'.$formatos['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$num_trim.'</span>, a continuación se muestra una tabla con el resumen de las operaciones.
+					        <hr>
+					        <p style="color:#2c3e50;font-weight:bold">El Área de Certificación y Calidad SPP ha autorizado el siguiente Informe Trimestral de Compras, por favor proceda a generar la factura correspondiente.</p>
+					        <!--11_04_2017 <p style="color:#2c3e50;font-weight:bold">Una vez creada la factura dar clic en el siguiente enlace para poder adjuntarla. <a href="http://localhost/D-SPP.ORG_2/procesar/facturacion.php?num='.$num_trim.'&trim='.$idtrimestre.'" style="color:red">Clic para poder adjuntar factura</a></p>-->
+					      </td>
+
+					    </tr>
+					    <tr>
+					      <td colspan="2">
+					        <table style="border: 1px solid #ddd;border-collapse: collapse;font-size:12px;">
+					          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
+					            <td colspan="7" style="text-align:center">Resumen de operaciones</td>
+					          </tr>
+					          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Empresa</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Tipo de Empresa</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Informe</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Num. de Contratos</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Valor total de los contratos</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Cuota de uso aplicada acorde al año en curso</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Total cuota de uso</td>
+					          </tr>
+					          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$formatos['abreviacion'].'</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">COMPRADOR FINAL</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$idtrimestre.'</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$formatos['num_contratos'].'</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($formatos['total_contrato'],2).'</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.$porcetaje_cuota.'%</td>
+					            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">'.number_format($formatos['total_cuota'],2).'</td>
+					          </tr>
+					        </table>
+					      </td>
+					    </tr>
+					    <tr>
+					    	<td colspan="2">
+						        Se adjunta el PDF con los registro correspondientes al trimestre finalizado. Para poder cargar la factura correspondiente al trimestre, debe de realizar los siguientes pasos:
+						        <ol>
+						        	<li>Debe de ingresar en su cuenta como Administrador dentro del sistema D-SPP</li>
+						        	<li>Seleccionar la opción "Reportes Comerciales"</li>
+						        	<li>Dar clic en la pestaña "Ingreso Cuota de Uso"</li>
+						        	<li>Seleccionar la pestaña "Empresas"</li>
+						        	<li>Localizar la Organización y el trimestre correspondiente y dar clic en el boton "+"(más)</li>
+						        </ol>
+					    	</td>
+					    </tr>
+					</tbody>
 				</table>
+
 
 			</body>
 			</html>
 		';
 		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
 
-		$mail->AddAddress('yasser.midnight@gmail.com');
+		$mail->AddAddress('adm@spp.coop');
+		$mail->AddBCC('cert@spp.coop');
 
 	    $mail->AddAttachment($trim[$txt_reporte_trim]);
 	    //$mail->Username = "soporte@d-spp.org";
@@ -165,7 +224,7 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 
 	$row_trim = mysql_query("SELECT * FROM $txt_trim WHERE $txt_idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 
-	$row_formatos = mysql_query("SELECT empresa.spp, empresa.abreviacion, empresa.pais, COUNT(idformato_compras) AS 'num_contratos', ROUND(SUM(valor_total_contrato),2) AS 'total_contrato', ROUND(SUM(total_a_pagar),2) AS 'total_cuota' FROM formato_compras INNER JOIN empresa ON formato_compras.idempresa = empresa.idempresa WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
+	$row_formatos = mysql_query("SELECT empresa.spp, empresa.abreviacion, empresa.password, empresa.pais, COUNT(idformato_compras) AS 'num_contratos', ROUND(SUM(valor_total_contrato),2) AS 'total_contrato', ROUND(SUM(total_a_pagar),2) AS 'total_cuota' FROM formato_compras INNER JOIN empresa ON formato_compras.idempresa = empresa.idempresa WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 	$formatos = mysql_fetch_assoc($row_formatos);
 	$valor_total_contratos = $formatos['total_contrato'];
 	$valor_cuota_de_uso = $formatos['total_cuota'];
@@ -228,21 +287,16 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
-				        <p style="color:#2c3e50;font-weight:bold">El Área de Adminsitración de SPP Global ha cargado la factura correspondiente al Informe Trimestral de Compras, por favor proceda a realizar el pago correspondiente por la cantidad de: <span style="color:red">'.number_format($valor_cuota_de_uso,2).' USD</span></small>).</p>
-				    <p>
-				      Se anexan los siguiente documentos:
-				      <ol>
-				        <li>Factura</li>
-				        <li>Reglamento de Costos</li>
-				        <li>Datos bancarios</li>
-				      </ol>
-				    </p>
-				        <p style="color:#2c3e50;font-weight:bold">Una vez realizado el pago por favor proceda a realizar las siguientes acciones</p>
-				         <ol>
-				           <li>Ingresar en su cuenta de Empresa dentro del sistema D-SPP.</li>
-				           <li></li>
-				           <li></li>
-				         </ol>
+				        <p style="color:#2c3e50;font-weight:bold">El Área de Adminsitración de SPP Global ha cargado la factura correspondiente al Informe Trimestral de Compras, por favor proceda a realizar el pago correspondiente por la cantidad de: <span style="color:red">'.number_format($valor_cuota_de_uso,2).' USD</span>.</p>
+					    <p>
+					      Se anexan los siguiente documentos:
+					      <ol>
+					        <li>Factura</li>
+					        <li>Reglamento de Costos</li>
+					        <li>Datos bancarios</li>
+					      </ol>
+					    </p>
+
 				      </td>
 
 				    </tr>
@@ -273,6 +327,19 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 				        </table>
 				      </td>
 				    </tr>
+				    <tr>
+				    	<td colspan="2">
+							<p style="color:#2c3e50;font-weight:bold">Una vez realizado el pago por el monto correspondiente, por favor proceda a cargar el comprobante de pago realizando los siguientes pasos:</p>
+							<ol>
+								<li>Ingresar en su cuenta de Empresa dentro del sistema <a href="http://d-spp.org/">D-SPP</a> con su Usuario(#SPP): <span style="color:red">'.$formatos['spp'].'</span> y Contraseña: <span style="color:red">'.$formatos['password'].'</span>.</li>
+								<li>Dentro de su cuenta debe seleccionar la opción "Informe Trimestral"</li>
+								<li>Seleccionar la pestaña "Informe General de Compras"</li>
+								<li>Seleccionar Trimestre '.$_POST['num_trim'].'</li>
+								<li>Dentro del encabezado de la tabla podra encontrar la opción para poder enviar el comprobante de pago.</li>
+							</ol>
+				    	</td>
+				    </tr>
+
 				</tbody>
 			</table>
 
@@ -286,9 +353,9 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 		$mail->AddAttachment($trim[$txt_reporte_trim]);
 		$mail->AddAttachment($archivo_factura);
 		$mail->AddAttachment($documentacion['archivo']);
-		$mail->AddAddress('yasser.midnight@gmail.com');
+		$mail->AddAddress('soporteinforganic@gmail.com');
 
-
+		$mail->AddBCC("cert@spp.coop");
 	    //$mail->Username = "soporte@d-spp.org";
 	    //$mail->Password = "/aung5l6tZ";
 	    $mail->Subject = utf8_decode($asunto);
@@ -330,7 +397,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
 
 	/// se envia mensaje a la empresa
 	/********/
-		$asunto = 'D-SPP - Pago Informe Trimestral Compras';
+		$asunto = 'D-SPP - Pago Acreditado - Informe Trimestral Compras';
 		$mensaje_correo = '
 			<html>
 			<head>
@@ -342,7 +409,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
 				<tbody>
 				    <tr>
 				      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-				      <th scope="col" align="left" width="280">Factura - Reporte Trimestral de Compras SPP</th>
+				      <th scope="col" align="left" width="280">Pago Acreditado - Reporte Trimestral de Compras SPP</th>
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
@@ -356,7 +423,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
 			</html>
 		';
 
-		$mail->AddAddress('yasser.midnight@gmail.com');
+		$mail->AddAddress('soporteinforganic@gmail.com');
 	    //$mail->Username = "soporte@d-spp.org";
 	    //$mail->Password = "/aung5l6tZ";
 	    $mail->Subject = utf8_decode($asunto);
@@ -377,7 +444,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
 //// TERMINA APROBAR O DENEGAR COMPROBANTE PAGO
 
 
-$row_informes = mysql_query("SELECT informe_general.*, trim1.*, trim2.*, trim3.*, trim4.*, empresa.abreviacion FROM informe_general INNER JOIN empresa ON informe_general.idempresa = empresa.idempresa LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
+$row_informes = mysql_query("SELECT informe_general.*, trim1.*, trim2.*, trim3.*, trim4.*, empresa.idempresa, empresa.abreviacion FROM informe_general INNER JOIN empresa ON informe_general.idempresa = empresa.idempresa LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
 $total_informes = mysql_num_rows($row_informes);
 //$plataformas_spp = array('Ecuador', 'Perú', 'Colombia', 'Guatemala');
 
@@ -962,7 +1029,7 @@ function redondear_dos_decimal($valor) {
 
 
 
-							echo '<td><a href="?REPORTES&informe_compras&detalle_total='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-search"></span> '.number_format($informes['total_cuota_uso'],2).' USD</a></td>';
+							echo '<td><a href="?REPORTES&informe_compras&detalle_total='.$informes['idinforme_general'].'"><span class="glyphicon glyphicon-search"></span> '.number_format($total_final,2).' USD</a></td>';
 						echo '</tr>';
 					}
 					echo '<tr>';

@@ -502,10 +502,11 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 							<select name="spp" id="spp" onChange="buscar();" required>
 								<option>Listado de Organizaciones</option>
 								<?php 
-								$row_opp = mysql_query("SELECT spp, abreviacion FROM opp", $dspp) or die(mysql_error());
-
+								$row_opp = mysql_query("SELECT spp, abreviacion FROM opp ORDER BY spp", $dspp) or die(mysql_error());
+								$contador = 1;
 								while($opp = mysql_fetch_assoc($row_opp)){
-									echo "<option value='".$opp['spp']."'>".$opp['spp']." | ".$opp['abreviacion']."</option>";
+									echo "<option value='".$opp['spp']."'>".$opp['spp']." | ".mayus($opp['abreviacion'])."</option>";
+									$contador++;
 								}
 								 ?>
 							</select>

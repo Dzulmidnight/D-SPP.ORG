@@ -40,6 +40,11 @@ $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
+//// CORREOS GENERALES
+//$correo_cert = 'cert@spp.coop';
+//$correo_adm = 'adm@spp.coop';
+$correo_cert = 'yasser.midnight@gmail.com';
+$correo_adm = 'yasser.midnight@gmail.com';
 ?>
 <hr style="margin-bottom:0px;">
 <div class="btn-group" role="group" aria-label="...">

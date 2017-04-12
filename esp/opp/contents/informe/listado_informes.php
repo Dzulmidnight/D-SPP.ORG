@@ -63,6 +63,7 @@ echo "<h4>Numero de informes actuales: $numero_informes</h4>";
 <table class="table table-bordered" style="font-size:12px;">
 	<thead>
 		<tr>
+			<th>Estatus</th>
 			<th>Id informe general</th>
 			<th>Año informe general</th>
 			<th>Trimestre 1</th>
@@ -70,7 +71,7 @@ echo "<h4>Numero de informes actuales: $numero_informes</h4>";
 			<th>Trimestre 3</th>
 			<th>Trimestre 4</th>
 			<th>Total</th>
-			<th>Estatus</th>
+			
 		</tr>
 	</thead>
 	<tbody>
@@ -80,6 +81,7 @@ echo "<h4>Numero de informes actuales: $numero_informes</h4>";
 				$balance_final = $listado['cuota_uso_trim1'] + $listado['cuota_uso_trim2'] + $listado['cuota_uso_trim3'] + $listado['cuota_uso_trim4'];
 			?>
 			<tr>
+				<td><?php echo $listado['estado_informe']; ?></td>
 				<td><?php echo $listado['idinforme_general']; ?></td>
 				<td><?php echo date('Y',$listado['ano']); ?></td>
 				<td><?php echo number_format($listado['cuota_uso_trim1'],2); ?></td>
@@ -87,7 +89,7 @@ echo "<h4>Numero de informes actuales: $numero_informes</h4>";
 				<td><?php echo number_format($listado['cuota_uso_trim3'],2); ?></td>
 				<td><?php echo number_format($listado['cuota_uso_trim4'],2); ?></td>
 				<td><?php echo number_format(round($balance_final,2),2); ?></td>
-				<td><?php echo $listado['estado_informe']; ?></td>
+				
 			</tr>
 			<?php
 			}

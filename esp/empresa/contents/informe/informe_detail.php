@@ -308,10 +308,10 @@ $informe_general = mysql_fetch_assoc($row_informe);
 		}
 		//$balance_final = $total_trim1 + $total_trim2 + $total_trim3 + $total_trim4;
 		?>
-		<tr>
+		<!--<tr>
 			<td class="text-right" colspan="27">
 				<h5>Total actual: <span style="color:#c0392b"><?php echo number_format($informe_general['total_cuota_uso'],2); ?> USD</span></h5>
 			</td>
-		</tr>
+		</tr>-->
 	</tbody>
 </table>
