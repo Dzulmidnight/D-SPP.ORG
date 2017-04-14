@@ -80,15 +80,15 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			<th class="text-center">Producto Especifico</th>
 			<th class="text-center">Specific Product</th>
 			<th class="text-center">Is it exported?</th>
-			<th colspan="2" class="text-center">Total Amount Due Invoice</th>
+			<th colspan="2" class="text-center">Total Amount in line with Contract</th>
 			<th class="text-center">Minimum Sustainable Price</th>
 			<th class="text-center">Organic Recognition</th>
 			<th class="text-center">SPP incentive</th>
 			<th class="text-center">Other prizes</th>
-			<th class="text-center">Total Unit Price Paid</th>
+			<th class="text-center">Total Unit Price</th>
 			<th class="text-center">Total Contract Value</th>
-			<th class="text-center">Usage Fee Regulation</th>
-			<th class="text-center">Total to pay</th>
+			<th class="text-center">User's Fee, in line with Regulations </th>
+			<th class="text-center">Total due</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -140,7 +140,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim1 = $total_trim1 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='20' class='text-right warning'><h5>FIRST TRIMESTER</h5></td>
+				<td colspan='20' class='text-right warning'><h5>FIRST QUARTER</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim1</td>
@@ -195,7 +195,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			}
 
 			echo "<tr>
-				<td colspan='20' class='text-right warning'><h5>SECOND TRIMESTER</h5></td>
+				<td colspan='20' class='text-right warning'><h5>SECOND QUARTER</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim2</td>
@@ -248,7 +248,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			}
 
 			echo "<tr>
-				<td colspan='20' class='text-right warning'><h5>THIRD TRIMESTER</h5></td>
+				<td colspan='20' class='text-right warning'><h5>THIRD QUARTER</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim3</td>
@@ -300,7 +300,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim4 = $total_trim4 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='20' class='text-right warning'><h5>FOURTH TRIMESTER</h5></td>
+				<td colspan='20' class='text-right warning'><h5>FOURTH QUARTER</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_contrato</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>$total_trim4</td>
@@ -308,10 +308,10 @@ $informe_general = mysql_fetch_assoc($row_informe);
 		}
 		//$balance_final = $total_trim1 + $total_trim2 + $total_trim3 + $total_trim4;
 		?>
-		<tr>
+		<!--<tr>
 			<td class="text-right" colspan="27">
-				<h5>Current total: <span style="color:#c0392b"><?php echo $informe_general['total_cuota_uso']; ?> USD</span></h5>
+				<h5>Total actual: <span style="color:#c0392b"><?php echo number_format($informe_general['total_cuota_uso'],2); ?> USD</span></h5>
 			</td>
-		</tr>
+		</tr>-->
 	</tbody>
 </table>

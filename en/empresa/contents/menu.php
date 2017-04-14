@@ -44,16 +44,16 @@ if (!function_exists("GetSQLValueString")) {
   if($tipo_empresa == 'COMPRADOR FINAL'){
   ?>
     <li <? if(isset($_GET['INFORME'])){?> class="active" <? }?>>
-      <a href="?INFORME&select">Quarterly report</a>
+      <a href="?INFORME&select">Quarterly Report</a>
     </li>
   <?php
   }
    ?>
   <li <? if(isset($_GET['EMPRESA'])){?> class="active" <?}?>>
-    <a href="?EMPRESA&detail">My Account</a>
+    <a href="?EMPRESA&detail">Company Information</a>
   </li>
   <li <? if(isset($_GET['.'])){?> class="active" <? }?>>
     <a href="#">---</a>
   </li>
-  <li><a href="<?php echo $logoutAction ?>">Logout</a></li>
+  <li><a href="<?php echo $logoutAction ?>">Log out</a></li>
 </ul>

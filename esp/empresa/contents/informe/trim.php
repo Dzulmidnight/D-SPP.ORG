@@ -694,7 +694,7 @@ if(isset($_GET['trim'])){
 									echo "<span style='color:red'>SE HA ENVIADO EL COMPROBANTE DE PAGO</span>";
 								}else if($trim[$txt_estatus_comprobante] == 'APROBADO'){
 									echo "<p>Se ha APROBADO el comprobante de pago</p>";
-									echo "<a href='".$trim[$txt_comprobante]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga comproban de pago</a>";
+									echo "<a href='".$trim[$txt_comprobante]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga comprobante de pago</a>";
 								}else{
 								?>
 									<form action="" method="POST" enctype="multipart/form-data">
@@ -708,7 +708,7 @@ if(isset($_GET['trim'])){
 								<?php
 								}
 							}else if($trim[$txt_estado_trim] == 'FINALIZADO'){
-								echo "<a href='".$trim[$txt_factura]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga Factura</a>";
+								echo "<a href='".$trim[$txt_factura]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descargar Factura</a>";
 								echo "<a href='".$trim[$txt_reporte_trim]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga Reporte Trimestral</a>";
 							}
 							 ?>

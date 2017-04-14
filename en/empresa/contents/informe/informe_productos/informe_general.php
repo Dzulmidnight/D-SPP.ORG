@@ -116,7 +116,7 @@ if(isset($_POST['informe_trimestral'])){
 				<div class="col-md-12">
 					<div class="btn-group" role="group" aria-label="...">
 						<div class="btn-group">
-						  <a type="button" <?php if(isset($_GET['trim1_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=1" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimester 1</a>
+						  <a type="button" <?php if(isset($_GET['trim1_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=1" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Quarter 1</a>
 						  
 						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim1_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
@@ -129,7 +129,7 @@ if(isset($_POST['informe_trimestral'])){
 						</div>
 
 						<div class="btn-group">
-						  <a type="button" <?php if(isset($_GET['trim2_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=2" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimester 2</a>
+						  <a type="button" <?php if(isset($_GET['trim2_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=2" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Quarter 2</a>
 						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim2_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
@@ -148,7 +148,7 @@ if(isset($_POST['informe_trimestral'])){
 						</div>
 
 						<div class="btn-group">
-						  <a type="button" <?php if(isset($_GET['trim3_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=3" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimester 3</a>
+						  <a type="button" <?php if(isset($_GET['trim3_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=3" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Quarter 3</a>
 						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim3_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
@@ -167,7 +167,7 @@ if(isset($_POST['informe_trimestral'])){
 						</div>
 
 						<div class="btn-group">
-						  <a type="button" <?php if(isset($_GET['trim4_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=4" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Trimester 4</a>
+						  <a type="button" <?php if(isset($_GET['trim4_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> href="?INFORME&producto&trim=4" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Quarter 4</a>
 						  <!--15_03_2017<button type="button" <?php if(isset($_GET['trim4_producto'])){ echo "class='btn btn-sm btn-success'"; }else{ echo "class='btn btn-sm btn-default'"; } ?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>

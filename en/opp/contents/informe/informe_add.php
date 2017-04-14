@@ -409,19 +409,19 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 
 		 				<!-- INICIA VALOR TOTAL CONTRATO -->
 		 				<td>
-		 					Total contract value (in accordance with the SPP Sustainable Price List)
+		 					Total contract value (in foreign currency, according to SPS List of Sustainable Prices)
 		 				</td>
 						<!-- TERMINA VALOR TOTAL CONTRATO -->
 
 		 				<!-- INICIA CUOTA DE USO REGLAMENTO -->
 		 				<td>
-		 					Current quota established according to SPP Cost Regulation
+		 					Unit of measurement in line with Regulations on Costs
 		 				</td>
 						<!-- TERMINA CUOTA DE USO REGLAMENTO -->
 
 		 				<!-- INICIA TOTAL A PAGAR -->
 		 				<td>
-		 					Total to be paid to SPP Global according to usage quota and lot volume
+		 					Total to be paid to SPP GLOBAL in line with user's fee and batch volume
 		 				</td>
 						<!-- TERMINA TOTAL A PAGAR -->
 		 			</tr>

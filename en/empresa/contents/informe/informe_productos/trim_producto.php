@@ -144,19 +144,19 @@ if(isset($_GET['trim'])){
 
 	switch ($_GET['trim']) {
 		case '1':
-			$titulo_trim = "<h4>FIRST TRIMESTER | <small>Estatus:  $estatus</small></h4>";
+			$titulo_trim = "<h4>FIRST QUARTER | <small>Estatus:  $estatus</small></h4>";
 			break;
 		case '2':
-			$titulo_trim = "<h4>SECOND TRIMESTER | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>SECOND QUARTER | <small>Estatus: $estatus</small></h4>";
 			break;
 		case '3':
-			$titulo_trim = "<h4>THIRD TRIMESTER | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>THIRD QUARTER | <small>Estatus: $estatus</small></h4>";
 			break;
 		case '4':
-			$titulo_trim = "<h4>FOURTH TRIMESTER | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>FOURTH QUARTER | <small>Estatus: $estatus</small></h4>";
 			break;		
 		default:
-			$titulo_trim = "<h4>TRIMESTER NOT AVAILABLE</small></h4>";
+			$titulo_trim = "<h4>QUARTER NOT AVAILABLE</small></h4>";
 			break;
 	}
 

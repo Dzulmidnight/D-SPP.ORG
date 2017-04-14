@@ -56,6 +56,15 @@ $anio_actual = date('Y',time());
 $row_configuracion = mysql_query("SELECT * FROM porcentaje_ajuste WHERE anio = $anio_actual", $dspp) or die(mysql_error());
 $configuracion = mysql_fetch_assoc($row_configuracion);
 
+
+if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
+	$idregistro = $_POST['eliminar_registro'];
+
+	$deleteSQL = sprintf("DELETE FROM formato_compras WHERE idformato_compras = $idregistro",
+		GetSQLValueString($idregistro, "int"));
+	$eliminar = mysql_query($deleteSQL, $dspp) or die(mysql_error());
+}
+
 if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	
 	$fecha_registro = time();
@@ -230,20 +239,24 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	$row_trim = mysql_query("SELECT * FROM $txt_trim WHERE $txt_idtrim = '$idtrim'", $dspp) or die(mysql_error());
 	$trim = mysql_fetch_assoc($row_trim);
 	?>
+
 	<div class="col-md-12">
 	<?php
 	if($trim[$txt_estatus] == 'FINALIZADO'){
-		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> You can no longer add more records to the Quarterly Format, since the quarter has ended.</p>";
+		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> No more records can be added to the <b>quarterly format</b> since it was completed.</p>";
+	}else if($trim[$txt_estatus] == 'EN ESPERA'){
+		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> No more records can be added to the <b>quarterly format</b>, as it is being reviewed.</p>";
+	}else if($trim[$txt_estatus] == 'APROBADO'){
+		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> No more records can be added to the <b>quarterly format</b>, since it is under review.</p>";
 	}else{
 	?>
-
 
 		<!--<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>-->
 		<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Fields marked in blue are optional, this information will be useful for the evaluation of certification.</p>
 		<p class="alert alert-success" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> The fields marked in green are mandatory.</p>
 		<p class="alert alert-warning" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> The fields marked in yellow are completed automatically.</p>
 	
-		<form class="form-horizontal" method="POST">
+
 		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
 		 		<thead>
 		 			<tr class="success">
@@ -269,15 +282,15 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<?php
 						}
 						 ?>
-						<th colspan="2" class="text-center">Invoice total amount</th>
+						<th colspan="2" class="text-center">Total Amount in line with Contract</th>
 						<th class="text-center">Minimum Sustainable Price</th>
 						<th class="text-center">Organic Recognition</th>
 						<th class="text-center">SPP incentive</th>
 						<th class="text-center">Other prizes</th>
-						<th class="text-center">Total Unit Price Paid</th>
+						<th class="text-center">Total Unit Price</th>
 						<th class="text-center">Total Contract Value</th>
-						<th class="text-center">Usage Fee Regulation</th>
-						<th class="text-center">Total to pay</th>
+						<th class="text-center">User's Fee, in line with Regulations </th>
+						<th class="text-center">Total due</th>
 		 			</tr>
 		 		</thead>
 		 		<tbody>
@@ -392,19 +405,19 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 		 				<!-- INICIA VALOR TOTAL CONTRATO -->
 		 				<td>
-		 					Total contract value (in accordance with the SPP Sustainable Price List)
+		 					Total contract value (in foreign currency, according to SPS List of Sustainable Prices)
 		 				</td>
 						<!-- TERMINA VALOR TOTAL CONTRATO -->
 
 		 				<!-- INICIA CUOTA DE USO REGLAMENTO -->
 		 				<td>
-		 					Current quota established according to SPP Cost Regulation
+		 					Unit of measurement in line with Regulations on Costs
 		 				</td>
 						<!-- TERMINA CUOTA DE USO REGLAMENTO -->
 
 		 				<!-- INICIA TOTAL A PAGAR -->
 		 				<td>
-		 					Total to be paid to SPP Global according to usage quota and lot volume
+		 					Total to be paid to SPP GLOBAL in line with user's fee and batch volume
 		 				</td>
 						<!-- TERMINA TOTAL A PAGAR -->
 		 			</tr>
@@ -434,54 +447,70 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 							while($formato = mysql_fetch_assoc($row_registro)){
 							?>
-								<tr class="active">
-									<td><?php echo $contador; ?></td>
-									<td><?php echo $formato['spp']; ?></td>
-									<td><?php echo $formato['opp']; ?></td>
-									<td><?php echo $formato['pais']; ?></td>
-									<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
-									<td><?php echo $formato['primer_intermediario']; ?></td>
-									<td><?php echo $formato['segundo_intermediario']; ?></td>
-									<td><?php echo $formato['clave_contrato']; ?></td>
-									<td>
-										<?php
-										if(isset($formato['fecha_contrato'])){
-											echo date('d/m/Y',$formato['fecha_contrato']); 
-										}
+								<form action="" method="POST">
+									<tr class="active">
+										<td>
+											<button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete record" name="eliminar_registro" value="<?php echo $formato['idformato_compras']; ?>" onclick="return confirm('Are you sure to delete the record?');"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+											<?php echo $contador; ?>
+										</td>
+										<td><?php echo $formato['spp']; ?></td>
+										<td><?php echo $formato['opp']; ?></td>
+										<td><?php echo $formato['pais']; ?></td>
+										<td><?php echo date('d/m/Y',$formato['fecha_facturacion']); ?></td>
+										<td><?php echo $formato['primer_intermediario']; ?></td>
+										<td><?php echo $formato['segundo_intermediario']; ?></td>
+										<td><?php echo $formato['clave_contrato']; ?></td>
+										<td>
+											<?php
+											if(isset($formato['fecha_contrato'])){
+												echo date('d/m/Y',$formato['fecha_contrato']); 
+											}
+											?>
+										</td>
+										<td><?php echo $formato['producto_general']; ?></td>
+										<td><?php echo $formato['producto_especifico']; ?></td>
+										<?php 
+										if($tipo_de_empresa){
 										?>
-									</td>
-									<td><?php echo $formato['producto_general']; ?></td>
-									<td><?php echo $formato['producto_especifico']; ?></td>
-									<?php 
-									if($tipo_de_empresa){
-									?>
-										<td><?php echo $formato['producto_terminado']; ?></td>
-										<td><?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
-									<?php
-									}
-									 ?>
-									<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
-									<td><?php echo $formato['cantidad_total_factura']; ?></td>
-									<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
-									<td><?php echo $formato['reconocimiento_organico']; ?></td>
-									<td><?php echo $formato['incentivo_spp']; ?></td>
-									<td><?php echo $formato['otros_premios']; ?></td>
-									<td><?php echo $formato['precio_total_unitario']; ?></td>
-									<td><?php echo $formato['valor_total_contrato']; ?></td>
-									<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
-									<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo $formato['total_a_pagar']; ?></td>
-								</tr>
+											<td><?php echo $formato['producto_terminado']; ?></td>
+											<td><?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
+										<?php
+										}
+										 ?>
+										<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
+										<td><?php echo number_format($formato['cantidad_total_factura'],2); ?></td>
+										<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
+										<td><?php echo $formato['reconocimiento_organico']; ?></td>
+										<td><?php echo $formato['incentivo_spp']; ?></td>
+										<td><?php echo $formato['otros_premios']; ?></td>
+										<td><?php echo $formato['precio_total_unitario']; ?></td>
+										<td><?php echo number_format($formato['valor_total_contrato'],2); ?></td>
+										<td><?php echo $formato['cuota_uso_reglamento']; ?></td>
+										<td style="background-color:#e74c3c;color:#ecf0f1;"><?php echo number_format($formato['total_a_pagar'],2); ?></td>
+									</tr>
+								</form>
 							<?php
 							$contador++;
 							}
 		 				 ?>
+		<form class="form-horizontal" method="POST">
 					<tr class="success">
 						<td class="warning"></td> <!-- # -->
 
 						<td>
-							
+							<select name="spp" id="spp" onChange="buscar();" required>
+								<option>List of organizations</option>
+								<?php 
+								$row_opp = mysql_query("SELECT spp, abreviacion FROM opp ORDER BY spp", $dspp) or die(mysql_error());
+								$contador = 1;
+								while($opp = mysql_fetch_assoc($row_opp)){
+									echo "<option value='".$opp['spp']."'>".$opp['spp']." | ".mayus($opp['abreviacion'])."</option>";
+									$contador++;
+								}
+								 ?>
+							</select>
 							<!--<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" />-->
-								<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur=" ponerMayusculas(this)" required />
+								<!--<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur="ponerMayusculas(this)" required />-->
 													
 						</td>
 
@@ -639,8 +668,16 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
     producto_terminado = document.getElementsByName("producto_terminado");
     // INICIA SELECCION TIPO SOLICITUD
-    var valor_campo = '';
-    var seleccionado = false;
+		var valor_campo = '';
+		var seleccionado = false;
+
+		var precio_total_unitario = document.getElementById('precio_total_unitario').value;
+
+		if(precio_total_unitario <= 0){
+			alert('The total unit price must be greater than 0');
+			return false;
+		}
+
     for(var i=0; i<producto_terminado.length; i++) {    
       if(producto_terminado[i].checked) {
       	valor_campo = producto_terminado[i].value;
@@ -689,14 +726,14 @@ $(document).ready(function() {
 });
 
 function buscar() {
-    var textoBusqueda = $("input#spp").val();
+    var textoBusqueda = $("select#spp").val();
  
      if (textoBusqueda != "") {
         $.post("../../nombre_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_opp) {
             $("#nombre_opp").val(nombre_opp);
          }); 
      } else { 
-        $("#nombre_opp").val('Name of SPO');
+        $("#nombre_opp").val('Name of the SPO');
      };
 
      if (textoBusqueda != "") {
@@ -704,7 +741,7 @@ function buscar() {
             $("#pais").val(nombre_pais);
          }); 
      } else { 
-        $("#pais").val('Country of the SPO');
+        $("#pais").val('SPO Country');
      };
 
 };
