@@ -380,14 +380,14 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
-				        La OPP <span style="color:red">'.$opp['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestra una tabla con el resumen de las operaciones.
+				        La OPP <span style="color:red">'.$opp['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestra una tabla con el resumen de las transacciones realizadas.
 				      </td>
 				    </tr>
 				    <tr>
 				      <td colspan="2">
 				        <table style="border: 1px solid #ddd;border-collapse: collapse;font-size:12px;">
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-				            <td colspan="7" style="text-align:center">Resumen de operaciones</td>
+				            <td colspan="7" style="text-align:center">Resumen de las transacciones</td>
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">OPP</td>
@@ -410,7 +410,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;" colspan="2">
-				        Se adjunta el PDF con los registro correspondientes al trimestre finalizado. Por favor verificar la información, en caso de que la información sea correcta realizar los siguientes pasos para poder "APROBAR" el reporte:
+				        Se adjunta el PDF con las transacciones correspondientes al trimestre finalizado. Por favor verificar la información, en caso de que la información sea correcta realizar los siguientes pasos para poder "APROBAR" el reporte:
 				        <ol>
 				        	<li>Debe de ingresar en su cuenta como Administrador dentro del sistema D-SPP</li>
 				        	<li>Seleccionar la opción "Reportes Comerciales"</li>
@@ -512,7 +512,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 				      <td colspan="2">
 				        <table style="border: 1px solid #ddd;border-collapse: collapse;font-size:12px;">
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-				            <td colspan="7" style="text-align:center">Resumen de operaciones</td>
+				            <td colspan="7" style="text-align:center">Resumen de las transacciones</td>
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">OPP</td>
@@ -582,7 +582,7 @@ if(isset($_GET['trim'])){
 			$pregunta = "
 			<form action='' method='POST'>
 				<p style='font-size:13px;'>
-					<b style='color:red'>¿Desea concluir la captura de registros en el formato de trimestre actual? </b>
+					<b style='color:red'>¿Desea concluir la captura de transacciones en el formato de trimestre actual? </b>
 					<button class='' type='subtmit' value='SI'  name='finalizar_trim' data-toggle='tooltip' data-placement='top' title='Finalizar trimestre actual' onclick='return confirm(\"¿Desea finalizar la captura del trimestre actual?\");' >SI</button>
 					<!--<input class='btn btn-success' type='submit' name='finalizar_trim' value='SI'>-->
 					<input type='hidden' name='idtrim' value='".$trim[$idtrim]."'>
@@ -602,16 +602,16 @@ if(isset($_GET['trim'])){
 
 	switch ($_GET['trim']) {
 		case '1':
-			$titulo_trim = "<h4>PRIMER TRIMESTRE | <small>Estatus:  $estatus</small></h4>";
+			$titulo_trim = "<h4>PRIMER TRIMESTRE <span style='color:red'>$ano_actual</span> | <small>Estatus:  $estatus</small></h4>";
 			break;
 		case '2':
-			$titulo_trim = "<h4>SEGUNDO TRIMESTRE | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>SEGUNDO TRIMESTRE <span style='color:red'>$ano_actual</span> | <small>Estatus: $estatus</small></h4>";
 			break;
 		case '3':
-			$titulo_trim = "<h4>TERCER TRIMESTRE | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>TERCER TRIMESTRE <span style='color:red'>$ano_actual</span> | <small>Estatus: $estatus</small></h4>";
 			break;
 		case '4':
-			$titulo_trim = "<h4>CUARTO TRIMESTRE | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>CUARTO TRIMESTRE <span style='color:red'>$ano_actual</span> | <small>Estatus: $estatus</small></h4>";
 			break;		
 		default:
 			$titulo_trim = "<h4>TRIMESTRE NO DISPONIBLE</small></h4>";
@@ -633,8 +633,8 @@ if(isset($_GET['trim'])){
 		}else{
 		?>
 		<div style="margin-top:10px;">
-			<a class="btn btn-default" href="?INFORME&general_detail&trim=<?php echo $_GET['trim']; ?>&add&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-plus"></span> Agregar nuevos registros</a>
-			<a class="btn btn-default" href="?INFORME&general_detail&trim=<?php echo $_GET['trim']; ?>&edit&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-pencil"></span> Editar registro actuales</a>
+			<a class="btn btn-default" href="?INFORME&general_detail&trim=<?php echo $_GET['trim']; ?>&add&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-plus"></span> Agregar nueva transacción</a>
+			<a class="btn btn-default" href="?INFORME&general_detail&trim=<?php echo $_GET['trim']; ?>&edit&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-pencil"></span> Editar transacciónes actuales</a>
 		</div>
 
 
@@ -702,8 +702,16 @@ if(isset($_GET['trim'])){
 								<?php
 								}
 							}else if($trim[$txt_estado_trim] == 'FINALIZADO'){
-								echo "<a href='".$trim[$txt_factura]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga Factura</a>";
-								echo "<a href='".$trim[$txt_reporte_trim]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga Reporte Trimestral</a>";
+								if(isset($trim[$txt_factura])){
+									echo "<a href='".$trim[$txt_factura]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descargar Factura</a>";
+								}else{
+									echo "<div class='col-xs-6'><p style='color:red'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Factura no disponible </p></div>";
+								}
+								if(isset($trim[$txt_reporte_trim])){
+									echo "<a href='".$trim[$txt_reporte_trim]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Descarga Reporte Trimestral</a>";
+								}else{
+									echo "<div class='col-xs-6'><p style='color:red'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Reporte trimestral no disponible</p></div>";
+								}
 							}
 							 ?>
 						</th>

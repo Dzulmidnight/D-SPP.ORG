@@ -503,17 +503,46 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
 		$destinatario = $oc['email1'];
 		if(isset($oc['email1'])){
-			$mail->AddAddress($oc['email1']);
+			//$mail->AddAddress($oc['email1']);
+
+			$token = strtok($oc['email1'], "\/\,\;");
+			while ($token !== false)
+			{
+				$mail->AddAddress($token);
+				$token = strtok('\/\,\;');
+			}
+
 		}
 		$destinatario = $oc['email2'];
 		if(isset($oc['email2'])){
-			$mail->AddAddress($oc['email2']);
+			//$mail->AddAddress($oc['email2']);
+			$token = strtok($oc['email2'], "\/\,\;");
+			while ($token !== false)
+			{
+				$mail->AddAddress($token);
+				$token = strtok('\/\,\;');
+			}
+
 		}
 		if(isset($_POST['email'])){
-			$mail->AddCC($_POST['email']);
+			//$mail->AddCC($_POST['email']);
+			$token = strtok($_POST['email1'], "\/\,\;");
+			while ($token !== false)
+			{
+				$mail->AddCC($token);
+				$token = strtok('\/\,\;');
+			}
+
 		}
 		if(isset($_POST['contacto1_email'])){
-			$mail->AddCC($_POST['contacto1_email']);
+			//$mail->AddCC($_POST['contacto1_email']);
+			$token = strtok($_POST['contacto1_email'], "\/\,\;");
+			while ($token !== false)
+			{
+				$mail->AddCC($token);
+				$token = strtok('\/\,\;');
+			}
+
 		}
 
 	    $mail->AddCC($administrador);

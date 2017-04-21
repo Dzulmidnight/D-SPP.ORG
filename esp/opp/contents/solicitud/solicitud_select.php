@@ -150,10 +150,20 @@ if(isset($_POST['cotizacion']) ){
           </html>
         ';
       if(isset($detalle_opp['email_oc'])){
-        $mail->AddAddress($detalle_opp['email_oc']);
+        $token = strtok($detalle_opp['email_oc'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($detalle_opp['email_oc2'])){
-        $mail->AddAddress($detalle_opp['email_oc2']);
+        $token = strtok($detalle_opp['email_oc2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       $mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
@@ -276,10 +286,21 @@ if(isset($_POST['cotizacion']) ){
         </html>
       ';
       if(isset($detalle_opp['email_oc'])){
-        $mail->AddAddress($detalle_opp['email_oc']);
+        $token = strtok($detalle_opp['email_oc'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
       }
       if(isset($detalle_opp['email_oc2'])){
-        $mail->AddAddress($detalle_opp['email_oc2']);
+        $token = strtok($detalle_opp['email_oc2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       $mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";

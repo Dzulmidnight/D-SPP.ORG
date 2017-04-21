@@ -516,10 +516,12 @@ function redondear_dos_decimal($valor) {
 													<?php
 													if($informes['estado_trim1'] == 'APROBADO' || $informes['estado_trim1'] == 'FINALIZADO'){
 														if(isset($informes['estatus_factura_trim1'])){
-														?>
-															<p>Se ha enviado la factura</p>
-															<a class="btn btn-sm btn-success" style="width:100%" href="<?php echo $informes['factura_trim1']; ?>" target="_new">Descargar Factura</a>
-														<?php
+															if(isset($informes['factura_trim1'])){
+																echo '<p>Se ha enviado la factura</p>';
+																echo '<a class="btn btn-sm btn-success" style="width:100%" href="'.$informes['factura_trim1'].'" target="_new">Descargar Factura</a>';
+															}else{
+																echo '<p style="color:red"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Factura no disponible</p>';
+															}
 														}else{
 														?>
 															<form action="" method="POST" enctype="multipart/form-data">
@@ -559,8 +561,12 @@ function redondear_dos_decimal($valor) {
 													</form>
 													<?php
 													}else if($informes['estatus_comprobante_trim1'] == 'APROBADO'){
-														echo "<p>Se ha aprobado el comprobante de pago</p>";
-														echo "<a href='".$informes['comprobante_pago_trim1']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+														if(isset($informes['comprobante_pago_trim1'])){
+															echo "<p>Se ha aprobado el comprobante de pago</p>";
+															echo "<a href='".$informes['comprobante_pago_trim1']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+														}else{
+															echo '<p style="color:red"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Comprobante de pago no disponible</p>';
+														}
 													}else{
 														echo "Aun no se ha cargado el comprobante de pago";
 													}
@@ -576,20 +582,21 @@ function redondear_dos_decimal($valor) {
 									</div>
 								</div>
 
-							<?php	
-								if($informes['estatus_factura_trim1'] == 'ENVIADA' || $informes['estatus_factura_trim1'] == 'PAGADA'){
-									///boton para descargar factura
-									echo "<a href='$informes[factura_trim1]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
-									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
-								}
-								if($informes['estatus_comprobante_trim1'] == 'ENVIADO' || $informes['estatus_comprobante_trim1'] == 'APROBADO' || $informes['estatus_comprobante_trim1'] == 'FINALIZADO'){
-									/// boton para descargar comprobante de pago
-									echo "<a href='$informes[comprobante_pago_trim1]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
-								}
+							<?php
 								if($informes['estado_trim1'] == 'ACTIVO' || $informes['estado_trim1'] == 'EN ESPERA' || $informes['estado_trim1'] == 'APROBADO'){
 									echo '<img src="../../img/circulo_verde.jpg">';
 								}else if($informes['estado_trim1'] == 'FINALIZADO'){
 									echo '<img src="../../img/circulo_rojo.jpg">';
+								}
+
+								if(($informes['estatus_factura_trim1'] == 'ENVIADA' || $informes['estatus_factura_trim1'] == 'PAGADA') && isset($informes['factura_trim1'])){
+									///boton para descargar factura
+									echo "<a href='$informes[factura_trim1]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
+									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
+								}
+								if(($informes['estatus_comprobante_trim1'] == 'ENVIADO' || $informes['estatus_comprobante_trim1'] == 'APROBADO' || $informes['estatus_comprobante_trim1'] == 'FINALIZADO') && isset($informes['comprobante_pago_trim1'])){
+									/// boton para descargar comprobante de pago
+									echo "<a href='$informes[comprobante_pago_trim1]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
 								}
 								
 								echo ' $'.number_format($informes['cuota_uso_trim1'],2).' USD';
@@ -641,10 +648,12 @@ function redondear_dos_decimal($valor) {
 													<?php
 													if($informes['estado_trim2'] == 'APROBADO' || $informes['estado_trim2'] == 'FINALIZADO'){
 														if(isset($informes['estatus_factura_trim2'])){
-														?>
-															<p>Se ha enviado la factura</p>
-															<a class="btn btn-sm btn-success" style="width:100%" href="<?php echo $informes['factura_trim2']; ?>" target="_new">Descargar Factura</a>
-														<?php
+															if(isset($informes['factura_trim2'])){
+																echo '<p>Se ha enviado la factura</p>';
+																echo '<a class="btn btn-sm btn-success" style="width:100%" href="'.$informes['factura_trim2'].'" target="_new">Descargar Factura</a>';
+															}else{
+																echo '<p style="color:red"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Factura no disponible</p>';
+															}
 														}else{
 														?>
 															<form action="" method="POST" enctype="multipart/form-data">
@@ -684,8 +693,12 @@ function redondear_dos_decimal($valor) {
 													</form>
 													<?php
 													}else if($informes['estatus_comprobante_trim2'] == 'APROBADO'){
-														echo "<p>Se ha aprobado el comprobante de pago</p>";
-														echo "<a href='".$informes['comprobante_pago_trim2']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+														if(isset($informes['comprobante_pago_trim2'])){
+															echo "<p>Se ha aprobado el comprobante de pago</p>";
+															echo "<a href='".$informes['comprobante_pago_trim2']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+														}else{
+															echo '<p style="color:red"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Comprobante de pago no disponible</p>';
+														}
 													}else{
 														echo "Aun no se ha cargado el comprobante de pago";
 													}
@@ -701,22 +714,23 @@ function redondear_dos_decimal($valor) {
 									</div>
 								</div>
 
-							<?php	
-								if($informes['estatus_factura_trim2'] == 'ENVIADA' || $informes['estatus_factura_trim2'] == 'PAGADA'){
-									///boton para descargar factura
-									echo "<a href='$informes[factura_trim2]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
-									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
-								}
-								if($informes['estatus_comprobante_trim2'] == 'ENVIADO' || $informes['estatus_comprobante_trim2'] == 'APROBADO' || $informes['estatus_comprobante_trim2'] == 'FINALIZADO'){
-									/// boton para descargar comprobante de pago
-									echo "<a href='$informes[comprobante_pago_trim2]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
-								}
+							<?php
 								if($informes['estado_trim2'] == 'ACTIVO' || $informes['estado_trim2'] == 'EN ESPERA' || $informes['estado_trim2'] == 'APROBADO'){
 									echo '<img src="../../img/circulo_verde.jpg">';
 								}else if($informes['estado_trim2'] == 'FINALIZADO'){
 									echo '<img src="../../img/circulo_rojo.jpg">';
 								}
-								
+
+								if(($informes['estatus_factura_trim2'] == 'ENVIADA' || $informes['estatus_factura_trim2'] == 'PAGADA') && isset($informes['factura_trim2'])){
+									///boton para descargar factura
+									echo "<a href='$informes[factura_trim2]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
+									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
+								}
+								if(($informes['estatus_comprobante_trim2'] == 'ENVIADO' || $informes['estatus_comprobante_trim2'] == 'APROBADO' || $informes['estatus_comprobante_trim2'] == 'FINALIZADO') && isset($informes['comprobante_pago_trim2'])){
+									/// boton para descargar comprobante de pago
+									echo "<a href='$informes[comprobante_pago_trim2]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
+								}
+							
 								echo ' $'.number_format($informes['cuota_uso_trim2'],2).' USD';
 								if($informes['estatus_factura_trim2'] == 'PAGADA'){
 									echo "<span class='disabled btn btn-xs btn-info glyphicon glyphicon-ok' aria-hidden='true'></span>";
@@ -766,10 +780,12 @@ function redondear_dos_decimal($valor) {
 													<?php
 													if($informes['estado_trim3'] == 'APROBADO' || $informes['estado_trim3'] == 'FINALIZADO'){
 														if(isset($informes['estatus_factura_trim3'])){
-														?>
-															<p>Se ha enviado la factura</p>
-															<a class="btn btn-sm btn-success" style="width:100%" href="<?php echo $informes['factura_trim3']; ?>" target="_new">Descargar Factura</a>
-														<?php
+															if(isset($informes['factura_trim3'])){
+																echo '<p>Se ha enviado la factura</p>';
+																echo '<a class="btn btn-sm btn-success" style="width:100%" href="'.$informes['factura_trim3'].'" target="_new">Descargar Factura</a>';
+															}else{
+																echo '<p style="color:red"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Factura no disponible</p>';
+															}
 														}else{
 														?>
 															<form action="" method="POST" enctype="multipart/form-data">
@@ -809,8 +825,12 @@ function redondear_dos_decimal($valor) {
 													</form>
 													<?php
 													}else if($informes['estatus_comprobante_trim3'] == 'APROBADO'){
-														echo "<p>Se ha aprobado el comprobante de pago</p>";
-														echo "<a href='".$informes['comprobante_pago_trim3']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+														if(isset($informes['comprobante_pago_trim3'])){
+															echo "<p>Se ha aprobado el comprobante de pago</p>";
+															echo "<a href='".$informes['comprobante_pago_trim3']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+														}else{
+															echo '<p style="color:red"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Comprobante de pago no disponible</p>';
+														}
 													}else{
 														echo "Aun no se ha cargado el comprobante de pago";
 													}
@@ -826,20 +846,20 @@ function redondear_dos_decimal($valor) {
 									</div>
 								</div>
 
-							<?php	
-								if($informes['estatus_factura_trim3'] == 'ENVIADA' || $informes['estatus_factura_trim3'] == 'PAGADA'){
-									///boton para descargar factura
-									echo "<a href='$informes[factura_trim3]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
-									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
-								}
-								if($informes['estatus_comprobante_trim3'] == 'ENVIADO' || $informes['estatus_comprobante_trim3'] == 'APROBADO' || $informes['estatus_comprobante_trim3'] == 'FINALIZADO'){
-									/// boton para descargar comprobante de pago
-									echo "<a href='$informes[comprobante_pago_trim3]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
-								}
+							<?php
 								if($informes['estado_trim3'] == 'ACTIVO' || $informes['estado_trim3'] == 'EN ESPERA' || $informes['estado_trim3'] == 'APROBADO'){
 									echo '<img src="../../img/circulo_verde.jpg">';
 								}else if($informes['estado_trim3'] == 'FINALIZADO'){
 									echo '<img src="../../img/circulo_rojo.jpg">';
+								}	
+								if(($informes['estatus_factura_trim3'] == 'ENVIADA' || $informes['estatus_factura_trim3'] == 'PAGADA') && isset($informes['factura_trim3'])){
+									///boton para descargar factura
+									echo "<a href='$informes[factura_trim3]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
+									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
+								}
+								if(($informes['estatus_comprobante_trim3'] == 'ENVIADO' || $informes['estatus_comprobante_trim3'] == 'APROBADO' || $informes['estatus_comprobante_trim3'] == 'FINALIZADO') && isset($informes['comprobante_pago_trim3'])){
+									/// boton para descargar comprobante de pago
+									echo "<a href='$informes[comprobante_pago_trim3]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
 								}
 								
 								echo ' $'.number_format($informes['cuota_uso_trim3'],2).' USD';
@@ -891,10 +911,12 @@ function redondear_dos_decimal($valor) {
 													<?php
 													if($informes['estado_trim4'] == 'APROBADO' || $informes['estado_trim4'] == 'FINALIZADO'){
 														if(isset($informes['estatus_factura_trim4'])){
-														?>
-															<p>Se ha enviado la factura</p>
-															<a class="btn btn-sm btn-success" style="width:100%" href="<?php echo $informes['factura_trim4']; ?>" target="_new">Descargar Factura</a>
-														<?php
+															if(isset($informes['factura_trim4'])){
+																echo '<p>Se ha enviado la factura</p>';
+																echo '<a class="btn btn-sm btn-success" style="width:100%" href="'.$informes['factura_trim4'].'" target="_new">Descargar Factura</a>';
+															}else{
+																echo '<p style="color:red"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Factura no disponible</p>';
+															}
 														}else{
 														?>
 															<form action="" method="POST" enctype="multipart/form-data">
@@ -934,8 +956,12 @@ function redondear_dos_decimal($valor) {
 													</form>
 													<?php
 													}else if($informes['estatus_comprobante_trim4'] == 'APROBADO'){
-														echo "<p>Se ha aprobado el comprobante de pago</p>";
-														echo "<a href='".$informes['comprobante_pago_trim4']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+														if(isset($informes['comprobante_pago_trim4'])){
+															echo "<p>Se ha aprobado el comprobante de pago</p>";
+															echo "<a href='".$informes['comprobante_pago_trim4']."' class='btn btn-sm btn-info' style='width:100%' target='_new'>Descargar Comprobante de Pago</a>";
+														}else{
+															echo '<p style="color:red"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Comprobante de pago no disponible</p>';
+														}
 													}else{
 														echo "Aun no se ha cargado el comprobante de pago";
 													}
@@ -952,21 +978,22 @@ function redondear_dos_decimal($valor) {
 								</div>
 
 							<?php	
-								if($informes['estatus_factura_trim4'] == 'ENVIADA' || $informes['estatus_factura_trim4'] == 'PAGADA'){
-									///boton para descargar factura
-									echo "<a href='$informes[factura_trim4]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
-									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
-								}
-								if($informes['estatus_comprobante_trim4'] == 'ENVIADO' || $informes['estatus_comprobante_trim4'] == 'APROBADO' || $informes['estatus_comprobante_trim4'] == 'FINALIZADO'){
-									/// boton para descargar comprobante de pago
-									echo "<a href='$informes[comprobante_pago_trim4]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
-								}
 								if($informes['estado_trim4'] == 'ACTIVO' || $informes['estado_trim4'] == 'EN ESPERA' || $informes['estado_trim4'] == 'APROBADO'){
 									echo '<img src="../../img/circulo_verde.jpg">';
 								}else if($informes['estado_trim4'] == 'FINALIZADO'){
 									echo '<img src="../../img/circulo_rojo.jpg">';
 								}
 								
+								if(($informes['estatus_factura_trim4'] == 'ENVIADA' || $informes['estatus_factura_trim4'] == 'PAGADA') && isset($informes['factura_trim4'])){
+									///boton para descargar factura
+									echo "<a href='$informes[factura_trim4]' target='_new' data-toggle='tooltip' title='Descargar factura'><span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span></a>";
+									//echo "<span class='btn btn-xs btn-info glyphicon glyphicon-open-file'></span>";
+								}
+								if(($informes['estatus_comprobante_trim4'] == 'ENVIADO' || $informes['estatus_comprobante_trim4'] == 'APROBADO' || $informes['estatus_comprobante_trim4'] == 'FINALIZADO') && isset($informes['comprobante_pago_trim4'])){
+									/// boton para descargar comprobante de pago
+									echo "<a href='$informes[comprobante_pago_trim4]' target='_new' data-toggle='tooltip' title='Descargar comprobante de pago'><span class='btn btn-xs btn-info glyphicon glyphicon-picture'></span></a>";				
+								}
+
 								echo ' $'.number_format($informes['cuota_uso_trim4'],2).' USD';
 								if($informes['estatus_factura_trim4'] == 'PAGADA'){
 									echo "<span class='disabled btn btn-xs btn-info glyphicon glyphicon-ok' aria-hidden='true'></span>";

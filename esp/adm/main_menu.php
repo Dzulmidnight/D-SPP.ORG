@@ -185,7 +185,7 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
     var config = {
       '.chosen-select'           : {},
       '.chosen-select-deselect'  : {allow_single_deselect:true},
-      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-single'z : {disable_search_threshold:10},
       '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
       '.chosen-select-width'     : {width:"95%"}
     }
@@ -198,7 +198,12 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
       $('[data-toggle="tooltip"]').tooltip()
     })
     </script>
+<script>
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
 
+</script>
   
 
   </body>

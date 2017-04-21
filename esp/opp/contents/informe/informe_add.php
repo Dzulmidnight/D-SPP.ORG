@@ -175,14 +175,36 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		}else{
 			$producto_terminado = NULL;
 		}
-		if(isset($_POST['se_exporta'])){
-			$se_exporta = $_POST['se_exporta'];
+		if($producto_terminado == 'SI'){
+			if(isset($_POST['valor_ingredientes'])){
+				$valor_ingredientes = $_POST['valor_ingredientes'];
+			}else{
+				$valor_ingredientes = NULL;
+			}
+			$porcentaje_valor_ingredientes = ($valor_ingredientes * 0.25);
+
+			if(isset($_POST['se_exporta'])){
+				$se_exporta = $_POST['se_exporta'];
+
+				if($se_exporta == 'DIRECTAMENTE'){
+					$valor_final_ingredientes = ($porcentaje_valor_ingredientes * 0.75);
+				}else if($se_exporta == 'INTERMEDIARIO'){
+					$valor_final_ingredientes = ($porcentaje_valor_ingredientes * 0.25);
+				}
+			}else{
+				$se_exporta = NULL;
+				$valor_final_ingredientes = 0;
+			}
+
 		}else{
 			$se_exporta = NULL;
+			$valor_ingredientes = NULL;
 		}
 
+		$total_a_pagar += $valor_final_ingredientes;
+
 		//Iniciamos insertar formato_ventas
-			$insertSQL = sprintf("INSERT INTO formato_ventas(idtrim, idopp, pais_opp, spp, empresa, pais_empresa, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+			$insertSQL = sprintf("INSERT INTO formato_ventas(idtrim, idopp, pais_opp, spp, empresa, pais_empresa, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, valor_ingredientes, valor_final_ingredientes, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 				GetSQLValueString($idtrim, "text"),
 				GetSQLValueString($idopp, "int"),
 				GetSQLValueString($pais_opp, "text"),
@@ -198,6 +220,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 				GetSQLValueString($producto_especifico, "text"),
 				GetSQLValueString($producto_terminado, "text"),
 				GetSQLValueString($se_exporta, "text"),
+				GetSQLValueString($valor_ingredientes, "text"),
+				GetSQLValueString($valor_final_ingredientes, "text"),
 				GetSQLValueString($unidad_cantidad_total_factura, "text"),
 				GetSQLValueString($cantidad_total_factura, "text"),
 				GetSQLValueString($precio_sustentable_minimo, "text"),
@@ -246,11 +270,11 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 	<div class="col-md-12">
 	<?php
 	if($trim[$txt_estatus] == 'FINALIZADO'){
-		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se puede agregar más registro al <b>Formato Trimestral $idtrim</b>, ya que fue concluido.</p>";
+		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se puede agregar más transacciones al <b>Formato Trimestral $idtrim</b>, ya que fue concluido.</p>";
 	}else if($trim[$txt_estatus] == 'EN ESPERA'){
-		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se puede agregar más registro al <b>Formato Trimestral $idtrim</b>, ya que se encuentra en proceso de revisión.</p>";
+		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se puede agregar más transacciones al <b>Formato Trimestral $idtrim</b>, ya que se encuentra en proceso de revisión.</p>";
 	}else if($trim[$txt_estatus] == 'APROBADO'){
-		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se puede agregar más registro al <b>Formato Trimestral $idtrim</b>, ya que se encuentra en proceso de revisión.</p>";
+		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se puede agregar más transacciones al <b>Formato Trimestral $idtrim</b>, ya que se encuentra en proceso de revisión.</p>";
 	}else{
 	?>
 
@@ -277,7 +301,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 						<th class="text-center">Producto General</th>
 						<th class="text-center">Producto Especifico</th>
 
-							<th colspan="2" class="text-center">
+							<th colspan="3" class="text-center">
 								Producto Terminado
 							</th>
 
@@ -361,7 +385,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 		 					Producto especifico. Ej: Café verde arábica, Miel tipo A, Chips de platano, Azúcar blanco refinado.
 		 				</td>
 		 		
-			 				<td colspan="2">
+			 				<td colspan="3">
 			 					¿Producto terminado?
 			 				</td>
 		 			
@@ -490,14 +514,17 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 										<!--<input type="text" name="producto_especifico" value="<?php echo $formato['producto_especifico']; ?>">-->
 										<?php echo $formato['producto_especifico']; ?>
 									</td>
-
+									<!-- INICIA SECCIÓN PRODUCTO TERMINADO -->
 										<td>
-
-											<?php echo $formato['producto_terminado']; ?>
+											<span style="color:red"><?php echo $formato['producto_terminado']; ?></span>
+										</td>
+										<td>
+											Valor ingrendientes: <span style="color:red"><?php echo $formato['valor_ingredientes']; ?></span>
 										</td>
 										<td>
 											<?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?>
 										</td>
+									<!-- TERMINA SECCIÓN PRODUCTO TERMINADO -->
 						
 									<td>
 										<!--<input type="text" name="unidad_cantidad_factura" value="<?php echo $formato['cantidad_total_factura']; ?>">-->
@@ -539,7 +566,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 		<form class="form-horizontal" method="POST">
 					<tr class="success">
 						<td class="warning"></td> <!-- # -->
-						<td><input type="text" name="pais_opp" value="<?php echo $opp['pais']; ?>" readonly></td>
+						<td class="warning"><input type="text" name="pais_opp" value="<?php echo $opp['pais']; ?>" readonly></td>
 
 						<td>
 							<?php 
@@ -573,19 +600,10 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 						</td>
 
 						<td class="warning"><!-- pais de la opp proveedora -->
-			              <!--<select name="pais" id="pais" class="" required>
-			                <option value="">Selecciona un País</option>
-			                <?php 
-			                $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
-			                while($pais = mysql_fetch_assoc($row_pais)){
-			                  echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
-			                }
-			                 ?>
-			              </select>-->
 			              <input id="pais_empresa" name="pais_empresa" value="" placeholder="Pais de la empresa">
 						</td>
 
-						<td class="success"><!-- fecha de facturación -->
+						<td><!-- fecha de facturación -->
 							<input type="date" name="fecha_facturacion" id="" placeholder="dd-mm-aaaa" required>
 						</td>
 
@@ -608,7 +626,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 							<input type="text" name="producto_general" id="" placeholder="Ej: café, miel, azucar" onBlur=" ponerMayusculas(this)" required>
 						</td>
 
-						<td class="success"><!-- producto especifico -->
+						<td><!-- producto especifico -->
 							<input type="text" name="producto_especifico" id="" placeholder="Ej: café verde, miel de abeja, azucar refinada" onBlur=" ponerMayusculas(this)" required>
 						</td>
 
@@ -623,6 +641,12 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 								</label>
 							</td>
 							<td style="border-left-style:hidden;">
+								<div id="div_multingrediente" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
+									Valor total de los ingredientes
+									<input style="color:black" type="number" step="any" name="valor_ingredientes" placeholder="Valor">
+								</div>
+							</td>
+							<td style="border-left-style:hidden;">
 								<div id="div_oculto" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
 									Se compra directamente a la organización o a travez de un intermediario 
 									<label class="radio-inline">
@@ -635,7 +659,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 								</div>
 							</td>
 
-						<td class="success"><!-- CANTIDAD TOTAL CONFORME FACTURA -->
+						<td><!-- CANTIDAD TOTAL CONFORME FACTURA -->
 							<select name="unidad_cantidad_total_factura" required><!-- #unidad de medida -->
 								<option value="Qq">Qq</option>
 								<option value="Lb">Lb</option>
@@ -644,7 +668,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 							</select>
 						</td>
 
-						<td class="success">
+						<td>
 							<input type="number" step="any" id="cantidad_total_factura" name="cantidad_total_factura" onChange="calcular();" onBlur=" ponerMayusculas(this)" required><!-- #cantidad total -->
 						</td><!-- CANTIDAD TOTAL CONFORME FACTURA -->
 
@@ -664,7 +688,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 							<input type="number" step="any" name="otros_premios" id="" placeholder="importe pagado">
 						</td>
 
-						<td class="success"><!-- precio total unitario pagado -->
+						<td><!-- precio total unitario pagado -->
 							<input type="number" step="any" id="precio_total_unitario" name="precio_total_unitario" onChange="calcular();" value="" required>
 						</td>
 
@@ -682,7 +706,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 
 					</tr>
 		 			<tr>
-		 				<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1" onclick="return validar()">Guardar Registro</button></td>
+		 				<td colspan="6"><button class="btn btn-primary" type="submit" style="width:100%" name="agregar_formato" value="1" onclick="return validar()"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> Guardar Transacción</button></td>
 		 			</tr>
 		 		</tbody>
 		 	</table>
@@ -741,10 +765,12 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 
 	function mostrar(){
 		document.getElementById('div_oculto').style.display = 'block';
+		document.getElementById('div_multingrediente').style.display = 'block';
 	}
 	function ocultar()
 	{
 		document.getElementById('div_oculto').style.display = 'none';
+		document.getElementById('div_multingrediente').style.display = 'none';
 	}
 </script>
 

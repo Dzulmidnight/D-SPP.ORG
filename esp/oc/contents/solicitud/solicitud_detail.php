@@ -804,25 +804,29 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             <label for="preg1_1">
               1.3: NÚMERO DE OPP DE 3ER GRADO:
             </label>
-            <input type="text" class="form-control" id="preg1_1" name="preg1_1" value="<?php echo $solicitud['preg1_1']; ?>" >
+            <textarea class="form-control" name="preg1_1" id="preg1_1" rows="3"><?php echo $solicitud['preg1_1']; ?></textarea>
+           
           </div>
           <div class="col-xs-3">
             <label for="preg1_2">
               1.2: NÚMERO DE OPP DE 2DO GRADO:
             </label>
-            <input type="text" class="form-control" id="preg1_2" name="preg1_2" value="<?php echo $solicitud['preg1_2']; ?>" >
+            <textarea class="form-control" name="preg1_2" id="preg1_2" rows="3"><?php echo $solicitud['preg1_2']; ?></textarea>
+           
           </div>
           <div class="col-xs-3">
             <label for="preg1_3">
               1.3: NÚMERO DE OPP DE 1ER GRADO:
             </label>
-            <input type="text" class="form-control" id="preg1_3" name="preg1_3" value="<?php echo $solicitud['preg1_3']; ?>" >
+            <textarea class="form-control" name="preg1_3" id="preg1_3" rows="3"><?php echo $solicitud['preg1_3']; ?></textarea>
+
           </div>
           <div class="col-xs-3">
             <label for="preg1_4">
               1.4: NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO:
             </label>
-            <input type="text" class="form-control" id="preg1_4" name="preg1_4" value="<?php echo $solicitud['preg1_4']; ?>" >
+            <textarea class="form-control" name="preg1_4" id="preg1_4" rows="3"><?php echo $solicitud['preg1_4']; ?></textarea>
+
           </div>
 
           <label for="op_preg2">
