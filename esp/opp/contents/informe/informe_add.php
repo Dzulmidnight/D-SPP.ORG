@@ -165,10 +165,10 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		}else{
 			$cuota_uso_reglamento = NULL;
 		}
-		if(isset($_POST['total_a_pagar'])){
-			$total_a_pagar = $_POST['total_a_pagar'];
+		if(isset($_POST['valor_cuota'])){ /// antes total_a_pagar
+			$valor_cuota = $_POST['valor_cuota'];
 		}else{
-			$total_a_pagar = 0;
+			$valor_cuota = 0;
 		}
 		if(isset($_POST['producto_terminado'])){
 			$producto_terminado = $_POST['producto_terminado'];
@@ -201,10 +201,10 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 			$valor_ingredientes = NULL;
 		}
 
-		$total_a_pagar += $valor_final_ingredientes;
+		$total_a_pagar = $valor_cuota + $valor_final_ingredientes;
 
 		//Iniciamos insertar formato_ventas
-			$insertSQL = sprintf("INSERT INTO formato_ventas(idtrim, idopp, pais_opp, spp, empresa, pais_empresa, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, valor_ingredientes, valor_final_ingredientes, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+			$insertSQL = sprintf("INSERT INTO formato_ventas(idtrim, idopp, pais_opp, spp, empresa, pais_empresa, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, valor_ingredientes, valor_final_ingredientes, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, valor_cuota, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 				GetSQLValueString($idtrim, "text"),
 				GetSQLValueString($idopp, "int"),
 				GetSQLValueString($pais_opp, "text"),
@@ -231,6 +231,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 				GetSQLValueString($precio_total_unitario, "text"),
 				GetSQLValueString($valor_total_contrato, "text"),
 				GetSQLValueString($cuota_uso_reglamento, "text"),
+				GetSQLValueString($valor_cuota, "text"),
 				GetSQLValueString($total_a_pagar, "text"),
 				GetSQLValueString($fecha_registro, "int"));
 			$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -701,7 +702,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 						</td>
 
 						<td class="warning"><!-- total a pagar -->
-							<input type="text" name="total_a_pagar" id="total_a_pagar" placeholder="Total a pagar" readonly>
+							<input type="text" name="valor_cuota" id="valor_cuota" placeholder="Total a pagar" readonly>
 						</td>
 
 					</tr>
@@ -823,9 +824,9 @@ var cuota_fija_anual = <?php echo $configuracion['cuota_productores']; ?>;
 		//calculamos el valor de la cuota de uso reglamento
 		//cuota_uso_reglamento = valor_total_contrato * cuota_fija_anual;
 		//calculamos el total a pagar
-		total_a_pagar = (valor_total_contrato * cuota_fija_anual) / 100;
+		valor_cuota = (valor_total_contrato * cuota_fija_anual) / 100;
 
-		total_redondeado = parseFloat(total_a_pagar.toFixed(2));
+		total_redondeado = parseFloat(valor_cuota.toFixed(2));
 
 		//calculamos el valor total del contrato
 
@@ -834,7 +835,7 @@ var cuota_fija_anual = <?php echo $configuracion['cuota_productores']; ?>;
 		//valor_total_contrato = parseFloat(Math.round((precio_total_unitario * peso_cantidad_total_contrato) * 100) / 100).toFixed(2);
 		document.getElementById("valor_total_contrato").value = total_contrato_redondeado; 
 		document.getElementById("cuota_uso_reglamento").value = "<?php echo $configuracion['cuota_productores']; ?> %"; 
-		document.getElementById("total_a_pagar").value = total_redondeado; 
+		document.getElementById("valor_cuota").value = total_redondeado; 
 
 		//calculamos el total a pagar
 		/*if(isNaN(cuota_uso_reglamento)){ // revisamos si es porcentaje

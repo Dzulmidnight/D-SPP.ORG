@@ -234,7 +234,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
             <th>
               Producto Especifico
             </th>
-            <th colspan="2">
+            <th colspan="3">
               Producto Terminado
             </th>
             <th colspan="2">
@@ -292,6 +292,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    <td>'.$formato_compras['producto_especifico'].'</td>
 				    <td>'.$formato_compras['producto_terminado'].'</td>
 				    <td>Se exporta: '.$formato_compras['se_exporta'].'</td>
+				    <td>Valor ingredientes: '.$formato_compras['valor_ingredientes'].'</td>
 				    <td>'.$formato_compras['unidad_cantidad_factura'].'</td>
 				    <td>'.number_format($formato_compras['cantidad_total_factura'],2).' USD</td>
 				    <td>'.$formato_compras['precio_sustentable_minimo'].' USD</td>
@@ -393,7 +394,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Empresa</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Tipo de Empresa</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Informe</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Num. de Contratos</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Num. de transacciones</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Valor total de los contratos</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Cuota de uso aplicada acorde al año en curso</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Total cuota de uso</td>
@@ -608,16 +609,16 @@ if(isset($_GET['trim'])){
 
 	switch ($_GET['trim']) {
 		case '1':
-			$titulo_trim = "<h4>PRIMER TRIMESTRE | <small>Estatus:  $estatus</small></h4>";
+			$titulo_trim = "<h4>PRIMER TRIMESTRE <span style='color:red'>$ano_actual</span> | <small>Estatus:  $estatus</small></h4>";
 			break;
 		case '2':
-			$titulo_trim = "<h4>SEGUNDO TRIMESTRE | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>SEGUNDO TRIMESTRE <span style='color:red'>$ano_actual</span> | <small>Estatus: $estatus</small></h4>";
 			break;
 		case '3':
-			$titulo_trim = "<h4>TERCER TRIMESTRE | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>TERCER TRIMESTRE <span style='color:red'>$ano_actual</span> | <small>Estatus: $estatus</small></h4>";
 			break;
 		case '4':
-			$titulo_trim = "<h4>CUARTO TRIMESTRE | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>CUARTO TRIMESTRE <span style='color:red'>$ano_actual</span> | <small>Estatus: $estatus</small></h4>";
 			break;		
 		default:
 			$titulo_trim = "<h4>TRIMESTRE NO DISPONIBLE</small></h4>";
@@ -648,7 +649,7 @@ if(isset($_GET['trim'])){
 			<table class="table table-bordered" style="font-size:11px;">
 				<thead>
 					<tr>
-						<th colspan="6">
+						<th colspan="7">
 							<?php 
 							echo $titulo_trim;
 							 ?>
@@ -736,6 +737,7 @@ if(isset($_GET['trim'])){
 						<th class="text-center">Producto Especifico</th>
 						<th class="warning text-center">¿Producto terminado?</th>
 						<th class="warning text-center">Se exporta a travez de:</th>
+						<th class="warning text-center">Valor ingredientes</th>
 						<th colspan="2" class="text-center">Cantidad Total Conforme Factura</th>
 						<th class="text-center">Precio Sustentable Mínimo</th>
 						<th class="text-center">Reconocimiento Orgánico</th>
@@ -774,6 +776,7 @@ if(isset($_GET['trim'])){
 							<td><?php echo $formato['producto_especifico']; ?></td>
 							<td><?php echo $formato['producto_terminado']; ?></td>
 							<td><?php echo $formato['se_exporta']; ?></td>
+							<td><?php echo $formato['valor_ingredientes']; ?></td>
 							<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 							<td><?php echo number_format($formato['cantidad_total_factura'],2); ?></td>
 							<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -792,7 +795,7 @@ if(isset($_GET['trim'])){
 					}
 						
 						echo "<tr class='info'>
-							<td colspan='20'></td>
+							<td colspan='21'></td>
 							<td class='text-right'><b style='color:red'>".number_format($suma_valor_contrato,2)." USD</b></td>
 							<td></td>
 							<td class='text-right'><b style='color:red'>".number_format($suma_cuota_uso,2)." USD</b></td>
