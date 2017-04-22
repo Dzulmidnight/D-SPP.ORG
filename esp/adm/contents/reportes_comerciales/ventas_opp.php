@@ -242,12 +242,13 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 				      <td style="padding-top:10px;">           
 				        <p style="color:#2c3e50;font-weight:bold">El Área de Adminsitración de SPP Global ha cargado la factura correspondiente al Informe Trimestral de Ventas, por favor proceda a realizar el pago correspondiente por la cantidad de: <span style="color:red">'.number_format($valor_cuota_de_uso,2).' USD</span>.</p>
 					    <p>
-					      Se anexan los siguiente documentos:
+					      Puede consultar los siguiente documentos:
 					      <ol>
-					        <li>Factura</li>
-					        <li>Reglamento de Costos</li>
-					        <li>Datos bancarios</li>
+					        <li>Factura (adjunto)</li>
+					        <li><a href="http://d-spp.org/archivos/formatos/documentacion/1492814387_Reglamento_Costos_SPP_V7_2016-07-06_E2_2016-12-05_Rev_2017-03-08-REVcJP.doc">Reglamento de Costos (enlace)</a></li>
+					        <li><a href="http://d-spp.org/archivos/formatos/documentacion/1476992706_Datos_Bancarios_SPP.pdf">Datos bancarios (enlace)</a></li>
 					      </ol>
+
 					    </p>
 
 				      </td>
@@ -297,11 +298,11 @@ if(isset($_POST['enviar_factura']) && $_POST['enviar_factura'] == 1){
 			</html>
 		';
 		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
-		$row_documentacion = mysql_query("SELECT * FROM documentacion WHERE nombre = 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
-		$documentacion = mysql_fetch_assoc($row_documentacion);
+		//21_04_2017 $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE nombre = 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
+		//21_04_2017 $documentacion = mysql_fetch_assoc($row_documentacion);
 
 		$mail->AddAttachment($archivo_factura);
-		$mail->AddAttachment($documentacion['archivo']);
+		//21_04_2017 $mail->AddAttachment($documentacion['archivo']);
 		$mail->AddBCC('adm@spp.coop');
 		$mail->AddBCC('cert@spp.coop');
 
@@ -396,7 +397,7 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
 //// TERMINA APROBAR O DENEGAR COMPROBANTE PAGO
 
 
-$row_informes = mysql_query("SELECT informe_general.*, trim1.*, trim2.*, trim3.*, trim4.*, opp.idopp, opp.abreviacion FROM informe_general INNER JOIN opp ON informe_general.idopp = opp.idopp LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4", $dspp) or die(mysql_error());
+$row_informes = mysql_query("SELECT informe_general.*, trim1.*, trim2.*, trim3.*, trim4.*, opp.idopp, opp.abreviacion FROM informe_general INNER JOIN opp ON informe_general.idopp = opp.idopp LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 ORDER BY opp.abreviacion", $dspp) or die(mysql_error());
 $total_informes = mysql_num_rows($row_informes);
 //$plataformas_spp = array('Ecuador', 'Perú', 'Colombia', 'Guatemala');
 

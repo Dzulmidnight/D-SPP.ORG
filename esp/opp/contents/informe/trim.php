@@ -232,7 +232,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
             <th>
               Producto Especifico
             </th>
-            <th colspan="3">
+            <th colspan="4">
               Producto Terminado
             </th>
             <th colspan="2">
@@ -290,9 +290,10 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    <td>'.$fecha_contrato.'</td>
 				    <td>'.$formato_ventas['producto_general'].'</td>
 				    <td>'.$formato_ventas['producto_especifico'].'</td>
-				    <td>'.$formato_ventas['producto_terminado'].'</td>
-				    <td>Se exporta: '.$formato_ventas['se_exporta'].'</td>
-				    <td>Valor_ingredientes: '.$formato_ventas['valor_ingredientes'].'</td>
+				    <td style="background-color:#ecf0f1"><span style="color:red">'.$formato_ventas['producto_terminado'].'</span></td>
+				    <td style="background-color:#ecf0f1">Se exporta: <span style="color:red">'.$formato_ventas['se_exporta'].'</span></td>
+				    <td style="background-color:#ecf0f1">Mercado: <span style="color:red">'.$formato_ventas['mercado'].'</span></td>
+				    <td style="background-color:#ecf0f1">Valor_ingredientes: <span style="color:red">'.$formato_ventas['valor_ingredientes'].'</span></td>
 				    <td>'.$formato_ventas['unidad_cantidad_factura'].'</td>
 				    <td>'.number_format($formato_ventas['cantidad_total_factura'],2).' USD</td>
 				    <td>'.$formato_ventas['precio_sustentable_minimo'].' USD</td>
@@ -653,7 +654,7 @@ if(isset($_GET['trim'])){
 						<th colspan="4">
 							<?php echo "<h4>".$opp['abreviacion']."</h4>"; ?>
 						</th>
-						<th colspan="5" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
+						<th colspan="6" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
 							<?php 
 							if(isset($pregunta)){
 								echo $pregunta;
@@ -677,7 +678,7 @@ if(isset($_GET['trim'])){
 							}else if($trim[$txt_estado_trim] == 'EN ESPERA'){
 								echo "<p style='color:red;font-size:12px;'>El Informe trimestral está en proceso de revisión</p>";
 							}else if($trim[$txt_estado_trim] == 'FINALIZADO'){
-								echo "<p style='color:red;font-size:12px;'>Ha concluido el Informe Trimestral</p>";
+								echo "<p style='color:red;font-size:12px;'>El Informe Trimestral ha concluido.</p>";
 							}
 							//echo 'asfasfds'.$trim[$txt_estatus_factura];
 							 ?>
@@ -731,7 +732,8 @@ if(isset($_GET['trim'])){
 						<th class="text-center">Producto General</th>
 						<th class="text-center">Producto Especifico</th>
 						<th class="warning text-center">¿Producto terminado?</th>
-						<th class="warning text-center">Se exporta a travez de:</th>
+						<th class="warning text-center">Se compra a travez de:</th>
+						<th class="warning text-center">Mercado</th>
 						<th class="warning text-center">Valor ingredientes</th>
 						<th colspan="2" class="text-center">Cantidad Total Conforme Factura</th>
 						<th class="text-center">Precio Sustentable Mínimo</th>
@@ -772,6 +774,7 @@ if(isset($_GET['trim'])){
 							<td><?php echo $formato['producto_especifico']; ?></td>
 							<td><?php echo $formato['producto_terminado']; ?></td>
 							<td><?php echo $formato['se_exporta']; ?></td>
+							<td><?php echo $formato['mercado']; ?></td>
 							<td><?php echo $formato['valor_ingredientes']; ?></td>
 							<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 							<td><?php echo number_format($formato['cantidad_total_factura'],2); ?></td>
@@ -791,7 +794,7 @@ if(isset($_GET['trim'])){
 					}
 						
 						echo "<tr class='info'>
-							<td colspan='22'></td>
+							<td colspan='23'></td>
 							<td class='text-right'><b style='color:red'>".number_format($suma_valor_contrato,2)." USD</b></td>
 							<td></td>
 							<td class='text-right'><b style='color:red'>".number_format($suma_cuota_uso,2)." USD</b></td>

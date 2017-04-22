@@ -290,9 +290,9 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    <td>'.$fecha_contrato.'</td>
 				    <td>'.$formato_compras['producto_general'].'</td>
 				    <td>'.$formato_compras['producto_especifico'].'</td>
-				    <td>'.$formato_compras['producto_terminado'].'</td>
-				    <td>Se exporta: '.$formato_compras['se_exporta'].'</td>
-				    <td>Valor ingredientes: '.$formato_compras['valor_ingredientes'].'</td>
+				    <td style="background-color:#ecf0f1"><span style="color:red">'.$formato_compras['producto_terminado'].'</span></td>
+				    <td style="background-color:#ecf0f1">Se exporta: <span style="color:"red">'.$formato_compras['se_exporta'].'</span></td>
+				    <td style="background-color:#ecf0f1">Valor ingredientes: <span style="color:red">'.$formato_compras['valor_ingredientes'].'</span></td>
 				    <td>'.$formato_compras['unidad_cantidad_factura'].'</td>
 				    <td>'.number_format($formato_compras['cantidad_total_factura'],2).' USD</td>
 				    <td>'.$formato_compras['precio_sustentable_minimo'].' USD</td>
@@ -683,7 +683,7 @@ if(isset($_GET['trim'])){
 							}else if($trim[$txt_estado_trim] == 'EN ESPERA'){
 								echo "<p style='color:red;font-size:12px;'>El Informe trimestral está en proceso de revisión</p>";
 							}else if($trim[$txt_estado_trim] == 'FINALIZADO'){
-								echo "<p style='color:red;font-size:12px;'>Ha concluido el Informe Trimestral</p>";
+								echo "<p style='color:red;font-size:12px;'>El Informe Trimestral ha concluido</p>";
 							}
 							//echo 'asfasfds'.$trim[$txt_estatus_factura];
 							 ?>

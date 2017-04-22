@@ -64,7 +64,11 @@ $informe_general = mysql_fetch_assoc($row_informe);
 ?>
 
 <h4>INFORMES TRIMESTRALES <span style="color:#e74c3c"><?php echo date('Y',$informe_general['ano']); ?></span></h4>
-
+<?php 
+	if(!isset($informe_general['trim2'])){
+		echo "<h4 class='alert alert-danger'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> Por disposiciones de SPP Global debe iniciar la captura de transacciones en el \"Trimestre 2\".</h4>";
+	}
+ ?>
 <table class="table table-bordered" style="font-size:11px;">
 	<thead>
 		<tr class="success">

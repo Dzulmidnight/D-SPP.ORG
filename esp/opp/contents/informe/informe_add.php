@@ -175,27 +175,37 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		}else{
 			$producto_terminado = NULL;
 		}
+		if(isset($_POST['mercado'])){
+			$mercado = $_POST['mercado'];
+		}else{
+			$mercado = NULL;
+		}
 		if($producto_terminado == 'SI'){
-			if(isset($_POST['valor_ingredientes'])){
-				$valor_ingredientes = $_POST['valor_ingredientes'];
-			}else{
-				$valor_ingredientes = NULL;
-			}
-			$porcentaje_valor_ingredientes = ($valor_ingredientes * 0.25);
-
-			if(isset($_POST['se_exporta'])){
+			if($mercado == 'INTERNO'){
 				$se_exporta = $_POST['se_exporta'];
-
-				if($se_exporta == 'DIRECTAMENTE'){
-					$valor_final_ingredientes = ($porcentaje_valor_ingredientes * 0.75);
-				}else if($se_exporta == 'INTERMEDIARIO'){
-					$valor_final_ingredientes = ($porcentaje_valor_ingredientes * 0.25);
+				$valor_ingredientes = $_POST['valor_ingredientes'];
+			}else if($mercado == 'EXPORTACIÓN'){ // solo para mercado de EXPORTACIÓN SE APLICAN LAS CUOTAS
+				if(isset($_POST['valor_ingredientes'])){
+					$valor_ingredientes = $_POST['valor_ingredientes'];
+				}else{
+					$valor_ingredientes = NULL;
 				}
-			}else{
-				$se_exporta = NULL;
-				$valor_final_ingredientes = 0;
-			}
+				$porcentaje_valor_ingredientes = ($valor_ingredientes * 0.25);
 
+				if(isset($_POST['se_exporta'])){
+					$se_exporta = $_POST['se_exporta'];
+
+					if($se_exporta == 'DIRECTAMENTE'){
+						$valor_final_ingredientes = ($porcentaje_valor_ingredientes * 0.75);
+					}else if($se_exporta == 'INTERMEDIARIO'){
+						$valor_final_ingredientes = ($porcentaje_valor_ingredientes * 0.25);
+					}
+				}else{
+					$se_exporta = NULL;
+					$valor_final_ingredientes = 0;
+				}
+
+			}
 		}else{
 			$se_exporta = NULL;
 			$valor_ingredientes = NULL;
@@ -204,7 +214,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		$total_a_pagar = $valor_cuota + $valor_final_ingredientes;
 
 		//Iniciamos insertar formato_ventas
-			$insertSQL = sprintf("INSERT INTO formato_ventas(idtrim, idopp, pais_opp, spp, empresa, pais_empresa, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, valor_ingredientes, valor_final_ingredientes, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, valor_cuota, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+			$insertSQL = sprintf("INSERT INTO formato_ventas(idtrim, idopp, pais_opp, spp, empresa, pais_empresa, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, mercado, valor_ingredientes, valor_final_ingredientes, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, valor_cuota, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 				GetSQLValueString($idtrim, "text"),
 				GetSQLValueString($idopp, "int"),
 				GetSQLValueString($pais_opp, "text"),
@@ -220,6 +230,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 				GetSQLValueString($producto_especifico, "text"),
 				GetSQLValueString($producto_terminado, "text"),
 				GetSQLValueString($se_exporta, "text"),
+				GetSQLValueString($mercado, "text"),
 				GetSQLValueString($valor_ingredientes, "text"),
 				GetSQLValueString($valor_final_ingredientes, "text"),
 				GetSQLValueString($unidad_cantidad_total_factura, "text"),
@@ -302,7 +313,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 						<th class="text-center">Producto General</th>
 						<th class="text-center">Producto Especifico</th>
 
-							<th colspan="3" class="text-center">
+							<th colspan="4" class="text-center">
 								Producto Terminado
 							</th>
 
@@ -386,7 +397,7 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 		 					Producto especifico. Ej: Café verde arábica, Miel tipo A, Chips de platano, Azúcar blanco refinado.
 		 				</td>
 		 		
-			 				<td colspan="3">
+			 				<td colspan="4">
 			 					¿Producto terminado?
 			 				</td>
 		 			
@@ -520,10 +531,13 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 											<span style="color:red"><?php echo $formato['producto_terminado']; ?></span>
 										</td>
 										<td>
-											Valor ingrendientes: <span style="color:red"><?php echo $formato['valor_ingredientes']; ?></span>
+											<?php echo 'Se compra: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?>
 										</td>
 										<td>
-											<?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?>
+											<?php echo 'Mercado: <span style="color:red">'.$formato['mercado'].'</span>'; ?>
+										</td>
+										<td>
+											Valor ingrendientes: <span style="color:red"><?php echo $formato['valor_ingredientes']; ?></span>
 										</td>
 									<!-- TERMINA SECCIÓN PRODUCTO TERMINADO -->
 						
@@ -642,12 +656,6 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 								</label>
 							</td>
 							<td style="border-left-style:hidden;">
-								<div id="div_multingrediente" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
-									Valor total de los ingredientes
-									<input style="color:black" type="number" step="any" name="valor_ingredientes" placeholder="Valor">
-								</div>
-							</td>
-							<td style="border-left-style:hidden;">
 								<div id="div_oculto" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
 									Se compra directamente a la organización o a travez de un intermediario 
 									<label class="radio-inline">
@@ -657,6 +665,25 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 									<label class="radio-inline">
 									  <input type="radio" name="se_exporta" id="" value="INTERMEDIARIO"> A travez de un intermediario
 									</label>
+								</div>
+							</td>
+
+							<td style="border-left-style:hidden;">
+								<div id="div_mercado" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
+									Para Mercado
+									<label class="radio-inline">
+									  <input type="radio" name="mercado" id="inlineRadio1" value="INTERNO"> Interno
+									</label>
+									<br>
+									<label class="radio-inline">
+									  <input type="radio" name="mercado" id="inlineRadio2" value="EXPORTACIÓN"> Exportación
+									</label>
+								</div>
+							</td>
+							<td style="border-left-style:hidden;">
+								<div id="div_multingrediente" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
+									Valor total de los ingredientes
+									<input style="color:black" type="number" step="any" name="valor_ingredientes" placeholder="Valor">
 								</div>
 							</td>
 
@@ -767,11 +794,13 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 	function mostrar(){
 		document.getElementById('div_oculto').style.display = 'block';
 		document.getElementById('div_multingrediente').style.display = 'block';
+		document.getElementById('div_mercado').style.display = 'block';
 	}
 	function ocultar()
 	{
 		document.getElementById('div_oculto').style.display = 'none';
 		document.getElementById('div_multingrediente').style.display = 'none';
+		document.getElementById('div_mercado').style.display = 'none';
 	}
 </script>
 
