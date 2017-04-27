@@ -223,7 +223,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
             <tr>
               <th colspan="2">
                 Export: 
-                <a href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
+                <!--24_04_2017<a href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>24_04_2017-->
                 <form name="formulario1" method="POST" action="../reportes/lista_empresas.php">
                   <input type="hidden" name="lista_publica_pdf" value="1">
                   <input type="hidden" name="query_pdf" value="<?php echo $query_empresa; ?>">

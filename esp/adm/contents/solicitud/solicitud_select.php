@@ -161,7 +161,14 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
 
       while($email_opp = mysql_fetch_assoc($ejecutar)){
         if(!empty($email_opp['email'])){
-          $mail->AddAddress($email_opp['email']);
+          //$mail->AddAddress($email_opp['email']);
+          $token = strtok($email_opp['email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+
         }
       }
 
@@ -181,7 +188,14 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
 
       while($email_empresa = mysql_fetch_assoc($ejecutar)){
         if(!empty($email_empresa['email'])){
-          $mail->AddAddress($email_empresa['email']);
+          //$mail->AddAddress($email_empresa['email']);
+          $token = strtok($email_empresa['email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+
         }
       }
 
@@ -201,10 +215,24 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
 
       while($email_oc = mysql_fetch_assoc($ejecutar)){
         if(!empty($email_oc['email1'])){
-          $mail->AddAddress($email_oc['email1']);
+          //$mail->AddAddress($email_oc['email1']);
+          $token = strtok($email_oc['email1'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+
         }
         if(!empty($email_oc['email2'])){
-          $mail->AddAddress($email_oc['email2']);
+          //$mail->AddAddress($email_oc['email2']);
+          $token = strtok($email_oc['email2'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+
         }
       }
 
@@ -242,7 +270,14 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
 
         while($email_adm = mysql_fetch_assoc($ejecutar)){  
           if($email_adm['email'] != "procu@spp.coop" ){
-            $mail->AddAddress($email_adm['email']);
+            //$mail->AddAddress($email_adm['email']);
+            $token = strtok($email_adm['email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+
           }
         }
 
@@ -502,16 +537,42 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
 
 
   if(!empty($detalle_opp['email_opp'])){
-    $mail->AddAddress($detalle_opp['email_opp']);
+    //$mail->AddAddress($detalle_opp['email_opp']);
+    $token = strtok($detalle_opp['email_opp'], "\/\,\;");
+    while ($token !== false)
+    {
+      $mail->AddAddress($token);
+      $token = strtok('\/\,\;');
+    }
+
   }
   if(!empty($detalle_opp['contacto1_email'])){
-    $mail->AddAddress($detalle_opp['contacto1_email']); 
+    //$mail->AddAddress($detalle_opp['contacto1_email']); 
+    $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
+    while ($token !== false)
+    {
+      $mail->AddAddress($token);
+      $token = strtok('\/\,\;');
+    }
+
   }
   if(!empty($detalle_opp['contacto2_email'])){
-    $mail->AddAddress($detalle_opp['contacto2_email']); 
+    //$mail->AddAddress($detalle_opp['contacto2_email']);
+    $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
+    while ($token !== false)
+    {
+      $mail->AddAddress($token);
+      $token = strtok('\/\,\;');
+    }
   }
   if(!empty($detalle_opp['adm1_email'])){
-    $mail->AddAddress($detalle_opp['adm1_email']); 
+    //$mail->AddAddress($detalle_opp['adm1_email']);
+    $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
+    while ($token !== false)
+    {
+      $mail->AddAddress($token);
+      $token = strtok('\/\,\;');
+    }
   }
   $mail->AddBCC($administrador);
 
@@ -599,10 +660,23 @@ if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
   ';
 
   if(!empty($informacion['contacto1_email'])){
-    $mail->AddAddress($informacion['contacto1_email']); 
+    //$mail->AddAddress($informacion['contacto1_email']);
+    $token = strtok($informacion['contacto1_email'], "\/\,\;");
+    while ($token !== false)
+    {
+      $mail->AddAddress($token);
+      $token = strtok('\/\,\;');
+    }
+
   }
   if(!empty($informacion['email'])){
-    $mail->AddAddress($informacion['email']); 
+    //$mail->AddAddress($informacion['email']);
+    $token = strtok($informacion['email'], "\/\,\;");
+    while ($token !== false)
+    {
+      $mail->AddAddress($token);
+      $token = strtok('\/\,\;');
+    } 
   }
 
   $mail->Subject = utf8_decode($asunto);
@@ -1024,10 +1098,22 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
       </html>
     ';
     if(!empty($informacion['email1'])){
-      $mail->AddAddress($informacion['email1']); 
+      //$mail->AddAddress($informacion['email1']);
+      $token = strtok($informacion['email1'], "\/\,\;");
+      while ($token !== false)
+      {
+        $mail->AddAddress($token);
+        $token = strtok('\/\,\;');
+      } 
     }
     if(!empty($informacion['email2'])){
-      $mail->AddAddress($informacion['email2']); 
+      //$mail->AddAddress($informacion['email2']);
+      $token = strtok($informacion['email2'], "\/\,\;");
+      while ($token !== false)
+      {
+        $mail->AddAddress($token);
+        $token = strtok('\/\,\;');
+      }
     }
       $mail->AddCC($spp_global);
       $mail->Subject = utf8_decode($asunto);
