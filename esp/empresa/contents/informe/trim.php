@@ -277,6 +277,22 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				}else{
 					$fecha_contrato = '';
 				}
+				if(isset($formato_compras['producto_terminado'])){
+					$producto_terminado = $formato_compras['producto_terminado'];
+				}else{
+					$producto_terminado = '';
+				}
+				if(isset($formato_compras['se_exporta'])){
+					$se_exporta = $formato_compras['se_exporta'];
+				}else{
+					$se_exporta = '';
+				}
+				if(isset($formato_compras['valor_ingredientes'])){
+					$valor_ingredientes = $formato_compras['valor_ingredientes'];
+				}else{
+					$valor_ingredientes = '';
+				}
+
 			  $html .= '
 				<tr>
 				    <td>'.$contador.'</td>
@@ -290,9 +306,12 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 				    <td>'.$fecha_contrato.'</td>
 				    <td>'.$formato_compras['producto_general'].'</td>
 				    <td>'.$formato_compras['producto_especifico'].'</td>
-				    <td style="background-color:#ecf0f1"><span style="color:red">'.$formato_compras['producto_terminado'].'</span></td>
-				    <td style="background-color:#ecf0f1">Se exporta: <span style="color:"red">'.$formato_compras['se_exporta'].'</span></td>
-				    <td style="background-color:#ecf0f1">Valor ingredientes: <span style="color:red">'.$formato_compras['valor_ingredientes'].'</span></td>
+
+				    <td style="background-color:#ecf0f1"><span style="color:red">'.$producto_terminado.'</span></td>
+				    <td style="background-color:#ecf0f1">Se exporta: <span style="color:red">'.$se_exporta.'</span></td>
+				    <td style="background-color:#ecf0f1">Valor ingredientes: <span style="color:red">'.$valor_ingredientes.'</span></td>
+
+
 				    <td>'.$formato_compras['unidad_cantidad_factura'].'</td>
 				    <td>'.number_format($formato_compras['cantidad_total_factura'],2).' USD</td>
 				    <td>'.$formato_compras['precio_sustentable_minimo'].' USD</td>
@@ -564,7 +583,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 
     if($mail->Send()){
     	$mail->ClearAddresses();
-		echo "<script>alert('Se ha enviado y notificado el pago a SPP Global');</script>";
+		echo "<script>alert('Se ha enviado el comprobante de pago a SPP Global');</script>";
     }else{
 		echo "<script>alert('No se pudo enviar el correo, por favor ponerse en contacto con el area de soporte);</script>";
     }

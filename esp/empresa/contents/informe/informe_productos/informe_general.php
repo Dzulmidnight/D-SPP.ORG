@@ -75,13 +75,26 @@ if(isset($_POST['informe_trimestral'])){
 		$idinforme_general_producto = $_POST['idinforme_general_producto'];
 		$ano = date('Y', time());
 		$idtrim1_producto = 'TE1-'.$ano.'-'.$idempresa;
-		$estado_trim1_producto = "ACTIVO";
+		$estado_trim1_producto = "FINALIZADO"; // se finaliza el trimestre 1, ya que el despliegue sera en abril, por lo tanto se empezara desde el segundo trimestre
 
-		$insertSQL = sprintf("INSERT INTO trim1_producto (idtrim1_producto, idempresa, fecha_inicio, estado_trim1) VALUES (%s, %s, %s, %s)",
+		$total_trim1 = 0;
+		$valor_contrato_trim1 = 0;
+		$cuota_uso_trim1 = 0;
+		$estatus_factura_trim1 = 'PAGADA';
+		$estatus_comprobante_trim1 = 'APROBADO';
+
+
+		$insertSQL = sprintf("INSERT INTO trim1_producto (idtrim1_producto, idempresa, fecha_inicio, fecha_fin, total_trim1, estado_trim1, valor_contrato_trim1, cuota_uso_trim1, estatus_factura_trim1, estatus_comprobante_trim1) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 			GetSQLValueString($idtrim1_producto, "text"),
 			GetSQLValueString($idempresa, "int"),
 			GetSQLValueString($fecha_actual, "int"),
-			GetSQLValueString($estado_trim1_producto, "text"));
+			GetSQLValueString($fecha_actual, "int"),
+			GetSQLValueString($total_trim1, "int"),
+			GetSQLValueString($estado_trim1_producto, "text"),
+			GetSQLValueString($valor_contrato_trim1, "int"),
+			GetSQLValueString($cuota_uso_trim1, "int"),
+			GetSQLValueString($estatus_factura_trim1, "text"),
+			GetSQLValueString($estatus_comprobante_trim1, "text"));
 		$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
 		$updateSQL = sprintf("UPDATE informe_general_producto SET trim1_producto = %s WHERE idinforme_general_producto = %s",
@@ -206,7 +219,7 @@ if(isset($_POST['informe_trimestral'])){
 				Paso 2: No se ha iniciado ningun <b style="color:red">"Formato Trimestral"</b> en el <b style="color:red">Informe General de Productos <?php echo $ano_actual ?></b> , <strong>¿Desea crear un nuevo Formato para Informe Trimestral?</strong>
 				<input class="btn btn-success" type="submit" name="informe_trimestral" value="SI">
 				<input class="btn btn-danger" type="submit" name="informe_trimestral" value="NO">
-				<input type="text" name="idinforme_general_producto" value="<?php echo $informe_general_producto['idinforme_general_producto']; ?>">
+				<input type="hidden" name="idinforme_general_producto" value="<?php echo $informe_general_producto['idinforme_general_producto']; ?>">
 				</p>
 			</form>
 		<?php
