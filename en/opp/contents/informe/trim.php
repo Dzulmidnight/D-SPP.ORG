@@ -71,6 +71,7 @@ if(isset($_POST['nuevo_trim']) && $_POST['nuevo_trim'] == 'YES'){
 
 	echo "<script>alert('A new quarterly format has been created - $idtrim');</script>";
 }
+
 if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 	$idtrimestre = $_POST['idtrim'];
 
@@ -79,6 +80,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 
 	$row_total_a_pagar = mysql_query("SELECT ROUND(SUM(total_a_pagar),2) AS 'total_a_pagar' FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 	$total_a_pagar = mysql_fetch_assoc($row_total_a_pagar);
+
 
 	/*if(isset($_POST['suma_cuota_uso']) || $_POST['suma_cuota_uso'] != 0 || $_POST['suma_cuota_uso'] != NULL){
 		$suma_cuota_uso = $_POST['suma_cuota_uso'];
@@ -229,7 +231,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
             <th>
               Producto Especifico
             </th>
-            <th colspan="2">
+            <th colspan="4">
               Producto Terminado
             </th>
             <th colspan="2">
@@ -263,7 +265,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 
 
           ';
-           	$contador = 1;
+          	$contador = 1;
 			$row_formato_ventas = mysql_query("SELECT * FROM formato_ventas WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 			$num_contratos = mysql_num_rows($row_formato_ventas);
 			while($formato_ventas = mysql_fetch_assoc($row_formato_ventas)){
@@ -287,8 +289,10 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 				    <td>'.$fecha_contrato.'</td>
 				    <td>'.$formato_ventas['producto_general'].'</td>
 				    <td>'.$formato_ventas['producto_especifico'].'</td>
-				    <td>'.$formato_ventas['producto_terminado'].'</td>
-				    <td>Se exporta: '.$formato_ventas['se_exporta'].'</td>
+				    <td style="background-color:#ecf0f1"><span style="color:red">'.$formato_ventas['producto_terminado'].'</span></td>
+				    <td style="background-color:#ecf0f1">Se exporta: <span style="color:red">'.$formato_ventas['se_exporta'].'</span></td>
+				    <td style="background-color:#ecf0f1">Mercado: <span style="color:red">'.$formato_ventas['mercado'].'</span></td>
+				    <td style="background-color:#ecf0f1">Valor_ingredientes: <span style="color:red">'.$formato_ventas['valor_ingredientes'].'</span></td>
 				    <td>'.$formato_ventas['unidad_cantidad_factura'].'</td>
 				    <td>'.number_format($formato_ventas['cantidad_total_factura'],2).' USD</td>
 				    <td>'.$formato_ventas['precio_sustentable_minimo'].' USD</td>
@@ -377,19 +381,19 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;">           
-				        La OPP <span style="color:red">'.$opp['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestra una tabla con el resumen de las operaciones.
+				        La OPP <span style="color:red">'.$opp['abreviacion'].'</span> ha finalizado el <span style="color:red">TRIMESTRE '.$_GET['trim'].'</span>, a continuación se muestra una tabla con el resumen de las transacciones realizadas.
 				      </td>
 				    </tr>
 				    <tr>
 				      <td colspan="2">
 				        <table style="border: 1px solid #ddd;border-collapse: collapse;font-size:12px;">
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-				            <td colspan="7" style="text-align:center">Resumen de operaciones</td>
+				            <td colspan="7" style="text-align:center">Resumen de las transacciones</td>
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">OPP</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Informe</td>
-				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Num. de Contratos</td>
+				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Num. de transacciones</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Valor total de los contratos</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Cuota de uso aplicada acorde al año en curso</td>
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">Total cuota de uso</td>
@@ -407,7 +411,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 				    </tr>
 				    <tr>
 				      <td style="padding-top:10px;" colspan="2">
-				        Se adjunta el PDF con los registro correspondientes al trimestre finalizado. Por favor verificar la información, en caso de que la información sea correcta realizar los siguientes pasos para poder "APROBAR" el reporte:
+				        Se adjunta el PDF con las transacciones correspondientes al trimestre finalizado. Por favor verificar la información, en caso de que la información sea correcta realizar los siguientes pasos para poder "APROBAR" el reporte:
 				        <ol>
 				        	<li>Debe de ingresar en su cuenta como Administrador dentro del sistema D-SPP</li>
 				        	<li>Seleccionar la opción "Reportes Comerciales"</li>
@@ -427,8 +431,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'YES'){
 	///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
 	//$mail->AddAddress($correo_cert);
 
-		$mail->AddAddress('cert@spp.coop');
-
+	$mail->AddAddress('cert@spp.coop');
 
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
@@ -509,7 +512,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 				      <td colspan="2">
 				        <table style="border: 1px solid #ddd;border-collapse: collapse;font-size:12px;">
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
-				            <td colspan="7" style="text-align:center">Resumen de operaciones</td>
+				            <td colspan="7" style="text-align:center">Resumen de las transacciones</td>
 				          </tr>
 				          <tr style="border: 1px solid #ddd;border-collapse: collapse;">
 				            <td style="padding: 10px;border: 1px solid #ddd;border-collapse: collapse;">OPP</td>
@@ -596,24 +599,24 @@ if(isset($_GET['trim'])){
 	}
 	$titulo_trim = '';
 
-
 	switch ($_GET['trim']) {
 		case '1':
-			$titulo_trim = "<h4>FIRST QUARTER | <small>Estatus:  $estatus</small></h4>";
+			$titulo_trim = "<h4>FIRST QUARTER <span style='color:red'>$ano_actual</span> | <small>Status:  $estatus</small></h4>";
 			break;
 		case '2':
-			$titulo_trim = "<h4>SECOND QUARTER | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>SECOND QUARTER <span style='color:red'>$ano_actual</span> | <small>Status: $estatus</small></h4>";
 			break;
 		case '3':
-			$titulo_trim = "<h4>THIRD QUARTER | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>THIRD QUARTER <span style='color:red'>$ano_actual</span> | <small>Status: $estatus</small></h4>";
 			break;
 		case '4':
-			$titulo_trim = "<h4>FOURD QUARTER | <small>Estatus: $estatus</small></h4>";
+			$titulo_trim = "<h4>FOURD QUARTER <span style='color:red'>$ano_actual</span> | <small>Status: $estatus</small></h4>";
 			break;		
 		default:
 			$titulo_trim = "<h4>QUARTER NOT AVAILABLE</small></h4>";
 			break;
 	}
+
 
 	//echo $titulo_trim;
 	if($total_trim == 1){
@@ -634,22 +637,19 @@ if(isset($_GET['trim'])){
 			<a class="btn btn-default" href="?INFORME&general_detail&trim=<?php echo $_GET['trim']; ?>&add&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-pencil"></span> Edit current record</a>
 		</div>
 
-
-
 			<table class="table table-bordered" style="font-size:11px;">
 				<thead>
 					<tr>
-						<th colspan="6">
+						<th colspan="7">
 							<?php 
 							echo $titulo_trim;
 							 ?>
 						</th>
 
-
 						<th colspan="4">
 							<?php echo "<h4>".$opp['abreviacion']."</h4>"; ?>
 						</th>
-						<th colspan="5" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
+						<th colspan="6" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
 							<?php 
 							if(isset($pregunta)){
 								echo $pregunta;
@@ -682,7 +682,7 @@ if(isset($_GET['trim'])){
 							<?php
 							if($trim[$txt_estatus_factura] == 'ENVIADA'){
 								if(isset($trim[$txt_estatus_comprobante]) && $trim[$txt_estatus_comprobante] == 'ENVIADO'){
-									echo "<span style='color:red'>PAYMENT PROOF IS SENT</span>";
+									echo "<span style='color:red'>PAYMENT PROOF HAS BEEN SENT</span>";
 								}else if($trim[$txt_estatus_comprobante] == 'APROBADO'){
 									echo "<p>Proof of payment has been approved</p>";
 									echo "<a href='".$trim[$txt_comprobante]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Download payment voucher</a>";
@@ -690,7 +690,7 @@ if(isset($_GET['trim'])){
 								?>
 									<form action="" method="POST" enctype="multipart/form-data">
 										<p style="font-size:12px;">Click on the following button to load the proof of payment corresponding to the Quarterly Report.</p>
-										<input type="file" class="form-control" name="comprobante_pago">
+										<input type="file" class="form-control" name="comprobante_pago" required>
 										<input type="hidden" name="num_trimestre" value="<?php echo $_GET['trim']; ?>">
 										<input type="hidden" name="idtrimestre" value="<?php echo $trim[$txt_id]; ?>">
 										<input type="hidden" name="idopp" value="<?php echo $trim['idopp']; ?>">
@@ -699,8 +699,16 @@ if(isset($_GET['trim'])){
 								<?php
 								}
 							}else if($trim[$txt_estado_trim] == 'FINALIZADO'){
-								echo "<a href='".$trim[$txt_factura]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Download Invoice</a>";
-								echo "<a href='".$trim[$txt_reporte_trim]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Download Quarterly Report</a>";
+								if(isset($trim[$txt_factura])){
+									echo "<a href='".$trim[$txt_factura]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Download Invoice</a>";
+								}else{
+									echo "<div class='col-xs-6'><p style='color:red'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Invoice not available</p></div>";
+								}
+								if(isset($trim[$txt_reporte_trim])){
+									echo "<a href='".$trim[$txt_reporte_trim]."' target='_new' class='btn btn-success'><span class='glyphicon glyphicon-floppy-save' aria-hidden='true'></span> Download Quarterly Report</a>";
+								}else{
+									echo "<div class='col-xs-6'><p style='color:red'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Quarterly Report not available</p></div>";
+								}
 							}
 							 ?>						
 							</th>
@@ -720,6 +728,8 @@ if(isset($_GET['trim'])){
 						<th class="text-center">Specific Product</th>
 						<th class="warning text-center">Finished product?</th>
 						<th class="warning text-center">It is exported through:</th>
+						<th class="warning text-center">Market</th>
+						<th class="warning text-center">Value ingredients</th>
 						<th colspan="2" class="text-center">Total Amount in line with Contract</th>
 						<th class="text-center">Minimum Sustainable Price</th>
 						<th class="text-center">Organic Recognition</th>
@@ -759,6 +769,8 @@ if(isset($_GET['trim'])){
 							<td><?php echo $formato['producto_especifico']; ?></td>
 							<td><?php echo $formato['producto_terminado']; ?></td>
 							<td><?php echo $formato['se_exporta']; ?></td>
+							<td><?php echo $formato['mercado']; ?></td>
+							<td><?php echo $formato['valor_ingredientes']; ?></td>
 							<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 							<td><?php echo number_format($formato['cantidad_total_factura'],2); ?></td>
 							<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -777,7 +789,7 @@ if(isset($_GET['trim'])){
 					}
 						
 						echo "<tr class='info'>
-							<td colspan='21'></td>
+							<td colspan='23'></td>
 							<td class='text-right'><b style='color:red'>".number_format($suma_valor_contrato,2)." USD</b></td>
 							<td></td>
 							<td class='text-right'><b style='color:red'>".number_format($suma_cuota_uso,2)." USD</b></td>

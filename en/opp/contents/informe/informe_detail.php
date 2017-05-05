@@ -60,12 +60,14 @@ $opp = mysql_fetch_assoc($row_opp);
 
 $row_informe = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, SUM(trim1.total_trim1 + trim2.total_trim2 + trim3.total_trim3 + trim4.total_trim4) AS 'balance_final' FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idopp = $idopp AND FROM_UNIXTIME(informe_general.ano, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 $informe_general = mysql_fetch_assoc($row_informe);
-
-
-
 ?>
 
 <h4>QUARTERLY REPORTS <span style="color:#e74c3c"><?php echo date('Y',$informe_general['ano']); ?></span></h4>
+<?php 
+	if(!isset($informe_general['trim2'])){
+		echo "<h4 class='alert alert-danger'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> Por disposiciones de SPP Global debe iniciar la captura de transacciones en el \"Trimestre 2\".</h4>";
+	}
+ ?>
 
 <table class="table table-bordered" style="font-size:11px;">
 	<thead>
@@ -73,8 +75,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			<th class="text-center">#</th>
 			<th class="text-center">Country of the SPO</th>
 			<th class="text-center">#SPP</th>
-			<th class="text-center">Name of the buyer</th>
-			<th class="text-center">Buyer Country</th>
+			<th class="text-center"><span style="color:red">Name of the buyer</span></th>
+			<th class="text-center"><span style="color:red">Buyer Country</span></th>
 			<th class="text-center">Billing Date</th>
 			<th class="text-center">First Intermediate</th>
 			<th class="text-center">Second Intermediate</th>
@@ -83,6 +85,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			<th class="text-center">Specific Product</th>
 			<th class="text-center">Finished product?</th>
 			<th class="text-center">Is it exported?</th>
+			<th class="text-center">Market</th>
+			<th class="text-center">Value of the ingredients</th>
 			<th colspan="2" class="text-center">Total Amount in line with Contract</th>
 			<th class="text-center">Minimum Sustainable Price</th>
 			<th class="text-center">Organic Recognition</th>
@@ -127,6 +131,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['producto_especifico']; ?></td>
 					<td><?php echo $formato['producto_terminado']; ?></td>
 					<td><?php echo $formato['se_exporta']; ?></td>
+					<td><?php echo $formato['mercado']; ?></td>
+					<td><?php echo $formato['valor_ingredientes']; ?></td>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 					<td><?php echo $formato['cantidad_total_factura']; ?></td>
 					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -144,7 +150,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			$total_trim1 = $total_trim1 + $formato['total_a_pagar'];
 			}
 			echo "<tr>
-				<td colspan='21' class='text-right warning'><h5>FIRST QUARTER</h5></td>
+				<td colspan='23' class='text-right warning'><h5>FIRST QUARTER</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_contrato,2)."</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim1,2)."</td>
@@ -160,7 +166,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			?>
 				<tr>
 					<td><?php echo $contador; ?></td>
-					<td><?php echo $opp['pais_opp']; ?></td>
+					<td><?php echo $formato['pais_opp']; ?></td>
 					<td><?php echo $formato['spp']; ?></td>
 					<td><?php echo $formato['empresa']; ?></td>
 					<td><?php echo $formato['pais_empresa']; ?></td>
@@ -180,6 +186,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['producto_especifico']; ?></td>
 					<td><?php echo $formato['producto_terminado']; ?></td>
 					<td><?php echo $formato['se_exporta']; ?></td>
+					<td><?php echo $formato['mercado']; ?></td>
+					<td><?php echo $formato['valor_ingredientes']; ?></td>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 					<td><?php echo $formato['cantidad_total_factura']; ?></td>
 					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -198,7 +206,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			}
 
 			echo "<tr>
-				<td colspan='21' class='text-right warning'><h5>SECOND QUARTER</h5></td>
+				<td colspan='23' class='text-right warning'><h5>SECOND QUARTER</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_contrato,2)."</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim2,2)."</td>
@@ -236,6 +244,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['producto_especifico']; ?></td>
 					<td><?php echo $formato['producto_terminado']; ?></td>
 					<td><?php echo $formato['se_exporta']; ?></td>
+					<td><?php echo $formato['mercado']; ?></td>
+					<td><?php echo $formato['valor_ingredientes']; ?></td>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 					<td><?php echo $formato['cantidad_total_factura']; ?></td>
 					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -254,7 +264,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			}
 
 			echo "<tr>
-				<td colspan='21' class='text-right warning'><h5>THIRD QUARTER </h5></td>
+				<td colspan='23' class='text-right warning'><h5>THIRD QUARTER </h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_contrato,2)."</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim3,2)."</td>
@@ -290,6 +300,8 @@ $informe_general = mysql_fetch_assoc($row_informe);
 					<td><?php echo $formato['producto_especifico']; ?></td>
 					<td><?php echo $formato['producto_terminado']; ?></td>
 					<td><?php echo $formato['se_exporta']; ?></td>
+					<td><?php echo $formato['mercado']; ?></td>
+					<td><?php echo $formato['valor_ingredientes']; ?></td>
 					<td><?php echo $formato['unidad_cantidad_factura']; ?></td>
 					<td><?php echo $formato['cantidad_total_factura']; ?></td>
 					<td><?php echo $formato['precio_sustentable_minimo']; ?></td>
@@ -308,7 +320,7 @@ $informe_general = mysql_fetch_assoc($row_informe);
 			}
 
 			echo "<tr>
-				<td colspan='21' class='text-right warning'><h5>FOURD QUARTER</h5></td>
+				<td colspan='23' class='text-right warning'><h5>FOURD QUARTER</h5></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_contrato,2)."</td>
 				<td class='warning'></td>
 				<td style='background-color:#2c3e50;color:#ecf0f1' class='danger'>".number_format($total_trim4,2)."</td>

@@ -121,7 +121,11 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 	if(isset($_POST['op_preg13'])){
-		$op_preg13 = $_POST['op_preg13'];
+		if($_POST['op_preg13'] == 'mayor'){
+			$op_preg13 = $_POST['op_preg13_1'];
+		}else{
+			$op_preg13 = $_POST['op_preg13'];
+		}
 	}else{
 		$op_preg13 = "";
 	}
@@ -412,14 +416,14 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		          <tbody>
 		                <tr>
 		                  <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-		                  <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Certification Application for Small Producers’ Organizations</strong></th>
+		                  <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Certification Application for Small Producers’ Organizations </strong></th>
 		                </tr>
 		                <tr>
 		                  <td style="padding-top:10px;">
 		       
 		                    Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
 		                  <br>
-		                    To consult the application, please log in to your CE(Certification Entity) account, in the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+		                    In order to consult the application, please open a session in your  Certification Entity (CE) account at the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
 		                  </td>
 		                </tr>
 		            <tr>
@@ -477,6 +481,18 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		                </ol>
 		              </td>
 		            </tr> 
+		            <tr>
+		              <td colspan="2">
+		                <span style="color:red">What should I do now? You should review the application and upload a price quote.</span>
+		                <ol>
+		                  <li>•	You should open a session in the D-SPP system as a Certification Entity (CE).</li>
+		                  <li>•	Within your account, you should select ApplicationsSolicitudes > SPO Applications Solicitudes OPP</li>
+		                  <li>•	In the applications table, you should locate the column entitled “Actions” and select the Blue Consult button.  </li>
+		                  <li>•	To send your price quote, you should select “Certification Procedure” and upload your price quote.</li>
+		                </ol>
+		              </td>
+		            </tr> 
+
 
 				  </tbody>
 				</table>
@@ -484,7 +500,6 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			</body>
 			</html>
 		';
-		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
 		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
 		$destinatario = $oc['email1'];
 		if(isset($oc['email1'])){
@@ -529,6 +544,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			}
 
 		}
+
 	    $mail->AddCC($administrador);
 	    $mail->AddBCC($administrador);
 	    $mail->AddBCC($spp_global);
@@ -540,7 +556,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
         $mail->Send();
         $mail->ClearAddresses();
 
- 		$mensaje = "Se ha enviado la Solicitud de Certificacion al OC, en breve seras contactado";
+ 		$mensaje = "The Application has been sent to the OC, soon you will be contacted";
 
 
 }
@@ -732,7 +748,7 @@ $opp = mysql_fetch_assoc($row_opp);
 			<div class="col-lg-12">
 				<div class="col-md-12">
 					<label for="resp1">NUMBER OF PRODUCERS MEMBERS:</label>
-					<input type="text" class="form-control" id="resp1" name="resp1" placeholder="just number" required>
+					<input type="number" class="form-control" id="resp1" name="resp1" placeholder="just number" required>
 
 					<label for="resp2">NUMBER OF PRODUCERS MEMBERS OF THE  PRODUCT (S) TO BE INCLUDED IN THE CERTIFICATION:</label>
 					<input type="text" class="form-control" id="resp2" name="resp2" >
@@ -897,7 +913,7 @@ $opp = mysql_fetch_assoc($row_opp);
 						<b>13.	IF YOUR RESPONSE WAS POSITIVE, PLEASE MARK THE RANGE OF THE TOTAL VALUE SPP FROM THE PREVIOUS CYCLE ACCORDING TO THE FOLLOWING TABLE:</b>
 					</p>
 
-					<div class="well col-xs-12 " id="tablaVentas" style="display:none;">
+					<div class="well col-xs-12">
 						<div class="col-xs-6"><p>LESS THAN $3,000 USD</p></div>
 						<div class="col-xs-6 "><input type="radio" name="op_preg13" class="form-control" id="ver" onclick="ocultar()" value="HASTA $3,000 USD"></div>
 					
@@ -1073,7 +1089,7 @@ $opp = mysql_fetch_assoc($row_opp);
 	    }
 	     
 	    if(!monto) {
-	      alert("You selected that if you had sales, you must select the SPP sales amount");
+	      alert("You selected that you had sales, you must select the SPP sales amount");
 	      return false;
 	    }
 

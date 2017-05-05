@@ -216,14 +216,16 @@ if($_GET['distribucion_p'] == 'producto'){ /// SECCIÓN DE PRODUCTO TERMINADO
 			<?php
 			}else{
 			?>
-				<div class="col-md-12">
-					<table class="table">
-						<thead>
-							<tr>
-								<th class="warning"><b>No se encontraron registros sobre el Trimestre <?php echo $i; ?></b></th>
-							</tr>
-						</thead>
-					</table>
+				<div class="row">
+					<div class="col-md-12">
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="warning"><b>No se encontraron registros sobre el Trimestre <?php echo $i; ?></b></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
 				</div>
 			<?php
 			}

@@ -110,7 +110,6 @@ if(isset($_POST['informe_trimestral'])){
 		echo "<script>alert('No');</script>";
 	}
 }
-
 ?>
 <div class="row">
 	<div class="col-md-12">

@@ -56,20 +56,10 @@ $opp = mysql_fetch_assoc($row_opp);
 
 $row_configuracion = mysql_query("SELECT * FROM porcentaje_ajuste WHERE anio = $ano_actual", $dspp) or die(mysql_error());
 $configuracion = mysql_fetch_assoc($row_configuracion);
-/*$row_opp = mysql_query("SELECT spp, abreviacion, pais, maquilador, comprador, intermediario FROM opp WHERE idopp = $idopp", $dspp) or die(mysql_error());
-$opp = mysql_fetch_assoc($row_opp);
-$tipo_opp = '';
-if($opp['maquilador']){
-	$tipo_opp = 'MAQUILADOR';
-}else if($opp['comprador']){
-	$tipo_opp = 'COMPRADOR FINAL';
-}else if($opp['intermediario']){
-	$tipo_opp = 'INTERMEDIARIO';
-}
-*/
-$row_configuracion = mysql_query("SELECT * FROM porcentaje_ajuste WHERE anio = $ano_actual", $dspp) or die(mysql_error());
-$configuracion = mysql_fetch_assoc($row_configuracion);
 
+//// CORREOS GENERALES
+//$correo_cert = 'cert@spp.coop';
+//$correo_adm = 'adm@spp.coop';
 
 $row_informe_general = mysql_query("SELECT informe_general.*, trim1.total_trim1, trim2.total_trim2, trim3.total_trim3, trim4.total_trim4, ROUND(SUM(trim1.total_trim1 + trim2.total_trim2 + trim3.total_trim3 + trim4.total_trim4), 2) AS 'balance_final' FROM informe_general LEFT JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 LEFT JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 LEFT JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 LEFT JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idopp = $idopp AND FROM_UNIXTIME(informe_general.ano, '%Y') = '$ano_actual'", $dspp) or die(mysql_error());
 
@@ -99,7 +89,6 @@ $row_informe_general = mysql_query("SELECT informe_general.*, trim1.total_trim1,
 	?>
 </h4>
 
-
 <?php 
 if(isset($_GET['general_detail'])){
 	include("informe_general.php");
@@ -114,6 +103,4 @@ if(isset($_GET['general_detail'])){
 }else{
 	include ('listado_informes.php');
 }
-
-
 ?>

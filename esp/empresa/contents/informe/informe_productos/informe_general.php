@@ -83,7 +83,6 @@ if(isset($_POST['informe_trimestral'])){
 		$estatus_factura_trim1 = 'PAGADA';
 		$estatus_comprobante_trim1 = 'APROBADO';
 
-
 		$insertSQL = sprintf("INSERT INTO trim1_producto (idtrim1_producto, idempresa, fecha_inicio, fecha_fin, total_trim1, estado_trim1, valor_contrato_trim1, cuota_uso_trim1, estatus_factura_trim1, estatus_comprobante_trim1) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 			GetSQLValueString($idtrim1_producto, "text"),
 			GetSQLValueString($idempresa, "int"),
@@ -101,7 +100,6 @@ if(isset($_POST['informe_trimestral'])){
 			GetSQLValueString($idtrim1_producto, "text"),
 			GetSQLValueString($idinforme_general_producto, "text"));
 		$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
-
 		echo "<script>alert('Se ha creado un nuevo formato trimestral $idtrim1_producto');</script>";
 	}else{
 		echo "<script>alert('No');</script>";

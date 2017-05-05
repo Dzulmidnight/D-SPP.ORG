@@ -169,24 +169,46 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		}else{
 			$cuota_uso_reglamento = NULL;
 		}
-		if(isset($_POST['total_a_pagar'])){
-			$total_a_pagar = $_POST['total_a_pagar'];
+		if(isset($_POST['valor_cuota'])){ /// antes total_a_pagar
+			$valor_cuota = $_POST['valor_cuota'];
 		}else{
-			$total_a_pagar = 0;
+			$valor_cuota = 0;
 		}
 		if(isset($_POST['producto_terminado'])){
 			$producto_terminado = $_POST['producto_terminado'];
 		}else{
 			$producto_terminado = NULL;
 		}
-		if(isset($_POST['se_exporta'])){
-			$se_exporta = $_POST['se_exporta'];
+		if($producto_terminado == 'SI'){
+			if(isset($_POST['valor_ingredientes'])){
+				$valor_ingredientes = $_POST['valor_ingredientes'];
+			}else{
+				$valor_ingredientes = NULL;
+			}
+			$porcentaje_valor_ingredientes = ($valor_ingredientes * 0.25);
+
+			if(isset($_POST['se_exporta'])){
+				$se_exporta = $_POST['se_exporta'];
+
+				if($se_exporta == 'DIRECTAMENTE'){
+					$valor_final_ingredientes = ($porcentaje_valor_ingredientes * 0.75);
+				}else if($se_exporta == 'INTERMEDIARIO'){
+					$valor_final_ingredientes = ($porcentaje_valor_ingredientes * 0.25);
+				}
+			}else{
+				$se_exporta = NULL;
+				$valor_final_ingredientes = 0;
+			}
+
 		}else{
 			$se_exporta = NULL;
+			$valor_ingredientes = NULL;
 		}
 
+		$total_a_pagar = $valor_cuota + $valor_final_ingredientes;
+
 		//Iniciamos insertar formato_compras
-			$insertSQL = sprintf("INSERT INTO formato_compras(idtrim, idempresa, spp, opp, pais, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+			$insertSQL = sprintf("INSERT INTO formato_compras(idtrim, idempresa, spp, opp, pais, fecha_facturacion, primer_intermediario, segundo_intermediario, clave_contrato, fecha_contrato, producto_general, producto_especifico, producto_terminado, se_exporta, valor_ingredientes, valor_final_ingredientes, unidad_cantidad_factura, cantidad_total_factura, precio_sustentable_minimo, reconocimiento_organico, incentivo_spp, otros_premios, precio_total_unitario, valor_total_contrato, cuota_uso_reglamento, valor_cuota, total_a_pagar, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 				GetSQLValueString($idtrim, "text"),
 				GetSQLValueString($idempresa, "int"),
 				GetSQLValueString($spp, "text"),
@@ -201,6 +223,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 				GetSQLValueString($producto_especifico, "text"),
 				GetSQLValueString($producto_terminado, "text"),
 				GetSQLValueString($se_exporta, "text"),
+				GetSQLValueString($valor_ingredientes, "text"),
+				GetSQLValueString($valor_final_ingredientes, "text"),
 				GetSQLValueString($unidad_cantidad_total_factura, "text"),
 				GetSQLValueString($cantidad_total_factura, "text"),
 				GetSQLValueString($precio_sustentable_minimo, "text"),
@@ -210,6 +234,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 				GetSQLValueString($precio_total_unitario, "text"),
 				GetSQLValueString($valor_total_contrato, "text"),
 				GetSQLValueString($cuota_uso_reglamento, "text"),
+				GetSQLValueString($valor_cuota, "text"),
 				GetSQLValueString($total_a_pagar, "text"),
 				GetSQLValueString($fecha_registro, "int"));
 			$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -239,7 +264,6 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	$row_trim = mysql_query("SELECT * FROM $txt_trim WHERE $txt_idtrim = '$idtrim'", $dspp) or die(mysql_error());
 	$trim = mysql_fetch_assoc($row_trim);
 	?>
-
 	<div class="col-md-12">
 	<?php
 	if($trim[$txt_estatus] == 'FINALIZADO'){
@@ -251,11 +275,9 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	}else{
 	?>
 
-		<!--<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>-->
 		<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Fields marked in blue are optional, this information will be useful for the evaluation of certification.</p>
 		<p class="alert alert-success" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> The fields marked in green are mandatory.</p>
 		<p class="alert alert-warning" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> The fields marked in yellow are completed automatically.</p>
-	
 
 		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
 		 		<thead>
@@ -275,7 +297,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						<?php 
 						if($tipo_de_empresa){
 						?>
-							<th colspan="2" class="text-center">
+							<th colspan="3" class="text-center">
 								Finished product
 							</th>
 
@@ -358,7 +380,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 		 				<?php 
 		 				if($tipo_de_empresa){
 		 				?>
-			 				<td colspan="2">
+			 				<td colspan="3">
 			 					Finished product?
 			 				</td>
 		 				<?php
@@ -473,7 +495,8 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 										if($tipo_de_empresa){
 										?>
 											<td><?php echo $formato['producto_terminado']; ?></td>
-											<td><?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
+											<td><?php echo 'Value ingredients: <span style="color:red">'.$formato['valor_ingredientes']."</span>"; ?></td>
+											<td><?php echo 'It export: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
 										<?php
 										}
 										 ?>
@@ -508,33 +531,14 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 									$contador++;
 								}
 								 ?>
-							</select>
-							<!--<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" />-->
-								<!--<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur="ponerMayusculas(this)" required />-->
-													
+							</select>													
 						</td>
-
-
-						<!--<td class="success"><!-- #SPP(codigo de identificación)-->
-							<!--* <input type="text" name="spp" id="" placeholder="#SPP" autofocus required>
-						</td>-->
 
 						<td class="warning"><!-- nombre de la opp -->
 							<textarea id="nombre_opp" name="nombre_opp" value="" placeholder="Name of SPO"></textarea>
-
-							<!--<input type="text" name="nombre_opp" id="" placeholder="Nombre de la OPP">-->
 						</td>
 
-						<td class="warning"><!-- pais de la opp proveedora -->
-			              <!--<select name="pais" id="pais" class="" required>
-			                <option value="">Selecciona un País</option>
-			                <?php 
-			                $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
-			                while($pais = mysql_fetch_assoc($row_pais)){
-			                  echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
-			                }
-			                 ?>
-			              </select>-->
+						<td class="warning">
 			              <input id="pais" name="pais" value="" placeholder="pais">
 						</td>
 
@@ -578,6 +582,12 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 								</label>
 							</td>
 							<td style="border-left-style:hidden;">
+								<div id="div_multingrediente" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
+									Total value of the ingredients
+									<input style="color:black" type="number" step="any" name="valor_ingredientes" placeholder="Value">
+								</div>
+							</td>
+							<td style="border-left-style:hidden;">
 								<div id="div_oculto" style="display:none;background-color:#e74c3c;color:#ecf0f1;padding:10px;">
 									Purchased directly from the organization or through an intermediary
 									<label class="radio-inline">
@@ -587,8 +597,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 									<label class="radio-inline">
 									  <input type="radio" name="se_exporta" id="" value="INTERMEDIARIO"> Through an intermediary
 									</label>
-								</div>							
-							
+								</div>	
 						<?php
 						}
 						 ?>
@@ -636,7 +645,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>
 
 						<td class="warning"><!-- total a pagar -->
-							<input type="text" name="total_a_pagar" id="total_a_pagar" placeholder="Total to pay" readonly>
+							<input type="text" name="valor_cuota" id="valor_cuota" placeholder="Total to pay" readonly>
 						</td>
 
 					</tr>
@@ -709,10 +718,12 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 
 	function mostrar(){
 		document.getElementById('div_oculto').style.display = 'block';
+		document.getElementById('div_multingrediente').style.display = 'block';
 	}
 	function ocultar()
 	{
 		document.getElementById('div_oculto').style.display = 'none';
+		document.getElementById('div_multingrediente').style.display = 'none';
 	}
 </script>
 
@@ -765,9 +776,9 @@ var cuota_fija_anual = <?php echo $configuracion['cuota_compradores']; ?>;
 		//calculamos el valor de la cuota de uso reglamento
 		//cuota_uso_reglamento = valor_total_contrato * cuota_fija_anual;
 		//calculamos el total a pagar
-		total_a_pagar = (valor_total_contrato * cuota_fija_anual) / 100;
+		valor_cuota = (valor_total_contrato * cuota_fija_anual) / 100;
 
-		total_redondeado = parseFloat(total_a_pagar.toFixed(2));
+		total_redondeado = parseFloat(valor_cuota.toFixed(2));
 
 		//calculamos el valor total del contrato
 
@@ -776,7 +787,7 @@ var cuota_fija_anual = <?php echo $configuracion['cuota_compradores']; ?>;
 		//valor_total_contrato = parseFloat(Math.round((precio_total_unitario * peso_cantidad_total_contrato) * 100) / 100).toFixed(2);
 		document.getElementById("valor_total_contrato").value = total_contrato_redondeado; 
 		document.getElementById("cuota_uso_reglamento").value = "<?php echo $configuracion['cuota_compradores']; ?> %"; 
-		document.getElementById("total_a_pagar").value = total_redondeado; 
+		document.getElementById("valor_cuota").value = total_redondeado; 
 
 		//calculamos el total a pagar
 		/*if(isNaN(cuota_uso_reglamento)){ // revisamos si es porcentaje

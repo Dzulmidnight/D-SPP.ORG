@@ -59,12 +59,14 @@ $idempresa = $_SESSION['idempresa'];
 $row_informe_producto = mysql_query("SELECT informe_general_producto.*, trim1_producto.total_trim1, trim2_producto.total_trim2, trim3_producto.total_trim3, trim4_producto.total_trim4, SUM(trim1_producto.total_trim1 + trim2_producto.total_trim2 + trim3_producto.total_trim3 + trim4_producto.total_trim4) AS 'balance_final' FROM informe_general_producto LEFT JOIN trim1_producto ON informe_general_producto.trim1_producto = trim1_producto.idtrim1_producto LEFT JOIN trim2_producto ON informe_general_producto.trim2_producto = trim2_producto.idtrim2_producto LEFT JOIN trim3_producto ON informe_general_producto.trim3_producto = trim3_producto.idtrim3_producto LEFT JOIN trim4_producto ON informe_general_producto.trim4_producto = trim4_producto.idtrim4_producto WHERE informe_general_producto.idempresa = $idempresa AND FROM_UNIXTIME(informe_general_producto.ano, '%Y') = $ano_actual", $dspp) or die(mysql_error());
 $informe_general_producto = mysql_fetch_assoc($row_informe_producto);
 
-
-
 ?>
 
 <h4>QUARTERLY REPORTS <span style="color:#e74c3c"><?php echo date('Y',$informe_general_producto['ano']); ?></span></h4>
-
+<?php 
+	if(!isset($informe_general['trim2'])){
+		echo "<h4 class='alert alert-danger'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> Por disposiciones de SPP Global debe iniciar la captura de transacciones en el \"Trimestre 2\".</h4>";
+	}
+ ?>
 <table class="table table-bordered" style="font-size:11px;">
 	<thead>
 		<tr class="success">

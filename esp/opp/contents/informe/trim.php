@@ -431,9 +431,7 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	';
 	///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
 	//$mail->AddAddress($correo_cert);
-
-		$mail->AddAddress('cert@spp.coop');
-
+	$mail->AddAddress('cert@spp.coop');
 
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
@@ -601,7 +599,6 @@ if(isset($_GET['trim'])){
 	}
 	$titulo_trim = '';
 
-
 	switch ($_GET['trim']) {
 		case '1':
 			$titulo_trim = "<h4>PRIMER TRIMESTRE <span style='color:red'>$ano_actual</span> | <small>Estatus:  $estatus</small></h4>";
@@ -639,8 +636,6 @@ if(isset($_GET['trim'])){
 			<a class="btn btn-default" href="?INFORME&general_detail&trim=<?php echo $_GET['trim']; ?>&edit&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-pencil"></span> Editar transacciónes actuales</a>
 		</div>
 
-
-
 			<table class="table table-bordered" style="font-size:11px;">
 				<thead>
 					<tr>
@@ -649,7 +644,6 @@ if(isset($_GET['trim'])){
 							echo $titulo_trim;
 							 ?>
 						</th>
-
 
 						<th colspan="4">
 							<?php echo "<h4>".$opp['abreviacion']."</h4>"; ?>
@@ -695,7 +689,7 @@ if(isset($_GET['trim'])){
 								?>
 									<form action="" method="POST" enctype="multipart/form-data">
 										<p style="font-size:12px;">Dar clic en el siguiente botón para poder cargar el comprobante de pago correspondiente al Informe Trimestral.</p>
-										<input type="file" class="form-control" name="comprobante_pago">
+										<input type="file" class="form-control" name="comprobante_pago" required>
 										<input type="hidden" name="num_trimestre" value="<?php echo $_GET['trim']; ?>">
 										<input type="hidden" name="idtrimestre" value="<?php echo $trim[$txt_id]; ?>">
 										<input type="hidden" name="idopp" value="<?php echo $trim['idopp']; ?>">

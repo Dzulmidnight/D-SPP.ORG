@@ -291,7 +291,6 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 	?>
 
 
-		<!--<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>-->
 		<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color azul son opcionales, dicha informacion será de utilitdad para la evaluación de la certificación.</p>
 		<p class="alert alert-success" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color verde son obligatorios.</p>
 		<p class="alert alert-warning" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color amarillo son completados de manera automatica.</p>
@@ -495,35 +494,28 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 									<td><?php echo $formato['empresa']; ?></td>
 									<td><?php echo $formato['pais_empresa']; ?></td>
 									<td>
-										<!--<input type="date" value="<?php echo date('Y-m-d',$formato['fecha_facturacion']); ?>">-->
 										<?php echo date('d/m/Y',$formato['fecha_facturacion']); ?>
 									</td>
 									<td>
-										<!--<input type="text" name="primer_intermediario" value="<?php echo $formato['primer_intermediario']; ?>">-->
 										<?php echo $formato['primer_intermediario']; ?>
 									</td>
 									<td>
-										<!--<input type="text" name="segundo_intermediario" value="<?php echo $formato['segundo_intermediario']; ?>">-->
 										<?php echo $formato['segundo_intermediario']; ?>
 									</td>
 									<td>
-										<!--<input type="text" name="clave_contrato" value="<?php echo $formato['clave_contrato']; ?>">-->
 										<?php echo $formato['clave_contrato']; ?>
 									</td>
 									<td>
 										<?php
 										if(isset($formato['fecha_contrato'])){
-										 	//echo "<input type='date' name='fecha_contrato' value='".date('Y-m-d', $formato['fecha_contrato'])."'>";
 											echo date('d/m/Y',$formato['fecha_contrato']); 
 										}
 										?>
 									</td>
 									<td>
-										<!--<input type="text" name="producto_general" value="<?php echo $formato['producto_general']; ?>">-->
 										<?php echo $formato['producto_general']; ?>
 									</td>
 									<td>
-										<!--<input type="text" name="producto_especifico" value="<?php echo $formato['producto_especifico']; ?>">-->
 										<?php echo $formato['producto_especifico']; ?>
 									</td>
 									<!-- INICIA SECCIÓN PRODUCTO TERMINADO -->
@@ -542,27 +534,21 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 									<!-- TERMINA SECCIÓN PRODUCTO TERMINADO -->
 						
 									<td>
-										<!--<input type="text" name="unidad_cantidad_factura" value="<?php echo $formato['cantidad_total_factura']; ?>">-->
 										<?php echo $formato['unidad_cantidad_factura']; ?>
 									</td>
 									<td>
-										<!--<input type="text" value="<?php echo $formato['cantidad_total_factura']; ?>">-->
 										<?php echo $formato['cantidad_total_factura']; ?>
 									</td>
 									<td>
-										<!--<input type="text" name="precio_sustentable_minimo" value="<?php echo $formato['precio_sustentable_minimo']; ?>">-->
 										<?php echo $formato['precio_sustentable_minimo']; ?>
 									</td>
 									<td>
-										<!--<input type="text" name="reconocimiento_organico" value="<?php echo $formato['reconocimiento_organico']; ?>">-->
 										<?php echo $formato['reconocimiento_organico']; ?>
 									</td>
 									<td>
-										<!--<input type="text" name="incentivo_spp" value="<?php echo $formato['incentivo_spp']; ?>">-->
 										<?php echo $formato['incentivo_spp']; ?>
 									</td>
 									<td>
-										<!--<input type="text" name="otros_premios" value="<?php echo $formato['otros_premios']; ?>">-->
 										<?php echo $formato['otros_premios']; ?>
 									</td>
 									<td>
@@ -577,7 +563,6 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 							$contador++;
 							}
 		 				 ?>
-
 		<form class="form-horizontal" method="POST">
 					<tr class="success">
 						<td class="warning"></td> <!-- # -->
@@ -594,19 +579,8 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 							 		echo "<option value='".$empresa['spp']."'>".$empresa['spp']." | ".mayus($empresa['abreviacion'])."</option>";
 							 	}
 							 	 ?>
-							 </select>
-
-							 	<!--<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur="ponerMayusculas(this)" required />
-
-							<!--<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" />-->
-								<!--<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur=" ponerMayusculas(this)" required />-->
-													
+							 </select>					
 						</td>
-
-
-						<!--<td class="success"><!-- #SPP(codigo de identificación)-->
-							<!--* <input type="text" name="spp" id="" placeholder="#SPP" autofocus required>
-						</td>-->
 
 						<td class="warning"><!-- nombre de la opp -->
 							<textarea id="nombre_empresa" name="nombre_empresa" value="" placeholder="Nombre del Comprador Final"></textarea>

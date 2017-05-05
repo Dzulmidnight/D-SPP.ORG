@@ -71,7 +71,6 @@ echo "<h4>Numero de informes actuales: $numero_informes</h4>";
 			<th>Trimestre 3</th>
 			<th>Trimestre 4</th>
 			<th>Total</th>
-			
 		</tr>
 	</thead>
 	<tbody>
@@ -89,7 +88,6 @@ echo "<h4>Numero de informes actuales: $numero_informes</h4>";
 				<td><?php echo number_format($listado['cuota_uso_trim3'],2); ?></td>
 				<td><?php echo number_format($listado['cuota_uso_trim4'],2); ?></td>
 				<td><?php echo number_format(round($balance_final,2),2); ?></td>
-				
 			</tr>
 			<?php
 			}

@@ -2530,7 +2530,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consultar Solicitud" href="?SOLICITUD&IDsolicitud_empresa=<?php echo $solicitud['idsolicitud']; ?>">Consultar</a>
           </td>
           <td>
-            <form action="../../reportes/solicitud.php" method="POST" target="_new">
+            <form action="../../reportes/solicitud_empresa.php" method="POST" target="_new">
               <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
               <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud']; ?>">

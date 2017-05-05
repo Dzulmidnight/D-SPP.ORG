@@ -275,12 +275,9 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 	}else{
 	?>
 
-
-		<!--<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>-->
 		<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color azul son opcionales, dicha informacion será de utilidad para la evaluación de la certificación.</p>
 		<p class="alert alert-success" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color verde son obligatorios.</p>
 		<p class="alert alert-warning" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color amarillo son completados de manera automatica.</p>
-	
 
 		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
 		 		<thead>
@@ -499,7 +496,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 										?>
 											<td><?php echo $formato['producto_terminado']; ?></td>
 											<td><?php echo 'Se exporta: <span style="color:red">'.$formato['se_exporta'].'</span>'; ?></td>
-											<td><?php echo 'Valor ingredientes: '.$formato['valor_ingredientes']; ?></td>
+											<td><?php echo 'Valor ingredientes: <span style="color:red">'.$formato['valor_ingredientes']."</span>"; ?></td>
 										<?php
 										}
 										 ?>
@@ -519,8 +516,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 							$contador++;
 							}
 		 				 ?>
-		<form class="form-horizontal" method="POST">
-		 				 
+		<form class="form-horizontal" method="POST">		 
 					<tr class="success">
 						<td class="warning"></td> <!-- # -->
 
@@ -535,33 +531,14 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 									$contador++;
 								}
 								 ?>
-							</select>
-							<!--<input type="text" name="busqueda" id="busqueda" value="" placeholder="" maxlength="30" autocomplete="off" />-->
-								<!--<input type="text" name="spp" id="spp" value="" placeholder="#SPP" maxlength="30" autocomplete="off" onKeyUp="buscar();" onBlur="ponerMayusculas(this)" required />-->
-													
+							</select>				
 						</td>
-
-
-						<!--<td class="success"><!-- #SPP(codigo de identificación)-->
-							<!--* <input type="text" name="spp" id="" placeholder="#SPP" autofocus required>
-						</td>-->
 
 						<td class="warning"><!-- nombre de la opp -->
 							<textarea id="nombre_opp" name="nombre_opp" value="" placeholder="Nombre de la OPP"></textarea>
-
-							<!--<input type="text" name="nombre_opp" id="" placeholder="Nombre de la OPP">-->
 						</td>
 
-						<td class="warning"><!-- pais de la opp proveedora -->
-			              <!--<select name="pais" id="pais" class="" required>
-			                <option value="">Selecciona un País</option>
-			                <?php 
-			                $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
-			                while($pais = mysql_fetch_assoc($row_pais)){
-			                  echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
-			                }
-			                 ?>
-			              </select>-->
+						<td class="warning">
 			              <input id="pais" name="pais" value="" placeholder="pais">
 						</td>
 

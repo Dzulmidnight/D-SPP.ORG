@@ -58,6 +58,7 @@ $row_informes = mysql_query("SELECT informe_general.*, trim1.cuota_uso_trim1, tr
 //$row_informes = mysql_query("SELECT informe_general.*, trim1.cuota_uso_trim1, trim2.cuota_uso_trim2, trim3.cuota_uso_trim3, trim4.cuota_uso_trim4 FROM informe_general INNER JOIN trim1 ON informe_general.trim1 = trim1.idtrim1 INNER JOIN trim2 ON informe_general.trim2 = trim2.idtrim2 INNER JOIN trim3 ON informe_general.trim3 = trim3.idtrim3 INNER JOIN trim4 ON informe_general.trim4 = trim4.idtrim4 WHERE informe_general.idempresa = $idempresa", $dspp) or die(mysql_error());
 $numero_informes = mysql_num_rows($row_informes);
 
+
 echo "<h4>Number of current reports: $numero_informes</h4>";
 ?>
 <table class="table table-bordered" style="font-size:12px;">

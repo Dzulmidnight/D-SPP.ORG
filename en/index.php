@@ -189,7 +189,7 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
       $mail->MsgHTML(utf8_decode($cuerpo));
       $mail->Send();
       $mail->ClearAddresses();
-      $mensaje = "<strong>Datos Registrados Correctamente, por favor revisa tu bandeja de correo electronico, si no encuentras tus datos revisa tu bandeja de spam</strong>";
+      $mensaje = "<strong>Registered Data Correctly, please check your email tray, if you can not find your data check your spam tray</strong>";
 
 }
 /****************************** FIN FORMULARIO INSERTAR OPP **************************************************/

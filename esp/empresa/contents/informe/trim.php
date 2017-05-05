@@ -79,18 +79,6 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 	$row_total_a_pagar = mysql_query("SELECT ROUND(SUM(total_a_pagar), 2) AS 'total_a_pagar' FROM formato_compras WHERE idtrim = '$idtrimestre'", $dspp) or die(mysql_error());
 	$total_a_pagar = mysql_fetch_assoc($row_total_a_pagar);
 
-
-	/*if(isset($_POST['suma_cuota_uso']) || $_POST['suma_cuota_uso'] != 0 || $_POST['suma_cuota_uso'] != NULL){
-		$suma_cuota_uso = $_POST['suma_cuota_uso'];
-	}else{
-		$suma_cuota_uso = 0;
-	}
-	if(isset($_POST['suma_valor_contrato']) || $_POST['suma_valor_contrato'] != 0 || $_POST['suma_valor_contrato'] != NULL){
-		$suma_valor_contrato = $_POST['suma_valor_contrato'];
-	}else{
-		$suma_valor_contrato = 0;
-	}*/
-
 	$row_informe = mysql_query("SELECT total_informe, total_cuota_uso, total_valor_contrato FROM informe_general WHERE idinforme_general = '$informe_general[idinforme_general]'", $dspp) or die(mysql_error());
 	$informe = mysql_fetch_assoc($row_informe);
 
@@ -136,15 +124,11 @@ if(isset($_POST['finalizar_trim']) && $_POST['finalizar_trim'] == 'SI'){
 
 /********  SE ENVIA CORREO SOBRE REPORTE TRIMESTRAL  ************/
 
-	//$porcetaje_cuota = $configuracion['cuota_compradores'];
-	//$tipo_empresa = $tipo_empresa;
-
 	$txt_cuota = 'cuota_uso_trim'.$_GET['trim'];
 	$txt_trim = 'trim'.$_GET['trim'];
 	$txt_id = 'idtrim'.$_GET['trim'];
 	$row_total = mysql_query("SELECT $txt_cuota AS 'total_cuota_uso' FROM $txt_trim WHERE $txt_id = '$idtrimestre'", $dspp) or die(mysql_error());
 	$total = mysql_fetch_assoc($row_total);
-
 
     $html = '
       <div>
@@ -663,20 +647,17 @@ if(isset($_GET['trim'])){
 			<a class="btn btn-default" href="?INFORME&general_detail&trim=<?php echo $_GET['trim']; ?>&add&idtrim=<?php echo $trim_options[$idtrim_txt]; ?>"><span class="glyphicon glyphicon-pencil"></span> Editar transacciones actuales</a>
 		</div>
 
-
-
 			<table class="table table-bordered" style="font-size:11px;">
 				<thead>
 					<tr>
-						<th colspan="7">
+						<th colspan="6">
 							<?php 
 							echo $titulo_trim;
 							 ?>
 						</th>
 
-
-						<th colspan="4">
-							<?php echo $empresa['abreviacion'].' - '.$tipo_empresa; ?>
+						<th colspan="5">
+							<h5><?php echo $empresa['abreviacion'].' - '.$tipo_empresa; ?></h5>
 						</th>
 						<th colspan="4" class="info" style="border-style:hidden;border-left-style:solid;border-bottom-style:solid">
 							<?php 
@@ -830,7 +811,6 @@ if(isset($_GET['trim'])){
 		<?php
 		}
 	?>
-
 
 	<?php
 	}else{

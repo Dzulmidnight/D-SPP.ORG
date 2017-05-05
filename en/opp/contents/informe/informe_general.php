@@ -76,14 +76,29 @@ if(isset($_POST['informe_trimestral'])){
 		$ano = date('Y', time());
 		/// Trimestre Opp = TO
 		$idtrim1 = 'TO1-'.$ano.'-'.$idopp;
-		$estado_trim1 = "ACTIVO";
+		$estado_trim1 = "FINALIZADO"; // se finaliza el trimestre 1, ya que el despliegue sera en abril, por lo tanto se empezara desde el segundo
 
-		$insertSQL = sprintf("INSERT INTO trim1 (idtrim1, idopp, fecha_inicio, estado_trim1) VALUES (%s, %s, %s, %s)",
+		///
+		$total_trim1 = 0;
+		$valor_contrato_trim1 = 0;
+		$cuota_uso_trim1 = 0;
+		$estatus_factura_trim1 = 'PAGADA';
+		$estatus_comprobante_trim1 = 'APROBADO';
+
+
+		$insertSQL = sprintf("INSERT INTO trim1 (idtrim1, idopp, fecha_inicio, fecha_fin, total_trim1, estado_trim1, valor_contrato_trim1, cuota_uso_trim1, estatus_factura_trim1, estatus_comprobante_trim1) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 			GetSQLValueString($idtrim1, "text"),
 			GetSQLValueString($idopp, "int"),
 			GetSQLValueString($fecha_actual, "int"),
-			GetSQLValueString($estado_trim1, "text"));
+			GetSQLValueString($fecha_actual, "int"),
+			GetSQLValueString($total_trim1, "int"),
+			GetSQLValueString($estado_trim1, "text"),
+			GetSQLValueString($valor_contrato_trim1, "int"),
+			GetSQLValueString($cuota_uso_trim1, "int"),
+			GetSQLValueString($estatus_factura_trim1, "text"),
+			GetSQLValueString($estatus_comprobante_trim1, "text"));
 		$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+
 
 		$updateSQL = sprintf("UPDATE informe_general SET trim1 = %s WHERE idinforme_general = %s",
 			GetSQLValueString($idtrim1, "text"),
@@ -95,7 +110,6 @@ if(isset($_POST['informe_trimestral'])){
 		echo "<script>alert('No');</script>";
 	}
 }
-
 ?>
 <div class="row">
 	<div class="col-md-12">

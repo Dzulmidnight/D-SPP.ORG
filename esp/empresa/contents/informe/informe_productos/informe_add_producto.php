@@ -126,13 +126,6 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 		echo "<p class='alert alert-danger'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span> Ya no se puede agregar más registro al <b>Formato Trimestral $idtrim</b>, ya que fue concluido.</p>";
 	}else{
 	?>
-
-
-		<!--<p class="alert alert-info" style="padding:7px;margin-bottom:0px;"><strong>Agregar Registro al Trimestre <?php echo $idtrim; ?></strong></p>-->
-		<!--<p class="alert alert-info" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color azul son opcionales, dicha informacion será de utilitdad para la evaluación de la certificación.</p>
-		<p class="alert alert-success" style="padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Los campos marcados en color verde son obligatorios.</p>-->
-	
-
 			<p class="alert alert-danger" style="margin-bottom:0px;padding:5px;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> El valor de ventas totales debe ser expresado en dolares americanos(USD)</p>
 		 	<table class="table table-bordered table-condensed" style="font-size:11px;" id="tablaInforme">
 		 		<thead>
@@ -218,77 +211,3 @@ if(isset($_POST['eliminar_registro']) && $_POST['eliminar_registro'] != 0){
 	?>	
 	</div>
 </div>
-
-<script>
-/*$(document).ready(function() {
-//    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
-    $("#nombre_opp").val('Nombre de la OPP');
-//    $("#resultadoBusqueda").val('<p>CAMPO VACIO</p>');
-    $("#pais").val('Pais de la OPP');
-});
-
-function buscar() {
-    var textoBusqueda = $("input#spp").val();
- 
-     if (textoBusqueda != "") {
-        $.post("../../nombre_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_opp) {
-            $("#nombre_opp").val(nombre_opp);
-         }); 
-     } else { 
-        $("#nombre_opp").val('Nombre de la OPP');
-     };
-
-     if (textoBusqueda != "") {
-        $.post("../../pais_ajax.php", {valorBusqueda: textoBusqueda}, function(nombre_pais) {
-            $("#pais").val(nombre_pais);
-         }); 
-     } else { 
-        $("#pais").val('País de la OPP');
-     };
-
-};
-</script>
-
-<script>
-/*function ponerMayusculas(nombre) 
-{ 
-nombre.value=nombre.value.toUpperCase(); 
-} 
-var contador=0;
-var cuota_fija_anual = <?php echo $configuracion['cuota_compradores']; ?>;
-//var cuota_fija_anual = 0.01;
-	function calcular(){
-		cantidad_total_factura = document.getElementById("cantidad_total_factura").value;
-		precio_total_unitario = document.getElementById("precio_total_unitario").value;
-
-		//calculamos el valor total contrato
-		valor_total_contrato = parseFloat(cantidad_total_factura) * parseFloat(precio_total_unitario);
-		total_contrato_redondeado = parseFloat(valor_total_contrato.toFixed(2));
-		//calculamos el valor de la cuota de uso reglamento
-		//cuota_uso_reglamento = valor_total_contrato * cuota_fija_anual;
-		//calculamos el total a pagar
-		total_a_pagar = (valor_total_contrato * cuota_fija_anual) / 100;
-
-		total_redondeado = parseFloat(total_a_pagar.toFixed(2));
-
-		//calculamos el valor total del contrato
-
-		//21_07_2017 valor_total_contrato_redondeado = parseFloat(valor_total_contrato.toFixed(2));
-		/* se redondea el resultado a 2 decimales */
-		//valor_total_contrato = parseFloat(Math.round((precio_total_unitario * peso_cantidad_total_contrato) * 100) / 100).toFixed(2);
-		//document.getElementById("valor_total_contrato").value = total_contrato_redondeado; 
-		//document.getElementById("cuota_uso_reglamento").value = "<?php echo $configuracion['cuota_compradores']; ?> %"; 
-		//document.getElementById("total_a_pagar").value = total_redondeado; 
-
-		//calculamos el total a pagar
-		/*if(isNaN(cuota_uso_reglamento)){ // revisamos si es porcentaje
-			//alert("ES PORCENTAJE : "+cuota_uso_reglamento);
-			total_final = parseFloat(valor_total_contrato_redondeado) * (0.01);
-		}else{	//si es solo numero
-			//alert("ES NUMERO: "+cuota_uso_reglamento);
-			total_final = parseFloat(peso_cantidad_total_contrato) * parseFloat(cuota_uso_reglamento);
-		}*/
-	//}
-
-
-</script>
