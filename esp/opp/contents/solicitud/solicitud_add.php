@@ -95,6 +95,21 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	$alcance_opp = "";
 
 
+	///ACTUALIZAMOS LA INFORMACIÓN PRINCIPAL DE LA OPP DE ACUERDO A LA SOLICITUD
+	$updateSQL = sprintf("UPDATE opp SET nombre = %s, sitio_web = %s, email = %s, telefono = %s, pais = %s, razon_social = %s, direccion_oficina = %s, direccion_fiscal = %s, rfc = %s, ruc = %s WHERE idopp = %s",
+		GetSQLValueString($_POST['nombre'], "text"),
+		GetSQLValueString($_POST['sitio_web'], "text"),
+		GetSQLValueString($_POST['email'], "text"),
+		GetSQLValueString($_POST['telefono'], "text"),
+		GetSQLValueString($_POST['pais'], "text"),
+		GetSQLValueString($_POST['razon_social'], "text"),
+		GetSQLValueString($_POST['direccion_oficina'], "text"),
+		GetSQLValueString($_POST['direccion_fiscal'], "text"),
+		GetSQLValueString($_POST['rfc'], "text"),
+		GetSQLValueString($_POST['ruc'], "text"),
+		GetSQLValueString($idopp, "int"));
+
+	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 	/* INICIA CAPTURA ALCANCE DEL OPP */
 	if(isset($_POST['produccion'])){
 		$produccion = $_POST['produccion'];
@@ -412,88 +427,91 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			</head>
 			<body>
 			
-		        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-		          <tbody>
-		                <tr>
-		                  <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-		                  <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Certification Application for Small Producers’ Organizations </strong></th>
-		                </tr>
-		                <tr>
-		                  <td style="padding-top:10px;">
-		       
-		                    Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
-		                  <br>
-		                    In order to consult the application, please open a session in your  Certification Entity (CE) account at the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
-		                  </td>
-		                </tr>
-		            <tr>
-		              <td align="left">Teléfono / phone Organización: '.$_POST['telefono'].'</td>
-		            </tr>
+				<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; text-align:justify; color: #797979;" border="0" width="650px">
+				  <thead>
+				    <tr>
+				      <th scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+				      <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Certification Application for Small Producers’ Organizations </strong></th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+				      <td colspan="2" style="padding-top:10px;">
+				        <p>
+				          Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+				        </p>
+				        <p>
+				          In order to consult the application, please open a session in your  Certification Entity (CE) account at the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+				        </p>
+				      </td>
+				    </tr>
+				    <tr>
+				      <td colspan="2">
+				        <p>
+				          <b>Teléfono Organización / Organization phone:</b> '.$_POST['telefono'].'
+				        </p>
+				        <p>
+				          <b>Pais / Country:</b> '.$_POST['pais'].'
+				        </p>
+				        <p>
+				          <b>Email:</b> '.$_POST['email'].'<br>
+				          <b>Email:</b> '.$_POST['contacto1_email'].'
+				        </p>
+				      </td>
+				    </tr>
+				    <tr>
+				      <td colspan="2">
+				        <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+				          <tbody>
+				            <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+				              <td width="130px">Nombre de la organización/Organization name</td>
+				              <td width="130px">País / Country</td>
+				              <td width="130px">Organismo de Certificación / Certification Entity</td>
+				           
+				              <td width="130px">Fecha de solicitud/Date of application</td>
+				            </tr>
+				            <tr style="font-size: 12px;">
+				              <td style="padding:10px;">
+				                '.$_POST['nombre'].'
+				              </td>
+				              <td style="padding:10px;">
+				                '.$_POST['pais'].'
+				              </td>
+				              <td style="padding:10px;">
+				                '.$oc['nombre'].'
+				              </td>
+				              <td style="padding:10px;">
+				              '.date('d/m/Y', $fecha).'
+				              </td>
+				            </tr>
 
-		            <tr>
-		              <td align="left">'.$_POST['pais'].'</td>
-		            </tr>
-		            <tr>
-		              <td align="left" style="color:#ff738a;">Email: '.$_POST['email'].'</td>
-		            </tr>
-		            <tr>
-		              <td align="left" style="color:#ff738a;">Email: '.$_POST['contacto1_email'].'</td>
-		            </tr>
+				          </tbody>
+				        </table>  
+				      </td>
+				    </tr>
+				    <tr>
+				      <td colspan="2">
+				        <p><span style="color:red">¿Qué es lo de debo realizar ahora?. Debes revisar la solicitud y cargar una cotización</span></p>
+				        <ol>
+				          <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organismo de Certificación(OC).</li>
+				          <li>Dentro de tu cuenta debes seleccionar Solicitudes > Solicitudes OPP.</li>
+				          <li>Dentro de la tabla solicitudes debes localizar la columna "Acciones" Y seleccionar el boton Azul Consultar.</li>
+				          <li>Para poder enviar la cotización debes seleccionar el "Procedimiento de Certificación" y cargar la cotización.</li>
+				        </ol>
+				      </td>
+				    </tr>
+				    <tr>
+				      <td colspan="2">
+				        <p><span style="color:red">What should I do now? You should review the application and upload a price quote.</span></p>
+				        <ol>
+				          <li>You should open a session in the D-SPP system as a Certification Entity (CE).</li>
+				          <li>Within your account, you should select ApplicationsSolicitudes > SPO Applications Solicitudes OPP.</li>
+				          <li>In the applications table, you should locate the column entitled “Actions” and select the Blue Consult button.</li>
+				          <li>To send your price quote, you should select “Certification Procedure” and upload your price quote.</li>
+				        </ol>
 
-		            <tr>
-		              <td colspan="2">
-		                <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-		                  <tbody>
-		                    <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-		                      <td width="130px">Nombre de la organización/Organization name</td>
-		                      <td width="130px">País / Country</td>
-		                      <td width="130px">Organismo de Certificación / Certification Entity</td>
-		                   
-		                      <td width="130px">Fecha de solicitud/Date of application</td>
-		                    </tr>
-		                    <tr style="font-size: 12px;">
-		                      <td style="padding:10px;">
-		                        '.$_POST['nombre'].'
-		                      </td>
-		                      <td style="padding:10px;">
-		                        '.$_POST['pais'].'
-		                      </td>
-		                      <td style="padding:10px;">
-		                        '.$oc['nombre'].'
-		                      </td>
-		                      <td style="padding:10px;">
-		                      '.date('d/m/Y', $fecha).'
-		                      </td>
-		                    </tr>
-
-		                  </tbody>
-		                </table>  
-		              </td>
-		            </tr>
-		            <tr>
-		              <td colspan="2">
-		                <span style="color:red">¿Qué es lo de debo realizar ahora?. Debes revisar la solicitud y cargar una cotización</span>
-		                <ol>
-		                  <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organismo de Certificación(OC).</li>
-		                  <li>Dentro de tu cuenta debes seleccionar Solicitudes > Solicitudes OPP.</li>
-		                  <li>Dentro de la tabla solicitudes debes localizar la columna "Acciones" Y seleccionar el boton Azul Consultar</li>
-		                  <li>Para poder enviar la cotización debes seleccionar el "Procedimiento de Certificación" y cargar la cotización</li>
-		                </ol>
-		              </td>
-		            </tr> 
-		            <tr>
-		              <td colspan="2">
-		                <span style="color:red">What should I do now? You should review the application and upload a price quote.</span>
-		                <ol>
-		                  <li>•	You should open a session in the D-SPP system as a Certification Entity (CE).</li>
-		                  <li>•	Within your account, you should select ApplicationsSolicitudes > SPO Applications Solicitudes OPP</li>
-		                  <li>•	In the applications table, you should locate the column entitled “Actions” and select the Blue Consult button.  </li>
-		                  <li>•	To send your price quote, you should select “Certification Procedure” and upload your price quote.</li>
-		                </ol>
-		              </td>
-		            </tr> 
-
-
+				      </td>
+				    </tr>
 				  </tbody>
 				</table>
 
@@ -526,7 +544,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		}
 		if(isset($_POST['email'])){
 			//$mail->AddCC($_POST['email']);
-			$token = strtok($_POST['email1'], "\/\,\;");
+			$token = strtok($_POST['email'], "\/\,\;");
 			while ($token !== false)
 			{
 				$mail->AddCC($token);
@@ -630,7 +648,7 @@ $opp = mysql_fetch_assoc($row_opp);
 						<input type="radio" class="form-control" id="nueva" name="tipo_solicitud" value="NUEVA">
 					</div>
 					<div class="col-md-6">
-						<label for="renovacion">RENOVACIÓN DE CERTIFICADO</label>
+						<label for="renovacion">RENOVACIÓN DEL CERTIFICADO</label>
 						<input type="radio" class="form-control" id="renovacion" name="tipo_solicitud" value="RENOVACION">
 					</div>
 				</div>

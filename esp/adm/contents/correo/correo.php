@@ -111,14 +111,14 @@
   <div class="col-md-12">
     <!-- INICIA MENU OPCIONES -->
     <div class="btn-group" role="group" aria-label="...">
-      <a href="?CORREO&select=notificaciones" <?php if($_GET['select'] == 'notificaciones'){ echo 'class="btn btn-sm btn-primary"'; }else{ echo 'class="btn btn-sm btn-default"'; } ?>>Notificaciones</a>
+      <a href="?CORREO&select=mensajes" <?php if($_GET['select'] == 'mensajes'){ echo 'class="btn btn-sm btn-primary"'; }else{ echo 'class="btn btn-sm btn-default"'; } ?>>Mensajes</a>
       <a href="?CORREO&select=listas" <?php if($_GET['select'] == 'listas'){ echo 'class="btn btn-sm btn-primary"'; }else{ echo 'class="btn btn-sm btn-default"'; } ?>>Listas de Contactos</a>
     </div>
     <!-- FIN MENU OPCIONES -->
     <div class="row">
     <?php 
-    if($_GET['select'] == 'notificaciones'){
-      include('notificaciones.php');
+    if($_GET['select'] == 'mensajes'){
+      include('mensajes.php');
     }else if($_GET['select'] == 'listas'){
       include('listas.php');
     }

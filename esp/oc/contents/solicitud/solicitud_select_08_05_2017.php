@@ -2597,7 +2597,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                                 if($solicitud['tipo_solicitud'] == 'RENOVACION'){ // EN CASO DE QUE SEA UNA SOLICITUD EN RENOVACIÓN
                                   // inicia validación ///
-                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO')){
+                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($proceso_certificacion['estatus_membresia'] == "APROBADA")){
                                     if(isset($solicitud['idcertificado'])){
                                       $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                                       $certificado = mysql_fetch_assoc($row_certificado);
@@ -2629,13 +2629,13 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                     }
                                   }else{
                                     echo '<p class="alert alert-warning">
-                                    Una vez aprobada la documentación necesaria por parte de SPP Global, podra cargar el Certificado SPP.
+                                    Una vez aprobada la "Membresia SPP" podra cargar el Certificado correspondiente.
                                     </p> ';
                                   }
                                   // termina validación //
                                 }else{ /// EN CASO DE QUE SEA UNA NUEVA SOLICITUD
                                   // inicia validación ///
-                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO'){
+                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO' && $proceso_certificacion['estatus_membresia'] == "APROBADA")){
                                     if(isset($solicitud['idcertificado'])){
                                       $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                                       $certificado = mysql_fetch_assoc($row_certificado);
@@ -2667,7 +2667,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                     }
                                   }else{
                                     echo '<p class="alert alert-warning">
-                                    Una vez aprobado el "Contrato de Uso" podra cargar el Certificado correspondiente.
+                                    Una vez aprobado el "Contrato de Uso" y la "Membresia SPP" podra cargar el Certificado correspondiente.
                                     </p> ';
                                   }
                                   // termina validación //
@@ -2675,11 +2675,11 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                             }else{
                               if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                                 echo '<p class="alert alert-warning">
-                                  Aun no se han cargado los documentos de evaluación.
+                                  Una vez que se ha aprobado la "Membresia SPP" podrá cargar el certificado correspondiente.
                                 </p> ';
                               }else{
                                 echo '<p class="alert alert-warning">
-                                  Una vez aprobada la documentación necesaria por parte de SPP Global, podra cargar el Certificado SPP.
+                                  Una vez que se ha aprobado el "Contrato de Uso" y la "Membresia SPP" podrá cargar el certificado correspondiente.
                                 </p> ';
                               }
                             }

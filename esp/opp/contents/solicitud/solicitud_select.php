@@ -1093,34 +1093,3 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
     </table>
   </div>
 </div>
-
-
-
-<hr>
-
-
-<!--
-<table>
-<tr>
-<td width="20"><?php if ($pageNum_opp > 0) { // Show if not first page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, 0, $queryString_opp); ?>">
-<span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not first page ?></td>
-<td width="20"><?php if ($pageNum_opp > 0) { // Show if not first page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, max(0, $pageNum_opp - 1), $queryString_opp); ?>">
-<span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not first page ?></td>
-<td width="20"><?php if ($pageNum_opp < $totalPages_opp) { // Show if not last page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, min($totalPages_opp, $pageNum_opp + 1), $queryString_opp); ?>">
-<span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not last page ?></td>
-<td width="20"><?php if ($pageNum_opp < $totalPages_opp) { // Show if not last page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, $totalPages_opp, $queryString_opp); ?>">
-<span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not last page ?></td>
-</tr>
-</table>-->

@@ -1,3 +1,8 @@
+<?php 
+$ano_actual = date('Y', time());
+echo $ano_actual;
+ ?>
+
 <ul class="nav nav-pills">
 	<li role="presentation" <?php if(isset($_GET['select'])){ echo "class='active'"; } ?>>
 		<a href="?SOLICITUD&select">
