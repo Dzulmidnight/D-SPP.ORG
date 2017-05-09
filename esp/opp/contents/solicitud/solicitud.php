@@ -14,52 +14,44 @@ if (!isset($_SESSION)) {
 	}
 }
 
-if (!function_exists("GetSQLValueString")) {
-	function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-	{
-	  if (PHP_VERSION < 6) {
-	    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-	  }
 
-	  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
-	  switch ($theType) {
-	    case "text":
-	      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-	      break;    
-	    case "long":
-	    case "int":
-	      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-	      break;
-	    case "double":
-	      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-	      break;
-	    case "date":
-	      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-	      break;
-	    case "defined":
-	      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-	      break;
-	  }
-	  return $theValue;
-	}
-}
-
-$editFormAction = $_SERVER['PHP_SELF'];
-if (isset($_SERVER['QUERY_STRING'])) {
-  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
-}
-
+$tiempo_actual = time();
 $idopp = $_SESSION['idopp'];
-$ano_actual = date('Y', time());
-echo $ano_actual;
+$ano_actual = date('Y', $tiempo_actual);
+$min = 60;
+$hr = 60;
+$dia = 24;
+//08_05_2017 echo $ano_actual;
+//60 seg = 1min
+//60 min = 1hr
+//24 hr = 1dia
 
 //consultamos las solicitudes que tiene en el año
-$row_solicitudes = mysql_query("SELECT idsolicitud_certificacion FROM solicitud_certificacion WHERE idopp = $idopp AND FROM_UNIXTIME(fecha_registro,'%Y') = $ano_actual", $dspp) or die(mysql_error());
+$row_solicitudes = mysql_query("SELECT idsolicitud_certificacion, fecha_registro FROM solicitud_certificacion WHERE idopp = $idopp AND FROM_UNIXTIME(fecha_registro,'%Y') = $ano_actual", $dspp) or die(mysql_error());
+$solicitud = mysql_fetch_assoc($row_solicitudes);
 $total = mysql_num_rows($row_solicitudes);
 
-echo "EL TOTAL ES: ".$total;
- ?>
+$diferencia = $tiempo_actual - $solicitud['fecha_registro'];
+
+$minutos = round($diferencia / $min);
+$horas = round($minutos / $hr);
+$dias = round($horas / $dia);
+
+/*08_05_2017
+echo "<br>EL TOTAL ES: ".$total;
+echo "<br>LA DIFERENCIA DE TIEMPO ES: ".$diferencia;
+echo "<br>MINUTOS: ".$minutos;
+echo "<br>HORAS: ".$horas;
+echo "<br>DIAS: ".$dias;
+
+if($dias <= 100){
+	echo "<br>Los dias son menos de 100";
+}else{
+	echo "<br>Mayor a 100 dias";
+} 08_05_2017*/
+
+?>
 
 <ul class="nav nav-pills">
 	<li role="presentation" <?php if(isset($_GET['select'])){ echo "class='active'"; } ?>>
