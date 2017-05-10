@@ -2458,7 +2458,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   // termina validación //
                                 }else{ /// EN CASO DE QUE SEA UNA NUEVA SOLICITUD
                                   // inicia validación ///
-                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO' && $proceso_certificacion['estatus_membresia'] == "APROBADA")){
+                                  //09_05_2017 if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO' && $proceso_certificacion['estatus_membresia'] == "APROBADA")){
+                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO')){
                                     if(isset($solicitud['idcertificado'])){
                                       $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                                       $certificado = mysql_fetch_assoc($row_certificado);

@@ -2635,7 +2635,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                   // termina validación //
                                 }else{ /// EN CASO DE QUE SEA UNA NUEVA SOLICITUD
                                   // inicia validación ///
-                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO'){
+                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO')){
                                     if(isset($solicitud['idcertificado'])){
                                       $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                                       $certificado = mysql_fetch_assoc($row_certificado);
@@ -2704,7 +2704,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- TERMINA SECCION CERTIFICADO ------>
             </form>
           <td>
-            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consultar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>">Consultar</a>
+            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consultar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>">Consultar Solicitud</a>
           </td>
           <td>
             <form action="../../reportes/solicitud.php" method="POST" target="_new">

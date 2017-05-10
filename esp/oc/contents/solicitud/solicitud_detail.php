@@ -308,30 +308,77 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
     <body>
     
       <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-        <tbody>
+        <thead>
           <tr>
             <th rowspan="4" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
             <th scope="col" align="left" width="280" ><strong>Notificación de Cotización / Price quote  Notification</strong></th>
           </tr>
-          <tr>
-            <td align="left" style="color:#ff738a;">Email Organismo de Certificación / Certification Entity: '.$opp_detail['email1'].'</td>
+        </thead>
+        <tbody>
+          <tr style="text-align:justify">
+            <td colspan="2">
+              <p>
+                Email Organismo de Certificación / Certification Entity: <span style="color:red">'.$opp_detail['email1'].'</span>
+              </p>
+            </td>
           </tr>
-          <tr>
-            <td aling="left" style="text-align:justify">
-              <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
-              <br><br> 
-              Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
+          <tr style="text-align:justify">
+            <td colspan="2">
+              <p>
+                <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
+              </p>
+              <p>
+                Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
+              </p>
             </td>
           </tr>
 
+          <tr style="text-align:justify">
+            <td colspan="2">
+              <span style="color:red">¿Qué es lo de debo realizar ahora?. Debes "Aceptar" o "Rechazar" la cotización</span>
+              <ol>
+
+                <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organización de Pequeños Productores(OPP).</li>
+                <li>Tu Usuario: <b style="color:red">'.$opp_detail['spp'].'</b> y Contraseña: <b style="color:red">'.$opp_detail['password'].'</b></li>
+                <li>Dentro de tu cuenta debes seleccionar Solicitudes > Listado Solicitudes.</li>
+                <li>Dentro de la tabla solicitudes debes localizar la columna "Cotización" Y seleccionar el botón Verde (aceptar cotización) ó el botón Rojo (rechazar cotización)</li>
+                <li>En caso de aceptar la cotización debes esperar a que finalice el "Periodo de Objeción"(en caso de que sea la primera vez que solicitas la certificación SPP)</li>
+              </ol>
+            </td>
+          </tr> 
+  
           <tr>
-            <td aling="left" style="text-align:justify">
-              <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> has sent the price quote corresponding to the Certification Application for Small Producers’ Organizations (SPOs)
-              <br><br> 
-              Please open a session as an SPO at the following link: <a href="http://d-spp.org/">www.d-spp.org/</a> in order to access the price quote.
+            <td colspan="2" style="padding-bottom:10px;">
+              <hr>
+              <p><b>English below</b></p>
             </td>
           </tr>
+          
+          <tr style="font-style: italic; text-align:justify">
+            <td colspan="2">
+              <p>
+                <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> has sent the price quote corresponding to the Certification Application for Small Producers’ Organizations (SPOs)
+              </p>
+              <p>
+                Please open a session as an SPO at the following link: <a href="http://d-spp.org/">www.d-spp.org/</a> in order to access the price quote.
+              </p>
+            </td>
+          </tr>
+          <tr style="font-style: italic; text-align:justify">
+            <td colspan="2">
+              <span style="color:red">What should I do now? You should “Accept” or “Reject” the price quote.</span>
+              <ol>
 
+                <li>
+                  You should open a session in the <a href="http://d-spp.org/">D-SPP (clic aquí)</a> system as a Small Producers’ Organization (SPO).
+                </li>
+                <li>Your User (SPP#): <b style="color:red">'.$opp_detail['spp'].'</b> and your Password is:  <b style="color:red">'.$opp_detail['password'].'</b></li>
+                <li>Within your account you should select Applications  >  Applications List.</li>
+                <li>In the Applications table, you should locate the column entitled “Price Quote” and select the Green button (accept price quote) or the Red button (reject price quote).</li>
+                <li>If you accept the price quote, you will need to wait until the “Objection Period” is over (if this is the first time you are applying for SPP certification).</li>
+              </ol>
+            </td>
+          </tr> 
 
           <tr>
             <td colspan="2">
@@ -364,34 +411,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
               </table>        
             </td>
           </tr>
-          <tr>
-            <td colspan="2">
-              <span style="color:red">¿Qué es lo de debo realizar ahora?. Debes "Aceptar" o "Rechazar" la cotización</span>
-              <ol>
 
-                <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organización de Pequeños Productores(OPP).</li>
-                <li>Tu Usuario: <b style="color:red">'.$opp_detail['spp'].'</b> y Contraseña: <b style="color:red">'.$opp_detail['password'].'</b></li>
-                <li>Dentro de tu cuenta debes seleccionar Solicitudes > Listado Solicitudes.</li>
-                <li>Dentro de la tabla solicitudes debes localizar la columna "Cotización" Y seleccionar el botón Verde (aceptar cotización) ó el botón Rojo (rechazar cotización)</li>
-                <li>En caso de aceptar la cotización debes esperar a que finalice el "Periodo de Objeción"(en caso de que sea la primera vez que solicitas la certificación SPP)</li>
-              </ol>
-            </td>
-          </tr> 
-          <tr>
-            <td colspan="2">
-              <span style="color:red">What should I do now? You should “Accept” or “Reject” the price quote.</span>
-              <ol>
-
-                <li>
-                  You should open a session in the <a href="http://d-spp.org/">D-SPP (clic aquí)</a> system as a Small Producers’ Organization (SPO).
-                </li>
-                <li>Your User (SPP#): <b style="color:red">'.$opp_detail['spp'].'</b> and your Password is:  <b style="color:red">'.$opp_detail['password'].'</b></li>
-                <li>Within your account you should select Applications  >  Applications List.</li>
-                <li>In the Applications table, you should locate the column entitled “Price Quote” and select the Green button (accept price quote) or the Red button (reject price quote).</li>
-                <li>If you accept the price quote, you will need to wait until the “Objection Period” is over (if this is the first time you are applying for SPP certification).</li>
-              </ol>
-            </td>
-          </tr> 
 
           <tr>
             <td coslpan="2">Para cualquier duda o aclaración por favor contactar a: soporte@d-spp.org</td>
