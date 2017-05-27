@@ -120,6 +120,47 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
 
       echo "<script>alert('OPP');</script>";
     }
+    if($value == 'oc'){ // SE ENVIAN LOS CORREOS A LA OPP
+      $row_oc = mysql_query("SELECT email1, email2 FROM oc", $dspp);
+      while($oc = mysql_fetch_assoc($row_oc)){
+        if(!empty($oc['email1'])){
+          //$mail->AddAddress($email_oc['email']);
+          $token = strtok($oc['email1'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+
+        if(!empty($oc['email2'])){
+          //$mail->AddAddress($email_oc['email']);
+          $token = strtok($oc['email2'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+
+      }
+      if(isset($archivo1)){
+         $mail->AddAttachment($archivo1);
+      }
+      if(isset($archivo2)){
+         $mail->AddAttachment($archivo2);
+      }
+        $mail->AddBCC($administrador);
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_mensaje);
+        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+        $mail->Send();
+        $mail->clearAttachments();
+        $mail->ClearAddresses();
+
+      echo "<script>alert('OC');</script>";
+    }
+
      if($value == 'contactos'){
       $row_contactos = mysql_query("SELECT email1 FROM contactos GROUP BY email1", $dspp);
       while($contactos = mysql_fetch_assoc($row_contactos)){
@@ -241,6 +282,12 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
 					<input type="checkbox" name="lista_contactos[]" value="empresas" > Empresas
 				</label>
 			</div>
+      <div class="checkbox" >
+        <label>
+          <input type="checkbox" name="lista_contactos[]" value="oc" > OC
+        </label>
+      </div>
+
 			<div class="checkbox" >
 				<label>
 					<input type="checkbox" name="lista_contactos[]" value="administradores" > Administradores

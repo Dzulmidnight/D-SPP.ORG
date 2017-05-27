@@ -299,7 +299,7 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $estatus_dspp = '4'; // COTIZACIÓN ENVIADA
   $estatus_publico = '1';
-
+  echo '<script>alert("1");</script>';
   $rutaArchivo = "../../archivos/ocArchivos/cotizaciones/";
   $procedimiento = $_POST['procedimiento'];
 
@@ -310,7 +310,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   }else{
     $cotizacion_empresa = NULL;
   }
-
+  echo '<script>alert("2");</script>';
   //ACTUALIZAMOS LA SOLICITUD DE CERTIFICACION AGREGANDO LA COTIZACIÓN
   $updateSQL = sprintf("UPDATE solicitud_registro SET tipo_procedimiento = %s, cotizacion_empresa = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
     GetSQLValueString($procedimiento, "text"),
@@ -318,27 +318,27 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($idsolicitud_registro, "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
-
+  echo '<script>alert("3");</script>';
   // ACTUALIZAMOS EL ESTATUS_DSPP DEL OPP
   $updateSQL = sprintf("UPDATE empresa SET estatus_dspp = %s WHERE idempresa = %s",
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idempresa'], "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
-
+  echo '<script>alert("4");</script>';
   //AGREGAMOS EL PROCESO DE CERTIFICACIÓN
   $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_publico, estatus_dspp) VALUES (%s, %s, %s)",
     GetSQLValueString($idsolicitud_registro, "int"),
     GetSQLValueString($estatus_publico, "int"),
     GetSQLValueString($estatus_dspp, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
-
+  echo '<script>alert("5");</script>';
   //ASUNTO DEL CORREO
   $row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
   $oc = mysql_fetch_assoc($row_oc);
-
+  echo '<script>alert("6");</script>';
   $row_empresa = mysql_query("SELECT spp, abreviacion, password FROM empresa WHERE idempresa = $_POST[idempresa]", $dspp) or die(mysql_error());
   $empresa = mysql_fetch_assoc($row_empresa);
-
+  echo '<script>alert("7");</script>';
   $asunto = "D-SPP Cotización (Solicitud de Registro para Compradores y otros Actores) / Price Quote (Registration Application for Buyers and other Stakeholders)";
 
   $cuerpo_mensaje = '
@@ -349,28 +349,64 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
     <body>
     
       <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-        <tbody>
+        <thead>
           <tr>
             <th rowspan="4" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
             <th scope="col" align="left" width="280" ><strong>Notificación de Cotización / Price Notification</strong></th>
           </tr>
+        </thead>
+        <tbody>
           <tr>
-            <td align="left" style="color:#ff738a;">Email Organismo de Certificación / Certification Entity: '.$oc['email1'].'</td>
-          </tr>
-
-          <tr>
-            <td align="left">'.$oc['pais'].'</td>
-          </tr>
-          <tr>
-            <td aling="left" style="text-align:justify">
-              Se ha enviado la cotización correspondiente a la Solicitud de Registro para Compradores y otros Actores.
-              <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como Empresa, para poder acceder a la cotización.
-
-              <br><br>
-              The price quote corresponding to the Application for Buyers’, Registration has been sent.
-                <br><br>
-              Please open a session as a Company at the following link: <a href="http://d-spp.org/?Empresa">www.d-spp.org/</a> in order to access the price quote.
+            <td colspan="2">
+              <p style="text-align:justify">
+                Se ha enviado la cotización correspondiente a la Solicitud de Registro para Compradores y otros Actores. Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como Empresa, para poder acceder a la cotización. 
+              </p>
             </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <p style="color:red">¿Qué es lo de debo realizar ahora?. Debes "Aceptar" o "Rechazar" la cotización</p>
+              <ol>
+
+                <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Empresa.</li>
+                <li>Tu Usuario: <b style="color:red">'.$empresa['spp'].'</b> y Contraseña: <b style="color:red">'.$empresa['password'].'</b></li>
+                <li>Dentro de tu cuenta debes seleccionar Solicitudes > Listado Solicitudes.</li>
+                <li>Dentro de la tabla solicitudes debes localizar la columna "Cotización" Y seleccionar el botón Verde (aceptar cotización) ó el botón Rojo (rechazar cotización)</li>
+                <li>En caso de aceptar la cotización debes esperar a que finalice el "Periodo de Objeción"(en caso de que sea la primera vez que solicitas la certificación SPP)</li>
+              </ol>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <h4>English Below</h4>
+              <hr>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <p>
+              The price quote corresponding to the Application for Buyers’ Registration has been sent. Please open a session as a Company at the following link: <a href="http://d-spp.org/?Empresa">www.d-spp.org/</a> in order to access the price quote.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <span style="color:red">What should I do now? You should "Accept" or "Reject" the price quote.</span>
+              <ol>
+
+                <li>
+                  You should open a session in the <a href="http://d-spp.org/">D-SPP (clic aquí)</a> system as a Company.
+                </li>
+                <li>Your User (SPP#): <b style="color:red">'.$empresa['spp'].'</b> and your Password is:  <b style="color:red">'.$empresa['password'].'</b></li>
+                <li>Within your account you should select Applications  >  Applications List.</li>
+                <li>In the Applications table, you should locate the column entitled “Price Quote” and select the Green button (accept price quote) or the Red button (reject price quote).</li>
+                <li>If you accept the price quote, you will need to wait until the “Objection Period” is over (if this is the first time you are applying for SPP certification).</li>
+              </ol>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2" style="color:#ff738a;">Email Organismo de Certificación / Certification Entity: '.$oc['email1'].'</td>
           </tr>
 
           <tr>
@@ -404,34 +440,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
               </table>        
             </td>
           </tr>
-          <tr>
-            <td colspan="2">
-              <span style="color:red">¿Qué es lo de debo realizar ahora?. Debes "Aceptar" o "Rechazar" la cotización</span>
-              <ol>
-
-                <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Empresa.</li>
-                <li>Tu Usuario: <b style="color:red">'.$empresa['spp'].'</b> y Contraseña: <b style="color:red">'.$empresa['password'].'</b></li>
-                <li>Dentro de tu cuenta debes seleccionar Solicitudes > Listado Solicitudes.</li>
-                <li>Dentro de la tabla solicitudes debes localizar la columna "Cotización" Y seleccionar el botón Verde (aceptar cotización) ó el botón Rojo (rechazar cotización)</li>
-                <li>En caso de aceptar la cotización debes esperar a que finalice el "Periodo de Objeción"(en caso de que sea la primera vez que solicitas la certificación SPP)</li>
-              </ol>
-            </td>
-          </tr> 
-          <tr>
-            <td colspan="2">
-              <span style="color:red">What should I do now? You should "Accept" or "Reject" the price quote.</span>
-              <ol>
-
-                <li>
-                  You should open a session in the <a href="http://d-spp.org/">D-SPP (clic aquí)</a> system as a Company.
-                </li>
-                <li>Your User (SPP#): <b style="color:red">'.$empresa['spp'].'</b> and your Password is:  <b style="color:red">'.$empresa['password'].'</b></li>
-                <li>Within your account you should select Applications  >  Applications List.</li>
-                <li>In the Applications table, you should locate the column entitled “Price Quote” and select the Green button (accept price quote) or the Red button (reject price quote).</li>
-                <li>If you accept the price quote, you will need to wait until the “Objection Period” is over (if this is the first time you are applying for SPP certification).</li>
-              </ol>
-            </td>
-          </tr> 
+  
 
         </tbody>
       </table>
@@ -439,24 +448,51 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
     </body>
     </html>
   ';
+    echo '<script>alert("8");</script>';
   if(isset($_POST['email'])){
-    $mail->AddAddress($_POST['email']);
+    $token = strtok($_POST['email'], "\/\,\;");
+    while ($token !== false)
+    {
+      $mail->AddAddress($token);
+      $token = strtok('\/\,\;');
+    }
   }
   if(isset($_POST['contacto1_email'])){
-    $mail->AddAddress($_POST['contacto1_email']);
+      $token = strtok($_POST['contacto1_email'], "\/\,\;");
+      while ($token !== false)
+      {
+        $mail->AddAddress($token);
+        $token = strtok('\/\,\;');
+      }
   }
   if(isset($_POST['contacto2_email'])){
-    $mail->AddAddress($_POST['contacto2_email']);
+      $token = strtok($_POST['contacto2_email'], "\/\,\;");
+      while ($token !== false)
+      {
+        $mail->AddAddress($token);
+        $token = strtok('\/\,\;');
+      }
   }
   $mail->AddBCC($spp_global);
 
   if(!empty($oc['email1'])){
-    $mail->AddCC($oc['email1']);
+      $token = strtok($oc['email1'], "\/\,\;");
+      while ($token !== false)
+      {
+        $mail->AddCC($token);
+        $token = strtok('\/\,\;');
+      }
+
   }
   if(!empty($oc['email2'])){
-    $mail->AddCC($oc['email2']);
+      $token = strtok($oc['email2'], "\/\,\;");
+      while ($token !== false)
+      {
+        $mail->AddCC($token);
+        $token = strtok('\/\,\;');
+      }
   }
-
+  echo '<script>alert("9");</script>';
   
   //se adjunta la cotización
   $mail->AddAttachment($cotizacion_empresa);
@@ -476,7 +512,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
 
 
 
-$query = "SELECT solicitud_registro.*, empresa.nombre, empresa.spp AS 'spp_empresa', empresa.sitio_web, empresa.email, empresa.telefono, empresa.pais, empresa.ciudad, empresa.razon_social, empresa.direccion_oficina, empresa.direccion_fiscal, empresa.rfc, empresa.ruc, oc.abreviacion AS 'abreviacionOC', porcentaje_productoVentas.* FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc LEFT JOIN porcentaje_productoVentas ON solicitud_registro.idsolicitud_registro = porcentaje_productoVentas.idsolicitud_registro WHERE solicitud_registro.idsolicitud_registro = $idsolicitud_registro";
+$query = "SELECT solicitud_registro.*, empresa.idempresa AS 'id_de_la_empresa', empresa.nombre, empresa.spp AS 'spp_empresa', empresa.sitio_web, empresa.email, empresa.telefono, empresa.pais, empresa.ciudad, empresa.razon_social, empresa.direccion_oficina, empresa.direccion_fiscal, empresa.rfc, empresa.ruc, oc.abreviacion AS 'abreviacionOC', porcentaje_productoVentas.* FROM solicitud_registro INNER JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa INNER JOIN oc ON solicitud_registro.idoc = oc.idoc LEFT JOIN porcentaje_productoVentas ON solicitud_registro.idsolicitud_registro = porcentaje_productoVentas.idsolicitud_registro WHERE solicitud_registro.idsolicitud_registro = $idsolicitud_registro";
 $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
 $solicitud = mysql_fetch_assoc($ejecutar);
 
@@ -998,7 +1034,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
         <p style="font-size:14px;"><strong>Nombre de la persona que se responsabiliza de la veracidad de la información del formato y que le dará seguimiento a la solicitud de parte del solicitante:</strong></p>
 
-        <input type="hidden" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
+        <input type="hidden" name="idempresa" value="<?php echo $solicitud['id_de_la_empresa']; ?>">
         <input type="hidden" name="fecha_registro" value="<?php echo $solicitud['fecha_registro']; ?>">
         <input type="text" class="form-control" id="responsable" value="<?php echo $solicitud['responsable']; ?>" > 
 

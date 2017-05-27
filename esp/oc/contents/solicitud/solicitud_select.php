@@ -86,7 +86,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
         $row_opp = mysql_query("SELECT opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.pais AS 'opp_pais', opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
         $opp_detail = mysql_fetch_assoc($row_opp);
 
-        $asunto = "D-SPP Cotización - actualizada (Solicitud de Certificación para Organizaciones de Pequeños Productores)";
+        $asunto = "D-SPP Cotización actualizada / Updated quotation (Solicitud de Certificación para Organizaciones de Pequeños Productores)";
 
         $cuerpo_mensaje = '
           <html>
@@ -182,7 +182,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
           }
         }
 
-        $mail->AddBCC($spp_global);
+        //$mail->AddBCC($spp_global);
 
         if(!empty($oc['email1'])){
           $token = strtok($oc['email1'], "\/\,\;");

@@ -204,7 +204,7 @@ $opp = mysql_fetch_assoc($row_opp);
             </label>
           </td>
           <td>
-               ¿AUTORIZA QUE EL ORGANISMO DE CERTIFICACION INGRESE A SU CUENTA?, ELIJA ESTA OPCIÓN Y MODIFIQUEN SU CONTRASEÑA
+               ¿AUTORIZA QUE EL ORGANISMO DE CERTIFICACION INGRESE A SU CUENTA?
           </td>
         </tr>
         <tr>

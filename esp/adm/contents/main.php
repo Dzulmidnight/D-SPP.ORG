@@ -476,19 +476,49 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
             $asunto = "D-SPP - Aviso de Renovacion de Certificado / SPP Certificate Renewal Notice"; 
             ///CORREOS A LOS QUE SE ENVIARA EL CORREO DE RENOVACIÓN
             if(!empty($opp['email'])){
-              $mail->AddAddress($opp['email']);
+              $token = strtok($opp['email'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+
             }
             if(!empty($contactos['email1'])){
-              $mail->AddAddress($opp['email1']);
+              $token = strtok($opp['email1'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+
             }
             if(!empty($contactos['email2'])){
-              $mail->AddAddress($opp['email2']);
+              $token = strtok($opp['email2'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+
             }
             if(!empty($detalle_certificado['oc_email1'])){
-              $mail->AddAddress($detalle_certificado['oc_email1']);
+              $token = strtok($detalle_certificado['oc_email1'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+
             }
             if(!empty($detalle_certificado['oc_email2'])){
-              $mail->AddAddress($detalle_certificado['oc_email2']);
+              $token = strtok($detalle_certificado['oc_email2'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+
             }
             ///correos SPP GLOBAL con copia oculta
             $mail->AddBCC("cert@spp.coop");
@@ -602,19 +632,49 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
             $asunto = "D-SPP - Certificado por expirar / Certified for expiring"; 
             ///CORREOS A LOS QUE SE ENVIARA EL CORREO DE RENOVACIÓN
             if(!empty($opp['email'])){
-              $mail->AddAddress($opp['email']);
+              $token = strtok($oppp['email'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+
             }
             if(!empty($contactos['email1'])){
-              $mail->AddAddress($opp['email1']);
+              $token = strtok($opp['email1'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+
             }
             if(!empty($contactos['email2'])){
-              $mail->AddAddress($opp['email2']);
+              $token = strtok($opp['email2'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+
             }
             if(!empty($detalle_certificado['oc_email1'])){
-              $mail->AddAddress($detalle_certificado['oc_email1']);
+              $token = strtok($detalle_certificado['oc_email1'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+
             }
             if(!empty($detalle_certificado['oc_email2'])){
-              $mail->AddAddress($detalle_certificado['oc_email2']);
+              $token = strtok($detalle_certificado['oc_email2'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+
             }
 
             ///correos SPP GLOBAL con copia oculta

@@ -381,16 +381,9 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                           1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluación SPP fue concluida con resultado <span style="color:red">positivo</span>.
                         </p>
                         <p>
-                          2. Para concluir el proceso, se solicita de la manera más atenta se <span style="color:red">proceda con el pago de membresía a SPP Global</span>, de acuerdo al monto de: <strong style="color:red">'.$_POST['total_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de entrar a su cuenta y cargar el comprobante bancario.
+                          2. Una vez que SPP Global confirme la recepción de los documentos de evaluación a través del Sistema se procedera a hacer entrega de su Certificado.
                         </p>
-                        <p>
-                          3. Una vez que SPP Global confirme a través del Sistema la recepción del pago en la cuenta de SPP Global, se procedera a hacer entrega de su Certificado.
-                        </p>
-                        <p>
-                          <b>
-                            NOTA: El pago de membresía se considera una ratificación de la firma de Contrato de Uso por lo que no es necesario firmar el contrato cada año que renuevan su certificado.
-                          </b>
-                        </p>
+                        
                         <hr>
                       </td>
                     </tr>
@@ -398,36 +391,17 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     <tr>
                       <td colspan="2">
                         <p>
-                          1. We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a <span style="color:red">“positive”</span> result.
+                          1. We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a <span style="color:red">positive</span> result.
                         </p>
                         <p>
-                          2.  In order to complete the process, you are asked to <span style="color:red">please proceed with payment of the membership fee to SPP Global</span>, in the following amount: <strong style="color:red">'.$_POST['total_membresia'].'</strong>. (Bank information is attached. Please read the General Payment Provisions to avoid interest charges.) After payment has been made, please enter your account in the D-SPP system and upload the bank receipt.
+                          2.  Once SPP Global confirms receipt of the evaluation documents through the System, it will proceed to deliver its Certificate.
                         </p>
-                        <p>
-                          3.  After SPP Global has confirmed through the System that payment has been received in the SPP Global account, your Certificate will be made available to you.
-                        </p>
-                        <p>
-                          <b>
-                            NOTE: Payment of membership fee is considered as ratification of the signing of the User’s Contract, and it is thus not necessary to sign the contract each year in order to renew your certificate.
-                          </b>
-                        </p>
+                        
                         <hr>
                       </td>
                     </tr>
 
-                    <tr>
-                      <td><p><strong>Datos Bancarios</strong></p></td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <ul>
-                          Datos Bancarios Anexos en el correo.
-                          <br>
-                          Bank Information attached to email.
-                        </ul>
-                      </td>
-                    </tr>
-
+                   
                     <tr>
                       <td colspan="2">
                         <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
@@ -450,22 +424,57 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->AddAttachment($archivo_dictamen);
       }
       if(isset($detalle_empresa['contacto1_email'])){
-        $mail->AddAddress($detalle_empresa['contacto1_email']);
+
+        $token = strtok($detalle_empresa['contacto1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($detalle_empresa['contacto2_email'])){
-        $mail->AddAddress($detalle_empresa['contacto2_email']);
+        $token = strtok($detalle_empresa['contacto2_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
       }
       if(isset($detalle_empresa['adm1_email'])){
-        $mail->AddAddress($detalle_empresa['adm1_email']);
+        $token = strtok($detalle_empresa['adm1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($detalle_empresa['email'])){
-        $mail->AddAddress($detalle_empresa['email']);
+        $token = strtok($detalle_empresa['email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
       }
       if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+
       }
       if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+
       }
       $mail->AddBCC($spp_global);
       $mail->AddBCC($finanzas_spp);
@@ -545,10 +554,22 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         </html>
       ';
       if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+
       }
       if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+
       }
 
       $mail->Subject = utf8_decode($asunto);
