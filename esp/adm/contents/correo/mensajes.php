@@ -42,6 +42,94 @@ if (!function_exists("GetSQLValueString")) {
   }
 }
 $rutaArchivo = "../../archivos/recursos/";
+
+if(isset($_POST['enviar_prueba']) && $_POST['enviar_prueba'] == 3){
+
+      $asunto = "D-SPP | Formatos de Evaluación";
+
+      $cuerpo_mensaje = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">Cooperativa Muitiservicios de Productores Cañeros de Cuidad Antigua R.L. COOPROCA R.L.</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>SPP GLOBLA notifica que la OPP: Cooperativa Muitiservicios de Productores Cañeros de Cuidad Antigua R.L. COOPROCA R.L. , ha cumplido con la documentación necesaria.</p>
+                 <p>
+                  Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
+                     <ul style="color:red">
+                       <li>Formato de Evaluación</li>
+                       <li>Informe de Evaluación</li>
+                       <li>Dictamen de Evaluación</li>
+                     </ul>
+
+                 </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
+                  <ol>
+                    <li>Dar clic en la opción "SOLICITUDES"</li>
+                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
+                    <li>Se desplegara una ventan donde podra cargar la documentación</li>
+                  </ol>
+                  <p style="color:red">
+                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+        </html>
+      ';
+      /*if(isset($correos_oc['email1'])){
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(isset($correos_oc['email2'])){
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+      }*/
+      $mail->AddCC('jaime.picado@biolatina.com');
+      $mail->AddCC('roxana.laynes@biolatina.com ');
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+      $mail->ClearAttachments();
+
+      echo "<script>alert('SE ENVIO EL CORREO')</script>";
+}
+
 if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
   $administrador = 'yasser.midnight@gmail.com';
 
@@ -311,60 +399,8 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
 
 </form>
 
-<script>
-/*
-function validar() {
-    var x = document.getElementsByName("lista_contactos");
-    var i;
-    for (i = 0; i < x.length; i++) {
-    	if(){
-	        if (x[i].type == "checkbox") {
-	            x[i].checked = true;
-	        }
-    	}
-
-    }
-}*/
-</script>
-<script>
- /* function validar(){
-    lista_contactos = document.getElementsByName("lista_contactos[]");
-    
-    var seleccionado = false;
-    for(var i=0; i<lista_contactos.length; i++) {    
-      if(lista_contactos[i].checked) {
-        seleccionado = true;
-        break;
-      }
-    }
-     
-    if(!seleccionado) {
-      alert("Debes de seleecionar un destinatario");
-      return false;
-    }
-
-    return true
-  }
- /* function mostrar(){
-    document.getElementById('oculto').style.display = 'block';
-  }
-  function ocultar()
-  {
-    document.getElementById('oculto').style.display = 'none';
-  }*/
-
-/*
-  function ocultar()
-  {
-    document.getElementById('todos').checked = 0;
-  }
-  function ocultarTodos()
-  {
-    document.getElementById('checkbox1').checked = 0;
-    document.getElementById('checkbox2').checked = 0;
-    document.getElementById('checkbox3').checked = 0;
-    document.getElementById('checkbox4').checked = 0;
-
-  }
-
-</script>
+<!--<form action="" method="POST">
+  <p>Correo particular</p>
+  <input type="text" name="enviar_prueba" value="3">
+  <input type="submit" value="enviar">
+</form>-->

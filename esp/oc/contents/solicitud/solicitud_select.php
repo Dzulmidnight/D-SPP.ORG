@@ -326,7 +326,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       //$mail->AddAttachment($archivo);
 
-      if(!empty($_POST['mensaje_renovacion'])){
+      /*29_05_2017 if(!empty($_POST['mensaje_renovacion'])){
         $cuerpo_mensaje = '
               <html>
               <head>
@@ -536,7 +536,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->Send();
       $mail->ClearAddresses();
       $mail->ClearAttachments();
-
+      29_05_2017*/
       /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
 
       $asunto = "D-SPP | Formatos de Evaluación";
@@ -683,7 +683,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }
 
       $documentacion = mysql_fetch_assoc($row_documentacion);
-
+      /*29_05_2017
       $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN (NOTIFICATION OF RESOLUTION)";
 
       if(!empty($_POST['mensajeOPP'])){
@@ -898,7 +898,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
       $mail->Send();
       $mail->ClearAddresses();
-      $mail->ClearAttachments();
+      $mail->ClearAttachments(); 29_05_2017*/
       /*if($mail->Send()){
         $mail->ClearAddresses();
         echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";

@@ -547,7 +547,7 @@ if(isset($_POST['agregar_formato']) && $_POST['agregar_formato'] == 1){
 						</td>
 
 						<td class="info"><!-- primer intermediario -->
-							<input type="text" name="primer_intermediario" id="" placeholder="primer intermediario" onBlur=" ponerMayusculas(this)">
+							<input type="text" name="primer_intermediario" id="" placeholder="primer intermediario" onBlur="ponerMayusculas(this)">
 						</td>
 
 						<td class="info"><!-- segundo intermediario -->
@@ -761,7 +761,7 @@ function buscar() {
 <script>
 function ponerMayusculas(nombre) 
 { 
-nombre.value=nombre.value.toUpperCase(); 
+	nombre.value=nombre.value.toUpperCase(); 
 } 
 var contador=0;
 var cuota_fija_anual = <?php echo $configuracion['cuota_compradores']; ?>;
