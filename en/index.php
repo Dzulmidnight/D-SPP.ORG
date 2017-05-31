@@ -579,7 +579,7 @@ $alerta2 = '
                 <br>
                 <a href="#">Forgot my password</a>
                 <br>
-                <button class="btn btn-primary btn-block" type="submit">Sing In</button>
+                <button class="btn btn-primary btn-block" type="submit">Log In</button>
                 <a class="btn btn-danger btn-block" type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroOPP'";} ?>>No account? Create one!</a>
               </form>
             </div>
@@ -600,7 +600,7 @@ $alerta2 = '
                 <br>
                 <a href="#">Forgot my password</a>
                 <br>
-                <button class="btn btn-primary form-control"  type="submit">Sing In</button>
+                <button class="btn btn-primary form-control"  type="submit">Log In</button>
 
               </form>
             </div>
@@ -621,7 +621,7 @@ $alerta2 = '
                 <br>
                 <a href="#">Forgot my password</a>
                 <br>
-                <button class="btn btn-primary btn-block" type="submit">Sing In</button>
+                <button class="btn btn-primary btn-block" type="submit">Log in</button>
                 <a class="btn btn-danger btn-block"  type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroCOM'";} ?>>No account? Create one!</a>
               </form>
             </div>
@@ -641,7 +641,7 @@ $alerta2 = '
               <input type="text" id="" name="username" class="form-control" placeholder="Username" required autofocus>
               <label for="inputPassword" class="sr-only">Password</label>
               <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
-              <button class="btn btn-lg btn-primary btn-block" type="submit">Sing In</button>
+              <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
             </form>
             </div>
         <?php

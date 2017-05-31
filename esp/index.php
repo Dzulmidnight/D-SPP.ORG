@@ -598,7 +598,7 @@ $alerta2 = '
         ?>
 
             <div>
-              <h4 class="alert alert-success">Iniciar de Sesión como Organización de Pequeños Productores</h4>
+              <h4 class="alert alert-success">Iniciar Sesión como Organización de Pequeños Productores</h4>
             </div>
             <div class="panel-body panel-success">
               <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="opp">

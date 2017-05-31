@@ -56,7 +56,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 
 ?>
 <p class="alert alert-info" style="padding:5px;">
-	To be able to consult more information about an Organization or Company, please enter #SPP or the abbreviation or the name of the same.
+	To be able to consult more information about an Organization or Company, please enter #SPP, short name or the name of the same.
 </p>
 <form action="" method="POST">
 	<div class="input-group">

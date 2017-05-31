@@ -419,7 +419,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     <tr>
                       <td colspan="2">
                         <p>
-                          1. We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a <span style="color:red">“positive”</span> result.
+                          1. We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a <span style="color:red">positive</span> result.
                         </p>
                         <p>
                           2.  In order to complete the process, you are asked to <span style="color:red">please proceed with payment of the membership fee to SPP Global</span>, in the following amount: <strong style="color:red">'.$_POST['total_membresia'].'</strong>. (Bank information is attached. Please read the General Payment Provisions to avoid interest charges.) After payment has been made, please enter your account in the D-SPP system and upload the bank receipt.

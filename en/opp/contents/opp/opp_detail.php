@@ -180,7 +180,7 @@ $opp = mysql_fetch_assoc($row_opp);
   <?php
   }
   ?>
-    <h3>Mis Datos </h3>
+    <h3>My Information</h3>
     <form action="" method="POST">
       <table class="table table-condensed">
         <tr>

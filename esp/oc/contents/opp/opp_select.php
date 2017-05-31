@@ -50,7 +50,7 @@ mysql_select_db($database_dspp, $dspp);
 if(isset($_POST['buscar']) && $_POST['buscar'] == 1){
   $busqueda = $_POST['campo_buscar'];
 
-  $query_opp = "SELECT opp.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', MAX(certificado.idcertificado) AS 'idcertificado', MAX(certificado.vigencia_inicio) AS 'fecha_inicio', MAX(certificado.vigencia_fin) AS 'fecha_fin', certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', num_socios.idnum_socios, num_socios.numero FROM opp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp WHERE opp.idoc = $idoc AND (opp.spp LIKE '%$busqueda%' OR opp.nombre LIKE '%$busqueda%' OR opp.abreviacion LIKE '%$busqueda%') ORDER BY fecha_fin DESC";
+  $query_opp = "SELECT opp.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', MAX(certificado.idcertificado) AS 'idcertificado', MAX(certificado.vigencia_inicio) AS 'fecha_inicio', MAX(certificado.vigencia_fin) AS 'fecha_fin', certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', num_socios.idnum_socios, num_socios.numero FROM opp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp WHERE opp.spp LIKE '%$busqueda%' OR opp.nombre LIKE '%$busqueda%' OR opp.abreviacion LIKE '%$busqueda%' AND opp.idoc = $idoc ORDER BY fecha_fin DESC";
 }else{
   $query_opp = "SELECT opp.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', MAX(certificado.idcertificado) AS 'idcertificado', MAX(certificado.vigencia_inicio) AS 'fecha_inicio', MAX(certificado.vigencia_fin) AS 'fecha_fin', certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', num_socios.idnum_socios, num_socios.numero FROM opp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp WHERE opp.idoc = $idoc GROUP BY opp.idopp ORDER BY fecha_fin DESC";
 }
@@ -336,8 +336,16 @@ if(isset($_POST['actualizacion_opp']) && $_POST['actualizacion_opp'] == 'actuali
 
 }
 
+$pre_detalle = mysql_query($query_opp, $dspp) or die(mysql_error());
+$pre = mysql_fetch_assoc($pre_detalle);
 $detalle_opp = mysql_query($query_opp,$dspp) or die(mysql_error());
-$totalOPP = mysql_num_rows($detalle_opp);
+
+if(isset($pre['idopp'])){
+    $totalOPP = mysql_num_rows($detalle_opp);
+}else{
+    $totalOPP = 0;
+}
+
 
 $row_interno = mysql_query("SELECT * FROM estatus_interno", $dspp) or die(mysql_error());
 
