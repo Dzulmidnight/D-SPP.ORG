@@ -32,7 +32,7 @@
 <? }?>
 
 
-<?
+<?/*
 if(isset($_GET['select'])){
 	include ("solicitud_select.php");
 }else if(isset($_GET['add'])){
@@ -41,5 +41,18 @@ if(isset($_GET['select'])){
 	include ("solicitud_detail.php");
 }else if(isset($_GET['detailBlock'])){
 	include ("solicitud_detailBlock.php");
+}*/
+if(isset($_GET['select'])){
+	include ("solicitud_select.php");
+}else if(isset($_GET['add'])){
+	include ("tipo_solicitud.php");
+}else if(isset($_GET['detail'])){
+	include ("solicitud_detail.php");
+}else if(isset($_GET['detailBlock'])){
+	include ("solicitud_detailBlock.php");
+}else if(isset($_GET['ordinay'])){
+	include('solicitud_ordinaria.php');
+}else if(isset($_GET['collective'])){
+	include('solicitud_colectiva.php');
 }
 ?>
