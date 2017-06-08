@@ -84,6 +84,7 @@ $idopp = $_SESSION['idopp'];
 $ruta_croquis = "../../archivos/oppArchivos/croquis/";
 $spp_global = "cert@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
+$fecha_registro = time();
 /************ VARIABLES DE CONTROL ******************/
 
 
@@ -106,10 +107,10 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}else{
 		$procesamiento = '';
 	}
-	if(isset($_POST['exportacion'])){
-		$exportacion = $_POST['exportacion'];
+	if(isset($_POST['comercializacion'])){
+		$comercializacion = $_POST['comercializacion'];
 	}else{
-		$exportacion = '';
+		$comercializacion = '';
 	}
 
 	/* TERMINA CAPTURA ALCANCE DEL OPP */
@@ -140,7 +141,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 	// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
-	$insertSQL = sprintf("INSERT INTO solicitud_certificacion (tipo_solicitud, idopp, idoc, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, resp1, resp2, resp3, resp4, op_preg1, preg1_1, preg1_2, preg1_3, preg1_4, op_preg2, op_preg3, produccion, procesamiento, exportacion, op_preg5, op_preg6, op_preg7, op_preg8, op_preg10, preg8, preg9, op_preg14, op_preg15, responsable, fecha_registro, estatus_dspp) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	$insertSQL = sprintf("INSERT INTO solicitud_colectiva (tipo_solicitud, idopp, idoc, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, total_miembros, produccion, procesamiento, comercializacion, preg2, preg3, preg4, preg5, preg6, preg8, preg9, preg10, preg11, responsable, fecha_registro, estatus_dspp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 		   GetSQLValueString($_POST['tipo_solicitud'], "text"),
 		   GetSQLValueString($idopp, "int"),
            GetSQLValueString($_POST['idoc'], "int"),
@@ -158,37 +159,27 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
            GetSQLValueString($_POST['adm2_email'], "text"),
            GetSQLValueString($_POST['adm1_telefono'], "text"),
            GetSQLValueString($_POST['adm2_telefono'], "text"),
-           GetSQLValueString($_POST['resp1'], "text"),
-           GetSQLValueString($_POST['resp2'], "text"),
-           GetSQLValueString($_POST['resp3'], "text"),
-           GetSQLValueString($_POST['resp4'], "text"),
-           GetSQLValueString($_POST['op_preg1'], "text"),
-           GetSQLValueString($_POST['preg1_1'], "text"),
-           GetSQLValueString($_POST['preg1_2'], "text"),
-           GetSQLValueString($_POST['preg1_3'], "text"),
-           GetSQLValueString($_POST['preg1_4'], "text"),
-           GetSQLValueString($_POST['op_preg2'], "text"),
-           GetSQLValueString($_POST['op_preg3'], "text"),
-           GetSQLValueString($produccion, "int"),
-           GetSQLValueString($procesamiento, "int"),
-           GetSQLValueString($exportacion, "int"),
-           GetSQLValueString($_POST['op_preg5'], "text"),
-           GetSQLValueString($_POST['op_preg6'], "text"),
-           GetSQLValueString($_POST['op_preg7'], "text"),
-           GetSQLValueString($_POST['op_preg8'], "text"),
-           GetSQLValueString($_POST['op_preg10'], "text"),
-           GetSQLValueString($preg8, "text"),
-           GetSQLValueString($preg9, "text"),
-           GetSQLValueString($_POST['op_preg14'], "text"),
-           GetSQLValueString($croquis, "text"),
+           GetSQLValueString($_POST['total_miembros'], "text"),
+           GetSQLValueString($produccion, "text"),
+           GetSQLValueString($procesamiento, "text"),
+           GetSQLValueString($comercializacion, "text"),
+           GetSQLValueString($_POST['preg2'], "text"),
+           GetSQLValueString($_POST['preg3'], "text"),
+           GetSQLValueString($_POST['preg4'], "text"),
+           GetSQLValueString($_POST['preg5'], "text"),
+           GetSQLValueString($_POST['preg6'], "text"),
+           GetSQLValueString($_POST['preg8'], "text"),
+           GetSQLValueString($_POST['preg9'], "text"),
+           GetSQLValueString($_POST['preg10'], "text"),
+           GetSQLValueString($_POST['preg11'], "text"),
            GetSQLValueString($_POST['responsable'], "text"),
-           GetSQLValueString($fecha, "int"),
+           GetSQLValueString($_POST['fecha_registro'], "int"),
            GetSQLValueString($estatus_dspp, "int"));
 
 
 		  $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
 		 
-		 $idsolicitud_certificacion = mysql_insert_id($dspp); 
+		 $idsolicitud_colectiva = mysql_insert_id($dspp); 
 
 	///INGRESAMOS EL TIPO DE SOLICITUD A LA TABLA OPP y EL ALCANCE DE LA OPP
 	$updateSQL = sprintf("UPDATE opp SET produccion = %s, procesamiento = %s, exportacion = %s, estatus_opp = %s WHERE idopp = %s",
@@ -242,7 +233,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 	// INGRESAMOS EL NUMERO DE SOCIOS A LA TABLA NUM_SOCIOS
-	if(isset($_POST['resp1'])){
+	/*08_06_2017 if(isset($_POST['resp1'])){
 		if($_POST['tipo_solicitud'] == "NUEVA"){ //si es nueva se inserta un registro de numero de socios
 			$insertSQL = sprintf("INSERT INTO num_socios (idopp, numero, fecha_registro) VALUES (%s, %s, %s)",
 				GetSQLValueString($idopp, "int"),
@@ -256,26 +247,26 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 				GetSQLValueString($idopp, "int"));
 			$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 		}
-	}
+	} 08_06_2017*/
 
 
 		 // INGRESAMOS EL PORCENTAJE DE VENTA DE LOS PRODUCTOS
 
 		 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
-		 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_certificacion, idopp) VALUES (%s, %s, %s, %s, %s, %s)",
+		 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_colectiva, idopp) VALUES (%s, %s, %s, %s, %s, %s)",
 		 			GetSQLValueString($_POST['organico'], "text"),
 		 			GetSQLValueString($_POST['comercio_justo'], "text"),
 		 			GetSQLValueString($_POST['spp'], "text"),
 		 			GetSQLValueString($_POST['sin_certificado'], "text"),
-		 			GetSQLValueString($idsolicitud_certificacion, "int"),
+		 			GetSQLValueString($idsolicitud_colectiva, "int"),
 		 			GetSQLValueString($idopp, "int"));
 		 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 		 	}
 
 
 		/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
-		$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_publico, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
-			GetSQLValueString($idsolicitud_certificacion, "int"),
+		$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_colectiva, estatus_publico, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+			GetSQLValueString($idsolicitud_colectiva, "int"),
 			GetSQLValueString($estatus_publico, "int"),
 			GetSQLValueString($estatus_interno, "int"),
 			GetSQLValueString($estatus_dspp, "int"),
@@ -312,8 +303,8 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			for($i=0;$i<count($certificacion);$i++){
 				if($certificacion[$i] != NULL){
 					#for($i=0;$i<count($certificacion);$i++){
-					$insertSQL = sprintf("INSERT INTO certificaciones (idsolicitud_certificacion, certificacion, certificadora, ano_inicial, interrumpida) VALUES (%s, %s, %s, %s, %s)",
-					    GetSQLValueString($idsolicitud_certificacion, "int"),
+					$insertSQL = sprintf("INSERT INTO certificaciones (idsolicitud_colectiva, certificacion, certificadora, ano_inicial, interrumpida) VALUES (%s, %s, %s, %s, %s)",
+					    GetSQLValueString($idsolicitud_colectiva, "int"),
 					    GetSQLValueString(strtoupper($certificacion[$i]), "text"),
 					    GetSQLValueString(strtoupper($certificadora[$i]), "text"),
 					    GetSQLValueString($ano_inicial[$i], "text"),
@@ -383,9 +374,9 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 					$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
 
-				    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto_general, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+				    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_colectiva, producto_general, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 				    	GetSQLValueString($idopp, "int"),
-				        GetSQLValueString($idsolicitud_certificacion, "int"),
+				        GetSQLValueString($idsolicitud_colectiva, "int"),
 				        GetSQLValueString($producto_general[$i], "text"),
 				        GetSQLValueString($producto[$i], "text"),
 				        GetSQLValueString($volumen[$i], "text"),
@@ -781,26 +772,26 @@ $opp = mysql_fetch_assoc($row_opp);
 								<input type="number" class="form-control" style="width:120px;" name="numero_miembros[0]" placeholder="Only numbers">
 							</td>
 							<td>
-								<textarea class="form-control" name="productos[0]" id="" rows="3" placeholder="Products"></textarea>
+								<textarea class="form-control" style="width:200px;" name="productos[0]" id="" rows="3" placeholder="Products"></textarea>
 							</td>
 							<td>
-								<input type="text" class="form-control" name="unidad_produccion[0]" placeholder="Unit production">
+								<input type="text" class="form-control" style="width:150px;" name="unidad_produccion[0]" placeholder="Unit production">
 							</td>
 							<td>
-								<input type="text" class="form-control" name="certificacion[0]" placeholder="Certification(s)" required>
+                                <textarea class="form-control" style="width:150px;" name="certificacion[0]" placeholder="Certification(s)" rows="3" required></textarea>
 							</td>
 							<td>
-								<input type="text" class="form-control" name="certificadora[0]" placeholder="Certification Entity" required>
+                                <textarea class="form-control" style="width:150px;" name="certificadora[0]" placeholder="Certification Entity" rows="3" required></textarea>
 							</td>
 							<td>
-								<input type="text" class="form-control" name="anio_certificacion[0]" placeholder="Initial Year">
+                                <textarea class="form-control" style="width:150px;" name="anio_certificacion[0]" placeholder="Initial Year" rows="3" required></textarea>
 							</td>
 							<td>
 								YES <input type="radio"  name="interrumpido[0]" id="" value="SI"><br>
 								NO <input type="radio"  name="interrumpido[0]" id="" value="NO" >
 							</td>
 							<td>
-								<textarea class="form-control" name="inconformidades[0]" id="" rows="3"></textarea>
+								<textarea class="form-control" style="width:200px;" name="inconformidades[0]" id="" rows="3"></textarea>
 							</td>
 							<td>
 								
@@ -1128,9 +1119,9 @@ var contador=0;
 		  cell4.innerHTML = '<input type="text" class="form-control" style="width:120px;" name="numero_miembros['+contador+']" id="" placeholder="Only numbers">';
 		  cell5.innerHTML = '<textarea class="form-control" name="productos['+contador+']" id="" rows="3" placeholder="Products"></textarea>';
 		  cell6.innerHTML = '<input type="text" class="form-control" name="unidad_produccion['+contador+']" id="" placeholder="Unit production">';
-		  cell7.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="" placeholder="Certification(s)"> required';
-		  cell8.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="" placeholder="Certification Entity"> required';
-		  cell9.innerHTML = '<input type="text" class="form-control" name="anio_certificacion['+contador+']" id="" placeholder="Initial Year">';
+		  cell7.innerHTML = '<textarea class="form-control" style="width:150px;" name="certificacion['+contador+']" placeholder="Certification(s)" rows="3" required></textarea>';
+		  cell8.innerHTML = '<textarea class="form-control" style="width:150px;" name="certificadora['+contador+']" placeholder="Certification Entity" rows="3" required></textarea>';
+		  cell9.innerHTML = '<textarea class="form-control" style="width:150px;" name="anio_certificacion['+contador+']" placeholder="Initial Year" rows="3" required></textarea>';
 		  cell10.innerHTML = 'YES <input type="radio" name="interrumpida'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="interrumpida'+cont+'['+cont+']" id="" value="NO">';
 		  cell11.innerHTML = '<textarea class="form-control" name="inconformidades['+contador+']" id="" rows="3"></textarea>';
 	  }

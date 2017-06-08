@@ -326,7 +326,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       //$mail->AddAttachment($archivo);
 
-      /*29_05_2017 if(!empty($_POST['mensaje_renovacion'])){
+       if(!empty($_POST['mensaje_renovacion'])){
         $cuerpo_mensaje = '
               <html>
               <head>
@@ -536,7 +536,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->Send();
       $mail->ClearAddresses();
       $mail->ClearAttachments();
-      29_05_2017*/
+      
       /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
 
       $asunto = "D-SPP | Formatos de Evaluación";
