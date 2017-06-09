@@ -85,6 +85,7 @@ $ruta_croquis = "../../archivos/oppArchivos/croquis/";
 $spp_global = "cert@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 $fecha_registro = time();
+setlocale(LC_ALL, 'en_US.UTF8');
 /************ VARIABLES DE CONTROL ******************/
 
 
@@ -132,10 +133,10 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 
-	if(!empty($_FILES['op_preg15']['name'])){
-	    $_FILES["op_preg15"]["name"];
-	      move_uploaded_file($_FILES["op_preg15"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
-	      $croquis = $ruta_croquis.basename(date("Ymd H:i:s")."_".$_FILES["op_preg15"]["name"]);
+	if(!empty($_FILES['preg11']['name'])){
+	    $_FILES["preg11"]["name"];
+	      move_uploaded_file($_FILES["preg11"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["preg11"]["name"]);
+	      $croquis = $ruta_croquis.basename(date("Ymd H:i:s")."_".$_FILES["preg11"]["name"]);
 	}else{
 		$croquis = NULL;
 	}
@@ -160,20 +161,20 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
            GetSQLValueString($_POST['adm1_telefono'], "text"),
            GetSQLValueString($_POST['adm2_telefono'], "text"),
            GetSQLValueString($_POST['total_miembros'], "text"),
-           GetSQLValueString($produccion, "text"),
-           GetSQLValueString($procesamiento, "text"),
-           GetSQLValueString($comercializacion, "text"),
+           GetSQLValueString($produccion, "int"),
+           GetSQLValueString($procesamiento, "int"),
+           GetSQLValueString($comercializacion, "int"),
            GetSQLValueString($_POST['preg2'], "text"),
            GetSQLValueString($_POST['preg3'], "text"),
            GetSQLValueString($_POST['preg4'], "text"),
            GetSQLValueString($_POST['preg5'], "text"),
            GetSQLValueString($_POST['preg6'], "text"),
            GetSQLValueString($_POST['preg8'], "text"),
-           GetSQLValueString($_POST['preg9'], "text"),
+           GetSQLValueString($preg9, "text"),
            GetSQLValueString($_POST['preg10'], "text"),
-           GetSQLValueString($_POST['preg11'], "text"),
+           GetSQLValueString($croquis, "text"),
            GetSQLValueString($_POST['responsable'], "text"),
-           GetSQLValueString($_POST['fecha_registro'], "int"),
+           GetSQLValueString($fecha_registro, "int"),
            GetSQLValueString($estatus_dspp, "int"));
 
 
@@ -182,10 +183,10 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		 $idsolicitud_colectiva = mysql_insert_id($dspp); 
 
 	///INGRESAMOS EL TIPO DE SOLICITUD A LA TABLA OPP y EL ALCANCE DE LA OPP
-	$updateSQL = sprintf("UPDATE opp SET produccion = %s, procesamiento = %s, exportacion = %s, estatus_opp = %s WHERE idopp = %s",
+	$updateSQL = sprintf("UPDATE opp SET produccion = %s, procesamiento = %s, comercializacion = %s, estatus_opp = %s WHERE idopp = %s",
 		GetSQLValueString($produccion, "int"),
 		GetSQLValueString($procesamiento, "int"),
-		GetSQLValueString($exportacion, "int"),
+		GetSQLValueString($comercializacion, "int"),
 		GetSQLValueString($_POST['tipo_solicitud'], "int"),
 		GetSQLValueString($idopp, "int"));
 	$actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
@@ -273,6 +274,112 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			GetSQLValueString($fecha, "int"));
 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 		/*************************** TERMINA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
+
+		/*************************** INICIA INSERTAR SUB ORGANIZACIONES ***************************/
+			//$spp_suborganizacion = 'PRUEBA';
+			$pais_facilitador = $_POST['pais_facilitador'];
+			if(isset($_POST['sub_nombre'])){
+				$nombre = $_POST['sub_nombre'];
+			}else{
+				$nombre = NULL;
+			}
+
+			if(isset($_POST['unidad_produccion'])){
+				$unidad_produccion = $_POST['unidad_produccion'];
+			}else{
+				$unidad_produccion = NULL;
+			}
+			if(isset($_POST['sub_producto'])){
+				$sub_producto = $_POST['sub_producto'];
+			}else{
+				$sub_producto = NULL;
+			}
+			if(isset($_POST['num_productores'])){
+				$num_productores = $_POST['num_productores'];
+			}else{
+				$num_productores = NULL;
+			}
+			if(isset($_POST['sub_incumplimientos'])){
+				$incumplimientos = $_POST['sub_incumplimientos'];
+			}else{
+				$incumplimientos = NULL;
+			}
+			if(isset($_POST['sub_certificaciones'])){
+				$certificaciones = $_POST['sub_certificaciones'];
+			}else{
+				$certificaciones = NULL;
+			}
+			if(isset($_POST['sub_certificadora'])){
+				$certificadora = $_POST['sub_certificadora'];
+			}else{
+				$certificadora = NULL;
+			}
+			if(isset($_POST['sub_anio_certificacion'])){
+				$anio_inicial = $_POST['sub_anio_certificacion'];
+			}else{
+				$anio_inicial = NULL;
+			}
+			if(isset($_POST['sub_interrumpido'])){
+				$interrumpida = $_POST['sub_interrumpido'];
+			}else{
+				$interrumpida = NULL;
+			}
+
+						$contador = 1;
+
+			for($i=0;$i<count($nombre);$i++){
+				if($nombre[$i] != NULL){
+						$contador++;
+					$row_opp = mysql_query("SELECT idopp, spp, pais FROM opp WHERE pais = '$pais_facilitador'",$dspp) or die(mysql_error());
+					//$datos_opp = mysql_fetch_assoc($ejecutar);
+					//$fecha = $_POST['fecha_inclusion'];
+
+
+						$charset='utf-8'; // o 'UTF-8'
+						$str = iconv($charset, 'ASCII//TRANSLIT', $pais_facilitador);
+						$pais_facilitador = preg_replace("/[^a-zA-Z0-9]/", '', $str);
+
+						$pais_facilitadorDigitos = strtoupper(substr($pais_facilitador, 0, 3));
+						$formatoFecha = date("d/m/Y", $fecha);
+						$fechaDigitos = substr($formatoFecha, -2);
+
+						$contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
+						//$numero =  strlen($contador);
+
+						$spp_suborganizacion = "OPP-".$pais_facilitadorDigitos."-".$fechaDigitos."-".$contador;
+
+						while($datos_opp = mysql_fetch_assoc($row_opp)) {
+						  if($datos_opp['spp'] == $spp_suborganizacion){
+						    //echo "<b style='color:red'>es igual el OPP con id: $datos_opp[idf]</b><br>";
+						    $contador++;
+						    $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
+						    $spp_suborganizacion = "OPP-".$pais_facilitadorDigitos."-".$fechaDigitos."-".$contador;
+						  }/*else{
+						    echo "el id encontrado es: $datos_opp[idf]<br>";
+						  }*/
+						  
+						}
+
+
+					#for($i=0;$i<count($certificacion);$i++){
+					$insertSQL = sprintf("INSERT INTO sub_organizaciones (spp, nombre, pais, productos, unidad_produccion, num_productores, incumplimientos, certificaciones, certificadora, anio_inicial, interrumpida, idsolicitud_colectiva) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+						GetSQLValueString($spp_suborganizacion, "text"),
+					    GetSQLValueString(strtoupper($nombre[$i]), "text"),
+					    GetSQLValueString(strtoupper($pais_facilitador), "text"),
+					    GetSQLValueString(strtoupper($sub_producto[$i]), "text"),
+					    GetSQLValueString(strtoupper($unidad_produccion[$i]), "text"),
+					    GetSQLValueString(strtoupper($num_productores[$i]), "text"),
+					    GetSQLValueString(strtoupper($incumplimientos[$i]), "text"),
+					    GetSQLValueString(strtoupper($certificaciones[$i]), "text"),
+					    GetSQLValueString(strtoupper($certificadora[$i]), "text"),
+					    GetSQLValueString($anio_inicial[$i], "text"),
+					    GetSQLValueString(strtoupper($interrumpida[$i]), "text"),
+					    GetSQLValueString($idsolicitud_colectiva, "int"));
+					$Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+					#}
+				}
+			}
+		/*************************** INICIA INSERTAR SUB ORGANIZACIONES ***************************/
 
 		/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
 			if(isset($_POST['certificacion'])){
@@ -392,7 +499,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		/***************************** TERMINA INSERTAR PRODUCTOS ******************************/
 
 		///// INICIA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
-		$asunto = "D-SPP Solicitud de Certificación para Organizaciones de Pequeños Productores";
+		$asunto = "D-SPP Solicitud de Certificación Colectiva para Organizaciones de Pequeños Productores";
 		$row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
 		$oc = mysql_fetch_assoc($row_oc);
 
@@ -407,7 +514,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		          <tbody>
 		                <tr>
 		                  <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-		                  <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Certification Application for Small Producers’ Organizations </strong></th>
+		                  <th scope="col" align="left" width="280"><strong>Solicitud de Certificación Colectiva para Organizaciones de Pequeños Productores / Application for Collective Certification for Small Producers Organizations </strong></th>
 		                </tr>
 		                <tr>
 		                  <td style="padding-top:10px;">
@@ -444,7 +551,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		                    </tr>
 		                    <tr style="font-size: 12px;">
 		                      <td style="padding:10px;">
-		                        '.$_POST['nombre'].'
+		                        '.$_POST['nombre_facilitador'].'
 		                      </td>
 		                      <td style="padding:10px;">
 		                        '.$_POST['pais'].'
@@ -517,7 +624,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		}
 		if(isset($_POST['email'])){
 			//$mail->AddCC($_POST['email']);
-			$token = strtok($_POST['email1'], "\/\,\;");
+			$token = strtok($_POST['email'], "\/\,\;");
 			while ($token !== false)
 			{
 				$mail->AddCC($token);
@@ -574,6 +681,30 @@ $opp = mysql_fetch_assoc($row_opp);
 		<fieldset>
 			<div class="col-md-12 alert alert-primary" style="padding:7px;">
 				<h3 class="text-center">Application for Collective Certification SPO</h3>
+			</div>
+			<div class="col-md-12 well text-justify">
+				<p class="text-center" style="color:red"><b>Important Information about the Guidelines for the Collective Certification:</b></p>
+				<p><b>Scope:</b></p>
+				<p>
+					1.	The Collective Certification Procedures apply to first-level Organizations that are members of a higher level Small Producers’ Organization that applies for Certification, based on the General Standard for the Small Producers’ Symbol, through the Small Producers’ Organization of a higher level. 
+				</p>  
+
+				<p>
+					2.	The high-level Small Producers’ Organization does not acquire certification. If the high-level Small Producers’ Organization is the organization that is commercializing products under the Small Producers’ Symbol, it should become registered as an Intermediary (INT) or Collective Trading Company owned by Small Producers’ Organizations (C-OPP). 
+				</p>      
+
+				<p>
+					<b>Requirements:</b><br>
+					i.	The high-level Small Producers’ Organization (SPO) should work to facilitate and promote the certification process for its members and should provide all the necessary information based on their internal control system. 
+				</p>
+				<p>
+					ii.	The high-level SPO should complete the SPP Evaluation Form as a form of self-assessment in line with the information from each of the first-level SPOs involved.
+				</p>
+				<p>
+					iii.	The high-level SPO should send the documentation specified in the Evaluation Form as support documentation, as well as the information requested by the Certification Entity (CE). 
+				</p> 
+
+
 			</div>
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
 				<div class="col-md-12 alert alert-warning" style="padding:5px;">
@@ -654,6 +785,7 @@ $opp = mysql_fetch_assoc($row_opp);
 					 	}
 					 	 ?>
 					 </select>
+					 <input type="hidden" name="pais_facilitador" value="<?php echo $opp['pais']; ?>">
 
 					<label for="direccion_oficina">COMPLETE ADDRESS FOR THE FACILITATING ORGANIZATION (STREET, DISTRICT, TOWN/CITY, REGION):</label>
 					<textarea name="direccion_oficina" id="direccion_oficina"  class="form-control"><?php echo $opp['direccion_oficina']; ?></textarea>
@@ -733,7 +865,12 @@ $opp = mysql_fetch_assoc($row_opp);
 				<table class="table table-bordered" id="tabla_organizaciones">
 					<thead>
 						<tr class="success">
-							<th rowspan="2">#</th>
+							<th rowspan="2" style="margin:0px;padding:0px;">
+								<button type="button" onclick="tabla_organizaciones()" class="btn btn-primary" aria-label="Left Align">
+								  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								</button>
+							</th>
+
 							<th rowspan="2">Complete Name</th>
 							<th rowspan="2">SPP Identification Code</th>
 							<th rowspan="2">Number of Producer Members</th>
@@ -742,11 +879,6 @@ $opp = mysql_fetch_assoc($row_opp);
 							<th colspan="4">Fill out the table according your certifications, (example: EU, NOP, JAS, FLO, etc.)</th>
 
 							<th rowspan="2">According the certifications, in its most recent internal and external evaluations, how many cases of non compliance were identified? Please explain if they have been resolved or what their status is?</th>
-							<th rowspan="2" style="margin:0px;padding:0px;">
-								<button type="button" onclick="tabla_organizaciones()" class="btn btn-primary" aria-label="Left Align">
-								  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-								</button>
-							</th>
 
 						</tr>
 						<tr>
@@ -759,43 +891,41 @@ $opp = mysql_fetch_assoc($row_opp);
 					</thead>
 					<tbody>
 						<tr>	
-							<td style="width:20px;">
+							<td>
+								1
+							</td>
+							<td>
+								<input type="text" class="form-control" style="width:150px;" name="sub_nombre[0]" placeholder="Complete name">
+							</td>
+							<td>
 								Generated by the system
 							</td>
 							<td>
-								<input type="text" class="form-control" style="width:150px;" name="nombre_organizacion[0]" placeholder="Complete name">
+								<input type="number" class="form-control" style="width:120px;" name="num_productores[0]" placeholder="Only numbers">
 							</td>
 							<td>
-								Generated by the system
-							</td>
-							<td>
-								<input type="number" class="form-control" style="width:120px;" name="numero_miembros[0]" placeholder="Only numbers">
-							</td>
-							<td>
-								<textarea class="form-control" style="width:200px;" name="productos[0]" id="" rows="3" placeholder="Products"></textarea>
+								<textarea class="form-control" style="width:200px;" name="sub_producto[0]" id="" rows="3" placeholder="Products"></textarea>
 							</td>
 							<td>
 								<input type="text" class="form-control" style="width:150px;" name="unidad_produccion[0]" placeholder="Unit production">
 							</td>
 							<td>
-                                <textarea class="form-control" style="width:150px;" name="certificacion[0]" placeholder="Certification(s)" rows="3" required></textarea>
+                                <textarea class="form-control" style="width:150px;" name="sub_certificaciones[0]" placeholder="Certification(s)" rows="3" required></textarea>
 							</td>
 							<td>
-                                <textarea class="form-control" style="width:150px;" name="certificadora[0]" placeholder="Certification Entity" rows="3" required></textarea>
+                                <textarea class="form-control" style="width:150px;" name="sub_certificadora[0]" placeholder="Certification Entity" rows="3" required></textarea>
 							</td>
 							<td>
-                                <textarea class="form-control" style="width:150px;" name="anio_certificacion[0]" placeholder="Initial Year" rows="3" required></textarea>
+                                <textarea class="form-control" style="width:150px;" name="sub_anio_certificacion[0]" placeholder="Initial Year" rows="3" required></textarea>
 							</td>
 							<td>
-								YES <input type="radio"  name="interrumpido[0]" id="" value="SI"><br>
-								NO <input type="radio"  name="interrumpido[0]" id="" value="NO" >
+								YES <input type="radio"  name="sub_interrumpido[0]" id="" value="SI"><br>
+								NO <input type="radio"  name="sub_interrumpido[0]" id="" value="NO" >
 							</td>
 							<td>
-								<textarea class="form-control" style="width:200px;" name="inconformidades[0]" id="" rows="3"></textarea>
+								<textarea class="form-control" style="width:200px;" name="sub_incumplimientos[0]" id="" rows="3"></textarea>
 							</td>
-							<td>
-								
-							</td>
+
 						</tr>
 						<tr>
 							<td colspan="11">
@@ -1094,37 +1224,39 @@ $opp = mysql_fetch_assoc($row_opp);
 
 <script>
 var contador=0;
+var contador2=1;
 	function tabla_organizaciones()
 	{
 		contador++;
-	var table = document.getElementById("tabla_organizaciones");
-	  {
-		  var row = table.insertRow(2);
-		  var cell1 = row.insertCell(0);
-		  var cell2 = row.insertCell(1);
-		  var cell3 = row.insertCell(2);
-		  var cell4 = row.insertCell(3);
-		  var cell5 = row.insertCell(4);
-		  var cell6 = row.insertCell(5);
-		  var cell7 = row.insertCell(6);
-		  var cell8 = row.insertCell(7);
-		  var cell9 = row.insertCell(8);
-		  var cell10 = row.insertCell(9);
-		  var cell11 = row.insertCell(10);
-		  var cell12 = row.insertCell(11);
+		contador2++;
 
-		  cell1.innerHTML = 'Generated by the system';
-		  cell2.innerHTML = '<input type="text" class="form-control" style="width:150px;" name="nombre_organizacion['+contador+']" id="" placeholder="Complete name">';
-		  cell3.innerHTML = 'Generated by the system';
-		  cell4.innerHTML = '<input type="text" class="form-control" style="width:120px;" name="numero_miembros['+contador+']" id="" placeholder="Only numbers">';
-		  cell5.innerHTML = '<textarea class="form-control" name="productos['+contador+']" id="" rows="3" placeholder="Products"></textarea>';
-		  cell6.innerHTML = '<input type="text" class="form-control" name="unidad_produccion['+contador+']" id="" placeholder="Unit production">';
-		  cell7.innerHTML = '<textarea class="form-control" style="width:150px;" name="certificacion['+contador+']" placeholder="Certification(s)" rows="3" required></textarea>';
-		  cell8.innerHTML = '<textarea class="form-control" style="width:150px;" name="certificadora['+contador+']" placeholder="Certification Entity" rows="3" required></textarea>';
-		  cell9.innerHTML = '<textarea class="form-control" style="width:150px;" name="anio_certificacion['+contador+']" placeholder="Initial Year" rows="3" required></textarea>';
-		  cell10.innerHTML = 'YES <input type="radio" name="interrumpida'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="interrumpida'+cont+'['+cont+']" id="" value="NO">';
-		  cell11.innerHTML = '<textarea class="form-control" name="inconformidades['+contador+']" id="" rows="3"></textarea>';
-	  }
+		var table = document.getElementById("tabla_organizaciones");
+		{
+			var row = table.insertRow(2);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			var cell3 = row.insertCell(2);
+			var cell4 = row.insertCell(3);
+			var cell5 = row.insertCell(4);
+			var cell6 = row.insertCell(5);
+			var cell7 = row.insertCell(6);
+			var cell8 = row.insertCell(7);
+			var cell9 = row.insertCell(8);
+			var cell10 = row.insertCell(9);
+			var cell11 = row.insertCell(10);
+
+			cell1.innerHTML = ''+contador2+'';
+			cell2.innerHTML = '<input type="text" class="form-control" style="width:150px;" name="sub_nombre['+contador+']" id="" placeholder="Complete name">';
+			cell3.innerHTML = 'Generated by the system';
+			cell4.innerHTML = '<input type="text" class="form-control" style="width:120px;" name="num_productores['+contador+']" id="" placeholder="Only numbers">';
+			cell5.innerHTML = '<textarea class="form-control" name="sub_producto['+contador+']" id="" rows="3" placeholder="Products"></textarea>';
+			cell6.innerHTML = '<input type="text" class="form-control" name="unidad_produccion['+contador+']" id="" placeholder="Unit production">';
+			cell7.innerHTML = '<textarea class="form-control" style="width:150px;" name="sub_certificaciones['+contador+']" placeholder="Certification(s)" rows="3" required></textarea>';
+			cell8.innerHTML = '<textarea class="form-control" style="width:150px;" name="sub_certificadora['+contador+']" placeholder="Certification Entity" rows="3" required></textarea>';
+			cell9.innerHTML = '<textarea class="form-control" style="width:150px;" name="sub_anio_certificacion['+contador+']" placeholder="Initial Year" rows="3" required></textarea>';
+			cell10.innerHTML = 'YES <input type="radio" name="sub_interrumpido'+contador+'['+contador+']" id="" value="SI"><br>NO <input type="radio" name="sub_interrumpido'+contador+'['+contador+']" id="" value="NO">';
+			cell11.innerHTML = '<textarea class="form-control" name="sub_incumplimientos['+contador+']" id="" rows="3"></textarea>';
+		}
 	}	
 
 	function mostrar(){
