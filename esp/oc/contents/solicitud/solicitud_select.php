@@ -2351,7 +2351,6 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               <!-------- TERMINA VENTANA DICTAMEN NEGATIVO ---------->
 
 
-
                         </div><!--TERMINA ROW-->
                       </div><!-- TERMINA MODAL BODY -->
 

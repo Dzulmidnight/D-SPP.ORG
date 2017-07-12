@@ -95,7 +95,7 @@ $row_empresa = mysql_query($query_empresa, $dspp) or die(mysql_error());
 //$row_empresa = mysql_query("SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10", $dspp) or die(mysql_error());
 $total_empresa = mysql_num_rows($row_empresa);
 
-$row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
+$row_pais = mysql_query("SELECT pais FROM empresa GROUP BY pais", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT * FROM oc", $dspp) or die(mysql_error());
 $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempresa IS NOT NULL GROUP BY producto",$dspp) or die(mysql_error());
 ?>
@@ -141,7 +141,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
 
       <!-- (PRIMERA)INICIA SECCIÓN PRINCIPAL -->
       <div class="col-md-6">
-        <p class="alert alert-default" style="padding:9px;"><a href="lista_empresa.php"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Revisar Lista de Organizaciones de Pequeños Productores</a></p>
+        <p class="alert alert-default" style="padding:9px;"><a href="lista_opp.php"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Revisar Lista de Organizaciones de Pequeños Productores</a></p>
       </div>
       <div class="col-md-6">
         <p class="alert alert-success" style="padding:9px;"><a href="lista_empresas.php"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Revisar Lista de Compradores y otros Actores</a></p>
@@ -181,7 +181,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
                     <option value=''>Selecciona un país</option>
                     <?php 
                     while($pais = mysql_fetch_assoc($row_pais)){
-                      echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
+                      echo "<option value='".$pais['pais']."'>".$pais['pais']."</option>";
                     }
                      ?>
                   </select>

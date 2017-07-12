@@ -2441,7 +2441,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                                 if($solicitud['tipo_solicitud'] == 'RENOVACION'){ // EN CASO DE QUE SEA UNA SOLICITUD EN RENOVACIÓN
                                   // inicia validación ///
-                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO')){
+                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($proceso_certificacion['estatus_membresia'] == "APROBADA")){
                                     if(isset($solicitud['idcertificado'])){
                                       $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                                       $certificado = mysql_fetch_assoc($row_certificado);

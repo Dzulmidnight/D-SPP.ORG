@@ -299,7 +299,7 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $estatus_dspp = '4'; // COTIZACIÓN ENVIADA
   $estatus_publico = '1';
-  echo '<script>alert("1");</script>';
+  //echo '<script>alert("1");</script>';
   $rutaArchivo = "../../archivos/ocArchivos/cotizaciones/";
   $procedimiento = $_POST['procedimiento'];
 
@@ -310,7 +310,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   }else{
     $cotizacion_empresa = NULL;
   }
-  echo '<script>alert("2");</script>';
+  //echo '<script>alert("2");</script>';
   //ACTUALIZAMOS LA SOLICITUD DE CERTIFICACION AGREGANDO LA COTIZACIÓN
   $updateSQL = sprintf("UPDATE solicitud_registro SET tipo_procedimiento = %s, cotizacion_empresa = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
     GetSQLValueString($procedimiento, "text"),
@@ -318,27 +318,27 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($idsolicitud_registro, "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
-  echo '<script>alert("3");</script>';
+  //echo '<script>alert("3");</script>';
   // ACTUALIZAMOS EL ESTATUS_DSPP DEL OPP
   $updateSQL = sprintf("UPDATE empresa SET estatus_dspp = %s WHERE idempresa = %s",
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idempresa'], "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
-  echo '<script>alert("4");</script>';
+  //echo '<script>alert("4");</script>';
   //AGREGAMOS EL PROCESO DE CERTIFICACIÓN
   $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_publico, estatus_dspp) VALUES (%s, %s, %s)",
     GetSQLValueString($idsolicitud_registro, "int"),
     GetSQLValueString($estatus_publico, "int"),
     GetSQLValueString($estatus_dspp, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
-  echo '<script>alert("5");</script>';
+  //echo '<script>alert("5");</script>';
   //ASUNTO DEL CORREO
   $row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
   $oc = mysql_fetch_assoc($row_oc);
-  echo '<script>alert("6");</script>';
+  //echo '<script>alert("6");</script>';
   $row_empresa = mysql_query("SELECT spp, abreviacion, password FROM empresa WHERE idempresa = $_POST[idempresa]", $dspp) or die(mysql_error());
   $empresa = mysql_fetch_assoc($row_empresa);
-  echo '<script>alert("7");</script>';
+  //echo '<script>alert("7");</script>';
   $asunto = "D-SPP Cotización (Solicitud de Registro para Compradores y otros Actores) / Price Quote (Registration Application for Buyers and other Stakeholders)";
 
   $cuerpo_mensaje = '
@@ -448,7 +448,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
     </body>
     </html>
   ';
-    echo '<script>alert("8");</script>';
+    //echo '<script>alert("8");</script>';
   if(isset($_POST['email'])){
     $token = strtok($_POST['email'], "\/\,\;");
     while ($token !== false)
@@ -492,7 +492,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
         $token = strtok('\/\,\;');
       }
   }
-  echo '<script>alert("9");</script>';
+  //echo '<script>alert("9");</script>';
   
   //se adjunta la cotización
   $mail->AddAttachment($cotizacion_empresa);

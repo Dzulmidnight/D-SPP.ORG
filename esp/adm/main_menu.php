@@ -188,6 +188,7 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
     <!--<script src="../bootstrap/js/ie10-viewport-bug-workaround.js"></script>-->
 
   <script src="../chosen/chosen.jquery.js" type="text/javascript"></script>
+
   <script type="text/javascript">
     var config = {
       '.chosen-select'           : {},
@@ -200,6 +201,7 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
       $(selector).chosen(config[selector]);
     }
   </script>
+  
     <script>
       $(function () {
       $('[data-toggle="tooltip"]').tooltip()

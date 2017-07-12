@@ -490,7 +490,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
             }
             if(!empty($contactos['email1'])){
-              $token = strtok($opp['email1'], "\/\,\;");
+              $token = strtok($contactos['email1'], "\/\,\;");
               while ($token !== false)
               {
                 $mail->AddAddress($token);
@@ -499,7 +499,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
             }
             if(!empty($contactos['email2'])){
-              $token = strtok($opp['email2'], "\/\,\;");
+              $token = strtok($contactos['email2'], "\/\,\;");
               while ($token !== false)
               {
                 $mail->AddAddress($token);
@@ -637,7 +637,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
             $asunto = "D-SPP - Certificado por expirar / Certified for expiring"; 
             ///CORREOS A LOS QUE SE ENVIARA EL CORREO DE RENOVACIÓN
             if(!empty($opp['email'])){
-              $token = strtok($oppp['email'], "\/\,\;");
+              $token = strtok($opp['email'], "\/\,\;");
               while ($token !== false)
               {
                 $mail->AddAddress($token);
@@ -646,7 +646,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
             }
             if(!empty($contactos['email1'])){
-              $token = strtok($opp['email1'], "\/\,\;");
+              $token = strtok($contactos['email1'], "\/\,\;");
               while ($token !== false)
               {
                 $mail->AddAddress($token);
@@ -655,7 +655,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
             }
             if(!empty($contactos['email2'])){
-              $token = strtok($opp['email2'], "\/\,\;");
+              $token = strtok($contactos['email2'], "\/\,\;");
               while ($token !== false)
               {
                 $mail->AddAddress($token);
@@ -927,7 +927,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
             }
             if(!empty($contactos['email1'])){
-              $token = strtok($empresa['email1'], "\/\,\;");
+              $token = strtok($contactos['email1'], "\/\,\;");
               while ($token !== false)
               {
                 $mail->AddAddress($token);
@@ -936,7 +936,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
             }
             if(!empty($contactos['email2'])){
-              $token = strtok($empresa['email2'], "\/\,\;");
+              $token = strtok($contactos['email2'], "\/\,\;");
               while ($token !== false)
               {
                 $mail->AddAddress($token);
@@ -1081,7 +1081,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
             $asunto = "D-SPP - Certificado por expirar / Certified for expiring"; 
             ///CORREOS A LOS QUE SE ENVIARA EL CORREO DE RENOVACIÓN
             if(!empty($empresa['email'])){
-              $token = strtok($empresap['email'], "\/\,\;");
+              $token = strtok($empresa['email'], "\/\,\;");
               while ($token !== false)
               {
                 $mail->AddAddress($token);
@@ -1090,7 +1090,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
             }
             if(!empty($contactos['email1'])){
-              $token = strtok($empresa['email1'], "\/\,\;");
+              $token = strtok($contactos['email1'], "\/\,\;");
               while ($token !== false)
               {
                 $mail->AddAddress($token);
@@ -1099,7 +1099,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
             }
             if(!empty($contactos['email2'])){
-              $token = strtok($empresa['email2'], "\/\,\;");
+              $token = strtok($contactos['email2'], "\/\,\;");
               while ($token !== false)
               {
                 $mail->AddAddress($token);

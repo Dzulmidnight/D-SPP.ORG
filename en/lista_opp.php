@@ -7,8 +7,8 @@ mysql_select_db($database_dspp, $dspp);
 
 if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
   $palabra = $_POST['palabra'];
+  $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.spp LIKE '%$palabra%' OR opp.nombre LIKE '%$palabra%' OR opp.abreviacion LIKE '%$palabra%' OR opp.pais LIKE '%$palabra%' OR oc.abreviacion LIKE '%$palabra%' OR opp.email LIKE '%$palabra%' OR opp.telefono LIKE '%$palabra%') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' AND opp.estatus_opp != 'ARCHIVADO' AND opp.estatus_interno != 10 GROUP BY certificado.idopp ORDER BY fecha_fin  DESC";
 
-  $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.spp LIKE '%$palabra%' OR opp.nombre LIKE '%$palabra%' OR opp.abreviacion LIKE '%$palabra%' OR opp.pais LIKE '%$palabra%' OR oc.abreviacion LIKE '%$palabra%' OR opp.email LIKE '%$palabra%' OR opp.telefono LIKE '%$palabra%') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' AND opp.estatus_opp != 'ARCHIVADO' AND opp.estatus_interno != 10";
 }else if(isset($_POST['busqueda_filtros']) && $_POST['busqueda_filtros'] == 1){
   $idoc = $_POST['idoc'];
   $pais = $_POST['pais'];
@@ -95,7 +95,7 @@ $row_opp = mysql_query($query_opp, $dspp) or die(mysql_error());
 //$row_opp = mysql_query("SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' AND opp.estatus_opp != 'ARCHIVADO' AND opp.estatus_interno != 10", $dspp) or die(mysql_error());
 $total_opp = mysql_num_rows($row_opp);
 
-$row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
+$row_pais = mysql_query("SELECT pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT * FROM oc", $dspp) or die(mysql_error());
 $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS NOT NULL GROUP BY producto",$dspp) or die(mysql_error());
 
@@ -182,7 +182,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idopp IS
                     <option value=''>Select a Country</option>
                     <?php 
                     while($pais = mysql_fetch_assoc($row_pais)){
-                      echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
+                      echo "<option value='".$pais['pais']."'>".$pais['pais']."</option>";
                     }
                      ?>
                   </select>
