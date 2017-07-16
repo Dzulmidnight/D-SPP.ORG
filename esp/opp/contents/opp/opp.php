@@ -1,6 +1,6 @@
 <ul class="nav nav-pills">
 	<li role="presentation" <?php if(isset($_GET['detail'])){ echo "class='active'"; } ?>>
-		<a href="?OPP&detail"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Mi Cuenta</a>
+		<a href="?OPP&detail"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Mi Información</a>
 	</li>
 
 	<li role="presentation" <?php if(isset($_GET['contacts'])){ echo "class='active'"; } ?>>
