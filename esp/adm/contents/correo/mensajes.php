@@ -186,7 +186,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
           $token = strtok($opp['email'], "\/\,\;");
           while ($token !== false)
           {
-            $mail->AddAddress($token);
+            $mail->AddBCC($token);
             $token = strtok('\/\,\;');
           }
 
@@ -216,7 +216,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
           $token = strtok($oc['email1'], "\/\,\;");
           while ($token !== false)
           {
-            $mail->AddAddress($token);
+            $mail->AddBCC($token);
             $token = strtok('\/\,\;');
           }
         }
@@ -226,7 +226,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
           $token = strtok($oc['email2'], "\/\,\;");
           while ($token !== false)
           {
-            $mail->AddAddress($token);
+            $mail->AddBCC($token);
             $token = strtok('\/\,\;');
           }
         }
@@ -257,7 +257,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
           $token = strtok($contactos['email1'], "\/\,\;");
           while ($token !== false)
           {
-            $mail->AddAddress($token);
+            $mail->AddBCC($token);
             $token = strtok('\/\,\;');
           }
 
@@ -287,7 +287,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
           $token = strtok($empresa['email'], "\/\,\;");
           while ($token !== false)
           {
-            $mail->AddAddress($token);
+            $mail->AddBCC($token);
             $token = strtok('\/\,\;');
           }
 
@@ -300,6 +300,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
          $mail->AddAttachment($archivo2);
       }
         $mail->AddBCC($administrador);
+
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -322,15 +323,17 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
 
         }
       }
-      $mail->AddAddress('p.lacroix@tero.coop');
+      $mail->AddBCC('p.lacroix@tero.coop');
       if(isset($archivo1)){
          $mail->AddAttachment($archivo1);
       }
       if(isset($archivo2)){
          $mail->AddAttachment($archivo2);
       }
+
         $mail->AddBCC($administrador);
 
+        $mail->AddAddress('dspporg@d-spp.org');
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
