@@ -1046,7 +1046,6 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       </div> 
 
       <!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
-      <!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
       <div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>ORGANIZACIÓN FACILITADORA( <a data-toggle="tooltip" title="Organización de Pequeños Productores de segundo o más alto nivel que representa a sus organizaciones miembros en su proceso de certificación colectiva" href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a> ) INFORMACIÓN GENERAL ( <a data-toggle="tooltip" title="Los datos generales de la Organización de Pequeños Productores solicitante serán publicados por SPP Global." href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a> )</b></div>
       <!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
       <div class="col-lg-12">

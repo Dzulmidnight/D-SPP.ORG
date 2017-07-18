@@ -32,21 +32,12 @@
 <? }?>
 
 
-<?/*
-if(isset($_GET['select'])){
-	include ("solicitud_select.php");
-}else if(isset($_GET['add'])){
-	include ("solicitud_add.php");
-}else if(isset($_GET['detail'])){
-	include ("solicitud_detail.php");
-}else if(isset($_GET['detailBlock'])){
-	include ("solicitud_detailBlock.php");
-}*/
+<?
 if(isset($_GET['select'])){
 	include ("solicitud_select.php");
 }else if(isset($_GET['add'])){
 	include ("tipo_solicitud.php");
-}else if(isset($_GET['detail'])){
+}else if(isset($_GET['detail']) && isset($_GET['idsolicitud'])){
 	include ("solicitud_detail.php");
 }else if(isset($_GET['detailBlock'])){
 	include ("solicitud_detailBlock.php");
@@ -54,5 +45,7 @@ if(isset($_GET['select'])){
 	include('solicitud_ordinaria.php');
 }else if(isset($_GET['collective'])){
 	include('solicitud_colectiva.php');
+}else if(isset($_GET['detail']) && isset($_GET['idsolicitud_colectiva'])){
+	include('solicitud_detail_colectiva.php');
 }
 ?>

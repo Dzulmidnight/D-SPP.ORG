@@ -589,7 +589,7 @@ $ruta_croquis = "../../archivos/oppArchivos/croquis/";
 
 
 
-  $mensaje = "Datos Actualizados Correctamente";
+  $mensaje = "Correctly Updated Data";
 }
  
 
@@ -615,38 +615,38 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 	<form action="" name="" method="POST" enctype="multipart/form-data">
 		<fieldset>
 			<div class="col-md-12 alert alert-primary" style="padding:7px;">
-				<h3 class="text-center">Solicitud de Certificación Colectiva OPP</h3>
+				<h3 class="text-center">Application for Collective Certification SPO</h3>
 			</div>
 			<div class="col-md-12 well text-justify">
-				<p class="text-center" style="color:red"><b>Información importante sobre las directrices para la certificación colectiva:</b></p>
-				<p><b>Alcance:</b></p>
+				<p class="text-center" style="color:red"><b>Important Information about the Guidelines for the Collective Certification:</b></p>
+				<p><b>Scope:</b></p>
 				<p>
-					1. Los Procedimientos de Certificación Colectiva se aplican a las Organizaciones de primer nivel que son miembros de una Organización de Pequeños Productores de nivel superior que solicita la Certificación, basada en la Norma General para el Símbolo de Pequeños Productores, a través de la Organización de Pequeños Productores de un nivel superior . 
+					1. The Collective Certification Procedures apply to first-level Organizations that are members of a higher level Small Producers’ Organization that applies for Certification, based on the General Standard for the Small Producers’ Symbol, through the Small Producers’ Organization of a higher level.
 				</p>  
 
 				<p>
-					2. La Organización de Pequeños Productores de Alto Nivel no adquiere la certificación. Si la Organización de Pequeños Productores de Alto Nivel es la organización que está comercializando productos bajo el Símbolo de Pequeños Productores, debería registrarse como Intermediaria (INT) o Compañía de Comercio Colectivo propiedad de Organizaciones de Pequeños Productores (C-OPP).
+					2. The high-level Small Producers’ Organization does not acquire certification. If the high-level Small Producers’ Organization is the organization that is commercializing products under the Small Producers’ Symbol, it should become registered as an Intermediary (INT) or Collective Trading Company owned by Small Producers’ Organizations (C-OPP).
 				</p>      
 
 				<p>
-					<b>Requisitos:</b><br>
-					i.	La Organización de Pequeños Productores (OPP) de alto nivel debe trabajar para facilitar y promover el proceso de certificación para sus miembros y debe proporcionar toda la información necesaria basada en su sistema de control interno. 
+					<b>Requirements:</b><br>
+					i. The high-level Small Producers’ Organization (SPO) should work to facilitate and promote the certification process for its members and should provide all the necessary information based on their internal control system.
 				</p>
 				<p>
-					ii.	La OPP de alto nivel debe completar el Formulario de Evaluación del SPP como una forma de autoevaluación en línea con la información de cada una de las OPPs de primer nivel implicadas.
+					ii.  The high-level SPO should complete the SPP Evaluation Form as a form of self-assessment in line with the information from each of the first-level SPOs involved.
 				</p>
 				<p>
-					iii. La OPP de alto nivel debe enviar la documentación especificada en el Formulario de Evaluación como documentación de apoyo, así como la información solicitada por la Entidad Certificadora (CE). 
+					iii. The high-level SPO should send the documentation specified in the Evaluation Form as support documentation, as well as the information requested by the Certification Entity (CE).
 				</p> 
 			</div>
 
 
-			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
+			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>GENERAL INFORMATION</b></div>
 
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
 				<div class="col-md-4">
 					<div class="col-xs-12">
-						<b>ENVAR AL OC (selecciona el OC al que deseas enviar la solicitud):</b>
+						<b>Send to Certification Entity:</b>
 					</div>
 					<div class="col-xs-12">
 						<input type="text" class="form-control" value="<?php echo $solicitud['abreviacionOC']; ?>" readonly>
@@ -654,7 +654,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 				</div>
 				<div class="col-md-4">
 					<div class="col-xs-12">
-						<b>TIPO DE SOLICITUD</b>
+						<b>TYPE OF APPLICATION</b>
 					</div>
 					<div class="col-xs-6">
 						<input type="text" class="form-control" value="<?php echo $solicitud['tipo_solicitud']; ?>"readonly>
@@ -664,29 +664,29 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 				<div class="col-md-4">
 
 					<input type="hidden" name="actualizar_solicitud" value="1">
-					<button style="color:white" type="submit" class="btn btn-warning form-control"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> ACTUALIZAR SOLICITUD</button>
+					<button style="color:white" type="submit" class="btn btn-warning form-control"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> UPDATE APPLICATION</button>
 				</div>
 
 			</div>
 
 
 		      <!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
-		      <div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>ORGANIZACIÓN FACILITADORA( <a data-toggle="tooltip" title="Organización de Pequeños Productores de segundo o más alto nivel que representa a sus organizaciones miembros en su proceso de certificación colectiva" href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a> ) INFORMACIÓN GENERAL ( <a data-toggle="tooltip" title="Los datos generales de la Organización de Pequeños Productores solicitante serán publicados por SPP Global." href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a> )</b></div>
+		      <div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>FACILITATING ORGANIZATION( <a data-toggle="tooltip" title="Facilitating SPO: Second or higher-level Small Producers´ Organization representing its member organizations in their collective certification process" href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a> ) GENERAL INFORMATION ( <a data-toggle="tooltip" title="General information corresponding to the Facilitating Small Producers´ Organization submitting the application will be published by SPP Global" href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a> )</b></div>
 		      <!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
 		      <div class="col-lg-12">
 		        <div class="col-md-6">
-		          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMACIÓN GENERAL</div>
-		          <label for="fecha_elaboracion">FECHA DE ELABORACIÓN</label>
+		          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">GENERAL INFORMATION</div>
+		          <label for="fecha_elaboracion">DATE OF ELABORATION</label>
 		          <input type="text" class="form-control" id="fecha_elaboracion" name="fecha_elaboracion" value="<?php echo date('Y-m-d', time()); ?>" readonly>  
 
-		          <label for="spp">CODIGO DE IDENTIFICACIÓN SPP(#SPP): </label>
+		          <label for="spp">SPP IDENTIFICATION CODE(#SPP):</label>
 		          <input type="text" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp_opp']; ?>" readonly>
 
-		          <label for="nombre_facilitador" style="color:red">NOMBRE COMPLETO DE LA ORGANIZACIÓN FACILITADORA DE LA QUE FORMAN PARTE LAS ORGANIZACIONES DE BASE A INCLUIR EN LA CERTIFICACIÓN COLECTIVA:</label>
+		          <label for="nombre_facilitador" style="color:red">COMPLETE NAME OF THE FACILITATING ORGANIZATION</label>
 		          <textarea name="nombre_facilitador" id="nombre_facilitador" class="form-control"><?php echo $solicitud['nombre']; ?></textarea>
 
 
-		          <label for="pais">PAÍS:</label>
+		          <label for="pais">COUNTRY:</label>
 		          <?php 
 		          $row_pais = mysql_query("SELECT * FROM paises",$dspp) or die(mysql_error());
 		           ?>
@@ -704,27 +704,27 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		           </select>
 		           <input type="hidden" name="pais_facilitador" value="<?php echo $solicitud['pais']; ?>">
 
-		          <label for="direccion_oficina">DIRECCIÓN COMPLETA DE SUS OFICINAS CENTRALES DE LA ORGANIZACIÓN FACILITADORA (CALLE, BARRIO, LUGAR, REGIÓN):</label>
+		          <label for="direccion_oficina">COMPLETE ADDRESS FOR THE FACILITATING ORGANIZATION (STREET, DISTRICT, TOWN/CITY, REGION):</label>
 		          <textarea name="direccion_oficina" id="direccion_oficina"  class="form-control"><?php echo $solicitud['direccion_oficina']; ?></textarea>
 
-		          <label for="email">CORREO ELECTRÓNICO:</label>
+		          <label for="email">ORGANIZATION´S EMAIL ADDRESS:</label>
 		          <input type="text" class="form-control" id="email" name="email" value="<?php echo $solicitud['email']; ?>">
 
-		          <label for="email">TELÉFONOS (CÓDIGO DE PAÍS+ CÓDIGO DE ÁREA + NÚMERO):</label>
+		          <label for="email">ORGANIZATION’S TELEPHONES(COUNTRY CODE+AREA CODE+NUMBER):</label>
 		          <input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $solicitud['telefono']; ?>">  
 
-		          <label for="sitio_web">SITIO WEB:</label>
+		          <label for="sitio_web">WEBSITE:</label>
 		          <input type="text" class="form-control" id="sitio_web" name="sitio_web" value="<?php echo $solicitud['sitio_web']; ?>">
 
 		        </div>
 
 		        <div class="col-md-6">
-		          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMACIÓN FISCAL</div>
+		          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">DATA FOR INVOICING</div>
 
-		          <label for="razon_social">NOMBRE COMERCIAL</label>
+		          <label for="razon_social">BUSINESS NAME</label>
 		          <input type="text" class="form-control" id="razon_social" name="razon_social" value="<?php echo $solicitud['razon_social']; ?>">
 
-		          <label for="direccion_fiscal">DIRECCIÓN FISCAL</label>
+		          <label for="direccion_fiscal">FISCAL ADDRESS</label>
 		          <textarea class="form-control" name="direccion_fiscal" id="direccion_fiscal"><?php echo $solicitud['direccion_fiscal']; ?></textarea>
 
 		          <label for="rfc">RFC</label>
@@ -740,38 +740,38 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		      <!------ INICIA INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 		      <div class="col-lg-12">
 		        <div class="col-md-6">
-		          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONAS DE CONTACTO DE LA SOLICITUD</div>
+		          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">CONTACT PERSON(S) OF APPLICATION</div>
 
-		          <label for="persona1">PERSONAS DE CONTACTO</label>
+		          <label for="persona1">CONTACT PERSON(S)</label>
 		          <input type="text" class="form-control" id="persona1" name="contacto1_nombre" value="<?php echo $solicitud['contacto1_nombre']; ?>" placeholder="* Nombre persona 1" required>
 		          <input type="text" class="form-control" id="" name="contacto2_nombre" value="<?php echo $solicitud['contacto2_nombre']; ?>" placeholder="Name Person 2">
 
-		          <label for="cargo">CARGO(S)</label>
+		          <label for="cargo">POSITION(S)</label>
 		          <input type="text" class="form-control" id="cargo" name="contacto1_cargo" value="<?php echo $solicitud['contacto1_cargo']; ?>" placeholder="* Cargo persona 1" required>
 		          <input type="text" class="form-control" id="" name="contacto2_cargo" value="<?php echo $solicitud['contacto2_cargo']; ?>" placeholder="Position Person 2">
 
-		          <label for="email">CORREO ELECTRÓNICO PERSONA(S) DE CONTACTO</label>
+		          <label for="email">EMAIL ADDRESS FROM THE CONTACT PERSON(S)</label>
 		          <input type="email" class="form-control" id="email" name="contacto1_email" value="<?php echo $solicitud['contacto1_email']; ?>" placeholder="* Email persona 1" required>
 		          <input type="email" class="form-control" id="" name="contacto2_email" value="<?php echo $solicitud['contacto2_email']; ?>" placeholder="Email Person 2">
 
-		          <label for="telefono">TELÉFONO PERSONA(S) DE CONTACTO:</label>
+		          <label for="telefono">TELEPHONE(S) FOR CONTACT PERSON(S)</label>
 		          <input type="text" class="form-control" id="telefono" name="contacto1_telefono" value="<?php echo $solicitud['contacto1_telefono']; ?>" placeholder="* Teléfono persona 1" required>
 		          <input type="text" class="form-control" id="" name="contacto2_telefono" value="<?php echo $solicitud['contacto2_telefono']; ?>" placeholder="Teléfono persona 2">
 
 		        </div>
 
 		        <div class="col-md-6">
-		          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONAL DEL ÁREA ADMINISTRATIVA</div>
+		          <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSON(S) OF THE ADMINISTRATIVE AREA</div>
 
-		          <label for="persona_adm">PERSONA(S) DEL ÁREA ADMINISTRATIVA</label>
+		          <label for="persona_adm">PERSON(S) OF THE ADMINISTRATIVE AREA</label>
 		          <input type="text" class="form-control" id="persona_adm" name="adm1_nombre" value="<?php echo $solicitud['adm1_nombre']; ?>" placeholder="Nombre persona 1">
 		          <input type="text" class="form-control" id="" name="adm2_nombre" value="<?php echo $solicitud['adm2_nombre']; ?>" placeholder="Nombre persona 2">
 
-		          <label for="email_adm">CORREO ELECTRÓNICO</label>
+		          <label for="email_adm">EMAIL</label>
 		          <input type="email" class="form-control" id="email_adm" name="adm1_email" value="<?php echo $solicitud['adm1_email']; ?>" placeholder="Email persona 1">
 		          <input type="email" class="form-control" id="" name="adm2_email" value="<?php echo $solicitud['adm2_email']; ?>" placeholder="Email persona 2">
 
-		          <label for="telefono_adm">TELÉFONO(S) PERSONA(S) DEL ÁREA ADMINISTRATIVA:</label>
+		          <label for="telefono_adm">TELEPHONE(S) PERSON(S) ADMINISTRATIVE AREA</label>
 		          <input type="text" class="form-control" id="telefono_adm" name="adm1_telefono" value="<?php echo $solicitud['adm1_telefono']; ?>" placeholder="Teléfono persona 1">
 		          <input type="text" class="form-control" id="" name="adm2_telefono" value="<?php echo $solicitud['adm2_telefono']; ?>" placeholder="Teléfono persona 2">
 		        </div>
@@ -788,21 +788,21 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		                </button>
 		              </th>
 
-		              <th rowspan="2">Nombre Completo</th>
-		              <th rowspan="2">Código de Identificación SPP Identification Code</th>
-		              <th rowspan="2">Número de Socios</th>
-		              <th rowspan="2">Productos a incluir en la certificación Colectiva</th>
-		              <th rowspan="2">Tamaño máximo de la unidad Producción <span style="background:yellow">por Productor</span> del producto para incluir en la certificación colectiva (unidad de medida)</th>
-		              <th colspan="4">Llenar la tabla de acuerdo a las certificaciones que tiene (Ejemplo: EU, NOP, JASS, FLO, etc)</th>
+		              <th rowspan="2">Complete Name</th>
+		              <th rowspan="2">SPP Identification Code</th>
+		              <th rowspan="2">Number of Producer Members</th>
+		              <th rowspan="2">Name of products to be included in the collective certification</th>
+		              <th rowspan="2">Maximum Size of the Unit Production <span style="background:yellow">by Producer</span> of the product(s) to include in the collective certification (unit of measure):</th>
+		              <th colspan="4">Fill out the table according your certifications, (example: EU, NOP, JAS, FLO, etc.)</th>
 
-		              <th rowspan="2">De las certificaciones con las que cuenta, en su más reciente evaluación externa, ¿cuántos incumplimientos se identificaron. ¿Están resueltos o cuál es su estado?</th>
+		              <th rowspan="2">According the certifications, in its most recent internal and external evaluations, how many cases of non compliance were identified? Please explain if they have been resolved or what their status is?</th>
 
 		            </tr>
 		            <tr>
-		              <th>Certificación</th>
-		              <th>Certificadora</th>
-		              <th>Año inicial</th>
-		              <th>¿Ha sido Interrumpida?</th>
+		              <th>Certification</th>
+		              <th>Certification Entity</th>
+		              <th>Initial Year of Certification</th>
+		              <th>Has been interrupted?</th>
 		            </tr>
 
 		          </thead>
@@ -820,35 +820,35 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		                  <?php echo $contador2; ?>
 		                </td>
 		                <td>
-		                  <input type="text" class="form-control" style="width:150px;" name="sub_nombre[]" value="<?php echo $row_sub_organizaciones['nombre']; ?>" placeholder="Nombre completo">
+		                  <input type="text" class="form-control" style="width:150px;" name="sub_nombre[]" value="<?php echo $row_sub_organizaciones['nombre']; ?>" placeholder="Complete Name">
 		                </td>
 		                <td>
 		                  <?php echo $row_sub_organizaciones['spp']; ?>
 		                </td>
 		                <td>
-		                  <input type="number" class="form-control" style="width:120px;" name="num_productores[]" value="<?php echo $row_sub_organizaciones['num_productores']; ?>" placeholder="Solo numero">
+		                  <input type="number" class="form-control" style="width:120px;" name="num_productores[]" value="<?php echo $row_sub_organizaciones['num_productores']; ?>" placeholder="Only numbers">
 		                </td>
 		                <td>
-		                  <textarea class="form-control" style="width:200px;" name="sub_producto[]" id="" rows="3" placeholder="Productos"><?php echo $row_sub_organizaciones['productos']; ?></textarea>
+		                  <textarea class="form-control" style="width:200px;" name="sub_producto[]" id="" rows="3" placeholder="Products"><?php echo $row_sub_organizaciones['productos']; ?></textarea>
 		                </td>
 		                <td>
-		                  <input type="text" class="form-control" style="width:150px;" name="unidad_produccion[]" value="<?php echo $row_sub_organizaciones['unidad_produccion']; ?>" placeholder="Unidad producción">
+		                  <input type="text" class="form-control" style="width:150px;" name="unidad_produccion[]" value="<?php echo $row_sub_organizaciones['unidad_produccion']; ?>" placeholder="Unit production">
 		                </td>
 		                <td>
-		                                  <textarea class="form-control" style="width:150px;" name="sub_certificaciones[]" placeholder="Certificación" rows="3" required><?php echo $row_sub_organizaciones['certificaciones']; ?></textarea>
+		                  <textarea class="form-control" style="width:150px;" name="sub_certificaciones[]" placeholder="Certification" rows="3" required><?php echo $row_sub_organizaciones['certificaciones']; ?></textarea>
 		                </td>
 		                <td>
-		                                  <textarea class="form-control" style="width:150px;" name="sub_certificadora[]" placeholder="Certificadora" rows="3" required><?php echo $row_sub_organizaciones['certificadora']; ?></textarea>
+		                  <textarea class="form-control" style="width:150px;" name="sub_certificadora[]" placeholder="Certification Entity" rows="3" required><?php echo $row_sub_organizaciones['certificadora']; ?></textarea>
 		                </td>
 		                <td>
-		                                  <textarea class="form-control" style="width:150px;" name="sub_anio_certificacion[]"  placeholder="Año inicial" rows="3" required><?php echo $row_sub_organizaciones['anio_inicial']; ?></textarea>
+		                  <textarea class="form-control" style="width:150px;" name="sub_anio_certificacion[]"  placeholder="Initial year" rows="3" required><?php echo $row_sub_organizaciones['anio_inicial']; ?></textarea>
 		                </td>
 		                <td>
 		                    <?php 
 		                      if($row_sub_organizaciones['interrumpida'] == 'SI'){
-		                        echo "SI <input type='radio'  name='sub_interrumpido".$contador."' value='SI' checked><br>";
+		                        echo "YES <input type='radio'  name='sub_interrumpido".$contador."' value='SI' checked><br>";
 		                      }else{
-		                        echo "SI <input type='radio'  name='sub_interrumpido".$contador."' value='SI'><br>";
+		                        echo "YES <input type='radio'  name='sub_interrumpido".$contador."' value='SI'><br>";
 		                      }
 		                      if($row_sub_organizaciones['interrumpida'] == 'NO'){
 		                        echo "NO <input type='radio'  name='sub_interrumpido".$contador."' value='NO' checked>";
@@ -872,7 +872,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
 		            <tr>
 		              <td colspan="11">
-		                <h6>La información proporcionada en esta sección será manejada con total confidencialidad. Por favor, inserte líneas adicionales si es necesario.</h6>
+		                <h6>Information provided in this section will be handled with complete confidentiality. Please insert additional lines if necessary.</h6>
 		              </td>
 		            </tr>
 		          </tbody>
@@ -883,22 +883,22 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		      <!------ INICIA INFORMACION DATOS DE OPERACIÓN ------>
 		    
 		      <div class="col-lg-6" style="background:#2ecc71">
-		          <label for="total_miembros">TOTAL DE MIEMBROS INCLUIDOS EN LA CERTIFICACIÓN COLECTIVA:</label>
+		          <label for="total_miembros">TOTAL MEMBERS INCLUDED IN THE COLLECTIVE CERTIFICATION:</label>
 		          <input type="number" class="form-control" id="total_miembros" name="total_miembros" value="<?php echo $solicitud['total_miembros']; ?>" placeholder="just number" required>
 		      </div>
 
-		      <div class="col-md-12 text-center alert alert-success" style="margin-top:5em;">DATOS DE OPERACIÓN</div>
+		      <div class="col-md-12 text-center alert alert-success" style="margin-top:5em;">INFORMATION ON OPERATION FOR SPP TRANSACTIONS</div>
 
 		      <div class="col-lg-12">
 		        <div class="col-md-12">
 
 		          <div >
 		            <label for="alcance_opp">
-		              1.  INDIQUE CON UNA  ‘X’ EL ALCANCE QUE TIENE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES:
+		              1. MARK WITH AN 'X' THE SCOPE OF THE SMALL PRODUCERS` ORGANIZATIONS INCLUDED IN THE COLLECTIVE CERTIFICATION:
 		            </label>
 		          </div>
 		          <div class="col-xs-4">
-		            <label>PRODUCCIÓN</label>
+		            <label>PRODUCTION</label>
 		            <?php 
 		            if($solicitud['produccion'] == 1){
 		              echo '<input type="checkbox" name="produccion" class="form-control" value="1" checked>';
@@ -908,7 +908,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		            ?>
 		          </div>
 		          <div class="col-xs-4">
-		            <label>PROCESAMIENTO</label>
+		            <label>PROCESSING</label>
 		            <?php 
 		            if($solicitud['procesamiento'] == 1){
 		              echo '<input type="checkbox" name="procesamiento" class="form-control" value="1" checked>';
@@ -918,7 +918,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		            ?>
 		          </div>
 		          <div class="col-xs-4">
-		            <label>COMERCIALIZACIÓN</label>
+		            <label>TRAIDING</label>
 		            <?php 
 		            if($solicitud['comercializacion'] == 1){
 		              echo '<input type="checkbox" name="comercializacion" class="form-control" value="1" checked>';
@@ -931,50 +931,50 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
 
 		          <label for="preg2">
-		            2.  ESPECIFIQUE EL NOMBRE DE LA INSTANCIA QUE LLEVA A CABO LA COMERCIALIZACIÓN, IMPORTACIÓN O EXPORTACIÓN DE LAS TRANSACCIONES SPP.
+		            2. SPECIFY THE NAME OF THE ENTITY THAT CARRY OUT THE IMPORT OR EXPORT FOR SPP TRANSACTIONS.
 		          </label>
 		          <input type="text" class="form-control" id="preg2" name="preg2" value="<?php echo $solicitud['preg2']; ?>">
 
 
 		          <label for="preg3">
-		            3.  ESPECIFIQUE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA.
+		            3.  SPECIFY IF YOU SUBCONTRACT THE SERVICES OF PROCESSING PLANTS, TRADING COMPANIES OR COMPANIES THAT CARRY OUT THE IMPORT OR EXPORT, IF THE ANSWER IS AFFIRMATIVE, MENTION THE NAME AND THE SERVICE THAT PERFORMS.
 		          </label>
 		          <textarea name="preg3" id="preg3" class="form-control"><?php echo $solicitud['preg3']; ?></textarea>
 
 		          <label for="preg4">
-		            4.  ADICIONAL A SUS OFICINAS CENTRALES (DE LA ORGANIZACIÓN FACILITADORA), ESPECIFIQUE CUÁNTOS CENTROS DE ACOPIO, ÁREAS DE PROCESAMIENTO U OFICINAS ADICIONALES TIENE.
+		            4.  IN ADDITION TO THE MAIN OFFICES (OF THE FACILITATING SPO), PLEASE SPECIFY HOW MANY COLLECTION CENTERS, PROCESSING AREAS AND ADDITIONAL OFFICES YOU HAVE.
 		          </label>
 		          <textarea class="form-control" name="preg4" id="" rows="3"><?php echo $solicitud['preg4']; ?></textarea>
 
 		          <label for="preg5">
-		            5.  SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, INDIQUE SI ESTAS EMPRESAS VAN A REALIZAR EL REGISTRO BAJO EL PROGRAMA DEL SPP O SERÁN CONTROLADAS A TRAVÉS DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES. <sup><a data-toggle="tooltip" title="Revisar las Directrices Generales de Sistema SPP" href="#">4</a></sup>
+		            5.  IF YOU SUBCONTRACT THE SERVICES OF PROCESSING PLANTS, TRADING COMPANIES OR COMPANIES THAT CARRY OUT THE IMPORT OR EXPORT, INDICATE WHETHER THESE COMPANIES ARE GOING TO APPLY FOR THE REGISTRATION UNDER SPP CERTIFICATION PROGRAM. <sup><a data-toggle="tooltip" title="Review the General Application Guidelines to the SPP System" href="#">4</a></sup>
 		          </label>
 		          <textarea name="preg5" id="preg5" class="form-control"><?php echo $solicitud['preg5']; ?></textarea>
 
 		          <label for="preg6">
-		            6.  ¿CUENTA CON UN SISTEMA DE CONTROL INTERNO PARA DAR CUMPLIMIENTO A LOS CRITERIOS DE LA NORMA GENERAL DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?, EN SU CASO, EXPLIQUE.WORKS.
+		            6.  IF THE ORGANIZATION HAS AN INTERNAL CONTROL SYSTEM FOR COMPLYING WITH THE CRITERIA IN THE GENERAL STANDARD OF THE SMALL PRODUCERS´ SYMBOL, PLEASE EXPLAIN HOW IT WORKS.
 		          </label>
 		          <textarea name="preg6" id="preg6" class="form-control"><?php echo $solicitud['preg6']; ?></textarea>
 
 		          <p for="preg7">
-		            <b>7. DEL TOTAL DE SUS VENTAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?  </b>
+		            <b>7. OF THE APPLICANT’S TOTAL TRADING DURING THE PREVIOUS CYCLE, WHAT PERCENTAGE WAS CONDUCTED UNDER THE SCHEMES OF CERTIFICATION FOR ORGANIC, FAIR TRADE AND/OR THE SMALL PRODUCERS’ SYMBOL?</b>
 		            <i>(* Enter only quantity, integer or decimal)</i>
 		            <div class="col-lg-12">
 		              <div class="row">
 		                <div class="col-xs-3">
-		                  <label for="organico">% ORGANICO</label>
+		                  <label for="organico">% ORGANIC</label>
 		                  <input type="number" step="any" class="form-control" id="organico" name="organico" value="<?php echo $solicitud['organico']; ?>" placeholder="Ej: 0.0">
 		                </div>
 		                <div class="col-xs-3">
-		                  <label for="comercio_justo">% COMERCIO JUSTO</label>
+		                  <label for="comercio_justo">%  FAIR TRADE</label>
 		                  <input type="number" step="any" class="form-control" id="comercio_justo" name="comercio_justo" value="<?php echo $solicitud['comercio_justo']; ?>" placeholder="Ej: 0.0">
 		                </div>
 		                <div class="col-xs-3">
-		                  <label for="spp">SPP</label>
+		                  <label for="spp">SMALL PRODUCERS' SYMBOL</label>
 		                  <input type="number" step="any" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp']; ?>" placeholder="Ej: 0.0">
 		                </div>
 		                <div class="col-xs-3">
-		                  <label for="otro">SIN CERTIFICADO</label>
+		                  <label for="otro">WITHOUT CERTIFICATE</label>
 		                  <input type="number" step="any" class="form-control" id="otro" name="sin_certificado" value="<?php echo $solicitud['sin_certificado']; ?>" placeholder="Ej: 0.0">
 		                </div>
 		              </div>
@@ -983,13 +983,13 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
 		  
 
-		          <p><b>8. ¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?</b></p>
+		          <p><b>8. DID YOU HAVE SPP PURCHASES DURING THE PREVIOUS CERTIFICATION CYCLE?</b></p>
 		            <div class="col-xs-6">
 		              <?php 
 		              if($solicitud['preg8'] == 'SI'){
-		                echo 'SI <input type="radio" class="form-control" name="preg8" onclick="mostrar_ventas()" id="preg8" value="SI" checked>';
+		                echo 'YES <input type="radio" class="form-control" name="preg8" onclick="mostrar_ventas()" id="preg8" value="SI" checked>';
 		              }else{
-		                echo 'SI <input type="radio" class="form-control" name="preg8" onclick="mostrar_ventas()" id="preg8" value="SI">';
+		                echo 'YES <input type="radio" class="form-control" name="preg8" onclick="mostrar_ventas()" id="preg8" value="SI">';
 		              }
 		               ?>
 		            </div>
@@ -1004,7 +1004,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		            </div>      
 
 		          <p>
-		            <b>9. SI SU RESPUESTA FUE POSITIVA, FAVOR DE INIDICAR CON UNA ‘X ‘EL RANGO DEL VALOR TOTAL DE SUS VENTAS SPP  DEL CICLO ANTERIOR DE ACUERDO A LA SIGUIENTE TABLA:</b>
+		            <b>9. IF YOUR RESPONSE WAS POSITIVE, PLEASE MARK THE RANGE OF THE TOTAL VALUE SPP FROM THE PREVIOUS CYCLE ACCORDING TO THE FOLLOWING TABLE:</b>
 		          </p>
 
 		          <div class="col-xs-12 ">
@@ -1018,19 +1018,19 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		                    <?php 
 		                      if(empty($solicitud['preg9'])){
 		                     ?>
-		                      <p class="alert alert-danger">No se proporciono ninguna respuesta.</p>
+		                      <p class="alert alert-danger">No response was provided.</p>
 		                    <?php 
 		                      }else if($solicitud['preg9'] == "HASTA $3,000 USD"){
 		                     ?>
-		                      <p class="alert alert-info">HASTA $3,000 USD</p>
+		                      <p class="alert alert-info">LESS THAN $3,000 USD</p>
 		                    <?php 
 		                      }else if($solicitud['preg9'] == "ENTRE $3,000 Y $10,000 USD"){
 		                     ?>
-		                     <p class="alert alert-info">ENTRE $3,000 Y $10,000 USD</p>
+		                     <p class="alert alert-info">BETWEENN $3,000 AND $10,000 USD</p>
 		                    <?php 
 		                      }else if($solicitud['preg9'] == "ENTRE $10,000 A $25,000 USD"){
 		                     ?>
-		                     <p class="alert alert-info">ENTRE $10,000 A $25,000 USD</p>
+		                     <p class="alert alert-info">BEETWENN $10,000 AND $25,000 USD</p>
 		                    <?php 
 		                      }else if($solicitud['preg9'] != "HASTA $3,000 USD" && $solicitud['preg9'] != "ENTRE $3,000 Y $10,000 USD" && $solicitud['preg9'] != "ENTRE $10,000 A $25,000 USD"){
 		                     ?>
@@ -1054,12 +1054,12 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
 		              
 		          <label for="preg10">
-		            10. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
-		          </label>
+		            10. ESTIMATED DATE FOR BEGINNING TO USE THE SMALL PRODUCERS’ SYMBOL:  		          
+              </label>
 		          <input type="text" class="form-control" id="preg10" name="preg10" value="<?php echo $solicitud['preg10']; ?>">
 
 		          <label for="preg11">
-		            11. ANEXAR EL CROQUIS GENERAL DE SU OPP, INDICANDO LAS ZONAS EN DONDE CUENTA CON SOCIOS.
+		            11. PLEASE ATTACH A GENERAL MAP OF THE AREA WHERE YOUR SPO OPERATES, INDICATING THE ZONES WHERE MEMBERS ARE LOCATED.
 		          </label>
 		          <input type="file" class="form-control" id="preg11" name="preg11">
 		        </div>
@@ -1068,18 +1068,18 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		      <!------ FIN INFORMACION DATOS DE OPERACIÓN ------>
 
 
-		      <div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE PRODUCTOS PARA LOS CUALES QUIERE UTILIZAR EL SÍMBOLO<sup>6</sup></div>
+		      <div class="col-md-12 text-center alert alert-success" style="padding:7px;">INFORMATION ON PRODUCTS FOR WHICH APPLICATION WISHES TO USE SYMBOL<sup>6</sup></div>
 		      <div class="col-lg-12">
 		        <table class="table table-bordered" id="tablaProductos">
 		          <tr>
-		            <td>Producto</td>
-		            <td>Volumen Total Estimado a Comercializar</td>
-		            <td>Producto Terminado</td>
-		            <td>Materia Prima</td>
-		            <td>País(es) de Destino</td>
-		            <td>Marca Propia</td>
-		            <td>Marca de un Cliente</td>
-		            <td>Sin cliente aún</td>
+		            <td>Product</td>
+		            <td>Total Estimated Volume to be Traded </td>
+		            <td>Finished Product</td>
+		            <td>Raw material</td>
+		            <td>Destination Countries</td>
+		            <td>Own brand</td>
+		            <td>Client´s brand</td>
+		            <td>Still without client</td>
 		            <td>
 		              <button type="button" onclick="tablaProductos()" class="btn btn-primary" aria-label="Left Align">
 		                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -1095,7 +1095,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		          ?>
 		            <tr>
 		              <td>
-		                <input type="text" class="form-control" name="producto_actual[]" id="exampleInputEmail1" placeholder="Producto" value="<?echo $row_producto['producto']?>">
+		                <input type="text" class="form-control" name="producto_actual[]" id="exampleInputEmail1" placeholder="Product" value="<?echo $row_producto['producto']?>">
 		              </td>
 		              <td>
 		                <input type="text" class="form-control" name="volumen_actual[]" id="exampleInputEmail1" placeholder="Volumen" value="<?echo $row_producto['volumen']?>">
@@ -1103,9 +1103,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		              <td>
 		                <?php 
 		                  if($row_producto['terminado'] == 'SI'){
-		                    echo "SI <input type='radio'  name='terminado_actual".$contador."' value='SI' checked><br>";
+		                    echo "YES <input type='radio'  name='terminado_actual".$contador."' value='SI' checked><br>";
 		                  }else{
-		                    echo "SI <input type='radio'  name='terminado_actual".$contador."' value='SI'><br>";
+		                    echo "YES <input type='radio'  name='terminado_actual".$contador."' value='SI'><br>";
 		                  } 
 		                  if($row_producto['terminado'] == 'NO'){
 		                    echo "NO <input type='radio'  name='terminado_actual".$contador."' value='NO' checked>";
@@ -1123,9 +1123,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		              <td>
 		                <?php 
 		                  if($row_producto['marca_propia'] == 'SI'){
-		                    echo "SI <input type='radio'  name='marca_propia_actual".$contador."' value='SI' checked><br>";
+		                    echo "YES <input type='radio'  name='marca_propia_actual".$contador."' value='SI' checked><br>";
 		                  }else{
-		                    echo "SI <input type='radio'  name='marca_propia_actual".$contador."' value='SI'><br>";
+		                    echo "YES <input type='radio'  name='marca_propia_actual".$contador."' value='SI'><br>";
 		                  } 
 		                  if($row_producto['marca_propia'] == 'NO'){
 		                    echo "NO <input type='radio'  name='marca_propia_actual".$contador."' value='NO' checked>";
@@ -1137,9 +1137,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		              <td>
 		                <?php 
 		                  if($row_producto['marca_cliente'] == 'SI'){
-		                    echo "SI <input type='radio'  name='marca_cliente_actual".$contador."' value='SI' checked><br>";
+		                    echo "YES <input type='radio'  name='marca_cliente_actual".$contador."' value='SI' checked><br>";
 		                  }else{
-		                    echo "SI <input type='radio'  name='marca_cliente_actual".$contador."' value='SI'><br>";
+		                    echo "YES <input type='radio'  name='marca_cliente_actual".$contador."' value='SI'><br>";
 		                  } 
 		                  if($row_producto['marca_cliente'] == 'NO'){
 		                    echo "NO <input type='radio'  name='marca_cliente_actual".$contador."' value='NO' checked>";
@@ -1151,9 +1151,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		              <td>
 		                <?php 
 		                  if($row_producto['sin_cliente'] == 'SI'){
-		                    echo "SI <input type='radio'  name='sin_cliente_actual".$contador."' value='SI' checked><br>";
+		                    echo "YES <input type='radio'  name='sin_cliente_actual".$contador."' value='SI' checked><br>";
 		                  }else{
-		                    echo "SI <input type='radio'  name='sin_cliente_actual".$contador."' value='SI'><br>";
+		                    echo "YES <input type='radio'  name='sin_cliente_actual".$contador."' value='SI'><br>";
 		                  }
 		                  if($row_producto['sin_cliente'] == 'NO'){
 		                    echo "NO <input type='radio'  name='sin_cliente_actual".$contador."' value='NO' checked>";
@@ -1170,26 +1170,26 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 		          ?>        
 		          <tr>
 		            <td colspan="8">
-		              <h6><sup>6</sup> La información proporcionada en esta sección será tratada con plena confidencialidad. Favor de insertar filas adicionales de ser necesario.</h6>
+		              <h6><sup>6</sup> Information provided in this section will be handled with complete confidentiality. Please insert additional lines if necessary.</h6>
 		            </td>
 		          </tr>
 		        </table>
 		      </div>
 
 			<div class="col-lg-12 text-center alert alert-success" style="padding:7px;">
-				<b>COMPROMISOS</b>
+				<b>COMMITMENTS</b>
 			</div>
 			<div class="col-lg-12 text-justify">
-				<p>1.	Con el envío de esta solicitud se manifiesta el interés de recibir una propuesta de Certificación.</p>
-				<p>2.	El proceso de Certificación comenzará en el momento que se confirme la recepción del pago correspondiente.</p>
-				<p>3.	La entrega y recepción de esta solicitud no garantiza que el proceso de Certificación será positivo.</p>
-				<p>4.	Conocer y dar cumplimiento a todos los requisitos de la Norma General del Símbolo de Pequeños Productores que le apliquen como Organización de Pequeños Productores, tanto Críticos como Mínimos, independientemente del tipo de evaluación que se realice.</p>
+				<p>1.  By sending in this document, the applicant expresses its interest in receiving a proposal for certification with the Small Producers’ Symbol.</p>
+        <p>2.  The certification process will begin when it is confirmed that the payment corresponding to the proposal has been received.</p>
+        <p>3.  The fact that this application is delivered and received does not guarantee that the results of the certification process will be positive.</p>
+        <p>4.  The applicant will become familiar with and comply with all the applicable requirements in the General Standard of the Small Producers’ Symbol for a Small Producers’ Organization, including both Critical and Minimum Criteria, and independently of the type of evaluation conducted.</p>
 
 			</div>
 			<div class="col-lg-12">
 
 				<p style="font-size:14px;">
-					<strong>Nombre de la persona que se responsabiliza de la veracidad de la información del formato y que le dará seguimiento a la solicitud de parte del solicitante:</strong>
+					<strong>Name of the person who is responsible for the accuracy of the information on this form, and who, on behalf of the Applicant, will follow up on the application:</strong>
 				</p>
 
 				<input type="hidden" name="idopp" value="<?php echo $solicitud['id_opp']; ?>">
@@ -1197,7 +1197,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 				<input type="text" class="form-control" id="responsable" value="<?php echo $solicitud['responsable']; ?>" readonly>	
 
 				<p>
-					<b>Organismo de Certificación que recibe la solicitud:</b>
+					<b>Certification Entity that receives the request:</b>
 				</p>
 				<p class="alert alert-info" style="padding:7px;">
 					<?php echo $solicitud['abreviacionOC']; ?>
@@ -1235,15 +1235,15 @@ var contador2=0;
       var cell11 = row.insertCell(10);
 
       cell1.innerHTML = ''+contador2+'';
-      cell2.innerHTML = '<input type="text" class="form-control" style="width:150px;" name="sub_nombre_nuevo['+contador+']" id="" placeholder="Nombre Completo">';
+      cell2.innerHTML = '<input type="text" class="form-control" style="width:150px;" name="sub_nombre_nuevo['+contador+']" id="" placeholder="Complete Name">';
       cell3.innerHTML = 'Generated by the system';
-      cell4.innerHTML = '<input type="text" class="form-control" style="width:120px;" name="num_productores_nuevo['+contador+']" id="" placeholder="Solo numeros">';
-      cell5.innerHTML = '<textarea class="form-control" name="sub_producto_nuevo['+contador+']" id="" rows="3" placeholder="Productos"></textarea>';
-      cell6.innerHTML = '<input type="text" class="form-control" name="unidad_produccion_nuevo['+contador+']" id="" placeholder="Unidad de producción">';
-      cell7.innerHTML = '<textarea class="form-control" style="width:150px;" name="sub_certificaciones_nuevo['+contador+']" placeholder="Certificacion(es)" rows="3" required></textarea>';
-      cell8.innerHTML = '<textarea class="form-control" style="width:150px;" name="sub_certificadora_nuevo['+contador+']" placeholder="Certificadora" rows="3" required></textarea>';
-      cell9.innerHTML = '<textarea class="form-control" style="width:150px;" name="sub_anio_certificacion_nuevo['+contador+']" placeholder="Año inicial" rows="3" required></textarea>';
-      cell10.innerHTML = 'SI <input type="radio" name="sub_interrumpido_nuevo['+contador+']" id="" value="SI"><br>NO <input type="radio" name="sub_interrumpido_nuevo['+contador+']" id="" value="NO">';
+      cell4.innerHTML = '<input type="text" class="form-control" style="width:120px;" name="num_productores_nuevo['+contador+']" id="" placeholder="Just numbers">';
+      cell5.innerHTML = '<textarea class="form-control" name="sub_producto_nuevo['+contador+']" id="" rows="3" placeholder="Products"></textarea>';
+      cell6.innerHTML = '<input type="text" class="form-control" name="unidad_produccion_nuevo['+contador+']" id="" placeholder=" Unit Productionn">';
+      cell7.innerHTML = '<textarea class="form-control" style="width:150px;" name="sub_certificaciones_nuevo['+contador+']" placeholder="Certifications" rows="3" required></textarea>';
+      cell8.innerHTML = '<textarea class="form-control" style="width:150px;" name="sub_certificadora_nuevo['+contador+']" placeholder="Certification Entity" rows="3" required></textarea>';
+      cell9.innerHTML = '<textarea class="form-control" style="width:150px;" name="sub_anio_certificacion_nuevo['+contador+']" placeholder="Initial Year" rows="3" required></textarea>';
+      cell10.innerHTML = 'YES <input type="radio" name="sub_interrumpido_nuevo['+contador+']" id="" value="SI"><br>NO <input type="radio" name="sub_interrumpido_nuevo['+contador+']" id="" value="NO">';
       cell11.innerHTML = '<textarea class="form-control" name="sub_incumplimientos_nuevo['+contador+']" id="" rows="3"></textarea>';
     }
     contador++;
@@ -1286,10 +1286,10 @@ var contador=0;
 	  var cell3 = row.insertCell(2);
 	  var cell4 = row.insertCell(3);
 
-	  cell1.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICACIÓN">';
-	  cell2.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICADORA">';
-	  cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="AÑO INICIAL">';
-	  cell4.innerHTML = '<div class="col-xs-6">SI<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
+	  cell1.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION">';
+	  cell2.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY">';
+	  cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="INITIAL YEAR">';
+	  cell4.innerHTML = '<div class="col-xs-6">YES<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
 	  }
 		contador++;
 	}		
@@ -1329,21 +1329,21 @@ var contador=0;
 
 	  
 
-	  cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Producto">';
+	  cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Product">';
 	  
-	  cell2.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volumen">';
+	  cell2.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volume">';
 	  
-	  cell3.innerHTML = 'SI <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
+	  cell3.innerHTML = 'YES <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
 	  
-	  cell4.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Materia">';
+	  cell4.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Material">';
 	  
-	  cell5.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destino">';
+	  cell5.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destination">';
 	  
-	  cell6.innerHTML = 'SI <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
+	  cell6.innerHTML = 'YES <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
 	  
-	  cell7.innerHTML = 'SI <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
+	  cell7.innerHTML = 'YES <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
 	  
-	  cell8.innerHTML = 'SI <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';	 
+	  cell8.innerHTML = 'YES <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';	 
 
 	  cont++;
 	  }

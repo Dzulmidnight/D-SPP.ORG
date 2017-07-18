@@ -62,7 +62,4 @@ if($total_solicitudes == 1){
 }else{
   include('select_colectiva.php');
 }
-
-
 ?>
-
