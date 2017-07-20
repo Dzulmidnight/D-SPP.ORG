@@ -57,7 +57,7 @@ $row_solicitud_certificacion = mysql_query($query, $dspp) or die(mysql_error());
 $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
 
 
-if($total_solicitudes == 1){
+if($total_solicitudes >= 1){
   include('select_normal.php');
 }else{
   include('select_colectiva.php');

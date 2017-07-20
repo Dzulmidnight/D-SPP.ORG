@@ -17,7 +17,7 @@ if(isset($_POST['cotizacion']) ){
   $estatus_dspp = $_POST['cotizacion'];
   
   if($estatus_dspp == 5){ // se acepta la cotización, modificamos la solicitud y fijamos las fechas del periodo de objeción
-    $asunto_opp = "D-SPP Cotización de Solicitud Aceptada";
+    $asunto_opp = "D-SPP Cotización de Solicitud de Colectiva Aceptada";
 
     $updateSQL = sprintf("UPDATE solicitud_colectiva SET estatus_dspp = %s, fecha_aceptacion = %s WHERE idsolicitud_colectiva = %s",
       GetSQLValueString(5, "int"),
@@ -37,7 +37,7 @@ if(isset($_POST['cotizacion']) ){
               <tbody>
                 <tr>
                   <th rowspan="6" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><strong>Cotización de Solicitud Aceptada / Application Price Quote Accepted ('.date('d/m/Y', $fecha).')</strong></th>
+                  <th scope="col" align="left" width="280"><strong>Solicitud de Certificación Colectiva, Cotización Aceptada / Application for Collective Certification, Price Quote Accepted ('.date('d/m/Y', $fecha).')</strong></th>
                 </tr>
 
                 <tr>
@@ -114,7 +114,7 @@ if(isset($_POST['cotizacion']) ){
           $token = strtok('\/\,\;');
         }
       }
-      $mail->AddBCC($administrador);
+      $mail->AddBCC('cert@spp.coop');
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
       $mail->Subject = utf8_decode($asunto_opp);
@@ -160,7 +160,7 @@ if(isset($_POST['cotizacion']) ){
       }
 
 
-      $asunto_oc = "D-SPP Cotización de Solicitud Aceptada";
+      $asunto_oc = "D-SPP Cotización de Solicitud Colectiva Aceptada";
       
       $mensaje_oc = '
         <html>
