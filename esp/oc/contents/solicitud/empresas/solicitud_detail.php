@@ -134,18 +134,23 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
   }
 
   //SE DEBE COMPONER
-  /*$preg9 = '';
+  /*$preg9 = '';*/
+  $preg9_actual = $_POST['preg9_actual'];
   if(!empty($_FILES['preg9']['name'])){
+        if(file_exists($preg9_actual)){
+          unlink($preg9_actual);
+        }
+
       $_FILES["preg9"]["name"];
         move_uploaded_file($_FILES["preg9"]["tmp_name"], $ruta_croquis.date("Ymd H:i:s")."_".$_FILES["preg9"]["name"]);
         $preg9 = $ruta_croquis.basename(date("Ymd H:i:s")."_".$_FILES["preg9"]["name"]);
   }else{
-    $preg9 = $_POST['preg9'];
-  }*/
+    $preg9 = $preg9_actual;
+  }
 
 
   // ACTUALIZAMOS LA INFORMACION DE LA SOLICITUD
-  $updateSQL = sprintf("UPDATE solicitud_registro SET comprador_final = %s, intermediario = %s, maquilador = %s, preg1 = %s, preg2 = %s, preg3 = %s, preg4 = %s, produccion = %s, procesamiento = %s, importacion = %s, preg6 = %s, preg7 = %s, preg8 = %s, preg10 = %s, preg12 = %s, preg13 = %s, preg14 = %s, preg15 = %s WHERE idsolicitud_registro = %s",
+  $updateSQL = sprintf("UPDATE solicitud_registro SET comprador_final = %s, intermediario = %s, maquilador = %s, preg1 = %s, preg2 = %s, preg3 = %s, preg4 = %s, produccion = %s, procesamiento = %s, importacion = %s, preg6 = %s, preg7 = %s, preg8 = %s, preg9 = %s, preg10 = %s, preg12 = %s, preg13 = %s, preg14 = %s, preg15 = %s WHERE idsolicitud_registro = %s",
         GetSQLValueString($comprador, "int"),
         GetSQLValueString($intermediario, "int"),
         GetSQLValueString($maquilador, "int"),
@@ -159,9 +164,8 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
          GetSQLValueString($preg6, "text"),
          GetSQLValueString($_POST['preg7'], "text"),
          GetSQLValueString($_POST['preg8'], "text"),
+         GetSQLValueString($preg9, "text"),
          GetSQLValueString($_POST['preg10'], "text"),
-         //GetSQLValueString($op_preg12, "text"),
-         //GetSQLValueString($op_preg13, "text"),
          GetSQLValueString($_POST['preg12'], "text"),
          GetSQLValueString($preg13, "text"),
          GetSQLValueString($preg14, "text"),
@@ -205,90 +209,254 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
     }  
 
 
+  /*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
 
-    // SE ACTUALIZAN LAS CERTIFICACIONES
+    if(isset($_POST['certificadora'])){
+      $certificadora = $_POST['certificadora'];
+    }else{
+      $certificadora = NULL;
+    }
 
-      if(isset($_POST['certificacion'])){
-        $certificacion = $_POST['certificacion'];
-      }else{
-        $certificacion = NULL;
-      }
+    if(isset($_POST['ano_inicial'])){
+      $ano_inicial = $_POST['ano_inicial'];
+    }else{
+      $ano_inicial = NULL;
+    }
 
+    if(isset($_POST['interrumpida'])){
+      $interrumpida = $_POST['interrumpida'];
+    }else{
+      $interrumpida = NULL;
+    }
 
-      if(isset($_POST['certificadora'])){
-        $certificadora = $_POST['certificadora'];
-      }else{
-        $certificadora = NULL;
-      }
+    if(isset($_POST['certificacion'])){
+      $certificacion = $_POST['certificacion'];
+      
+      for($i=0;$i<count($certificacion);$i++){
+        if($certificacion[$i] != NULL){
+          #for($i=0;$i<count($certificacion);$i++){
+          $insertSQL = sprintf("INSERT INTO certificaciones (idsolicitud_registro, certificacion, certificadora, ano_inicial, interrumpida) VALUES (%s, %s, %s, %s, %s)",
+              GetSQLValueString($idsolicitud_registro, "int"),
+              GetSQLValueString(strtoupper($certificacion[$i]), "text"),
+              GetSQLValueString(strtoupper($certificadora[$i]), "text"),
+              GetSQLValueString($ano_inicial[$i], "text"),
+              GetSQLValueString($interrumpida[$i], "text"));
 
-      if(isset($_POST['ano_inicial'])){
-        $ano_inicial = $_POST['ano_inicial'];
-      }else{
-        $ano_inicial = NULL;
-      }
-
-      if(isset($_POST['interrumpida'])){
-        $interrumpida = $_POST['interrumpida'];
-      }else{
-        $interrumpida = NULL;
-      }
-    $idcertificacion = $_POST['idcertificacion'];
-
-    for($i=0;$i<count($certificacion);$i++){
-      if($certificacion[$i] != NULL){
-        #for($i=0;$i<count($certificacion);$i++){
-
-        $updateSQL = sprintf("UPDATE certificaciones SET certificacion = %s, certificadora = %s, ano_inicial = %s, interrumpida = %s WHERE idcertificacion = %s",
-          GetSQLValueString(strtoupper($certificacion[$i]), "text"),
-          GetSQLValueString(strtoupper($certificadora[$i]), "text"),
-          GetSQLValueString($ano_inicial[$i], "text"),
-          GetSQLValueString($interrumpida[$i], "text"),
-          GetSQLValueString($idcertificacion[$i], "int"));
-
-        //$updateSQL = "UPDATE certificaciones SET certificacion= '".$certificacion[$i]."', certificadora='".$certificadora[$i]."', ano_inicial= '".$ano_inicial[$i]."', interrumpida= '".$interrumpida[$i]."' WHERE idcertificacion= '".$idcertificacion[$i]."'";
-
-        $Result1 = mysql_query($updateSQL, $dspp) or die(mysql_error());
+          $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+          #}
         }
+      }
+
     }
+  /*************************** TERMINA INSERTAR CERTIFICACIONES ***************************/
 
-    // SE ACTUALIZAN LOS PRODUCTOS
-      $producto = $_POST['producto'];
+
+  /*************************** INICIA ACTUALIZAR CERTIFICACIONES ***************************/
+
+      if(isset($_POST['certificacion_actual'])){
+        $certificacion_actual = $_POST['certificacion_actual'];
+      }else{
+        $certificacion_actual = NULL;
+      }
+
+
+      if(isset($_POST['certificadora_actual'])){
+        $certificadora_actual = $_POST['certificadora_actual'];
+      }else{
+        $certificadora_actual = NULL;
+      }
+
+      if(isset($_POST['ano_inicial_actual'])){
+        $ano_inicial_actual = $_POST['ano_inicial_actual'];
+      }else{
+        $ano_inicial_actual = NULL;
+      }
+
+      if(isset($_POST['interrumpida_actual'])){
+        $interrumpida_actual = $_POST['interrumpida_actual'];
+      }else{
+        $interrumpida_actual = NULL;
+      }
+
+      if(isset($_POST['idcertificacion'])){
+        $idcertificacion = $_POST['idcertificacion'];
+      }else{
+        $idcertificacion = '';
+      }
+
+      if(isset($_POST['idcertificacion'])){
+        for($i=0;$i<count($certificacion_actual);$i++){
+          if($certificacion_actual[$i] != NULL){
+            #for($i=0;$i<count($certificacion_actual);$i++){
+
+
+            $updateSQL = sprintf("UPDATE certificaciones SET certificacion = %s, certificadora = %s, ano_inicial = %s, interrumpida = %s WHERE idcertificacion = %s",
+              GetSQLValueString(strtoupper($certificacion_actual[$i]), "text"),
+              GetSQLValueString(strtoupper($certificadora_actual[$i]), "text"),
+              GetSQLValueString($ano_inicial_actual[$i], "text"),
+              GetSQLValueString($interrumpida_actual[$i], "text"),
+              GetSQLValueString($idcertificacion[$i], "int"));
+            $Result1 = mysql_query($updateSQL, $dspp) or die(mysql_error());
+          }
+        }
+      }    
+  /*************************** TERMINA INSERTAR CERTIFICACIONES ***************************/
+
+  /*************************** INICIA INSERTAR PRODUCTOS ***************************/
+    if(isset($_POST['volumen_estimado'])){
       $volumen_estimado = $_POST['volumen_estimado'];
-      $volumen_materia = $_POST['volumen_materia'];
+    }
+    if(isset($_POST['volumen_terminado'])){
       $volumen_terminado = $_POST['volumen_terminado'];
-      $origen = $_POST['origen'];
+    }
+    if(isset($_POST['volumen_materia'])){
+      $volumen_materia = $_POST['volumen_materia'];
+    }
+    if(isset($_POST['destino'])){
       $destino = $_POST['destino'];
-      $idproducto = $_POST['idproducto'];
-      /*$marca_propia = $_POST['marca_propia'];
-      $marca_cliente = $_POST['marca_cliente'];
-      $sin_cliente = $_POST['sin_cliente'];*/
+    }
+    if(isset($_POST['origen'])){
+      $origen = $_POST['origen'];
+    }
+    if(isset($_POST['producto'])){
+      $producto = $_POST['producto'];
+      for ($i=0;$i<count($producto);$i++) { 
+        if($producto[$i] != NULL){
 
-    for ($i=0;$i<count($producto);$i++) { 
-      if($producto[$i] != NULL){
+            $str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
+            $destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
+            $str = iconv($charset, 'ASCII//TRANSLIT', $origen[$i]);
+            $origen[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
-          $str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
-          $producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+            $insertSQL = sprintf("INSERT INTO productos (idempresa, idsolicitud_registro, producto, volumen_estimado, volumen_terminado, volumen_materia, origen, destino) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                GetSQLValueString($_POST['idempresa'], "int"),
+                    GetSQLValueString($idsolicitud_registro, "int"),
+                    GetSQLValueString($producto[$i], "text"),
+                    GetSQLValueString($volumen_estimado[$i], "text"),
+                    GetSQLValueString($volumen_terminado[$i], "text"),
+                    GetSQLValueString($volumen_materia[$i], "text"),
+                    GetSQLValueString($origen[$i], "text"),
+                    GetSQLValueString($destino[$i], "text"));
 
-          $str = iconv($charset, 'ASCII//TRANSLIT', $origen[$i]);
-          $origen[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
-         
-          $str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
-          $destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
-
-
-      $updateSQL = sprintf("UPDATE productos SET producto = %s, volumen_estimado = %s, volumen_terminado = %s, volumen_materia = %s, origen = %s, destino = %s WHERE idproducto = %s",
-        GetSQLValueString($producto[$i], "text"),
-        GetSQLValueString($volumen_estimado[$i], "text"),
-        GetSQLValueString($volumen_terminado[$i], "text"),
-        GetSQLValueString($volumen_materia[$i], "text"),
-        GetSQLValueString($origen[$i], "text"),
-        GetSQLValueString($destino[$i], "text"),
-        GetSQLValueString($idproducto[$i], "int"));
-      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
-
+            $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+        }
       }
     }
+  /*************************** TERMINA INSERTAR PRODUCTOS ***************************/
+
+  /*************************** INICIA ACTUALIZAR PRODUCTOS ***************************/
+    if(isset($_POST['producto_actual'])){
+      $producto_actual = $_POST['producto_actual'];
+    }else{
+      $producto_actual = '';
+    }
+    if(isset($_POST['volumen_estimado_actual'])){
+      $volumen_estimado_actual = $_POST['volumen_estimado_actual'];
+    }
+    if(isset($_POST['volumen_terminado_actual'])){
+      $volumen_terminado_actual = $_POST['volumen_terminado_actual'];
+    }
+    if(isset($_POST['volumen_materia_actual'])){
+      $volumen_materia_actual = $_POST['volumen_materia_actual'];
+    }
+    if(isset($_POST['destino_actual'])){
+      $destino_actual = $_POST['destino_actual'];
+    }
+    if(isset($_POST['origen_actual'])){
+      $origen_actual = $_POST['origen_actual'];
+    }
+    if(isset($_POST['idproducto'])){
+      $idproducto = $_POST['idproducto'];
+    }else{
+      $idproducto = '';
+    }
+
+    if(isset($_POST['idproducto'])){
+      for ($i=0;$i<count($producto_actual);$i++) { 
+        if($producto_actual[$i] != NULL){
+
+            //$str = iconv($charset, 'ASCII//TRANSLIT', $producto_actual[$i]);
+            //$producto_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+            $str = iconv($charset, 'ASCII//TRANSLIT', $destino_actual[$i]);
+            $destino_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+            $str = iconv($charset, 'ASCII//TRANSLIT', $origen_actual[$i]);
+            $origen_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+
+            $updateSQL = sprintf("UPDATE productos SET producto = %s, volumen_estimado = %s, volumen_terminado = %s, volumen_materia = %s, origen = %s, destino = %s WHERE idproducto = %s",
+              GetSQLValueString($producto_actual[$i], "text"),
+              GetSQLValueString($volumen_estimado_actual[$i], "text"),
+              GetSQLValueString($volumen_terminado_actual[$i], "text"),
+              GetSQLValueString($volumen_materia_actual[$i], "text"),
+              GetSQLValueString($origen_actual[$i], "text"),
+              GetSQLValueString($destino_actual[$i], "text"),
+              GetSQLValueString($idproducto[$i], "int"));
+            $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+
+
+        }
+      }
+    }
+  /*************************** TERMINA ACTUALIZAR PRODUCTOS ***************************/
+
+
+
+  /*************************** INICIA INSERTAR SUB EMPRESAS ***************************/
+
+    if(isset($_POST['servicio'])){
+      $servicio = $_POST['servicio'];
+    }
+
+    if(isset($_POST['subempresa'])){
+      $subempresa = $_POST['subempresa'];
+      for ($i=0;$i<count($subempresa);$i++) { 
+        if($subempresa[$i] != NULL){
+
+            $insertSQL = sprintf("INSERT INTO sub_empresas (idsolicitud_registro, idempresa, nombre, servicio) VALUES (%s, %s, %s, %s)",
+                    GetSQLValueString($idsolicitud_registro, "int"),
+                    GetSQLValueString($_POST['idempresa'], "int"),
+                    GetSQLValueString($subempresa[$i], "text"),
+                    GetSQLValueString($servicio[$i], "text"));
+            $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+        }
+      }
+    }
+  /*************************** TERMINA INSERTAR SUB EMPRESAS ***************************/
+
+  /*************************** INICIA ACTUALIZAR SUB EMPRESAS ***************************/
+    if(isset($_POST['subempresa_actual'])){
+      $subempresa_actual = $_POST['subempresa_actual'];
+    }else{
+      $subempresa_actual = '';
+    }
+    if(isset($_POST['servicio_actual'])){
+      $servicio_actual = $_POST['servicio_actual'];
+    }
+    if(isset($_POST['idsub_empresa_actual'])){
+      $idsub_empresa_actual = $_POST['idsub_empresa_actual'];
+    }else{
+      $idsub_empresa_actual = '';
+    }
+
+    if(isset($_POST['idsub_empresa_actual'])){
+      for ($i=0;$i<count($subempresa_actual);$i++) { 
+        if($subempresa_actual[$i] != NULL){
+
+            $updateSQL = sprintf("UPDATE sub_empresas SET nombre = %s, servicio = %s WHERE idsub_empresas = %s",
+              GetSQLValueString($subempresa_actual[$i], "text"),
+              GetSQLValueString($servicio_actual[$i], "text"),
+              GetSQLValueString($idsub_empresa_actual[$i], "int"));
+            $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+        }
+      }
+    }
+  /*************************** TERMINA ACTUALIZAR SUB EMPRESAS ***************************/
+
+
 
 
   $mensaje = "Datos Actualizados Correctamente";
@@ -548,7 +716,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             <div class="col-xs-4">
               <b>TIPO DE SOLICITUD</b>
               <input type="text" class="form-control" value="<?php echo $solicitud['tipo_solicitud']; ?>"readonly>
-              <button type="submit" class="btn btn-warning form-control" style="color:white" name="guardar_cambios" value="1">
+              <button type="submit" class="btn btn-warning form-control" style="color:white" name="actualizar_solicitud" value="1">
                 <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>Actualizar Solicitud
               </button>
               <!--<input type="submit" style="color:white" class="btn btn-warning form-control" value="Actualizar Solicitud">
@@ -793,20 +961,31 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             <input type="checkbox" name="importacion" class="form-control" <?php if($solicitud['importacion']){echo "checked";} ?> value="1">
           </div>
 
-        <p><b>6.  SELECCIONE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN</b></p>
+        <p>
+          <b>6.  SELECCIONE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN</b>
+        </p>
         <div class="col-md-6">
-          SI <input type="radio" class="form-control" name="preg6" onclick="mostrar_empresas()" id="preg6" <?php if($solicitud['preg6'] == 'SI'){echo "checked"; } ?> value="SI">
+          SI <input type="radio" class="form-control" name="preg6"  id="preg6" <?php if($solicitud['preg6'] == 'SI'){echo "checked"; } ?> value="SI">
         </div>
         <div class="col-md-6">
-          NO <input type="radio" class="form-control" name="preg6" onclick="ocultar_empresas()" id="preg6" <?php if($solicitud['preg6'] == 'NO'){echo "checked"; } ?> value="NO">
+          NO <input type="radio" class="form-control" name="preg6"  id="preg6" <?php if($solicitud['preg6'] == 'NO'){echo "checked"; } ?> value="NO">
         </div>
 
-        <p>SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA</p>
-        <div id="contenedor_tablaEmpresas" class="col-md-12" style="display:none">
+        <p>
+          <b style="background:#3498db;color:#ecf0f1;padding:3px;">SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA</b>
+        </p>
+        <div id="contenedor_tablaEmpresas" class="col-md-12" >
           <table class="table table-bordered" id="tablaEmpresas">
             <tr>
               <td>NOMBRE DE LA EMPRESA</td>
               <td>SERVICIO QUE REALIZA</td>
+              <td>
+                <button type="button" onclick="tablaEmpresas()" class="btn btn-primary" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+                
+              </td>
+
             </tr>
             <?php 
             $query_subempresa = "SELECT * FROM sub_empresas WHERE idsolicitud_registro = $idsolicitud_registro";
@@ -815,8 +994,12 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             while($row_subempresa = mysql_fetch_assoc($subempresa_detalle)){
             ?>
             <tr class="text-center">
-              <td><input type="text" class="form-control" name="subempresa[]" id="exampleInputEmail1" placeholder="EMPRESA" value="<?php echo $row_subempresa['nombre']; ?>"></td>
-              <td><input type="text" class="form-control" name="servicio[]" id="exampleInputEmail1" placeholder="SERVICIO" value="<?php echo $row_subempresa['servicio']; ?>"></td>
+              <td><input type="text" class="form-control" name="subempresa_actual[]" id="exampleInputEmail1" placeholder="EMPRESA" value="<?php echo $row_subempresa['nombre']; ?>"></td>
+              <td>
+                <input type="text" class="form-control" name="servicio_actual[]" id="exampleInputEmail1" placeholder="SERVICIO" value="<?php echo $row_subempresa['servicio']; ?>">
+                <input type="hidden" name="idsub_empresa_actual[]" value="<?php echo $row_subempresa['idsub_empresas']; ?>">
+
+              </td>
             </tr>
             <?php 
               $contador++; 
@@ -847,8 +1030,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           <?php
           }else{
           ?>
-            <input type="text" name="preg9" value="<?php echo $solicitud['preg9']; ?>">
-            <a href="<?php echo $solicitud['preg9']; ?>" target="_blank" class="btn btn-success form-control">Descargar Croquis</a>
+            <input type="file" id="preg9" name="preg9" class="form-control">
+            <input type="hidden" id="preg9_actual" name="preg9_actual" value="<?php echo $solicitud['preg9']; ?>">
+            <a href="<?php echo $solicitud['preg9']; ?>" target="_blank" class="btn btn-success" style="width:40%">Descargar Croquis</a>
           <?php
           }
            ?>
@@ -865,6 +1049,12 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
               <td>CERTIFICADORA</td>
               <td>AÑO INICIAL DE CERTIFICACIÓN?</td>
               <td>¿HA SIDO INTERRUMPIDA?</td>
+              <td>
+                <button type="button" onclick="tablaCertificaciones()" class="btn btn-primary" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+                
+              </td>
             </tr>
             <?php 
             $query_certificacion_detalle = "SELECT * FROM certificaciones WHERE idsolicitud_registro = $idsolicitud_registro";
@@ -873,10 +1063,10 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             while($row_certificacion = mysql_fetch_assoc($certificacion_detalle)){
             ?>
               <tr class="text-center">
-                <td><input type="text" class="form-control" name="certificacion[]" id="exampleInputEmail1" placeholder="CERTIFICACIÓN" value="<?echo $row_certificacion['certificacion']?>"></td>
-                <td><input type="text" class="form-control" name="certificadora[]" id="exampleInputEmail1" placeholder="CERTIFICADORA" value="<?echo $row_certificacion['certificadora']?>"></td>
-                <td><input type="text" class="form-control" name="ano_inicial[]" id="exampleInputEmail1" placeholder="AÑO INICIAL" value="<?echo $row_certificacion['ano_inicial']?>"></td>
-                <td><input type="text" class="form-control" name="interrumpida[]" id="exampleInputEmail1" placeholder="¿HA SIDO INTERRUMPIDA?" value="<?echo $row_certificacion['interrumpida']?>"></td>
+                <td><input type="text" class="form-control" name="certificacion_actual[]" id="exampleInputEmail1" placeholder="CERTIFICACIÓN" value="<?echo $row_certificacion['certificacion']?>"></td>
+                <td><input type="text" class="form-control" name="certificadora_actual[]" id="exampleInputEmail1" placeholder="CERTIFICADORA" value="<?echo $row_certificacion['certificadora']?>"></td>
+                <td><input type="text" class="form-control" name="ano_inicial_actual[]" id="exampleInputEmail1" placeholder="AÑO INICIAL" value="<?echo $row_certificacion['ano_inicial']?>"></td>
+                <td><input type="text" class="form-control" name="interrumpida_actual[]" id="exampleInputEmail1" placeholder="¿HA SIDO INTERRUMPIDA?" value="<?echo $row_certificacion['interrumpida']?>"></td>
                 <input type="hidden" name="idcertificacion[]" value="<?echo $row_certificacion['idcertificacion']?>">
               </tr>
             <?php 
@@ -914,7 +1104,52 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             </div>
           </p>
             
-          <p><b>14 - 15. ¿TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
+
+          <p><b>14. TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
+            <div class="col-md-6">
+              SI <input type="radio" class="form-control" name="preg13" id="preg13" value="SI" <?php if($solicitud['preg13'] == 'SI' ){echo 'checked'; } ?>>
+            </div>
+            <div class="col-md-6">
+              NO <input type="radio" class="form-control" name="preg13" id="preg13" value="NO" <?php if($solicitud['preg13'] == 'NO' ){echo 'checked'; } ?>>
+            </div>      
+          <p>
+            <b>15. SI SU RESPUESTA FUE POSITIVA FAVOR DE SELECCIONAR EL RANGO DEL VALOR TOTAL DE SUS COMPRAS SPP DEL CICLO ANTERIOR DE ACUERDO A LA SIGUIENTE TABLA 
+          </p>
+
+          <div class="well col-md-12 " id="tablaVentas">
+            <div class="col-md-6"><p>Hasta $3,000 USD</p></div>
+            <div class="col-md-6 "><input type="radio" name="preg14" class="form-control" id="ver" onclick="ocultar()" value="HASTA $3,000 USD" <?php if($solicitud['preg14'] == 'HASTA $3,000 USD' ){echo 'checked'; } ?>></div>
+          
+          
+            <div class="col-md-6"><p>Entre $3,000 y $10,000 USD</p></div>
+            <div class="col-md-6"><input type="radio" name="preg14" class="form-control" id="ver" onclick="ocultar()" value="ENTRE $3,000 Y $10,000 USD" <?php if($solicitud['preg14'] == 'ENTRE $3,000 Y $10,000 USD' ){echo 'checked'; } ?>></div>
+          
+          
+            <div class="col-md-6"><p>Entre $10,000 a $25,000 USD</p></div>
+            <div class="col-md-6"><input type="radio" name="preg14" class="form-control"  id="ver" onclick="ocultar()" value="ENTRE $10,000 A $25,000 USD" <?php if($solicitud['preg14'] == 'ENTRE $10,000 A $25,000 USD' ){echo 'checked'; } ?>></div>
+            
+            <?php 
+            if($solicitud['preg14'] != NULL && $solicitud['preg14'] != 'HASTA $3,000 USD' && $solicitud['preg14'] != 'ENTRE $3,000 Y $10,000 USD' && $solicitud['preg14'] != 'ENTRE $10,000 A $25,000 USD'){
+            ?>
+              <div class="col-md-6"><p>Más de $25,000 USD <sup>*</sup><br><h6><sup>*</sup>Especifique la cantidad.</h6></p></div>
+              <div class="col-md-6"><input type="radio" name="" class="form-control" id="exampleInputEmail1" onclick="mostrar()" value="" checked>
+                <input type="text" name="preg14" class="form-control" id="" placeholder="Especifique la Cantidad" value="<?php echo $solicitud['preg14']; ?>">
+              </div>
+
+            <?php
+            }else{
+            ?>
+              <div class="col-md-6"><p>Más de $25,000 USD <sup>*</sup><br><h6><sup>*</sup>Especifique la cantidad.</h6></p></div>
+              <div class="col-md-6"><input type="radio" name="" class="form-control" id="exampleInputEmail1" onclick="mostrar()" value="">
+                <input type="text" name="preg14" class="form-control" id="oculto" style='display:none;' placeholder="Especifique la Cantidad">
+              </div>
+            <?php
+            }
+             ?>
+
+          </div>
+
+          <!--<p><b>14 - 15. ¿TUVO COMPRAS SPP DURANTE EL CICLO DE REGISTRO ANTERIOR?</b></p>
           <div class="col-xs-12 ">
                 <?php
                   if($solicitud['preg13'] == 'SI'){
@@ -959,13 +1194,12 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
                 <?php         
                   }
                 ?>
-          </div>
+          </div>-->
 
           <label for="preg15">
             16. FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
           </label>
           <input type="text" class="form-control" id="preg15" name="preg15" value="<?php echo $solicitud['preg15']; ?>">
-
 
 
       <div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE PRODUCTOS PARA LOS CUALES QUIERE UTILIZAR EL SÍMBOLO<sup>6</sup></div>
@@ -977,7 +1211,13 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             <td>Volumen como Producto Terminado</td>
             <td>Volumen como Materia Prima</td>
             <td>País(es) de Origen</td>
-            <td>País(es) Destino</td>          
+            <td>País(es) Destino</td> 
+            <td>
+              <button type="button" onclick="tablaProductos()" class="btn btn-primary" aria-label="Left Align">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              </button>
+              
+            </td>   
           </tr>
           <?php 
           $query_producto_detalle = "SELECT * FROM productos WHERE idsolicitud_registro = $idsolicitud_registro";
@@ -987,23 +1227,23 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           ?>
             <tr>
               <td>
-                <input type="text" class="form-control" name="producto[]" id="exampleInputEmail1" placeholder="Producto" value="<?echo $row_producto['producto']?>">
+                <input type="text" class="form-control" name="producto_actual[]" id="exampleInputEmail1" placeholder="Producto" value="<?echo $row_producto['producto']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="volumen_estimado[]" id="exampleInputEmail1" placeholder="Volumen Estimado" value="<?echo $row_producto['volumen_estimado']?>">
+                <input type="text" class="form-control" name="volumen_estimado_actual[]" id="exampleInputEmail1" placeholder="Volumen Estimado" value="<?echo $row_producto['volumen_estimado']?>">
               </td>
         
               <td>
-                <input type="text" class="form-control" name="volumen_terminado[]" id="exampleInputEmail1" placeholder="Volumen Terminado" value="<?echo $row_producto['volumen_terminado']?>">
+                <input type="text" class="form-control" name="volumen_terminado_actual[]" id="exampleInputEmail1" placeholder="Volumen Terminado" value="<?echo $row_producto['volumen_terminado']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="volumen_materia[]" id="exampleInputEmail1" placeholder="Volumen Materia" value="<?echo $row_producto['volumen_materia']?>">
+                <input type="text" class="form-control" name="volumen_materia_actual[]" id="exampleInputEmail1" placeholder="Volumen Materia" value="<?echo $row_producto['volumen_materia']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="origen[]" id="exampleInputEmail1" placeholder="Origen" value="<?echo $row_producto['origen']?>">
+                <input type="text" class="form-control" name="origen_actual[]" id="exampleInputEmail1" placeholder="Origen" value="<?echo $row_producto['origen']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="destino[]" id="exampleInputEmail1" placeholder="Destino" value="<?echo $row_producto['destino']?>">
+                <input type="text" class="form-control" name="destino_actual[]" id="exampleInputEmail1" placeholder="Destino" value="<?echo $row_producto['destino']?>">
               </td>
 
                 <input type="hidden" name="idproducto[]" value="<?echo $row_producto['idproducto']?>">                     
@@ -1019,7 +1259,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           </tr>
         </table>
       </div>
-
 
       <div class="col-lg-12 text-center alert alert-success" style="padding:7px;">
         <b>COMPROMISOS</b>
@@ -1085,28 +1324,30 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 var contador=0;
   function tablaCertificaciones()
   {
-    contador++;
-  var table = document.getElementById("tablaCertificaciones");
-    {
-    var row = table.insertRow(2);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
 
-    cell1.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICACIÓN">';
-    cell2.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICADORA">';
-    cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="AÑO INICIAL">';
-    cell4.innerHTML = '<div class="col-xs-6">SI<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
+    var table = document.getElementById("tablaCertificaciones");
+    {
+      var row = table.insertRow(1);
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+      var cell4 = row.insertCell(3);
+
+      cell1.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICACIÓN">';
+      cell2.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICADORA">';
+      cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="AÑO INICIAL">';
+      cell4.innerHTML = '<div class="col-xs-6">SI<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
+    contador++;
     }
+    
   } 
 
   function tablaEmpresas()
   {
-    contador++;
+  
   var table = document.getElementById("tablaEmpresas");
     {
-    var row = table.insertRow(2);
+    var row = table.insertRow(1);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
 
@@ -1114,8 +1355,9 @@ var contador=0;
     cell1.innerHTML = '<input type="text" class="form-control" name="subempresa['+contador+']" id="exampleInputEmail1" placeholder="EMPRESA">';
     cell2.innerHTML = '<input type="text" class="form-control" name="servicio['+contador+']" id="exampleInputEmail1" placeholder="SERVICIO">';
 
+    contador++;
     }
-  } 
+  }
   function mostrar_empresas(){
     document.getElementById('contenedor_tablaEmpresas').style.display = 'block';
   }
@@ -1146,7 +1388,6 @@ var contador=0;
 
   var table = document.getElementById("tablaProductos");
     {
-  cont++;
 
     var row = table.insertRow(1);
     var cell1 = row.insertCell(0);
@@ -1154,28 +1395,21 @@ var contador=0;
     var cell3 = row.insertCell(2);
     var cell4 = row.insertCell(3);
     var cell5 = row.insertCell(4);
-    var cell6 = row.insertCell(5);
-    var cell7 = row.insertCell(6); 
-    var cell8 = row.insertCell(7);        
-
+    var cell6 = row.insertCell(5);   
     
-
     cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Producto">';
     
-    cell2.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volumen">';
+    cell2.innerHTML = '<input type="text" class="form-control" name="volumen_estimado['+cont+']" id="exampleInputEmail1" placeholder="Volumen Estimado">';
     
-    cell3.innerHTML = 'SI <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="terminado'+cont+'['+cont+']" id="" value="NO">';
+    cell3.innerHTML = '<input type="text" class="form-control" name="volumen_terminado['+cont+']" id="exampleInputEmail1" placeholder="Volumen Terminado">';
     
-    cell4.innerHTML = '<input type="text" class="form-control" name="materia['+cont+']" id="exampleInputEmail1" placeholder="Materia">';
+    cell4.innerHTML = '<input type="text" class="form-control" name="volumen_materia['+cont+']" id="exampleInputEmail1" placeholder="Volumen Materia">';
     
-    cell5.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destino">';
+    cell5.innerHTML = '<input type="text" class="form-control" name="origen['+cont+']" id="exampleInputEmail1" placeholder="Origen">';
     
-    cell6.innerHTML = 'SI <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_propia'+cont+'['+cont+']" id="" value="NO">';
-    
-    cell7.innerHTML = 'SI <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="marca_cliente'+cont+'['+cont+']" id="" value="NO">';
-    
-    cell8.innerHTML = 'SI <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="SI"><br>NO <input type="radio" name="sin_cliente'+cont+'['+cont+']" id="" value="NO">';   
-
+    cell6.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destino">';
+     
+  cont++;
     }
 
   } 

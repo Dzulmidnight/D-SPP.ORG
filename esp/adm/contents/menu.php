@@ -36,7 +36,7 @@ if (!function_exists("GetSQLValueString")) {
 
 <ul class="nav nav-sidebar">
   <li <?php if(isset($_GET['CRM'])){echo "class='active'"; } ?>>
-    <a href="#">CRM</a>
+    <a href="http://d-spp.org/crm/" target="_new">CRM</a>
     <!--<a href="?CRM&inicio">CRM</a>-->
   </li>
   <li <?php if(isset($_GET['MEMBRESIAS'])){echo "class='active'"; } ?>>

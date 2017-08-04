@@ -143,7 +143,11 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		$preg13 = "";
 	}
 	if(isset($_POST['preg14'])){
-		$preg14 = $_POST['preg14'];
+		if($_POST['preg14'] == 'mayor'){
+			$preg14 = $_POST['preg14_1'];
+		}else{
+			$preg14 = $_POST['preg14'];
+		}
 	}else{
 		$preg14 = "";
 	}
@@ -161,9 +165,9 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
 
-	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, total_ventas, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro, estatus_interno ) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, facturacion_total, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro, estatus_interno ) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 		   GetSQLValueString($_POST['tipo_solicitud'], "text"),
-		   GetSQLValueString($_POST['total_ventas'], "double"),
+		   GetSQLValueString($_POST['facturacion_total'], "double"),
 		   GetSQLValueString($idempresa, "int"),
            GetSQLValueString($_POST['idoc'], "int"),
            GetSQLValueString($comprador, "int"),
@@ -202,6 +206,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
            GetSQLValueString($_POST['responsable'], "text"),
            GetSQLValueString($fecha, "int"),
            GetSQLValueString($estatus_dspp, "int"));
+
 
 		  $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
 		 
@@ -475,12 +480,28 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			</html>
 		';
 		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
-		if(isset($oc['email1'])){
-			$mail->AddAddress($oc['email1']);
-		}
-		if(isset($oc['email2'])){
-			$mail->AddAddress($oc['email2']);
-		}
+
+		  if(!empty($oc['email1'])){
+		    //$mail->AddAddress($detalle_opp['email_opp']);
+		    $token = strtok($oc['email1'], "\/\,\;");
+		    while ($token !== false)
+		    {
+		      $mail->AddAddress($token);
+		      $token = strtok('\/\,\;');
+		    }
+
+		  }
+		  if(!empty($oc['email2'])){
+		    //$mail->AddAddress($detalle_opp['email_opp']);
+		    $token = strtok($oc['email2'], "\/\,\;");
+		    while ($token !== false)
+		    {
+		      $mail->AddAddress($token);
+		      $token = strtok('\/\,\;');
+		    }
+
+		  }
+
 
 	    $mail->AddBCC($spp_global);
         //$mail->Username = "soporte@d-spp.org";
@@ -491,7 +512,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
         $mail->Send();
         $mail->ClearAddresses();
 
- 		$mensaje = "Se ha enviado la Solicitud de Registro al OC, en breve seras contactado";
+ 		$mensaje = "The Registration Application has been sent to the Certification Entity, you will shortly be contacted";
 
 
 }
@@ -582,7 +603,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 						<b>TOTAL VALUE OF SALES <i>(regardless of whether it is SPP sales or not)</i></b>
 						<br>
 						Note: <i>This data is necessary to determine the membership to be paid by the Final Buyer. <a href="#">Reglamento de Costos V8_2017-02-03, 4.3 (descargar</a>) "End Buyers pay an Annual Membership Fee (in USD) equivalent to a percentage of the company's total billing regardless of whether it is SPP sales or not"</i>
-						<input type="number" step="any" class="form-control" id="total_ventas" name="total_ventas" placeholder="Sales value, enter numbers only" required>
+						<input type="number" step="any" class="form-control" id="facturacion_total" name="facturacion_total" placeholder="Valor de ventas, ingresar solo numeros" required>
 					</div>
 				</div>
 			<?php

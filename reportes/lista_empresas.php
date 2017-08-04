@@ -50,7 +50,7 @@
     ';
     $contador = 1;
     while($empresa = mysql_fetch_assoc($row_empresa)){
-      $row_producto = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
+      $row_producto = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa] GROUP BY productos.producto", $dspp) or die(mysql_error());
       $producto = '';
       $total_producto = mysql_num_rows($row_producto);
       $cont = 1;
@@ -181,11 +181,11 @@
     ';
     $contador = 1;
     while($empresa = mysql_fetch_assoc($row_empresa)){
-      $row_producto = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
+      $row_producto = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa] GROUP BY productos.producto", $dspp) or die(mysql_error());
       $producto = '';
       $total_producto = mysql_num_rows($row_producto);
 
-      $row_contactos = mysql_query("SELECT * FROM contactos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
+      $row_contactos = mysql_query("SELECT * FROM contactos WHERE idempresa = $empresa[idempresa] GROUP BY productos.producto", $dspp) or die(mysql_error());
       $total_contactos = mysql_num_rows($row_contactos);
 
       $cont = 1;
@@ -351,7 +351,7 @@
         $vigencia = 'No Disponible';
       }
       $productos = '';
-      $query_producto = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
+      $query_producto = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa] GROUP BY productos.producto", $dspp) or die(mysql_error());
       $total = mysql_num_rows($query_producto);
       $cont = 1;
       while($row_producto = mysql_fetch_assoc($query_producto)){

@@ -46,6 +46,7 @@ if (!function_exists("GetSQLValueString")) {
 
 /**** VARIABLES GLOBALES *******/
 $spp_global = "cert@spp.coop";
+$finanzas_spp = "adm@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 $fecha = time();
 $idempresa = $_SESSION['idempresa'];
@@ -60,23 +61,23 @@ $idempresa = $_SESSION['idempresa'];
 /*************************** VARIABLES DE CONTROL **********************************/
 /// INICIA SE ACEPTA O RECHAZA COTIZACIÓN
 if(isset($_POST['cotizacion']) ){
-  $row_empresa = mysql_query("SELECT solicitud_registro.*, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.telefono, empresa.email, empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+  $row_empresa = mysql_query("SELECT solicitud_registro.*, empresa.idempresa, empresa.nombre AS 'nombre_empresa', empresa.abreviacion AS 'abreviacion_empresa', empresa.telefono, empresa.email, empresa.pais, oc.nombre AS 'nombre_oc', oc.email1 AS 'email_oc', oc.email2 AS 'email_oc2' FROM solicitud_registro LEFT JOIN empresa ON solicitud_registro.idempresa = empresa.idempresa LEFT JOIN oc ON solicitud_registro.idoc = oc.idoc WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
   $detalle_empresa = mysql_fetch_assoc($row_empresa);
 
 
   $estatus_dspp = $_POST['cotizacion'];
   
   if($estatus_dspp == 5){ // se acepta la cotización, modificamos la solicitud y fijamos las fechas del periodo de objeción
-    $asunto_oc = "D-SPP Cotización de Solicitud Aceptada";
+    $asunto_empresa = "D-SPP Cotización de Solicitud Aceptada";
 
-    $updateSQL = sprintf("UPDATE solicitud_registro SET fecha_aceptacion = %s, estatus_dspp = %s WHERE idsolicitud_registro = %s",
-      GetSQLValueString($fecha, "int"),
+    $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s, fecha_aceptacion = %s WHERE idsolicitud_registro = %s",
       GetSQLValueString(5, "int"),
+      GetSQLValueString($fecha, "int"),
       GetSQLValueString($_POST['idsolicitud_registro'], "int"));
     $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
     if($_POST['tipo_solicitud'] == 'RENOVACION'){
-        $mensaje_oc = '
+        $mensaje_empresa = '
           <html>
           <head>
             <meta charset="utf-8">
@@ -87,20 +88,19 @@ if(isset($_POST['cotizacion']) ){
               <tbody>
                 <tr>
                   <th rowspan="6" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><strong>Notificación de Propuesta / Notification of Proposal ('.date('d/m/Y', $fecha).')</strong></th>
+                  <th scope="col" align="left" width="280"><strong>Cotización de Solicitud Aceptada / Application Price Quote Accepted ('.date('d/m/Y', $fecha).')</strong></th>
                 </tr>
 
                 <tr>
                   <td align="left" style="color:#ff738a;">
-                  Felicidades se ha aceptado su cotización, ahora <span style="color:red">puede iniciar el Proceso de Certificación</span>, ya que esta solicitud se encuentra en proceso de \" RENOVACIÓN DEL REGISTRO\" :
-                  <br><br>
-                  Congratulations! Your quotation has been accepted, <span style="color:red">Now you can start the certification process</span>, as this application is in the process of renewal of registration:
-
+                    Felicidades se ha aceptado su cotización, ahora <span style="color:red">puede iniciar el Proceso de Certificación</span>, ya que esta solicitud se encuentra en proceso de "RENOVACIÓN DEL REGISTRO" :
+                    <br><br>
+                    Congratulations. Your price quote has been accepted. <span style="color:red">You may now begin the Certification Process</span>, since your application is in the "REGISTRATION RENEWAL" process.
                   </td>
                 </tr>
 
                 <tr>
-                  <td align="left">Teléfono / Company phone: '.$detalle_empresa['telefono'].'</td>
+                  <td align="left">Teléfono Empresa / Company phone: '.$detalle_empresa['telefono'].'</td>
                 </tr>
                 <tr>
                   <td align="left">País / Country: '.$detalle_empresa['pais'].'</td>
@@ -118,7 +118,7 @@ if(isset($_POST['cotizacion']) ){
                     <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
                       <tbody>
                         <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                          <td width="162.5px">Nombre de la organización/Organization name</td>
+                          <td width="162.5px">Nombre de la Empresa/Company name</td>
                           <td width="162.5px">Abreviación / Short name</td>
                           <td width="162.5px">País / Country</td>
                           <td width="162.5px">Organismo de Certificación / Certification Entity</td> 
@@ -149,18 +149,41 @@ if(isset($_POST['cotizacion']) ){
           </body>
           </html>
         ';
-      $mail->AddAddress($detalle_empresa['email_oc']);
+      
+      if(!empty($detalle_empresa['email_oc'])){
+        //$mail->AddAddress($detalle_opp['email_opp']);
+        $token = strtok($detalle_empresa['email_oc'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
+      }
+
+      if(!empty($detalle_empresa['email_oc2'])){
+        //$mail->AddAddress($detalle_opp['email_opp']);
+        $token = strtok($detalle_empresa['email_oc2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
+      }
+
       $mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
-      $mail->Subject = utf8_decode($asunto_oc);
-      $mail->Body = utf8_decode($mensaje_oc);
-      $mail->MsgHTML(utf8_decode($mensaje_oc));
+      $mail->Subject = utf8_decode($asunto_empresa);
+      $mail->Body = utf8_decode($mensaje_empresa);
+      $mail->MsgHTML(utf8_decode($mensaje_empresa));
       $mail->Send();
       $mail->ClearAddresses();
 
-    }else{
+      $mensaje = "La cotización ha sido aceptada, en breve el Organismo de Certificación se pondra en contacto.";
 
+    }else{
       //CALCULAMOS Y FIJAMOS EL PERIODO DE OBJECIÓN
       $periodo = 15*(24*60*60); //calculamos los segundos de 15 dias
       $fecha_inicio = time();
@@ -178,6 +201,25 @@ if(isset($_POST['cotizacion']) ){
       $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
       //////// INICIA ENVIAR CORREO AL OC SOBRE LA ACEPTACION DE LA COTIZACION
+      $row_productos = mysql_query("SELECT producto FROM productos WHERE idsolicitud_registro = $_POST[idsolicitud_registro]", $dspp) or die(mysql_error());
+      $nombre_productos = '';
+      while($producto = mysql_fetch_assoc($row_productos)){
+        $nombre_productos .= $producto['producto']."<br>"; 
+      } 
+      $alcance = '';
+      if(isset($detalle_empresa['produccion'])){
+        $alcance .= 'PRODUCCION - PRODUCTION.<br>';
+      }
+      if(isset($detalle_empresa['procesamiento'])){
+        $alcance .= 'PROCESAMIENTO - PROCESSING.<br>';
+      }
+      if(isset($detalle_empresa['exportacion'])){
+        $alcance .= 'EXPORTACIÓN - TRAIDING.<br>';
+      }
+
+
+      $asunto_oc = "D-SPP Cotización de Solicitud Aceptada";
+      
       $mensaje_oc = '
         <html>
         <head>
@@ -189,20 +231,19 @@ if(isset($_POST['cotizacion']) ){
             <tbody>
               <tr>
                 <th rowspan="6" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                <th scope="col" align="left" width="280"><strong>Notificación de Propuesta / Notification of Proposal ('.date('d/m/Y', $fecha).')</strong></th>
+                <th scope="col" align="left" width="280"><strong>Notificación de Propuesta / Application Price Quote Accepted ('.date('d/m/Y', $fecha).')</strong></th>
               </tr>
 
               <tr>
                 <td align="left" style="color:#ff738a;">
-                Felicidades se ha aceptado su cotización, sera informado una vez que inicie el período de objeción:
-                <br><br>
-                Congratulations! Your quotation has been accepted. You will be notified once the objection period begins:
-
+                  Felicidades se ha aceptado su cotización, será informado una vez que inicie el período de objeción:
+                  <br><br>
+                  Congratulations. Your price quote has been accepted. You will be informed as soon as the objection period begins.
                 </td>
               </tr>
 
               <tr>
-                <td align="left">Teléfono / Company phone: '.$detalle_empresa['telefono'].'</td>
+                <td align="left">Teléfono / Telephono: '.$detalle_empresa['telefono'].'</td>
               </tr>
               <tr>
                 <td align="left">País / Country: '.$detalle_empresa['pais'].'</td>
@@ -220,7 +261,7 @@ if(isset($_POST['cotizacion']) ){
                   <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
                     <tbody>
                       <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                        <td width="162.5px">Nombre de la organización/Organization name</td>
+                        <td width="162.5px">Nombre de la Empresa/Company name</td>
                         <td width="162.5px">Abreviación / Short name</td>
                         <td width="162.5px">País / Country</td>
                         <td width="162.5px">Organismo de Certificación / Certification Entity</td> 
@@ -251,7 +292,29 @@ if(isset($_POST['cotizacion']) ){
         </body>
         </html>
       ';
-      $mail->AddAddress($detalle_empresa['email_oc']);
+
+      if(!empty($detalle_empresa['email_oc'])){
+        //$mail->AddAddress($detalle_opp['email_opp']);
+        $token = strtok($detalle_empresa['email_oc'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
+      }
+      if(!empty($detalle_empresa['email_oc2'])){
+        //$mail->AddAddress($detalle_opp['email_opp']);
+        $token = strtok($detalle_empresa['email_oc2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
+      }
+
+
       $mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
@@ -317,7 +380,7 @@ if(isset($_POST['cotizacion']) ){
 
                               <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
                                 <td style="text-align:center">Tipo / Type</td>
-                                <td style="text-align:center">Nombre de la organización/Organization name</td>
+                                <td style="text-align:center">Nombre de la Empresa/Company name</td>
                                 <td style="text-align:center">Abreviación / Short name</td>
                                 <td style="text-align:center">País / Country</td>
                                 <td style="text-align:center">Organismo de Certificación / Certification Entity</td>
@@ -356,20 +419,21 @@ if(isset($_POST['cotizacion']) ){
       $mail->Send();
       $mail->ClearAddresses();
 
+
       ////// TERMINA ENVIAR CORREO AL ADMINISTRADOR PARA APROBAR PERIODO DE OBJECIÓN
+
+      $mensaje = "La cotización ha sido aceptada, el periodo de objeción ha empezado, en breve seras contactado";
 
     }
 
-    $mensaje = "La cotización ha sido aceptada, el periodo de objeción ha empezado, en breve seras contactado";
   }else{
     $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
       GetSQLValueString(17, "int"),
       GetSQLValueString($_POST['idsolicitud_registro'], "int"));
     $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
-
     $mensaje = "La cotización ha sido rechazada";
   }
-  
+
   //INSERTAMOS EL PROCESO DE CERTIFICACIÓN
   $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_registro, estatus_dspp, fecha_registro) VALUES (%s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_registro'], "int"),
@@ -393,6 +457,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
   }else{
     $comprobante_pago = NULL;
   }
+
   $updateSQL = sprintf("UPDATE solicitud_registro SET estatus_dspp = %s WHERE idsolicitud_registro = %s",
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idsolicitud_registro'], "int"));
@@ -418,7 +483,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
   $row_informacion = mysql_query("SELECT membresia.idempresa, membresia.idcomprobante_pago, empresa.nombre, comprobante_pago.monto FROM membresia INNER JOIN empresa ON membresia.idempresa = empresa.idempresa INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE membresia.idcomprobante_pago = $_POST[idcomprobante_pago]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
 
-  $asunto = "D-SPP | Aprobación Comprobante de Pago";
+  $asunto = "D-SPP | Comprobante de Pago por Aprobar";
 
   $cuerpo_mensaje = '
     <html>
@@ -426,7 +491,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
       <meta charset="utf-8">
     </head>
     <body>
-      <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+      <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979; text-align:justify" border="0" width="650px">
         <tbody>
           <tr>
             <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
@@ -434,17 +499,25 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
 
           </tr>
           <tr>
-           <th scope="col" align="left" width="280"><p>empresa: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+           <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
           </tr>
 
           <tr>
             <td colspan="2">
-             <p>La empresa: '.$informacion['nombre'].' ha cargado el Comprobante de Pago de la membresia SPP por un monto total de: '.$informacion['monto'].'.</p>
+             <p>La OPP: <span style="color:red">'.$informacion['nombre'].'</span> ha cargado el Comprobante de Pago de la membresia SPP por un monto total de: <span style="color:red">'.$informacion['monto'].'</span>.</p>
             </td>
           </tr>
           <tr>
             <td colspan="2">
               <p>Después de revisa el comprobante <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el comprobante de pago</span> </p>
+              <p>Pasos para "Aprobar" o "Rechazar" el Comprobante de pago:</p>
+              <ol>
+                <li>Debe ingresar en su cuenta de Adminitrador dentro del D-SPP.</li>
+                <li>Seleccionar "Solicitudes" > "Solicitudes Empresas".</li>
+                <li>Dentro de la tabla de Solicitudes debe localizar la solicitud de la Empresa.</li>
+                <li>Posicionarse sobre la columna "Membresia" y dar clic en el botón "Estatus Membresia".</li>
+                <li>Se mostrara una ventana donde podra "Aprobar" o "Rechazar" el comprobante.</li>
+              </ol>
             </td>
           </tr>
         </tbody>
@@ -453,19 +526,25 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
     </html>
   ';
     $mail->AddAddress($spp_global);
-    $mail->AddBCC($administrador);
+    $mail->AddAddress($finanzas_spp);
     $mail->AddAttachment($comprobante_pago);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";
     $mail->Subject = utf8_decode($asunto);
     $mail->Body = utf8_decode($cuerpo_mensaje);
     $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-    $mail->Send();
-    $mail->ClearAddresses();
+    /*$mail->Send();
+    $mail->ClearAddresses();*/
 
   //termina correo enviar comprobante de pago
-
-  $mensaje = "Se ha enviado el comprobante de pago, en breve seras notificado";
+    if($mail->Send()){
+      $mail->ClearAddresses();
+      echo "<script>alert('Se ha enviado el comprobante de pago, en breve sera contactado.');location.href ='javascript:history.back()';</script>";
+    }else{
+      $mail->ClearAddresses();
+      echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+    }
+  $mensaje = "Se ha enviado el comprobante de pago, en breve sera contactado.";
 }
 /// TERMINA ENVIAR COMPROBANTE DE PAGO
 
@@ -476,6 +555,8 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
   $rutaArchivo = "../../archivos/admArchivos/contratos/";
   $nombre = "CONTRATO DE USO";
 
+
+  // se carga el Contrato de Uso
   if(!empty($_FILES['contrato']['name'])){
       $_FILES["contrato"]["name"];
         move_uploaded_file($_FILES["contrato"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["contrato"]["name"]);
@@ -483,6 +564,8 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
   }else{
     $contrato = NULL;
   }
+
+  // se carga el ACUSE DE Recibo
   if(!empty($_FILES['acuse_recibo']['name'])){
       $_FILES["acuse_recibo"]["name"];
         move_uploaded_file($_FILES["acuse_recibo"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["acuse_recibo"]["name"]);
@@ -525,7 +608,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
             <meta charset="utf-8">
           </head>
           <body>
-            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979; text-align:justify" border="0" width="650px">
               <tbody>
                 <tr>
                   <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
@@ -533,17 +616,25 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
 
                 </tr>
                 <tr>
-                 <th scope="col" align="left" width="280"><p>empresa: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+                 <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
                 </tr>
 
                 <tr>
                   <td colspan="2">
-                   <p>La empresa: '.$informacion['nombre'].' ha cargado el "Contrato de Uso y "Acuse de Recibo"".</p>
+                   <p>La OPP: '.$informacion['nombre'].' ha cargado el "Contrato de Uso" y "Acuse de Recibo".</p>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="2">
-                    <p>Después de revisar el "Contrato de Uso" y "Acuse de Recibo" <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el mismo</span> </p>
+                    <p>Después de revisa el "Contrato de Uso" y "Acuse de Recibo" <span style="color:red">debe ingresar en su cuenta de administrador dentro del D-SPP, para poder APROBAR o RECHAZAR el mismo</span> </p>
+                    <p>¿Cómo "Aprobar" o "Rechazar" el Contrato de Uso?</p>
+                    <ol>
+                      <li>Debe de ingresar en su cuenta de administrador dentro del D-SPP.</li>
+                      <li>Seleccionar "Solicitudes" > "Solicitudes OPP".</li>
+                      <li>Localizar la Solicitud de la OPP: '.$informacion['nombre'].'.</li>
+                      <li>Posicionarse sobre la columna "Certificado" y dar clic en el bóton "Consultar Certificado".</li>
+                      <li>Se mostrara una ventana donde podra "Aprobar" o "Rechazar" el Contrato de Uso.</li>
+                    </ol>
                   </td>
                 </tr>
               </tbody>
@@ -559,19 +650,25 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
     $mail->Subject = utf8_decode($asunto);
     $mail->Body = utf8_decode($cuerpo_mensaje);
     $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-    $mail->Send();
-    $mail->ClearAddresses();
-  //termina enviar mensaje contrato de uso
+    /*$mail->Send();
+    $mail->ClearAddresses();*/
+    if($mail->Send()){
+      $mail->ClearAddresses();
+      echo "<script>alert('Se ha enviado el Contrato de Uso Y Acuse de Recibo, en breve sera contactado.');location.href ='javascript:history.back()';</script>";
+    }else{
+      $mail->ClearAddresses();
+      echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+    }
 
-  $mensaje = "Se ha enviado el Contrato de Uso y Acuse de Recibo, en breve sera contactado";
+  //termina enviar mensaje contrato de uso
+  //$mensaje = "Se ha enviado el Contrato de Uso, en breve sera contactado";
 }
 /// TERMINA ENVIAR CONTRATO DE USO
 
 
-$query = "SELECT solicitud_registro.*, oc.abreviacion AS 'abreviacionOC', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idempresa = certificado.idempresa LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro WHERE solicitud_registro.idempresa = $idempresa GROUP BY solicitud_registro.idempresa";
+$query = "SELECT solicitud_registro.*, oc.abreviacion AS 'abreviacionOC', periodo_objecion.idperiodo_objecion, periodo_objecion.fecha_inicio, periodo_objecion.fecha_fin, periodo_objecion.estatus_objecion, periodo_objecion.observacion, periodo_objecion.dictamen, periodo_objecion.documento, membresia.idmembresia, certificado.idcertificado, contratos.idcontrato FROM solicitud_registro INNER JOIN oc ON solicitud_registro.idoc = oc.idoc LEFT JOIN periodo_objecion ON solicitud_registro.idsolicitud_registro  = periodo_objecion.idsolicitud_registro LEFT JOIN membresia ON solicitud_registro.idsolicitud_registro = membresia.idsolicitud_registro LEFT JOIN certificado ON solicitud_registro.idsolicitud_registro = certificado.idsolicitud_registro LEFT JOIN contratos ON solicitud_registro.idsolicitud_registro = contratos.idsolicitud_registro WHERE solicitud_registro.idempresa = $idempresa GROUP BY solicitud_registro.idsolicitud_registro ORDER BY solicitud_registro.fecha_registro DESC";
 $row_solicitud_registro = mysql_query($query, $dspp) or die(mysql_error());
 $total_solicitudes = mysql_num_rows($row_solicitud_registro);
-
 
 
 ?>

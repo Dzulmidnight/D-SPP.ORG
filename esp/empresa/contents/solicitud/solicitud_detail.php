@@ -300,7 +300,16 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
           }
       }
     }
-    /*************************** INICIA INSERTAR PRODUCTOS ***************************/
+
+
+
+
+
+
+  /*************************** INICIA INSERTAR PRODUCTOS ***************************/
+
+
+
 
     if(isset($_POST['volumen_estimado'])){
       $volumen_estimado = $_POST['volumen_estimado'];
@@ -328,15 +337,7 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 
     for ($i=0;$i<count($producto);$i++) { 
       if($producto[$i] != NULL){
-
-
-          //$terminado = $_POST[$array1[$i]];
-          //$marca_propia = $_POST[$array2[$i]];
-          //$marca_cliente = $_POST[$array3[$i]];
-          //$sin_cliente = $_POST[$array4[$i]];
-
-          $str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
-          $producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+          
 
           $str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
           $destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
@@ -358,55 +359,73 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
           $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
       }
     }
-
-    }
-    /*$marca_propia = $_POST['marca_propia'];
-    $marca_cliente = $_POST['marca_cliente'];
-    $sin_cliente = $_POST['sin_cliente'];*/
-
-
     /***************************** TERMINA INSERTAR PRODUCTOS ******************************/
+
+  }
 
 
     // SE ACTUALIZAN LOS PRODUCTOS
-      $producto_2 = $_POST['producto_2'];
-      $volumen_estimado_2 = $_POST['volumen_estimado_2'];
-      $volumen_materia_2 = $_POST['volumen_materia_2'];
-      $volumen_terminado_2 = $_POST['volumen_terminado_2'];
-      $origen_2 = $_POST['origen_2'];
-      $destino_2 = $_POST['destino_2'];
-      $idproducto = $_POST['idproducto'];
-      /*$marca_propia = $_POST['marca_propia'];
-      $marca_cliente = $_POST['marca_cliente'];
-      $sin_cliente = $_POST['sin_cliente'];*/
-
-    for ($i=0;$i<count($producto_2);$i++) { 
-      if($producto_2[$i] != NULL){
-
-
-          $str = iconv($charset, 'ASCII//TRANSLIT', $producto_2[$i]);
-          $producto_2[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
-
-          $str = iconv($charset, 'ASCII//TRANSLIT', $origen_2[$i]);
-          $origen_2[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
-         
-          $str = iconv($charset, 'ASCII//TRANSLIT', $destino_2[$i]);
-          $destino_2[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
-
-
-      $updateSQL = sprintf("UPDATE productos SET producto = %s, volumen_estimado = %s, volumen_terminado = %s, volumen_materia = %s, origen = %s, destino = %s WHERE idproducto = %s",
-        GetSQLValueString($producto_2[$i], "text"),
-        GetSQLValueString($volumen_estimado_2[$i], "text"),
-        GetSQLValueString($volumen_terminado_2[$i], "text"),
-        GetSQLValueString($volumen_materia_2[$i], "text"),
-        GetSQLValueString($origen_2[$i], "text"),
-        GetSQLValueString($destino_2[$i], "text"),
-        GetSQLValueString($idproducto[$i], "int"));
-      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
-
-      }
+    if(isset($_POST['producto_actual'])){
+      $producto_actual = $_POST['producto_actual'];
+    }else{
+      $producto_actual = '';
     }
 
+    if(isset($_POST['volumen_estimado_actual'])){
+      $volumen_estimado_actual = $_POST['volumen_estimado_actual'];
+    }
+
+    if(isset($_POST['volumen_terminado_actual'])){
+      $volumen_terminado_actual = $_POST['volumen_terminado_actual'];
+    }
+
+    if(isset($_POST['volumen_materia_actual'])){
+      $volumen_materia_actual = $_POST['volumen_materia_actual'];
+    }
+
+    if(isset($_POST['destino_actual'])){
+      $destino_actual = $_POST['destino_actual'];
+    }
+
+    if(isset($_POST['origen_actual'])){
+      $origen_actual = $_POST['origen_actual'];
+    }
+
+    if(isset($_POST['idproducto'])){
+      $idproducto = $_POST['idproducto'];
+    }else{
+      $idproducto = '';
+    }
+
+    if(isset($_POST['idproducto'])){
+      for ($i=0;$i<count($producto_actual);$i++) { 
+        if($producto_actual[$i] != NULL){
+
+            //$str = iconv($charset, 'ASCII//TRANSLIT', $producto_actual[$i]);
+            //$producto_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+            $str = iconv($charset, 'ASCII//TRANSLIT', $destino_actual[$i]);
+            $destino_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+            $str = iconv($charset, 'ASCII//TRANSLIT', $origen_actual[$i]);
+            $origen_actual[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+
+            $updateSQL = sprintf("UPDATE productos SET producto = %s, volumen_estimado = %s, volumen_terminado = %s, volumen_materia = %s, origen = %s, destino = %s WHERE idproducto = %s",
+              GetSQLValueString($producto_actual[$i], "text"),
+              GetSQLValueString($volumen_estimado_actual[$i], "text"),
+              GetSQLValueString($volumen_terminado_actual[$i], "text"),
+              GetSQLValueString($volumen_materia_actual[$i], "text"),
+              GetSQLValueString($origen_actual[$i], "text"),
+              GetSQLValueString($destino_actual[$i], "text"),
+              GetSQLValueString($idproducto[$i], "int"));
+            $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+
+
+        }
+      }
+    }
 
   $mensaje = "Datos Actualizados Correctamente";
 }
@@ -635,14 +654,14 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
         <p><b>6.  SELECCIONE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN</b></p>
         <div class="col-md-6">
-          SI <input type="radio" class="form-control" name="preg6" onclick="mostrar_empresas()" id="preg6" <?php if($solicitud['preg6'] == 'SI'){echo "checked"; } ?> value="SI">
+          SI <input type="radio" class="form-control" name="preg6" id="preg6" <?php if($solicitud['preg6'] == 'SI'){echo "checked"; } ?> value="SI">
         </div>
         <div class="col-md-6">
-          NO <input type="radio" class="form-control" name="preg6" onclick="ocultar_empresas()" id="preg6" <?php if($solicitud['preg6'] == 'NO'){echo "checked"; } ?> value="NO">
+          NO <input type="radio" class="form-control" name="preg6" id="preg6" <?php if($solicitud['preg6'] == 'NO'){echo "checked"; } ?> value="NO">
         </div>
 
         <p>SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA</p>
-        <div id="contenedor_tablaEmpresas" class="col-md-12" style="display:none">
+        <div id="contenedor_tablaEmpresas" class="col-md-12">
           <table class="table table-bordered" id="tablaEmpresas">
             <tr>
               <td>NOMBRE DE LA EMPRESA</td>
@@ -845,23 +864,23 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
           ?>
             <tr>
               <td>
-                <input type="text" class="form-control" name="producto_2[]" id="exampleInputEmail1" placeholder="Producto" value="<?echo $row_producto['producto']?>">
+                <input type="text" class="form-control" name="producto_actual[]" id="exampleInputEmail1" placeholder="Producto" value="<?echo $row_producto['producto']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="volumen_estimado_2[]" id="exampleInputEmail1" placeholder="Volumen Estimado" value="<?echo $row_producto['volumen_estimado']?>">
+                <input type="text" class="form-control" name="volumen_estimado_actual[]" id="exampleInputEmail1" placeholder="Volumen Estimado" value="<?echo $row_producto['volumen_estimado']?>">
               </td>
         
               <td>
-                <input type="text" class="form-control" name="volumen_terminado_2[]" id="exampleInputEmail1" placeholder="Volumen Terminado" value="<?echo $row_producto['volumen_terminado']?>">
+                <input type="text" class="form-control" name="volumen_terminado_actual[]" id="exampleInputEmail1" placeholder="Volumen Terminado" value="<?echo $row_producto['volumen_terminado']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="volumen_materia_2[]" id="exampleInputEmail1" placeholder="Volumen Materia" value="<?echo $row_producto['volumen_materia']?>">
+                <input type="text" class="form-control" name="volumen_materia_actual[]" id="exampleInputEmail1" placeholder="Volumen Materia" value="<?echo $row_producto['volumen_materia']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="origen_2[]" id="exampleInputEmail1" placeholder="Origen" value="<?echo $row_producto['origen']?>">
+                <input type="text" class="form-control" name="origen_actual[]" id="exampleInputEmail1" placeholder="Origen" value="<?echo $row_producto['origen']?>">
               </td>
               <td>
-                <input type="text" class="form-control" name="destino_2[]" id="exampleInputEmail1" placeholder="Destino" value="<?echo $row_producto['destino']?>">
+                <input type="text" class="form-control" name="destino_actual[]" id="exampleInputEmail1" placeholder="Destino" value="<?echo $row_producto['destino']?>">
               </td>
 
                 <input type="hidden" name="idproducto[]" value="<?echo $row_producto['idproducto']?>">                     

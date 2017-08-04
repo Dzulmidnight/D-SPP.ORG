@@ -1,6 +1,7 @@
 <?
 if(isset($_GET['CRM'])){
-	include ("contents/crm/crm.php");
+	include('http://d-spp.org/crm/');
+	//include ("..contents/crm/crm.php");
 }else if(isset($_GET['MEMBRESIAS'])){
 	include ("contents/membresias/membresias.php");
 }else if(isset($_GET['REPORTES'])){
