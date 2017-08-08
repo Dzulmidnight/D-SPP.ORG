@@ -60,8 +60,9 @@
 
 			</div>
 			<div class="col-xs-12">
-				<div class="col-xs-6"><h3><a href="esp/">Español</a></h3></div>
-				<div class="col-xs-6"><h3><a href="en">English</a></h3></div>
+				<div class="col-xs-4"><h3><a href="esp/">Español</a></h3></div>
+				<div class="col-xs-4"><h3><a href="en">English</a></h3></div>
+        <div class="col-xs-4"><h3><a href="fra">Français</a></h3></div>
         <!--<div class="col-xs-6"><h3><a href="en" style="font-size:24px;font-weight:bold" class="btn btn-link disabled">English</a></h3></div>-->
 
 			</div>
