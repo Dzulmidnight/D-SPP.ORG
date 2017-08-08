@@ -150,11 +150,9 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
 
 
   // ACTUALIZAMOS LA INFORMACION DE LA SOLICITUD
-<<<<<<< HEAD
-  $updateSQL = sprintf("UPDATE solicitud_registro SET comprador_final = %s, intermediario = %s, maquilador = %s, preg1 = %s, preg2 = %s, preg3 = %s, preg4 = %s, produccion = %s, procesamiento = %s, importacion = %s, preg6 = %s, preg7 = %s, preg8 = %s, preg10 = %s, preg12 = %s, preg13 = %s, preg15 = %s WHERE idsolicitud_registro = %s",
-=======
+
+
   $updateSQL = sprintf("UPDATE solicitud_registro SET comprador_final = %s, intermediario = %s, maquilador = %s, preg1 = %s, preg2 = %s, preg3 = %s, preg4 = %s, produccion = %s, procesamiento = %s, importacion = %s, preg6 = %s, preg7 = %s, preg8 = %s, preg9 = %s, preg10 = %s, preg12 = %s, preg13 = %s, preg14 = %s, preg15 = %s WHERE idsolicitud_registro = %s",
->>>>>>> origin/master
         GetSQLValueString($comprador, "int"),
         GetSQLValueString($intermediario, "int"),
         GetSQLValueString($maquilador, "int"),

@@ -149,39 +149,27 @@ if(isset($_POST['cotizacion']) ){
           </body>
           </html>
         ';
-<<<<<<< HEAD
+
       if(isset($detalle_empresa['email_oc'])){
-=======
-      
-      if(!empty($detalle_empresa['email_oc'])){
-        //$mail->AddAddress($detalle_opp['email_opp']);
->>>>>>> origin/master
+
         $token = strtok($detalle_empresa['email_oc'], "\/\,\;");
         while ($token !== false)
         {
           $mail->AddAddress($token);
           $token = strtok('\/\,\;');
         }
-<<<<<<< HEAD
-      }
-      if(isset($detalle_empresa['email_oc2'])){
-=======
 
       }
 
       if(!empty($detalle_empresa['email_oc2'])){
         //$mail->AddAddress($detalle_opp['email_opp']);
->>>>>>> origin/master
+
         $token = strtok($detalle_empresa['email_oc2'], "\/\,\;");
         while ($token !== false)
         {
           $mail->AddAddress($token);
           $token = strtok('\/\,\;');
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
       }
 
       $mail->AddBCC($administrador);
@@ -304,13 +292,11 @@ if(isset($_POST['cotizacion']) ){
         </body>
         </html>
       ';
-<<<<<<< HEAD
-      if(isset($detalle_empresa['email_oc'])){
-=======
+
 
       if(!empty($detalle_empresa['email_oc'])){
         //$mail->AddAddress($detalle_opp['email_opp']);
->>>>>>> origin/master
+
         $token = strtok($detalle_empresa['email_oc'], "\/\,\;");
         while ($token !== false)
         {
@@ -319,23 +305,16 @@ if(isset($_POST['cotizacion']) ){
         }
 
       }
-<<<<<<< HEAD
-      if(isset($detalle_empresa['email_oc2'])){
-        $token = strtok($detalle_empresa['email_oc'], "\/\,\;");
-=======
+
       if(!empty($detalle_empresa['email_oc2'])){
         //$mail->AddAddress($detalle_opp['email_opp']);
         $token = strtok($detalle_empresa['email_oc2'], "\/\,\;");
->>>>>>> origin/master
+
         while ($token !== false)
         {
           $mail->AddAddress($token);
           $token = strtok('\/\,\;');
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
       }
 
 

@@ -149,17 +149,7 @@ if(isset($_POST['cotizacion']) ){
           </body>
           </html>
         ';
-<<<<<<< HEAD
 
-      if(isset($detalle_empresa['email_oc'])){
-          $token = strtok($detalle_empresa['email_oc'], "\/\,\;");
-          while ($token !== false)
-          {
-            $mail->AddAddress($token);
-            $token = strtok('\/\,\;');
-          }
-      }
-=======
       
       if(!empty($detalle_empresa['email_oc'])){
         //$mail->AddAddress($detalle_opp['email_opp']);
@@ -183,7 +173,7 @@ if(isset($_POST['cotizacion']) ){
 
       }
 
->>>>>>> origin/master
+
       $mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
@@ -304,17 +294,7 @@ if(isset($_POST['cotizacion']) ){
         </body>
         </html>
       ';
-<<<<<<< HEAD
-      $mail->AddAddress($detalle_empresa['email_oc']);
-      if(isset($detalle_empresa['email_oc'])){
-          $token = strtok($detalle_empresa['email_oc'], "\/\,\;");
-          while ($token !== false)
-          {
-            $mail->AddAddress($token);
-            $token = strtok('\/\,\;');
-          }
-      }
-=======
+
 
       if(!empty($detalle_empresa['email_oc'])){
         //$mail->AddAddress($detalle_opp['email_opp']);
@@ -338,7 +318,6 @@ if(isset($_POST['cotizacion']) ){
       }
 
 
->>>>>>> origin/master
       $mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
