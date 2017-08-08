@@ -95,7 +95,7 @@ $row_empresa = mysql_query($query_empresa, $dspp) or die(mysql_error());
 //$row_empresa = mysql_query("SELECT empresa.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', certificado.vigencia_fin FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.estatus_empresa != 'NUEVA' AND empresa.estatus_empresa != 'CANCELADA' AND empresa.estatus_empresa != 'ARCHIVADO' AND empresa.estatus_interno != 10", $dspp) or die(mysql_error());
 $total_empresa = mysql_num_rows($row_empresa);
 
-$row_pais = mysql_query("SELECT empresa FROM opp GROUP BY pais", $dspp) or die(mysql_error());
+$row_pais = mysql_query("SELECT pais FROM empresa GROUP BY pais", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT * FROM oc", $dspp) or die(mysql_error());
 $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempresa IS NOT NULL GROUP BY producto",$dspp) or die(mysql_error());
 ?>
@@ -223,7 +223,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
             <tr>
               <th colspan="2">
                 Export: 
-                <!--24_04_2017<a href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>24_04_2017-->
+                <a href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
                 <form name="formulario1" method="POST" action="../reportes/lista_empresas.php">
                   <input type="hidden" name="lista_publica_pdf" value="1">
                   <input type="hidden" name="query_pdf" value="<?php echo $query_empresa; ?>">
@@ -266,7 +266,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
                   <td><?php echo strtoupper($empresa['pais']); ?></td>
                   <td>
                     <?php 
-                    $row_productos = mysql_query("SELECT producto, producto_ingles FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
+                    $row_productos = mysql_query("SELECT producto, producto_ingles FROM productos WHERE idempresa = $empresa[idempresa] GROUP BY productos.producto", $dspp) or die(mysql_error());
                     $total_producto = mysql_num_rows($row_productos);
                     $cont = 1;
                     while($producto = mysql_fetch_assoc($row_productos)){

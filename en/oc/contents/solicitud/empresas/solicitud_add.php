@@ -480,10 +480,20 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 		$destinatario = $oc['email1'];
 		if(!empty($destinatario)){
-        	$mail->AddAddress($destinatario);
+			$token = strtok($destinatario, "\/\,\;");
+          	while ($token !== false)
+          	{
+            	$mail->AddAddress($token);
+            	$token = strtok('\/\,\;');
+          	}
 		}
 		if(!empty($oc['email2'])){
-			$mail->AddAddress($oc['email2']);
+			$token = strtok($oc['email2'], "\/\,\;");
+          	while ($token !== false)
+          	{
+            	$mail->AddAddress($token);
+            	$token = strtok('\/\,\;');
+          	}
 		}     
 	    $mail->AddBCC($administrador);
 	    $mail->AddBCC($spp_global);

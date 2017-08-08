@@ -2148,7 +2148,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         <h5 class="">MEMBRESÍA SPP: <span style="color:#7f8c8d">Indicar el monto total de la membresía, asi como el tipo de moneda.</span></h5>
                                         <?php 
                                         // calculamos el valor de la membresia SPP
-                                        $num_productores = $solicitud['resp1'];
+                                        $num_productores = $solicitud['total_miembros'];
                                         if($num_productores <= 100){
                                           $valor_membresia = '$ 150 USD';
                                         }
@@ -2235,7 +2235,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                                       <div class="col-xs-12 alert alert-info">
                                         <?php 
-                                        $num_productores = $solicitud['resp1'];
+                                        $num_productores = $solicitud['total_miembros'];
                                         if($num_productores <= 100){
                                           $valor_membresia = '$ 150 USD';
                                         }

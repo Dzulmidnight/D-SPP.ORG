@@ -83,10 +83,10 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
           GetSQLValueString($idsolicitud_certificacion, "int"));
         $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
-        $row_opp = mysql_query("SELECT opp.nombre, opp.pais AS 'opp_pais', opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
+        $row_opp = mysql_query("SELECT opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.pais AS 'opp_pais', opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
         $opp_detail = mysql_fetch_assoc($row_opp);
 
-        $asunto = "D-SPP Cotización - actualizada (Solicitud de Certificación para Organizaciones de Pequeños Productores)";
+        $asunto = "D-SPP Cotización actualizada / Updated quotation (Solicitud de Certificación para Organizaciones de Pequeños Productores)";
 
         $cuerpo_mensaje = '
           <html>
@@ -110,11 +110,12 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
                   <br><br> Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
 
                   <br><br>
-                  <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> has sent the quotation corresponding to the Certification Application for Small producers organizations.
-                    <br><br>Please log in to the following link <a href="http://d-spp.org/?OPP">www.d-spp.org/</a> as OPP to access the quotation.
+                  <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> has sent the updated price quote corresponding to the Certification Application for Small Producers’ Organizations (SPOs).
+                    Please open a session as an SPO at the following link <a href="http://d-spp.org/">www.d-spp.org/</a> in order to access the price quote.
 
                   </td>
                 </tr>
+
 
                 <tr>
                   <td colspan="2">
@@ -130,7 +131,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
                         </tr>
                         <tr style="font-size: 12px; text-align:justify">
                           <td style="padding:10px;">
-                            '.$opp_detail['nombre'].'
+                            '.$opp_detail['nombre'].' - ('.$opp_detail['abreviacion_opp'].')
                           </td>
                           <td style="padding:10px;">
                             '.$opp_detail['opp_pais'].'
@@ -157,22 +158,47 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
           </html>
         ';
         if(!empty($opp_detail['email'])){
-          $mail->AddAddress($opp_detail['email']);
+          $token = strtok($opp_detail['email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
         }
         if(!empty($opp_detail['contacto1_email'])){
-          $mail->AddAddress($opp_detail['contacto1_email']);
+          $token = strtok($opp_detail['contacto1_email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
         }
         if(!empty($opp_detail['contacto2_email'])){
-          $mail->AddAddress($opp_detail['contacto2_email']);
+          $token = strtok($opp_detail['contacto2_email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
         }
 
-        $mail->AddBCC($spp_global);
+        //$mail->AddBCC($spp_global);
 
         if(!empty($oc['email1'])){
-          $mail->AddCC($oc['email1']);
+          $token = strtok($oc['email1'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
         }
         if(!empty($oc['email2'])){
-          $mail->AddCC($oc['email2']);
+          $token = strtok($oc['email2'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
         }
         //se adjunta la cotización
         $mail->AddAttachment($archivo);
@@ -184,6 +210,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
         $mail->Send();
         $mail->ClearAddresses();
+        $mail->ClearAttachments();
 
 
         echo "<script>alert('Se ha actualizado la cotización');</script>";
@@ -200,9 +227,11 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
 
 if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
-  $query_opp = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, opp.nombre, opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE solicitud_certificacion.idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $query_opp = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE solicitud_certificacion.idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $detalle_opp = mysql_fetch_assoc($query_opp);
 
+  $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2', solicitud_certificacion.contacto1_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $informacion = mysql_fetch_assoc($row_informacion);
 
   $estatus_dspp = 8; //INICIA PROCESO DE CERTIFICACION
   //ESTATUS INTERNO
@@ -248,7 +277,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $archivo_dictamen = NULL;
     }
 
-    $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN";
+    $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN (NOTIFICATION OF RESOLUTION)";
 
     if($_POST['tipo_solicitud'] == 'RENOVACION'){
       if(isset($_POST['mensaje_renovacion'])){
@@ -297,7 +326,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       //$mail->AddAttachment($archivo);
 
-      if(!empty($_POST['mensaje_renovacion'])){
+       if(!empty($_POST['mensaje_renovacion'])){
         $cuerpo_mensaje = '
               <html>
               <head>
@@ -312,7 +341,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                     </tr>
                     <tr>
-                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].' - ('.$detalle_opp['abreviacion_opp'].')</span></p></th>
                     </tr>
 
                     <tr>
@@ -356,7 +385,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 <meta charset="utf-8">
               </head>
               <body>
-                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;text-align:justify" border="0" width="650px">
+                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; text-align:justify" border="0" width="650px">
                   <tbody>
                     <tr>
                       <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
@@ -364,7 +393,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                     </tr>
                     <tr>
-                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].' - ('.$detalle_opp['abreviacion_opp'].')</span></p></th>
                     </tr>
 
                     <tr>
@@ -373,10 +402,20 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                           1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluación SPP fue concluida con resultado <span style="color:red">positivo</span>.
                         </p>
                         <p>
-                          2. Para concluir el proceso, se solicita de la manera más atenta se <span style="color:red">proceda con el pago de membresía a SPP Global</span>, de acuerdo al monto de: <strong style="color:red">'.$_POST['total_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de entrar a su cuenta y cargar el comprobante bancario.
+                          2. A continuación, procederemos a subir (cargar) el Certificado en el sistema D-SPP para que usted pueda descargarlo.
                         </p>
                         <p>
-                          3. Una vez que SPP Global confirme a través del Sistema la recepción del pago en la cuenta de SPP Global, se procedera a hacer entrega de su Certificado.
+                          3. Se solicita de la manera más atenta se <span style="color:red">proceda con el pago de membresía a SPP Global</span>. De acuerdo al número se socios, el importe de la membresía es: <strong style="color:red">'.$_POST['total_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago).
+                        </p>
+
+                        <p>
+                          La Organización de Pequeños Productores (OPP) tendrá un plazo máximo de 30 días naturales para realizar el pago y cargar su comprobante al D-SPP.
+                        </p>
+                        <p>
+                          En caso de que tuvieran algún problema para realizar el pago oportunamente, se debe informar al área de Administración y Finanzas de SPP Global (adm@spp.coop).
+                        </p>
+                        <p>
+                          De no recibir el pago o comunicación de parte de la OPP, lamentablemente se enviará la Suspensión de su Certificado.
                         </p>
                         <p>
                           <b>
@@ -387,12 +426,50 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                       </td>
                     </tr>
                     <tr>
+                      <td colspan="2">
+                        <h3>English Below</h3>
+                      </td>
+                    </tr>
+
+                    <tr style="font-style: italic; color: #797979;">
+                      <td colspan="2">
+                        <p>
+                          1. We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a <span style="color:red">positive</span> result.
+                        </p>
+                        <p>
+                          2. Next, we will proceed to upload the Certificate in the D-SPP system so that you can download it.
+                        </p>
+                        <p>
+                          3. We request the most careful way to <span style="color:red">proceed with the payment of membership to SPP Global</span>. According to the number of members, the amount of the membership is: <strong style="color:red">'.$_POST['total_membresia'].'</strong>. (The bank details are attached, please read the General Payment Provisions)
+                        </p>
+
+                        <p>
+                          The Small Producers Organization (OPP) will have a maximum deadline of 30 calendar days to make the payment and load your receipt to the D-SPP.
+                        </p>
+                        <p>
+                          In case of any problems to make the payment in due time, please inform the Administration and Finance area of SPP Global (adm@spp.coop).
+                        </p>
+                        <p>
+                          Failure to receive payment or communication from the OPP, will unfortunately send the Suspension of your Certificate.
+                        </p>
+                        <p>
+                          <b>
+                            NOTE: Payment of membership fee is considered as ratification of the signing of the User’s Contract, and it is thus not necessary to sign the contract each year in order to renew your certificate.
+                          </b>
+                        </p>
+                        <hr>
+                      </td>
+                    </tr>
+
+                    <tr>
                       <td><p><strong>Datos Bancarios</strong></p></td>
                     </tr>
                     <tr>
                       <td>
                         <ul>
                           Datos Bancarios Anexos en el correo.
+                          <br>
+                          Bank Information attached to email.
                         </ul>
                       </td>
                     </tr>
@@ -419,22 +496,53 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->AddAttachment($archivo_dictamen);
       }
       if(isset($detalle_opp['contacto1_email'])){
-        $mail->AddAddress($detalle_opp['contacto1_email']);
+        $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
       }
       if(isset($detalle_opp['contacto2_email'])){
-        $mail->AddAddress($detalle_opp['contacto2_email']);
+        $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($detalle_opp['adm1_email'])){
-        $mail->AddAddress($detalle_opp['adm1_email']);
+        $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($detalle_opp['email'])){
-        $mail->AddAddress($detalle_opp['email']);
+        $token = strtok($detalle_opp['email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
       }
       $mail->AddBCC($spp_global);
       $mail->AddBCC($finanzas_spp);
@@ -452,6 +560,93 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }*/
       $mail->Send();
       $mail->ClearAddresses();
+      $mail->ClearAttachments();
+      
+      /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
+
+      $asunto = "D-SPP | Formatos de Evaluación";
+
+      $cuerpo_mensaje = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_opp'].'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre_opp'].' ha cumplido con la documentación necesaria.</p>
+                 <p>
+                  Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
+                     <ul style="color:red">
+                       <li>Formato de Evaluación</li>
+                       <li>Informe de Evaluación</li>
+                       <li>Dictamen de Evaluación</li>
+                     </ul>
+
+                 </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
+                  <ol>
+                    <li>Dar clic en la opción "SOLICITUDES"</li>
+                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
+                    <li>Se desplegara una ventan donde podra cargar la documentación</li>
+                  </ol>
+                  <p style="color:red">
+                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+        </html>
+      ';
+      if(isset($correos_oc['email1'])){
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(isset($correos_oc['email2'])){
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+      $mail->ClearAttachments();
+
+      /// TERMINA MENSAJE "CARGAR DOCUEMENTOS DE EVALUACIÓN"
+
       ///termina envio de mensaje dictamen positivo
     ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
     }else{ 
@@ -493,20 +688,28 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
       ///inicia envio de mensaje dictamen positivo
-
-      $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]'", $dspp) or die(mysql_error());
-      while($documentacion = mysql_fetch_assoc($row_documentacion)){
-          $mail->AddAttachment($documentacion['archivo']);
-          $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+      if(isset($_POST['idioma'])){
+        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]'", $dspp) or die(mysql_error());
+        while($documentacion = mysql_fetch_assoc($row_documentacion)){
+            $mail->AddAttachment($documentacion['archivo']);
+            $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+        }
+      }else{
+        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = 'ESP'", $dspp) or die(mysql_error());
+        while($documentacion = mysql_fetch_assoc($row_documentacion)){
+            $mail->AddAttachment($documentacion['archivo']);
+            $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+        }
       }
+
       if(isset($archivo_dictamen)){
         $documentacion_nombres .= '<li>'.$_POST['nombre_archivo_dictamen'].'</li>';
         $mail->AddAttachment($archivo_dictamen);
       }
 
       $documentacion = mysql_fetch_assoc($row_documentacion);
-
-      $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN";
+      /*29_05_2017
+      $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN (NOTIFICATION OF RESOLUTION)";
 
       if(!empty($_POST['mensajeOPP'])){
         $cuerpo_mensaje = '
@@ -519,11 +722,11 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   <tbody>
                     <tr>
                       <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN / NOTIFICATION OF RESOLUTION</span></p></th>
 
                     </tr>
                     <tr>
-                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].' - ('.$detalle_opp['abreviacion_opp'].')</span></p></th>
                     </tr>
 
                     <tr>
@@ -577,11 +780,11 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   <tbody>
                     <tr>
                       <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN / NOTIFICATION OF RESOLUTION </span></p></th>
 
                     </tr>
                     <tr>
-                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].' - ('.$detalle_opp['abreviacion_opp'].')</span></p></th>
                     </tr>
                     <tr>
                       <td colspan="2" style="text-align:justify">
@@ -593,7 +796,17 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                       </td>
                     </tr>
                     <tr>
-                      <td><p><strong>DOCUMENTOS ANEXOS</strong></p></td>
+                      <td colspan="2" style="text-align:justify">
+
+                        <p>1. We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a “positive” result.</p>
+                        <p>
+                          2. In order to complete the process, the most careful request is to read the attached documents and subsequently sign <span style="color:red">the User´s Contract and Confirmation of Receipt </span>. Please complete the information of your organization and the legal representative in <span style="color:red">the texts marked in red</span> within the Contract of Use.
+                        </p>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td><p><strong>DOCUMENTOS ANEXOS / ATTACHED DOCUMENTS</strong></p></td>
                     </tr>
                     <tr>
                       <td>
@@ -620,6 +833,26 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                       </td>
                     </tr>
+
+                    <tr>
+                      <td colspan="2" style="text-align:justify">
+                        <p style="color:red"><strong>SPP MEMBERSHIP</strong></p>
+                        <p>
+                          In order to complete the process, you are asked to please proceed with payment of the membership fee to SPP Global, in the following amount: <strong style="color:red;">'.$_POST['total_membresia'].'</strong>. (Bank information is attached. Please read the General Payment Provisions to avoid interest charges.) After payment has been made, please <span style="color:red">enter your account in the D-SPP system and upload the bank receipt.</span>
+                        </p>
+                        <p>
+                          BANK INFORMATION ATTACHED TO EMAIL
+                        </p>
+                        <p>
+                          AFTER MAKING PAYMENT, PLEASE <span style="color:red">UPLOAD “SIGNED USER’S CONTRACT AND ACKNOWLEDGEMENT OF RECEIPT</span> AND ALSO <span style="color:red">THE “RECEIPT OF PAYMENT”</span> THROUGH THE D-SPP SYSTEM, BY ENTERING YOUR ACCOUNT AS AN SPO (Small Producers’ Organization) IN THE FOLLOWING LINK: <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>
+                        </p>
+                        <p>
+                          3.  After SPP Global has confirmed through the System that payment has been received in the SPP Global account, your Certificate will be made available to you.
+                        </p>
+
+                      </td>
+                    </tr>
+
                     <tr>
                       <td colspan="2">
                       <hr>
@@ -633,22 +866,53 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         ';
       }
       if(!empty($detalle_opp['contacto1_email'])){
-        $mail->AddAddress($detalle_opp['contacto1_email']);
+        $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
       }
       if(!empty($detalle_opp['contacto2_email'])){
-        $mail->AddAddress($detalle_opp['contacto2_email']);
+        $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(!empty($detalle_opp['adm1_email'])){
-        $mail->AddAddress($detalle_opp['adm1_email']);
+        $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(!empty($detalle_opp['email'])){
-        $mail->AddAddress($detalle_opp['email']);
+        $token = strtok($detalle_opp['email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
       }
 
       $mail->AddBCC($spp_global);
@@ -659,6 +923,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
       $mail->Send();
       $mail->ClearAddresses();
+      $mail->ClearAttachments(); 29_05_2017*/
       /*if($mail->Send()){
         $mail->ClearAddresses();
         echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
@@ -666,20 +931,112 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->ClearAddresses();
         echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
       }*/
+      /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
 
+      $asunto = "D-SPP | Formatos de Evaluación";
+
+      $cuerpo_mensaje = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_opp'].'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre_opp'].' ha cumplido con la documentación necesaria.</p>
+                 <p>
+                  Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
+                     <ul style="color:red">
+                       <li>Formato de Evaluación</li>
+                       <li>Informe de Evaluación</li>
+                       <li>Dictamen de Evaluación</li>
+                     </ul>
+
+                 </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
+                  <ol>
+                    <li>Dar clic en la opción "SOLICITUDES"</li>
+                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
+                    <li>Se desplegara una ventan donde podra cargar la documentación</li>
+                  </ol>
+                  <p style="color:red">
+                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+        </html>
+      ';
+      if(isset($correos_oc['email1'])){
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(isset($correos_oc['email2'])){
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+      $mail->ClearAttachments();
+
+      /// TERMINA MENSAJE "CARGAR DOCUEMENTOS DE EVALUACIÓN"
           
       ///termina envio de mensaje dictamen positivo
     }
 
 
 
-  }else if($_POST['estatus_interno'] == 9){ // EL DICTAMEN ES NEGATIVO **********************************************************************/
+  }//***********************************************************************************************//
+   // EL DICTAMEN ES NEGATIVO **********************************************************************/
+   //***************************************************************************************************/
+  else if($_POST['estatus_interno'] == 9){
       $query_oc = mysql_query("SELECT nombre FROM oc WHERE idoc = $detalle_opp[idoc]", $dspp) or die(mysql_error());
       $detalle_oc = mysql_fetch_assoc($query_oc);
 
     $documentacion_nombres = '';
     $estatus_dspp = 9; //Termina proceso de certificación
     //creamos la variable del archivo extra
+    if(isset($_POST['nombre_archivo'])){
+      $nombre_archivo = $_POST['nombre_archivo'];
+    }else{
+      $nombre_archivo = '';
+    }
+
     if(!empty($_FILES['archivo_extra']['name'])){
         $_FILES["archivo_extra"]["name"];
           move_uploaded_file($_FILES["archivo_extra"]["tmp_name"], $rutaArchivo.$fecha."_".$_FILES["archivo_extra"]["name"]);
@@ -688,9 +1045,11 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $archivo = NULL;
     }
 
-    $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN";
+    $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN NEGATIVO";
 
-    if($_POST['tipo_solicitud'] == 'RENOVACION'){
+    ///*******************************                              ***********************************************
+    ///****************************** DICTAMEN NEGATIVO (RENOVACION)************************************************
+    //09_04_2017if($_POST['tipo_solicitud'] == 'RENOVACION'){
       if(isset($_POST['mensaje_renovacion'])){
         $mensaje_renovacion = $_POST['mensaje_renovacion'];
       }else{
@@ -701,6 +1060,12 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         GetSQLValueString($_POST['estatus_interno'], "int"),
         GetSQLValueString($estatus_dspp, "int"),
         GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
+      $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+      $estatus_opp = 8;// dictamen negativo
+      $updateSQL = sprintf("UPDATE opp SET estatus_opp = %s WHERE idopp = %s",
+        GetSQLValueString($estatus_opp, "int"),
+        GetSQLValueString($_POST['idopp'], "int"));
       $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
       $insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, accion, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)",
@@ -734,7 +1099,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                     </tr>
                     <tr>
-                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].' - ('.$detalle_opp['abreviacion_opp'].')</span></p></th>
                     </tr>
 
                     <tr>
@@ -766,17 +1131,24 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   <tbody>
                     <tr>
                       <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN / NOTIFICATION OF RESOLUTION </span></p></th>
 
                     </tr>
                     <tr>
-                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].' - ('.$detalle_opp['abreviacion_opp'].')</span></p></th>
                     </tr>
 
                     <tr>
                       <td colspan="2">
                         <p>
                           Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, lamentamos informar que su Dictamen de la evaluación para el Certificación SPP es negatvio. 
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <p>
+                          We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, regret to inform you that your Resolution for the SPP Certification evaluation is negative. 
                         </p>
                       </td>
                     </tr>
@@ -797,22 +1169,52 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->AddAttachment($archivo);
       }
       if(isset($detalle_opp['contacto1_email'])){
-        $mail->AddAddress($detalle_opp['contacto1_email']);
+        $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($detalle_opp['contacto2_email'])){
-        $mail->AddAddress($detalle_opp['contacto2_email']);
+        $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($detalle_opp['adm1_email'])){
-        $mail->AddAddress($detalle_opp['adm1_email']);
+        $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($detalle_opp['email'])){
-        $mail->AddAddress($detalle_opp['email']);
+        $token = strtok($detalle_opp['email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
       }
 
       $mail->AddBCC($spp_global);
@@ -831,9 +1233,15 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }
       //$mail->Send();
       $mail->ClearAddresses();
+      $mail->ClearAttachments();
       ///termina envio de mensaje dictamen positivo
-    }else{
-      $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+    //09_04_2017}
+    ///********************************* TERMINA DICTAMEN NEGATIVO RENOVACION*********************************************
+    ///*********************************                                     *********************************************
+    //09_04_2017else if($_POST['tipo_solicitud'] == 'NUEVA'){
+    ///********************************* TERMINA DICTAMEN POSITIVO RENOVACION*********************************************
+    ///*********************************                                     *********************************************
+      /*09_04_2017$updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
         GetSQLValueString($_POST['estatus_interno'], "int"),
         GetSQLValueString($estatus_dspp, "int"),
         GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
@@ -870,12 +1278,20 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
       ///inicia envio de mensaje dictamen positivo
-
-      $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]'", $dspp) or die(mysql_error());
-      while($documentacion = mysql_fetch_assoc($row_documentacion)){
-          $mail->AddAttachment($documentacion['archivo']);
-          $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+      if(isset($_POST['idioma'])){
+        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = '$_POST[idioma]'", $dspp) or die(mysql_error());
+        while($documentacion = mysql_fetch_assoc($row_documentacion)){
+            $mail->AddAttachment($documentacion['archivo']);
+            $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+        }
+      }else{
+        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = 'ESP'", $dspp) or die(mysql_error());
+        while($documentacion = mysql_fetch_assoc($row_documentacion)){
+            $mail->AddAttachment($documentacion['archivo']);
+            $documentacion_nombres .= "<li>".$documentacion['nombre']."</li>";   
+        }
       }
+
       if(!empty($archivo)){
         $documentacion_nombres .= '<li>'.$_POST['nombreArchivo'].'</li>';
         $mail->AddAttachment($archivo);
@@ -900,7 +1316,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                     </tr>
                     <tr>
-                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].' - ('.$detalle_opp['abreviacion_opp'].')</span></p></th>
                     </tr>
 
                     <tr>
@@ -954,11 +1370,11 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                   <tbody>
                     <tr>
                       <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN / NOTIFICATION OF RESOLUTION </span></p></th>
 
                     </tr>
                     <tr>
-                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].'</span></p></th>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].' - ('.$detalle_opp['abreviacion_opp'].')</span></p></th>
                     </tr>
                     <tr>
                       <td colspan="2" style="text-align:justify">
@@ -968,8 +1384,19 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         </p>
                       </td>
                     </tr>
+
                     <tr>
-                      <td><p><strong>DOCUMENTOS ANEXOS</strong></p></td>
+                      <td colspan="2" style="text-align:justify">
+                        <p>
+                          1.  We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a “positive” result
+                        <p>
+                          2. In order to complete the process, the most careful request is to read the attached documents and subsequently <span style="color:red">sign the User´s Contract and Acknowledgment of Receipt</span>.
+                        </p>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td><p><strong>DOCUMENTOS ANEXOS /  ATTACHED DOCUMENTS  </strong></p></td>
                     </tr>
                     <tr>
                       <td>
@@ -998,6 +1425,28 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
                       </td>
                     </tr>
+
+                    <tr>
+                      <td colspan="2" style="text-align:justify">
+                        <p style="color:red"><strong>SPP MEMBERSHIP</strong></p>
+                        <p>
+                          In order to complete the process, you are asked to please proceed with <span style="color:red">payment of the membership fee to SPP Global</span>, in the following amount: <strong style="color:red;">'.$_POST['monto_membresia'].'</strong>. (Bank information is attached. Please read the General Payment Provisions to avoid interest charges.) After payment has been made, please <span style="color:red">enter your account in the D-SPP system and upload the bank receipt</span>.
+                        </p>
+                        <p>
+                          • BANK INFORMATION IS ATTACHED TO EMAIL
+                        </p>
+
+
+                        <p>
+                          AFTER MAKING PAYMENT, PLEASE <span style="color:red">UPLOAD “SIGNED USER’S CONTRACT AND ACKNOWLEDGEMENT OF RECEIPT.”</span> AND ALSO <span style="color:red">THE “RECEIPT OF PAYMENT”</span> THROUGH THE D-SPP SYSTEM, BY ENTERING YOUR ACCOUNT AS AN SPO (Small Producers’ Organization) IN THE FOLLOWING LINK: <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>. 
+                        </p>
+                        <p>
+                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
+                        </p>
+
+                      </td>
+                    </tr>
+
                     <tr>
                       <td colspan="2">
                       <hr>
@@ -1035,6 +1484,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
       $mail->Send();
       $mail->ClearAddresses();
+      $mail->ClearAttachments();
       /*if($mail->Send()){
         $mail->ClearAddresses();
         echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
@@ -1042,9 +1492,85 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->ClearAddresses();
         echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
       }*/
+
+      /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
+
+/*09_04_2017      $asunto = "D-SPP | Formatos de Evaluación";
+
+      $cuerpo_mensaje = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>SPP GLOBLA notifica que la OPP: '.$informacion['nombre'].' ha cumplido con la documentación necesaria.</p>
+                 <p>
+                  Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
+                     <ul style="color:red">
+                       <li>Formato de Evaluación</li>
+                       <li>Informe de Evaluación</li>
+                       <li>Dictamen de Evaluación</li>
+                     </ul>
+
+                 </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
+                  <ol>
+                    <li>Dar clic en la opción "SOLICITUDES"</li>
+                    <li>Seleccionar "Solicitudes OPP"</li>
+                    <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
+                    <li>Se desplegara una ventan donde podra cargar la documentación</li>
+                  </ol>
+                  <p style="color:red">
+                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+        </html>
+      ';
+      if(isset($correos_oc['email1'])){
+        $mail->AddCC($correos_oc['email1']);
+      }
+      if(isset($correos_oc['email2'])){
+        $mail->AddCC($correos_oc['email2']);
+      }
+
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+      $mail->ClearAttachments();
+
+      /// TERMINA MENSAJE "CARGAR DOCUEMENTOS DE EVALUACIÓN"
+      
           
       ///termina envio de mensaje dictamen positivo
-    }
+    //09_04_2017}  09_04_2017*/
   }else{
     $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
       GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -1158,7 +1684,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
   //inicia enviar correo a ADM sobre documentacion de Evaluación
-  $row_informacion = mysql_query("SELECT solicitud_certificacion.idsolicitud_certificacion, opp.nombre AS 'nombre_opp', oc.nombre AS 'nombre_oc' FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $row_informacion = mysql_query("SELECT solicitud_certificacion.idsolicitud_certificacion, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', oc.nombre AS 'nombre_oc' FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
   $asunto = "D-SPP | Se ha cargado el Formato, Dictamen e Informe de Evaluación";
 
@@ -1176,7 +1702,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
             </tr>
             <tr>
-             <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_opp'].'</span></p></th>
+             <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_opp'].' - ('.$informacion['abreviacion_opp'].')</span></p></th>
             </tr>
 
             <tr>
@@ -1222,6 +1748,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
       $mail->ClearAddresses();
       echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
     }
+    $mail->ClearAttachments();
   //termina enviar correo a ADM sobre documentación de Evaluación
 
   //$mensaje = "Se ha enviado el Formato, Dictamen e Informe de Evaluación";
@@ -1238,14 +1765,19 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   }else{
     $certificado = NULL;
   }
+  $fecha_inicio = strtotime($_POST['fecha_inicio']);
+  $fecha_fin = strtotime($_POST['fecha_fin']);
+  $vigencia_inicio = date('Y-m-d', $fecha_inicio);
+  $vigencia_fin = date('Y-m-d', $fecha_fin);
+
   //insertamos el certificado
   $insertSQL = sprintf("INSERT INTO certificado(idopp, idsolicitud_certificacion, entidad, estatus_certificado, vigencia_inicio, vigencia_fin, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
     GetSQLValueString($_POST['idopp'], "int"),
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
     GetSQLValueString($_POST['idoc'], "int"),
     GetSQLValueString($estatus_dspp, "int"),
-    GetSQLValueString($_POST['fecha_inicio'], "text"),
-    GetSQLValueString($_POST['fecha_fin'], "text"),
+    GetSQLValueString($vigencia_inicio, "text"),
+    GetSQLValueString($vigencia_fin, "text"),
     GetSQLValueString($certificado, "text"),
     GetSQLValueString($fecha, "int"));
   $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
@@ -1272,7 +1804,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $estatus_dspp = 13; //certificada
   $estatus_interno = 8; //dictamen_positivo
   $estatus_publico = 2; //certificado
-  $estatus_opp = "CERTITICADO";
+  $estatus_opp = "CERTIFICADO";
   $updateSQL = sprintf("UPDATE opp SET estatus_opp = %s, estatus_publico = %s, estatus_interno = %s, estatus_dspp = %s WHERE idopp = %s",
     GetSQLValueString($estatus_opp, "text"),
     GetSQLValueString($estatus_publico, "int"),
@@ -1282,11 +1814,10 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //inicia correo envio de certificado
-  $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2', solicitud_certificacion.contacto1_email, opp.nombre AS 'nombre_opp', opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
+  $row_informacion = mysql_query("SELECT solicitud_certificacion.idopp, solicitud_certificacion.idoc, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2', solicitud_certificacion.contacto1_email, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $_POST[idsolicitud_certificacion]", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
-  $inicio = strtotime($_POST['fecha_inicio']);
-  $fin = strtotime($_POST['fecha_fin']);
-  $asunto = "D-SPP | Certificado Disponible para Descargar";
+
+  $asunto = "D-SPP | Certificado Disponible para Descargar / Certificate Ready to be Downloaded";
 
   $cuerpo_mensaje = '
       <html>
@@ -1298,11 +1829,11 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
             <tbody>
               <tr>
                 <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Certificado Disponible para descargar</span></p></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Certificado Disponible para descargar / Certificate Ready to be Downloaded</span></p></th>
 
               </tr>
               <tr>
-               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_opp'].'</span></p></th>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre_opp'].' - ('.$informacion['abreviacion_opp'].')</span></p></th>
               </tr>
 
               <tr>
@@ -1310,10 +1841,21 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
                  <p>
                   Felicidades!!!, su Certificado ha sido liberado, ahora puede descargarlo.
                  </p>
-                 <p>El Certificado tiene un vigencia del dia <span style="color:red">'.date('d/m/Y', $inicio).'</span> al dia: <span style="color:red">'.date('d/m/Y', $fin).'</span>, el cual se encuentra anexo a este correo.</p>
+                 <p>El Certificado tiene un vigencia del dia <span style="color:red">'.date('d/m/Y', $fecha_inicio).'</span> al dia: <span style="color:red">'.date('d/m/Y', $fecha_fin).'</span>, el cual se encuentra anexo a este correo.</p>
                  
                 </td>
               </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>
+                  • Congratulations!!! Your Certificate has been issued and can now be downloaded.
+                 </p>
+                 <p>
+                 •  The Certificate is in effect from <span style="color:red">'.date('d/m/Y', $fecha_inicio).'</span> to <span style="color:red">'.date('d/m/Y', $fecha_fin).'</span>, and is attached to this email.
+                </td>
+              </tr>
+
               <tr>
                 <td colspan="2">
                   <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
@@ -1329,10 +1871,22 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     $mail->AddAddress($informacion['contacto1_email']);
     $mail->AddBCC($spp_global);
       if(isset($informacion['oc_email1'])){
-        $mail->AddCC($informacion['oc_email1']);
+        $token = strtok($informacion['oc_email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+
       }
       if(isset($informacion['oc_email2'])){
-        $mail->AddCC($informacion['oc_email2']);
+        $token = strtok($informacion['oc_email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+
       }
 
     $mail->AddAttachment($certificado);
@@ -1343,6 +1897,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
     $mail->Send();
     $mail->ClearAddresses();
+    $mail->ClearAttachments();
 
 
 

@@ -484,10 +484,20 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 		$destinatario = $oc['email1'];
 		if(!empty($destinatario)){
-        	$mail->AddAddress($destinatario);
+			$token = strtok($destinatario, "\/\,\;");
+          	while ($token !== false)
+          	{
+            	$mail->AddAddress($token);
+            	$token = strtok('\/\,\;');
+          	}
 		}
 		if(!empty($oc['email2'])){
-			$mail->AddAddress($oc['email2']);
+			$token = strtok($oc['email2'], "\/\,\;");
+          	while ($token !== false)
+          	{
+            	$mail->AddAddress($token);
+            	$token = strtok('\/\,\;');
+          	}
 		}     
 	    $mail->AddBCC($administrador);
 	    $mail->AddBCC($spp_global);
@@ -683,16 +693,16 @@ $row_empresa = mysql_query("SELECT * FROM empresa WHERE idoc = $idoc", $dspp) or
 
 				<p><b>6.	SELECCIONE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN</b></p>
 				<div class="col-md-6">
-					SI <input type="radio" class="form-control" name="preg6" onclick="mostrar_empresas()" id="preg6" value="SI">
+					SI <input type="radio" class="form-control" name="preg6" id="preg6" value="SI">
 				</div>
 				<div class="col-md-6">
-					NO <input type="radio" class="form-control" name="preg6" onclick="ocultar_empresas()" id="preg6" value="NO">
+					NO <input type="radio" class="form-control" name="preg6" id="preg6" value="NO">
 				</div>
 
 
 
 				<p>SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA</p>
-				<div id="contenedor_tablaEmpresas" class="col-md-12" style="display:none">
+				<div id="contenedor_tablaEmpresas" class="col-md-12">
 					<table class="table table-bordered" id="tablaEmpresas">
 						<tr>
 							<td>NOMBRE DE LA EMPRESA</td>

@@ -223,15 +223,15 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
             <tr>
               <th colspan="2">
                 Exportar: 
-                <!--<a href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>-->
+                <a href="#" onclick="document.formulario1.submit()"><img src="../img/pdf.png"></a>
 
                 <!--24_04_2017<a href="#" onclick="document.formulario2.submit()"><img src="../img/excel.png"></a>24_04_2017-->
-                <form name="formulario1" method="POST" action="../reportes/lista_empresa.php">
+                <form name="formulario1" method="POST" action="../reportes/lista_empresas.php">
                   <input type="hidden" name="lista_publica_pdf" value="1">
                   <input type="hidden" name="query_pdf" value="<?php echo $query_empresa; ?>">
                 </form> 
 
-                <form name="formulario2" method="POST" action="../reportes/lista_empresa.php">
+                <form name="formulario2" method="POST" action="../reportes/lista_empresas.php">
                   <input type="hidden" name="lista_publica_excel" value="2">
                   <input type="hidden" name="query_excel" value="<?php echo $query_empresa; ?>">
                 </form>
@@ -275,7 +275,7 @@ $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempres
                   <td><?php echo strtoupper($empresa['pais']); ?></td>
                   <td>
                     <?php 
-                    $row_productos = mysql_query("SELECT producto, producto_ingles FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
+                    $row_productos = mysql_query("SELECT producto, producto_ingles FROM productos WHERE idempresa = $empresa[idempresa] GROUP BY productos.producto", $dspp) or die(mysql_error());
                     $total_producto = mysql_num_rows($row_productos);
                     $cont = 1;
                     while($producto = mysql_fetch_assoc($row_productos)){

@@ -480,13 +480,47 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 			</html>
 		';
 		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
+<<<<<<< HEAD
 		if(isset($oc['email1'])){
-			$mail->AddAddress($oc['email1']);
+	        $token = strtok($oc['email1'], "\/\,\;");
+	        while ($token !== false)
+	        {
+	          $mail->AddAddress($token);
+	          $token = strtok('\/\,\;');
+	        }
+
 		}
 		if(isset($oc['email2'])){
-			$mail->AddAddress($oc['email2']);
+	        $token = strtok($oc['email2'], "\/\,\;");
+	        while ($token !== false)
+	        {
+	          $mail->AddAddress($token);
+	          $token = strtok('\/\,\;');
+	        }
 		}
 
+=======
+		  if(!empty($oc['email1'])){
+		    //$mail->AddAddress($detalle_opp['email_opp']);
+		    $token = strtok($oc['email1'], "\/\,\;");
+		    while ($token !== false)
+		    {
+		      $mail->AddAddress($token);
+		      $token = strtok('\/\,\;');
+		    }
+
+		  }
+		  if(!empty($oc['email2'])){
+		    //$mail->AddAddress($detalle_opp['email_opp']);
+		    $token = strtok($oc['email2'], "\/\,\;");
+		    while ($token !== false)
+		    {
+		      $mail->AddAddress($token);
+		      $token = strtok('\/\,\;');
+		    }
+
+		  }
+>>>>>>> origin/master
 	    $mail->AddBCC($spp_global);
         //$mail->Username = "soporte@d-spp.org";
         //$mail->Password = "/aung5l6tZ";

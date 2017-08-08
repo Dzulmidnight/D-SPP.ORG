@@ -2,6 +2,7 @@
 	<div class="btn-group" role="group" aria-label="...">
 		<a class="btn btn-sm <?php if(isset($_GET['select'])){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>" href="?SOLICITUD&select">Solicitudes OPP</a>
 		<a class="btn btn-sm <?php if(isset($_GET['select_empresa'])){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>" href="?SOLICITUD&select_empresa">Solicitudes Empresas</a>
+		<a class="btn btn-sm <?php if(isset($_GET['select_colectiva'])){ echo 'btn-primary'; }else{ echo 'btn-default'; } ?>" href="?SOLICITUD&select_colectiva">Solicitudes Colectivas</a>
 
 	  <!--<button type="button" class="btn btn-default" href="?SOLICITUD&add">Agregar Solicitud</button>-->
 	</div>
@@ -21,6 +22,8 @@
 	else
 	if(isset($_GET['idsolicitud'])){include ("solicitud_detail.php");}
 	else
+	if(isset($_GET['idsolicitud_colectiva'])){include ("colectiva/solicitud_detail.php");}
+	else
 	if(isset($_GET['cancel'])){include ("solicitud_cancel.php");}
 	else 
 	if(isset($_GET['finalizado'])){include ("proceso_finalizado.php");}
@@ -30,6 +33,8 @@
 	if(isset($_GET['idsolicitud_empresa'])){include ("empresa/solicitud_detail.php");}
 	else
 	if(isset($_GET['select_empresa'])){include ("empresa/solicitud_select.php");}
+	else
+	if(isset($_GET['select_colectiva'])){include ("colectiva/solicitud_select.php");}
 	else
 	if(isset($_GET['cancelCOM'])){include ("com/solicitud_cancel.php");}
 	else

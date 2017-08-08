@@ -443,7 +443,22 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   ';
 
   $mail->AddAddress($detalle_opp['email_oc']);
-  $mail->AddAddress($detalle_opp['email_oc2']);
+  if(isset($detalle_opp['email_oc'])){
+          $token = strtok($detalle_opp['email_oc'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+  }
+  if(isset($detalle_opp['email_oc2'])){
+          $token = strtok($detalle_opp['email_oc2'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+  }
   $mail->AddBCC($spp_global);  
   $mail->AddBCC($administrador);
 
