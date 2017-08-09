@@ -1,19 +1,19 @@
 <ul class="nav nav-pills">
 	<li role="presentation" <?php if(isset($_GET['select'])){ echo "class='active'"; } ?>>
 		<a href="?SOLICITUD&select">
-			<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Listado Solicitudes
+			<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Liste des demandes
 		</a>
 	</li>
 	<li role="presentation" <?php if(isset($_GET['add'])){ echo "class='active'"; } ?>>
 		<a href="?SOLICITUD&add">
-			<span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> Nueva Solicitud
+			<span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> Nouvelle demande
 		</a>
 	</li>
 	<?php 
 	if(isset($_GET['detail'])){
 	?>
 		<li role="presentation" class="active">
-			<a href="#">Detalle</a>
+			<a href="#">Détails</a>
 		</li>
 	<?php
 	}

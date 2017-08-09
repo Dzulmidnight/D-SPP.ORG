@@ -158,7 +158,7 @@ if(isset($_POST['actualizar_opp']) && $_POST['actualizar_opp'] == 1){
       GetSQLValueString($_SESSION['idempresa'], "int"));
   $actualizar = mysql_query($insertar,$dspp) or die(mysql_error());
 
-  $mensaje = "Datos Actualizados Correctamente";
+  $mensaje = "Informations mises à jour correctement";
 }
 
 $query = "SELECT * FROM empresa WHERE idempresa = $_SESSION[idempresa]";
@@ -180,7 +180,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
   <?php
   }
   ?>
-    <h3>Mis Datos </h3>
+    <h3>Mes informations</h3>
     <form action="" method="POST">
       <table class="table table-condensed">
         <tr>
@@ -190,79 +190,79 @@ $empresa = mysql_fetch_assoc($row_empresa);
           </td>
         </tr>
         <tr>
-          <td>Nombre</td>
+          <td>Nom</td>
           <td>
             <input class="form-control" id="" name="nombre" value="<?php echo $empresa['nombre']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Abreviación</td>
+          <td>Sigle, nom abrégé</td>
           <td>
             <input class="form-control" id="" name="abreviacion" value="<?php echo $empresa['abreviacion']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Tipo de Empresa</td>
+          <td>Type d'entreprise</td>
           <td>
             <label class="checkbox-inline">
-              <input type="checkbox" name="maquilador" id="" <?php if($empresa['maquilador']){ echo 'checked'; } ?> value="<?php echo $comprador['maquilador']; ?>"> MAQUILADOR
+              <input type="checkbox" name="maquilador" id="" <?php if($empresa['maquilador']){ echo 'checked'; } ?> value="<?php echo $comprador['maquilador']; ?>"> Transformateur
             </label>
             <label class="checkbox-inline">
-              <input type="checkbox" name="comprador" id="" <?php if($empresa['comprador']){ echo 'checked'; } ?> value="<?php echo $comprador['comprador']; ?>"> COMPRADOR FINAL
+              <input type="checkbox" name="comprador" id="" <?php if($empresa['comprador']){ echo 'checked'; } ?> value="<?php echo $comprador['comprador']; ?>"> Acheteur final
             </label>
             <label class="checkbox-inline">
-              <input type="checkbox" name="intermediario" id="" <?php if($empresa['intermediario']){ echo 'checked'; } ?> value="<?php echo $comprador['intermediario']; ?>"> INTERMEDIARIO
+              <input type="checkbox" name="intermediario" id="" <?php if($empresa['intermediario']){ echo 'checked'; } ?> value="<?php echo $comprador['intermediario']; ?>"> Intermédiaire
             </label>
           </td>
         </tr>
         <tr>
-          <td>Password</td>
+          <td>Mot de passe</td>
           <td>
             <input class="form-control" id="" name="password" value="<?php echo $empresa['password']; ?>">
             <label>
-              <input type="checkbox" name="ver_password" value="1" <?php if(isset($empresa['ver_password'])){ echo 'checked'; } ?>> ocultar mi contraseña al OC
+              <input type="checkbox" name="ver_password" value="1" <?php if(isset($empresa['ver_password'])){ echo 'checked'; } ?>> Autorisez-vous l'organisme de certification à avoir accès à votre compte?
             </label>
           </td>
         </tr>
         <tr>
-          <td>Sitio Web</td>
+          <td>Site web</td>
           <td>
             <input class="form-control" id="" name="sitio_web" value="<?php echo $empresa['sitio_web']; ?>">
           </td>
         </tr>
         <tr>
-          <td style="width:300px;">Email<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
+          <td style="width:300px;">Email<br>(<small>Courriel auquel seront envoyées les notifications</small>)</td>
           <td>
             <input class="form-control" id="" name="email" value="<?php echo $empresa['email']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Teléfono</td>
+          <td>Téléphone</td>
           <td>
             <input class="form-control" id="" name="telefono" value="<?php echo $empresa['telefono']; ?>">
           </td>
         </tr>
         <tr>
-          <td>País</td>
+          <td>Pays</td>
           <td>
             <?php echo $empresa['pais']; ?>
           </td>
         </tr>
         <tr>
-          <td>Ciudad</td>
+          <td>Ville</td>
           <td>
             <input class="form-control" id="" name="ciudad" value="<?php echo $empresa['ciudad']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Dirección Oficina</td>
+          <td>Adresse du bureau</td>
           <td>
             <input class="form-control" id="" name="direccion_oficina" value="<?php echo $empresa['direccion_oficina']; ?>">
           </td>
         </tr>
 
         <tr class="warning">
-          <td colspan="2" class="text-center"><strong>Datos Fiscales</strong></td>
+          <td colspan="2" class="text-center"><strong>Données fiscales</strong></td>
         </tr>
         <tr>
           <td>Razón Social</td>
@@ -271,7 +271,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
           </td>
         </tr>
         <tr>
-          <td>Dirección Fiscal</td>
+          <td>Adresse fiscale</td>
           <td>
             <input class="form-control" id="" name="direccion_fiscal" value="<?php echo $empresa['direccion_fiscal']; ?>">
           </td>
@@ -291,7 +291,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
         </tr>
         <tr>
           <td colspan="2">
-            <input class="btn btn-success" type="submit" value="Actualizar Información">
+            <input class="btn btn-success" type="submit" value="Mettre à jour les informations">
             <input type="hidden" name="actualizar_opp" value="1">
           </td>
         </tr>
@@ -299,4 +299,3 @@ $empresa = mysql_fetch_assoc($row_empresa);
     </form>
   </div>
 </div>
-

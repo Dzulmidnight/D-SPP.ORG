@@ -158,7 +158,7 @@ if(isset($_POST['actualizar_opp']) && $_POST['actualizar_opp'] == 1){
       GetSQLValueString($_SESSION['idopp'], "int"));
   $actualizar = mysql_query($insertar,$dspp) or die(mysql_error());
 
-  $mensaje = "Datos Actualizados Correctamente";
+  $mensaje = "Données mises à jour correctement";
 }
 
 $query = "SELECT * FROM opp WHERE idopp = $_SESSION[idopp]";
@@ -180,12 +180,12 @@ $opp = mysql_fetch_assoc($row_opp);
   <?php
   }
   ?>
-    <h3>Mis Datos </h3>
+    <h3>Mes informations</h3>
     <form action="" method="POST">
       <table class="table table-condensed">
         <tr>
           <td colspan="2">
-            <p class="alert alert-info"><b>La información mostrada a continuación puede ser modificada, una vez realizados los cambios por favor de clic en "Actualizar Información"</b></p>
+            <p class="alert alert-info"><b>Les informations qui suivent peuvent être modifiées; après avoir fait les changements, cliquer sur "Mettre à jour"</b></p>
           </td>
         </tr>
         <tr>
@@ -204,75 +204,75 @@ $opp = mysql_fetch_assoc($row_opp);
             </label>
           </td>
           <td>
-               ¿AUTORIZA QUE EL ORGANISMO DE CERTIFICACION INGRESE A SU CUENTA?
+            Autorisez-vous l'organisme de certification à avoir accès à votre compte?
           </td>
         </tr>
         <tr>
-          <td>Nombre</td>
+          <td>Nom</td>
           <td>
             <input class="form-control" id="" name="nombre" value="<?php echo $opp['nombre']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Abreviación</td>
+          <td>Abréviation</td>
           <td>
             <input class="form-control" id="" name="abreviacion" value="<?php echo $opp['abreviacion']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Password</td>
+          <td>Mot de passe</td>
           <td>
             <input class="form-control" id="" name="password" value="<?php echo $opp['password']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Sitio Web</td>
+          <td>Site Web</td>
           <td>
             <input class="form-control" id="" name="sitio_web" value="<?php echo $opp['sitio_web']; ?>">
           </td>
         </tr>
         <tr>
-          <td style="width:300px;">Email<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
+          <td style="width:300px;">Courriel<br> (<small>auquel seront envoyées les notifications Email</small>)</td>
           <td>
             <input class="form-control" id="" name="email" value="<?php echo $opp['email']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Teléfono</td>
+          <td>Téléphone</td>
           <td>
             <input class="form-control" id="" name="telefono" value="<?php echo $opp['telefono']; ?>">
           </td>
         </tr>
         <tr>
-          <td>País</td>
+          <td>Pays</td>
           <td>
             <?php echo $opp['pais']; ?>
           </td>
         </tr>
         <tr>
-          <td>Ciudad</td>
+          <td>Ville</td>
           <td>
             <input class="form-control" id="" name="ciudad" value="<?php echo $opp['ciudad']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Dirección Oficina</td>
+          <td>Adresse du bureau</td>
           <td>
             <input class="form-control" id="" name="direccion_oficina" value="<?php echo $opp['direccion_oficina']; ?>">
           </td>
         </tr>
 
         <tr class="warning">
-          <td colspan="2" class="text-center"><strong>Datos Fiscales</strong></td>
+          <td colspan="2" class="text-center"><strong>Données fiscales</strong></td>
         </tr>
         <tr>
-          <td>Razón Social</td>
+          <td>Raison sociale</td>
           <td>
             <input class="form-control" id="" name="razon_social" value="<?php echo $opp['razon_social']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Dirección Fiscal</td>
+          <td>Adresse fiscale</td>
           <td>
             <input class="form-control" id="" name="direccion_fiscal" value="<?php echo $opp['direccion_fiscal']; ?>">
           </td>
@@ -292,7 +292,7 @@ $opp = mysql_fetch_assoc($row_opp);
         </tr>
         <tr>
           <td colspan="2">
-            <input class="btn btn-success" type="submit" value="Actualizar Información">
+            <input class="btn btn-success" type="submit" value="Mettre à jour les informations">
             <input type="hidden" name="actualizar_opp" value="1">
           </td>
         </tr>

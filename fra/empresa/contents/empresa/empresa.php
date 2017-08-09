@@ -1,10 +1,10 @@
 <ul class="nav nav-pills">
 	<li role="presentation" <?php if(isset($_GET['detail'])){ echo "class='active'"; } ?>>
-		<a href="?EMPRESA&detail"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Mi Cuenta</a>
+		<a href="?EMPRESA&detail"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Mes informations</a>
 	</li>
 
 	<li role="presentation" <?php if(isset($_GET['contacts'])){ echo "class='active'"; } ?>>
-		<a href="?EMPRESA&contacts"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Mis Contactos</a>
+		<a href="?EMPRESA&contacts"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Mes contacts</a>
 	</li>
 </ul>
 

@@ -156,7 +156,7 @@ if(isset($_POST['cotizacion']) ){
         $alcance .= 'PROCESAMIENTO - PROCESSING.<br>';
       }
       if(isset($detalle_opp['exportacion'])){
-        $alcance .= 'EXPORTACIÓN - TRAIDING.<br>';
+        $alcance .= 'EXPORTACIÓN - TRADING.<br>';
       }
 
 

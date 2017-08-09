@@ -5,7 +5,7 @@ mysql_select_db($database_dspp, $dspp);
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Dictamen Positivo</title>
+	<title>Avis positif</title>
 </head>
 <body>
 <?php 
@@ -22,49 +22,52 @@ mysql_select_db($database_dspp, $dspp);
 			  <tbody>
 			    <tr>
 			      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-			      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+			      <th scope="col" align="left" width="280"><p>Sujet: <span style="color:red">Notification d'avis</span></p></th>
 
 			    </tr>
 			    <tr>
-			     <th scope="col" align="left" width="280"><p>Para: <span style="color:red"><?php echo $nombre_opp; ?></span></p></th>
+			     <th scope="col" align="left" width="280"><p>Á: <span style="color:red"><?php echo $nombre_opp; ?></span></p></th>
 			    </tr>
 
 			    <tr>
 			      <td colspan="2" style="text-align:justify">
-			        <p>1. Nosotros <span style="color:red"><?php echo $oc['nombre'] ?></span> como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.</p>
+			      	<p>
+			      		1. Nous, <span style="color:red"><?php echo $oc['nombre'] ?></span>, Organisme de Certification autorisé par SPP Global, avons l'honneur de vous informer par la présente du résultat positif de l'évaluation SPP.
+			      	</p>
+
 			        <p>
-			          2. Para concluir el proceso, se solicita de la manera más atenta se proceda con el pago de membresìa a SPP Global, de acuerdo al monto indicado. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de entrar a su cuenta y cargar el comprobante bancario.
+			         	2. Pour terminer le processus, veuillez procéder au paiement de l'adhésion à SPP Global pour le montant indiqué (En annexe, les coordonnée bancaires, merci de lire les Conditions générales de paiement pour éviter le paiement d'intérêts). Une fois le paiement réalisé, merci d'accéder à votre compte et de télécharger le justificatif bancaire.
 			        </p>
 			        <p>
-						4. Una vez que SPP Global confirme a través del Sistema la recepción del pago en la cuenta de SPP Global, se procedera a hacer entrega del certificado.   
+						3. Une fois que SPP Global aura confirmé au travers du système la réception du paiement dans le compte de SPP Global, il sera procédé à la délivrance de votre certificat.   
 					</p>
 					<p>
 						<b style="color:red">
-							NOTA: El pago de membresìa se considera una ratificación de la firma de Contrato de Uso por lo que no es necesario firmar el contrato cada año que renuevan su certificado.
+							Not : Le paiement de l'adhésion SPP vaut ratification de la signature du contrat d'utilisation, il n'est donc pas nécessaire de signer le contrat chaque année lorsque vous renouvelez votre certificat.
 						</b>
 			        </p>
 			      </td>
 			    </tr>
 			    <tr>
-			      <td><p><strong>DOCUMENTOS ANEXOS</strong></p></td>
+			      <td><p><strong>Documents annexes</strong></p></td>
 			    </tr>
 			    <tr>
 			      <td>
 			        <ul>
-			        	<li>Datos Bancarios</li>
+			        	<li>Coordonnées bancaires</li>
 			        </ul>
 			      </td>
 			    </tr>
 			    <tr>
 			      <td colspan="2" style="text-align:justify">
-			        <p>
-			          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR  EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
-			        </p>
+			      	<p>
+			      		Après avoir réalisé le paiement, merci de télécharger le justificatif de paiement grâce au système D-SPP, en accédant à votre compte d'OPP (organisation de petits producteurs) à l'adresse suivante <a href="http://d-spp.org/fra/?OPP">http://d-spp.org/fra/?OPP</a>.
+			      	</p>
 			      </td>
 			    </tr>
 			    <tr>
 			      <td colspan="2">
-			        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
+			        <p>En cas de doute ou de question, merci d'écrire à <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
 			      </td>
 			    </tr>
 			  </tbody>
@@ -77,21 +80,23 @@ mysql_select_db($database_dspp, $dspp);
 			  <tbody>
 			    <tr>
 			      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-			      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+			      <th scope="col" align="left" width="280"><p>Sujet: <span style="color:red">Notification d'avis</span></p></th>
 
 			    </tr>
 			    <tr>
-			     <th scope="col" align="left" width="280"><p>Para: <span style="color:red"><?php echo $nombre_opp; ?></span></p></th>
+			     <th scope="col" align="left" width="280"><p>Á: <span style="color:red"><?php echo $nombre_opp; ?></span></p></th>
 			    </tr>
 
 			    <tr>
 			      <td colspan="2" style="text-align:justify">
-			        <p>Nosotros <span style="color:red"><?php echo $oc['nombre'] ?></span> como Organismo de Certificación autorizado por SPP Global, lamentamos informar que su Dictamen de la evaluación para el Certificación SPP es negatvio.</p>
+			      	<p>
+			      		Nous, <span style="color:red"><?php echo $oc['nombre'] ?></span>, Organisme de certification autorisé par SPP Global, avons le regret de vous informer par la présente que l'avis de l'évaluation pour la certification SPP est  négatif.
+			      	</p>
 			      </td>
 			    </tr>
 			    <tr>
 			      <td colspan="2">
-			        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
+			        <p>En cas de doute ou de question, merci d'écrire à <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
 			      </td>
 			    </tr>
 			  </tbody>
@@ -104,24 +109,24 @@ mysql_select_db($database_dspp, $dspp);
 			  <tbody>
 			    <tr>
 			      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-			      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+			      <th scope="col" align="left" width="280"><p>Sujet: <span style="color:red">Notification d'avis</span></p></th>
 
 			    </tr>
 			    <tr>
-			     <th scope="col" align="left" width="280"><p>Para: <span style="color:red"><?php echo $nombre_opp; ?></span></p></th>
+			     <th scope="col" align="left" width="280"><p>Á: <span style="color:red"><?php echo $nombre_opp; ?></span></p></th>
 			    </tr>
 
 			    <tr>
 			      <td colspan="2" style="text-align:justify">
-			        <p>
-			        	Nosotros <span style="color:red"><?php echo $oc['nombre'] ?></span> como Organismo de Certificación autorizado por SPP Global, lamentamos informar que su Dictamen es negativo.
-			        </p>
+			      	<p>
+			      		Nous, <span style="color:red"><?php echo $oc['nombre'] ?></span>, Organisme de certification autorisé par SPP Global, avons le regret de vous informer par la présente que l'avis de l'évaluation pour la certification SPP est  négatif.
+			      	</p>
 			      </td>
 			    </tr>
 
 			    <tr>
 			      <td colspan="2">
-			        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
+			        <p>En cas de doute ou de question, merci d'écrire à <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
 			      </td>
 			    </tr>
 			  </tbody>
@@ -134,40 +139,40 @@ mysql_select_db($database_dspp, $dspp);
 			  <tbody>
 			    <tr>
 			      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-			      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+			      <th scope="col" align="left" width="280"><p>Sujet: <span style="color:red">Notification d'avis</span></p></th>
 
 			    </tr>
 			    <tr>
-			     <th scope="col" align="left" width="280"><p>Para: <span style="color:red"><?php echo $nombre_opp; ?></span></p></th>
+			     <th scope="col" align="left" width="280"><p>Á: <span style="color:red"><?php echo $nombre_opp; ?></span></p></th>
 			    </tr>
 
 			    <tr>
 			      <td colspan="2" style="text-align:justify">
-			        <p>
-			        	1. Nosotros <span style="color:red"><?php echo $oc['nombre'] ?></span> como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluaciòn SPP fue concluida con resultado positivo.
-			        </p>
-			        <p>
-			        	2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente <span style="color:red">firmar el Contrato de Uso y Acuse de Recibo</span>. Favor de completar los datos de su organización y del representante legal en los <span style="color:red">textos marcados en color rojo dentro del Contrato de Uso</span>.
-			        </p>
+			      	<p>
+			      		1. Nous, <span style="color:red"><?php echo $oc['nombre'] ?></span>, Organisme de Certification autorisé par SPP Global, avons l'honneur de vous informer par la présente du résultat positif de l'évaluation SPP.
+			      	</p>
+					<p>
+						2. Pour terminer le processus, merci de lire de manière attentive les documents joints et ensuite de signer le <span style="color:red">Contrat d'utilisation et l'Accusé de réception</span>. Veuillez compléter les informations de votre organisation et le représentant légal dans les textes marqués en rouge dans le contrat d'utilisation.
+					</p>
+					<p>
+						3. Une fois que vous aurez signé les documenst indiqués, accédez à votre compte et téléchargez les documents pour qu'ils soient revus par SPP Global.
+					</p>
 
-                    <p>
-                      Una vez que haya firmado los documentos indicados, <span style="color:red">ingresar a su cuenta como Organización de Pequeños Productores (OPP) dentro del sistema <a href="http://d-spp.org/">d-spp.org</a> y cargar los documentos para que éstos sean revisados por SPP Global</span>.
-                    </p>
 			        <p>
-			        	3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepciòn del pago en la cuenta de SPP Global, se procedera a hacer entrega del Certificado.
+			        	4. Une fois que SPP Global aura confirmé au travers du système la réception des documents, il sera procédé à la délivrance du certificat.
 			        </p>
 			      </td>
 			    </tr>
 			    <tr>
-			      <td><p><strong>DOCUMENTOS ANEXOS</strong></p></td>
+			      <td><p><strong>Documents annexes</strong></p></td>
 			    </tr>
 			    <tr>
 			      <td>
 			        <ul>
-			        	<li>Contrato de Uso</li>
-			        	<li>Manual del SPP</li>
-			        	<li>Acuse de Recibo</li>
-			        	<li>Datos Bancarios</li>
+			        	<li>Contrat d'utilisation</li>
+			        	<li>Manuel SPP</li>
+			        	<li>Accusé de réception</li>
+			        	<li>Coordonnées bancaires</li>
 			        </ul>
 			      </td>
 			    </tr>
@@ -187,7 +192,7 @@ mysql_select_db($database_dspp, $dspp);
 			    </tr>
 			    <tr>
 			      <td colspan="2">
-			        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
+			        <p>En cas de doute ou de question, merci d'écrire à <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
 			      </td>
 			    </tr>
 			  </tbody>
@@ -202,11 +207,11 @@ mysql_select_db($database_dspp, $dspp);
         <tbody>
           <tr>
             <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-            <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN</span></p></th>
+            <th scope="col" align="left" width="280"><p>Sujet: <span style="color:red">Notification d'avis</span></p></th>
 
           </tr>
           <tr>
-           <th scope="col" align="left" width="280"><p>Para: <span style="color:red"><?php echo $nombre_empresa; ?></span></p></th>
+           <th scope="col" align="left" width="280"><p>Á: <span style="color:red"><?php echo $nombre_empresa; ?></span></p></th>
           </tr>
 
           <tr>
@@ -246,7 +251,7 @@ mysql_select_db($database_dspp, $dspp);
           </tr>
           <tr>
             <td colspan="2" style="padding-top:10px;">
-              <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
+              <p>En cas de doute ou de question, merci d'écrire à <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>
             </td>
           </tr>
         </tbody>

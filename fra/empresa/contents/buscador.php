@@ -56,14 +56,14 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 
 ?>
 <p class="alert alert-info" style="padding:5px;">
-	Para poder consultar mas información sobre una Organización o Empresa, por favor ingresar el #SPP ó la abreviación ó el nombre de la misma
+	Pour obtenir plus d'informations sur une organisation ou une entreprise, entrez le numéro SPP, le sigle ou le nom de celle-ci.
 </p>
 <form action="" method="POST">
 	<div class="input-group">
 		<span class="input-group-btn">
-			<button class="btn btn-success" type="submit" name="consultar" value="1">Buscar</button>
+			<button class="btn btn-success" type="submit" name="consultar" value="1">Chercher</button>
 		</span>
-		<input type="text" class="form-control" id="buscar" name="buscar" placeholder="#SPP, Nombre, abreviación" required>
+		<input type="text" class="form-control" id="buscar" name="buscar" placeholder="#SPP, Nom, Sigle" required>
 	</div><!-- /input-group -->
 </form>
 
@@ -77,13 +77,13 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				<tr>
 					<th></th>
 					<th class="text-center">#SPP</th>
-					<th class="text-center">Organización</th>
-					<th class="text-center">País</th>
-					<th class="text-center">Proceso Certificación</th>
-					<th class="text-center">Fecha limite del Certificado</th>
-					<th class="text-center">Productos</th>
-					<th class="text-center">Organismo de Certificación</th>
-					<th class="text-center">Certificado</th>
+					<th class="text-center">Organisation</th>
+					<th class="text-center">Pays</th>
+					<th class="text-center">Processus de certification</th>
+					<th class="text-center">Date limite du certificat</th>
+					<th class="text-center">Produits</th>
+					<th class="text-center">Organisme de certification</th>
+					<th class="text-center">Certificat</th>
 				</tr>
 			</thead>
 			<tbody style="font-size:11px;">
@@ -95,51 +95,51 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				?>
 					<tr>
 						<td>
-							<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#datos".$opp['idopp']; ?>">Consultar<br>datos generales</button>
+							<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#datos".$opp['idopp']; ?>">Consultation<br>des informations générales</button>
 
 							<div id="<?php echo "datos".$opp['idopp']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
 								<div class="modal-dialog modal-lg" role="document">
 								  <div class="modal-content">
 								    <div class="modal-header">
 								      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								      <h4 class="text-center modal-title" id="myModalLabel">Datos Generales de la Organización</h4>
+								      <h4 class="text-center modal-title" id="myModalLabel">Informations générales sur l'organisation</h4>
 								    </div>
 								    <div class="modal-body" style="font-size:13px;">
 										<div class="row">
 											<div class="col-md-6">
 												<p>
-													<strong>Nombre de la Organización:</strong><br>
+													<strong>Nom de l'organisation:</strong><br>
 													<?php echo $opp['nombre'].' - <span style="color:red">'.$opp['abreviacion_opp'].'</span>'; ?>													
 												</p>
 												<p>
-													<strong>País de la Organización:</strong>
+													<strong>Pays de l'organisation:</strong>
 													<br>
 													<?php echo $opp['pais']; ?>
 												</p>
 												<p>
-													<strong>Ciudad:</strong>
+													<strong>Ville:</strong>
 													<br>
 													<?php echo $opp['ciudad']; ?>
 												</p>
 												<p>
-													<strong>Sitio Web:</strong>
+													<strong>Site web:</strong>
 													<br>
 													<?php echo $opp['sitio_web']; ?>					
 												</p>
 											</div>
 											<div class="col-md-6">
 												<p>
-													<strong>Email:</strong>
+													<strong>Courriel:</strong>
 													<br>
 													<?php echo $opp['email']; ?>													
 												</p>
 												<p>
-													<strong>Telefonos:</strong>
+													<strong>Téléphones:</strong>
 													<br>
 													<?php echo $opp['telefono']; ?>													
 												</p>
 												<p>
-													<strong>Dirección Oficinas:</strong>
+													<strong>Adresse du bureau:</strong>
 													<br>
 													<?php echo $opp['direccion_oficina']; ?>
 												</p>
@@ -147,7 +147,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 										</div>
 								    </div>
 								    <div class="modal-footer">
-								      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+								      <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
 								      <!--<button type="button" class="btn btn-primary">Guardar Cambios</button>-->
 								    </div>
 								  </div>
@@ -171,15 +171,15 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				            $total_certificada += $num_certificadas;
 				            */
 				            if($opp['estatus_dspp'] == 14 OR $opp['estatus_dspp'] == 15 OR $opp['estatus_dspp'] == 13){
-				              echo "<p class='text-center alert alert-success' style='padding:5px;'>Certificada</p>";
+				              echo "<p class='text-center alert alert-success' style='padding:5px;'>Certifié</p>";
 				            }else if($solicitud['tipo_solicitud'] == 'RENOVACION' && $opp['estatus_dspp'] = 16 ){
-				              echo "<p class='text-center alert alert-warning' style='padding:5px;'>En Proceso de Renovación</p>";
+				              echo "<p class='text-center alert alert-warning' style='padding:5px;'>En voie de certification</p>";
 				            }else if(!isset($opp['fecha_fin']) && $solicitud['tipo_solicitud'] == 'NUEVA'){
-				              echo "<p class='text-center alert alert-info' style='padding:5px;'>Solicitud Inicial</p>";
+				              echo "<p class='text-center alert alert-info' style='padding:5px;'>Demande initiale</p>";
 				            }else if($opp['estatus_dspp'] == 16 && !isset($solicitud['tipo_solicitud'])){
-				              echo "<p class='text-center alert alert-danger' style='padding:5px;'>Certificación Expirada</p>";
+				              echo "<p class='text-center alert alert-danger' style='padding:5px;'>Certificat expiré</p>";
 				            }else{
-				              echo '<p style="color:red">No Disponible</p>';
+				              echo '<p style="color:red">Non disponible</p>';
 				            }
 				            /*echo 'interno'.$opp['estatus_interno'].'<br>';
 				            echo 'dspp'.$opp['estatus_dspp'].'<br>';
@@ -223,7 +223,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 							}
 							 echo "<p style='padding:5px;' class='".$clase."'>".$certificado['nombre']."</p>";
 							}else{
-							echo "<p style='padding:5px;'>No Disponible</p>";
+							echo "<p style='padding:5px;'>Non disponible</p>";
 							}
 							//echo $opp['estatus_certificado'];
 						?>
@@ -238,7 +238,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 							$total_productos = mysql_num_rows($row_productos);
 							
 							if($total_productos == 0){
-								echo 'No disponible';
+								echo 'Non disponible';
 							}
 							$contador = 1;
 							while($productos = mysql_fetch_assoc($row_productos)){
@@ -258,7 +258,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 							if($opp['abreviacion_oc']){
 								echo $opp['abreviacion_oc'];
 							}else{
-								echo 'No disponible';
+								echo 'Non disponible';
 							}
 							 ?>
 						</td>
@@ -270,10 +270,10 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 								if($certificado['archivo']){
 									echo "<a href='".$certificado['archivo']."' target='_new'><img src='../../img/logo_certificado.png'></a>";
 								}else{
-									echo 'No disponible';
+									echo 'Non disponible';
 								}
 							}else{
-								echo 'No disponible';
+								echo 'Non disponible';
 							}
 							?>
 						</td>

@@ -40,21 +40,21 @@ $currentPage = $_SERVER["PHP_SELF"];
 
 <ul class="nav nav-sidebar">
   <li <?php if(isset($_GET['SOLICITUD'])){ echo "class='active'"; } ?>>
-    <a href="?SOLICITUD&select">Solicitudes</a>
+    <a href="?SOLICITUD&select">Demandes</a>
   </li>
   <li <?php if(isset($_GET['OPP'])){ echo "class='active'"; } ?>>
-    <a href="?OPP&select">Información OPP</a>
+    <a href="?OPP&select">Information OPP</a>
   </li>
   <li <?php if(isset($_GET['EMPRESAS'])){ echo "class='active'"; } ?>>
-    <a href="?EMPRESAS&select">Información Empresas</a>
+    <a href="?EMPRESAS&select">Information commerciale</a>
   </li>
   <li <?php if(isset($_GET['OC'])){ echo "class='active'"; } ?>>
-    <a href="?OC&detail">Información OC</a>
+    <a href="?OC&detail">Information OC</a>
   </li>  
   <li>
     <a href="#">---</a>
   </li>
 
-  <li><a href="<?php echo $logoutAction ?>">Cerrar Sesión</a></li>
+  <li><a href="<?php echo $logoutAction ?>">Fermer la session</a></li>
 
 </ul>

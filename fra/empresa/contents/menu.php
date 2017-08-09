@@ -35,25 +35,25 @@ if (!function_exists("GetSQLValueString")) {
 
 <ul class="nav nav-sidebar">
   <li <? if(isset($_GET['buscador'])){?> class="active" <? }?>>
-    <a href="?buscador">Buscador de Organizaciones</a>
+    <a href="?buscador">Trouver une organisation</a>
   </li>
   <li <? if(isset($_GET['SOLICITUD'])){?> class="active" <? }?>>
-    <a href="?SOLICITUD&select">Solicitudes</a>
+    <a href="?SOLICITUD&select">Demandes</a>
   </li>
   <?php 
   if($tipo_empresa == 'COMPRADOR FINAL'){
   ?>
     <li <? if(isset($_GET['INFORME'])){?> class="active" <? }?>>
-      <a href="?INFORME&select">Informe Trimestral</a>
+      <a href="?INFORME&select">Rapport trimestriel</a>
     </li>
   <?php
   }
    ?>
   <li <? if(isset($_GET['EMPRESA'])){?> class="active" <?}?>>
-    <a href="?EMPRESA&detail">Información Empresa</a>
+    <a href="?EMPRESA&detail">Mon compte</a>
   </li>
   <li <? if(isset($_GET['.'])){?> class="active" <? }?>>
     <a href="#">---</a>
   </li>
-  <li><a href="<?php echo $logoutAction ?>">Cerrar Sesión</a></li>
+  <li><a href="<?php echo $logoutAction ?>">Fermer la session</a></li>
 </ul>

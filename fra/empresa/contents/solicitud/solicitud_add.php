@@ -400,7 +400,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		/************************** TERMINA INSERTAR SUB EMPRESAS **************************/
 
 		///// INICIA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
-		$asunto = "D-SPP | Solicitud de Registro para Compradores y otros Actores ";
+		$asunto = "D-SPP | Demande d'enregistrement pour les Acheteurs et autres acteurs";
 		$row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
 		$oc = mysql_fetch_assoc($row_oc);
 
@@ -415,12 +415,11 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 				  <tbody>
 		            <tr>
 		              <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-		              <th scope="col" align="left" width="280"><strong>Solicitud de Registro para Compradores y otro Actores / Application for Buyers’, Registration </strong></th>
+		              <th scope="col" align="left" width="280"><strong>Demande d\'enregistrement pour les Acheteurs et autres acteurs / Application for Buyers’, Registration </strong></th>
 		            </tr>
 		            <tr>
 		              <td style="padding-top:10px;">
-		   
-		              Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+		   				Pour pouvoir consulter la demande, merci d\'ouvrir une session avec votre compte d\'Organisme de certification à l\'adresse suivante : <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
 		              <br>
 		              To consult the application, please log in to your CE(Certification Entity) account, in the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
 
@@ -429,17 +428,17 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		              </td>
 		            </tr>
 				    <tr>
-				      <td align="left">Teléfono / Company phone: '.$_POST['telefono'].'</td>
+				      <td align="left">Téléphone / Company phone: '.$_POST['telefono'].'</td>
 				    </tr>
 
 				    <tr>
 				      <td align="left">'.$_POST['pais'].'</td>
 				    </tr>
 				    <tr>
-				      <td align="left" style="color:#ff738a;">Email: '.$_POST['email'].'</td>
+				      <td align="left" style="color:#ff738a;">Courriel: '.$_POST['email'].'</td>
 				    </tr>
 				    <tr>
-				      <td align="left" style="color:#ff738a;">Email: '.$_POST['contacto1_email'].'</td>
+				      <td align="left" style="color:#ff738a;">Courriel: '.$_POST['contacto1_email'].'</td>
 				    </tr>
 
 				    <tr>
@@ -447,11 +446,11 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 				        <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
 				          <tbody>
 				            <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-				              <td width="130px">Nombre de la Empresa/Company name</td>
-				              <td width="130px">País / Country</td>
-				              <td width="130px">Organismo de Certificación / Certification Entity</td>
+				              <td width="130px">Nom de l\'entreprise / Company name</td>
+				              <td width="130px">Pays / Country</td>
+				              <td width="130px">Organisme de certification / Certification Entity</td>
 				           
-				              <td width="130px">Fecha de solicitud/Date of application</td>
+				              <td width="130px">Date de la demande / Date of application</td>
 				            </tr>
 				            <tr style="font-size: 12px;">
 				              <td style="padding:10px;">
@@ -511,7 +510,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
         $mail->Send();
         $mail->ClearAddresses();
 
- 		$mensaje = "Se ha enviado la Solicitud de Registro al OC, en breve seras contactado";
+ 		$mensaje = "La demande d'inscription a été envoyée au CO, vous serez bientôt contacté";
 
 
 }
@@ -539,7 +538,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 	<form action="" name="" method="POST" enctype="multipart/form-data">
 		<fieldset>
 			<div class="col-md-12 alert alert-primary" style="padding:7px;">
-				<h3 class="text-center">Solicitud de Registro para Compradores y otros Actores</h3>
+				<h3 class="text-center">Demande d'enregistrement pour les Acheteurs et autres acteurs</h3>
 			</div>
 
 			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
@@ -550,21 +549,25 @@ $empresa = mysql_fetch_assoc($row_empresa);
 						<ul>
 							<li>
 								<b>
-									SI CONTARON CON CERTIFICACIÓN DE SPP ANTERIORMENTE (CON EL ORGANISMO DE CERTIFICACIÓN ACTUAL ó CON OTRO ORGANISMO DE CERTIFICACIÓN) DEBEN ELEGIR <span style="color:red">"RENOVACION DEL CERTIFICADO"</span>
+									Si vous avez eu précédemment une certification SPP, avec le même organisme de certification ou avec un autre, vous devez choisir <span style="color:red">"Renouvellement du certificat"</span>
 								</b>
 							</li>
-							<li><b>SI ES LA PRIMERA VEZ QUE SE CERTIFICAN DEBEN ELEGIR <span style="color:red">"PRIMERA VEZ"</span></b></li>
+							<li>
+								<b>
+									S'il s'agit de la première fois que vous demandez la certification, vous devez choisir <span style="color:red">"Première fois"</span>.
+								</b>
+							</li>
 						</ul>
 					 
 				</div>
 
 				<div class="col-md-6">
 					<div class="col-md-12">
-						<b>ENVAR AL OC (selecciona el OC al que deseas enviar la solicitud):</b>
+						<b>Envoi à l'OC (choisissez l'OC auquel vous souhaitez envoyer la demande) :</b>
 					</div>
 					<div class="col-md-12">
 						<select class="form-control" name="idoc" id="" required>
-							<option value="">Seleccione un OC</option>
+							<option value="">Sélectionnez un OC</option>
 							<?php 
 							$query = "SELECT idoc, abreviacion FROM oc";
 							$row_oc = mysql_query($query,$dspp) or die(mysql_error());
@@ -575,20 +578,20 @@ $empresa = mysql_fetch_assoc($row_empresa);
 							<?php
 							}
 							 ?>
-							 <option value="TODOS">ENVIAR A TODOS LOS OC</option>
+							 <option value="TODOS">Envoyer à tous les organismes de certification</option>
 						</select>
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="col-md-12">
-						<p class="text-center"><strong>SELECCIONE EL TIPO DE SOLICITUD</strong></p>
+						<p class="text-center"><strong>Sélectionnez le type de demande</strong></p>
 					</div>
 					<div class="col-md-6">
-						<label for="nueva">1º SOLICITUD</label>
+						<label for="nueva">Première fois</label>
 						<input type="radio" class="form-control" id="nueva" name="tipo_solicitud" value="NUEVA">
 					</div>
 					<div class="col-md-6">
-						<label for="renovacion">RENOVACIÓN DE REGISTRO</label>
+						<label for="renovacion">Renouvellement de l'enregistrement</label>
 						<input type="radio" class="form-control" id="renovacion" name="tipo_solicitud" value="RENOVACION">
 					</div>
 				</div>
@@ -598,11 +601,10 @@ $empresa = mysql_fetch_assoc($row_empresa);
 			?>
 				<div class="row">
 					<div class="col-md-12 alert alert-info">
-						<b>VALOR TOTAL DE VENTAS (<i>independientemente de si se trata de ventas SPP o no</i>)</b>
+						<b>Valeur totale des ventes (<i>que ce soient des ventes SPP ou non</i>)</b>
 						<br>
-						Nota: <i>Este dato es necesario para determinar la membresia a pagar por parte del Comprador Final.   <a href="#">Reglamento de Costos V8_2017-02-03, 4.3 (descargar</a>) "Los Compradores Finales pagan una cuota de Membresía Anual (en USD) equivalente a  un porcentaje del total de facturación de la empresa, independientemente de si se trata de ventas SPP o no"</i>
-
-						<input type="number" step="any" class="form-control" id="facturacion_total" name="facturacion_total" placeholder="Valor de ventas, ingresar solo numeros" required>
+						Note : <i>Cette information est nécessaire pour déterminer le montant de l'adhésion à payer de la part de l'Acheteur final. <a href="#">Règlement des Coûts V8_2017-02-03 , 4.3 (Télécharger)</a> : "Les Acheteurs finaux payent une  adhésion annuelle (en USD) équivalente à un pourcentage du montant total des ventes de l'entreprise, qu'il s'agisse d'achats SPP ou non".</i>
+						<input type="number" step="any" class="form-control" id="facturacion_total" name="facturacion_total" placeholder="Valeur des ventes, saisir seulement des chiffres" required>
 					</div>
 				</div>
 			<?php
@@ -718,19 +720,19 @@ $empresa = mysql_fetch_assoc($row_empresa);
 			<div class="col-md-12 alert alert-info">
 				<div>
 					<label for="alcance_opp">
-						SELECCIONE EL TIPO DE EMPRESA SPP PARA EL CUAL SE SOLICITA EL REGISTRO. UN INTERMEDIARIO NO PUEDE REGISTRARSE SPP SI NO CUENTA CON UN COMPRADOR FINAL REGISTRADO SPP O EN PROCESO DE REGISTRO. 
+						Sélectionnez le type d'entreprise SPP pour lequel l'enregistrement est demandé. Un intermédiaire ne peut être entegistré SPP s'il n'a pas un acheteur final enregistré SPP ou en cours d'enregistrement.
 					</label>
 				</div>
 
                   <div class="checkbox">
                     <label class="col-sm-4">
-                      <input type="checkbox" name="comprador" <?php if($empresa['comprador']){echo "checked"; } ?> value="1"> COMPRADOR-FINAL
+                      <input type="checkbox" name="comprador" <?php if($empresa['comprador']){echo "checked"; } ?> value="1"> Acheteur final
                     </label>
                     <label class="col-sm-4">
-                      <input type="checkbox" name="intermediario" <?php if($empresa['intermediario']){echo "checked"; } ?> value="1"> INTERMEDIARIO
+                      <input type="checkbox" name="intermediario" <?php if($empresa['intermediario']){echo "checked"; } ?> value="1"> Intermédiaire
                     </label>
                     <label class="col-sm-4">
-                      <input type="checkbox" name="maquilador" <?php if($empresa['maquilador']){echo "checked"; } ?> value="1"> MAQUILADOR
+                      <input type="checkbox" name="maquilador" <?php if($empresa['maquilador']){echo "checked"; } ?> value="1"> Transformateur
                     </label>
                   </div>
 			</div>
@@ -1025,7 +1027,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
     }
      
     if(!seleccionado) {
-      alert("Debes de seleccionar un Tipo de Solicitud");
+      alert("Vous devez sélectionner un type de demande");
       return false;
     }
     //// TERMINA SELECCION TIPO SOLICITUD
@@ -1042,7 +1044,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
     }
      
     if(!ventas) {
-      alert("Debe seleccionar \"SI\" tuvo ó \"NO\" compras");
+      alert('Vous devez sélectionner "OUI" si vous avez eu des achats, sinon "NON"');
       return false;
     }
     /// TERMINA OPCION DE VENTAS
@@ -1058,7 +1060,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 	    }
 	     
 	    if(!monto) {
-	      alert("Seleccionaste que \"SI\" tuviste compras, debes seleccionar el monto de compras SPP");
+	      alert('Vous avez sélectionné "OUI" vous avez eu des achats; vous devez indiquer le montant des achats SPP');
 	      //alert(valor_venta);
 	      return false;
 	    }
