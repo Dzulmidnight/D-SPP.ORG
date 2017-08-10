@@ -298,7 +298,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $row_opp = mysql_query("SELECT opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
   $opp_detail = mysql_fetch_assoc($row_opp);
 
-  $asunto = "D-SPP Cotización (Solicitud de Certificación para Organizaciones de Pequeños Productores)";
+  $asunto = "D-SPP Cotation (Demande de certification pour les Organisations de petits producteurs";
 
   $cuerpo_mensaje = '
     <html>
@@ -311,38 +311,48 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
         <thead>
           <tr>
             <th rowspan="4" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-            <th scope="col" align="left" width="280" ><strong>Notificación de Cotización / Price quote  Notification</strong></th>
+            <th scope="col" align="left" width="280" ><strong>Notification de cotation / Price quote  Notification</strong></th>
           </tr>
         </thead>
         <tbody>
           <tr style="text-align:justify">
             <td colspan="2">
               <p>
-                Email Organismo de Certificación / Certification Entity: <span style="color:red">'.$opp_detail['email1'].'</span>
+                Courriel de l\'Organisme de certification / Certification Entity: <span style="color:red">'.$opp_detail['email1'].'</span>
               </p>
             </td>
           </tr>
           <tr style="text-align:justify">
             <td colspan="2">
               <p>
-                <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> ha enviado la cotización correspondiente a la Solicitud de Certificación para Organizaciones de Pequeños Productores.
+                <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> a envoyé la cotation correspondante à la demande de certification pour les Organisations de petits producteurs
               </p>
               <p>
-                Por favor iniciar sesión en el siguiente enlace <a href="http://d-spp.org/">www.d-spp.org/</a> como OPP, para poder acceder a la cotización.
+                Merci d\'ouvrir une session en <a href="http://d-spp.org/">www.d-spp.org/</a>, comme OPP, pour accéder à la cotation.
               </p>
             </td>
           </tr>
 
           <tr style="text-align:justify">
             <td colspan="2">
-              <span style="color:red">¿Qué es lo de debo realizar ahora?. Debes "Aceptar" o "Rechazar" la cotización</span>
+              <span style="color:red">Que dois-je faire maintenant ? Vous devez "Accepter" ou "refuser3 la cotation</span>
               <ol>
 
-                <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organización de Pequeños Productores(OPP).</li>
-                <li>Tu Usuario: <b style="color:red">'.$opp_detail['spp'].'</b> y Contraseña: <b style="color:red">'.$opp_detail['password'].'</b></li>
-                <li>Dentro de tu cuenta debes seleccionar Solicitudes > Listado Solicitudes.</li>
-                <li>Dentro de la tabla solicitudes debes localizar la columna "Cotización" Y seleccionar el botón Verde (aceptar cotización) ó el botón Rojo (rechazar cotización)</li>
-                <li>En caso de aceptar la cotización debes esperar a que finalice el "Periodo de Objeción"(en caso de que sea la primera vez que solicitas la certificación SPP)</li>
+                <li>
+                  Vous devez ouvrir la session du système <a href="http://d-spp.org/">D-SPP</a> comme Organisation de petits producteurs.
+                </li>
+                <li>
+                  Votre identifiant: <b style="color:red">'.$opp_detail['spp'].'</b> et votre mot de passe : <b style="color:red">'.$opp_detail['password'].'</b>
+                </li>
+                <li>
+                  Depuis votre compte, vous devez sélectionner Demandes > Liste des demandes
+                </li>
+                <li>
+                  Dans la liste des demandess, vous devez trouver la colonne "Cotation" et sélectionner le bouton vert (accepter cotation) ou le bouton rouge (refuser cotation).
+                </li>
+                <li>
+                  Si vous acceptez la cotation, vous devez attendre la fin de la "Période d\'objection" (si c\'est la première fois que vous demandez la certification SPP).
+                </li>
               </ol>
             </td>
           </tr> 
@@ -385,10 +395,10 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
               <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
                 <tbody>
                   <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                    <td width="130px">Nombre de la organización/Organization name</td>
-                    <td width="130px">País / Country</td>
-                    <td width="130px">Organismo de Certificación / Certification Entity</td>
-                    <td width="130px">Fecha de envío / Shipping Date</td>
+                    <td width="130px">Nom de l\'organisation / Organization name</td>
+                    <td width="130px">Pays / Country</td>
+                    <td width="130px">Organisme de certification / Certification Entity</td>
+                    <td width="130px">Date d\'envoi / Shipping Date</td>
                  
                     
                   </tr>
@@ -414,7 +424,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
 
 
           <tr>
-            <td coslpan="2">Para cualquier duda o aclaración por favor contactar a: soporte@d-spp.org</td>
+            <td coslpan="2">En cas de doute ou de question, merci de contacter: soporte@d-spp.org</td>
           </tr>
         </tbody>
       </table>
@@ -458,7 +468,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $mail->ClearAddresses();
 
 
-  $mensaje = "Se ha enviado la cotizacion al OPP";
+  $mensaje = "La cotation a été envoyée à l'OPP";
 }
 //****** TERMINA ENVIAR COTIZACION *******///
 
@@ -475,7 +485,7 @@ if(isset($_POST['agregar_observaciones']) && $_POST['agregar_observaciones'] == 
   $row_informacion = mysql_query("SELECT opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
   $informacion = mysql_fetch_assoc($row_informacion);
   
-  $asunto = "D-SPP | Observaciones Solicitud Certficación SPP";
+  $asunto = "D-SPP | Observations demande de certification SPP";
 
   $cuerpo_mensaje = '
     <html>
@@ -488,18 +498,18 @@ if(isset($_POST['agregar_observaciones']) && $_POST['agregar_observaciones'] == 
         <tbody>
           <tr>
             <th rowspan="4" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-            <th scope="col" align="left" width="280" ><strong>Observaciones Realizadas a la Solicitud de Certificación SPP / Observations SPP Certification Application</strong></th>
+            <th scope="col" align="left" width="280" ><strong>Observations faites sur la demande de certification SPP / Observations SPP Certification Application</strong></th>
           </tr>
           <tr>
             <td align="left" style="color:#ff738a;">
-              <p>Organismo de Certificación: '.$informacion['abreviacion_oc'].'</p>
-              <p>Email Organismo de Certificación / Certification Entity: '.$informacion['email1'].'</p>
+              <p>Organisme de certification: '.$informacion['abreviacion_oc'].'</p>
+              <p>Courrier de l\'organisme de certification / Certification Entity: '.$informacion['email1'].'</p>
             </td>
           </tr>
 
           <tr>
             <td aling="left" style="text-align:justify">
-            A continuación se listan las siguientes observaciones realizadas a su Solicitud de Certificación SPP. Por favor proceda a corregir y/o complementar su solicitud, para poder continuar con el proceso de certificación.
+              Ci-dessous, les différentes observations faites sur votre demande de certification SPP
             </td>
           </tr>
           <tr>
@@ -518,13 +528,23 @@ if(isset($_POST['agregar_observaciones']) && $_POST['agregar_observaciones'] == 
           </tr>
                 <tr>
                   <td colspan="2">
-                    <span style="color:red">¿Qué es lo de debo realizar ahora?</span>
+                    <span style="color:red">Que dois-je faire maintenant?</span>
                     <ol>
-                      <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organización de Pequeños Productores(OPP).</li>
-                      <li>Usuario(#SPP): <span style="color:red">'.$informacion['spp'].'</span> y contraseña: <span style="color:red">'.$informacion['password'].'</span> de su cuenta.</li>
-                      <li>Dentro de tu cuenta debes seleccionar <span style="color:red">"Solicitudes"</span> > <span style="color:red">Listado Solicitudes</span>.</li>
-                      <li>Dentro de la tabla solicitudes debes localizar la columna <span style="color:red">"Acciones"</span> Y seleccionar el botón <span style="color:red">"CONSULTAR"</span>.</li>
-                      <li>Al dar clic en "Consultar" podra visualizar su Solicitud de Certificación" la cual puede ser modificada.</li>
+                      <li>
+                        Vous devez ouvrir la session du système <a href="http://d-spp.org/">D-SPP</a> comme Organisation de petits producteurs.
+                      </li>
+                      <li>
+                        Votre identifiant (#SPP): <span style="color:red">'.$informacion['spp'].'</span> et votre mot de passe : <span style="color:red">'.$informacion['password'].'</span>
+                      </li>
+                      <li>
+                        Dentro de tu cuenta debes seleccionar <span style="color:red">"Solicitudes"</span> > <span style="color:red">Listado Solicitudes</span>.
+                      </li>
+                      <li>
+                        Dentro de la tabla solicitudes debes localizar la columna <span style="color:red">"Acciones"</span> Y seleccionar el botón <span style="color:red">"CONSULTAR"</span>.
+                      </li>
+                      <li>
+                        Al dar clic en "Consultar" podra visualizar su Solicitud de Certificación" la cual puede ser modificada.
+                      </li>
                       <li>Una vez realizados los cambios correspondientes debe dar clic en el boton <span style="color:red">"Actualizar Solicitud" al inicio de su Solicitud</span>.</li>
                     </ol>
                   </td>
