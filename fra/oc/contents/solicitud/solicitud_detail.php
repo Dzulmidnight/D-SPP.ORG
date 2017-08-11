@@ -537,15 +537,17 @@ if(isset($_POST['agregar_observaciones']) && $_POST['agregar_observaciones'] == 
                         Votre identifiant (#SPP): <span style="color:red">'.$informacion['spp'].'</span> et votre mot de passe : <span style="color:red">'.$informacion['password'].'</span>
                       </li>
                       <li>
-                        Dentro de tu cuenta debes seleccionar <span style="color:red">"Solicitudes"</span> > <span style="color:red">Listado Solicitudes</span>.
+                        Dans votre compte, vous devez sélectionner <span style="color:red">"Demandes"</span> > <span style="color:red">Demandes d\'inscription</span>
                       </li>
                       <li>
-                        Dentro de la tabla solicitudes debes localizar la columna <span style="color:red">"Acciones"</span> Y seleccionar el botón <span style="color:red">"CONSULTAR"</span>.
+                        Dans le tableau des demandes, vous devez trouver la colonne <span style="color:red">"Actions"</span> et sélectionner <span style="color:red">"CONSULTER"</span>
                       </li>
                       <li>
-                        Al dar clic en "Consultar" podra visualizar su Solicitud de Certificación" la cual puede ser modificada.
+                        En cliquant sur "Consulter", vous pourrez visualiser votre demande de certification "qui peut être modifiée.
                       </li>
-                      <li>Una vez realizados los cambios correspondientes debe dar clic en el boton <span style="color:red">"Actualizar Solicitud" al inicio de su Solicitud</span>.</li>
+                      <li>
+                        Une fois que vous avez effectué les modifications correspondantes, vous devez cliquer sur le bouton <span style="color:red">"Mettre à jour la demande"</span> au début de votre demande
+                      </li>
                     </ol>
                   </td>
                 </tr> 
@@ -577,7 +579,7 @@ if(isset($_POST['agregar_observaciones']) && $_POST['agregar_observaciones'] == 
                 </tr>
 
                 <tr>
-                  <td colspan="2">Para cualquier duda o aclaración por favor contactar a: soporte@d-spp.org</td>
+                  <td colspan="2">En cas de doute ou de question, merci d\'écrire à soporte@d-spp.org</td>
                 </tr>
         </tbody>
       </table>
@@ -602,10 +604,10 @@ if(isset($_POST['agregar_observaciones']) && $_POST['agregar_observaciones'] == 
 
   if($mail->Send()){
     $mail->ClearAddresses();
-    echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+    echo "<script>alert('Courrier envoyé avec succès');location.href ='javascript:history.back()';</script>";
   }else{
     $mail->ClearAddresses();
-    echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+    echo "<script>alert('Erreur. Le courrier n'a pas pu être envoyé, merci de contacter l'administrateur : soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
   }
 
 }
@@ -633,11 +635,11 @@ $solicitud = mysql_fetch_assoc($ejecutar);
   <form action="" name="" method="POST" enctype="multipart/form-data">
     <fieldset>
       <div class="col-md-12 alert alert-primary" style="padding:7px;">
-        <h3 class="text-center">Solicitud de Certificación para Organizaciones de Pequeños Productores</h3>
+        <h3 class="text-center">Demande de certification pour les Organisations de Petits Producteurs</h3>
       </div>
 
 
-      <div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
+      <div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DONNÉES GÉNÉRALES</b></div>
 
       <div class="col-lg-12 alert alert-info" style="padding:7px;">
         <div class="col-md-12">
@@ -646,15 +648,15 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             <input type="text" class="form-control" value="<?php echo $solicitud['abreviacionOC']; ?>" readonly>
           </div>-->
           <div class="col-md-4">
-            <b>AGREGAR OBSERVACIONES</b>
-            <button type="button" class="btn btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#observaciones".$_GET['IDsolicitud']; ?>">Agregar Observaciones</button>
+            <b>AJOUTER DES OBSERVATIONS</b>
+            <button type="button" class="btn btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#observaciones".$_GET['IDsolicitud']; ?>">Ajouter des observations</button>
           </div>
 
           <div class="col-xs-4">
-            <b>TIPO DE SOLICITUD</b>
+            <b>TYPE DE DEMANTE</b>
             <input type="text" class="form-control" value="<?php echo $solicitud['tipo_solicitud']; ?>"readonly>
             <button type="submit" class="btn btn-warning form-control" style="color:white" name="guardar_cambios" value="1">
-              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>Actualizar Solicitud
+              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>Mettre à jour la demande
             </button>
             <!--<input type="submit" style="color:white" class="btn btn-warning form-control" value="Actualizar Solicitud">
             <input type="hidden" name="guarda_cambios" value="1">-->
@@ -664,17 +666,17 @@ $solicitud = mysql_fetch_assoc($ejecutar);
             <?php 
             if(empty($solicitud['cotizacion_opp'])){
             ?>
-              <b>CARGAR COTIZACIÓN</b>
+              <b>CHARGEMENT DES COTATIONS</b>
               <input type="file" class="form-control" id="cotizacion_opp" name="cotizacion_opp"> 
               <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>"> 
               <button class="btn btn-sm btn-success form-control" style="color:white" id="enviar_cotizacion" name="enviar_cotizacion" type="submit" value="1" onclick="return validar()">
-                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Enviar Cotización
+                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Envoyer cotation
               </button>
               <!--<button type="submit" class="btn btn-success form-control" style="color:white" name="enviar_cotizacion" value="Enviar"><span class="glyphicon glyphicon-envelope" aria-hidden="true" onclick="return validar()"></span> Enviar Cotización</button>-->
 
             <?php 
             }else{
-              echo "<b style='font-size:14px;'>Ya se ha enviado la cotización</b>";
+              echo "<b style='font-size:14px;'>Le cotation a déjà été soumis</b>";
             }
              ?>
           </div>
@@ -683,13 +685,13 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       </div>
       <div class="col-xs-12 text-center">
         <div class="row">
-      <h4>Procedimiento de Certificación <br><small>(realizado por OC)</small></h4>
+      <h4>Procédure de certification <br>(<small>réalisée par l'OC</small>)</h4>
         </div>
       </div>
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>DOCUMENTAL "ACORTADO"</b></p> 
+            <p style="font-size:10px;"><b>Documentaire simplifié</b></p> 
           </div>       
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='DOCUMENTAL "ACORTADO"' <?php if($solicitud['tipo_procedimiento'] == 'DOCUMENTAL "ACORTADO"'){ echo "checked"; } ?>>
@@ -700,7 +702,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>DOCUMENTAL "NORMAL"</b></p> 
+            <p style="font-size:10px;"><b>Documentaire normal</b></p> 
           </div>
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='DOCUMENTAL "NORMAL"' <?php if($solicitud['tipo_procedimiento'] == 'DOCUMENTAL "NORMAL"'){ echo "checked"; } ?>>
@@ -711,7 +713,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>COMPLETO "IN SITU"</b></p>  
+            <p style="font-size:10px;"><b>Complet sur site</b></p>  
           </div>
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='COMPLETO "IN SITU"' <?php if($solicitud['tipo_procedimiento'] == 'COMPLETO "IN SITU"'){ echo "checked"; } ?>>
@@ -722,7 +724,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
       <div class="col-xs-3 text-center">
         <div class="row">
           <div class="col-xs-12">
-            <p style="font-size:10px;"><b>COMPLETO "A DISTANCIA"</b></p>  
+            <p style="font-size:10px;"><b>Complet à distance</b></p>  
           </div>
           <div class="col-xs-12">
             <input type="radio" data-on-color="success" data-off-color="danger" data-size="small" name="procedimiento" value='COMPLETO "A DISTANCIA"' <?php if($solicitud['tipo_procedimiento'] == 'COMPLETO "A DISTANCIA"'){ echo "checked"; } ?>>
@@ -1210,7 +1212,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title" id="myModalLabel">Agregar Observaciones sobre la Solicitud</h4>
+          <h4 class="modal-title" id="myModalLabel">Ajouter des observations sur la demande</h4>
         </div>
         <div class="modal-body">
           <textarea name="observaciones_solicitud" id="" class="textareaMensaje" cols="30" rows="10"></textarea>
@@ -1220,7 +1222,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
           <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
           <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $_GET['IDsolicitud']; ?>">
           <input type="hidden" name="agregar_observaciones" value="1">
-          <button type="submit" class="btn btn-success">Enviar Observaciones</button>
+          <button type="submit" class="btn btn-success">Envoyer des observations</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
         </div>
       </form>
@@ -1234,7 +1236,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
   function validar(){
     valor = document.getElementById("cotizacion_opp").value;
     if( valor == null || valor.length == 0 ) {
-      alert("No se ha cargado la cotización de el OPP");
+      alert("La cotation de l'OPP n'a pas été téléchargée");
       return false;
     }
     
@@ -1249,7 +1251,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
     }
      
     if(!seleccionado) {
-      alert("Debes de seleecionar un Procedimiento de Certificación");
+      alert("Vous devez sélectionner une procédure de certification");
       return false;
     }
 
