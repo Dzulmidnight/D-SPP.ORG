@@ -553,11 +553,11 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 	<form action="" name="" method="POST" enctype="multipart/form-data">
 		<fieldset>
 			<div class="col-md-12 alert alert-primary" style="padding:7px;">
-				<h3 class="text-center">Solicitud de Certificación para Organizaciones de Pequeños Productores</h3>
+				<h3 class="text-center">Demande de Certification pour les Organisations de Petits Producteurs</h3>
 			</div>
 
 
-			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
+			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>INFORMATIONS GENERALES</b></div>
 
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
 				<div class="col-md-6">
