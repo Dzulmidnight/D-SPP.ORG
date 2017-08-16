@@ -408,7 +408,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
         <div class="col-md-6">
           <div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMACION GENERAL</div>
           <label for="fecha_elaboracion">FECHA ELABORACIÓN</label>
-          <input type="text" class="form-control" id="fecha_elaboracion" name="fecha_elaboracion" value="<?php echo date('Y-m-d', time()); ?>" readonly>  
+          <input type="text" class="form-control" id="fecha_elaboracion" name="fecha_elaboracion" value="<?php echo date('d-m-Y', $solicitud['fecha_registro']); ?>" readonly>  
 
           <label for="spp">CODIGO DE IDENTIFICACIÓN SPP(#SPP): </label>
           <input type="text" class="form-control" id="spp" name="spp" value="<?php echo $solicitud['spp_opp']; ?>" readonly>
