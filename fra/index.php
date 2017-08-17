@@ -552,7 +552,7 @@ $alerta2 = '
 
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -582,11 +582,11 @@ $alerta2 = '
       <div class="col-md-12">
         <ul class="nav nav-pills">
           <li role="presentation" style="margin:0px;padding:0px;"><a href="index.php"><img src="../img/FUNDEPPO.png" alt=""></a></li>
-          <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar sesión">Organización de Pequeños Productores</a></li>
-          <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar Sesión">Organismo de Certificación</a></li>
-          <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM" data-toggle="tooltip" data-placement="bottom" title="Clic para iniciar sesión">EMPRESAS</a></li>
+          <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP" data-toggle="tooltip" data-placement="bottom" title="Cliquez pour commencer la session">Organisation de petits producteurs</a></li>
+          <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC" data-toggle="tooltip" data-placement="bottom" title="Cliquez pour commencer la session">Organisme de certification</a></li>
+          <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM" data-toggle="tooltip" data-placement="bottom" title="Cliquez pour commencer la session">Entreprises</a></li>
           <li role="presentation" <? if(isset($_GET['ADM'])){?> class="active" <? }?>><a href="?ADM">ADM</a></li>
-          <li role="presentation" <? if(isset($_GET['RECURSOS'])){?> class="active" <? }?>><a href="#">RECURSOS</a></li>
+          <!--<li role="presentation" <? if(isset($_GET['RECURSOS'])){?> class="active" <? }?>><a href="#">RECURSOS</a></li>-->
         </ul>
         <hr>
       </div>
@@ -598,19 +598,19 @@ $alerta2 = '
         ?>
 
             <div>
-              <h4 class="alert alert-success">Iniciar Sesión como Organización de Pequeños Productores</h4>
+              <h4 class="alert alert-success">Connectez-vous en tant organisation de petits producteurs</h4>
             </div>
             <div class="panel-body panel-success">
               <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="opp">
                
                 <input type="text" id="SPP_OPP" name="SPP_OPP" class="form-control" placeholder="#SPP" required autofocus>
                 <br>
-                <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+                <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Mot de passe" required>
                 <br>
-                <a href="#">¿Olvidaste tu contraseña?</a>
+                
                 <br>
-                <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
-                <a class="btn btn-danger btn-block" type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroOPP'";} ?>>Crear Nuevo Usuario</a>
+                <button class="btn btn-primary btn-block" type="submit">Connectez-vous</button>
+                <a class="btn btn-danger btn-block" type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroOPP'";} ?>>Créer un nouvel utilisateur</a>
               </form>
             </div>
          
@@ -619,18 +619,18 @@ $alerta2 = '
         ?>
 
             <div>
-              <h4 class="alert alert-info">Iniciar Sesión como Organismo de Certificación</h4>
+              <h4 class="alert alert-info">Connectez-vous en tant qu'organisme de certification</h4>
             </div>
             <div class="panel-body">
               <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="oc">
                
                 <input type="text" id="SPP_OC" name="SPP_OC" class="form-control" placeholder="#SPP" required autofocus>
                 <br>
-                <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+                <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Mot de passe" required>
                 <br>
-                <a href="#">¿Olvidaste tu contraseña?</a>
+                
                 <br>
-                <button class="btn btn-primary form-control"  type="submit">Ingresar</button>
+                <button class="btn btn-primary form-control"  type="submit">Connectez-vous</button>
 
               </form>
             </div>
@@ -641,18 +641,18 @@ $alerta2 = '
         ?>
 
             <div >
-              <h4 class="alert alert-success">Iniciar Sesión como EMPRESAS</h4>
+              <h4 class="alert alert-success">Connectez-vous en tant qu'entreprise</h4>
             </div>
             <div class="panel-body">
               <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="empresa">
                 <input type="text" id="SPP_EMPRESA" name="SPP_EMPRESA" class="form-control" placeholder="#SPP" required autofocus>
                 <br>
-                <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+                <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Mot de passe" required>
                 <br>
-                <a href="#">¿Olvidaste tu contraseña?</a>
+                
                 <br>
-                <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
-                <a class="btn btn-danger btn-block"  type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroCOM'";} ?>>Crear Nuevo Usuario</a>
+                <button class="btn btn-primary btn-block" type="submit">Connectez-vous</button>
+                <a class="btn btn-danger btn-block"  type="submit" name="registrarse" <?php if(isset($_GET['SPP_OC'])){echo "href='?registro&SPP_OC=$_GET[SPP_OC]'";}else{ echo "href='?registroCOM'";} ?>>Créer un nouvel utilisateur</a>
               </form>
             </div>
    
@@ -662,16 +662,16 @@ $alerta2 = '
 
             <div class="alert alert-info">
               <h3>SPP GLOBAL</h3>
-              <p>Inicio de sesión administradores</p>
+              <p>Administrateurs d'accès</p>
             </div>
             <div class="panel-body">
             <form ACTION="<?php echo $loginFormAction; ?>" METHOD="POST" class="form-signin" id="adm">
-              <h2 class="form-signin-heading">Datos de ingreso</h2>
+              <h2 class="form-signin-heading">Informations de connexion</h2>
               <label for="inputEmail" class="sr-only">Email address</label>
               <input type="text" id="" name="username" class="form-control" placeholder="Username" required autofocus>
-              <label for="inputPassword" class="sr-only">Password</label>
-              <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
-              <button class="btn btn-lg btn-primary btn-block" type="submit">Ingresar</button>
+              <label for="inputPassword" class="sr-only">Mot de passe</label>
+              <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Mot de passe" required>
+              <button class="btn btn-lg btn-primary btn-block" type="submit">Connectez-vous</button>
             </form>
             </div>
         <?php
@@ -679,14 +679,14 @@ $alerta2 = '
         ?>
           <div class="panel panel-primary">
             <div class="panel-heading">
-              <h3 class="panel-title">Inicio de sesión</h3>
+              <h3 class="panel-title">Login</h3>
             </div>
             <div class="panel-body">
-              <p>Selecciona un tipo de usuario</p>
+              <p>Sélectionnez un type d'utilisateur</p>
               <ul class="nav">
-              <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP">(OPP) Organización de Pequeños Productores</a></li>
-              <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC">(OC) Organismo de Certificacion</a></li>
-              <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM">EMPRESAS</a></li>
+              <li role="presentation" <? if(isset($_GET['OPP'])){?> class="active" <? }?>><a href="?OPP">(OPP) Organisation de petits producteurs</a></li>
+              <li role="presentation" <? if(isset($_GET['OC'])){?> class="active" <? }?>><a href="?OC">(OC) Organisme de certification</a></li>
+              <li role="presentation" <? if(isset($_GET['COM'])){?> class="active" <? }?>><a href="?COM">Entreprises</a></li>
               </ul>
             </div>
             <?php echo $alerta2; ?>
@@ -723,54 +723,54 @@ $alerta2 = '
               <form action="" method="POST" class="form-horizontal">
                 <div class="panel panel-info">
                   <div class="panel-heading">
-                    <h3 class="panel-title">Formulario de Registro para Organización de Pequeños Productores</h3>
+                    <h3 class="panel-title">Formulaire d'inscription pour l'organisation des petits producteurs</h3>
                   </div>
                   <div class="panel-body" style="font-size:12px;">
-                    <p class="alert alert-warning" style="padding:7px;">El #SPP y la contraseña son proporcionados por D-SPP, dichos datos son enviados por email al OPP</p>
+                    <p class="alert alert-warning" style="padding:7px;">Le #SPP et le mot de passe sont fournis par D-SPP, ces données sont envoyées par courrier électronique à la Police provinciale de l'Ontario</p>
 
                     <div class="form-group">
-                      <label for="spp" class="col-sm-2 control-label">#SPP (En caso de contar con uno)</label>
+                      <label for="spp" class="col-sm-2 control-label">#SPP (si vous en avez un)</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="spp" name="spp" placeholder="En caso de contar con uno">
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label for="nombre" class="col-sm-2 control-label">* Nombre de la OPP</label>
+                      <label for="nombre" class="col-sm-2 control-label">* Nom de l'organisation:</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escriba el nombre" autofocus required>
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Écrivez le numéro" autofocus required>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="abreviacion" class="col-sm-2 control-label">Abreviación de la OPP</label>
+                      <label for="abreviacion" class="col-sm-2 control-label">Sigle ou nom gégé</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="abreviacion" placeholder="Escriba la abreviación" name="abreviacion">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="sitio_web" class="col-sm-2 control-label">Sitio Web</label>
+                      <label for="sitio_web" class="col-sm-2 control-label">Site Web</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="sitio_web" name="sitio_web">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="email" class="col-sm-2 control-label">* Correo Electronico</label>
+                      <label for="email" class="col-sm-2 control-label">* Courrier électronique</label>
                       <div class="col-sm-10">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Escriba el correo electronico" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Entrez le courrier électronique" required>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="telefono" class="col-sm-2 control-label">* Teléfono de Oficina</label>
+                      <label for="telefono" class="col-sm-2 control-label">* Téléphone de l'organisation</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Escriba el teléfono de oficina" required>
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label for="sitio_web" class="col-sm-2 control-label">Certificadora (si utiliza los servicios de alguna certificadora)</label>
+                      <label for="sitio_web" class="col-sm-2 control-label">Organisme de certification (Si vous utilisez les services d'un certificateur)</label>
                       <div class="col-sm-10">
                         <select class="form-control" name="idoc" id="idoc">
-                          <option value="">Seleccionar</option>
+                          <option value="">Sélectionnez un</option>
                           <?php 
                           while($oc = mysql_fetch_assoc($row_oc)){
                             echo "<option value='".$oc['idoc']."'>".$oc['abreviacion']."</option>";
@@ -781,10 +781,10 @@ $alerta2 = '
                     </div>
 
                     <div class="form-group">
-                      <label for="pais" class="col-sm-2 control-label">País</label>
+                      <label for="pais" class="col-sm-2 control-label">Pays</label>
                       <div class="col-sm-10">
                         <select name="pais" id="pais" class="form-control" required>
-                          <option value="">Selecciona un País</option>
+                          <option value="">Sélectionnez un pays</option>
                           <?php 
                           while($pais = mysql_fetch_assoc($row_pais)){
                             echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
@@ -794,26 +794,26 @@ $alerta2 = '
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="ciudad" class="col-sm-2 control-label">Ciudad</label>
+                      <label for="ciudad" class="col-sm-2 control-label">Ville</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="ciudad" name="ciudad">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="direccion_oficina" class="col-sm-2 control-label">Dirección de las Oficinas</label>
+                      <label for="direccion_oficina" class="col-sm-2 control-label">Adresse du bureau</label>
                       <div class="col-sm-10">
                         <input type="text" id="direccion_oficina" class="form-control" name="direccion_oficina" placeholder="Dirección de las Oficinas">
                       </div>
                     </div>
-                    <p class="alert alert-warning text-center" style="padding:7px;">Datos Fiscales (Opcionales)</p>
+                    <p class="alert alert-warning text-center" style="padding:7px;">Données fiscales (facultatif)</p>
                     <div class="form-group">
-                      <label for="razon_social" class="col-sm-2 control-label">Razón Social</label>
+                      <label for="razon_social" class="col-sm-2 control-label">Registre du commerce</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="razon_social" name="razon_social">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="direccion_fiscal" class="col-sm-2 control-label">Dirección Fiscal</label>
+                      <label for="direccion_fiscal" class="col-sm-2 control-label">Adresse fiscale</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="direccion_fiscal" name="direccion_fiscal">
                       </div>
@@ -831,7 +831,7 @@ $alerta2 = '
                       </div>
                     </div>
                     <input type="hidden" name="registro_opp" value="1">
-                    <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Registrarse</button>
+                    <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>Créer un utilisateur</button>
 
                   </div>
                 </div>
@@ -849,47 +849,47 @@ $alerta2 = '
               <form action="" method="POST" class="form-horizontal">
                 <div class="panel panel-info">
                   <div class="panel-heading">
-                    <h3 class="panel-title">Formulario de Registro para Empresas</h3>
+                    <h3 class="panel-title">Formulaire d'inscription aux entreprises</h3>
                   </div>
                   <div class="panel-body" style="font-size:12px;">
-                    <p class="alert alert-warning" style="padding:7px;">El #SPP y la contraseña son proporcionados por D-SPP, dichos datos son enviados por email</p>
+                    <p class="alert alert-warning" style="padding:7px;">Le #SPP et le mot de passe sont fournis par D-SPP, ces données sont envoyées par courrier électronique</p>
 
                     <div class="form-group">
-                      <label for="spp" class="col-sm-2 control-label">#SPP (En caso de contar con uno)</label>
+                      <label for="spp" class="col-sm-2 control-label">#SPP (si vous en avez un)</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="spp" name="spp" placeholder="En caso de contar con uno">
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label for="nombre" class="col-sm-2 control-label">* Nombre de la Empresa</label>
+                      <label for="nombre" class="col-sm-2 control-label">* Nom de l'entreprise</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escriba el nombre" autofocus required>
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Écrivez le numéro" autofocus required>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="abreviacion" class="col-sm-2 control-label">Abreviación de la Empresa</label>
+                      <label for="abreviacion" class="col-sm-2 control-label">Sigle ou nom abrégé</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="abreviacion" placeholder="Escriba la abreviación" name="abreviacion">
                       </div>
                     </div>
 
                      <div class="form-group">
-                        <p class="col-sm-2 text-right"><strong>TIPO DE EMPRESA</strong></p>
+                        <p class="col-sm-2 text-right"><strong>TYPE DE ENTREPRISE</strong></p>
                         <div class="col-sm-10">
                           <div class="checkbox">
                             <label class="col-sm-4">
-                              <input type="checkbox" id="maquilador" name="maquilador" value="1"> MAQUILADOR
+                              <input type="checkbox" id="maquilador" name="maquilador" value="1"> SOUS-TRAITANT
                               <p style="color:#7f8c8d;">Proveedores de servicios que intervienenen en la comercialización o el acondicionamiento del producto, sin que haya de por medio un proceso de compra venta del mismo.</p>
                               
                             </label>
                             <label class="col-sm-4">
-                              <input type="checkbox" id="comprador" name="comprador" value="1"> COMPRADOR FINAL
+                              <input type="checkbox" id="comprador" name="comprador" value="1"> ACHETEUR FINAL
                               <p style="color:#7f8c8d;">Una empresa que compra productos certificados bajo el Símbolo de Pequeños Productores para ponerlos en el mercado de consumo final bajo su nombre o marca y que cumple con los criterios respectivos de la Norma General del Símbolo de Pequeños Productores.</p>
                               
                             </label>
                             <label class="col-sm-4">
-                              <input type="checkbox" id="intermediario" name="intermediario" value="1"> INTERMEDIARIO
+                              <input type="checkbox" id="intermediario" name="intermediario" value="1"> INTERMEDIAIRE
                               <p style="color:#7f8c8d;">Empresas comercializadoras que compran y venden los productos del Símbolo de Pequeños Productores sin que pongan el producto bajo su nombre o marca en el mercado de consumo final.</p>
                               
                             </label>
