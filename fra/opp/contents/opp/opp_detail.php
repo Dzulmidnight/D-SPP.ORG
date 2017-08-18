@@ -197,10 +197,10 @@ $opp = mysql_fetch_assoc($row_opp);
         <tr>
           <td>
             <label class="radio-inline">
-              <input type="radio" name="ver_password" id="inlineRadio1" <?php if(isset($opp['ver_password']) && $opp['ver_password'] == 1){ echo 'checked'; } ?> value="1"> SI
+              <input type="radio" name="ver_password" id="inlineRadio1" <?php if(isset($opp['ver_password']) && $opp['ver_password'] == 1){ echo 'checked'; } ?> value="1"> Oui
             </label>
             <label class="radio-inline">
-              <input type="radio" name="ver_password" id="inlineRadio2" <?php if(isset($opp['ver_password']) && $opp['ver_password'] == 0){ echo 'checked'; } ?> value="0"> NO
+              <input type="radio" name="ver_password" id="inlineRadio2" <?php if(isset($opp['ver_password']) && $opp['ver_password'] == 0){ echo 'checked'; } ?> value="0"> Non
             </label>
           </td>
           <td>

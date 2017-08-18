@@ -43,7 +43,7 @@ if(isset($_POST['cotizacion']) ){
               <tbody>
                 <tr>
                   <th rowspan="6" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><strong>Cotización de Solicitud Aceptada / Application Price Quote Accepted ('.date('d/m/Y', $fecha).')</strong></th>
+                  <th scope="col" align="left" width="280"><strong>Citation acceptée / Application Price Quote Accepted ('.date('d/m/Y', $fecha).')</strong></th>
                 </tr>
 
                 <tr>
@@ -61,10 +61,10 @@ if(isset($_POST['cotizacion']) ){
                   <td align="left">Pays / Country: '.$detalle_opp['pais'].'</td>
                 </tr>
                 <tr>
-                  <td align="left" style="color:#ff738a;">Name: '.$detalle_opp['contacto1_nombre'].' | '.$detalle_opp['contacto1_email'].'</td>
+                  <td align="left" style="color:#ff738a;">Nom / Name: '.$detalle_opp['contacto1_nombre'].' | '.$detalle_opp['contacto1_email'].'</td>
                 </tr>
                 <tr>
-                  <td align="left" style="color:#ff738a;">Name: '.$detalle_opp['contacto2_nombre'].' | '.$detalle_opp['contacto2_email'].'</td>
+                  <td align="left" style="color:#ff738a;">Nom / Name: '.$detalle_opp['contacto2_nombre'].' | '.$detalle_opp['contacto2_email'].'</td>
                 </tr>
 
 
@@ -647,7 +647,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
             <tr>
               <td>
                 <form action="../../reportes/solicitud.php" method="POST" target="_new">
-                  <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><?php echo $solicitud['idsolicitud_certificacion']; ?> <img src="../../img/pdf.png" style="height:30px;" alt=""></button>
+                  <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Télécharger la demande" target="_new" type="submit" ><?php echo $solicitud['idsolicitud_certificacion']; ?> <img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
                   <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
                   <input type="hidden" name="generar_formato" value="1">
@@ -907,7 +907,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
-                            <h4 class="modal-title" id="myModalLabel">Processus de certification</h4>
+                            <h4 class="modal-title" id="myModalLabel">Processus de certificat</h4>
                           </div>
                           <div class="modal-body">
                             <div class="row">
@@ -1033,7 +1033,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                   Consulter la demande
                 </a>
                <!-- <form action="" method="POST"  style="display:inline-block">-->
-                  <button class="btn btn-sm btn-danger" name="eliminar_solicitud" value="1" data-toggle="tooltip" title="Eliminar Solicitud" type="submit" onclick="return confirm('Etes-vous sûr ? Les données seront définitivement supprimées.');">
+                  <button class="btn btn-sm btn-danger" name="eliminar_solicitud" value="1" data-toggle="tooltip" title="Supprimer la demande" type="submit" onclick="return confirm('Etes-vous sûr ? Les données seront définitivement supprimées.');">
                     <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
                   </button>         
                 <!--</form>-->

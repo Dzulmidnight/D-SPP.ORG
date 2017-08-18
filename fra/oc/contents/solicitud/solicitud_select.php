@@ -1545,7 +1545,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               <?php 
                               $row_estatus_interno = mysql_query("SELECT * FROM estatus_interno",$dspp) or die(mysql_error());
                               while($estatus_interno = mysql_fetch_assoc($row_estatus_interno)){
-                                echo "<option value='$estatus_interno[idestatus_interno]'>$estatus_interno[nombre]</option>";
+                                echo "<option value='$estatus_interno[idestatus_interno]'>$estatus_interno[nombre_frances]</option>";
                               }
                                ?>
                             </select>                        
@@ -2176,7 +2176,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- TERMINA SECCION CERTIFICADO ------>
             </form>
           <td>
-            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consultar Solicitud" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>">Consultar Solicitud</a>
+            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Demande de demande" href="?SOLICITUD&IDsolicitud=<?php echo $solicitud['idsolicitud']; ?>">Demande de demande</a>
           </td>
           <td>
             <form action="../../reportes/solicitud.php" method="POST" target="_new">

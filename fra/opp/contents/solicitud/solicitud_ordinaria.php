@@ -1076,7 +1076,7 @@ if($dias < 100){
 				<div class="col-xs-12">
 					<hr>
 					<input type="hidden" name="insertar_solicitud" value="1">
-					<input type="submit" class="btn btn-primary form-control" style="color: white;font-size:14px" value="Enviar Solicitud" onclick="return validar()">
+					<input type="submit" class="btn btn-primary form-control" style="color: white;font-size:14px" value="Envoyer la demande" onclick="return validar()">
 				</div>
 
 			</fieldset>

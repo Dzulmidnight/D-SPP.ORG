@@ -51,7 +51,7 @@ if (isset($_GET['accesscheck'])) {
 /***  VARIABLE GENERALES  ****/
 $administrador = 'cert@spp.coop';
 $fecha = time();
-$asunto_usuario = "D-SPP Datos de Usuario / User Data";
+$asunto_usuario = "D-SPP Données utilisateur / User Data";
 
 /**********************************************/
 
@@ -543,11 +543,11 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 $row_oc = mysql_query("SELECT idoc, abreviacion FROM oc", $dspp) or die(mysql_error());
 $alerta = '
            <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center">
-            SI YA ES O FUE UNA ORGANIZACIÓN o EMPRESA CERTIFICADA CON EL SPP, DEBE DE SOLICITAR SU USUARIO Y CONTRASEÑA EN EL SIGUIENTE CORREO: <a href="mailto:soporte@d-spp.org" style="color:#ecf0f1;background-color:#2980b9">soporte@d-spp.org</a> Y OMITIR EL SIGUIENTE FORMULARIO.
+            SI VOUS ÊTES OU VOUS ÊTES UNE ORGANISATION OU UNE SOCIÉTÉ CERTIFIÉE AVEC LE SPP, VOUS DEVEZ DEMANDER VOTRE UTILISATEUR ET MOT DE PASSE AU MAIL SUIVANT: <a href="mailto:soporte@d-spp.org" style="color:#ecf0f1;background-color:#2980b9">soporte@d-spp.org</a> ET OMMIT LE FORMULAIRE SUIVANT.
           </p>';
 $alerta2 = '
            <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center">
-            SI YA ES O FUE UNA ORGANIZACIÓN o EMPRESA CERTIFICADA CON EL SPP, DEBE DE SOLICITAR SU USUARIO Y CONTRASEÑA EN EL SIGUIENTE CORREO: <a href="mailto:soporte@d-spp.org" style="color:#ecf0f1;background-color:#2980b9">soporte@d-spp.org</a>.
+            SI VOUS ÊTES UNE ORGANISATION OU UNE SOCIÉTÉ CERTIFIÉE AVEC LE SPP, VOUS DEVEZ DEMANDER VOTRE UTILISATEUR ET MOT DE PASSE AU MAINTENANT SUIVANT: <a href="mailto:soporte@d-spp.org" style="color:#ecf0f1;background-color:#2980b9">soporte@d-spp.org</a>.
           </p>';
 
 ?>
@@ -561,7 +561,7 @@ $alerta2 = '
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="img/FUNDEPPO.png">
+    <link rel="icon" href="../img/FUNDEPPO.png">
     <title>SPP GLOBAL | D-SPP</title>
 
     <!-- Bootstrap core CSS -->
@@ -728,23 +728,23 @@ $alerta2 = '
                   <div class="panel-body" style="font-size:12px;">
                     <p class="alert alert-warning" style="padding:7px;">Le #SPP et le mot de passe sont fournis par D-SPP, ces données sont envoyées par courrier électronique à la Police provinciale de l'Ontario</p>
 
-                    <div class="form-group">
+                    <!--<div class="form-group">
                       <label for="spp" class="col-sm-2 control-label">#SPP (si vous en avez un)</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="spp" name="spp" placeholder="En caso de contar con uno">
                       </div>
-                    </div>
+                    </div>-->
 
                     <div class="form-group">
                       <label for="nombre" class="col-sm-2 control-label">* Nom de l'organisation:</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Écrivez le numéro" autofocus required>
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" autofocus required>
                       </div>
                     </div>
                     <div class="form-group">
                       <label for="abreviacion" class="col-sm-2 control-label">Sigle ou nom gégé</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="abreviacion" placeholder="Escriba la abreviación" name="abreviacion">
+                        <input type="text" class="form-control" id="abreviacion" placeholder="" name="abreviacion">
                       </div>
                     </div>
                     <div class="form-group">
@@ -756,13 +756,13 @@ $alerta2 = '
                     <div class="form-group">
                       <label for="email" class="col-sm-2 control-label">* Courrier électronique</label>
                       <div class="col-sm-10">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Entrez le courrier électronique" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="" required>
                       </div>
                     </div>
                     <div class="form-group">
                       <label for="telefono" class="col-sm-2 control-label">* Téléphone de l'organisation</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Escriba el teléfono de oficina" required>
+                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="" required>
                       </div>
                     </div>
 
@@ -802,7 +802,7 @@ $alerta2 = '
                     <div class="form-group">
                       <label for="direccion_oficina" class="col-sm-2 control-label">Adresse du bureau</label>
                       <div class="col-sm-10">
-                        <input type="text" id="direccion_oficina" class="form-control" name="direccion_oficina" placeholder="Dirección de las Oficinas">
+                        <input type="text" id="direccion_oficina" class="form-control" name="direccion_oficina" placeholder="">
                       </div>
                     </div>
                     <p class="alert alert-warning text-center" style="padding:7px;">Données fiscales (facultatif)</p>
@@ -831,7 +831,7 @@ $alerta2 = '
                       </div>
                     </div>
                     <input type="hidden" name="registro_opp" value="1">
-                    <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>Créer un utilisateur</button>
+                    <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Créer un utilisateur</button>
 
                   </div>
                 </div>
@@ -854,23 +854,23 @@ $alerta2 = '
                   <div class="panel-body" style="font-size:12px;">
                     <p class="alert alert-warning" style="padding:7px;">Le #SPP et le mot de passe sont fournis par D-SPP, ces données sont envoyées par courrier électronique</p>
 
-                    <div class="form-group">
+                    <!--<div class="form-group">
                       <label for="spp" class="col-sm-2 control-label">#SPP (si vous en avez un)</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="spp" name="spp" placeholder="En caso de contar con uno">
                       </div>
-                    </div>
+                    </div>-->
 
                     <div class="form-group">
                       <label for="nombre" class="col-sm-2 control-label">* Nom de l'entreprise</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Écrivez le numéro" autofocus required>
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" autofocus required>
                       </div>
                     </div>
                     <div class="form-group">
                       <label for="abreviacion" class="col-sm-2 control-label">Sigle ou nom abrégé</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="abreviacion" placeholder="Escriba la abreviación" name="abreviacion">
+                        <input type="text" class="form-control" id="abreviacion" placeholder="" name="abreviacion">
                       </div>
                     </div>
 
@@ -880,17 +880,17 @@ $alerta2 = '
                           <div class="checkbox">
                             <label class="col-sm-4">
                               <input type="checkbox" id="maquilador" name="maquilador" value="1"> SOUS-TRAITANT
-                              <p style="color:#7f8c8d;">Proveedores de servicios que intervienenen en la comercialización o el acondicionamiento del producto, sin que haya de por medio un proceso de compra venta del mismo.</p>
+                              <p style="color:#7f8c8d;">Fournisseurs de services impliqués dans le marketing ou l'emballage du produit, sans qu'il y ait un processus d'achat de celui-ci.</p>
                               
                             </label>
                             <label class="col-sm-4">
                               <input type="checkbox" id="comprador" name="comprador" value="1"> ACHETEUR FINAL
-                              <p style="color:#7f8c8d;">Una empresa que compra productos certificados bajo el Símbolo de Pequeños Productores para ponerlos en el mercado de consumo final bajo su nombre o marca y que cumple con los criterios respectivos de la Norma General del Símbolo de Pequeños Productores.</p>
+                              <p style="color:#7f8c8d;">Une entreprise qui achète des produits certifiés sous le symbole du petit producteur pour les mettre sur le marché de consommation finale sous son nom ou sa marque et répond aux critères respectifs de la norme générale du symbole des petits producteurs.</p>
                               
                             </label>
                             <label class="col-sm-4">
                               <input type="checkbox" id="intermediario" name="intermediario" value="1"> INTERMEDIAIRE
-                              <p style="color:#7f8c8d;">Empresas comercializadoras que compran y venden los productos del Símbolo de Pequeños Productores sin que pongan el producto bajo su nombre o marca en el mercado de consumo final.</p>
+                              <p style="color:#7f8c8d;">Les entreprises de marketing qui achètent et vendent les produits du Symbole des petits producteurs sans mettre le produit sous leur nom ou leur marque sur le marché de consommation finale.</p>
                               
                             </label>
                           </div>
@@ -899,10 +899,10 @@ $alerta2 = '
 
 
                     <div class="form-group">
-                      <label for="sitio_web" class="col-sm-2 control-label">Certificadora (si utiliza los servicios de alguna certificadora)</label>
+                      <label for="sitio_web" class="col-sm-2 control-label">Organisme de certification (Si vous utilisez les services d'un organisme de certification)</label>
                       <div class="col-sm-10">
                         <select class="form-control" name="idoc" id="idoc">
-                          <option value="">Seleccionar</option>
+                          <option value="">Sélectionnez un</option>
                           <?php 
                           while($oc = mysql_fetch_assoc($row_oc)){
                             echo "<option value='".$oc['idoc']."'>".$oc['abreviacion']."</option>";
@@ -912,29 +912,29 @@ $alerta2 = '
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="sitio_web" class="col-sm-2 control-label">Sitio Web</label>
+                      <label for="sitio_web" class="col-sm-2 control-label">Site Web</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="sitio_web" name="sitio_web">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="telefono" class="col-sm-2 control-label">* Teléfono de Oficina</label>
+                      <label for="telefono" class="col-sm-2 control-label">* Téléphone de bureau</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Escriba el teléfono de oficina" required>
+                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="" required>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="email" class="col-sm-2 control-label">* Correo Electronico</label>
+                      <label for="email" class="col-sm-2 control-label">* Courrier électronique</label>
                       <div class="col-sm-10">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Escriba el correo electronico" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="" required>
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label for="pais" class="col-sm-2 control-label">País</label>
+                      <label for="pais" class="col-sm-2 control-label">Pays</label>
                       <div class="col-sm-10">
                         <select name="pais" id="pais" class="form-control" required>
-                          <option value="">Selecciona un País</option>
+                          <option value="">Sélectionnez un pays</option>
                           <?php 
                           while($pais = mysql_fetch_assoc($row_pais)){
                             echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
@@ -944,26 +944,26 @@ $alerta2 = '
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="ciudad" class="col-sm-2 control-label">Ciudad</label>
+                      <label for="ciudad" class="col-sm-2 control-label">City</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="ciudad" name="ciudad">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="direccion_oficina" class="col-sm-2 control-label">Dirección de las Oficinas</label>
+                      <label for="direccion_oficina" class="col-sm-2 control-label">Adresse du bureau</label>
                       <div class="col-sm-10">
-                        <input type="text" id="direccion_oficina" class="form-control" name="direccion_oficina" placeholder="Dirección de las Oficinas">
+                        <input type="text" id="direccion_oficina" class="form-control" name="direccion_oficina" placeholder="">
                       </div>
                     </div>
-                    <p class="alert alert-warning text-center" style="padding:7px;">Datos Fiscales (Opcionales)</p>
+                    <p class="alert alert-warning text-center" style="padding:7px;">Informations Fiscales (Facultatif)</p>
                     <div class="form-group">
-                      <label for="razon_social" class="col-sm-2 control-label">Razón Social</label>
+                      <label for="razon_social" class="col-sm-2 control-label">Registre du commerce</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="razon_social" name="razon_social">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="direccion_fiscal" class="col-sm-2 control-label">Dirección Fiscal</label>
+                      <label for="direccion_fiscal" class="col-sm-2 control-label">Adresse fiscale</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="direccion_fiscal" name="direccion_fiscal">
                       </div>
@@ -981,7 +981,7 @@ $alerta2 = '
                       </div>
                     </div>
                     <input type="hidden" name="registro_empresa" value="1">
-                    <button type="submit" class="btn btn-success form-control" onclick="return validar();"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Registrarse</button>
+                    <button type="submit" class="btn btn-success form-control" onclick="return validar();"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Créer un utilisateur</button>
 
                   </div>
                 </div>
@@ -995,11 +995,13 @@ $alerta2 = '
         ?>
           <div class="row">
             <div class="col-md-12">
-              <p class="alert alert-warning">Para tener un mejor desempeño dentro de D-SPP.ORG le recomendamos usar los siguientes navegadores: <a href="https://www.google.com.mx/chrome/browser/desktop/" target="_new">Google Chrome</a>, <a href="https://www.mozilla.org/es-MX/firefox/new/" target="_new">Mozilla Firefox</a>, dar click sobre el nombre en caso de no contar con el mismo.</p>
+              <p class="alert alert-warning">
+                Pour avoir une meilleure performance au sein de D-SPP.ORG, nous vous recommandons d'utiliser les navigateurs suivants: <a href="https://www.google.com.mx/chrome/browser/desktop/" target="_new">Google Chrome</a>, <a href="https://www.mozilla.org/es-MX/firefox/new/" target="_new">Mozilla Firefox</a>, cliquez sur le nom si vous ne l'avez pas.
+              </p>
             </div> 
 
             <div class="col-md-4">
-              <img src="img/FUNDEPPO.jpg" class="text-center img-responsive" alt="SPP GLOBAL">
+              <img src="../img/FUNDEPPO.jpg" class="text-center img-responsive" alt="SPP GLOBAL">
             </div>
             <div class="col-md-8">
               <h5 class="text-justify" style="color:#27ae60">
@@ -1009,14 +1011,14 @@ $alerta2 = '
                 Desde el lanzamiento a nivel global en el año 2011, muchas Organizaciones de Pequeños Productores se acercaron para obtener la certificación. Desde esa fecha ya hay muchas Organizaciones que confían en el Símbolo de Pequeños Productores.
               </p>
               <p class="text-justify alert alert-success" style="padding:5.5px;">
-                <a href="lista_opp.php">Revisa la lista de Organizaciones de Pequeños Productores certificadas con el SPP aquí.</a>
+                <a href="lista_opp.php">Consultez la liste des petites organisations de producteurs certifiées avec le SPP ici.</a>
               </p>
               <h5 class="text-justify" style="color:#27ae60">¿Quiénes son los Compradores?</h5>
               <p class="text-justify">
                 Existen muchas empresas comprometidas con la misión y visión del SPP y apoyan íntegramente al desarrollo de las Organizaciones de Pequeños Productores.
               </p>
               <p class="text-justify alert alert-success" style="padding:5.5px;">
-                <a href="lista_empresas.php">Revisa la lista de Empresas registradas con el SPP aquí.</a>
+                <a href="lista_empresas.php">Consultez la liste des sociétés enregistrées auprès du SPP ici.</a>
               </p>
             </div>
 
@@ -1036,7 +1038,7 @@ $alerta2 = '
                   </p>
                   <!--El Símbolo de Pequeños Productores es una iniciativa lanzada en el año 2006 por la CLAC (Coordinadora Latinoamericana y del Caribe de Pequeños Productores de Comercio Justo) con el apoyo del movimiento de Comercio Justo y Economía Solidaria de varios continentes. Para garantizar el adecuado uso de este Símbolo, las organizaciones de pequeños productores crearon la FUNDEPPO (Fundación de Pequeños Productores Organizados), la cual permite asegurar que este Símbolo realmente beneficie a los pequeños productores, las comunidades y los consumidores. FUNDEPPO trabaja con organismos y profesionales calificados para certificar de manera independiente y confiable el cumplimiento de las normas del Símbolo.-->
                   <hr>
-                  <a class="" href="http://spp.coop/" target="_blank">Ir al Sitio Web</a>
+                  <a class="" href="http://spp.coop/" target="_blank">Aller au site web</a>
                 </div>
               </div>
             </div>

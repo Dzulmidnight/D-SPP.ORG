@@ -728,12 +728,12 @@ $alerta2 = '
                   <div class="panel-body" style="font-size:12px;">
                     <p class="alert alert-warning" style="padding:7px;">El #SPP y la contraseña son proporcionados por D-SPP, dichos datos son enviados por email al OPP</p>
 
-                    <div class="form-group">
+                    <!--<div class="form-group">
                       <label for="spp" class="col-sm-2 control-label">#SPP (En caso de contar con uno)</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="spp" name="spp" placeholder="En caso de contar con uno">
                       </div>
-                    </div>
+                    </div>-->
 
                     <div class="form-group">
                       <label for="nombre" class="col-sm-2 control-label">* Nombre de la OPP</label>
@@ -854,12 +854,12 @@ $alerta2 = '
                   <div class="panel-body" style="font-size:12px;">
                     <p class="alert alert-warning" style="padding:7px;">El #SPP y la contraseña son proporcionados por D-SPP, dichos datos son enviados por email</p>
 
-                    <div class="form-group">
+                    <!--<div class="form-group">
                       <label for="spp" class="col-sm-2 control-label">#SPP (En caso de contar con uno)</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="spp" name="spp" placeholder="En caso de contar con uno">
                       </div>
-                    </div>
+                    </div>-->
 
                     <div class="form-group">
                       <label for="nombre" class="col-sm-2 control-label">* Nombre de la Empresa</label>

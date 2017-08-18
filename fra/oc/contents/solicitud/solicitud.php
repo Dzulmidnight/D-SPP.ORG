@@ -25,7 +25,7 @@
         <ul class="dropdown-menu">
           <li><a href="?SOLICITUD&add"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Demande d'OPP</a></li>
           <li><a href="?SOLICITUD&add_empresa"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Demande d'entreprise</a></li>
-          <li><a href="?SOLICITUD&add_colectiva"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitud Colectiva</a></li>
+          <li><a href="?SOLICITUD&add_colectiva"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Demande collective</a></li>
         </ul>
       </div>
     </div>

@@ -698,12 +698,12 @@ $alerta2 = '
                   <div class="panel-body" style="font-size:12px;">
                     <p class="alert alert-warning" style="padding:7px;">The #SPP and password are provided by D-SPP, these data are sent by email to SPO(Small Producers' Organization)</p>
 
-                    <div class="form-group">
+                    <!--<div class="form-group">
                       <label for="spp" class="col-sm-2 control-label">#SPP (If you have one)</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="spp" name="spp" placeholder="If you have one">
                       </div>
-                    </div>
+                    </div>-->
 
                     <div class="form-group">
                       <label for="nombre" class="col-sm-2 control-label">* Name of the Small Producers' Organization</label>
@@ -809,12 +809,12 @@ $alerta2 = '
                   <div class="panel-body" style="font-size:12px;">
                     <p class="alert alert-warning" style="padding:7px;">The #SPP and password are provided by D-SPP, these data are sent by email to the company</p>
 
-                    <div class="form-group">
+                    <!--<div class="form-group">
                       <label for="spp" class="col-sm-2 control-label">#SPP (If you have one)</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="spp" name="spp" placeholder="If you have one">
                       </div>
-                    </div>
+                    </div>-->
 
                     <div class="form-group">
                       <label for="nombre" class="col-sm-2 control-label">* Company name</label>

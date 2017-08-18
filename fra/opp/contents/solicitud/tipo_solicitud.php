@@ -8,17 +8,17 @@ if(isset($_GET['ordinary'])){
 <div class="row" style="margin-top:5em;">
 	<div class="col-md-6 text-center">
 		<p class="text-justify well">
-			<b>Solicitud de Certificación para Organizaciones de Pequeños Productores</b><br>
-			Esta solicitud debe ser llenada por las Organizaciones de Pequeños Productores que solicitan la Certificación SPP a través del procedimiento convencional.
+			<b>Demande de Certification pour les Organisations de Petits Producteurs</b><br>
+			Cette demande doit être remplie par les petites organisations de producteurs qui postulent la certification SPP selon la procédure conventionnelle.
 		</p>
-		<a class="btn btn-success" style="width:50%" href="?SOLICITUD&add&ordinary">Nueva Solicitud Convencional</a>
+		<a class="btn btn-success" style="width:50%" href="?SOLICITUD&add&ordinary">Nouvelle demande conventionnelle</a>
 	</div>
 	<div class="col-md-6 text-center">
 		<p class="text-justify well">
-			<b>Solicitud de Certificación Colectiva para Organizaciones de Pequeños Productores</b><br>
-			Esta solicitud debe ser llenada por las Organizaciones de Pequeños Productores que solicitan la Certificación SPP mediante el procedimiento de Certificación Colectiva.
+			<b>Demande de certification collective pour les petites organisations de producteurs</b><br>
+			Cette demande doit être remplie par les petites organisations de producteurs qui demandent la certification SPP dans le cadre de la procédure de certification collective.
 		</p>
-		<a class="btn btn-warning" style="width:50%" href="?SOLICITUD&add&collective">Nueva Solicitud Colectiva</a>
+		<a class="btn btn-warning" style="width:50%" href="?SOLICITUD&add&collective">Nouvelle demande collective</a>
 	</div>
 </div>
 
