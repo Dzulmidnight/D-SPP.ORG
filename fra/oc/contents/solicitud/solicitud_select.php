@@ -2076,27 +2076,29 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       $inicio = strtotime($certificado['vigencia_inicio']);
                                       $fin = strtotime($certificado['vigencia_fin']);
                                     ?>
-                                      <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
-                                      <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
+                                      <p class="alert alert-info">
+                                        Le certificat a été téléchargé, il est valide du <b><?php echo date('d/m/Y', $inicio); ?></b> au <b><?php echo date('d/m/Y', $fin); ?></b>
+                                      </p>
+                                      <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Télécharger le certificat</a>
                                     <?php
                                     }else{
                                     ?>
                                       <div class="col-md-12">
-                                        <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
-                                        <p class="alert alert-warning" style="padding:5px;">En caso de que no se despliegue el calendario, por favor definir la fecha con el siguiente formato <span style="color:red">dd-mm-aaaa</span></p>
+                                        <p class="alert alert-info">Meci de définir la date de début et de fin du certificat.</p>
+                                        <p class="alert alert-warning" style="padding:5px;">Au cas où le calendrier ne s'ouvrirait pas, merci d'indqiquer la date sous la forme <span style="color:red">jj-mm-aaaa</span></p>
                                       </div>
                                       <div class="col-md-6">
-                                        <label for="fecha_inicio">Fecha Inicio</label> 
-                                        <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd-mm-aaaa" required> 
+                                        <label for="fecha_inicio">Date de début</label> 
+                                        <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="jj-mm-aaaa" required> 
                                       </div>
                                       <div class="col-md-6">
-                                        <label for="fecha_fin">Fecha Fin</label>
-                                        <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd-mm-aaaa" required>
+                                        <label for="fecha_fin">Fin du certificat</label>
+                                        <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="jj-mm-aaaa" required>
                                       </div>
                                       
-                                      <label for="certificado">Por favor seleccione el Certificado</label>
+                                      <label for="certificado">Merci de sélectionner le certificat</label>
                                       <input type="file" name="certificado" id="certificado" class="form-control" required>
-                                      <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>  
+                                      <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Envoyer le certificat</button>  
                                     <?php
                                     }
                                   }else{
@@ -2114,32 +2116,38 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       $inicio = strtotime($certificado['vigencia_inicio']);
                                       $fin = strtotime($certificado['vigencia_fin']);
                                     ?>
-                                      <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
-                                      <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
+                                      <p class="alert alert-info">
+                                        Le certificat a été téléchargé, il est valide du <b><?php echo date('d/m/Y', $inicio); ?></b> au <b><?php echo date('d/m/Y', $fin); ?></b>
+                                      </p>
+                                      <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Télécharger le certificat</a>
                                     <?php
                                     }else{
                                     ?>
                                       <div class="col-md-12">
-                                        <p class="alert alert-info">Por favor defina la fecha de Inicio y Fin del Certificado.</p>
-                                        <p class="alert alert-warning" style="padding:5px;">En caso de que no se despliegue el calendario, por favor definir la fecha con el siguiente formato <span style="color:red">dd-mm-aaaa</span></p>
+                                        <p class="alert alert-info">
+                                          Meci de définir la date de début et de fin du certificat.
+                                        </p>
+                                        <p class="alert alert-warning" style="padding:5px;">
+                                          Au cas où le calendrier ne s'ouvrirait pas, merci d'indqiquer la date sous la forme <span style="color:red">dd-mm-aaaa</span>
+                                        </p>
                                       </div>
                                       <div class="col-md-6">
-                                        <label for="fecha_inicio">Fecha Inicio</label> 
+                                        <label for="fecha_inicio">Date de début</label> 
                                         <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" placeholder="dd-mm-aaaa" required> 
                                       </div>
                                       <div class="col-md-6">
-                                        <label for="fecha_fin">Fecha Fin</label>
+                                        <label for="fecha_fin">Fin du certificat</label>
                                         <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" placeholder="dd-mm-aaaa" required>
                                       </div>
                                       
-                                      <label for="certificado">Por favor seleccione el Certificado</label>
+                                      <label for="certificado">Merci de sélectionner le certificat</label>
                                       <input type="file" name="certificado" id="certificado" class="form-control" required>
-                                      <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>  
+                                      <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Envoyer le certificat</button>  
                                     <?php
                                     }
                                   }else{
                                     echo '<p class="alert alert-warning">
-                                    Una vez aprobado el "Contrato de Uso" podra cargar el Certificado correspondiente.
+                                   Une fois que la documentation nécessaire aura été approuvée par SPP Global, vous pourrez télécharger le certificat SPP.
                                     </p> ';
                                   }
                                   // termina validación //
@@ -2147,11 +2155,11 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                             }else{
                               if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                                 echo '<p class="alert alert-warning">
-                                  Aun no se han cargado los documentos de evaluación.
+                                  Les documents d\'évaluation n\'ont pas encore été téléchargés.
                                 </p> ';
                               }else{
                                 echo '<p class="alert alert-warning">
-                                  Una vez aprobada la documentación necesaria por parte de SPP Global, podra cargar el Certificado SPP.
+                                  Une fois que la documentation nécessaire aura été approuvée par SPP Global, vous pourrez télécharger le certificat SPP.
                                 </p> ';
                               }
                             }
@@ -2166,7 +2174,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
                         <input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                       </div>
                     </div>
                   </div>
@@ -2180,7 +2188,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           </td>
           <td>
             <form action="../../reportes/solicitud.php" method="POST" target="_new">
-              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
+              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Télécharger le demande" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
               <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
               <input type="hidden" name="generar_formato" value="1">
@@ -2239,27 +2247,3 @@ function ventanaNueva(documento,ancho,alto,nombreVentana){
      
 //-->
 </script>
-<!--<table>
-<tr>
-<td width="20"><?php if ($pageNum_opp > 0) { // Show if not first page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, 0, $queryString_opp); ?>">
-<span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not first page ?></td>
-<td width="20"><?php if ($pageNum_opp > 0) { // Show if not first page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, max(0, $pageNum_opp - 1), $queryString_opp); ?>">
-<span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not first page ?></td>
-<td width="20"><?php if ($pageNum_opp < $totalPages_opp) { // Show if not last page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, min($totalPages_opp, $pageNum_opp + 1), $queryString_opp); ?>">
-<span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not last page ?></td>
-<td width="20"><?php if ($pageNum_opp < $totalPages_opp) { // Show if not last page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, $totalPages_opp, $queryString_opp); ?>">
-<span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not last page ?></td>
-</tr>
-</table>-->

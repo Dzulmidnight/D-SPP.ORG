@@ -623,7 +623,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
       <thead>
         <tr class="success">
           <th class="text-center">ID</th>
-          <th class="text-center"><a href="#" data-toggle="tooltip" title="Tipo de Solicitud"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Type</a></th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Type de demande"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Type</a></th>
           <th class="text-center">Date</th>
           <th class="text-center">OC</th>
           <th class="text-center">Etat de la demande</th>
