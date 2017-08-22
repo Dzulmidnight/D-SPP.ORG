@@ -179,7 +179,7 @@ $opp = mysql_fetch_assoc($row_opp);
   <?php
   }
   ?>
-    <h3>Mis Datos </h3>
+    <h3>Information de l'organisation</h3>
     <form action="" method="POST">
       <table class="table table-condensed">
         <tr>
@@ -189,77 +189,77 @@ $opp = mysql_fetch_assoc($row_opp);
           </td>
         </tr>
         <tr>
-          <td>Nombre</td>
+          <td>Nom de l'organisation</td>
           <td>
             <input class="form-control" id="" name="nombre" value="<?php echo $opp['nombre']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Abreviación</td>
+          <td>Sigle ou nom gégé</td>
           <td>
             <input class="form-control" id="" name="abreviacion" value="<?php echo $opp['abreviacion']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Password</td>
+          <td>Mot de passe</td>
           <td>
             <?php 
             if($opp['ver_password']){
               echo $opp['password'];
             }else{
-              echo "<p class='alert alert-warning' style='padding:7px;'>Información no Disponible</p>";
+              echo "<p class='alert alert-warning' style='padding:7px;'>Information non disponible</p>";
             }
              ?>
           </td>
         </tr>
         <tr>
-          <td>Sitio Web</td>
+          <td>Site Web</td>
           <td>
             <input class="form-control" id="" name="sitio_web" value="<?php echo $opp['sitio_web']; ?>">
           </td>
         </tr>
         <tr>
-          <td style="width:300px;">Email<br>(<small>email al que seran enviadas las notificaciones</small>)</td>
+          <td style="width:300px;">Email<br>(<small>Le courrier électronique auquel les notifications seront envoyées</small>)</td>
           <td>
             <input class="form-control" id="" name="email" value="<?php echo $opp['email']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Teléfono</td>
+          <td>Téléphone</td>
           <td>
             <input class="form-control" id="" name="telefono" value="<?php echo $opp['telefono']; ?>">
           </td>
         </tr>
         <tr>
-          <td>País</td>
+          <td>Pays</td>
           <td>
             <?php echo $opp['pais']; ?>
           </td>
         </tr>
         <tr>
-          <td>Ciudad</td>
+          <td>Ville</td>
           <td>
             <input class="form-control" id="" name="ciudad" value="<?php echo $opp['ciudad']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Dirección Oficina</td>
+          <td>Adresse du bureau</td>
           <td>
             <input class="form-control" id="" name="direccion_oficina" value="<?php echo $opp['direccion_oficina']; ?>">
           </td>
         </tr>
 
         <tr class="warning">
-          <td colspan="2" class="text-center"><strong>Datos Fiscales</strong></td>
+          <td colspan="2" class="text-center"><strong>Données fiscales</strong></td>
         </tr>
         <tr>
-          <td>Razón Social</td>
+          <td>Raison sociale</td>
           <td>
             <input class="form-control" id="" name="razon_social" value="<?php echo $opp['razon_social']; ?>">
           </td>
         </tr>
         <tr>
-          <td>Dirección Fiscal</td>
+          <td>Adresse fiscale</td>
           <td>
             <input class="form-control" id="" name="direccion_fiscal" value="<?php echo $opp['direccion_fiscal']; ?>">
           </td>
@@ -282,7 +282,7 @@ $opp = mysql_fetch_assoc($row_opp);
             <?php 
             if($opp['ver_password']){
             ?>
-              <input class="btn btn-success" type="submit" value="Actualizar Información">
+              <input class="btn btn-success" type="submit" value="Mettre à jour l'information">
               <input type="hidden" name="actualizar_opp" value="1">
             <?php
             }

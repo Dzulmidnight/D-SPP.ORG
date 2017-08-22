@@ -4,15 +4,15 @@
 	</li>
 	<li role="presentation" <?php if(isset($_GET['add'])){echo "class='active'"; } ?>>
 		<a href="?OPP&add" aria-label="Left Align">
-			<span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> Nuevo OPP
+			<span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> Nouvelle OPP
 		</a>
 	</li>
-	<?php 
+	<?php
 	if(isset($_GET['detail'])){
 	?>
 	<li class="active">
 		<a href="#">
-			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Detalle 	
+			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Détail 	
 		 </a>
 	</li>
 	<?php

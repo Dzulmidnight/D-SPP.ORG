@@ -352,8 +352,8 @@ function preguntar(){
   <hr>
     <div class="row">
       <div class="col-md-4" >
-        <button class="btn btn-sm btn-primary" onclick="guardarDatos()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Cambios</button><!-- BOTON GUARDAR DATOS -->
-        | <span class="alert alert-warning" style="padding:7px;">Total EMPRESAS: <?php echo $totalEmpresa; ?></span>
+        <button class="btn btn-sm btn-primary" onclick="guardarDatos()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Enregistrer les modifications</button><!-- BOTON GUARDAR DATOS -->
+        | <span class="alert alert-warning" style="padding:7px;">Entreprises totales: <?php echo $totalEmpresa; ?></span>
       </div>
       <form action="" method="POST">
         <div class="col-md-8">
@@ -361,7 +361,7 @@ function preguntar(){
             <span class="input-group-btn">
               <button class="btn btn-default" type="submit" name="buscar" value="1">Buscar</button>
             </span>
-            <input type="text" class="form-control" name="campo_buscar" placeholder="Buscar por: #spp, palabra, abreviación">
+            <input type="text" class="form-control" name="campo_buscar" placeholder="Rechercher: #spp, mot, abreviation">
           </div><!-- /input-group -->
         </div><!-- /.col-lg-6 -->
       </form>
@@ -392,18 +392,18 @@ function preguntar(){
       <thead>
         <tr>
           <th class="text-center" style="width:100px;">#SPP</th>
-          <th class="text-center" style="width:100px;">Nombre</th>
-          <th class="text-center">Abreviación</th>
-          <th class="text-center"><a href="#" data-toggle="tooltip" title="Proceso de Certificación en el que se encuentra la Empresa"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Proceso certificación</a></th>
+          <th class="text-center" style="width:100px;">Nom</th>
+          <th class="text-center">Abreviation</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Processus de certification dans lequel se trouve la enterprise"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Processus de certification</a></th>
           <th class="text-center">
-            <a href="#" data-toggle="tooltip" title="Fecha en la que expira el Certificado"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Fecha Final<br>(Certificado)</a>
+            <a href="#" data-toggle="tooltip" title="Date à laquelle le certificat expire"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Fin du<br>certificat</a>
           </th>
-          <th class="text-center"><a href="#" data-toggle="tooltip" title="Estatus del Certificado definido por la fecha de vigencia final">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Estatus Certificado</a>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Statut du certificat défini à la date d'entrée en vigueu">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Statut du certificat</a>
           </th>
 
           <!--<th class="text-center">Abreviación</th>-->
-          <th class="text-center">Productos</th>
+          <th class="text-center">Produits</th>
           <!--<th class="text-center">Email</th>
           <th class="text-center">Teléfono Oficinas</th>
           <th class="text-center">País</th>-->
@@ -412,7 +412,7 @@ function preguntar(){
 
           <!--<th class="text-center">Dirección fiscal</th>-->
           <!--<th class="text-center">RFC</th>-->
-          <th class="text-center">Acciones</th>
+          <th class="text-center">Actions</th>
         </tr>
       </thead>
       <form name="formularioActualizar" id="formularioActualizar" action="" method="POST">
@@ -420,14 +420,14 @@ function preguntar(){
         <tbody>
           <?php 
           if($totalEmpresa == 0){
-            echo "<tr><td class='alert alert-info text-center' colspan='10'>No se encontraron registros</td></tr>";
+            echo "<tr><td class='alert alert-info text-center' colspan='10'>Aucun enregistrement trouvé</td></tr>";
           }else{
             while($empresa = mysql_fetch_assoc($detalle_empresa)){
             ?>
               <tr>
                 <td>
                   <input type="text" name="spp<?php echo $empresa['idempresa']; ?>" value="<?php echo $empresa['spp']; ?>">
-                  <a class="btn btn-xs btn-primary" style="width:100%;" href="?EMPRESAS&amp;detail&amp;idempresa=<?php echo $empresa['idempresa']; ?>">Consultar</a>
+                  <a class="btn btn-xs btn-primary" style="width:100%;" href="?EMPRESAS&amp;detail&amp;idempresa=<?php echo $empresa['idempresa']; ?>">Voir les informations</a>
                 </td>
                 <td>
                   <?php echo $empresa['nombre']; ?>
@@ -484,7 +484,7 @@ function preguntar(){
                 }
                  echo "<td class='".$clase."'>".$certificado['nombre']."</td>";
               }else{
-                echo "<td>No Disponible</td>";
+                echo "<td>Non disponible</td>";
               }
                 //echo $opp['estatus_certificado'];
                ?>
@@ -495,7 +495,7 @@ function preguntar(){
                   $row_productos = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
                   $total_productos = mysql_num_rows($row_productos);
                   if($total_productos == 0){
-                    echo "No Disponible";
+                    echo "Non disponible";
                   }else{
 
                   }
@@ -506,7 +506,7 @@ function preguntar(){
                 </td>
                 <td>
                   <!-- ELIMINAR EMPRESA -->
-                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Organización" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_empresa" value="<?php echo $empresa['idempresa']; ?>"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Supprimer la enterprise" type="submit" onclick="return confirm('Êtes-vous sûr ?, Les données seront supprimées en permanence');" name="eliminar_empresa" value="<?php echo $empresa['idempresa']; ?>"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
                   <input type="hidden" name="idempresa" value="<?php echo $empresa['idempresa']; ?>">
                 </td>
               </tr>

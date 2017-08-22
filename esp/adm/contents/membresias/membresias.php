@@ -40,6 +40,7 @@ if (isset($_SERVER['QUERY_STRING'])) {
 mysql_select_db($database_dspp, $dspp);
 
 $fecha = time();
+$anio = date('Y', time());
 
 
 if(isset($_POST['aprobar_comprobante'])){
@@ -197,7 +198,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 
 }else{
 	//$row_membresias = mysql_query("SELECT membresia.* FROM membresia ORDER BY membresia.idmembresia DESC", $dspp) or die(mysql_error());
-	$row_membresias = mysql_query("SELECT opp.abreviacion, opp.pais, membresia.*, comprobante_pago.monto, comprobante_pago.archivo FROM membresia INNER JOIN opp ON membresia.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago ORDER BY membresia.idmembresia DESC", $dspp) or die(mysql_error());
+	$row_membresias = mysql_query("SELECT opp.abreviacion, opp.pais, membresia.*, comprobante_pago.monto, comprobante_pago.archivo, proceso_certificacion.fecha_registro AS 'periodo' FROM membresia INNER JOIN opp ON membresia.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN proceso_certificacion ON membresia.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion WHERE FROM_UNIXTIME(membresia.fecha_registro, '%Y') = $anio AND proceso_certificacion.estatus_interno = 8 GROUP BY membresia.idsolicitud_certificacion ORDER BY membresia.idmembresia DESC", $dspp) or die(mysql_error());
 }
 
 
@@ -249,7 +250,11 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 						<option value="">Todos</option>
 						<?php
 						while($fecha = mysql_fetch_assoc($row_anio)){
-							echo '<option value="'.$fecha['anio'].'">'.$fecha['anio'].'</option>';
+							if($anio == $fecha['anio']){
+								echo '<option value="'.$fecha['anio'].'" selected>'.$fecha['anio'].'</option>';
+							}else{
+								echo '<option value="'.$fecha['anio'].'">'.$fecha['anio'].'</option>';
+							}
 						}
 						 ?>
 					</select>
@@ -264,6 +269,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 			<th class="text-center">ID</th>
 			<th class="text-center">Comprobante</th>
 			<th class="text-center">Organización</th>
+			<th class="text-center">Periodo</th>
 			<th class="text-center">País</th>
 			<th class="text-center">Monto membresia</th>
 			<th class="text-center">Estatus membresia</th>

@@ -182,7 +182,7 @@ $row_oc = mysql_fetch_assoc($oc);
 $totalRows_oc = mysql_num_rows($oc);
 $alerta = '
            <p style="background-color:#e74c3c; border: solid 2px #c0392b; color:#ecf0f1; text-align:center; padding:5px;">
-            SI YA ES O FUE UNA ORGANIZACIÓN CERTIFICADA CON EL SPP, DEBE DE CONSULTAR EN SU LISTA DE "Informacion OPP" ANTES DE CREAR UN NUEVO USUARIO.
+            SI VOUS ÊTES OU A ÉTÉ UNE ORGANISATION CERTIFIÉE AVEC LE SPP, VOUS DEVEZ CONSULTER VOTRE LISTE DES "INFORMATIONS OPP" AVANT DE CRÉER UN NOUVEAU UTILISATEUR.
           </p>';
 
 ?>
@@ -209,53 +209,53 @@ $alerta = '
     <form action="" method="POST" class="form-horizontal">
       <div class="panel panel-info">
         <div class="panel-heading">
-          <h3 class="panel-title">Formulario de Registro para OPP</h3>
+          <h3 class="panel-title">Formulaire d'inscription pour l'organisation des petits producteurs</h3>
         </div>
         <div class="panel-body" style="font-size:12px;">
-          <p class="alert alert-warning" style="padding:7px;">El #SPP y la contraseña son proporcionados por D-SPP, dichos datos son enviados por email al OPP</p>
+          <p class="alert alert-warning" style="padding:7px;">Le #SPP et le mot de passe sont fournis par D-SPP, ces données sont envoyées par courrier électronique à la Police provinciale de l'Ontario</p>
 
-          <div class="form-group">
+          <!--<div class="form-group">
             <label for="spp" class="col-sm-2 control-label">#SPP (En caso de contar con uno)</label>
             <div class="col-sm-10">
               <input type="text" class="form-control" id="spp" name="spp" placeholder="En caso de contar con uno">
             </div>
-          </div>
+          </div>-->
 
           <div class="form-group">
-            <label for="nombre" class="col-sm-2 control-label">* Nombre de la OPP</label>
+            <label for="nombre" class="col-sm-2 control-label">* Nom de l'organisation:</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escriba el nombre" autofocus required>
+              <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" autofocus required>
             </div>
           </div>
           <div class="form-group">
-            <label for="abreviacion" class="col-sm-2 control-label">Abreviación de la OPP</label>
+            <label for="abreviacion" class="col-sm-2 control-label">Sigle ou nom gégé</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="abreviacion" placeholder="Escriba la abreviación" name="abreviacion">
+              <input type="text" class="form-control" id="abreviacion" placeholder="" name="abreviacion">
             </div>
           </div>
           <div class="form-group">
-            <label for="sitio_web" class="col-sm-2 control-label">Sitio Web</label>
+            <label for="sitio_web" class="col-sm-2 control-label">Site Web</label>
             <div class="col-sm-10">
               <input type="text" class="form-control" id="sitio_web" name="sitio_web">
             </div>
           </div>
           <div class="form-group">
-            <label for="email" class="col-sm-2 control-label">* Correo Electronico</label>
+            <label for="email" class="col-sm-2 control-label">* Courrier électronique</label>
             <div class="col-sm-10">
-              <input type="email" class="form-control" id="email" name="email" placeholder="Escriba el correo electronico" required>
+              <input type="email" class="form-control" id="email" name="email" placeholder="" required>
             </div>
           </div>
           <div class="form-group">
-            <label for="telefono" class="col-sm-2 control-label">* Teléfono de Oficina</label>
+            <label for="telefono" class="col-sm-2 control-label">* Téléphone de l'organisation</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Escriba el teléfono de oficina" required>
+              <input type="text" class="form-control" id="telefono" name="telefono" placeholder="" required>
             </div>
           </div>
           <div class="form-group">
-            <label for="pais" class="col-sm-2 control-label">País</label>
+            <label for="pais" class="col-sm-2 control-label">Pays</label>
             <div class="col-sm-10">
               <select name="pais" id="pais" class="form-control" required>
-                <option value="">Selecciona un País</option>
+                <option value="">Sélectionnez un pays</option>
                 <?php 
                 while($pais = mysql_fetch_assoc($row_pais)){
                   echo "<option value='".utf8_encode($pais['nombre'])."'>".utf8_encode($pais['nombre'])."</option>";
@@ -265,26 +265,26 @@ $alerta = '
             </div>
           </div>
           <div class="form-group">
-            <label for="ciudad" class="col-sm-2 control-label">Ciudad</label>
+            <label for="ciudad" class="col-sm-2 control-label">Ville</label>
             <div class="col-sm-10">
               <input type="text" class="form-control" id="ciudad" name="ciudad">
             </div>
           </div>
           <div class="form-group">
-            <label for="direccion_oficina" class="col-sm-2 control-label">Dirección de las Oficinas</label>
+            <label for="direccion_oficina" class="col-sm-2 control-label">Adresse du bureau</label>
             <div class="col-sm-10">
               <input type="text" id="direccion_oficina" class="form-control" name="direccion_oficina" placeholder="Dirección de las Oficinas">
             </div>
           </div>
-          <p class="alert alert-warning text-center" style="padding:7px;">Datos Fiscales (Opcionales)</p>
+          <p class="alert alert-warning text-center" style="padding:7px;">Données fiscales (facultatif)</p>
           <div class="form-group">
-            <label for="razon_social" class="col-sm-2 control-label">Razón Social</label>
+            <label for="razon_social" class="col-sm-2 control-label">Registre du commerce</label>
             <div class="col-sm-10">
               <input type="text" class="form-control" id="razon_social" name="razon_social">
             </div>
           </div>
           <div class="form-group">
-            <label for="direccion_fiscal" class="col-sm-2 control-label">Dirección Fiscal</label>
+            <label for="direccion_fiscal" class="col-sm-2 control-label">Adresse fiscale</label>
             <div class="col-sm-10">
               <input type="text" class="form-control" id="direccion_fiscal" name="direccion_fiscal">
             </div>
@@ -302,7 +302,7 @@ $alerta = '
             </div>
           </div>
           <input type="hidden" name="registro_opp" value="1">
-          <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Registrarse</button>
+          <button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Créer un utilisateur</button>
 
         </div>
       </div>
