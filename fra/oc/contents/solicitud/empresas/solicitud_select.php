@@ -1776,16 +1776,16 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
       <thead>
         <tr class="success">
           <th class="text-center">ID</th>
-          <th class="text-center"><a href="#" data-toggle="tooltip" title="Tipo de Solicitud"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Tipo</a></th>
-          <th class="text-center">Fecha Solicitud</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Type de demande"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Type</a></th>
+          <th class="text-center">Date</th>
           <th class="text-center">OC</th>
-          <th class="text-center">Organización</th>
-          <th class="text-center">Estatus Solicitud</th>
-          <th class="text-center">Cotización <br>(Descargable)</th>
-          <th class="text-center">Proceso de Objeción</th>
-          <th class="text-center"><a href="#" data-toggle="tooltip" title="El OC debe actualizar el estatus del proceso eligiendo una de las opciones que se despliega en esta sección"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Proceso<br>Certificación</a></th>
-          <th class="text-center">Certificado</th>
-          <th class="text-center" colspan="2">Acciones</th>
+          <th class="text-center">Organisation</th>
+          <th class="text-center">Etat de la demande</th>
+          <th class="text-center">Cotation (téléchargeable)</th>
+          <th class="text-center">Processus d'objection</th>
+          <th class="text-center"><a href="#" data-toggle="tooltip" title="Sélectionnez le procesuus de certification dans lequel se trouve l'OPP"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Processus de<br>certification</a></th>
+          <th class="text-center">Certificat</th>
+          <th class="text-center" colspan="2">Actions</th>
         </tr>       
       </thead>
       <tbody>
@@ -1819,7 +1819,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             if(isset($proceso_certificacion['estatus_dspp'])){
               echo $proceso_certificacion['nombre_dspp'];
             }else{
-              echo "No Disponible";
+              echo "Non disponible";
             }
              ?>
           </td>
@@ -1842,7 +1842,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                }
 
             }else{ // INICIA CARGAR COTIZACIÓN
-              echo "No Disponible";
+              echo "Non disponible";
             } // TERMINA CARGAR COTIZACIÓN
              ?>
 
@@ -1897,7 +1897,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 ?>
               <?php
               }else{
-                echo "No Disponible";
+                echo "Non disponible";
               }
             }
             ?>
@@ -2301,7 +2301,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
               <?php
               }else{
-                echo "No Disponible";
+                echo "Non disponible";
               }
                ?>
                <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">

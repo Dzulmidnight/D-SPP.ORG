@@ -351,12 +351,12 @@ function preguntar(){
 </script>
   <hr>
     <div class="row">
-      <div class="col-md-4" >
+      <div class="col-md-5" >
         <button class="btn btn-sm btn-primary" onclick="guardarDatos()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Enregistrer les modifications</button><!-- BOTON GUARDAR DATOS -->
         | <span class="alert alert-warning" style="padding:7px;">Entreprises totales: <?php echo $totalEmpresa; ?></span>
       </div>
       <form action="" method="POST">
-        <div class="col-md-8">
+        <div class="col-md-7">
           <div class="input-group">
             <span class="input-group-btn">
               <button class="btn btn-default" type="submit" name="buscar" value="1">Buscar</button>
