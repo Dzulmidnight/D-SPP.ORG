@@ -199,7 +199,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 }else{
 	//$row_membresias = mysql_query("SELECT membresia.* FROM membresia ORDER BY membresia.idmembresia DESC", $dspp) or die(mysql_error());
 	//22_08_2017 $row_membresias = mysql_query("SELECT opp.abreviacion, opp.pais, membresia.*, comprobante_pago.monto, comprobante_pago.archivo, proceso_certificacion.fecha_registro AS 'periodo' FROM membresia INNER JOIN opp ON membresia.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN proceso_certificacion ON membresia.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion WHERE FROM_UNIXTIME(proceso_certificacion.fecha_registro, '%Y') = $anio AND proceso_certificacion.estatus_interno = 8 GROUP BY membresia.idsolicitud_certificacion ORDER BY membresia.idmembresia DESC", $dspp) or die(mysql_error());
-	$row_membresias = mysql_query("SELECT opp.abreviacion, opp.pais, membresia.*, comprobante_pago.monto, comprobante_pago.archivo, proceso_certificacion.fecha_registro AS 'periodo' FROM membresia INNER JOIN opp ON membresia.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN proceso_certificacion ON membresia.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion WHERE proceso_certificacion.estatus_interno = 8 GROUP BY membresia.idsolicitud_certificacion ORDER BY membresia.idmembresia DESC", $dspp) or die(mysql_error());
+	$row_membresias = mysql_query("SELECT opp.abreviacion, opp.pais, membresia.*, comprobante_pago.monto, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.aviso2, comprobante_pago.aviso3, proceso_certificacion.fecha_registro AS 'periodo' FROM membresia INNER JOIN opp ON membresia.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago LEFT JOIN proceso_certificacion ON membresia.idsolicitud_certificacion = proceso_certificacion.idsolicitud_certificacion WHERE proceso_certificacion.estatus_interno = 8 GROUP BY membresia.idsolicitud_certificacion ORDER BY membresia.idmembresia DESC", $dspp) or die(mysql_error());
 }
 
 
@@ -270,6 +270,10 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 			<th class="text-center">ID</th>
 			<th class="text-center">Comprobante</th>
 			<th class="text-center">Organización</th>
+			<th class="text-center">Fecha dictamen</th>
+			<th class="text-center">Recordatorio 1</th>
+			<th class="text-center">Recordatorio 2</th>
+			<th class="text-center">Alerta</th>
 			<th class="text-center">Periodo</th>
 			<th class="text-center">País</th>
 			<th class="text-center">Monto membresia</th>
@@ -280,8 +284,36 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 	<tbody>
 		<?php
 		$estatus = '';
+		$cinco_dias = 432000;
+		$diez_dias = 864000;
+		$veinte_dias = $diez_dias*2;
 		$contador = 1;
+
 		while($membresias = mysql_fetch_assoc($row_membresias)){
+
+			$fecha_dictamen = $membresias['periodo'];
+			$recordatorio1 = $fecha_dictamen + $diez_dias;
+			$recordatorio2 = $fecha_dictamen + $veinte_dias;
+			$alerta_suspension = $recordatorio2 + $cinco_dias;
+
+			if($membresias['aviso1']){
+				$clase_aviso1 = 'label label-success';
+			}else{
+				$clase_aviso1 = 'label label-default';
+			}
+			if($membresias['aviso2']){
+				$clase_aviso2 = 'label label-success';
+			}else{
+				$clase_aviso2 = 'label label-default';
+			}
+			if($membresias['aviso3']){
+				$clase_aviso3 = 'label label-success';
+			}else{
+				$clase_aviso3 = 'label label-default';
+			}
+
+
+
 			if($membresias['estatus_membresia'] == 'EN ESPERA'){
 				$estatus = 'danger';
 			}else{
@@ -322,6 +354,20 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 					 ?>
 				</td>
 				<td><?php echo $membresias['abreviacion']; ?></td>
+				<!-- INICIAN LOS PERIODOS DE LAS ALERTAS -->
+				<td class="warning"> <!-- fecha del dictamen positivo -->
+					<?php echo date('d/m/Y', $membresias['periodo']); ?>
+				</td>
+				<td> <!-- RECORDATORIO 1 -->
+					<?php echo '<span class="'.$clase_aviso1.'">'.date('d/m/Y', $recordatorio1).'</span>'; ?>
+				</td>
+				<td> <!-- RECORDATORIO 2 -->
+					<?php echo '<span class="'.$clase_aviso2.'">'.date('d/m/Y', $recordatorio2).'</span>'; ?>
+				</td>
+				<td> <!-- ALERTA -->
+					<?php echo '<span class="'.$clase_aviso3.'">'.date('d/m/Y', $alerta_suspension).'</span>'; ?>
+				</td>
+				<!-- TERMINAN LOS PERIODOS DE LAS ALERTAS -->
 				<td><?php echo date('d/m/Y', $membresias['periodo']); ?></td>
 				<td><?php echo $membresias['pais'] ?></td>
 				<td><?php echo $membresias['monto']; ?></td>
@@ -340,3 +386,77 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 		 ?>
 	</tbody>
 </table>
+
+<?php
+
+$query = "SELECT * FROM comprobante_pago";
+$consultar = mysql_query($query,$dspp) or die(mysql_error());
+while($registros = mysql_fetch_assoc($consultar)){
+
+}
+ ?>
+
+ <table class="table table-bordered table-condensed">
+ 	<thead>
+ 		<tr>
+ 			<th>Nº</th>
+ 			<th>ID COMPROBANTE</th>
+ 			<th>ID MEMBRESIA</th>
+ 			<th>ID PROCESO_CERTIFICACIÓN</th>
+ 			<th>COMPROBANTE?</th>
+ 			<th>FECHA DICTAMEN</th>
+ 		</tr>
+ 	</thead>
+ 	<?php
+
+ 	$fecha_actual = time();
+	$cinco_dias = 432000;
+	$diez_dias = 864000;
+	$veinte_dias = $diez_dias*2;
+
+ 	$query = "SELECT proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.aviso2, comprobante_pago.aviso3 FROM proceso_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8";
+ 	$ejecutar = mysql_query($query, $dspp) or die(mysql_error());
+ 	$contador = 1;
+ 	while($registros = mysql_fetch_assoc($ejecutar)){
+
+	$fecha_dictamen = $registros['fecha_dictamen'];
+	$recordatorio1 = $fecha_dictamen + $diez_dias;
+	$recordatorio2 = $fecha_dictamen + $veinte_dias;
+	$alerta_suspension = $recordatorio2 + $cinco_dias;
+
+ 	?>
+ 		<tr>
+ 			<td>
+ 				<?php echo $contador; ?>
+ 			</td>
+ 			<td>
+ 				<?php echo $registros['idcomprobante_pago']; ?>
+ 			</td>
+ 			<td>
+ 				<?php echo $registros['idmembresia']; ?>
+ 			</td>
+ 			<td>
+ 				<?php echo $registros['idproceso_certificacion']; ?>
+ 			</td>
+ 			<td>
+ 				<?php 
+ 				if(isset($registros['archivo'])){
+ 					echo 'SI';
+ 				}else{
+ 					echo 'NO';
+ 				}
+ 				 ?>
+ 			</td>
+ 			<td>
+ 				<?php 
+ 				
+ 				echo date('d/m/Y', $registros['fecha_dictamen']); 
+ 				
+ 				?>
+ 			</td>
+ 		</tr>
+ 	<?php
+ 	$contador++;
+ 	}
+ 	 ?>
+ </table>
