@@ -405,6 +405,9 @@ while($registros = mysql_fetch_assoc($consultar)){
  			<th>ID PROCESO_CERTIFICACIÓN</th>
  			<th>COMPROBANTE?</th>
  			<th>FECHA DICTAMEN</th>
+ 			<th>AVISO 1</th>
+ 			<th>AVISO 2</th>
+ 			<th>AVISO 3</th>
  		</tr>
  	</thead>
  	<?php
@@ -414,7 +417,7 @@ while($registros = mysql_fetch_assoc($consultar)){
 	$diez_dias = 864000;
 	$veinte_dias = $diez_dias*2;
 
- 	$query = "SELECT proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.aviso2, comprobante_pago.aviso3 FROM proceso_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8";
+ 	$query = "SELECT solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.aviso2, comprobante_pago.aviso3 FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 ORDER BY proceso_certificacion.fecha_registro DESC";
  	$ejecutar = mysql_query($query, $dspp) or die(mysql_error());
  	$contador = 1;
  	while($registros = mysql_fetch_assoc($ejecutar)){
@@ -423,6 +426,23 @@ while($registros = mysql_fetch_assoc($consultar)){
 	$recordatorio1 = $fecha_dictamen + $diez_dias;
 	$recordatorio2 = $fecha_dictamen + $veinte_dias;
 	$alerta_suspension = $recordatorio2 + $cinco_dias;
+
+			if($registros['aviso1']){
+				$clase_aviso1 = 'label label-success';
+			}else{
+				$clase_aviso1 = 'label label-default';
+			}
+			if($registros['aviso2']){
+				$clase_aviso2 = 'label label-success';
+			}else{
+				$clase_aviso2 = 'label label-default';
+			}
+			if($registros['aviso3']){
+				$clase_aviso3 = 'label label-success';
+			}else{
+				$clase_aviso3 = 'label label-default';
+			}
+
 
  	?>
  		<tr>
@@ -454,8 +474,240 @@ while($registros = mysql_fetch_assoc($consultar)){
  				
  				?>
  			</td>
+			<td> <!-- RECORDATORIO 1 -->
+				<?php 
+				echo '<span class="'.$clase_aviso1.'">'.date('d/m/Y', $recordatorio1).'</span>'; 
+			 	/// notificación 1º aviso
+			 	if(!$registros['aviso1']){
+			 		if($fecha_actual >= $recordatorio1){
+			 			echo '<p style="color:red">ENVIADO</p>';
+						$asunto = "D-SPP | 1er recordatorio pago Membresía SPP";
+
+						$cuerpo_mensaje = '
+						      <html>
+						      <head>
+						        <meta charset="utf-8">
+						      </head>
+						      <body>
+						        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+						          <tbody>
+						            <tr>
+						              <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+						              <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">1º Recordatorio</span></p></th>
+
+						            </tr>
+
+
+						            <tr>
+						              <td colspan="2">
+						               <p>Felicidades!!! el pago de su membresía fue aprobado, su certificado estara disponible en breve por favor espere.</p>
+						              </td>
+						            </tr>
+						            <tr>
+						              <td colspan="2">
+						                <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+						              </td>
+						            </tr>
+						          </tbody>
+						        </table>
+						      </body>
+						      </html>
+						';
+
+						if(!empty($informacion['contacto1_email'])){
+							//$mail->AddAddress($informacion['contacto1_email']);
+							$token = strtok($informacion['contacto1_email'], "\/\,\;");
+							while ($token !== false)
+							{
+							  $mail->AddAddress($token);
+							  $token = strtok('\/\,\;');
+							}
+
+						}
+						if(!empty($informacion['email'])){
+							//$mail->AddAddress($informacion['email']);
+							$token = strtok($informacion['email'], "\/\,\;");
+							while ($token !== false)
+							{
+							  $mail->AddAddress($token);
+							  $token = strtok('\/\,\;');
+							} 
+						}
+
+						$mail->Subject = utf8_decode($asunto);
+						$mail->Body = utf8_decode($cuerpo_mensaje);
+						$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+						$mail->Send();
+						$mail->ClearAddresses();
+
+
+			 		}else{
+			 			echo '<p style="color:green">ACTIVO</p>';
+			 		}
+			 	}
+
+				?>
+			</td>
+			<td> <!-- RECORDATORIO 2 -->
+				<?php 
+				echo '<span class="'.$clase_aviso2.'">'.date('d/m/Y', $recordatorio2).'</span>'; 
+			 	/// notificación 2º aviso
+			 	if(!$registros['aviso2']){
+			 		if($fecha_actual >= $recordatorio2){
+			 			echo '<p style="color:red">ENVIADO</p>';
+
+						$asunto = "D-SPP | 2do recordatorio pago Membresía SPP";
+						$cuerpo_mensaje = '
+						      <html>
+						      <head>
+						        <meta charset="utf-8">
+						      </head>
+						      <body>
+						        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+						          <tbody>
+						            <tr>
+						              <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+						              <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">2º Recordatorio</span></p></th>
+
+						            </tr>
+						            <tr>
+						             <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+						            </tr>
+
+						            <tr>
+						              <td colspan="2">
+						               <p>Felicidades!!! el pago de su membresía fue aprobado, su certificado estara disponible en breve por favor espere.</p>
+						              </td>
+						            </tr>
+						            <tr>
+						              <td colspan="2">
+						                <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+						              </td>
+						            </tr>
+						          </tbody>
+						        </table>
+						      </body>
+						      </html>
+						';
+
+						if(!empty($informacion['contacto1_email'])){
+							//$mail->AddAddress($informacion['contacto1_email']);
+							$token = strtok($informacion['contacto1_email'], "\/\,\;");
+							while ($token !== false)
+							{
+							  $mail->AddAddress($token);
+							  $token = strtok('\/\,\;');
+							}
+
+						}
+						if(!empty($informacion['email'])){
+							//$mail->AddAddress($informacion['email']);
+							$token = strtok($informacion['email'], "\/\,\;");
+							while ($token !== false)
+							{
+							  $mail->AddAddress($token);
+							  $token = strtok('\/\,\;');
+							} 
+						}
+
+						$mail->Subject = utf8_decode($asunto);
+						$mail->Body = utf8_decode($cuerpo_mensaje);
+						$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+						$mail->Send();
+						$mail->ClearAddresses();
+
+			 		}else{
+			 			echo '<p style="color:green">ACTIVO</p>';
+			 		}
+			 	}
+
+				?>
+			</td>
+			<td> <!-- ALERTA -->
+				<?php 
+				echo '<span class="'.$clase_aviso3.'">'.date('d/m/Y', $alerta_suspension).'</span>'; 
+			 	/// notificación 2º aviso
+			 	if(!$registros['aviso3']){
+			 		if($fecha_actual >= $alerta_suspension){
+			 			echo '<p style="color:red">ENVIADO</p>';
+						
+						$asunto = "D-SPP | Alerta de Suspensión";
+						$cuerpo_mensaje = '
+						      <html>
+						      <head>
+						        <meta charset="utf-8">
+						      </head>
+						      <body>
+						        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+						          <tbody>
+						            <tr>
+						              <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+						              <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Alerta de Suspensión</span></p></th>
+
+						            </tr>
+						            <tr>
+						             <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$informacion['nombre'].'</span></p></th>
+						            </tr>
+
+						            <tr>
+						              <td colspan="2">
+						               <p>Felicidades!!! el pago de su membresía fue aprobado, su certificado estara disponible en breve por favor espere.</p>
+						              </td>
+						            </tr>
+						            <tr>
+						              <td colspan="2">
+						                <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+						              </td>
+						            </tr>
+						          </tbody>
+						        </table>
+						      </body>
+						      </html>
+						';
+
+						/*if(!empty($informacion['contacto1_email'])){
+							//$mail->AddAddress($informacion['contacto1_email']);
+							$token = strtok($informacion['contacto1_email'], "\/\,\;");
+							while ($token !== false)
+							{
+							  $mail->AddAddress($token);
+							  $token = strtok('\/\,\;');
+							}
+
+						}
+						if(!empty($informacion['email'])){
+							//$mail->AddAddress($informacion['email']);
+							$token = strtok($informacion['email'], "\/\,\;");
+							while ($token !== false)
+							{
+							  $mail->AddAddress($token);
+							  $token = strtok('\/\,\;');
+							} 
+						}
+
+						$mail->Subject = utf8_decode($asunto);
+						$mail->Body = utf8_decode($cuerpo_mensaje);
+						$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+						$mail->Send();
+						$mail->ClearAddresses();
+
+			 		}else{
+			 			echo '<p style="color:green">ACTIVO</p>';
+			 		}
+			 	}
+
+				?>
+			</td>
+
  		</tr>
  	<?php
+
+
+ 	/// notificación 2º aviso
+
+ 	///notificación 3º aviso
+
+
  	$contador++;
  	}
  	 ?>
