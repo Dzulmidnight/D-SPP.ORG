@@ -464,13 +464,14 @@ function redondear_dos_decimal($valor) {
 					<td style="border-style:hidden;"><span class="disabled btn btn-xs btn-info glyphicon glyphicon-open-file"></span> = Factura enviada</td>
 					<td style="border-style:hidden;"><img src="../../img/circulo_verde.jpg" alt=""> Activo</td>
 					<td style="border-style:hidden;"><span class="disabled btn btn-xs btn-info glyphicon glyphicon-picture" aria-hidden="true"></span> = Comprobante de pago cargado</td>
+					<td style="border-style:hidden;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> = Previsualizar reporte</td>
 				</tr>
 				<tr>
 					<td style="border-style:hidden;">
 						<span class="disabled btn btn-xs btn-info glyphicon glyphicon-ok" aria-hidden="true"></span> Pagado
 					</td>
 					<td style="border-style:hidden;"><img src="../../img/circulo_rojo.jpg" alt=""> Finalizado</span></td>
-					<td tyle="border-style:hidden;"><img src="../../img/pdf.png" alt=""> = Reporte PDF</td>
+					<td style="border-style:hidden;"><img src="../../img/pdf.png" alt=""> = Reporte PDF</td>
 				</tr>
 
 				<tr class="warning">
@@ -528,6 +529,12 @@ function redondear_dos_decimal($valor) {
 						//// INICIA TRIMESTRE 1
 							echo '<td>'; //// TRIMESTRE 1
 							?>
+								<?php 
+								if(isset($informes['trim1'])){
+									echo '<a data-toggle="tooltip" title="Previsualizar reporte trimestral" href="?REPORTES&previsualizar_compras='.$informes['trim1'].'"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>';
+								}
+								 ?>
+
 								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim1".$informes['trim1']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
 
 								<div id="<?php echo "trim1".$informes['trim1']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -658,6 +665,12 @@ function redondear_dos_decimal($valor) {
 						//// INICIA TRIMESTRE 2
 							echo '<td>'; //// TRIMESTRE 2
 							?>
+								<?php 
+								if(isset($informes['trim2'])){
+									echo '<a data-toggle="tooltip" title="Previsualizar reporte trimestral" href="?REPORTES&previsualizar_compras='.$informes['trim2'].'"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>';
+								}
+								 ?>
+								
 								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim2".$informes['trim2']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
 
 								<div id="<?php echo "trim2".$informes['trim2']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -790,6 +803,12 @@ function redondear_dos_decimal($valor) {
 						/// INICIA TRIMESTRE 3
 							echo '<td>'; //// TRIMESTRE 3
 							?>
+								<?php 
+								if(isset($informes['trim3'])){
+									echo '<a data-toggle="tooltip" title="Previsualizar reporte trimestral" href="?REPORTES&previsualizar_compras='.$informes['trim3'].'"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>';
+								}
+								 ?>
+
 								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim3".$informes['trim3']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
 
 								<div id="<?php echo "trim3".$informes['trim3']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -922,6 +941,12 @@ function redondear_dos_decimal($valor) {
 						/// INICIA TRIMESTRE 4
 							echo '<td>'; //// TRIMESTRE 4
 							?>
+								<?php 
+								if(isset($informes['trim4'])){
+									echo '<a data-toggle="tooltip" title="Previsualizar reporte trimestral" href="?REPORTES&previsualizar_compras='.$informes['trim4'].'"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>';
+								}
+								 ?>
+
 								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim4".$informes['trim4']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
 
 								<div id="<?php echo "trim4".$informes['trim4']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">

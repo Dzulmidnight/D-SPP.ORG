@@ -43,7 +43,7 @@ if (!function_exists("GetSQLValueString")) {
     <a href="?MEMBRESIAS&inicio">Membresias</a>
   </li>
   <li <?php if(isset($_GET['REPORTES'])){echo "class='active'"; } ?>>
-    <a href="?REPORTES&select">Reportes Comerciales</a>
+    <a href="?REPORTES&ingresos=informe_compras">Reportes Comerciales</a>
     <!--<a href="?ESTADISTICAS&select">Estadisticas</a>-->
   </li>
   <!--24_02_2017<li <?php if(isset($_GET['FINANZAS'])){echo "class='active'"; } ?>>

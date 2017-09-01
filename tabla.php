@@ -1,4 +1,4 @@
-                    <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+                    <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px;" border="0" width="650px">
                       <tbody>
                         <tr>
                           <th rowspan="1" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
@@ -8,7 +8,7 @@
 
 
                         <tr>
-                          <td colspan="2">
+                          <td colspan="2" style="text-align:justify">
                             <p>
                               Estimados Representantes de : <span style="color:red">ASOCIACION DE PEQUEÑOS PRODUCTORES DE CAFÉ INGRUMA</span> - (ASPROCAFE INGRUMA)
                             </p>
@@ -24,12 +24,18 @@
                           </td>
                         </tr>
                         <tr>
+                          <td colspan="2" style="padding-top:2em;">
+                            <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                          </td>
+                        </tr>
+
+                        <tr style="color: #797979;">
                           <td style="padding-top:2em;">
                             <b>English Below</b>
                             <hr>
                           </td>
                         </tr>
-                        <tr>
+                        <tr style="color: #797979;text-align:justify">
                           <td colspan="2">
                             <p>
                               Dear Representatives of: <span style="color:red">ASOCIACION DE PEQUEÑOS PRODUCTORES DE CAFÉ INGRUMA</span> - (ASPROCAFE INGRUMA)
@@ -47,8 +53,8 @@
                         </tr>
 
                         <tr>
-                          <td colspan="2">
-                            <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                          <td colspan="2" style="padding-top:2em;">
+                            <p>For any doubt or clarification please write to: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
                           </td>
                         </tr>
                       </tbody>

@@ -479,6 +479,13 @@ function redondear_dos_decimal($valor) {
 							echo '<td><a href="?OPP&detail&idopp='.$informes['idopp'].'">'.$informes['abreviacion'].'</a></td>';
 							echo '<td>'; //// TRIMESTRE 1
 							?>
+
+								<?php 
+								if(isset($informes['trim1'])){
+									echo '<a data-toggle="tooltip" title="Previsualizar reporte trimestral" href="?REPORTES&previsualizar_ventas='.$informes['trim1'].'"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>';
+								}
+								 ?>
+
 								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim1".$informes['trim1']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
 
 								<div id="<?php echo "trim1".$informes['trim1']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -611,6 +618,11 @@ function redondear_dos_decimal($valor) {
 
 							echo '<td>'; //// TRIMESTRE 2
 							?>
+								<?php 
+								if(isset($informes['trim2'])){
+									echo '<a data-toggle="tooltip" title="Previsualizar reporte trimestral" href="?REPORTES&previsualizar_ventas='.$informes['trim2'].'"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>';
+								}
+								 ?>
 								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim2".$informes['trim2']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
 
 								<div id="<?php echo "trim2".$informes['trim2']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -743,6 +755,11 @@ function redondear_dos_decimal($valor) {
 
 							echo '<td>'; /// TRIMESTRE 3
 							?>
+								<?php 
+								if(isset($informes['trim3'])){
+									echo '<a data-toggle="tooltip" title="Previsualizar reporte trimestral" href="?REPORTES&previsualizar_ventas='.$informes['trim3'].'"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>';
+								}
+								 ?>
 								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim3".$informes['trim3']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
 
 								<div id="<?php echo "trim3".$informes['trim3']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -874,6 +891,11 @@ function redondear_dos_decimal($valor) {
 
 							echo '<td>';  /// TRIMESTRE 4
 							?>
+								<?php 
+								if(isset($informes['trim4'])){
+									echo '<a data-toggle="tooltip" title="Previsualizar reporte trimestral" href="?REPORTES&previsualizar_ventas='.$informes['trim4'].'"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>';
+								}
+								 ?>
 								<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="<?php echo "#trim4".$informes['trim4']; ?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
 
 								<div id="<?php echo "trim4".$informes['trim4']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
