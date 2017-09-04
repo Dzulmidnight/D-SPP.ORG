@@ -297,7 +297,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
                               <td style="padding:10px;">OPP</td>
                               <td style="padding:10px;">'.$informacion_opp['nombre_opp'].'</td>
                               <td style="padding:10px;">'.$informacion_opp['pais'].'</td>
-                              <td style="padding:10px;">'.$direccion_opp.'</td>
+                              <td style="padding:10px;">'.$informacion_opp['direccion_oficina'].'</td>
                               <td style="padding:10px;">'.$informacion_opp['nombre_oc'].'</td>
                               <td style="padding:10px;">Certificación</td>
                               <td style="text-align:center">'.$informacion_opp['lista_productos'].'</td>
@@ -1322,7 +1322,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
   $diez_dias = 864000;
   $veinte_dias = $diez_dias*2;
 
-  $query = "SELECT opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, comprobante_pago.monto, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.aviso2, comprobante_pago.aviso3 FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC";
+  $query = "SELECT opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais,  solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.aviso2, comprobante_pago.aviso3, comprobante_pago.notificacion_suspender FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC";
   $ejecutar = mysql_query($query, $dspp) or die(mysql_error());
   $contador = 1;
   while($registros = mysql_fetch_assoc($ejecutar)){ //// inicia while
@@ -1331,11 +1331,12 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
     $recordatorio1 = $fecha_dictamen + $diez_dias;
     $recordatorio2 = $fecha_dictamen + $veinte_dias;
     $alerta_suspension = $recordatorio2 + $cinco_dias;
+    $correo_suspender = $veinte_dias + $diez_dias;
 
 
 
     /// notificación 1º aviso
-    if(!$registros['aviso1']){
+    if(!$registros['aviso1'] && $registros['estatus_comprobante'] != 'ACEPTADO'){
       if($fecha_actual >= $recordatorio1){
 
         $query = "UPDATE comprobante_pago SET aviso1 = 1 WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
@@ -1461,7 +1462,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
 
     /// notificación 2º aviso
-    if(!$registros['aviso2']){
+    if(!$registros['aviso2'] && $registros['estatus_comprobante'] != 'ACEPTADO'){
       if($fecha_actual >= $recordatorio2){
 
         $query = "UPDATE comprobante_pago SET aviso2 = 1 WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
@@ -1585,7 +1586,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
     }
 
     /// notificación 3º aviso
-    if(!$registros['aviso3']){
+    if(!$registros['aviso3'] && $registros['estatus_comprobante'] != 'ACEPTADO'){
       if($fecha_actual >= $alerta_suspension){
 
         $query = "UPDATE comprobante_pago SET aviso3 = 1 WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
@@ -1699,7 +1700,8 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
           }
 
         }
-
+        $mail->AddBCC("cert@spp.coop");
+        $mail->AddBCC("adm@spp.coop");
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -1708,5 +1710,108 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
       }
     }
+    /// Se envia el correo a los administradores para suspender a la organización
+    if(($registros['aviso3'] && !$registros['notificacion_suspender'] && $registros['estatus_comprobante'] != 'ACEPTADO' && !$registros['archivo']) && ($fecha_actual >= $correo_suspender)){
+      //echo '<p style="color:red">ENVIADO</p>';
+      $query = "UPDATE comprobante_pago SET notificacion_suspender = 1 WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
+      $updateSQL = mysql_query($query, $dspp) or die(mysql_error());
+      
+      $asunto = "D-SPP | Suspender Organización";
+      $cuerpo_mensaje = '
+            <html>
+            <head>
+              <meta charset="utf-8">
+            </head>
+            <body>
+              <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px;" border="0" width="650px">
+                  <tr>
+                    <th rowspan="1" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Suspender Organización por falta de pago de la membresía SPP</span></p></th>
+
+                  </tr>
+
+
+                  <tr>
+                    <td colspan="2" style="text-align:justify">
+                      <p>
+                        Organización: <span style="color:red">'.$registros['nombre_opp'].'</span> - ('.$registros['abreviacion_opp'].')
+                      </p>
+                      <p>
+                        En seguimiento a la notificación del dictamen positivo SPP y de acuerdo al plazo máximo de 30 días se han enviado los recordatorios y la alerta de suspensión.
+                      </p>
+                      <p>
+                        Al no haber detectado un comprobante de pago de la membresía SPP cargado dentro del sistema D-SPP, el sistema solicita que ingrese al sistema para poder enviar la suspensión de dicha organización.
+                      </p>
+                      <p>
+                        A continuación se muestra una tabla con información relevante:
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <style>
+                        table.tabla1, td.tabla1, th.tabla1 {    
+                            border: 1px solid #ddd;
+                            text-align: left;
+                        }
+
+                        table.tabla1 {
+                            border-collapse: collapse;
+                            font-size: 11px;
+                            width: 100%;
+                        }
+
+                        th.tabla1, td.tabla1 {
+                            padding: 5px;
+                        }
+                      </style>
+                      <table class="tabla1">
+                        <tr class="tabla1">
+                          <th style="text-align:center;" class="tabla1">País</th>
+                          <th style="text-align:center;" class="tabla1">Organización</th>
+                          <th style="text-align:center;" class="tabla1">Fecha Dictamen</th>
+                          <th style="text-align:center;" class="tabla1">Monto Membresía</th>
+                          <th style="text-align:center;" class="tabla1" colspan="3">Fecha Mensajes</th>
+                          
+                        </tr>
+                        <tr class="tabla1">
+                          <td class="tabla1">'.$registros['pais'].'</td>
+                          <td class="tabla1">'.$registros['nombre_opp'].'(<span style="color:red">'.$registros['abreviacion_opp'].'</span>)</td>
+                          <td class="tabla1">'.date('d/m/Y',$registros['fecha_dictamen']).'</td>
+                          <td class="tabla1">'.$registros['monto'].'</td>
+                          <td class="tabla1">1º Recordatorio<br>'.date('d/m/Y', $recordatorio1).'</td>
+                          <td class="tabla1">2º Recordatorio<br>'.date('d/m/Y', $recordatorio2).'</td>
+                          <td class="tabla1">Alerta<br>'.date('d/m/Y', $alerta_suspension).'</td>
+                          
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <p>Pasos para suspender una organización:</p>
+                      <ol>
+                        <li>Debes ingresar en tu cuenta de administrador.</li>
+                        <li>Debes seleccionar la opción <span style="color:red;">"Membresias"</span>.</li>
+                        <li>Localizar la fila con el nombre de la Organización.</li>
+                        <li>Dar clic en la opción de <span style="color:red">"Suspender"</span>.</li>
+                      </ol>
+                    </td>
+                  </tr>
+              </table>
+            </body>
+            </html>
+      ';
+
+      $mail->AddAddress("cert@spp.coop");
+      $mail->AddAddress("adm@spp.coop");
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+    }
+  
+
   } /// termina while
 ?>

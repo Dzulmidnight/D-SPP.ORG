@@ -1,61 +1,76 @@
-                    <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px;" border="0" width="650px">
-                      <tbody>
-                        <tr>
-                          <th rowspan="1" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                          <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">1º Recordatorio</span></p></th>
+                                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px;" border="0" width="650px">
+                                    <tr>
+                                      <th rowspan="1" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Suspender Organización por falta de pago de la membresía SPP</span></p></th>
 
-                        </tr>
+                                    </tr>
 
 
-                        <tr>
-                          <td colspan="2" style="text-align:justify">
-                            <p>
-                              Estimados Representantes de : <span style="color:red">ASOCIACION DE PEQUEÑOS PRODUCTORES DE CAFÉ INGRUMA</span> - (ASPROCAFE INGRUMA)
-                            </p>
-                            <p>
-                              En seguimiento a la notificación de su dictamen positivo SPP, enviado con fecha  04/07/2017 se les recuerda que tienen un plazo máximo de 30 días posterior a la fecha de notificación para realizar el pago correspondiente a <span style="color:red">$ 750 dólares</span> por Membresía SPP y posteriormente cargar el comprobante de pago en el D-SPP.  
-                            </p>
-                            <p>
-                              El no pagar la Membresía SPP oportunamente es un incumplimiento con el Marco Regulatorio, por lo tanto si el sistema no detecta un comprobante de pago, automáticamente enviará  la suspensión del Certificado.
-                            </p>
-                            <p>
-                               Por lo anterior, les solicitamos de la manera más atenta se proceda a realizar el pago a la mayor brevedad para evitar ser suspendidos.
-                            </p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan="2" style="padding-top:2em;">
-                            <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
-                          </td>
-                        </tr>
+                                    <tr>
+                                      <td colspan="2" style="text-align:justify">
+                                        <p>
+                                          Organización: <span style="color:red">'.$registros['nombre_opp'].'</span> - ('.$registros['abreviacion_opp'].')
+                                        </p>
+                                        <p>
+                                          En seguimiento a la notificación del dictamen positivo SPP y de acuerdo al plazo máximo de 30 días se han enviado los recordatorios y la alerta de suspensión.
+                                        </p>
+                                        <p>
+                                          Al no haber detectado un comprobante de pago de la membresía SPP cargado dentro del sistema D-SPP, el sistema solicita su permiso para poder enviar la suspensión de dicha organización.
+                                        </p>
+                                        <p>
+                                          A continuación se muestra una tabla con información relevante:
+                                        </p>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td colspan="2">
+                                        <style>
+                                          table.tabla1, td.tabla1, th.tabla1 {    
+                                              border: 1px solid #ddd;
+                                              text-align: left;
+                                          }
 
-                        <tr style="color: #797979;">
-                          <td style="padding-top:2em;">
-                            <b>English Below</b>
-                            <hr>
-                          </td>
-                        </tr>
-                        <tr style="color: #797979;text-align:justify">
-                          <td colspan="2">
-                            <p>
-                              Dear Representatives of: <span style="color:red">ASOCIACION DE PEQUEÑOS PRODUCTORES DE CAFÉ INGRUMA</span> - (ASPROCAFE INGRUMA)
-                            </p>
-                            <p>
-                              Following the notification of their positive opinion SPP, sent on '.04/17/2017.' they are reminded that they have a maximum period of 30 days after the date of notification to make the payment corresponding to <span style="color:red">$ 750 dollars</span> per Membership SPP and later Load the proof of payment into the D-SPP.  
-                            </p>
-                            <p>
-                              Failure to pay the SPP Membership in a timely manner is a breach of the Regulatory Framework, therefore if the system does not detect a payment receipt, it will automatically send the suspension of the Certificate.
-                            </p>
-                            <p>
-                               For the above, we ask you in the most careful way to proceed to make the payment as soon as possible to avoid being suspended.
-                            </p>
-                          </td>
-                        </tr>
+                                          table.tabla1 {
+                                              border-collapse: collapse;
+                                              font-size: 11px;
+                                              width: 100%;
+                                          }
 
-                        <tr>
-                          <td colspan="2" style="padding-top:2em;">
-                            <p>For any doubt or clarification please write to: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                                          th.tabla1, td.tabla1 {
+                                              padding: 5px;
+                                          }
+                                        </style>
+                                        <table class="tabla1">
+                                          <tr class="tabla1">
+                                            <th class="tabla1">País</th>
+                                            <th class="tabla1">Organización</th>
+                                            <th class="tabla1">Periodo de Objeción</th>
+                                            <th class="tabla1">Monto Membresía</th>
+                                            <th class="tabla1" colspan="3">Fecha Mensajes</th>
+                                            
+                                          </tr>
+                                          <tr class="tabla1">
+                                            <td class="tabla1">'.$registros['pais'].'</td>
+                                            <td class="tabla1">'.$registros['nombre_opp'].'(<span style="color:red">'.$registros['abreviacion_opp'].'</span>)</td>
+                                            <td class="tabla1">'.$registros['fecha_dictamen'].'</td>
+                                            <td class="tabla1">'.$registros['monto'].'</td>
+                                            <td class="tabla1">'.date('d/m/Y', $recordatorio1).'</td>
+                                            <td class="tabla1">'.date('d/m/Y', $recordatorio2).'</td>
+                                            <td class="tabla1">'.date('d/m/Y', $alerta_suspension).'</td>
+                                            
+                                          </tr>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td colspan="2">
+                                        <p>Pasos para suspender una organización:</p>
+                                        <ol>
+                                          <li>Debes ingresar en tu cuenta de administrador.</li>
+                                          <li>Debes seleccionar la opción <span style="color:red;">"Membresias"</span>.</li>
+                                          <li>Localizar la fila con el nombre de la Organización.</li>
+                                          <li>Dar clic en la opción de <span style="color:red">"Suspender"</span>.</li>
+                                        </ol>
+                                      </td>
+                                    </tr>
+                                </table>
