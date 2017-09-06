@@ -185,7 +185,7 @@
       $producto = '';
       $total_producto = mysql_num_rows($row_producto);
 
-      $row_contactos = mysql_query("SELECT * FROM contactos WHERE idempresa = $empresa[idempresa] GROUP BY productos.producto", $dspp) or die(mysql_error());
+      $row_contactos = mysql_query("SELECT * FROM contactos WHERE idempresa = $empresa[idempresa] GROUP BY contactos.nombre", $dspp) or die(mysql_error());
       $total_contactos = mysql_num_rows($row_contactos);
 
       $cont = 1;
@@ -278,7 +278,7 @@
             <td style="text-align:right;font-size:12px;">
                   <div>
                 <h2>
-                  Lista de Organizaciones de Pequeños Productores /List of Small Producers´ Organizations
+                  Lista de Empresas y Otros Actores
                 </h2>             
                   </div>
                   <div>Símbolo de Pequeños Productores</div>
@@ -318,8 +318,8 @@
 							 ->setKeywords("reporte alumnos carreras")
 							 ->setCategory("Reporte excel");
 
-		$tituloReporte = "Lista de Organizaciones de Pequeños Productores";
-		$titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO(S) CERTIFICADO', 'FECHA SIGUIENTE EVALUACIÓN', 'ESTATUS', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', '#SPP', 'EMAIL', 'SITIO WEB', 'TELÉFONO');
+		$tituloReporte = "Lista de Empresas y Otros Actores";
+		$titulosColumnas = array('Nº', 'NOMBRE DE LA EMPRESA', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO(S) CERTIFICADO', 'FECHA SIGUIENTE EVALUACIÓN', 'ESTATUS', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', '#SPP', 'EMAIL', 'SITIO WEB', 'TELÉFONO');
 		
 		$objPHPExcel->setActiveSheetIndex(0)
         		    ->mergeCells('A1:L1');
@@ -477,7 +477,7 @@
 		}
 		
 		// Se asigna el nombre a la hoja
-		$objPHPExcel->getActiveSheet()->setTitle('Lista organizaciones');
+		$objPHPExcel->getActiveSheet()->setTitle('Lista Empresas');
 
 		// Se activa la hoja para que sea la que se muestre cuando el archivo se abre
 		$objPHPExcel->setActiveSheetIndex(0);
@@ -487,7 +487,7 @@
 
 		// Se manda el archivo al navegador web, con el nombre que se indica (Excel2007)
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-		header('Content-Disposition: attachment;filename="Lista_organizaciones.xls"');
+		header('Content-Disposition: attachment;filename="Lista_empresas.xls"');
 		header('Cache-Control: max-age=0');
 
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
