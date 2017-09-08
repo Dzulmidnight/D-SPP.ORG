@@ -154,56 +154,723 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		$croquis = NULL;
 	}
 
-	// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
-	$insertSQL = sprintf("INSERT INTO solicitud_certificacion (tipo_solicitud, idopp, idoc, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, resp1, resp2, resp3, resp4, op_preg1, preg1_1, preg1_2, preg1_3, preg1_4, op_preg2, op_preg3, produccion, procesamiento, exportacion, op_preg5, op_preg6, op_preg7, op_preg8, op_preg10, op_preg12, op_preg13, op_preg14, op_preg15, responsable, fecha_registro, estatus_dspp) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-		   GetSQLValueString($_POST['tipo_solicitud'], "text"),
-		   GetSQLValueString($idopp, "int"),
-           GetSQLValueString($_POST['idoc'], "int"),
-           GetSQLValueString($_POST['contacto1_nombre'], "text"),
-           GetSQLValueString($_POST['contacto2_nombre'], "text"),
-           GetSQLValueString($_POST['contacto1_cargo'], "text"),
-           GetSQLValueString($_POST['contacto2_cargo'], "text"),
-           GetSQLValueString($_POST['contacto1_email'], "text"),
-           GetSQLValueString($_POST['contacto2_email'], "text"),
-           GetSQLValueString($_POST['contacto1_telefono'], "text"),
-           GetSQLValueString($_POST['contacto2_telefono'], "text"),
-           GetSQLValueString($_POST['adm1_nombre'], "text"),
-           GetSQLValueString($_POST['adm2_nombre'], "text"),
-           GetSQLValueString($_POST['adm1_email'], "text"),
-           GetSQLValueString($_POST['adm2_email'], "text"),
-           GetSQLValueString($_POST['adm1_telefono'], "text"),
-           GetSQLValueString($_POST['adm2_telefono'], "text"),
-           GetSQLValueString($_POST['resp1'], "text"),
-           GetSQLValueString($_POST['resp2'], "text"),
-           GetSQLValueString($_POST['resp3'], "text"),
-           GetSQLValueString($_POST['resp4'], "text"),
-           GetSQLValueString($_POST['op_preg1'], "text"),
-           GetSQLValueString($_POST['preg1_1'], "text"),
-           GetSQLValueString($_POST['preg1_2'], "text"),
-           GetSQLValueString($_POST['preg1_3'], "text"),
-           GetSQLValueString($_POST['preg1_4'], "text"),
-           GetSQLValueString($_POST['op_preg2'], "text"),
-           GetSQLValueString($_POST['op_preg3'], "text"),
-           GetSQLValueString($produccion, "int"),
-           GetSQLValueString($procesamiento, "int"),
-           GetSQLValueString($exportacion, "int"),
-           GetSQLValueString($_POST['op_preg5'], "text"),
-           GetSQLValueString($_POST['op_preg6'], "text"),
-           GetSQLValueString($_POST['op_preg7'], "text"),
-           GetSQLValueString($_POST['op_preg8'], "text"),
-           GetSQLValueString($_POST['op_preg10'], "text"),
-           GetSQLValueString($op_preg12, "text"),
-           GetSQLValueString($op_preg13, "text"),
-           GetSQLValueString($_POST['op_preg14'], "text"),
-           GetSQLValueString($croquis, "text"),
-           GetSQLValueString($_POST['responsable'], "text"),
-           GetSQLValueString($fecha, "int"),
-           GetSQLValueString($estatus_dspp, "int"));
+	if($_POST['idoc'] == 'TODOS'){
+		$query_oc = "SELECT * FROM oc";
+		$consultar = mysql_query($query_oc) or die(mysql_error());
+
+		while($detalle_oc = mysql_fetch_assoc($consultar)){ /// INICIA WHILE ENVIAR A OCS
+
+			// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
+			$insertSQL = sprintf("INSERT INTO solicitud_certificacion (tipo_solicitud, idopp, idoc, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, resp1, resp2, resp3, resp4, op_preg1, preg1_1, preg1_2, preg1_3, preg1_4, op_preg2, op_preg3, produccion, procesamiento, exportacion, op_preg5, op_preg6, op_preg7, op_preg8, op_preg10, op_preg12, op_preg13, op_preg14, op_preg15, responsable, fecha_registro, estatus_dspp) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+				   GetSQLValueString($_POST['tipo_solicitud'], "text"),
+				   GetSQLValueString($idopp, "int"),
+		           GetSQLValueString($detalle_oc['idoc'], "int"),
+		           GetSQLValueString($_POST['contacto1_nombre'], "text"),
+		           GetSQLValueString($_POST['contacto2_nombre'], "text"),
+		           GetSQLValueString($_POST['contacto1_cargo'], "text"),
+		           GetSQLValueString($_POST['contacto2_cargo'], "text"),
+		           GetSQLValueString($_POST['contacto1_email'], "text"),
+		           GetSQLValueString($_POST['contacto2_email'], "text"),
+		           GetSQLValueString($_POST['contacto1_telefono'], "text"),
+		           GetSQLValueString($_POST['contacto2_telefono'], "text"),
+		           GetSQLValueString($_POST['adm1_nombre'], "text"),
+		           GetSQLValueString($_POST['adm2_nombre'], "text"),
+		           GetSQLValueString($_POST['adm1_email'], "text"),
+		           GetSQLValueString($_POST['adm2_email'], "text"),
+		           GetSQLValueString($_POST['adm1_telefono'], "text"),
+		           GetSQLValueString($_POST['adm2_telefono'], "text"),
+		           GetSQLValueString($_POST['resp1'], "text"),
+		           GetSQLValueString($_POST['resp2'], "text"),
+		           GetSQLValueString($_POST['resp3'], "text"),
+		           GetSQLValueString($_POST['resp4'], "text"),
+		           GetSQLValueString($_POST['op_preg1'], "text"),
+		           GetSQLValueString($_POST['preg1_1'], "text"),
+		           GetSQLValueString($_POST['preg1_2'], "text"),
+		           GetSQLValueString($_POST['preg1_3'], "text"),
+		           GetSQLValueString($_POST['preg1_4'], "text"),
+		           GetSQLValueString($_POST['op_preg2'], "text"),
+		           GetSQLValueString($_POST['op_preg3'], "text"),
+		           GetSQLValueString($produccion, "int"),
+		           GetSQLValueString($procesamiento, "int"),
+		           GetSQLValueString($exportacion, "int"),
+		           GetSQLValueString($_POST['op_preg5'], "text"),
+		           GetSQLValueString($_POST['op_preg6'], "text"),
+		           GetSQLValueString($_POST['op_preg7'], "text"),
+		           GetSQLValueString($_POST['op_preg8'], "text"),
+		           GetSQLValueString($_POST['op_preg10'], "text"),
+		           GetSQLValueString($op_preg12, "text"),
+		           GetSQLValueString($op_preg13, "text"),
+		           GetSQLValueString($_POST['op_preg14'], "text"),
+		           GetSQLValueString($croquis, "text"),
+		           GetSQLValueString($_POST['responsable'], "text"),
+		           GetSQLValueString($fecha, "int"),
+		           GetSQLValueString($estatus_dspp, "int"));
 
 
-		  $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
-		 
-		 $idsolicitud_certificacion = mysql_insert_id($dspp); 
+				  $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
+				 
+				 $idsolicitud_certificacion = mysql_insert_id($dspp); 
+
+
+					 // INGRESAMOS EL PORCENTAJE DE VENTA DE LOS PRODUCTOS
+
+					 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
+					 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_certificacion, idopp) VALUES (%s, %s, %s, %s, %s, %s)",
+					 			GetSQLValueString($_POST['organico'], "text"),
+					 			GetSQLValueString($_POST['comercio_justo'], "text"),
+					 			GetSQLValueString($_POST['spp'], "text"),
+					 			GetSQLValueString($_POST['sin_certificado'], "text"),
+					 			GetSQLValueString($idsolicitud_certificacion, "int"),
+					 			GetSQLValueString($idopp, "int"));
+					 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+					 	}
+
+
+					/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
+					$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_publico, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+						GetSQLValueString($idsolicitud_certificacion, "int"),
+						GetSQLValueString($estatus_publico, "int"),
+						GetSQLValueString($estatus_interno, "int"),
+						GetSQLValueString($estatus_dspp, "int"),
+						GetSQLValueString($fecha, "int"));
+					$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+					/*************************** TERMINA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
+
+					/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
+						if(isset($_POST['certificacion'])){
+							$certificacion = $_POST['certificacion'];
+						}else{
+							$certificacion = NULL;
+						}
+
+
+						if(isset($_POST['certificadora'])){
+							$certificadora = $_POST['certificadora'];
+						}else{
+							$certificadora = NULL;
+						}
+
+						if(isset($_POST['ano_inicial'])){
+							$ano_inicial = $_POST['ano_inicial'];
+						}else{
+							$ano_inicial = NULL;
+						}
+
+						if(isset($_POST['interrumpida'])){
+							$interrumpida = $_POST['interrumpida'];
+						}else{
+							$interrumpida = NULL;
+						}
+
+						for($i=0;$i<count($certificacion);$i++){
+							if($certificacion[$i] != NULL){
+								#for($i=0;$i<count($certificacion);$i++){
+								$insertSQL = sprintf("INSERT INTO certificaciones (idsolicitud_certificacion, certificacion, certificadora, ano_inicial, interrumpida) VALUES (%s, %s, %s, %s, %s)",
+								    GetSQLValueString($idsolicitud_certificacion, "int"),
+								    GetSQLValueString(strtoupper($certificacion[$i]), "text"),
+								    GetSQLValueString(strtoupper($certificadora[$i]), "text"),
+								    GetSQLValueString($ano_inicial[$i], "text"),
+								    GetSQLValueString($interrumpida[$i], "text"));
+
+								$Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+								#}
+							}
+						}
+					/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
+
+
+					/*************************** INICIA INSERTAR PRODUCTOS ***************************/
+					$producto_general = $_POST['producto_general'];
+					$producto = $_POST['producto'];
+					$volumen = $_POST['volumen'];
+					$materia = $_POST['materia'];
+					$destino = $_POST['destino'];
+					/*$marca_propia = $_POST['marca_propia'];
+					$marca_cliente = $_POST['marca_cliente'];
+					$sin_cliente = $_POST['sin_cliente'];*/
+
+					for ($i=0;$i<count($producto);$i++) { 
+						if($producto[$i] != NULL){
+
+								$array1[$i] = "terminado".$i; 
+								$array2[$i] = "marca_propia".$i;
+								$array3[$i] = "marca_cliente".$i;
+								$array4[$i] = "sin_cliente".$i;
+
+								if(isset($_POST[$array1[$i]])){
+									$terminado = $_POST[$array1[$i]];
+								}else{
+									$terminado = null;
+								}
+								if(isset($_POST[$array2[$i]])){
+									$marca_propia = $_POST[$array2[$i]];
+								}else{
+									$marca_propia = null;
+								}
+								if(isset($_POST[$array3[$i]])){
+									$marca_cliente = $_POST[$array3[$i]];
+								}else{
+									$marca_cliente = null;
+								}
+								if(isset($_POST[$array4[$i]])){
+									$sin_cliente = $_POST[$array4[$i]];
+								}else{
+									$sin_cliente = null;
+								}
+
+								//$terminado = $_POST[$array1[$i]];
+								//$marca_propia = $_POST[$array2[$i]];
+								//$marca_cliente = $_POST[$array3[$i]];
+								//$sin_cliente = $_POST[$array4[$i]];
+
+								$str = iconv($charset, 'ASCII//TRANSLIT', $producto_general[$i]);
+								$producto_general[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+								$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
+								$producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+								$str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
+								$destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+								$str = iconv($charset, 'ASCII//TRANSLIT', $materia[$i]);
+								$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+
+							    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto_general, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+							    	GetSQLValueString($idopp, "int"),
+							        GetSQLValueString($idsolicitud_certificacion, "int"),
+							        GetSQLValueString($producto_general[$i], "text"),
+							        GetSQLValueString($producto[$i], "text"),
+							        GetSQLValueString($volumen[$i], "text"),
+							        GetSQLValueString($terminado[$i], "text"),
+							        GetSQLValueString($materia[$i], "text"),
+							        GetSQLValueString($destino[$i], "text"),
+							        GetSQLValueString($marca_propia[$i], "text"),
+							        GetSQLValueString($marca_cliente[$i], "text"),                    
+							        GetSQLValueString($sin_cliente[$i], "text"));
+							  $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+						}
+					}
+					/***************************** TERMINA INSERTAR PRODUCTOS ******************************/
+
+					///// INICIA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
+					$asunto = "D-SPP Solicitud de Certificación para Organizaciones de Pequeños Productores";
+
+
+					$cuerpo_correo = '
+						<html>
+						<head>
+							<meta charset="utf-8">
+						</head>
+						<body>
+						
+							<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; text-align:justify; color: #797979;" border="0" width="650px">
+							  <thead>
+							    <tr>
+							      <th scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+							      <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Certification Application for Small Producers’ Organizations </strong></th>
+							    </tr>
+							  </thead>
+							  <tbody>
+							    <tr>
+							      <td colspan="2" style="padding-top:10px;">
+							        <p>
+							          Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+							        </p>
+							        <p>
+							          In order to consult the application, please open a session in your  Certification Entity (CE) account at the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+							        </p>
+							      </td>
+							    </tr>
+							    <tr>
+							      <td colspan="2">
+							        <p>
+							          <b>Teléfono Organización / Organization phone:</b> '.$_POST['telefono'].'
+							        </p>
+							        <p>
+							          <b>Pais / Country:</b> '.$_POST['pais'].'
+							        </p>
+							        <p>
+							          <b>Email:</b> '.$_POST['email'].'<br>
+							          <b>Email:</b> '.$_POST['contacto1_email'].'
+							        </p>
+							      </td>
+							    </tr>
+							    <tr>
+							      <td colspan="2">
+							        <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+							          <tbody>
+							            <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+							              <td width="130px">Nombre de la organización/Organization name</td>
+							              <td width="130px">País / Country</td>
+							              <td width="130px">Organismo de Certificación / Certification Entity</td>
+							           
+							              <td width="130px">Fecha de solicitud/Date of application</td>
+							            </tr>
+							            <tr style="font-size: 12px;">
+							              <td style="padding:10px;">
+							                '.$_POST['nombre'].'
+							              </td>
+							              <td style="padding:10px;">
+							                '.$_POST['pais'].'
+							              </td>
+							              <td style="padding:10px;">
+							                '.$detalle_oc['nombre'].'
+							              </td>
+							              <td style="padding:10px;">
+							              '.date('d/m/Y', $fecha).'
+							              </td>
+							            </tr>
+
+							          </tbody>
+							        </table>  
+							      </td>
+							    </tr>
+							    <tr>
+							      <td colspan="2">
+							        <p><span style="color:red">¿Qué es lo de debo realizar ahora?. Debes revisar la solicitud y cargar una cotización</span></p>
+							        <ol>
+							          <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organismo de Certificación(OC).</li>
+							          <li>Dentro de tu cuenta debes seleccionar Solicitudes > Solicitudes OPP.</li>
+							          <li>Dentro de la tabla solicitudes debes localizar la columna "Acciones" Y seleccionar el boton Azul Consultar.</li>
+							          <li>Para poder enviar la cotización debes seleccionar el "Procedimiento de Certificación" y cargar la cotización.</li>
+							        </ol>
+							      </td>
+							    </tr>
+							    <tr>
+							      <td colspan="2">
+							        <p><span style="color:red">What should I do now? You should review the application and upload a price quote.</span></p>
+							        <ol>
+							          <li>You should open a session in the D-SPP system as a Certification Entity (CE).</li>
+							          <li>Within your account, you should select ApplicationsSolicitudes > SPO Applications Solicitudes OPP.</li>
+							          <li>In the applications table, you should locate the column entitled “Actions” and select the Blue Consult button.</li>
+							          <li>To send your price quote, you should select “Certification Procedure” and upload your price quote.</li>
+							        </ol>
+
+							      </td>
+							    </tr>
+							  </tbody>
+							</table>
+
+						</body>
+						</html>
+					';
+					///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
+					$destinatario = $detalle_oc['email1'];
+					if(isset($detalle_oc['email1'])){
+						//$mail->AddAddress($detalle_oc['email1']);
+
+						$token = strtok($detalle_oc['email1'], "\/\,\;");
+						while ($token !== false)
+						{
+							$mail->AddAddress($token);
+							$token = strtok('\/\,\;');
+						}
+
+					}
+					$destinatario = $detalle_oc['email2'];
+					if(isset($detalle_oc['email2'])){
+						//$mail->AddAddress($oc['email2']);
+						$token = strtok($detalle_oc['email2'], "\/\,\;");
+						while ($token !== false)
+						{
+							$mail->AddAddress($token);
+							$token = strtok('\/\,\;');
+						}
+
+					}
+					if(isset($_POST['email'])){
+						//$mail->AddCC($_POST['email']);
+						$token = strtok($_POST['email'], "\/\,\;");
+						while ($token !== false)
+						{
+							$mail->AddCC($token);
+							$token = strtok('\/\,\;');
+						}
+
+					}
+					if(isset($_POST['contacto1_email'])){
+						//$mail->AddCC($_POST['contacto1_email']);
+						$token = strtok($_POST['contacto1_email'], "\/\,\;");
+						while ($token !== false)
+						{
+							$mail->AddCC($token);
+							$token = strtok('\/\,\;');
+						}
+
+					}
+
+				    $mail->AddCC($administrador);
+				    $mail->AddBCC($administrador);
+				    $mail->AddBCC($spp_global);
+			        //$mail->Username = "soporte@d-spp.org";
+			        //$mail->Password = "/aung5l6tZ";
+			        $mail->Subject = utf8_decode($asunto);
+			        $mail->Body = utf8_decode($cuerpo_correo);
+			        $mail->MsgHTML(utf8_decode($cuerpo_correo));
+			        $mail->Send();
+			        $mail->ClearAddresses();
+
+		}//// TERMINA WHILIE ENVIAR A OCS
+
+
+
+	}else{
+
+		// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
+		$insertSQL = sprintf("INSERT INTO solicitud_certificacion (tipo_solicitud, idopp, idoc, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, resp1, resp2, resp3, resp4, op_preg1, preg1_1, preg1_2, preg1_3, preg1_4, op_preg2, op_preg3, produccion, procesamiento, exportacion, op_preg5, op_preg6, op_preg7, op_preg8, op_preg10, op_preg12, op_preg13, op_preg14, op_preg15, responsable, fecha_registro, estatus_dspp) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+			   GetSQLValueString($_POST['tipo_solicitud'], "text"),
+			   GetSQLValueString($idopp, "int"),
+	           GetSQLValueString($_POST['idoc'], "int"),
+	           GetSQLValueString($_POST['contacto1_nombre'], "text"),
+	           GetSQLValueString($_POST['contacto2_nombre'], "text"),
+	           GetSQLValueString($_POST['contacto1_cargo'], "text"),
+	           GetSQLValueString($_POST['contacto2_cargo'], "text"),
+	           GetSQLValueString($_POST['contacto1_email'], "text"),
+	           GetSQLValueString($_POST['contacto2_email'], "text"),
+	           GetSQLValueString($_POST['contacto1_telefono'], "text"),
+	           GetSQLValueString($_POST['contacto2_telefono'], "text"),
+	           GetSQLValueString($_POST['adm1_nombre'], "text"),
+	           GetSQLValueString($_POST['adm2_nombre'], "text"),
+	           GetSQLValueString($_POST['adm1_email'], "text"),
+	           GetSQLValueString($_POST['adm2_email'], "text"),
+	           GetSQLValueString($_POST['adm1_telefono'], "text"),
+	           GetSQLValueString($_POST['adm2_telefono'], "text"),
+	           GetSQLValueString($_POST['resp1'], "text"),
+	           GetSQLValueString($_POST['resp2'], "text"),
+	           GetSQLValueString($_POST['resp3'], "text"),
+	           GetSQLValueString($_POST['resp4'], "text"),
+	           GetSQLValueString($_POST['op_preg1'], "text"),
+	           GetSQLValueString($_POST['preg1_1'], "text"),
+	           GetSQLValueString($_POST['preg1_2'], "text"),
+	           GetSQLValueString($_POST['preg1_3'], "text"),
+	           GetSQLValueString($_POST['preg1_4'], "text"),
+	           GetSQLValueString($_POST['op_preg2'], "text"),
+	           GetSQLValueString($_POST['op_preg3'], "text"),
+	           GetSQLValueString($produccion, "int"),
+	           GetSQLValueString($procesamiento, "int"),
+	           GetSQLValueString($exportacion, "int"),
+	           GetSQLValueString($_POST['op_preg5'], "text"),
+	           GetSQLValueString($_POST['op_preg6'], "text"),
+	           GetSQLValueString($_POST['op_preg7'], "text"),
+	           GetSQLValueString($_POST['op_preg8'], "text"),
+	           GetSQLValueString($_POST['op_preg10'], "text"),
+	           GetSQLValueString($op_preg12, "text"),
+	           GetSQLValueString($op_preg13, "text"),
+	           GetSQLValueString($_POST['op_preg14'], "text"),
+	           GetSQLValueString($croquis, "text"),
+	           GetSQLValueString($_POST['responsable'], "text"),
+	           GetSQLValueString($fecha, "int"),
+	           GetSQLValueString($estatus_dspp, "int"));
+
+
+			  $Result1 = mysql_query($insertSQL, $dspp) or die(mysql_error());
+			 
+			 $idsolicitud_certificacion = mysql_insert_id($dspp); 
+
+				 // INGRESAMOS EL PORCENTAJE DE VENTA DE LOS PRODUCTOS
+
+				 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
+				 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_certificacion, idopp) VALUES (%s, %s, %s, %s, %s, %s)",
+				 			GetSQLValueString($_POST['organico'], "text"),
+				 			GetSQLValueString($_POST['comercio_justo'], "text"),
+				 			GetSQLValueString($_POST['spp'], "text"),
+				 			GetSQLValueString($_POST['sin_certificado'], "text"),
+				 			GetSQLValueString($idsolicitud_certificacion, "int"),
+				 			GetSQLValueString($idopp, "int"));
+				 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+				 	}
+
+
+				/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
+				$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_publico, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+					GetSQLValueString($idsolicitud_certificacion, "int"),
+					GetSQLValueString($estatus_publico, "int"),
+					GetSQLValueString($estatus_interno, "int"),
+					GetSQLValueString($estatus_dspp, "int"),
+					GetSQLValueString($fecha, "int"));
+				$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
+				/*************************** TERMINA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
+
+				/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
+					if(isset($_POST['certificacion'])){
+						$certificacion = $_POST['certificacion'];
+					}else{
+						$certificacion = NULL;
+					}
+
+
+					if(isset($_POST['certificadora'])){
+						$certificadora = $_POST['certificadora'];
+					}else{
+						$certificadora = NULL;
+					}
+
+					if(isset($_POST['ano_inicial'])){
+						$ano_inicial = $_POST['ano_inicial'];
+					}else{
+						$ano_inicial = NULL;
+					}
+
+					if(isset($_POST['interrumpida'])){
+						$interrumpida = $_POST['interrumpida'];
+					}else{
+						$interrumpida = NULL;
+					}
+
+					for($i=0;$i<count($certificacion);$i++){
+						if($certificacion[$i] != NULL){
+							#for($i=0;$i<count($certificacion);$i++){
+							$insertSQL = sprintf("INSERT INTO certificaciones (idsolicitud_certificacion, certificacion, certificadora, ano_inicial, interrumpida) VALUES (%s, %s, %s, %s, %s)",
+							    GetSQLValueString($idsolicitud_certificacion, "int"),
+							    GetSQLValueString(strtoupper($certificacion[$i]), "text"),
+							    GetSQLValueString(strtoupper($certificadora[$i]), "text"),
+							    GetSQLValueString($ano_inicial[$i], "text"),
+							    GetSQLValueString($interrumpida[$i], "text"));
+
+							$Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+							#}
+						}
+					}
+				/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
+
+
+				/*************************** INICIA INSERTAR PRODUCTOS ***************************/
+				$producto_general = $_POST['producto_general'];
+				$producto = $_POST['producto'];
+				$volumen = $_POST['volumen'];
+				$materia = $_POST['materia'];
+				$destino = $_POST['destino'];
+				/*$marca_propia = $_POST['marca_propia'];
+				$marca_cliente = $_POST['marca_cliente'];
+				$sin_cliente = $_POST['sin_cliente'];*/
+
+				for ($i=0;$i<count($producto);$i++) { 
+					if($producto[$i] != NULL){
+
+							$array1[$i] = "terminado".$i; 
+							$array2[$i] = "marca_propia".$i;
+							$array3[$i] = "marca_cliente".$i;
+							$array4[$i] = "sin_cliente".$i;
+
+							if(isset($_POST[$array1[$i]])){
+								$terminado = $_POST[$array1[$i]];
+							}else{
+								$terminado = null;
+							}
+							if(isset($_POST[$array2[$i]])){
+								$marca_propia = $_POST[$array2[$i]];
+							}else{
+								$marca_propia = null;
+							}
+							if(isset($_POST[$array3[$i]])){
+								$marca_cliente = $_POST[$array3[$i]];
+							}else{
+								$marca_cliente = null;
+							}
+							if(isset($_POST[$array4[$i]])){
+								$sin_cliente = $_POST[$array4[$i]];
+							}else{
+								$sin_cliente = null;
+							}
+
+							//$terminado = $_POST[$array1[$i]];
+							//$marca_propia = $_POST[$array2[$i]];
+							//$marca_cliente = $_POST[$array3[$i]];
+							//$sin_cliente = $_POST[$array4[$i]];
+
+							$str = iconv($charset, 'ASCII//TRANSLIT', $producto_general[$i]);
+							$producto_general[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+							$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
+							$producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+							$str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
+							$destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+							$str = iconv($charset, 'ASCII//TRANSLIT', $materia[$i]);
+							$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+
+
+						    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto_general, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+						    	GetSQLValueString($idopp, "int"),
+						        GetSQLValueString($idsolicitud_certificacion, "int"),
+						        GetSQLValueString($producto_general[$i], "text"),
+						        GetSQLValueString($producto[$i], "text"),
+						        GetSQLValueString($volumen[$i], "text"),
+						        GetSQLValueString($terminado[$i], "text"),
+						        GetSQLValueString($materia[$i], "text"),
+						        GetSQLValueString($destino[$i], "text"),
+						        GetSQLValueString($marca_propia[$i], "text"),
+						        GetSQLValueString($marca_cliente[$i], "text"),                    
+						        GetSQLValueString($sin_cliente[$i], "text"));
+						  $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+					}
+				}
+				/***************************** TERMINA INSERTAR PRODUCTOS ******************************/
+
+				///// INICIA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
+				$asunto = "D-SPP Solicitud de Certificación para Organizaciones de Pequeños Productores";
+				$row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
+				$oc = mysql_fetch_assoc($row_oc);
+
+				$cuerpo_correo = '
+					<html>
+					<head>
+						<meta charset="utf-8">
+					</head>
+					<body>
+					
+						<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; text-align:justify; color: #797979;" border="0" width="650px">
+						  <thead>
+						    <tr>
+						      <th scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+						      <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Certification Application for Small Producers’ Organizations </strong></th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr>
+						      <td colspan="2" style="padding-top:10px;">
+						        <p>
+						          Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+						        </p>
+						        <p>
+						          In order to consult the application, please open a session in your  Certification Entity (CE) account at the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
+						        </p>
+						      </td>
+						    </tr>
+						    <tr>
+						      <td colspan="2">
+						        <p>
+						          <b>Teléfono Organización / Organization phone:</b> '.$_POST['telefono'].'
+						        </p>
+						        <p>
+						          <b>Pais / Country:</b> '.$_POST['pais'].'
+						        </p>
+						        <p>
+						          <b>Email:</b> '.$_POST['email'].'<br>
+						          <b>Email:</b> '.$_POST['contacto1_email'].'
+						        </p>
+						      </td>
+						    </tr>
+						    <tr>
+						      <td colspan="2">
+						        <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+						          <tbody>
+						            <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+						              <td width="130px">Nombre de la organización/Organization name</td>
+						              <td width="130px">País / Country</td>
+						              <td width="130px">Organismo de Certificación / Certification Entity</td>
+						           
+						              <td width="130px">Fecha de solicitud/Date of application</td>
+						            </tr>
+						            <tr style="font-size: 12px;">
+						              <td style="padding:10px;">
+						                '.$_POST['nombre'].'
+						              </td>
+						              <td style="padding:10px;">
+						                '.$_POST['pais'].'
+						              </td>
+						              <td style="padding:10px;">
+						                '.$oc['nombre'].'
+						              </td>
+						              <td style="padding:10px;">
+						              '.date('d/m/Y', $fecha).'
+						              </td>
+						            </tr>
+
+						          </tbody>
+						        </table>  
+						      </td>
+						    </tr>
+						    <tr>
+						      <td colspan="2">
+						        <p><span style="color:red">¿Qué es lo de debo realizar ahora?. Debes revisar la solicitud y cargar una cotización</span></p>
+						        <ol>
+						          <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organismo de Certificación(OC).</li>
+						          <li>Dentro de tu cuenta debes seleccionar Solicitudes > Solicitudes OPP.</li>
+						          <li>Dentro de la tabla solicitudes debes localizar la columna "Acciones" Y seleccionar el boton Azul Consultar.</li>
+						          <li>Para poder enviar la cotización debes seleccionar el "Procedimiento de Certificación" y cargar la cotización.</li>
+						        </ol>
+						      </td>
+						    </tr>
+						    <tr>
+						      <td colspan="2">
+						        <p><span style="color:red">What should I do now? You should review the application and upload a price quote.</span></p>
+						        <ol>
+						          <li>You should open a session in the D-SPP system as a Certification Entity (CE).</li>
+						          <li>Within your account, you should select ApplicationsSolicitudes > SPO Applications Solicitudes OPP.</li>
+						          <li>In the applications table, you should locate the column entitled “Actions” and select the Blue Consult button.</li>
+						          <li>To send your price quote, you should select “Certification Procedure” and upload your price quote.</li>
+						        </ol>
+
+						      </td>
+						    </tr>
+						  </tbody>
+						</table>
+
+					</body>
+					</html>
+				';
+				///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
+				$destinatario = $oc['email1'];
+				if(isset($oc['email1'])){
+					//$mail->AddAddress($oc['email1']);
+
+					$token = strtok($oc['email1'], "\/\,\;");
+					while ($token !== false)
+					{
+						$mail->AddAddress($token);
+						$token = strtok('\/\,\;');
+					}
+
+				}
+				$destinatario = $oc['email2'];
+				if(isset($oc['email2'])){
+					//$mail->AddAddress($oc['email2']);
+					$token = strtok($oc['email2'], "\/\,\;");
+					while ($token !== false)
+					{
+						$mail->AddAddress($token);
+						$token = strtok('\/\,\;');
+					}
+
+				}
+				if(isset($_POST['email'])){
+					//$mail->AddCC($_POST['email']);
+					$token = strtok($_POST['email'], "\/\,\;");
+					while ($token !== false)
+					{
+						$mail->AddCC($token);
+						$token = strtok('\/\,\;');
+					}
+
+				}
+				if(isset($_POST['contacto1_email'])){
+					//$mail->AddCC($_POST['contacto1_email']);
+					$token = strtok($_POST['contacto1_email'], "\/\,\;");
+					while ($token !== false)
+					{
+						$mail->AddCC($token);
+						$token = strtok('\/\,\;');
+					}
+
+				}
+
+			    $mail->AddCC($administrador);
+			    $mail->AddBCC($administrador);
+			    $mail->AddBCC($spp_global);
+		        //$mail->Username = "soporte@d-spp.org";
+		        //$mail->Password = "/aung5l6tZ";
+		        $mail->Subject = utf8_decode($asunto);
+		        $mail->Body = utf8_decode($cuerpo_correo);
+		        $mail->MsgHTML(utf8_decode($cuerpo_correo));
+		        $mail->Send();
+		        $mail->ClearAddresses();
+
+
+	}
+
 
 	///INGRESAMOS EL TIPO DE SOLICITUD A LA TABLA OPP y EL ALCANCE DE LA OPP
 	$updateSQL = sprintf("UPDATE opp SET produccion = %s, procesamiento = %s, exportacion = %s, estatus_opp = %s WHERE idopp = %s",
@@ -274,305 +941,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	}
 
 
-		 // INGRESAMOS EL PORCENTAJE DE VENTA DE LOS PRODUCTOS
 
-		 	if(!empty($_POST['organico']) || !empty($_POST['comercio_justo']) || !empty($_POST['spp']) || !empty($_POST['sin_certificado'])){
-		 		$insertSQL = sprintf("INSERT INTO porcentaje_productoVentas (organico, comercio_justo, spp, sin_certificado, idsolicitud_certificacion, idopp) VALUES (%s, %s, %s, %s, %s, %s)",
-		 			GetSQLValueString($_POST['organico'], "text"),
-		 			GetSQLValueString($_POST['comercio_justo'], "text"),
-		 			GetSQLValueString($_POST['spp'], "text"),
-		 			GetSQLValueString($_POST['sin_certificado'], "text"),
-		 			GetSQLValueString($idsolicitud_certificacion, "int"),
-		 			GetSQLValueString($idopp, "int"));
-		 		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
-		 	}
-
-
-		/*************************** INICIA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
-		$insertSQL = sprintf("INSERT INTO proceso_certificacion (idsolicitud_certificacion, estatus_publico, estatus_interno, estatus_dspp, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
-			GetSQLValueString($idsolicitud_certificacion, "int"),
-			GetSQLValueString($estatus_publico, "int"),
-			GetSQLValueString($estatus_interno, "int"),
-			GetSQLValueString($estatus_dspp, "int"),
-			GetSQLValueString($fecha, "int"));
-		$insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
-		/*************************** TERMINA INSERTAR PROCESO DE CERTIFICACIÓN ***************************/
-
-		/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
-			if(isset($_POST['certificacion'])){
-				$certificacion = $_POST['certificacion'];
-			}else{
-				$certificacion = NULL;
-			}
-
-
-			if(isset($_POST['certificadora'])){
-				$certificadora = $_POST['certificadora'];
-			}else{
-				$certificadora = NULL;
-			}
-
-			if(isset($_POST['ano_inicial'])){
-				$ano_inicial = $_POST['ano_inicial'];
-			}else{
-				$ano_inicial = NULL;
-			}
-
-			if(isset($_POST['interrumpida'])){
-				$interrumpida = $_POST['interrumpida'];
-			}else{
-				$interrumpida = NULL;
-			}
-
-			for($i=0;$i<count($certificacion);$i++){
-				if($certificacion[$i] != NULL){
-					#for($i=0;$i<count($certificacion);$i++){
-					$insertSQL = sprintf("INSERT INTO certificaciones (idsolicitud_certificacion, certificacion, certificadora, ano_inicial, interrumpida) VALUES (%s, %s, %s, %s, %s)",
-					    GetSQLValueString($idsolicitud_certificacion, "int"),
-					    GetSQLValueString(strtoupper($certificacion[$i]), "text"),
-					    GetSQLValueString(strtoupper($certificadora[$i]), "text"),
-					    GetSQLValueString($ano_inicial[$i], "text"),
-					    GetSQLValueString($interrumpida[$i], "text"));
-
-					$Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
-					#}
-				}
-			}
-		/*************************** INICIA INSERTAR CERTIFICACIONES ***************************/
-
-
-		/*************************** INICIA INSERTAR PRODUCTOS ***************************/
-		$producto_general = $_POST['producto_general'];
-		$producto = $_POST['producto'];
-		$volumen = $_POST['volumen'];
-		$materia = $_POST['materia'];
-		$destino = $_POST['destino'];
-		/*$marca_propia = $_POST['marca_propia'];
-		$marca_cliente = $_POST['marca_cliente'];
-		$sin_cliente = $_POST['sin_cliente'];*/
-
-		for ($i=0;$i<count($producto);$i++) { 
-			if($producto[$i] != NULL){
-
-					$array1[$i] = "terminado".$i; 
-					$array2[$i] = "marca_propia".$i;
-					$array3[$i] = "marca_cliente".$i;
-					$array4[$i] = "sin_cliente".$i;
-
-					if(isset($_POST[$array1[$i]])){
-						$terminado = $_POST[$array1[$i]];
-					}else{
-						$terminado = null;
-					}
-					if(isset($_POST[$array2[$i]])){
-						$marca_propia = $_POST[$array2[$i]];
-					}else{
-						$marca_propia = null;
-					}
-					if(isset($_POST[$array3[$i]])){
-						$marca_cliente = $_POST[$array3[$i]];
-					}else{
-						$marca_cliente = null;
-					}
-					if(isset($_POST[$array4[$i]])){
-						$sin_cliente = $_POST[$array4[$i]];
-					}else{
-						$sin_cliente = null;
-					}
-
-					//$terminado = $_POST[$array1[$i]];
-					//$marca_propia = $_POST[$array2[$i]];
-					//$marca_cliente = $_POST[$array3[$i]];
-					//$sin_cliente = $_POST[$array4[$i]];
-
-					$str = iconv($charset, 'ASCII//TRANSLIT', $producto_general[$i]);
-					$producto_general[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
-
-					$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
-					$producto[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
-
-					$str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
-					$destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
-
-					$str = iconv($charset, 'ASCII//TRANSLIT', $materia[$i]);
-					$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
-
-
-				    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto_general, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-				    	GetSQLValueString($idopp, "int"),
-				        GetSQLValueString($idsolicitud_certificacion, "int"),
-				        GetSQLValueString($producto_general[$i], "text"),
-				        GetSQLValueString($producto[$i], "text"),
-				        GetSQLValueString($volumen[$i], "text"),
-				        GetSQLValueString($terminado[$i], "text"),
-				        GetSQLValueString($materia[$i], "text"),
-				        GetSQLValueString($destino[$i], "text"),
-				        GetSQLValueString($marca_propia[$i], "text"),
-				        GetSQLValueString($marca_cliente[$i], "text"),                    
-				        GetSQLValueString($sin_cliente[$i], "text"));
-				  $Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
-			}
-		}
-		/***************************** TERMINA INSERTAR PRODUCTOS ******************************/
-
-		///// INICIA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
-		$asunto = "D-SPP Solicitud de Certificación para Organizaciones de Pequeños Productores";
-		$row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
-		$oc = mysql_fetch_assoc($row_oc);
-
-		$cuerpo_correo = '
-			<html>
-			<head>
-				<meta charset="utf-8">
-			</head>
-			<body>
-			
-				<table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; text-align:justify; color: #797979;" border="0" width="650px">
-				  <thead>
-				    <tr>
-				      <th scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-				      <th scope="col" align="left" width="280"><strong>Solicitud de Certificación para Organizaciones de Pequeños Productores / Certification Application for Small Producers’ Organizations </strong></th>
-				    </tr>
-				  </thead>
-				  <tbody>
-				    <tr>
-				      <td colspan="2" style="padding-top:10px;">
-				        <p>
-				          Para poder consultar la solicitud, por favor iniciar sesión en su cuenta de OC(Organismo de Certificación) en el siguiente enlace: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
-				        </p>
-				        <p>
-				          In order to consult the application, please open a session in your  Certification Entity (CE) account at the following link: <a href="http://d-spp.org" target="_new">www.d-spp.org</a>
-				        </p>
-				      </td>
-				    </tr>
-				    <tr>
-				      <td colspan="2">
-				        <p>
-				          <b>Teléfono Organización / Organization phone:</b> '.$_POST['telefono'].'
-				        </p>
-				        <p>
-				          <b>Pais / Country:</b> '.$_POST['pais'].'
-				        </p>
-				        <p>
-				          <b>Email:</b> '.$_POST['email'].'<br>
-				          <b>Email:</b> '.$_POST['contacto1_email'].'
-				        </p>
-				      </td>
-				    </tr>
-				    <tr>
-				      <td colspan="2">
-				        <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-				          <tbody>
-				            <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-				              <td width="130px">Nombre de la organización/Organization name</td>
-				              <td width="130px">País / Country</td>
-				              <td width="130px">Organismo de Certificación / Certification Entity</td>
-				           
-				              <td width="130px">Fecha de solicitud/Date of application</td>
-				            </tr>
-				            <tr style="font-size: 12px;">
-				              <td style="padding:10px;">
-				                '.$_POST['nombre'].'
-				              </td>
-				              <td style="padding:10px;">
-				                '.$_POST['pais'].'
-				              </td>
-				              <td style="padding:10px;">
-				                '.$oc['nombre'].'
-				              </td>
-				              <td style="padding:10px;">
-				              '.date('d/m/Y', $fecha).'
-				              </td>
-				            </tr>
-
-				          </tbody>
-				        </table>  
-				      </td>
-				    </tr>
-				    <tr>
-				      <td colspan="2">
-				        <p><span style="color:red">¿Qué es lo de debo realizar ahora?. Debes revisar la solicitud y cargar una cotización</span></p>
-				        <ol>
-				          <li>Debes iniciar sesión dentro del sistema <a href="http://d-spp.org/">D-SPP (clic aquí)</a> como Organismo de Certificación(OC).</li>
-				          <li>Dentro de tu cuenta debes seleccionar Solicitudes > Solicitudes OPP.</li>
-				          <li>Dentro de la tabla solicitudes debes localizar la columna "Acciones" Y seleccionar el boton Azul Consultar.</li>
-				          <li>Para poder enviar la cotización debes seleccionar el "Procedimiento de Certificación" y cargar la cotización.</li>
-				        </ol>
-				      </td>
-				    </tr>
-				    <tr>
-				      <td colspan="2">
-				        <p><span style="color:red">What should I do now? You should review the application and upload a price quote.</span></p>
-				        <ol>
-				          <li>You should open a session in the D-SPP system as a Certification Entity (CE).</li>
-				          <li>Within your account, you should select ApplicationsSolicitudes > SPO Applications Solicitudes OPP.</li>
-				          <li>In the applications table, you should locate the column entitled “Actions” and select the Blue Consult button.</li>
-				          <li>To send your price quote, you should select “Certification Procedure” and upload your price quote.</li>
-				        </ol>
-
-				      </td>
-				    </tr>
-				  </tbody>
-				</table>
-
-			</body>
-			</html>
-		';
-		///// TERMINA ENVIO DEL MENSAJE POR CORREO AL OC y a SPP GLOBAL
-		$destinatario = $oc['email1'];
-		if(isset($oc['email1'])){
-			//$mail->AddAddress($oc['email1']);
-
-			$token = strtok($oc['email1'], "\/\,\;");
-			while ($token !== false)
-			{
-				$mail->AddAddress($token);
-				$token = strtok('\/\,\;');
-			}
-
-		}
-		$destinatario = $oc['email2'];
-		if(isset($oc['email2'])){
-			//$mail->AddAddress($oc['email2']);
-			$token = strtok($oc['email2'], "\/\,\;");
-			while ($token !== false)
-			{
-				$mail->AddAddress($token);
-				$token = strtok('\/\,\;');
-			}
-
-		}
-		if(isset($_POST['email'])){
-			//$mail->AddCC($_POST['email']);
-			$token = strtok($_POST['email'], "\/\,\;");
-			while ($token !== false)
-			{
-				$mail->AddCC($token);
-				$token = strtok('\/\,\;');
-			}
-
-		}
-		if(isset($_POST['contacto1_email'])){
-			//$mail->AddCC($_POST['contacto1_email']);
-			$token = strtok($_POST['contacto1_email'], "\/\,\;");
-			while ($token !== false)
-			{
-				$mail->AddCC($token);
-				$token = strtok('\/\,\;');
-			}
-
-		}
-
-	    $mail->AddCC($administrador);
-	    $mail->AddBCC($administrador);
-	    $mail->AddBCC($spp_global);
-        //$mail->Username = "soporte@d-spp.org";
-        //$mail->Password = "/aung5l6tZ";
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_correo);
-        $mail->MsgHTML(utf8_decode($cuerpo_correo));
-        $mail->Send();
-        $mail->ClearAddresses();
 
  		$mensaje = "Se ha enviado la Solicitud de Certificacion al OC, en breve seras contactado";
 

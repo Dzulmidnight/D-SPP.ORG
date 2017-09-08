@@ -34,42 +34,26 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 }
 
 
-	if(isset($_POST['actualizar_dspp']) && $_POST['actualizar_dspp'] == 1){
+	if(isset($_POST['actualizar']) && $_POST['actualizar'] == 1){
 		$contador = 1;
-		foreach ($_POST['nombre_frances'] as $value) {
-			$insertSQL = sprintf("UPDATE estatus_dspp SET nombre_frances = %s WHERE idestatus_dspp = %s",
-				GetSQLValueString($value,"text"),
-				GetSQLValueString($contador, "int"));
-			$actualizar = mysql_query($insertSQL);
-			$contador++;
-		}
+    $name = $_POST['name'];
+    $nom = $_POST['nom'];
+    $iso2 = $_POST['iso2'];
+    $iso3 = $_POST['iso3'];
+    $codigo_telefono = '+'.$_POST['codigo_telefono'];
+    $idpais = $_POST['idpais'];
+    //$updateSQL = "UPDATE paises SET name = '$name', nom = '$nom', iso2 = '$iso2', iso3 = '$iso3', codigo_telefono = '$codigo_telefono' WHERE id = $idpais";
+		//$actualizar = mysql_query($updateSQL) or die(mysql_error());
+    $updateSQL = sprintf("UPDATE paises SET name = %s, nom = %s, iso2 = %s, iso3 = %s, codigo_telefono = %s WHERE id = %s",
+      GetSQLValueString($name, "text"),
+      GetSQLValueString($nom, "text"),
+      GetSQLValueString($iso2, "text"),
+      GetSQLValueString($iso3, "text"),
+      GetSQLValueString($codigo_telefono, "text"),
+      GetSQLValueString($idpais, "int"));
+    $actualizar = mysql_query($updateSQL) or die(mysql_error());
 
 	}
-
-	if(isset($_POST['actualizar_interno']) && $_POST['actualizar_interno'] == 2){
-		$contador = 1;
-		foreach ($_POST['nombre_frances'] as $value) {
-			$insertSQL = sprintf("UPDATE estatus_interno SET nombre_frances = %s WHERE idestatus_interno = %s",
-				GetSQLValueString($value,"text"),
-				GetSQLValueString($contador, "int"));
-			$actualizar = mysql_query($insertSQL);
-			$contador++;
-		}
-
-	}
-
-	if(isset($_POST['actualizar_publico']) && $_POST['actualizar_publico'] == 3){
-		$contador = 1;
-		foreach ($_POST['nombre_frances'] as $value) {
-			$insertSQL = sprintf("UPDATE estatus_publico SET nombre_frances = %s WHERE idestatus_publico = %s",
-				GetSQLValueString($value,"text"),
-				GetSQLValueString($contador, "int"));
-			$actualizar = mysql_query($insertSQL);
-			$contador++;
-		}
-
-	}
-
 
 
 
@@ -148,126 +132,54 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
   </head>
 
   <body>
-	<div class="col-md-6">
-		<form action="" method="POST">
+	<div class="col-md-12">
+
 			<table class="table table-bordered table-condensed">
 				<tr>
-					<td colspan="3">ESTATUS_DSPP</td>
+					<td colspan="3">PAISES</td>
 				</tr>
 				<tr>
-					<td>Español</td>
-					<td>Ingles</td>
-					<td>Frances</td>
+					<td>#</td>
+					<td>iso</td>
+					<td>Nombre</td>
+					<td>Name</td>
+					<td>Nom</td>
+					<td>iso2</td>
+					<td>iso3</td>
+					<td>codigo_telefono</td>
 				</tr>
 				<?php 
-				$query = "SELECT * FROM estatus_dspp";
+				$query = "SELECT * FROM paises";
 				$consultar = mysql_query($query) or die(mysql_error());
+				$contador = 1;
 
 				while($datos = mysql_fetch_assoc($consultar)){
 				?>
-					<tr>
-						<td>
-							<?php echo $datos['nombre']; ?>
-						</td>
-						<td>
-							<?php echo utf8_encode($datos['nombre_ingles']); ?>
-						</td>
-						<td>
-							<input type="text" class="form-control" name="nombre_frances[]" placeholder="nombre frances">
-							<?php echo $datos['nombre_frances']; ?>
-						</td>
-					</tr>
+          <form action="" method="POST">
+            <tr>
+              <td><?php echo $contador; ?></td>
+              <td><?php echo $datos['iso']; ?></td>
+              <td><input type="text" name="nombre" value="<?php echo utf8_encode($datos['nombre']); ?>"></td>
+              <td><input type="text" name="name" value="<?php echo utf8_encode($datos['name']); ?>"></td>
+              <td><input type="text" name="nom" value="<?php echo utf8_encode($datos['nom']); ?>"></td>
+              <td><input type="text" name="iso2" value="<?php echo $datos['iso2']; ?>"></td>
+              <td><input type="text" name="iso3" value="<?php echo $datos['iso3']; ?>"></td>
+              <td><input type="text" name="codigo_telefono" value="<?php echo $datos['codigo_telefono']; ?>"></td>
+              <td><button type="submit" name="actualizar" value="1">Actualizar</button></td>
+              <input type="hidden" name="idpais" value="<?php echo $datos['id']; ?>">
+            </tr>
+          </form>
 				<?php
+				$contador++;
 				}
 				 ?>
-				 <tr>
-				 	<td><button type="submit" name="actualizar_dspp" value="1">Actualizar</button></td>
-				 </tr>
+
 
 			</table>			
-		</form>
-	</div>
-
-	<div class="col-md-6">
-		<form action="" method="POST">
-			<table class="table table-bordered table-condensed">
-				<tr>
-					<td colspan="3">ESTATUS_INTERNO</td>
-				</tr>
-				<tr>
-					<td>Español</td>
-					<td>Ingles</td>
-					<td>Frances</td>
-				</tr>
-				<?php 
-				$query = "SELECT * FROM estatus_interno";
-				$consultar = mysql_query($query) or die(mysql_error());
-
-				while($datos = mysql_fetch_assoc($consultar)){
-				?>
-					<tr>
-						<td>
-							<?php echo $datos['nombre']; ?>
-						</td>
-						<td>
-							<?php echo utf8_encode($datos['nombre_ingles']); ?>
-						</td>
-						<td>
-							<input type="text" class="form-control" name="nombre_frances[]" placeholder="nombre frances">
-							<?php echo $datos['nombre_frances']; ?>
-						</td>
-					</tr>
-				<?php
-				}
-				 ?>
-				 <tr>
-				 	<td><button type="submit" name="actualizar_interno" value="2">Actualizar</button></td>
-				 </tr>
-
-			</table>			
-		</form>
-	</div>
-
-	<div class="col-md-6">
-		<form action="" method="POST">
-			<table class="table table-bordered table-condensed">
-				<tr>
-					<td colspan="3">ESTATUS_PUBLICO</td>
-				</tr>
-				<tr>
-					<td>Español</td>
-					<td>Ingles</td>
-					<td>Frances</td>
-				</tr>
-				<?php 
-				$query = "SELECT * FROM estatus_publico";
-				$consultar = mysql_query($query) or die(mysql_error());
-
-				while($datos = mysql_fetch_assoc($consultar)){
-				?>
-					<tr>
-						<td>
-							<?php echo $datos['nombre']; ?>
-						</td>
-						<td>
-							<?php echo utf8_encode($datos['nombre_ingles']); ?>
-						</td>
-						<td>
-							<input type="text" class="form-control" name="nombre_frances[]" placeholder="nombre frances">
-							<?php echo $datos['nombre_frances']; ?>
-						</td>
-					</tr>
-				<?php
-				}
-				 ?>
-				 <tr>
-				 	<td><button type="submit" name="actualizar_publico" value="3">Actualizar</button></td>
-				 </tr>
-
-			</table>			
-		</form>
 
 	</div>
+
+
 
 
 
