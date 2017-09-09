@@ -6,12 +6,12 @@
   </li>
   <li role="presentation" <?php if(isset($_GET['select_empresa'])){ echo "class='active'";} ?>>
     <a href="?SOLICITUD&select_empresa" aria-label="Left Align">
-      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Deamndes d'entreprises
+      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Demandes d'entreprises
     </a>
   </li>
   <li role="presentation" <?php if(isset($_GET['select_colectiva'])){ echo "class='active'";} ?>>
     <a href="?SOLICITUD&select_colectiva" aria-label="Left Align">
-      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Solicitudes Colectivas
+      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Demandes collectives
     </a>
   </li>
 
