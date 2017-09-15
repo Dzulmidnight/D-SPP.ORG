@@ -64,8 +64,8 @@
           $asunto = "1er Aviso de Renovación del Certificado / SPP Certificate Renewal Notice";
 
           separarCorreo($opp['email']);
-          separarCorreo($contactos['email1']));
-          separarCorreo($contactos['email2']));
+          separarCorreo($contactos['email1']);
+          separarCorreo($contactos['email2']);
           separarCorreo($detalle_certificado['oc_email1']);
           separarCorreo($detalle_certificado['oc_email2']);
           $mail->AddBCC("cert@spp.coop");
