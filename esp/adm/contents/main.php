@@ -56,7 +56,7 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
 <?php
   ////////////////////// INICIA SECCIÓN MENSAJES PERIODO DE OBJECIÓN //////////////////////////////
-  include('msj_periodo_objecion.php');
+  //include('msj_periodo_objecion.php');
   /**************************************/
 
   include('msj_renovacion_certificado.php');

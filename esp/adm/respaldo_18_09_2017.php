@@ -21,31 +21,32 @@
 
 
   // consultamos la información de la OPP de acuerdo al certificado
-  //$row_opp = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, MAX(certificado.idcertificado) AS 'idcertificado' FROM opp INNER JOIN certificado ON opp.idopp = certificado.idopp INNER JOIN oc ON certificado.entidad = oc.idoc GROUP BY certificado.idopp", $dspp) or die(mysql_error());
+  $row_opp = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, MAX(certificado.idcertificado) AS 'idcertificado' FROM opp INNER JOIN certificado ON opp.idopp = certificado.idopp INNER JOIN oc ON certificado.entidad = oc.idoc GROUP BY certificado.idopp", $dspp) or die(mysql_error());
 
+  while($opp = mysql_fetch_assoc($row_opp)){ /// INICIA WHILE 1
+    //consultamos la información del certificado asi como los datos del OC
+    $row_certificado = mysql_query("SELECT certificado.entidad, certificado.vigencia_fin, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN oc ON certificado.entidad = oc.idoc WHERE idcertificado = $opp[idcertificado]", $dspp) or die(mysql_error());
+    $detalle_certificado = mysql_fetch_assoc($row_certificado);
 
-  $row_certificado = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN opp ON certificado.idopp = opp.idopp INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%'", $dspp) or die(mysql_error());
-
-  while($certificado = mysql_fetch_assoc($row_certificado)){ /// INICIA WHILE 1
     // consultamos lo contactos registrados del OPP
-    $row_contactos = mysql_query("SELECT contactos.email1, contactos.email2 FROM contactos WHERE contactos.idopp = $certificado[idopp] GROUP BY email1", $dspp) or die(mysql_error());
+    $row_contactos = mysql_query("SELECT contactos.email1, contactos.email2 FROM contactos WHERE contactos.idopp = $opp[idopp] GROUP BY email1", $dspp) or die(mysql_error());
     $contactos = mysql_fetch_assoc($row_contactos);
 
     ///revisamos si se han enviado avisos de renovación
-    $row_aviso_renovacion = mysql_query("SELECT * FROM avisos_renovacion WHERE idcertificado = $certificado[idcertificado] ORDER BY avisos_renovacion.idaviso_renovacion", $dspp) or die(mysql_error());
+    $row_aviso_renovacion = mysql_query("SELECT * FROM avisos_renovacion WHERE idcertificado = $opp[idcertificado] AND ano_aviso = '$anio_actual' ORDER BY avisos_renovacion.idaviso_renovacion LIMIT 1", $dspp) or die(mysql_error());
     $aviso_renovacion = mysql_fetch_assoc($row_aviso_renovacion);
 
     // variables generales
-      $fecha_vigencia = date('d-m-Y', strtotime($certificado['vigencia_fin']));
-      $nombre_opp = $certificado['nombre'];
-      $abreviacion_opp = $certificado['abreviacion'];
-      $vigencia_final = $certificado['vigencia_fin'];
+      $fecha_vigencia = date('d-m-Y', strtotime($detalle_certificado['vigencia_fin']));
+      $nombre_opp = $opp['nombre'];
+      $abreviacion_opp = $opp['abreviacion'];
+      $vigencia_final = $detalle_certificado['vigencia_fin'];
       //revisamos el año del ultimo aviso de renovacion
       $anio_aviso = $aviso_renovacion['ano_aviso'];
     //
 
     //convertimos la fecha de vigencia mas reciente que obtenemos
-    $time_vencimiento = strtotime($certificado['vigencia_fin']);
+    $time_vencimiento = strtotime($detalle_certificado['vigencia_fin']);
     $primer_aviso = $time_vencimiento - $primero;
     $segundo_aviso = $time_vencimiento - $segundo;
     $tercer_aviso = $time_vencimiento;
@@ -61,8 +62,8 @@
       if(($plazo <= $primero) && ($plazo > $segundo) && !isset($aviso_renovacion['idaviso_renovacion'])){ // se valida el envio del PRIMER AVISO
         $asunto = "1er Aviso de Renovación del Certificado / 1st Certificate Renewal Notice";
 
-        if(!empty($certificado['email'])){
-          $token = strtok($certificado['email'], "\/\,\;");
+        if(!empty($opp['email'])){
+          $token = strtok($opp['email'], "\/\,\;");
           while($token !== false){   
             $mail->AddAddress($token);
             $token = strtok('\/\,\;');
@@ -160,17 +161,17 @@
         $mail->ClearAddresses();
 
         $insertSQL = sprintf("INSERT INTO avisos_renovacion(idopp, aviso1, ano_aviso, idcertificado, fecha_certificado) VALUES(%s, %s, %s, %s, %s)",
-            GetSQLValueString($certificado['idopp'], "int"),
+            GetSQLValueString($opp['idopp'], "int"),
             GetSQLValueString($time_actual, "int"),
             GetSQLValueString($anio_actual, "text"),
-            GetSQLValueString($certificado['idcertificado'], "int"),
+            GetSQLValueString($opp['idcertificado'], "int"),
             GetSQLValueString($detalle_certificado['vigencia_fin'], "text"));
         $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
       }else if((($plazo <= $segundo) && ($segundo >= 0)) && !isset($aviso_renovacion['aviso2'])){ // se valida el envio del SEGUNDO AVISO
         $asunto = "2do Aviso de Renovación del Certificado / 2nd Certificate Renewal Notice";
 
-        if(!empty($certificado['email'])){
-          $token = strtok($certificado['email'], "\/\,\;");
+        if(!empty($opp['email'])){
+          $token = strtok($opp['email'], "\/\,\;");
           while($token !== false){
             $mail->AddAddress($token);
             $token = strtok('\/\,\;');
@@ -272,11 +273,11 @@
         $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
       }
-    }else if(($time_actual <= $tercer_aviso && $tercer_aviso <= $cuarto_aviso) && !isset($aviso_renovacion['aviso3'])){ /// se valida el envio del 3º aviso
+    }else if(($tercer_aviso >= $time_actual && $tercer_aviso <= $cuarto_aviso) && !isset($aviso_renovacion['aviso3'])){ /// se valida el envio del 3º aviso
       $asunto = "3er Aviso de Renovación del Certificado - Alerta de suspensión / 3rd Certificate Renewal Notice - Suspension alert";
 
-      if(!empty($certificado['email'])){
-        $token = strtok($certificado['email'], "\/\,\;");
+      if(!empty($opp['email'])){
+        $token = strtok($opp['email'], "\/\,\;");
         while($token !== false){
           $mail->AddAddress($token);
           $token = strtok('\/\,\;');
@@ -351,7 +352,7 @@
                       <li>Ingresar en la dirección <a href="http://d-spp.org/">http://d-spp.org/</a>.</li>
                       <li>Seleccionar el idioma en el que desea utilizar el sistema.</li>
                       <li>Después de seleccionar el idioma, debe seleccionar la opción "Organización de Pequeños Productores"(OPP) o dar clic en el siguiente link <a href="http://d-spp.org/esp/">Español</a> o en <a href="http://d-spp.org/en/">Ingles</a></li>
-                      <li>Debe de iniciar sesión con su usuario(#SPP): <span style="color:#27ae60">'.$certificado['spp'].'</span> y su contraseña: <span style="color:#27ae60">'.$certificado['password'].'</span></li>
+                      <li>Debe de iniciar sesión con su usuario(#SPP): <span style="color:#27ae60">'.$opp['spp'].'</span> y su contraseña: <span style="color:#27ae60">'.$opp['password'].'</span></li>
                       <li>Una vez que ha iniciado sesión debe seleccionar la opción "Solicitudes" > "Nueva Solicitud"</li>
                       <li>Después de realizar esos pasos se mostrara la Solicitud electronica donde deberá completar la información correspondiente y al finalizar dar clic en "Enviar Solicitud".</li>
                       <li>Después de enviar la solicitud, el Organismo de Certificación correspondiente le enviara la cotización por medio del sistema, la cual también le llegara a los correos dados de alta en la solicitud.</li>
@@ -399,7 +400,7 @@
                         After selecting the language, you must select the "Small Producers Organization" (OPP) or click on the following link <a href="http://d-spp.org/esp/">Español</a> or <a href="http://d-spp.org/en/">Ingles</a>
                       </li>
                       <li>
-                        You must login with your user (#SPP): <span style="color:#27ae60">'.$certificado['spp'].'</span> and your password: <span style="color:#27ae60">'.$certificado['password'].'</span>
+                        You must login with your user (#SPP): <span style="color:#27ae60">'.$opp['spp'].'</span> and your password: <span style="color:#27ae60">'.$opp['password'].'</span>
                       </li>
                       <li>
                         Una vez que haya iniciado sesión debe seleccionar la opción "Aplicaciones"> "Nueva aplicación"
@@ -439,8 +440,8 @@
     }else if(($time_actual >= $cuarto_aviso) && !isset($aviso_renovacion['aviso4'])){ /// se valida el envio del 4º aviso
       $asunto = "Suspensión del certificado / Suspension of certificate";
 
-      if(!empty($certificado['email'])){
-        $token = strtok($certificado['email'], "\/\,\;");
+      if(!empty($opp['email'])){
+        $token = strtok($opp['email'], "\/\,\;");
         while($token !== false){
           $mail->AddAddress($token);
           $token = strtok('\/\,\;');
