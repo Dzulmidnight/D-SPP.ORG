@@ -387,7 +387,7 @@ if(isset($_GET['query'])){
   if(!empty($idoc) && !empty($pais) && !empty($producto) && !empty($estatus)){
 
 
-    $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE empresa.idoc = $idoc AND empresa.pais = '$pais' AND empresa.estatus_dspp = $estatus AND producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
+    $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE empresa.idoc = $idoc AND empresa.pais = '$pais' AND empresa.estatus_dspp = $estatus AND producto_general LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
     $total_idempresa = mysql_num_rows($query_productos);
     $cont_idempresa = 1;
     while($producto_empresa = mysql_fetch_assoc($query_productos)){
@@ -420,7 +420,7 @@ if(isset($_GET['query'])){
 
     $query_empresa = "SELECT empresa.idempresa, empresa.idoc, empresa.spp AS 'spp_empresa', empresa.nombre, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais, empresa.maquilador, empresa.comprador, empresa.intermediario, empresa.email, empresa.telefono, empresa.sitio_web, empresa.estatus_empresa, empresa.estatus_publico, empresa.estatus_interno, empresa.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', MAX(certificado.idcertificado) AS 'idcertificado', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM empresa LEFT JOIN oc ON empresa.idoc = oc.idoc LEFT JOIN estatus_publico ON empresa.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON empresa.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON empresa.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.pais = '$pais' GROUP BY empresa.idempresa ORDER BY empresa.abreviacion ASC";
   }else if(empty($idoc) && empty($pais) && empty($estatus) && !empty($producto)){
-    $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
+    $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE producto_general LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
     $total_idempresa = mysql_num_rows($query_productos);
     $cont_idempresa = 1;
     while($producto_empresa = mysql_fetch_assoc($query_productos)){
@@ -435,7 +435,7 @@ if(isset($_GET['query'])){
 
 
   }else if(empty($idoc) && !empty($pais) && empty($estatus) && !empty($producto)){
-    $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE empresa.pais = '$pais' AND producto LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
+    $query_productos = mysql_query("SELECT empresa.idempresa, productos.producto FROM empresa LEFT JOIN productos ON empresa.idempresa = productos.idempresa WHERE empresa.pais = '$pais' AND producto_general LIKE '%$producto%' GROUP BY idempresa", $dspp) or die(mysql_error());
     $total_idempresa = mysql_num_rows($query_productos);
     $cont_idempresa = 1;
     while($producto_empresa = mysql_fetch_assoc($query_productos)){
@@ -531,7 +531,9 @@ $queryString_empresa = sprintf("&totalRows_empresa=%d%s", $totalRows_empresa, $q
 
   $row_oc = mysql_query("SELECT * FROM oc", $dspp) or die(mysql_error());
   $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
-  $query_productos = mysql_query("SELECT * FROM productos WHERE productos.idempresa IS NOT NULL GROUP BY producto",$dspp) or die(mysql_error())
+
+
+  $query_productos = mysql_query("SELECT producto_general FROM productos WHERE productos.idempresa IS NOT NULL AND productos.producto_general IS NOT NULL GROUP BY producto_general ORDER BY productos.producto_general ASC",$dspp) or die(mysql_error());
  ?>
 
     <form action="" method="POST">
@@ -568,7 +570,7 @@ $queryString_empresa = sprintf("&totalRows_empresa=%d%s", $totalRows_empresa, $q
               <option value=''>Seleccione un producto</option>
               <?php 
               while($lista_productos = mysql_fetch_assoc($query_productos)){
-                echo "<option value='$lista_productos[producto]'>$lista_productos[producto]</option>";
+                echo "<option value='$lista_productos[producto_general]'>$lista_productos[producto_general]</option>";
               }
                ?>
             </select>
@@ -793,16 +795,25 @@ $queryString_empresa = sprintf("&totalRows_empresa=%d%s", $totalRows_empresa, $q
              ?>
             <td>
               <?php 
-              $row_productos = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
+              $row_productos = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa] GROUP BY productos.producto", $dspp) or die(mysql_error());
               $total_productos = mysql_num_rows($row_productos);
               ?>
               <a style="font-size:14px;" href="../../agregar_producto.php?idempresa=<?php echo $empresa['idempresa']; ?>" target="ventana1" onclick="ventanaNueva ('', 500, 400, 'ventana1');"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></a>
               <?php
               if($total_productos == 0){
-                echo "No Disponible";
+              ?>
+               No Disponible
+              <?php
               }
+              $contador = 1;
+              $total = mysql_num_rows($row_productos);
               while($productos = mysql_fetch_assoc($row_productos)){
-                echo $productos['producto']."<br>";
+                if($contador < $total){
+                  echo strtoupper($productos['producto']) .", ";
+                }else{
+                  echo strtoupper($productos['producto']);
+                }
+                $contador++;
               }
                ?>
             </td>
