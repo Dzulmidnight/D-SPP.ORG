@@ -550,7 +550,19 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
           <b style="color:#d35400">Seleccione los parametros de los cuales desea realizar la busqueda</b>
         </div> 
         <div class="row">
-          <div class="col-xs-4">
+          <div class="col-xs-3">
+            Estatus de la Organización
+            <select name="buscar_oc" class="form-control">
+              <option value=''>Seleccione un estatus</option>
+              <option value="">Certificada</option>
+              <option value="">Solicitud Inicial</option>
+              <option value="">En renovación</option>
+              <option value="">Expirado</option>
+              <option value="">Sin avance</option>
+            </select>
+          </div>
+
+          <div class="col-xs-3">
             Organismo de Certificación
             <select name="buscar_oc" class="form-control">
               <option value=''>Selecciona un organismo de certificación</option>
@@ -561,7 +573,7 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
                ?>
             </select>
           </div>
-          <div class="col-xs-4">
+          <div class="col-xs-3">
             País
             <select name="buscar_pais" class="form-control">
               <option value=''>Selecciona un país</option>
@@ -572,7 +584,7 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
                ?>
             </select>
           </div>
-          <div class="col-xs-4">
+          <div class="col-xs-3">
             Producto
             <select class="form-control" name="buscar_producto" id="">
               <option value=''>Seleccione un producto</option>
@@ -839,10 +851,7 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
             }else{
               echo '<p style="color:red">No Disponible</p>';
             }
-            /*echo 'interno'.$opp['estatus_interno'].'<br>';
-            echo 'dspp'.$opp['estatus_dspp'].'<br>';
-            echo 'opp'.$opp['estatus_opp'].'<br>';
-            */
+
              ?>
             </td>
             <!--- TERMINA ESTATUS_CERTIFICADO ---->

@@ -105,7 +105,7 @@
             $mail->AddBCC("adm@spp.coop");
             $mail->AddBCC("com@spp.coop");
 
-            // Definimos el mensaje general que se utilizara en el 1º, 2º, 3º aviso
+            // Definimos el mensaje general que se utilizara en el 1º aviso
             $mensaje_general = '
               <html>
                 <head>
@@ -165,7 +165,8 @@
             $mail->ClearAddresses();
 
             if(isset($aviso_renovacion['idaviso_renovacion'])){
-              $updateSQL = sprintf("UPDATE avisos_renovacion SET aviso1 = %s WHERE idaviso_renovacion = %s",                GetSQLValueString($time_actual, "int"),
+              $updateSQL = sprintf("UPDATE avisos_renovacion SET aviso1 = %s WHERE idaviso_renovacion = %s",
+                GetSQLValueString($time_actual, "int"),
                 GetSQLValueString($aviso_renovacion['idaviso_renovacion'], "text"));
               $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
             }else{
@@ -223,7 +224,7 @@
             $mail->AddBCC("adm@spp.coop");
             $mail->AddBCC("com@spp.coop");
 
-            // Definimos el mensaje general que se utilizara en el 1º, 2º, 3º aviso
+            // Definimos el mensaje general que se utilizara en el 2º aviso
             $mensaje_general = '
               <html>
                 <head>
@@ -282,7 +283,8 @@
             $mail->Send();
             $mail->ClearAddresses();
 
-            $updateSQL = sprintf("UPDATE avisos_renovacion SET aviso2 = %s WHERE idaviso_renovacion = %s",                GetSQLValueString($time_actual, "int"),
+            $updateSQL = sprintf("UPDATE avisos_renovacion SET aviso2 = %s WHERE idaviso_renovacion = %s",
+              GetSQLValueString($time_actual, "int"),
               GetSQLValueString($aviso_renovacion['idaviso_renovacion'], "text"));
             $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
@@ -333,7 +335,7 @@
             $mail->AddBCC("adm@spp.coop");
             $mail->AddBCC("com@spp.coop");
 
-            // Definimos el mensaje para la suspensión del certificado
+            // Definimos el mensaje para el 3º aviso
             $mensaje_general = '
               <html>
                 <head>
@@ -451,7 +453,8 @@
             $mail->Send();
             $mail->ClearAddresses();
 
-            $updateSQL = sprintf("UPDATE avisos_renovacion SET aviso3 = %s WHERE idaviso_renovacion = %s",                GetSQLValueString($time_actual, "int"),
+            $updateSQL = sprintf("UPDATE avisos_renovacion SET aviso3 = %s WHERE idaviso_renovacion = %s",
+              GetSQLValueString($time_actual, "int"),
               GetSQLValueString($aviso_renovacion['idaviso_renovacion'], "text"));
             $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
@@ -501,7 +504,7 @@
             $mail->AddBCC("adm@spp.coop");
             $mail->AddBCC("com@spp.coop");
 
-            // Definimos el mensaje general que se utilizara en el 1º, 2º, 3º aviso
+            // Definimos el mensaje general que se utilizara en el 4º aviso
             $mensaje_general = '
               <html>
                 <head>
@@ -560,7 +563,8 @@
             $mail->Send();
             $mail->ClearAddresses();
 
-            $updateSQL = sprintf("UPDATE avisos_renovacion SET aviso4 = %s WHERE idaviso_renovacion = %s",                GetSQLValueString($time_actual, "int"),
+            $updateSQL = sprintf("UPDATE avisos_renovacion SET aviso4 = %s WHERE idaviso_renovacion = %s",
+              GetSQLValueString($time_actual, "int"),
               GetSQLValueString($aviso_renovacion['idaviso_renovacion'], "text"));
             $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
