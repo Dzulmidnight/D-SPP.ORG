@@ -138,14 +138,14 @@
                       <tr>
                         <td style="text-align:justify; padding-top:2em" colspan="2">
                           <p>Dear <strong style="color:red">'.$nombre_empresa.', (<u>'.$abreviacion_empresa.'</u>)</strong> Representatives</p>
-                          <p>You are hereby informed of the need for renewal of your SPP Certificate. The effective date of your SPP certificate is: <strong style="color:red">'.$fecha_vigencia.'</strong>, so you must proceed with the annual evaluation.</p>
+                          <p>In this way, you are informed of the need to renew your SPP Registry. The effective date of your spp registration is: <strong style="color:red">'.$fecha_vigencia.'</strong>, so you must proceed with the annual evaluation.</p>
                           <p>According to the SPP procedures, the evaluation can be carried out one month before the effective date or maximum one month later. If the evaluation is carried out one month later, it would be expected that the opinion would be obtained 4 months later (from the expiration date of the certificate) as a maximum term, to obtain a positive opinion from the Certification Body</p>
                         
-                          <p>We want to emphasize that there are currently policies for the suspension and / or cancellation of the certificate, so if you do not apply on time you may be entitled to a suspension.</p>
+                          <p>We want to emphasize that currently there are policies for the suspension and / or cancellation of the registration so that if you do not apply on time you can be liable for a suspension.</p>
                           
                           <p>Thank you for your attention, we said goodbye and we send greetings from SPP GLOBAL.</p>
 
-                          <p style="color:#2c3e50"><b>If you have already started your certificate renewal process please ignore this message</b></p>
+                          <p style="color:#2c3e50"><b>If you have already started your registration renewal process please ignore this message</b></p>
                           
                           <p>ANY INCONVENIENT PLEASE NOTICE TO SPP GLOBAL TO THE MAIL <strong>cert@spp.coop</strong></p>
                         </td>
@@ -257,14 +257,14 @@
                       <tr>
                         <td style="text-align:justify; padding-top:2em" colspan="2">
                           <p>Dear <strong style="color:red">'.$nombre_empresa.', (<u>'.$abreviacion_empresa.'</u>)</strong> Representatives</p>
-                          <p>You are hereby informed of the need for renewal of your SPP Certificate. The effective date of your SPP certificate is: <strong style="color:red">'.$fecha_vigencia.'</strong>, so you must proceed with the annual evaluation.</p>
+                          <p>In this way, you are informed of the need to renew your SPP Registry. The effective date of your spp registration is: <strong style="color:red">'.$fecha_vigencia.'</strong>, so you must proceed with the annual evaluation.</p>
                           <p>According to the SPP procedures, the evaluation can be carried out one month before the effective date or maximum one month later. If the evaluation is carried out one month later, it would be expected that the opinion would be obtained 4 months later (from the expiration date of the certificate) as a maximum term, to obtain a positive opinion from the Certification Body</p>
                         
-                          <p>We want to emphasize that there are currently policies for the suspension and / or cancellation of the certificate, so if you do not apply on time you may be entitled to a suspension.</p>
+                          <p>We want to emphasize that currently there are policies for the suspension and / or cancellation of the registration so that if you do not apply on time you can be liable for a suspension.</p>
                           
                           <p>Thank you for your attention, we said goodbye and we send greetings from SPP GLOBAL.</p>
 
-                          <p style="color:#2c3e50"><b>If you have already started your certificate renewal process please ignore this message</b></p>
+                          <p style="color:#2c3e50"><b>If you have already started your registration renewal process please ignore this message</b></p>
                           
                           <p>ANY INCONVENIENT PLEASE NOTICE TO SPP GLOBAL TO THE MAIL <strong>cert@spp.coop</strong></p>
                         </td>
@@ -364,12 +364,12 @@
                           </p>
 
                           <p>
-                            <b style="color:red">Para poder completar su Solicitud de Renovación del Certificado para Organizaciones de Pequeños Productores, debe realizar los siguientes pasos:</b>
+                            <b style="color:red">Para completar su solicitud de renovación de registro, debe completar los siguientes pasos:</b>
                           </p>
                           <ol>
                             <li>Ingresar en la dirección <a href="http://d-spp.org/">http://d-spp.org/</a>.</li>
                             <li>Seleccionar el idioma en el que desea utilizar el sistema.</li>
-                            <li>Después de seleccionar el idioma, debe seleccionar la opción "Organización de Pequeños Productores"(OPP) o dar clic en el siguiente link <a href="http://d-spp.org/esp/">Español</a> o en <a href="http://d-spp.org/en/">Ingles</a></li>
+                            <li>Después de seleccionar el idioma, debe seleccionar la opción "Empresas" o dar clic en el siguiente link <a href="http://d-spp.org/esp/?COM">Español</a> o en <a href="http://d-spp.org/en/?COM">Ingles</a></li>
                             <li>Debe de iniciar sesión con su usuario(#SPP): <span style="color:#27ae60">'.$certificado['spp'].'</span> y su contraseña: <span style="color:#27ae60">'.$certificado['password'].'</span></li>
                             <li>Una vez que ha iniciado sesión debe seleccionar la opción "Solicitudes" > "Nueva Solicitud"</li>
                             <li>Después de realizar esos pasos se mostrara la Solicitud electronica donde deberá completar la información correspondiente y al finalizar dar clic en "Enviar Solicitud".</li>
@@ -392,10 +392,10 @@
                           <p>Dear Representatives of: <strong style="color:red">'.$nombre_empresa.', (<u>'.$abreviacion_empresa.'</u>)</strong>:</p>
 
                           <p>
-                            According to the certificate renewal notices previously sent and according to the procedures of the SPP system a gentle reminder is made that the maximum period to start the evaluation is one month after the validity of your certificate (<strong style="color:red">'.$fecha_vigencia.'</strong>). At the end of the month, the D-SPP digital system will proceed to send the <span style="color:red">suspension of its certificate</span>.
+                            According to the registration renewal notices sent previously and according to the procedures of the SPP system, a gentle reminder is made that the maximum period for starting the evaluation is one month after the date of registration (<strong style="color:red">'.$fecha_vigencia.'</strong>). At the end of the month, the D-SPP digital system will proceed to send the <span style="color:red">suspension of its registration</span>.
                           </p>
                           <p>
-                            Once the suspension is issued, the suspension of the certificate can not be lifted until the certification process is concluded with a <span style="color:red">positive opinion</span>.
+                            Once the suspension is issued, the suspension of registration can not be lifted until the registration process is concluded with a positive <span style="color:red">positive opinion</span>.
                           </p>
                           <p>
                             One of the <span style="color:red">consequences</span> of the suspension is that they can not enter into new contracts under the SPP certification.
@@ -405,7 +405,7 @@
                           </p>
 
                           <p>
-                            <b style="color:red">In order to complete your Certificate Renewal Request for Small Producer Organizations, you must complete the following steps:</b>
+                            <b style="color:red">In order to complete your registration renewal application, you must complete the following steps:</b>
                           </p>
                           <ol>
                             <li>
@@ -415,13 +415,13 @@
                               Select the language in which you want to use the system.
                             </li>
                             <li>
-                              After selecting the language, you must select the "Small Producers Organization" (OPP) or click on the following link <a href="http://d-spp.org/esp/">Español</a> or <a href="http://d-spp.org/en/">Ingles</a>
+                              After selecting the language, you must select the option "Companies" or click on the following link <a href="http://d-spp.org/esp/?COM">Spanish</a> or <a href="http://d-spp.org/en/?COM">English</a>.
                             </li>
                             <li>
                               You must login with your user (#SPP): <span style="color:#27ae60">'.$certificado['spp'].'</span> and your password: <span style="color:#27ae60">'.$certificado['password'].'</span>
                             </li>
                             <li>
-                              Una vez que haya iniciado sesión debe seleccionar la opción "Aplicaciones"> "Nueva aplicación"
+                              Once you have logged in you must select the "Applications"> "New application"
                             </li>
                             <li>
                               After completing these steps, the Electronic Application will be displayed, where you will have to fill in the corresponding information and click "Send Application".
@@ -431,11 +431,11 @@
                             </li>
                           </ol>
                           
-                          <p>Agradeciendo su atención, nos despedimos y enviamos saludos por parte del equipo de SPP GLOBAL.</p>
+                          <p>Thank you for your attention, we said goodbye and we send greetings from the team of SPP GLOBAL.</p>
 
-                          <p style="color:#2c3e50"><b>En caso de haber iniciado ya su proceso de renovación del certificado por favor hacer caso omiso a este mensaje</b></p>
+                          <p style="color:#2c3e50"><b>If you have already started your certificate renewal process please ignore this message</b></p>
                           
-                          <p>CUALQUIER INCONVENIENTE FAVOR DE NOTIFICARLO A SPP GLOBAL AL CORREO <strong>cert@spp.coop</strong></p>
+                          <p>ANY INCONVENIENT PLEASE NOTIFY SPP GLOBAL TO THE MAIL: <strong>cert@spp.coop</strong></p>
                         </td>
                       </tr>
                     </tbody>
@@ -520,15 +520,15 @@
                        
                           <p>Estimados Representantes de <strong style="color:red">'.$nombre_empresa.', (<u>'.$abreviacion_empresa.'</u>)</strong>:</p>
                           
-                          <p>Por este conducto se les informa la necesidad de renovación de su Certificado SPP. La fecha de su vigencia de su certificado spp es <strong style="color:red">'.$fecha_vigencia.'</strong>, por lo que deben proceder con la evaluación anual.</p>
+                          <p>Por este conducto se les informa la necesidad de renovación de su Registro SPP. La fecha de su vigencia de su registro spp es <strong style="color:red">'.$fecha_vigencia.'</strong>, por lo que deben proceder con la evaluación anual.</p>
                           
-                          <p>De acuerdo a los procedimientos del SPP, se puede llevar a cabo la evaluación un mes antes de la fecha de vigencia o máximo un mes después.  Si la evaluación se realiza un mes después, se esperaría que el dictamen se obtuviera 4 meses después  (de la fecha de vencimiento del certificado) como plazo máximo, para obtener el dictamen positivo de parte del Organismo de Certificación.</p>
+                          <p>De acuerdo a los procedimientos del SPP, se puede llevar a cabo la evaluación un mes antes de la fecha de vigencia o máximo un mes después.  Si la evaluación se realiza un mes después, se esperaría que el dictamen se obtuviera 4 meses después  (de la fecha de vencimiento del registro) como plazo máximo, para obtener el dictamen positivo de parte del Organismo de Certificación.</p>
                         
-                          <p>Queremos enfatizar que actualmente existen políticas para la suspensión y/o cancelación del certificado por lo que si ustedes no solicitan a tiempo pueden ser acreedores de una suspensión.</p>
+                          <p>Queremos enfatizar que actualmente existen políticas para la suspensión y/o cancelación del registro por lo que si ustedes no solicitan a tiempo pueden ser acreedores de una suspensión.</p>
                           
                           <p>Agradeciendo su atención, nos despedimos y enviamos saludos del SPP GLOBAL.</p>
 
-                          <p style="color:#2c3e50"><b>En caso de haber iniciado ya su proceso de renovación del certificado por favor hacer caso omiso a este mensaje</b></p>
+                          <p style="color:#2c3e50"><b>En caso de haber iniciado ya su proceso de renovación del registro por favor hacer caso omiso a este mensaje</b></p>
                           
                           <p>CUALQUIER INCONVENIENTE FAVOR DE NOTIFICARLO A SPP GLOBAL AL CORREO <strong>cert@spp.coop</strong></p>
                         </td>
@@ -537,14 +537,14 @@
                       <tr>
                         <td style="text-align:justify; padding-top:2em" colspan="2">
                           <p>Dear <strong style="color:red">'.$nombre_empresa.', (<u>'.$abreviacion_empresa.'</u>)</strong> Representatives</p>
-                          <p>You are hereby informed of the need for renewal of your SPP Certificate. The effective date of your SPP certificate is: <strong style="color:red">'.$fecha_vigencia.'</strong>, so you must proceed with the annual evaluation.</p>
+                          <p>In this way, you are informed of the need to renew your SPP Registry. The effective date of your spp registration is: <strong style="color:red">'.$fecha_vigencia.'</strong>, so you must proceed with the annual evaluation.</p>
                           <p>According to the SPP procedures, the evaluation can be carried out one month before the effective date or maximum one month later. If the evaluation is carried out one month later, it would be expected that the opinion would be obtained 4 months later (from the expiration date of the certificate) as a maximum term, to obtain a positive opinion from the Certification Body</p>
                         
-                          <p>We want to emphasize that there are currently policies for the suspension and / or cancellation of the certificate, so if you do not apply on time you may be entitled to a suspension.</p>
+                          <p>We want to emphasize that currently there are policies for the suspension and / or cancellation of the registration so that if you do not apply on time you can be liable for a suspension.</p>
                           
                           <p>Thank you for your attention, we said goodbye and we send greetings from SPP GLOBAL.</p>
 
-                          <p style="color:#2c3e50"><b>If you have already started your certificate renewal process please ignore this message</b></p>
+                          <p style="color:#2c3e50"><b>If you have already started your registration renewal process please ignore this message</b></p>
                           
                           <p>ANY INCONVENIENT PLEASE NOTICE TO SPP GLOBAL TO THE MAIL <strong>cert@spp.coop</strong></p>
                         </td>

@@ -16,8 +16,6 @@
     $alerta_suspension = $recordatorio2 + $cinco_dias;
     $correo_suspender = $veinte_dias + $diez_dias;
 
-
-
     /// notificación 1º aviso
     if(!$registros['aviso1'] && $registros['estatus_comprobante'] != 'ACEPTADO'){
       if($fecha_actual >= $recordatorio1){

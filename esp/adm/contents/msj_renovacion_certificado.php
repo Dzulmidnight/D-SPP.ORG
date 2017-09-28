@@ -423,7 +423,7 @@
                               You must login with your user (#SPP): <span style="color:#27ae60">'.$certificado['spp'].'</span> and your password: <span style="color:#27ae60">'.$certificado['password'].'</span>
                             </li>
                             <li>
-                              Una vez que haya iniciado sesión debe seleccionar la opción "Aplicaciones"> "Nueva aplicación"
+                              Once you have logged in you must select the "Applications"> "New application".
                             </li>
                             <li>
                               After completing these steps, the Electronic Application will be displayed, where you will have to fill in the corresponding information and click "Send Application".
@@ -433,11 +433,11 @@
                             </li>
                           </ol>
                           
-                          <p>Agradeciendo su atención, nos despedimos y enviamos saludos por parte del equipo de SPP GLOBAL.</p>
+                          <p>Thank you for your attention, we said goodbye and we send greetings from the team of SPP GLOBAL.</p>
 
-                          <p style="color:#2c3e50"><b>En caso de haber iniciado ya su proceso de renovación del certificado por favor hacer caso omiso a este mensaje</b></p>
+                          <p style="color:#2c3e50"><b>If you have already started your certificate renewal process please ignore this message</b></p>
                           
-                          <p>CUALQUIER INCONVENIENTE FAVOR DE NOTIFICARLO A SPP GLOBAL AL CORREO <strong>cert@spp.coop</strong></p>
+                          <p>ANY INCONVENIENT PLEASE NOTIFY SPP GLOBAL TO THE MAIL: <strong>cert@spp.coop</strong></p>
                         </td>
                       </tr>
                     </tbody>
