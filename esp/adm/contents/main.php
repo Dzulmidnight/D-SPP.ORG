@@ -1,6 +1,7 @@
 <?php 
 require_once('../Connections/dspp.php'); 
 require_once('../Connections/mail.php'); 
+require_once('../../mpdf/mpdf.php');
 
 //error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 
@@ -56,10 +57,10 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
 <?php
   ////////////////////// INICIA SECCIÓN MENSAJES PERIODO DE OBJECIÓN //////////////////////////////
-  include('msj_periodo_objecion.php');
+  //include('msj_periodo_objecion.php');
   /**************************************/
-  include('msj_recordatorio_pago.php');
+  //include('msj_recordatorio_pago.php');
 
   include('msj_renovacion_certificado.php');
-  include('msj_renovacion_registro.php');
+  //include('msj_renovacion_registro.php');
 ?>

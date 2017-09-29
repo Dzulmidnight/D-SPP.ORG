@@ -56,6 +56,7 @@ $anio_actual = date('Y', time());
 $idoc = $_SESSION['idoc'];
 $spp_global = "cert@spp.coop";
 $finanzas_spp = "adm@spp.coop";
+$direccion = "opera@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 
 $row_ajuste = mysql_query("SELECT membresia_compradores FROM porcentaje_ajuste WHERE anio = $anio_actual", $dspp) or die(mysql_error());
@@ -172,6 +173,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
         }
 
         $mail->AddBCC($spp_global);
+        $mail->AddBCC($direccion);
 
         if(!empty($oc['email1'])){
           $mail->AddCC($oc['email1']);
@@ -478,6 +480,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }
       $mail->AddBCC($spp_global);
       $mail->AddBCC($finanzas_spp);
+      $mail->AddBCC($direccion);
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -820,6 +823,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       $mail->AddBCC($spp_global);
       $mail->AddBCC($finanzas_spp);
+      $mail->AddBCC($direccion);
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -1071,6 +1075,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       $mail->AddBCC($spp_global);
       $mail->AddBCC($finanzas_spp);
+      $mail->AddBCC($direccion);
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -1577,6 +1582,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     </html>
   ';
     $mail->AddAddress($spp_global);
+    $mail->AddBCC($direccion);
     $mail->AddAttachment($formato);
     $mail->AddAttachment($informe);
     $mail->AddAttachment($dictamen);

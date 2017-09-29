@@ -1,3 +1,37 @@
+              <style>
+          table.formatoTabla {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 20px;
+          }
+
+          table.formatoTabla tr:nth-child(2n-1) td {
+            background: #F5F5F5;
+          }
+          table.formatoTabla th,
+          table.formatoTabla td {
+            padding: 10px;border: 1px solid #ddd;border-collapse: collapse;
+            text-align: center;
+          }
+          th{
+            background: #27ae60;
+          }
+          h2{
+            text-align: left;
+          }
+          p{
+            text-align: justify;
+          }
+          ol{
+            text-align: left;
+          }
+          .color{
+            background: #27ae60;
+          }
+
+        </style>
+
 <?php 
     ////////////////********************************** *****************************************************************//////////////////////////////////    
     ////////////////********************************** INICIA RENOVACION DEL REGISTRO EMPRESAS **********************************//////////////////////////////////
