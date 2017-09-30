@@ -50,18 +50,8 @@ h1 {
   margin: 0 0 20px 0;
   background: url(img/dimension.png);
 }
-
-#project {
-  float: left;
-}
-
-#project span {
-  color: #5D6975;
-  text-align: right;
-  width: 52px;
-  margin-right: 10px;
-  display: inline-block;
-  font-size: 0.8em;
+p{
+  text-align: left;
 }
 
 #company {
@@ -82,27 +72,28 @@ table.formatoTabla {
   margin-bottom: 20px;
 }
 
-table.formatoTabla tr:nth-child(2n-1) td {
-  background: #F5F5F5;
-}
+
 table.formatoTabla th,
 table.formatoTabla td {
-  padding: 10px;border: 1px solid #ddd;border-collapse: collapse;
-  text-align: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-collapse: collapse;
 }
 th{
-  background: #27ae60;
+  background: #B8D186;
 }
 h2{
   text-align: left;
 }
-p{
+.justificado{
   text-align: justify;
 }
 ol{
-  text-align: left;
+  text-align: justify;
+  list-style-type: lower-roman;
 }
+
 .color{
-  background: #27ae60;
+  background: #B8D186;
 }
 

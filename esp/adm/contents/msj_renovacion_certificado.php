@@ -19,7 +19,7 @@
         <table style="font-family: Tahoma, Geneva, sans-serif;font-size:12px;">
             <tr>
               <td>
-                <h2>1 DATOS</h2>
+                <h3>1 DATOS</h3>
               </td>
             </tr>
             <tr>
@@ -27,108 +27,109 @@
                 <table class="formatoTabla">
                   <tr>
                     <td>
-                      <p>Tipo de Actor: OPP</p>
+                      <p>Tipo de Actor: <span style="color:red">OPP</span></p>
                     </td>
                     <td>
                       <p>Nº de Certificado: <span style="color:red">'.$certificado['idcertificado'].'</span></p>
                     </td>
                     <td rowspan="2">
-                      <p>Fecha '.date('d/m/Y', time()).'</p>
+                      <p>Fecha: <span style="color:red">'.date('d/m/Y', time()).'</span></p>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      <p>Nombre de la instancia</p>
+                      <p>Nombre de la instancia: <span style="color:red">'.$nombre_opp.'</span></p>
                     </td>
                     <td>
-                      <p>Código de identificación SPP: <span style="color:red">'.$certificado['spp'].'</span></p> 
+                      <p>Código de identificación SPP: <span style="color:red">'.$spp.'</span></p> 
                     </td>
                   </tr>
                   <tr>
                     <td colspan="3">
-                      <p>Organismo de Certificación que otorgó el Certificado: <span style="color:red">'.$certificado['nombre_oc'].'</span></p>
+                      <p>Organismo de Certificación que otorgó el Certificado: <span style="color:red">'.$nombre_oc.'</span></p>
                     </td>
                   </tr>
                 </table>
               </td>
             </tr>
             <tr>
-              <td>
-                <p>Estimados representantes de la Organización: <span style="color:red">'.$nombre_opp.'</span> ('.$abreviacion_opp.')</p>
+              <td style="padding-top:3em;">
+                <p>Estimados representantes de la Organización: <span style="color:red">'.$nombre_opp.'</span> ('.$abreviacion_opp.').</p>
               </td>
             </tr>
             <tr>
-              <td >
+              <td style="padding-top:1em;">
                 <p>Por medio de la presente se hace la notificación del aviso de Suspensión del Certificado por Incumplimiento con el Marco Regulatorio SPP de acuerdo a la siguiente información:</p>
               </td>
             </tr>
             <tr>
+              <td style="padding-top:2em;">
+                <h3>2 MOTIVO</h3>
+              </td>
+            </tr>
+          </table>
+            
+          <table class="formatoTabla">
+            <tr>
+              <th width="5%"><p style="font-size:18px;">#</p></th>
+              <th width="25%"><p style="font-size:18px;">Descripción de la No Conformidad</p></th>
+              <th width="15%"><p style="font-size:18px;">Referencia</p></th>
+              <th width="10%"><p style="font-size:18px;">Acción Correctiva</p></th>
+              <th width="25%"><p style="font-size:18px;">Plazo<sup>1</sup></p></th>
+              <th width="20%"><p style="font-size:18px;">Observaciones</p></th>
+            </tr>
+            <tr>
               <td>
-                <h2>2 MOTIVO</h2>
+                <p style="font-size:18px;">1</p>
+              </td>
+              <td class="justificado">
+                <p style="font-size:18px;">
+                  La <span style="color:red">OPP</span> no ha renovado su <span style="color:red">Certificado</span> SPP de acuerdo a lo establecido en el Procedimiento SPP que indica lo siguiente:
+                </p>
+                <p style="font-size:18px;">
+                  “La OPP/empresa debe haber iniciado - mediante la aprobación formal de una oferta de certificación - la evaluación anual de certificación en el periodo entre un mes antes y un  mes después de la vigencia de su certificado.
+                </p>
+              </td>
+              <td class="justificado" style="width:100px;">
+                <p style="font-size:18px;">
+                  Proc_Cert_OPP_SPP_V6_31-Jul-2016_E1_10-Mar-2017_Vf
+                <br>
+                  Procedimiento_Registro_Compradores_Finales_otros_actores_V6_31-Jul-2016_E1_10-Mar-2017
+                </p>
+              </td>
+              <td>
+                <p style="font-size:18px;">Llevar a cabo la evaluación para la renovación del Certificado.</p>
+              </td>
+              <td class="justificado">
+                <p style="font-size:18px;">
+                  De acuerdo al Procedimiento de certificación y registro, tienen 90 días naturales para llevar a cabo todo el proceso, incluido el tiempo que tiene el OC para responder.
+                </p>
+                <p style="font-size:18px;">
+                  (Ver el plazo máximo para llevar a cabo los diferentes pasos del proceso de certificación en el Procedimiento de Certificación para OPP y Procedimiento de Registro para Compradores Finales y otros actores).
+                </p>
+              </td>
+              <td class="justificado">
+                <p style="font-size:18px;">
+                  Si la OPP o empresa no envía la documentación para iniciar la evaluación sino hasta 20 días antes de concluir el plazo máximo, el OC ya no recibirá la información porque en dicho tiempo ya no se tendría oportunidad de llevar a cabo todas las etapas del proceso.
+                </p>
               </td>
             </tr>
-            <tr>
-              <td >
-                <table class="formatoTabla">
-                  <tr>
-                    <th>#</th>
-                    <th>Descripción de la No Conformidad</th>
-                    <th>Referencia</th>
-                    <th>Acción Correctiva</th>
-                    <th>Plazo<sup>1</sup></th>
-                    <th>Observaciones</th>
-                  </tr>
-                  <tr>
-                    <td>1</td>
-                    <td>
-                      <p>
-                        La <span style="color:red">OPP</span> no ha renovado su <span style="color:red">Certificado</span> SPP de acuerdo a lo establecido en el Procedimiento …………….. SPP que indica lo siguiente:
-                      </p>
-                      <p>
-                        “La OPP/empresa debe haber iniciado - mediante la aprobación formal de una oferta de certificación/registro - la evaluación anual de certificación/registro en el periodo entre un mes antes y un  mes después de la vigencia de su certificado/registro”.
-                      </p>
-                    </td>
-                    <td>
-                      <p>
-                        Proc_Cert_OPP_SPP_V6_31-Jul-2016_E1_10-Mar-2017_Vf
-                      </p>
-                      <p>
-                        Procedimiento_Registro_Compradores_Finales_otros_actores_V6_31-Jul-2016_E1_10-Mar-2017
-                      </p>
-                    </td>
-                    <td>
-                      Llevar a cabo la evaluación para la renovación del Certificado.
-                    </td>
-                    <td>
-                      <p>
-                        De acuerdo al Procedimiento de certificación y registro, tienen 90 días naturales para llevar a cabo todo el proceso, incluido el tiempo que tiene el OC para responder.
-                      </p>
-                      <p>
-                        (Ver el plazo máximo para llevar a cabo los diferentes pasos del proceso de certificación en el Procedimiento de Certificación para OPP y Procedimiento de Registro para Compradores Finales y otros actores).
-                      </p>
-                    </td>
-                    <td>
-                      <p>
-                        Si la OPP o empresa no envía la documentación para iniciar la evaluación sino hasta 20 días antes de concluir el plazo máximo, el OC ya no recibirá la información porque en dicho tiempo ya no se tendría oportunidad de llevar a cabo todas las etapas del proceso.
-                      </p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="6">
-                      <p>
-                        <sup>1</sup> A partir de la fecha de notificación del presente Aviso de Suspensión.    
-                      </p>
-                    </td>
-                  </tr>
-                </table>
+            <tr style="padding-top:2em;">
+              <td colspan="6">
+                <p style="font-size:18px;">
+                  <sup>1</sup> A partir de la fecha de notificación del presente Aviso de Suspensión.    
+                </p>
               </td>
             </tr>
+          </table>
+
+          <table>
             <tr>
-              <td ><h2>3 CONSECUENCIAS DE LA SUSPENSIÓN DEL CERTIFICADO</h2></td>
+              <td style="padding-top:2em;"><h3>3 CONSECUENCIAS DE LA SUSPENSIÓN DEL CERTIFICADO</h3></td>
             </tr>
             <tr>
-              <td >
-                <ol style="list-style-type: lower-roman">
+              <td>
+                <ol>
                   <li>No puede celebrar nuevos contratos comerciales SPP con algún operador certificado o registrado.</li>
                   <li>Debe cumplir con los contratos SPP ya celebrados vigentes.</li>
                   <li>Se mantiene en listas oficiales de empresas del SPP de FUNDEPPO con estatus ‘Suspendido’.</li>
@@ -137,11 +138,11 @@
               </td>
             </tr>
             <tr>
-              <td ><h2>4 LEVANTAMIENTO</h2></td>
+              <td style="padding-top:2em;"><h3>4 LEVANTAMIENTO</h3></td>
             </tr>
             <tr>
               <td >
-                <ol style="list-style-type: lower-roman">
+                <ol>
                   <li>
                     Se levanta la Suspensión cuando se declaren resueltos los motivos por los cuales se les determinó dicho estatus.
                   </li>
@@ -152,8 +153,8 @@
               </td>
             </tr>
             <tr>
-              <td >
-                <h2>5 INFORMACIÓN SOBRE CANCELACION</h2>
+              <td style="padding-top:2em;">
+                <h3 style="padding-top:2em;">5 INFORMACIÓN SOBRE CANCELACION</h3>
               </td>
             </tr>
             <tr>
@@ -167,7 +168,7 @@
             </tr>
             <tr>
               <td>
-                <ol style="list-style-type: lower-roman">
+                <ol>
                   <li>
                     No puede hacer transacciones nuevas en condiciones SPP.
                   </li>
@@ -206,9 +207,9 @@
               </td>
               <td style="text-align:right;font-size:12px;">
                     <div>
-                      <h2>
+                      <h3>
                           Suspensión del Certificado
-                      </h2>             
+                      </h3>             
                     </div>
 
                     <div>Simbolo de Pequeños Productores</div>
@@ -1015,17 +1016,13 @@
           if(!empty($aviso_renovacion['aviso4'])){
           ?>
             <form action="" method="POST">
-              <input type="text" name="idcertificado" value="<?php echo $certificado['idcertificado']; ?>">
-              <br>
-              <input type="text" name="nombre_opp" value="<?php echo $nombre_opp; ?>">
-              <br>
-              <input type="text" name="abreviacion_opp" value="<?php echo $abreviacion_opp; ?>">
-              <br>
-              <input type="text" name="nombre_oc" value="<?php echo $certificado['nombre_oc'] ?>">
-              <br>
-              <input type="text" name="fecha_vigencia" value="<?php echo $fecha_vigencia; ?>">
-              <br>
-              <button type="submit" name="enviar_suspension" value="1" class="btn btn-sm btn-danger">Suspender</button>  
+              <input type="hidden" name="idcertificado" value="<?php echo $certificado['idcertificado']; ?>">
+              <input type="hidden" name="spp" value="<?php echo $certificado['spp']; ?>">
+              <input type="hidden" name="nombre_opp" value="<?php echo $nombre_opp; ?>">
+              <input type="hidden" name="abreviacion_opp" value="<?php echo $abreviacion_opp; ?>">
+              <input type="hidden" name="nombre_oc" value="<?php echo $certificado['nombre_oc'] ?>">
+              <input type="hidden" name="fecha_vigencia" value="<?php echo $fecha_vigencia; ?>">
+              <button type="submit" name="enviar_suspension" value="1" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Suspender</button>  
             </form>
             
           <?php
