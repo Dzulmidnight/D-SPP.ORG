@@ -1,4 +1,4 @@
-<?php 
+<?php
   if(isset($_POST['enviar_suspension']) && $_POST['enviar_suspension'] == 1){
     $idcertificado = $_POST['idcertificado'];
     $spp = $_POST['spp'];
@@ -390,7 +390,7 @@
 
   //28_09_2017 $row_certificado = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN opp ON certificado.idopp = opp.idopp INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%' ORDER BY certificado.vigencia_fin DESC", $dspp) or die(mysql_error());
 
-  $row_certificado = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.nombre AS 'nombre_oc', oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN opp ON certificado.idopp = opp.idopp INNER JOIN oc ON certificado.entidad = oc.idoc ORDER BY certificado.vigencia_fin DESC", $dspp) or die(mysql_error());
+  $row_certificado = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.nombre AS 'nombre_oc', oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN opp ON certificado.idopp = opp.idopp INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%' ORDER BY certificado.vigencia_fin ASC", $dspp) or die(mysql_error());
 
 ?>
   <h4>
@@ -419,8 +419,8 @@
     <tbody>
       <?php 
       while($certificado = mysql_fetch_assoc($row_certificado)){
-        $fecha_inicio = $certificado['vigencia_inicio'];
-        $fecha_fin = $certificado['vigencia_fin'];
+        $fecha_inicio = date('d/m/Y',strtotime($certificado['vigencia_inicio']));
+        $fecha_fin = date('d/m/Y',strtotime($certificado['vigencia_fin']));
 
         $row_contactos = mysql_query("SELECT contactos.email1, contactos.email2 FROM contactos WHERE contactos.idopp = $certificado[idopp] GROUP BY email1", $dspp) or die(mysql_error());
         $contactos = mysql_fetch_assoc($row_contactos);
@@ -461,7 +461,7 @@
             <?php echo $fecha_inicio; ?>
           </td>
           <!-- FECHA FIN -->
-          <td>
+          <td class="danger">
             <?php echo $fecha_fin; ?>
           </td>
           <!-- ID AVISO -->

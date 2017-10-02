@@ -26,7 +26,7 @@
 
   // consultamos la información de la EMPRESA de acuerdo al certificado
 
-  $row_certificado = mysql_query("SELECT empresa.idempresa, empresa.spp, empresa.nombre, empresa.abreviacion, empresa.password, empresa.email, empresa.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN empresa ON certificado.idempresa = empresa.idempresa INNER JOIN oc ON certificado.entidad = oc.idoc ORDER BY certificado.vigencia_fin DESC", $dspp) or die(mysql_error());
+  $row_certificado = mysql_query("SELECT empresa.idempresa, empresa.spp, empresa.nombre, empresa.abreviacion, empresa.password, empresa.email, empresa.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN empresa ON certificado.idempresa = empresa.idempresa INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%' ORDER BY certificado.vigencia_fin ASC", $dspp) or die(mysql_error());
 
   ?>
   <h4>
@@ -55,8 +55,8 @@
     <tbody>
       <?php 
       while($certificado = mysql_fetch_assoc($row_certificado)){
-        $fecha_inicio = $certificado['vigencia_inicio'];
-        $fecha_fin = $certificado['vigencia_fin'];
+        $fecha_inicio = date('d/m/Y',strtotime($certificado['vigencia_inicio']));
+        $fecha_fin = date('d/m/Y',strtotime($certificado['vigencia_fin']));
 
         // consultamos lo contactos registrados de la EMPRESA
         $row_contactos = mysql_query("SELECT contactos.email1, contactos.email2 FROM contactos WHERE contactos.idempresa = $certificado[idempresa] GROUP BY email1", $dspp) or die(mysql_error());
@@ -98,7 +98,7 @@
             <?php echo $fecha_inicio; ?>
           </td>
           <!-- FECHA FIN -->
-          <td>
+          <td class="danger">
             <?php echo $fecha_fin; ?>
           </td>
           <!-- ID AVISO -->
@@ -149,9 +149,10 @@
                             $token = strtok('\/\,\;');
                           }
                         }
-                        $mail->AddBCC("cert@spp.coop");
-                        $mail->AddBCC("adm@spp.coop");
-                        $mail->AddBCC("com@spp.coop");
+                  $mail->AddBCC($certificacion_spp);
+                  $mail->AddBCC($direccion_spp);
+                  $mail->AddBCC($finanzas_spp);
+                  $mail->AddBCC($asistencia_spp);
 
                         // Definimos el mensaje general que se utilizara en el 1º aviso
                         $mensaje_general = '
@@ -278,9 +279,10 @@
                             $token = strtok('\/\,\;');
                           }
                         }
-                        $mail->AddBCC("cert@spp.coop");
-                        $mail->AddBCC("adm@spp.coop");
-                        $mail->AddBCC("com@spp.coop");
+                  $mail->AddBCC($certificacion_spp);
+                  $mail->AddBCC($direccion_spp);
+                  $mail->AddBCC($finanzas_spp);
+                  $mail->AddBCC($asistencia_spp);
 
                         // Definimos el mensaje general que se utilizara en el 2º aviso
                         $mensaje_general = '
@@ -398,9 +400,10 @@
                             $token = strtok('\/\,\;');
                           }
                         }
-                        $mail->AddBCC("cert@spp.coop");
-                        $mail->AddBCC("adm@spp.coop");
-                        $mail->AddBCC("com@spp.coop");
+                  $mail->AddBCC($certificacion_spp);
+                  $mail->AddBCC($direccion_spp);
+                  $mail->AddBCC($finanzas_spp);
+                  $mail->AddBCC($asistencia_spp);
 
                         // Definimos el mensaje para el 3º aviso
                         $mensaje_general = '
@@ -576,9 +579,10 @@
                             $token = strtok('\/\,\;');
                           }
                         }
-                        $mail->AddBCC("cert@spp.coop");
-                        $mail->AddBCC("adm@spp.coop");
-                        $mail->AddBCC("com@spp.coop");
+                  $mail->AddBCC($certificacion_spp);
+                  $mail->AddBCC($direccion_spp);
+                  $mail->AddBCC($finanzas_spp);
+                  $mail->AddBCC($asistencia_spp);
 
                         // Definimos el mensaje general que se utilizara en el 4º aviso
                         $mensaje_general = '

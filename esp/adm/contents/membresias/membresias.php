@@ -406,7 +406,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 					</select>
 				</th>
 				<th>
-					<button type="submit" class="btn btn-default" name="consultar" value="1"><span class="glyphicon glyphicon-search" aria-hidde="true"></span> Consultar</button>
+					<button type="submit" class="btn btn-default" name="consultar" value="1" disabled><span class="glyphicon glyphicon-search" aria-hidde="true"></span> Consultar</button>
 				</th>
 				<th style="font-size: 10px;" class="text-center warning">EN ESPERA</th>
 				<th style="font-size: 10px;" class="text-center success">APROBADA</th>
