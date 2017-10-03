@@ -57,16 +57,16 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
 
 <?php
   ////////////////////// INICIA SECCIÓN MENSAJES PERIODO DE OBJECIÓN //////////////////////////////
-  //echo '<p class="alert alert-danger">PERIODO OBJECIÓN</p>';
-  //include('msj_periodo_objecion.php');
+  echo '<p class="alert alert-danger">PERIODO OBJECIÓN</p>';
+  include('msj_periodo_objecion.php');
 
-  //echo '<p class="alert alert-danger">RECORDATORIO PAGO</p>';
+  echo '<p class="alert alert-danger">RECORDATORIO PAGO</p>';
   /**************************************/
-  //include('msj_recordatorio_pago.php');
+  include('msj_recordatorio_pago.php');
 
-  //echo '<p class="alert alert-danger">RENOVACIÓN CERTIFICADO</p>';
-  //include('msj_renovacion_certificado.php');
+  echo '<p class="alert alert-danger">RENOVACIÓN CERTIFICADO</p>';
+  include('msj_renovacion_certificado.php');
   
-  //echo '<p class="alert alert-danger">RENOVACIÓN REGISTRO</p>';
-  //include('msj_renovacion_registro.php');
+  echo '<p class="alert alert-danger">RENOVACIÓN REGISTRO</p>';
+  include('msj_renovacion_registro.php');
 ?>
