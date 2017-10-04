@@ -4,11 +4,53 @@ function mayuscula($variable) {
 	return $variable;
 }
  ?>
-<div class="col-md-12">
-	<table class="table table-bordered" style="font-size: 10px;">
+
+<div class="col-md-6">
+	<div class="form-group">
+    	<label for="caja_busqueda">Buscar:</label>
+    	<input type="text" class="form-control" id="caja_busqueda" name="caja_busqueda" placeholder="Buscar por nombre, país">
+	</div>
+</div>
+
+<div class="col-md-12" id="datos">
+	
+</div>
+
+
+<!--03_10_2017<div class="col-md-12">
+	<table class="table table-bordered" style="font-size:12px;">
 		<thead>
 			<tr>
-				<th colspan="10">LISTA DE OPPS</th>
+				<th colspan="">LISTA DE CONTACTOS OPP</th>
+				<th>
+					<?php 
+					$query = "SELECT opp.pais FROM opp GROUP BY pais";
+					$consultar = mysql_query($query, $dspp) or die(mysql_error());
+					 ?>
+					<select name="pais" id="">
+						<option value="">Lista de Paises</option>
+						<?php 
+						while($paises = mysql_fetch_assoc($consultar)){
+							echo '<option value="'.$paises['pais'].'">'.$paises['pais'].'</option>';
+						}
+						 ?>
+					</select>
+				</th>
+				<th>
+					
+				</th>
+				<th>
+					
+				</th>
+				<th>
+					
+				</th>
+				<form action="" method="POST">
+					<th colspan="5">
+						<input id="buscador" name="buscador" onkeyup="buscar();" type="text" class="form-control" placeholder="Buscar ...">
+					</th>					
+				</form>
+
 			</tr>
 			<tr>
 				<th>#</th>
@@ -23,7 +65,7 @@ function mayuscula($variable) {
 				<th>Correo(s)</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody id="desplegar" name="desplegar">
 			<?php 
 			$contador = 1;
 			$query = "SELECT contactos.*, opp.abreviacion AS 'abreviacion_opp', opp.pais FROM contactos INNER JOIN opp ON contactos.idopp = opp.idopp GROUP BY nombre ORDER BY nombre ASC";
@@ -37,21 +79,21 @@ function mayuscula($variable) {
 				<td><?php echo 'id oc: '.$registros['idoc']; ?></td>
 				<td><?php echo 'lista: '.$registros['lista_contactos']; ?></td>
 				<!-- ABREVIACIÓN ORGANIZACIÓN -->
-				<td><?php echo $registros['idopp'].' - '.mayuscula($registros['abreviacion_opp']); ?></td>
+		<!--03_10		<td><?php echo $registros['idopp'].' - <a href="?OPP&detail&idopp='.$registros['idopp'].'">'.mayuscula($registros['abreviacion_opp']).'</a>'; ?></td>
 				<!-- PAIS -->
-				<td><?php echo mayuscula($registros['pais']); ?></td>
+		<!-- 03_10		<td><?php echo mayuscula($registros['pais']); ?></td>
 				<!-- NOMBRE -->
-				<td><?php echo mayuscula($registros['nombre']); ?></td>
+		<!-- 03_10		<td><?php echo '<a href="?OPP&detail&idopp='.$registros['idopp'].'&contacto='.$registros['idcontacto'].'">'.mayuscula($registros['nombre']).'</a>'; ?></td>
 				<!-- CARGO -->
-				<td><?php echo mayuscula($registros['cargo']); ?></td>
+		<!-- 03_10		<td><?php echo mayuscula($registros['cargo']); ?></td>
 				<!-- TELEFONO -->
-				<td>
+		<!-- 03_10		<td>
 					<b>Tel 1:</b> <?php echo '<span style="color:red">'.$registros['telefono1'].'</span>'; ?>
 					<br>
 					<b>Tel 2:</b> <?php echo '<span style="color:#e67e22">'.$registros['telefono2'].'</span>'; ?>
 				</td>
 				<!-- CORREO -->
-				<td>
+		<!-- 03_10		<td>
 					<b>Correo 1:</b> <?php echo '<span style="color:red">'.$registros['email1'].'</span>'; ?>
 					<br>
 					<b>Correo 2:</b> <?php echo '<span style="color:#e67e22">'.$registros['email2'].'</span>'; ?>
@@ -64,4 +106,4 @@ function mayuscula($variable) {
 			
 		</tbody>
 	</table>
-</div>
+</div>03_10-->

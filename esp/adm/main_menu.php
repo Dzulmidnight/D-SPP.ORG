@@ -111,8 +111,6 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!--<script src="../js/fileinput.min.js" type="text/javascript"></script>
     <script src="../js/fileinput_locale_es.js"></script>-->
-
-
      <!---LIBRERIAS DE Bootstrap File Input-->
 
     <script type="text/javascript" src="../js/bootstrap-filestyle.js"></script>
@@ -186,6 +184,8 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
     <!--<script src="../bootstrap/js/vendor/holder.js"></script>-->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!--<script src="../bootstrap/js/ie10-viewport-bug-workaround.js"></script>-->
+
+    <script src="../js/main.js"></script>
 
   <script src="../chosen/chosen.jquery.js" type="text/javascript"></script>
 
