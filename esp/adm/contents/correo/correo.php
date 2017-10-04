@@ -111,16 +111,25 @@
   <div class="col-md-12">
     <!-- INICIA MENU OPCIONES -->
     <div class="btn-group" role="group" aria-label="...">
-      <a href="?CORREO&select=mensajes" <?php if($_GET['select'] == 'mensajes'){ echo 'class="btn btn-sm btn-primary"'; }else{ echo 'class="btn btn-sm btn-default"'; } ?>>Mensajes</a>
-      <a href="?CORREO&select=listas" <?php if($_GET['select'] == 'listas'){ echo 'class="btn btn-sm btn-primary"'; }else{ echo 'class="btn btn-sm btn-default"'; } ?>>Listas de Contactos</a>
+      <!--<a href="?CORREO&select=mensajes" <?php if($_GET['select'] == 'mensajes'){ echo 'class="btn btn-sm btn-primary"'; }else{ echo 'class="btn btn-sm btn-default"'; } ?>>Mensajes</a>-->
+      
+      <a href="?CORREO&select=contactos_opp" <?php if($_GET['select'] == 'contactos_opp'){ echo 'class="btn btn-sm btn-primary"'; }else{ echo 'class="btn btn-sm btn-default"'; } ?>>Contactos de Organizaciones</a>
+      
+      <a href="?CORREO&select=contactos_empresas" <?php if($_GET['select'] == 'contactos_empresas'){ echo 'class="btn btn-sm btn-primary"'; }else{ echo 'class="btn btn-sm btn-default"'; } ?>>Contactos de Empresas</a>
+      
+      <a href="?CORREO&select=otros_contactos" <?php if($_GET['select'] == 'otros_contactos'){ echo 'class="btn btn-sm btn-primary"'; }else{ echo 'class="btn btn-sm btn-default"'; } ?>>Otros contactos</a>
     </div>
     <!-- FIN MENU OPCIONES -->
     <div class="row">
     <?php 
     if($_GET['select'] == 'mensajes'){
       include('mensajes.php');
-    }else if($_GET['select'] == 'listas'){
-      include('listas.php');
+    }else if($_GET['select'] == 'contactos_opp'){
+      include('contactos_opp.php');
+    }else if($_GET['select'] == 'contactos_empresas'){
+      include('contactos_empresas.php');
+    }else if($_GET['select'] == 'otros_contactos'){
+      include('otros_contactos.php');
     }
     ?>
 

@@ -8,11 +8,11 @@ function mayuscula($variable) {
 }
 
 $salida = "";
-$query = "SELECT contactos.*, opp.abreviacion AS 'abreviacion_opp', opp.pais FROM contactos INNER JOIN opp ON contactos.idopp = opp.idopp GROUP BY contactos.nombre ORDER BY contactos.nombre ASC";
+$query = "SELECT contactos.*, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais FROM contactos INNER JOIN empresa ON contactos.idempresa = empresa.idempresa GROUP BY contactos.nombre ORDER BY contactos.nombre ASC";
 
 if(isset($_POST['consulta'])){
 	$q = $_POST['consulta'];
-	$query = "SELECT contactos.*, opp.abreviacion AS 'abreviacion_opp', opp.pais FROM contactos INNER JOIN opp ON contactos.idopp = opp.idopp WHERE contactos.nombre LIKE '%".$q."%' OR opp.abreviacion LIKE '%".$q."%' OR opp.pais LIKE '%".$q."%' GROUP BY contactos.nombre ORDER BY contactos.nombre ASC";
+	$query = "SELECT contactos.*, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais FROM contactos INNER JOIN empresa ON contactos.idempresa = empresa.idempresa WHERE contactos.nombre LIKE '%".$q."%' OR empresa.pais LIKE '%".$q."%' OR empresa.abreviacion LIKE '%".$q."%' GROUP BY contactos.nombre ORDER BY contactos.nombre ASC";
 }
 $resultado = mysql_query($query,$dspp) or die(mysql_error());
 $total = mysql_num_rows($resultado);
@@ -24,7 +24,7 @@ if($total > 0){
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Organización</th>
+					<th>Empresa</th>
 					<th>País</th>
 					<th>Nombre</th>
 					<th>Cargo</th>
@@ -38,12 +38,12 @@ if($total > 0){
 		$salida .= 
 		"<tr>
 			<td>".$contador."</td>
-			<!-- ABREVIACIÓN ORGANIZACIÓN -->
-			<td><a href='?OPP&detail&idopp='".$fila['idopp']."'>".mayuscula($fila['abreviacion_opp'])."</a></td>
+			<!-- ABREVIACIÓN EMPRESA -->
+			<td><a href='?EMPRESAS&detail&idempresa=".$fila['idempresa']."'>".mayuscula($fila['abreviacion_empresa'])."</a></td>
 			<!-- PAIS -->
 			<td>".mayuscula($fila['pais'])."</td>
-			<!-- NOMBRE -->
-			<td>".'<a href="?OPP&detail&idopp='.$fila['idopp'].'&contacto='.$fila['idcontacto'].'">'.mayuscula($fila['nombre']).'</a>'."</td>
+			<!-- NOMBRE DE CONTACTO -->
+			<td>".'<a href="?EMPRESAS&detail&idempresa='.$fila['idempresa'].'&contacto='.$fila['idcontacto'].'">'.mayuscula($fila['nombre']).'</a>'."</td>
 			<!-- CARGO -->
 			<td>".mayuscula($fila['cargo'])."</td>
 			<!-- TELEFONO -->

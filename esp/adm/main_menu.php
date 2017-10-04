@@ -185,7 +185,8 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!--<script src="../bootstrap/js/ie10-viewport-bug-workaround.js"></script>-->
 
-    <script src="../js/main.js"></script>
+    
+
 
   <script src="../chosen/chosen.jquery.js" type="text/javascript"></script>
 
