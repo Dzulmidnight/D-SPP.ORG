@@ -29,11 +29,17 @@
   $row_certificado = mysql_query("SELECT empresa.idempresa, empresa.spp, empresa.nombre, empresa.abreviacion, empresa.password, empresa.email, empresa.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN empresa ON certificado.idempresa = empresa.idempresa INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%' ORDER BY certificado.vigencia_fin ASC", $dspp) or die(mysql_error());
 
   ?>
-  <h4>
-    Fecha actual: <?php echo date('d/m/Y', time()); ?>
-  </h4>
   <table class="table table-bordered" style="font-size:10px;">
     <thead>
+      <tr class="success">
+        <th colspan="12">
+          <h5>Listado Avisos de Renovación del Certificado</h5>
+        </th>
+        <th colspan="3">
+          <h5>Fecha actual: <?php echo date('d/m/Y',time()); ?></h5>
+        </th>
+      </tr>
+
       <tr>
         <td>ID CERTIFICADO</td>
         <td>ID EMPRESA</td>

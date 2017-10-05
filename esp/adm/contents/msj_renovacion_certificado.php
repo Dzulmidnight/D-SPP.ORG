@@ -1,5 +1,34 @@
 <?php
+  $time_actual = time();
+  $anio_actual = date('Y', time());
+  $time_vencimiento = "";
+  $time_restante = "";
+  $contador = 1;
+  // periodos en los que se enviaran las notificaciones
+  $plazo = ''; // Calculamos el número de segundos que tienen 60 dias 
+  $primero = 5.184e+6; // 60 dias
+  $segundo = 2.592e+6; // 30 dias
+  $tercer_aviso = ""; // igual a la vigencia final del certificado
+  $cuarto = 2.592e+6; // 30 dias despues del plazo
+    //$time_vencimiento = strtotime("2016-02-12");
+    //$time_vencimiento = strtotime(); // Obtenemos timestamp de la fecha de vencimiento
+   // $time_restante = ($time_vencimiento - $time_actual);
+  $destinatario_opp = "";
+  $asunto = "";
+  $nombre_opp = '';
+  $abreviacion_opp = '';
+  $fecha_vigencia = '';
+
+  $direccion_spp = "adm@spp.coop";
+  $asistencia_spp = "opera@spp.coop";
+  $certificacion_spp = "cert@spp.coop";
+  $finanzas_spp = "com@spp.coop";
+
+
   if(isset($_POST['enviar_suspension']) && $_POST['enviar_suspension'] == 1){
+    $idaviso_renovacion = $_POST['idaviso_renovacion'];
+    $motivo_suspension = $_POST['motivo_suspension'];
+
     $idcertificado = $_POST['idcertificado'];
     $spp = $_POST['spp'];
     $nombre_opp = $_POST['nombre_opp'];
@@ -30,10 +59,10 @@
                       <p>Tipo de Actor: <span style="color:red">OPP</span></p>
                     </td>
                     <td>
-                      <p>Nº de Certificado: <span style="color:red">'.$certificado['idcertificado'].'</span></p>
+                      <p>Código de identificación SPP: <span style="color:red">'.$spp.'</span></p>
                     </td>
-                    <td rowspan="2">
-                      <p>Fecha: <span style="color:red">'.date('d/m/Y', time()).'</span></p>
+                    <td>
+                      <p>Fecha de Envio: <br><span style="color:red">'.date('d-m-Y', time()).'</span></p>
                     </td>
                   </tr>
                   <tr>
@@ -41,7 +70,10 @@
                       <p>Nombre de la instancia: <span style="color:red">'.$nombre_opp.'</span></p>
                     </td>
                     <td>
-                      <p>Código de identificación SPP: <span style="color:red">'.$spp.'</span></p> 
+                      <p>Nº de Certificado: <span style="color:red">'.$certificado['idcertificado'].'</span></p>
+                    </td>
+                    <td>
+                      <p>Vigencia del Certificado: <br><span style="color:red">'.$fecha_vigencia.'</span></p>
                     </td>
                   </tr>
                   <tr>
@@ -271,34 +303,28 @@
                 </tr>
                 <tr>
                   <td style="text-align:justify; padding-top:2em" colspan="2">
-                 
                     <p>Estimados Representantes de <strong style="color:red">'.$nombre_opp.', (<u>'.$abreviacion_opp.'</u>)</strong>:</p>
                     
-                    <p>Por este conducto se les informa la necesidad de renovación de su Certificado SPP. La fecha de su vigencia de su certificado spp es <strong style="color:red">'.$fecha_vigencia.'</strong>, por lo que deben proceder con la evaluación anual.</p>
-                    
-                    <p>De acuerdo a los procedimientos del SPP, se puede llevar a cabo la evaluación un mes antes de la fecha de vigencia o máximo un mes después.  Si la evaluación se realiza un mes después, se esperaría que el dictamen se obtuviera 4 meses después  (de la fecha de vencimiento del certificado) como plazo máximo, para obtener el dictamen positivo de parte del Organismo de Certificación.</p>
-                  
-                    <p>Queremos enfatizar que actualmente existen políticas para la suspensión y/o cancelación del certificado por lo que si ustedes no solicitan a tiempo pueden ser acreedores de una suspensión.</p>
-                    
-                    <p>Agradeciendo su atención, nos despedimos y enviamos saludos del SPP GLOBAL.</p>
-
-                    <p style="color:#2c3e50"><b>En caso de haber iniciado ya su proceso de renovación del certificado por favor hacer caso omiso a este mensaje</b></p>
+                    <p>
+                      Por medio de la presente se hace la notificación del aviso de Suspensión del Certificado por Incumplimiento con el Marco Regulatorio SPP de acuerdo a la información presentada en el siguiente archivo PDF:
+                    </p>
                     
                     <p>CUALQUIER INCONVENIENTE FAVOR DE NOTIFICARLO A SPP GLOBAL AL CORREO <strong>cert@spp.coop</strong></p>
                   </td>
                 </tr>
-
+                <tr>
+                  <td style="padding-top:2em;" colspan="2">
+                    <b>English Below</b>
+                    <hr>
+                  </td>
+                </tr>
                 <tr>
                   <td style="text-align:justify; padding-top:2em" colspan="2">
-                    <p>Dear <strong style="color:red">'.$nombre_opp.', (<u>'.$abreviacion_opp.'</u>)</strong> Representatives</p>
-                    <p>You are hereby informed of the need for renewal of your SPP Certificate. The effective date of your SPP certificate is: <strong style="color:red">'.$fecha_vigencia.'</strong>, so you must proceed with the annual evaluation.</p>
-                    <p>According to the SPP procedures, the evaluation can be carried out one month before the effective date or maximum one month later. If the evaluation is carried out one month later, it would be expected that the opinion would be obtained 4 months later (from the expiration date of the certificate) as a maximum term, to obtain a positive opinion from the Certification Body</p>
-                  
-                    <p>We want to emphasize that there are currently policies for the suspension and / or cancellation of the certificate, so if you do not apply on time you may be entitled to a suspension.</p>
-                    
-                    <p>Thank you for your attention, we said goodbye and we send greetings from SPP GLOBAL.</p>
-
-                    <p style="color:#2c3e50"><b>If you have already started your certificate renewal process please ignore this message</b></p>
+                    <p>
+                      Dear <strong style="color:red">'.$nombre_opp.', (<u>'.$abreviacion_opp.'</u>)</strong> Representatives</p>
+                    <p>
+                      Notification of Suspension of Non-Compliance Certificate with the SPP Regulatory Framework is hereby made according to the information presented in the following PDF file:
+                    </p>
                     
                     <p>ANY INCONVENIENT PLEASE NOTICE TO SPP GLOBAL TO THE MAIL <strong>cert@spp.coop</strong></p>
                   </td>
@@ -361,59 +387,42 @@
       $mail->Send();
       $mail->ClearAddresses();
 
+      $updateSQL = "UPDATE avisos_renovacion SET suspender = $time_actual, motivo_suspension = '$motivo_suspension' WHERE idaviso_renovacion = $idaviso_renovacion";
+      $ejecutar = mysql_query($updateSQL, $dspp) or die(mysql_error());
   }
-
-  $time_actual = time();
-  $anio_actual = date('Y', time());
-  $time_vencimiento = "";
-  $time_restante = "";
-  $contador = 1;
-  // periodos en los que se enviaran las notificaciones
-  $plazo = ''; // Calculamos el número de segundos que tienen 60 dias 
-  $primero = 5.184e+6; // 60 dias
-  $segundo = 2.592e+6; // 30 dias
-  $tercer_aviso = ""; // igual a la vigencia final del certificado
-  $cuarto = 2.592e+6; // 30 dias despues del plazo
-    //$time_vencimiento = strtotime("2016-02-12");
-    //$time_vencimiento = strtotime(); // Obtenemos timestamp de la fecha de vencimiento
-   // $time_restante = ($time_vencimiento - $time_actual);
-  $destinatario_opp = "";
-  $asunto = "";
-  $nombre_opp = '';
-  $abreviacion_opp = '';
-  $fecha_vigencia = '';
-
-  $direccion_spp = "adm@spp.coop";
-  $asistencia_spp = "opera@spp.coop";
-  $certificacion_spp = "cert@spp.coop";
-  $finanzas_spp = "com@spp.coop";
 
   //28_09_2017 $row_certificado = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN opp ON certificado.idopp = opp.idopp INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%' ORDER BY certificado.vigencia_fin DESC", $dspp) or die(mysql_error());
 
   $row_certificado = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.nombre AS 'nombre_oc', oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN opp ON certificado.idopp = opp.idopp INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%' ORDER BY certificado.vigencia_fin ASC", $dspp) or die(mysql_error());
 
 ?>
-  <h4>
-    Fecha actual: <?php echo date('d/m/Y', time()); ?>
-  </h4>
   <table class="table table-bordered" style="font-size:10px;">
     <thead>
       <tr>
-        <td>ID CERTIFICADO</td>
-        <td>ID OPP</td>
-        <td>ORGANIZACIÓN</td>
-        <td>FECHA INICIO</td>
-        <td>FECHA FIN</td>
-        <td>ID AVISO</td>
-        <td>1º AVISO</td>
-        <td>enviado 1</td>
-        <td>2º AVISO</td>
-        <td>enviado 2</td>
-        <td>3º AVISO</td>
-        <td>enviado 3</td>
-        <td>4º AVISO</td>
-        <td>enviado 4</td>
-        <td>SUSPENSIÓN</td>
+        <th class="success" colspan="13">
+          <h5>Listado Avisos de Renovación del Certificado</h5>
+        </th>
+        <th class="warning" colspan="3">
+          <h5>Fecha actual: <?php echo date('d/m/Y',time()); ?></h5>
+        </th>
+      </tr>
+      <tr>
+        <th>ID CERTIFICADO</th>
+        <th>ID OPP</th>
+        <th>ORGANIZACIÓN</th>
+        <th>FECHA INICIO</th>
+        <th>FECHA FIN</th>
+        <th>ID AVISO</th>
+        <th>1º AVISO</th>
+        <th>enviado 1</th>
+        <th>2º AVISO</th>
+        <th>enviado 2</th>
+        <th>3º AVISO</th>
+        <th>enviado 3</th>
+        <th>4º AVISO</th>
+        <th>enviado 4</th>
+        <th>Suspender</th>
+        <th>SUSPENSIÓN</th>
       </tr>
     </thead>
     <tbody>
@@ -446,6 +455,28 @@
         // restamos la (fecha de vigencia - la fecha actual) para saber CUANTO TIEMPO NOS QUEDA
         $time_restante = ($time_vencimiento - $time_actual);
         $estatus_certificado = "";
+
+        if(isset($aviso_renovacion['aviso1'])){
+          $clase1 = 'class="success"';
+        }else{
+          $clase1 = '';
+        }
+        if(isset($aviso_renovacion['aviso2'])){
+          $clase2 = 'class="success"';
+        }else{
+          $clase2 = '';
+        }
+        if(isset($aviso_renovacion['aviso3'])){
+          $clase3 = 'class="success"';
+        }else{
+          $clase3 = '';
+        }
+        if(isset($aviso_renovacion['aviso4'])){
+          $clase4 = 'class="success"';
+        }else{
+          $clase4 = '';
+        }
+
         ?>
         <tr>
           <!-- ID CERTIFICADO -->
@@ -467,8 +498,10 @@
           <!-- ID AVISO -->
           <td><?php echo $aviso_renovacion['idaviso_renovacion']; ?></td>
           <!-- 1º AVISO -->
-          <td>
-            <?php echo date('d/m/Y',$primer_aviso); ?>
+          <td <?php echo $clase1; ?>>
+            <?php 
+            echo date('d/m/Y',$primer_aviso); 
+            ?>
           </td>
           <td>
             <?php 
@@ -597,7 +630,7 @@
              ?>
           </td>
           <!-- 2º AVISO -->
-          <td>
+          <td <?php echo $clase2; ?>>
             <?php echo date('d/m/Y',$segundo_aviso); ?>
           </td>
           <td>
@@ -717,7 +750,7 @@
              ?>
           </td>
           <!-- 3º AVISO -->
-          <td>
+          <td <?php echo $clase3; ?>>
             <?php echo date('d/m/Y',$tercer_aviso); ?>
           </td>
           <td>
@@ -897,7 +930,7 @@
              ?>  
           </td>
           <!-- 4º AVISO -->
-          <td>
+          <td <?php echo $clase4; ?>>
             <?php echo date('d/m/Y',$cuarto_aviso); ?>
           </td>
           <td>
@@ -1012,20 +1045,63 @@
           </td>
           <!-- SUSPENSIÓN -->
           <td>
+            <?php 
+            if(isset($aviso_renovacion['suspender'])){
+              echo date('d/m/Y', $aviso_renovacion['suspender']);
+            }
+             ?>
+          </td>
+          <td>
           <?php 
-          if(!empty($aviso_renovacion['aviso4'])){
+          if(!empty($aviso_renovacion['aviso4']) && empty($aviso_renovacion['suspender'])){
           ?>
             <form action="" method="POST">
-              <input type="hidden" name="idcertificado" value="<?php echo $certificado['idcertificado']; ?>">
-              <input type="hidden" name="spp" value="<?php echo $certificado['spp']; ?>">
-              <input type="hidden" name="nombre_opp" value="<?php echo $nombre_opp; ?>">
-              <input type="hidden" name="abreviacion_opp" value="<?php echo $abreviacion_opp; ?>">
-              <input type="hidden" name="nombre_oc" value="<?php echo $certificado['nombre_oc'] ?>">
-              <input type="hidden" name="fecha_vigencia" value="<?php echo $fecha_vigencia; ?>">
-              <button type="submit" name="enviar_suspension" value="1" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Suspender</button>  
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="<?php echo '#modalSuspender'.$aviso_renovacion['idaviso_renovacion']; ?>">
+                <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Suspender
+              </button>
+
+              <!-- Modal -->
+              <div class="modal fade" id="<?php echo 'modalSuspender'.$aviso_renovacion['idaviso_renovacion']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">SUSPENDER ORGANIZACIÓN</h4>
+                    </div>
+                    <div class="modal-body" style="font-size:12px;">
+                      <p>
+                        Se procedera a suspender a la organización: <?php echo '<span style="color:red">'.$certificado['nombre'].'</span> ('.$certificado['abreviacion'].')'; ?>
+                      </p>
+                      <div class="form-group has-error">
+                        <label class="control-label" for="motivo_suspension">A continuación debe de justificar el motivo de la suspensión de la organización:</label>
+                        <textarea class="form-control" name="motivo_suspension" id="motivo_suspension" cols="5" placeholder="Escribir el motivo de la suspensión" required></textarea>
+                        <p>*Nota: El motivo de la suspensión solo podra ser revisado por los administradores de SPP Global.</p>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <input type="hidden" name="idaviso_renovacion" value="<?php echo $aviso_renovacion['idaviso_renovacion']; ?>">
+                      <input type="hidden" name="idcertificado" value="<?php echo $certificado['idcertificado']; ?>">
+                      <input type="hidden" name="spp" value="<?php echo $certificado['spp']; ?>">
+                      <input type="hidden" name="nombre_opp" value="<?php echo $nombre_opp; ?>">
+                      <input type="hidden" name="abreviacion_opp" value="<?php echo $abreviacion_opp; ?>">
+                      <input type="hidden" name="nombre_oc" value="<?php echo $certificado['nombre_oc'] ?>">
+                      <input type="hidden" name="fecha_vigencia" value="<?php echo $fecha_vigencia; ?>">
+
+
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                      <button type="submit" class="btn btn-primary" name="enviar_suspension" onclick="return confirm('¿Desea continuar con la suspensión de la organización?');" value="1">Suspender Organización</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--<button type="submit" name="enviar_suspension" value="1" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Suspender</button>-->
             </form>
             
           <?php
+          }else if(isset($aviso_renovacion['suspender'])){
+            echo 'ORGANIZACIÓN SUSPENDIDA';
           }
            ?>         
 
