@@ -31,31 +31,32 @@
   ?>
   <table class="table table-bordered" style="font-size:10px;">
     <thead>
-      <tr class="success">
-        <th colspan="12">
+      <tr>
+        <th class="success" colspan="13">
           <h5>Listado Avisos de Renovación del Certificado</h5>
         </th>
-        <th colspan="3">
+        <th class="warning" colspan="3">
           <h5>Fecha actual: <?php echo date('d/m/Y',time()); ?></h5>
         </th>
       </tr>
 
       <tr>
-        <td>ID CERTIFICADO</td>
-        <td>ID EMPRESA</td>
-        <td>EMPRESA</td>
-        <td>FECHA INICIO</td>
-        <td>FECHA FIN</td>
-        <td>ID AVISO</td>
-        <td>1º AVISO</td>
-        <td>enviado 1</td>
-        <td>2º AVISO</td>
-        <td>enviado 2</td>
-        <td>3º AVISO</td>
-        <td>enviado 3</td>
-        <td>4º AVISO</td>
-        <td>enviado 4</td>
-        <td>SUSPENSIÓN</td>
+        <th>ID CERTIFICADO</th>
+        <th>ID EMPRESA</th>
+        <th>EMPRESA</th>
+        <th>FECHA INICIO</th>
+        <th>FECHA FIN</th>
+        <th>ID AVISO</th>
+        <th>1º AVISO</th>
+        <th>enviado 1</th>
+        <th>2º AVISO</th>
+        <th>enviado 2</th>
+        <th>3º AVISO</th>
+        <th>enviado 3</th>
+        <th>4º AVISO</th>
+        <th>enviado 4</th>
+        <th>Suspender</th>
+        <th>SUSPENSIÓN</th>
       </tr>
     </thead>
     <tbody>
@@ -662,10 +663,71 @@
           </td>
           <!-- SUSPENSIÓN -->
           <td>
+            <?php 
+            if(isset($aviso_renovacion['suspender'])){
+              echo date('d/m/Y', $aviso_renovacion['suspender']);
+            }
+             ?>
+          </td>
+          <td>
+          <?php 
+          if(!empty($aviso_renovacion['aviso4']) && empty($aviso_renovacion['suspender'])){
+          ?>
+            <form action="" method="POST">
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="<?php echo '#modalSuspender'.$aviso_renovacion['idaviso_renovacion']; ?>">
+                <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Suspender
+              </button>
+
+              <!-- Modal -->
+              <div class="modal fade" id="<?php echo 'modalSuspender'.$aviso_renovacion['idaviso_renovacion']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">SUSPENDER ORGANIZACIÓN</h4>
+                    </div>
+                    <div class="modal-body" style="font-size:12px;">
+                      <p>
+                        Se procedera a suspender a la organización: <?php echo '<span style="color:red">'.$certificado['nombre'].'</span> ('.$certificado['abreviacion'].')'; ?>
+                      </p>
+                      <div class="form-group has-error">
+                        <label class="control-label" for="motivo_suspension">A continuación debe de justificar el motivo de la suspensión de la organización:</label>
+                        <textarea class="form-control" name="motivo_suspension" id="motivo_suspension" cols="5" placeholder="Escribir el motivo de la suspensión" required></textarea>
+                        <p>*Nota: El motivo de la suspensión solo podra ser revisado por los administradores de SPP Global.</p>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <input type="text" name="idopp" value="<?php echo $certificado['idopp']; ?>">
+                      <input type="hidden" name="idaviso_renovacion" value="<?php echo $aviso_renovacion['idaviso_renovacion']; ?>">
+                      <input type="hidden" name="idcertificado" value="<?php echo $certificado['idcertificado']; ?>">
+                      <input type="hidden" name="spp" value="<?php echo $certificado['spp']; ?>">
+                      <input type="hidden" name="nombre_opp" value="<?php echo $nombre_opp; ?>">
+                      <input type="hidden" name="abreviacion_opp" value="<?php echo $abreviacion_opp; ?>">
+                      <input type="hidden" name="nombre_oc" value="<?php echo $certificado['nombre_oc'] ?>">
+                      <input type="hidden" name="fecha_vigencia" value="<?php echo $fecha_vigencia; ?>">
+
+
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                      <button type="submit" class="btn btn-primary" name="enviar_suspension" onclick="return confirm('¿Desea continuar con la suspensión de la organización?');" value="1">Suspender Organización</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--<button type="submit" name="enviar_suspension" value="1" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Suspender</button>-->
+            </form>
             
+          <?php
+          }else if(isset($aviso_renovacion['suspender'])){
+            echo 'ORGANIZACIÓN SUSPENDIDA';
+          }
+           ?>         
+
           </td>
         </tr>
-      <?php
+
+        <?php
       }
        ?>
     </tbody>

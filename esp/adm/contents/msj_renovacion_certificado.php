@@ -26,6 +26,7 @@
 
 
   if(isset($_POST['enviar_suspension']) && $_POST['enviar_suspension'] == 1){
+    $idopp = $_POST['idopp'];
     $idaviso_renovacion = $_POST['idaviso_renovacion'];
     $motivo_suspension = $_POST['motivo_suspension'];
 
@@ -389,6 +390,10 @@
 
       $updateSQL = "UPDATE avisos_renovacion SET suspender = $time_actual, motivo_suspension = '$motivo_suspension' WHERE idaviso_renovacion = $idaviso_renovacion";
       $ejecutar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+      $estatus_interno = 11; // SUSPENDIDO
+      $updateSQL = "UPDATE opp SET estatus_interno = $estatus_interno WHERE idopp = $idopp";
+      $ejecutar = mysql_query($updateSQL, $dspp) or die(mysql_error());
   }
 
   //28_09_2017 $row_certificado = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN opp ON certificado.idopp = opp.idopp INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%' ORDER BY certificado.vigencia_fin DESC", $dspp) or die(mysql_error());
@@ -399,7 +404,7 @@
   <table class="table table-bordered" style="font-size:10px;">
     <thead>
       <tr>
-        <th class="success" colspan="13">
+        <th class="success" colspan="7">
           <h5>Listado Avisos de Renovación del Certificado</h5>
         </th>
         <th class="warning" colspan="3">
@@ -407,20 +412,20 @@
         </th>
       </tr>
       <tr>
-        <th>ID CERTIFICADO</th>
-        <th>ID OPP</th>
-        <th>ORGANIZACIÓN</th>
+        <!--<th>ID CERTIFICADO</th>
+        <th>ID OPP</th>-->
+        <th>ID AVISO</th>
         <th>FECHA INICIO</th>
         <th>FECHA FIN</th>
-        <th>ID AVISO</th>
+        <th>ORGANIZACIÓN</th>
         <th>1º AVISO</th>
-        <th>enviado 1</th>
+        <!--<th>enviado 1</th>-->
         <th>2º AVISO</th>
-        <th>enviado 2</th>
+        <!--<th>enviado 2</th>-->
         <th>3º AVISO</th>
-        <th>enviado 3</th>
+        <!--<th>enviado 3</th>-->
         <th>4º AVISO</th>
-        <th>enviado 4</th>
+        <!--<th>enviado 4</th>-->
         <th>Suspender</th>
         <th>SUSPENSIÓN</th>
       </tr>
@@ -480,13 +485,20 @@
         ?>
         <tr>
           <!-- ID CERTIFICADO -->
-          <td><?php echo $certificado['idcertificado']; ?></td>
+          <!--<td><?php echo $certificado['idcertificado']; ?></td>-->
           <!-- ID EMPRESA -->
-          <td><?php echo $certificado['idopp']; ?></td>
-          <!-- ABREVIACIÓN EMPRESA -->
+          <!--<td><?php echo $certificado['idopp']; ?></td>-->
+          <!-- ID AVISO -->
           <td>
-            <?php echo $certificado['abreviacion']; ?>
+            <?php
+            if(isset($aviso_renovacion['idaviso_renovacion'])){
+              echo $aviso_renovacion['idaviso_renovacion']; 
+            }else{
+              echo '<span style="color:red">No disponible</span>';
+            }
+            ?>    
           </td>
+
           <!-- FECHA INICIO -->
           <td>
             <?php echo $fecha_inicio; ?>
@@ -495,16 +507,16 @@
           <td class="danger">
             <?php echo $fecha_fin; ?>
           </td>
-          <!-- ID AVISO -->
-          <td><?php echo $aviso_renovacion['idaviso_renovacion']; ?></td>
+          <!-- ABREVIACIÓN EMPRESA -->
+          <td>
+            <?php echo $certificado['abreviacion']; ?>
+          </td>
+
           <!-- 1º AVISO -->
           <td <?php echo $clase1; ?>>
             <?php 
             echo date('d/m/Y',$primer_aviso); 
-            ?>
-          </td>
-          <td>
-            <?php 
+
               if(!isset($aviso_renovacion['idaviso_renovacion']) || !isset($aviso_renovacion['aviso1'])){
                 if($time_actual >= $primer_aviso){
                   
@@ -624,17 +636,17 @@
                     $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
                   }
                 }
-              }else{
+              }/*else{
                 echo date('d/m/Y', $aviso_renovacion['aviso1']);
-              }
-             ?>
+              }*/
+
+            ?>
           </td>
+ 
           <!-- 2º AVISO -->
           <td <?php echo $clase2; ?>>
-            <?php echo date('d/m/Y',$segundo_aviso); ?>
-          </td>
-          <td>
             <?php 
+            echo date('d/m/Y',$segundo_aviso); 
               if(!isset($aviso_renovacion['aviso2'])){
                 if($time_actual >= $segundo_aviso){
                   $asunto = "2do Aviso de Renovación del Certificado / 2nd Certificate Renewal Notice";
@@ -744,17 +756,16 @@
                   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
                 }
-              }else{
+              }/*else{
                 echo date('d/m/Y', $aviso_renovacion['aviso2']);
-              }
-             ?>
+              }*/
+            ?>
           </td>
+
           <!-- 3º AVISO -->
           <td <?php echo $clase3; ?>>
-            <?php echo date('d/m/Y',$tercer_aviso); ?>
-          </td>
-          <td>
             <?php 
+            echo date('d/m/Y',$tercer_aviso); 
               if(!isset($aviso_renovacion['aviso3'])){
                 if($time_actual >= $tercer_aviso){
                   
@@ -924,17 +935,16 @@
                   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
                 }
-              }else{
+              }/*else{
                 echo date('d/m/Y', $aviso_renovacion['aviso3']);
-              }
-             ?>  
+              }*/
+            ?>
           </td>
+
           <!-- 4º AVISO -->
           <td <?php echo $clase4; ?>>
-            <?php echo date('d/m/Y',$cuarto_aviso); ?>
-          </td>
-          <td>
             <?php 
+            echo date('d/m/Y',$cuarto_aviso); 
               if(!isset($aviso_renovacion['aviso4'])){
                 if($time_actual >= $cuarto_aviso){
                   $asunto = "Suspensión del certificado / Suspension of certificate";
@@ -1038,11 +1048,12 @@
                   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
                 }
-              }else{
+              }/*else{
                 echo date('d/m/Y', $aviso_renovacion['aviso4']);
-              }
-             ?>
+              }*/
+            ?>
           </td>
+
           <!-- SUSPENSIÓN -->
           <td>
             <?php 
@@ -1080,6 +1091,7 @@
                       </div>
                     </div>
                     <div class="modal-footer">
+                      <input type="hidden" name="idopp" value="<?php echo $certificado['idopp']; ?>">
                       <input type="hidden" name="idaviso_renovacion" value="<?php echo $aviso_renovacion['idaviso_renovacion']; ?>">
                       <input type="hidden" name="idcertificado" value="<?php echo $certificado['idcertificado']; ?>">
                       <input type="hidden" name="spp" value="<?php echo $certificado['spp']; ?>">
