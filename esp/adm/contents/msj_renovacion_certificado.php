@@ -398,7 +398,7 @@
 
   //28_09_2017 $row_certificado = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN opp ON certificado.idopp = opp.idopp INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%' ORDER BY certificado.vigencia_fin DESC", $dspp) or die(mysql_error());
 
-  $row_certificado = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.nombre AS 'nombre_oc', oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN opp ON certificado.idopp = opp.idopp INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%' ORDER BY certificado.vigencia_fin ASC", $dspp) or die(mysql_error());
+  $row_certificado = mysql_query("SELECT opp.idopp, opp.spp, opp.nombre, opp.abreviacion, opp.password, opp.email, opp.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.nombre AS 'nombre_oc', oc.abreviacion AS 'abreviacion_oc', oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN opp ON certificado.idopp = opp.idopp INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%' ORDER BY certificado.vigencia_fin ASC", $dspp) or die(mysql_error());
 
 ?>
   <table class="table table-bordered" style="font-size:10px;">
@@ -407,7 +407,7 @@
         <th class="success" colspan="7">
           <h5>Listado Avisos de Renovación del Certificado</h5>
         </th>
-        <th class="warning" colspan="3">
+        <th class="warning" colspan="4">
           <h5>Fecha actual: <?php echo date('d/m/Y',time()); ?></h5>
         </th>
       </tr>
@@ -418,6 +418,7 @@
         <th>FECHA INICIO</th>
         <th>FECHA FIN</th>
         <th>ORGANIZACIÓN</th>
+        <th>OC</th>
         <th>1º AVISO</th>
         <!--<th>enviado 1</th>-->
         <th>2º AVISO</th>
@@ -509,7 +510,11 @@
           </td>
           <!-- ABREVIACIÓN EMPRESA -->
           <td>
-            <?php echo $certificado['abreviacion']; ?>
+            <?php echo '<a href="?OPP&detail&idopp='.$certificado['idopp'].'">'.$certificado['abreviacion'].'</a>'; ?>
+          </td>
+          <!-- ABREVIACIÓN DEL OC -->
+          <td>
+            <?php echo $certificado['abreviacion_oc']; ?>
           </td>
 
           <!-- 1º AVISO -->

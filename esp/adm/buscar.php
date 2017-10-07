@@ -39,7 +39,7 @@ if($total > 0){
 		"<tr>
 			<td>".$contador."</td>
 			<!-- ABREVIACIÓN ORGANIZACIÓN -->
-			<td><a href='?OPP&detail&idopp='".$fila['idopp']."'>".mayuscula($fila['abreviacion_opp'])."</a></td>
+			<td><a href='?OPP&detail&idopp=".$fila['idopp']."'>".mayuscula($fila['abreviacion_opp'])."</a></td>
 			<!-- PAIS -->
 			<td>".mayuscula($fila['pais'])."</td>
 			<!-- NOMBRE -->
