@@ -196,9 +196,15 @@ if(isset($_POST['aprobar_comprobante'])){
 	$estatus_comprobante = "ACEPTADO"; //se acepta el comprobante
 	$estatus_membresia = "APROBADA"; //se acepta la membresia
 	$estatus_dspp = 18; //MEMBRESIA APROBADA
+	
 	//actualizamos comprobante_pago
-	$updateSQL = sprintf("UPDATE comprobante_pago SET estatus_comprobante = %s WHERE idcomprobante_pago = %s",
+	$monto_transferido = $_POST['monto_transferido'].' '.$_POST['tipo_moneda_transferido'];
+	$monto_recibido = $_POST['monto_recibido'].' '.$_POST['tipo_moneda_recibido'];
+
+	$updateSQL = sprintf("UPDATE comprobante_pago SET estatus_comprobante = %s, monto_transferido = %s, monto_recibido = %s WHERE idcomprobante_pago = %s",
 	GetSQLValueString($estatus_comprobante, "text"),
+	GetSQLValueString($monto_transferido, "text"),
+	GetSQLValueString($monto_recibido, "text"),
 	GetSQLValueString($_POST['idcomprobante_pago'], "int"));
 	$actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 	//actualizamos la membresia
@@ -638,10 +644,9 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 											</table>
 										</div>
 										<div class="modal-footer">
-											<input type="hidden" name="idsolicitud_certificacion" value="<?php echo $registros['idsolicitud_certificacion']; ?>">
 											<input type="hidden" name="idmembresia" value="<?php echo $registros['idmembresia']; ?>">
 											<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-											<button type="submit" name="aprobar_comprobante" value="<?php echo $registros['idmembresia']; ?>" class="btn btn-success" onclick="return validar();">Autorizar membresia SPP</button>
+											<button type="submit" name="aprobar_comprobante" value="<?php echo $registros['idmembresia']; ?>" class="btn btn-success">Autorizar membresia SPP</button>
 											<!--<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" onclick="return validar();">Guardar Comprobante</button>-->
 										</div>
 									</div>
@@ -654,8 +659,8 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Rechazar
 							</button>
 
-							<input type="hidden" name="idcomprobante_pago" value="'.$registros['idcomprobante_pago'].'">
-							<input type="hidden" name="idsolicitud_certificacion" value="'.$registros['idsolicitud_certificacion'].'">
+							<input type="hidden" name="idcomprobante_pago" value="<?php echo $registros['idcomprobante_pago']; ?>">
+							<input type="hidden" name="idsolicitud_certificacion" value="<?php echo $registros['idsolicitud_certificacion']; ?>">
 						</form>
 					<?php
 					}
