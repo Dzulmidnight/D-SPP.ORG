@@ -299,8 +299,8 @@ if(isset($_POST['aprobar_comprobante'])){
 	}
 }
 
-if(isset($_POST['rechar_comprobante'])){
-	$idmembresia = $_POST['rechar_comprobante'];
+if(isset($_POST['rechazar_comprobante'])){
+	$idmembresia = $_POST['rechazar_comprobante'];
 	//SE RECHAZA EL COMPROBANTE DE PAGO
 	  $estatus_comprobante = "RECHAZADO"; //se rechaza el comprobante
 	  $estatus_membresia = "RECHAZADO"; //se rechaza la membresia
@@ -323,6 +323,79 @@ if(isset($_POST['rechar_comprobante'])){
 	  $mensaje = "Se ha rechaza la membresia y el OPP ha sido notificado";
 	  echo "<script>alert('Se ha rechaza la membresia y el OPP ha sido notificado');location.href ='javascript:history.back()';</script>";
 
+}
+
+if(isset($_POST['enviar_prorroga']) && $_POST['enviar_prorroga'] == 1){
+	$idopp = $_POST['idopp'];
+	$nombre_opp = $_POST['nombre_opp'];
+	$abreviacion_opp = $_POST['abreviacion_opp'];
+	$idcomprobante_pago = $_POST['idcomprobante_pago'];
+	$prorroga_inicio = $_POST['prorroga_inicio'];
+	$prorroga_fin = $_POST['prorroga_fin'];
+	$justificacion_prorroga = $_POST['justificacion_prorroga'];
+
+
+	$asunto = "D-SPP | Prorroga Pago Membresia SPP aprobada";
+
+	$cuerpo_mensaje = '
+	      <html>
+	      <head>
+	        <meta charset="utf-8">
+	      </head>
+	      <body>
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <tbody>
+              <tr>
+                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">'.$asunto.'</span></p></th>
+
+              </tr>
+              <tr>
+               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">'.$nombre_opp.'</span></p></th>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                 <p>Estimados representantes de: <span style="color:red">'.$nombre_opp.'</span> ('.$abreviacion_opp.'), se ha aprobado una prorroga para realizar el pago de la membresía spp, dicha prorroga tiene un período del dia: <span style="color:red">'.$prorroga_inicio.'</span> al <span style="color:red">'.$prorroga_fin.'</span>.</p>
+                 <p>Una vez finalizado el período de la prorroga, si aun no se ha cargado el comprobante de pago de la membresía SPP dentro del sistema D-SPP se procedera a suspender a la organización.</p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+	      </body>
+	      </html>
+	';
+
+	/*if(!empty($informacion['contacto1_email'])){
+		//$mail->AddAddress($informacion['contacto1_email']);
+		$token = strtok($informacion['contacto1_email'], "\/\,\;");
+		while ($token !== false)
+		{
+		  $mail->AddAddress($token);
+		  $token = strtok('\/\,\;');
+		}
+
+	}
+	if(!empty($informacion['email'])){
+		//$mail->AddAddress($informacion['email']);
+		$token = strtok($informacion['email'], "\/\,\;");
+		while ($token !== false)
+		{
+		  $mail->AddAddress($token);
+		  $token = strtok('\/\,\;');
+		} 
+	}*/
+	$mail->AddAddress('soporteinforganic@gmail.com');
+	$mail->Subject = utf8_decode($asunto);
+	$mail->Body = utf8_decode($cuerpo_mensaje);
+	$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+	$mail->Send();
+	$mail->ClearAddresses();
 }
 
 if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
@@ -628,7 +701,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 							<!-- TERMINA MODAL PARA AUTORIZAR MEMBRESIA -->
 
 							<!-- BOTON DENEGAR MEMBRESIA -->
-							<button name="rechar_comprobante" value="<?php echo $registros['idmembresia']; ?>" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Rechazar membresia" onclick="return confirm('¿Desea Rechazar el Comprobante de Pago?');" >
+							<button name="rechazar_comprobante" value="<?php echo $registros['idmembresia']; ?>" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Rechazar membresia" onclick="return confirm('¿Desea Rechazar el Comprobante de Pago?');" >
 								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Rechazar
 							</button>
 
@@ -1303,27 +1376,41 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 			                  	<div class="modal-content">
 				                    <div class="modal-header">
 				                    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				                      	<h4 class="modal-title" id="myModalLabel">PRORROGA ORGANIZACIÓN: <?php echo '<span style="color:red">'.$registros['nombre_opp'].'</span> ('.$registros['abreviacion_opp'].')'; ?></h4>
+				                      	<h4 class="modal-title" id="myModalLabel">PRORROGA PARA LA ORGANIZACIÓN: <?php echo '<span style="color:red">'.$registros['nombre_opp'].'</span> ('.$registros['abreviacion_opp'].')'; ?></h4>
 				                    </div>
 				                    <div class="modal-body" style="font-size:12px;">
-				                    	<p>A continuación debe de fijar la "Fecha Final" de la prorroga que se otorgara a la organización</p>
-				                    	<div class="col-md-6">lore</div>
-				                    	<div class="col-md-6"></div>
-				                      	<div class="form-group has-error">
-				                        	<label class="control-label" for="motivo_suspension">A continuación debe de justificar el motivo de la suspensión de la organización:</label>
-				                        	<textarea class="form-control" name="motivo_suspension" id="motivo_suspension" cols="5" placeholder="Escribir el motivo de la suspensión" required></textarea>
-				                        	<p>*Nota: El motivo de la suspensión solo podra ser revisado por los administradores de SPP Global.</p>
-				                      	</div>
+				                    	<p>A continuación debes de fijar la "Fecha Final" de la prorroga que se otorgara a la organización así como la "Justificación".</p>
+				                    	<div class="col-md-6">
+				                    		<p><b>PERÍODO DE LA PRORROGA</b></p>
+				                    		<div class="row">
+				                    			<div class="col-xs-6">
+						                        	<label class="control-label" for="prorroga_inicio">Fecha de Inicio:</label>
+						                        	<input type="date" class="form-control" id="prorroga_inicio" name="prorroga_inicio" placeholder="dd/mm/aaaa">
+				                    			</div>
+				                    			<div class="col-xs-6">
+						                        	<label class="control-label" for="prorroga_fin">Fecha Final:</label>
+						                        	<input type="date" class="form-control" id="prorroga_fin" name="prorroga_fin" placeholder="dd/mm/aaaa">
+				                    			</div>
+				                    		</div>
+
+				                    	</div>
+				                    	<div class="col-md-6">
+					                      	<div class="form-group has-success">
+					                        	<label class="control-label" for="justificacion_prorroga">JUSTIFICACIÓN:</label>
+					                        	<textarea class="form-control" name="justificacion_prorroga" id="justificacion_prorroga" cols="5" placeholder="Escribir la justificación de la prorroga" required></textarea>
+					                        	<p>*Debes escribir porque se ha otorgado una prorroga a la organización.</p>
+					                      	</div>
+				                    	</div>
 				                    </div>
 				                    <div class="modal-footer">
-				                      	<input type="text" name="idopp" value="<?php echo $registros['idopp']; ?>">
-				                      	
-				                    	<input type="text" name="spp" value="<?php echo $registros['spp']; ?>">
+				                      	<input type="hidden" name="idopp" value="<?php echo $registros['idopp']; ?>">
+				                      	<input type="text" name="idcomprobante_pago" value="<?php echo $registros['idcomprobante_pago']; ?>">
+				                    	<input type="hidden" name="spp" value="<?php echo $registros['spp']; ?>">
 				                      	<input type="text" name="nombre_opp" value="<?php echo $registros['nombre_opp']; ?>">
 				                      	<input type="text" name="abreviacion_opp" value="<?php echo $registros['abreviacion_opp']; ?>">
 
 				                      	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				                     	<button type="submit" class="btn btn-primary" name="enviar_suspension" onclick="return confirm('¿Desea continuar con la suspensión de la organización?');" value="1">Suspender Organización</button>
+				                     	<button type="submit" class="btn btn-primary" name="enviar_prorroga" onclick="return confirm('¿Desea activar la prorroga de la organización?');" value="1">Enviar Prorroga</button>
 				                    </div>
 			                 	</div>
 			                </div>
