@@ -40,6 +40,7 @@ if (isset($_SERVER['QUERY_STRING'])) {
 mysql_select_db($database_dspp, $dspp);
 
 $fecha = time();
+$fecha_actual = time();
 $anio = date('Y', time());
 $anio_actual = date('Y', time());
 
@@ -328,6 +329,379 @@ if(isset($_POST['rechazar_comprobante'])){
 	  echo "<script>alert('Se ha rechaza la membresia y el OPP ha sido notificado');location.href ='javascript:history.back()';</script>";
 
 }
+//// ENVIAR SUSPENSIÓN DE LA ORGANIZACIÓN
+if(isset($_POST['enviar_suspension']) && $_POST['enviar_suspension'] == 1){
+    $idopp = $_POST['idopp'];
+    $idaviso_renovacion = $_POST['idaviso_renovacion'];
+    $motivo_suspension = $_POST['motivo_suspension'];
+
+    $idcertificado = $_POST['idcertificado'];
+    $spp = $_POST['spp'];
+    $nombre_opp = $_POST['nombre_opp'];
+    $abreviacion_opp = $_POST['abreviacion_opp'];
+    $fecha_vigencia = $_POST['fecha_vigencia'];
+    $nombre_oc = $_POST['nombre_oc'];
+     ///// GENERAMOS EL FORMATO DE SUSPENSIÓN
+      ///inician variables del PDF
+      $ruta_pdf = '../../archivos/admArchivos/suspension/';
+      $nombre_pdf = 'formato_suspension_certificado_'.time().'.pdf';
+      $reporte = $ruta_pdf.$nombre_pdf;
+      /// fin
+
+      /// SE GENERA EL ARCHIVO PDF Y SE GUARDA EN EL SERVIDOR
+      $html = '
+
+        <table style="font-family: Tahoma, Geneva, sans-serif;font-size:12px;">
+            <tr>
+              <td>
+                <h3>1 DATOS</h3>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table class="formatoTabla">
+                  <tr>
+                    <td>
+                      <p>Tipo de Actor: <span style="color:red">OPP</span></p>
+                    </td>
+                    <td>
+                      <p>Código de identificación SPP: <span style="color:red">'.$spp.'</span></p>
+                    </td>
+                    <td>
+                      <p>Fecha de Envio: <br><span style="color:red">'.date('d-m-Y', time()).'</span></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <p>Nombre de la instancia: <span style="color:red">'.$nombre_opp.'</span></p>
+                    </td>
+                    <td>
+                      <p>Nº de Certificado: <span style="color:red">'.$certificado['idcertificado'].'</span></p>
+                    </td>
+                    <td>
+                      <p>Vigencia del Certificado: <br><span style="color:red">'.$fecha_vigencia.'</span></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3">
+                      <p>Organismo de Certificación que otorgó el Certificado: <span style="color:red">'.$nombre_oc.'</span></p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top:3em;">
+                <p>Estimados representantes de la Organización: <span style="color:red">'.$nombre_opp.'</span> ('.$abreviacion_opp.').</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top:1em;">
+                <p>Por medio de la presente se hace la notificación del aviso de Suspensión del Certificado por Incumplimiento con el Marco Regulatorio SPP de acuerdo a la siguiente información:</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top:2em;">
+                <h3>2 MOTIVO</h3>
+              </td>
+            </tr>
+          </table>
+            
+          <table class="formatoTabla">
+            <tr>
+              <th width="5%"><p style="font-size:18px;">#</p></th>
+              <th width="25%"><p style="font-size:18px;">Descripción de la No Conformidad</p></th>
+              <th width="15%"><p style="font-size:18px;">Referencia</p></th>
+              <th width="10%"><p style="font-size:18px;">Acción Correctiva</p></th>
+              <th width="25%"><p style="font-size:18px;">Plazo<sup>1</sup></p></th>
+              <th width="20%"><p style="font-size:18px;">Observaciones</p></th>
+            </tr>
+            <tr>
+              <td>
+                <p style="font-size:18px;">1</p>
+              </td>
+              <td class="justificado">
+                <p style="font-size:18px;">
+                  La <span style="color:red">OPP</span> no ha renovado su <span style="color:red">Certificado</span> SPP de acuerdo a lo establecido en el Procedimiento SPP que indica lo siguiente:
+                </p>
+                <p style="font-size:18px;">
+                  “La OPP/empresa debe haber iniciado - mediante la aprobación formal de una oferta de certificación - la evaluación anual de certificación en el periodo entre un mes antes y un  mes después de la vigencia de su certificado.
+                </p>
+              </td>
+              <td class="justificado" style="width:100px;">
+                <p style="font-size:18px;">
+                  Proc_Cert_OPP_SPP_V6_31-Jul-2016_E1_10-Mar-2017_Vf
+                <br>
+                  Procedimiento_Registro_Compradores_Finales_otros_actores_V6_31-Jul-2016_E1_10-Mar-2017
+                </p>
+              </td>
+              <td>
+                <p style="font-size:18px;">Llevar a cabo la evaluación para la renovación del Certificado.</p>
+              </td>
+              <td class="justificado">
+                <p style="font-size:18px;">
+                  De acuerdo al Procedimiento de certificación y registro, tienen 90 días naturales para llevar a cabo todo el proceso, incluido el tiempo que tiene el OC para responder.
+                </p>
+                <p style="font-size:18px;">
+                  (Ver el plazo máximo para llevar a cabo los diferentes pasos del proceso de certificación en el Procedimiento de Certificación para OPP y Procedimiento de Registro para Compradores Finales y otros actores).
+                </p>
+              </td>
+              <td class="justificado">
+                <p style="font-size:18px;">
+                  Si la OPP o empresa no envía la documentación para iniciar la evaluación sino hasta 20 días antes de concluir el plazo máximo, el OC ya no recibirá la información porque en dicho tiempo ya no se tendría oportunidad de llevar a cabo todas las etapas del proceso.
+                </p>
+              </td>
+            </tr>
+            <tr style="padding-top:2em;">
+              <td colspan="6">
+                <p style="font-size:18px;">
+                  <sup>1</sup> A partir de la fecha de notificación del presente Aviso de Suspensión.    
+                </p>
+              </td>
+            </tr>
+          </table>
+
+          <table>
+            <tr>
+              <td style="padding-top:2em;"><h3>3 CONSECUENCIAS DE LA SUSPENSIÓN DEL CERTIFICADO</h3></td>
+            </tr>
+            <tr>
+              <td>
+                <ol>
+                  <li>No puede celebrar nuevos contratos comerciales SPP con algún operador certificado o registrado.</li>
+                  <li>Debe cumplir con los contratos SPP ya celebrados vigentes.</li>
+                  <li>Se mantiene en listas oficiales de empresas del SPP de FUNDEPPO con estatus ‘Suspendido’.</li>
+                  <li>No se detienen los tiempos de los ciclos de registro en curso, es decir, se mantienen vigentes los tiempos establecidos para la renovación en el último certificado o registro.</li>
+                </ol>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top:2em;"><h3>4 LEVANTAMIENTO</h3></td>
+            </tr>
+            <tr>
+              <td >
+                <ol>
+                  <li>
+                    Se levanta la Suspensión cuando se declaren resueltos los motivos por los cuales se les determinó dicho estatus.
+                  </li>
+                  <li>
+                    Adicionalmente deben pagarse eventuales adeudos pendientes, como el pago de membresía y cuota de uso SPP, en caso de que exista. 
+                  </li>
+                </ol>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top:2em;">
+                <h3 style="padding-top:2em;">5 INFORMACIÓN SOBRE CANCELACION</h3>
+              </td>
+            </tr>
+            <tr>
+              <td >
+                <p>
+                  <b>
+                    Se debe tener en cuenta de que de no resolverse la suspensión en el plazo indicado, se emitirá la cancelación del Certificado o Registro que lleva a las siguientes consecuencias:
+                  </b>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ol>
+                  <li>
+                    No puede hacer transacciones nuevas en condiciones SPP.
+                  </li>
+                  <li>
+                    Debe cumplir contratos SPP hechos, siempre y cuando se respete lo siguiente: Producto sujeto a contratos hechos cuando la entidad estaba aún certificada o registrada se puede vender en el mercado como SPP hasta máximo un año en el caso de productos de ciclo anual; hasta  6 meses en caso de producción bianual o hasta 3 meses en el caso de productos de producción constante
+                  </li>
+                  <li>
+                    Debe reiniciar el proceso como solicitud de nuevo ingreso, sin poder aplicar al procedimiento acortado.
+                  </li>
+                  <li>
+                    Deberá demostrar haber resuelto los motivos por los cuales el certificado fue cancelado.
+                  </li>
+                  <li>
+                    El tiempo mínimo para solicitar nuevamente el registro es dos años después de la fecha de notificación de la cancelación.
+                  </li>
+                </ol>
+              </td>
+            </tr>
+        </table>';
+
+
+      $mpdf = new mPDF('c', 'Letter'); // seleccionamos el tamaño de la hoja
+      ob_start();
+
+      $mpdf->setAutoTopMargin = 'pad';
+      $mpdf->keep_table_proportions = TRUE;
+      $mpdf->SetHTMLHeader('
+      <header class="clearfix">
+        <div>
+          <table class="formatoTabla" style="padding:0px;margin-top:-20px;">
+            <tr>
+              <td style="text-align:left;margin-bottom:0px;font-size:12px;">
+                    <div>
+                      <img src="../../img/mailFUNDEPPO.jpg">
+                    </div>
+              </td>
+              <td style="text-align:right;font-size:12px;">
+                    <div>
+                      <h3>
+                          Suspensión del Certificado
+                      </h3>             
+                    </div>
+
+                    <div>Simbolo de Pequeños Productores</div>
+                    <div>Versión 2.  18-Ago-2017</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </header>
+        ');
+      $css = file_get_contents('../../archivos/css/style_reporte.css');  
+      //$mpdf->AddPage('L'); //se cambia la orientacion de la pagina
+      $mpdf->pagenumPrefix = 'Página ';
+      $mpdf->pagenumSuffix = ' - ';
+      $mpdf->nbpgPrefix = ' de ';
+      //$mpdf->nbpgSuffix = ' pages';
+      $mpdf->SetHTMLFooter('
+        <footer>
+          <table>
+            <tr>
+              <td style="text-align:right;">
+                <p>
+                  Formato_Suspensión_Certificado_Registro_SPP_V2_2017-08-18
+                </p>
+              </td>
+            </tr>
+          </table>
+        </footer>
+          ');
+      $mpdf->writeHTML($css,1);
+
+      ob_end_clean();
+
+      $mpdf->writeHTML($html);
+      //$pdf_listo = $mpdf->Output('reporte.pdf', 'I');
+      
+      /// CON LA LINEA DE ABAJO GENERAMOS EL PDF Y LO ENVIAMOS POR EMAIL, PERO NO LO GUARDAMOS
+      //28_03_2017 $pdf_listo = $mpdf->Output('reporte_trimestral.pdf', 'S'); //reemplazamos la I por S(regresa el documento como string)
+      /// CON LA LINEA DE ABAJO GENERAMOS EL PDF Y LO GUARDAMOS EN UNA CARPETA
+      $mpdf->Output(''.$ruta_pdf.''.$nombre_pdf.'', 'F'); //reemplazamos la I por S(regresa el documento como string)
+
+      /// FIN
+
+
+      /// SE GENERA EL CORREO
+      $asunto = 'Suspensión del Certificado SPP';
+
+      $mensaje_correo = '
+        <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+              <tbody>
+                <tr>
+                  <th rowspan="1" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                  <th scope="col" align="left" width="500"><strong><h3>'.$asunto.'</h3></strong></th>
+                </tr>
+                <tr>
+                  <td style="text-align:justify; padding-top:2em" colspan="2">
+                    <p>Estimados Representantes de <strong style="color:red">'.$nombre_opp.', (<u>'.$abreviacion_opp.'</u>)</strong>:</p>
+                    
+                    <p>
+                      Por medio de la presente se hace la notificación del aviso de Suspensión del Certificado por Incumplimiento con el Marco Regulatorio SPP de acuerdo a la información presentada en el siguiente archivo PDF:
+                    </p>
+                    
+                    <p>CUALQUIER INCONVENIENTE FAVOR DE NOTIFICARLO A SPP GLOBAL AL CORREO <strong>cert@spp.coop</strong></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-top:2em;" colspan="2">
+                    <b>English Below</b>
+                    <hr>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align:justify; padding-top:2em" colspan="2">
+                    <p>
+                      Dear <strong style="color:red">'.$nombre_opp.', (<u>'.$abreviacion_opp.'</u>)</strong> Representatives</p>
+                    <p>
+                      Notification of Suspension of Non-Compliance Certificate with the SPP Regulatory Framework is hereby made according to the information presented in the following PDF file:
+                    </p>
+                    
+                    <p>ANY INCONVENIENT PLEASE NOTICE TO SPP GLOBAL TO THE MAIL <strong>cert@spp.coop</strong></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </body>
+        </html>
+      ';
+
+
+      /*if(!empty($certificado['email'])){
+        $token = strtok($certificado['email'], "\/\,\;");
+        while($token !== false){
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(!empty($contactos['email1'])){
+        $token = strtok($contactos['email1'], "\/\,\;");
+        while($token !== false){
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(!empty($contactos['email2'])){
+        $token = strtok($contactos['email2'], "\/\,\;");
+        while($token !== false){
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(!empty($certificado['oc_email1'])){
+        $token = strtok($certificado['oc_email1'], "\/\,\;");
+        while($token !== false){
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(!empty($certificado['oc_email2'])){
+        $token = strtok($certificado['oc_email2'], "\/\,\;");
+        while($token !== false){
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+      }*/
+
+      $mail->AddAddress('soporteinforganic@gmail.com');
+
+      /*$mail->AddBCC($certificacion_spp);
+      $mail->AddBCC($direccion_spp);
+      $mail->AddBCC($finanzas_spp);
+      $mail->AddBCC($asistencia_spp);*/
+      $mail->AddAttachment($reporte);
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($mensaje_correo);
+      $mail->MsgHTML(utf8_decode($mensaje_correo));
+      //$mail->AddAttachment($pdf_listo, 'reporte.pdf');
+      //$mail->addStringAttachment($pdf_listo, 'reporte_trimestral.pdf'); // SE ENVIA LA CADENA DE TEXTO DEL PDF POR EMAIL
+      $mail->Send();
+      $mail->ClearAddresses();
+
+      $updateSQL = "UPDATE avisos_renovacion SET suspender = $time_actual, motivo_suspension = '$motivo_suspension' WHERE idaviso_renovacion = $idaviso_renovacion";
+      $ejecutar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
+      $estatus_interno = 11; // SUSPENDIDO
+      $updateSQL = "UPDATE opp SET estatus_interno = $estatus_interno WHERE idopp = $idopp";
+      $ejecutar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+}
+
+//// ENVIAR PRORROGA DEL PAGO
 
 if(isset($_POST['enviar_prorroga']) && $_POST['enviar_prorroga'] == 1){
 	$idopp = $_POST['idopp'];
@@ -648,6 +1022,11 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 					<?php
 						if(isset($registros['prorroga_inicio'])){
 							echo '<button class="btn btn-xs btn-warning" data-toggle="modal" data-target="#informacion_prorroga'.$registros['idcomprobante_pago'].'"><span class="glyphicon glyphicon-time" aria-hidden="true"></span></button> <a href="?OPP&detail&idopp='.$registros['idopp'].'"><b>'.$registros['abreviacion_opp'].'</b></a>';
+							if($fecha_actual > $registros['prorroga_fin']){
+								echo '<br>SE HA SUSPENDIDO A LA ORGANIZACIÓN';
+							}else{
+								echo '<br>ESTA ACTIVA';
+							}
 						?>
 						<!-- Modal Prorroga Organización -->
 				            <div class="modal fade" id="<?php echo 'informacion_prorroga'.$registros['idcomprobante_pago']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -1492,7 +1871,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				                    </div>
 				                    <div class="modal-footer">
 				                      	<input type="hidden" name="idopp" value="<?php echo $registros['idopp']; ?>">
-				                      	<input type="text" name="idsolicitud_certificacion" value="<?php echo $registros['idsolicitud_certificacion']; ?>">
+				                      	<input type="hidden" name="idsolicitud_certificacion" value="<?php echo $registros['idsolicitud_certificacion']; ?>">
 				                      	<input type="hidden" name="idcomprobante_pago" value="<?php echo $registros['idcomprobante_pago']; ?>">
 				                    	<input type="hidden" name="spp" value="<?php echo $registros['spp']; ?>">
 				                      	<input type="hidden" name="nombre_opp" value="<?php echo $registros['nombre_opp']; ?>">
