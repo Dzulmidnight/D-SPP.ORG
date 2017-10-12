@@ -43,6 +43,10 @@ $fecha = time();
 $anio = date('Y', time());
 $anio_actual = date('Y', time());
 
+$correo_certificacion = 'cert@spp.coop';
+$correo_finanzas = 'adm@spp.coop';
+
+
 if(isset($_POST['guardar_comprobante']) && !empty($_POST['guardar_comprobante'])){
 	$idsolicitud_certificacion = $_POST['idsolicitud_certificacion'];
 	$idmembresia = $_POST['idmembresia'];
@@ -327,12 +331,18 @@ if(isset($_POST['rechazar_comprobante'])){
 
 if(isset($_POST['enviar_prorroga']) && $_POST['enviar_prorroga'] == 1){
 	$idopp = $_POST['idopp'];
+	$idsolicitud_certificacion = $_POST['idsolicitud_certificacion'];
 	$nombre_opp = $_POST['nombre_opp'];
 	$abreviacion_opp = $_POST['abreviacion_opp'];
 	$idcomprobante_pago = $_POST['idcomprobante_pago'];
-	$prorroga_inicio = $_POST['prorroga_inicio'];
-	$prorroga_fin = $_POST['prorroga_fin'];
+
+	$prorroga_inicio = strtotime($_POST['prorroga_inicio']);
+	$prorroga_fin = strtotime($_POST['prorroga_fin']);
 	$justificacion_prorroga = $_POST['justificacion_prorroga'];
+
+	$query = "SELECT solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto1_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, opp.email FROM solicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE idsolicitud_certificacion = $idsolicitud_certificacion";
+	$consultar = mysql_query($query,$dspp) or die(mysql_error());
+	$correos_opp = mysql_fetch_assoc($consultar);
 
 
 	$asunto = "D-SPP | Prorroga Pago Membresia SPP aprobada";
@@ -356,7 +366,7 @@ if(isset($_POST['enviar_prorroga']) && $_POST['enviar_prorroga'] == 1){
 
               <tr>
                 <td colspan="2">
-                 <p>Estimados representantes de: <span style="color:red">'.$nombre_opp.'</span> ('.$abreviacion_opp.'), se ha aprobado una prorroga para realizar el pago de la membresía spp, dicha prorroga tiene un período del dia: <span style="color:red">'.$prorroga_inicio.'</span> al <span style="color:red">'.$prorroga_fin.'</span>.</p>
+                 <p>Estimados representantes de: <span style="color:red">'.$nombre_opp.'</span> ('.$abreviacion_opp.'), se ha aprobado una prorroga para realizar el pago de la membresía spp, dicha prorroga tiene un período del dia: <span style="color:red">'.date('d/m/Y',$prorroga_inicio).'</span> al <span style="color:red">'.date('d/m/Y',$prorroga_fin).'</span>.</p>
                  <p>Una vez finalizado el período de la prorroga, si aun no se ha cargado el comprobante de pago de la membresía SPP dentro del sistema D-SPP se procedera a suspender a la organización.</p>
                 </td>
               </tr>
@@ -371,31 +381,58 @@ if(isset($_POST['enviar_prorroga']) && $_POST['enviar_prorroga'] == 1){
 	      </html>
 	';
 
-	/*if(!empty($informacion['contacto1_email'])){
-		//$mail->AddAddress($informacion['contacto1_email']);
-		$token = strtok($informacion['contacto1_email'], "\/\,\;");
+	if(!empty($correos_opp['email'])){
+		$token = strtok($correos_opp['email'], "\/\,\;");
 		while ($token !== false)
 		{
 		  $mail->AddAddress($token);
 		  $token = strtok('\/\,\;');
 		}
-
 	}
-	if(!empty($informacion['email'])){
-		//$mail->AddAddress($informacion['email']);
-		$token = strtok($informacion['email'], "\/\,\;");
+	if(!empty($correos_opp['contacto1_email'])){
+		$token = strtok($correos_opp['contacto1_email'], "\/\,\;");
 		while ($token !== false)
 		{
 		  $mail->AddAddress($token);
 		  $token = strtok('\/\,\;');
-		} 
-	}*/
-	$mail->AddAddress('soporteinforganic@gmail.com');
+		}
+	}
+	if(!empty($correos_opp['contacto2_email'])){
+		$token = strtok($correos_opp['contacto2_email'], "\/\,\;");
+		while ($token !== false)
+		{
+		  $mail->AddAddress($token);
+		  $token = strtok('\/\,\;');
+		}
+	}
+	if(!empty($correos_opp['adm1_email'])){
+		$token = strtok($correos_opp['adm1_email'], "\/\,\;");
+		while ($token !== false)
+		{
+		  $mail->AddAddress($token);
+		  $token = strtok('\/\,\;');
+		}
+	}
+	if(!empty($correos_opp['adm2_email'])){
+		$token = strtok($correos_opp['adm2_email'], "\/\,\;");
+		while ($token !== false)
+		{
+		  $mail->AddAddress($token);
+		  $token = strtok('\/\,\;');
+		}
+	}
+
+	$mail->AddBCC($correo_certificacion);
+	$mail->AddBCC($correo_finanzas);
 	$mail->Subject = utf8_decode($asunto);
 	$mail->Body = utf8_decode($cuerpo_mensaje);
 	$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
 	$mail->Send();
 	$mail->ClearAddresses();
+
+	$updateSQL = "UPDATE comprobante_pago SET prorroga_inicio = $prorroga_inicio, prorroga_fin = $prorroga_fin, justificacion = '$justificacion_prorroga' WHERE idcomprobante_pago = $idcomprobante_pago";
+	$actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
 }
 
 if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
@@ -424,12 +461,12 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 	}else{
 		$q_anio = "AND FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '".$anio_membresia."'";
 	}
-	$query = "SELECT opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.monto_transferido, comprobante_pago.monto_recibido, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.validar1, comprobante_pago.aviso2, comprobante_pago.validar2, comprobante_pago.aviso3, comprobante_pago.validar3, comprobante_pago.notificacion_suspender, comprobante_pago.fecha_registro AS 'fecha_carga' FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 $q_estatus $q_pais $q_anio GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC";
+	$query = "SELECT opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.monto_transferido, comprobante_pago.monto_recibido, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.validar1, comprobante_pago.aviso2, comprobante_pago.validar2, comprobante_pago.aviso3, comprobante_pago.validar3, comprobante_pago.notificacion_suspender, comprobante_pago.fecha_registro AS 'fecha_carga', comprobante_pago.prorroga_inicio, comprobante_pago.prorroga_fin, comprobante_pago.justificacion FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 $q_estatus $q_pais $q_anio GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC";
 
 	$row_membresias = mysql_query($query, $dspp) or die(mysql_error());
 
 }else{
-	$row_membresias = mysql_query("SELECT opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.monto_transferido, comprobante_pago.monto_recibido, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.validar1, comprobante_pago.aviso2, comprobante_pago.validar2, comprobante_pago.aviso3, comprobante_pago.validar3, comprobante_pago.notificacion_suspender, comprobante_pago.fecha_registro AS 'fecha_carga' FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 AND FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '$anio_actual' GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC", $dspp) or die(mysql_error());
+	$row_membresias = mysql_query("SELECT opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.monto_transferido, comprobante_pago.monto_recibido, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.validar1, comprobante_pago.aviso2, comprobante_pago.validar2, comprobante_pago.aviso3, comprobante_pago.validar3, comprobante_pago.notificacion_suspender, comprobante_pago.fecha_registro AS 'fecha_carga', comprobante_pago.prorroga_inicio, comprobante_pago.prorroga_fin, comprobante_pago.justificacion FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 AND FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '$anio_actual' GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC", $dspp) or die(mysql_error());
 }
 
 
@@ -593,7 +630,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 			}
 
 			if($registros['estatus_membresia'] == 'EN ESPERA'){
-				$estatus = 'warning';
+				$estatus = '';
 			}else{
 				$estatus = 'success';
 			}
@@ -608,8 +645,53 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				
 				<!-- ABREVIACIÓN DE LA ORGANIZACIÓN -->
 				<td class="<?php echo $estatus; ?>">
-					<?php 
-						echo '<a href="?OPP&detail&idopp='.$registros['idopp'].'"><b>'.$registros['abreviacion_opp'].'</b></a>';
+					<?php
+						if(isset($registros['prorroga_inicio'])){
+							echo '<button class="btn btn-xs btn-warning" data-toggle="modal" data-target="#informacion_prorroga'.$registros['idcomprobante_pago'].'"><span class="glyphicon glyphicon-time" aria-hidden="true"></span></button> <a href="?OPP&detail&idopp='.$registros['idopp'].'"><b>'.$registros['abreviacion_opp'].'</b></a>';
+						?>
+						<!-- Modal Prorroga Organización -->
+				            <div class="modal fade" id="<?php echo 'informacion_prorroga'.$registros['idcomprobante_pago']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				            	<div class="modal-dialog modal-lg" role="document">
+				                  	<div class="modal-content">
+					                    <div class="modal-header">
+					                    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					                      	<h4 class="modal-title" id="myModalLabel">PRORROGA PARA LA ORGANIZACIÓN: <?php echo '<span style="color:red">'.$registros['nombre_opp'].'</span> ('.$registros['abreviacion_opp'].')'; ?></h4>
+					                    </div>
+					                    <div class="modal-body" style="font-size:12px;">
+					                    	<p>Información sobre la prorroga de la organización</p>
+					                    	<div class="col-md-6">
+					                    		<p><b>PERÍODO DE LA PRORROGA</b></p>
+					                    		<div class="row">
+					                    			<div class="col-xs-6">
+							                        	<label class="control-label" for="prorroga_inicio">Fecha de Inicio:</label>
+							                        	<input type="text" class="form-control" id="prorroga_inicio" name="prorroga_inicio" value="<?php echo date('d/m/Y', $registros['prorroga_inicio']); ?>" disabled>
+					                    			</div>
+					                    			<div class="col-xs-6">
+							                        	<label class="control-label" for="prorroga_fin">Fecha Final:</label>
+							                        	<input type="text" class="form-control" id="prorroga_fin" name="prorroga_fin" value="<?php echo date('d/m/Y', $registros['prorroga_fin']); ?>" disabled>
+					                    			</div>
+					                    		</div>
+
+					                    	</div>
+					                    	<div class="col-md-6">
+						                      	<div class="form-group has-success">
+						                        	<label class="control-label" for="justificacion_prorroga">JUSTIFICACIÓN DE LA PRORROGA:</label>
+						                        	<p class="well"><?php echo nl2br($registros['justificacion']); ?></p>
+						                        	
+						                      	</div>
+					                    	</div>
+					                    </div>
+					                    <div class="modal-footer">
+					                      	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+					                    </div>
+				                 	</div>
+				                </div>
+				           </div>
+
+						<?php
+						}else{
+							echo '<a href="?OPP&detail&idopp='.$registros['idopp'].'"><b>'.$registros['abreviacion_opp'].'</b></a>';
+						}
 					?>
 				</td>
 				<td><?php echo $registros['pais'] ?></td>
@@ -1344,11 +1426,11 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				                      	</div>
 				                    </div>
 				                    <div class="modal-footer">
-				                      	<input type="text" name="idopp" value="<?php echo $registros['idopp']; ?>">
+				                      	<input type="hidden" name="idopp" value="<?php echo $registros['idopp']; ?>">
 				                      	
-				                    	<input type="text" name="spp" value="<?php echo $registros['spp']; ?>">
-				                      	<input type="text" name="nombre_opp" value="<?php echo $registros['nombre_opp']; ?>">
-				                      	<input type="text" name="abreviacion_opp" value="<?php echo $registros['abreviacion_opp']; ?>">
+				                    	<input type="hidden" name="spp" value="<?php echo $registros['spp']; ?>">
+				                      	<input type="hidden" name="nombre_opp" value="<?php echo $registros['nombre_opp']; ?>">
+				                      	<input type="hidden" name="abreviacion_opp" value="<?php echo $registros['abreviacion_opp']; ?>">
 
 				                      	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 				                     	<button type="submit" class="btn btn-primary" name="enviar_suspension" onclick="return confirm('¿Desea continuar con la suspensión de la organización?');" value="1">Suspender Organización</button>
@@ -1368,9 +1450,15 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 					if($registros['notificacion_suspender'] && $registros['estatus_membresia'] == 'EN ESPERA' && !$registros['archivo']){
 					?>
 					<form action="" method="POST" enctype="multipart/form-data">
+						<?php 
+						if(!isset($registros['prorroga_inicio'])){
+						?>
 						<button class="btn btn-xs btn-info" data-toggle="modal" data-target="<?php echo '#prorroga_organizacion'.$registros['idcomprobante_pago']; ?>" ><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Prorroga</button>
+						<?php
+						}
+						 ?>
 
-					<!-- Modal Suspender Organización -->
+					<!-- Modal Prorroga Organización -->
 			            <div class="modal fade" id="<?php echo 'prorroga_organizacion'.$registros['idcomprobante_pago']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			            	<div class="modal-dialog modal-lg" role="document">
 			                  	<div class="modal-content">
@@ -1404,10 +1492,11 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				                    </div>
 				                    <div class="modal-footer">
 				                      	<input type="hidden" name="idopp" value="<?php echo $registros['idopp']; ?>">
-				                      	<input type="text" name="idcomprobante_pago" value="<?php echo $registros['idcomprobante_pago']; ?>">
+				                      	<input type="text" name="idsolicitud_certificacion" value="<?php echo $registros['idsolicitud_certificacion']; ?>">
+				                      	<input type="hidden" name="idcomprobante_pago" value="<?php echo $registros['idcomprobante_pago']; ?>">
 				                    	<input type="hidden" name="spp" value="<?php echo $registros['spp']; ?>">
-				                      	<input type="text" name="nombre_opp" value="<?php echo $registros['nombre_opp']; ?>">
-				                      	<input type="text" name="abreviacion_opp" value="<?php echo $registros['abreviacion_opp']; ?>">
+				                      	<input type="hidden" name="nombre_opp" value="<?php echo $registros['nombre_opp']; ?>">
+				                      	<input type="hidden" name="abreviacion_opp" value="<?php echo $registros['abreviacion_opp']; ?>">
 
 				                      	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 				                     	<button type="submit" class="btn btn-primary" name="enviar_prorroga" onclick="return confirm('¿Desea activar la prorroga de la organización?');" value="1">Enviar Prorroga</button>
