@@ -1025,7 +1025,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 							if($fecha_actual > $registros['prorroga_fin']){
 								echo '<br>SE HA SUSPENDIDO A LA ORGANIZACIÓN';
 							}else{
-								echo '<br>ESTA ACTIVA';
+								//echo '<br>ESTA ACTIVA';
 							}
 						?>
 						<!-- Modal Prorroga Organización -->
@@ -1154,7 +1154,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 											<input type="hidden" name="idmembresia" value="<?php echo $registros['idmembresia']; ?>">
 											<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
 											<button type="submit" name="aprobar_comprobante" value="<?php echo $registros['idmembresia']; ?>" class="btn btn-success">Autorizar membresia SPP</button>
-											<!--<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" onclick="return validar();">Guardar Comprobante</button>-->
+											<!--<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" >Guardar Comprobante</button>-->
 										</div>
 									</div>
 								</div>
@@ -1236,8 +1236,8 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 										<input type="hidden" name="idsolicitud_certificacion" value="<?php echo $registros['idsolicitud_certificacion']; ?>">
 										<input type="hidden" name="idmembresia" value="<?php echo $registros['idmembresia']; ?>">
 										<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-										<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" onclick="return validar();">Guardar Comprobante</button>
-										<!--<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" onclick="return validar();">Guardar Comprobante</button>-->
+										<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" >Guardar Comprobante</button>
+										<!--<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" >Guardar Comprobante</button>-->
 									</div>
 								</div>
 							</div>

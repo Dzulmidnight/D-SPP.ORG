@@ -464,7 +464,7 @@ function preguntar(){
                     $timeVencimiento = strtotime($opp['fecha_fin']);
                   
                    ?>
-                  <input type="date" name="vigencia_fin<?php echo $opp['idopp']; ?>" value="<?php echo $opp['fecha_fin']; ?>">
+                  <input type="date" name="vigencia_fin<?php echo $opp['idopp']; ?>" value="<?php echo $opp['fecha_fin']; ?>" readonly>
                 </td>
 
             <!--- INICIA ESTATUS_CERTIFICADO ---->

@@ -455,7 +455,7 @@ function preguntar(){
                     $timeVencimiento = strtotime($empresa['fecha_fin']);
                   
                    ?>
-                  <input type="date" name="vigencia_fin<?php echo $empresa['idempresa']; ?>" value="<?php echo $empresa['fecha_fin']; ?>">
+                  <input type="date" name="vigencia_fin<?php echo $empresa['idempresa']; ?>" value="<?php echo $empresa['fecha_fin']; ?>" readonly>
                 </td>
 
             <!--- INICIA ESTATUS_CERTIFICADO ---->
