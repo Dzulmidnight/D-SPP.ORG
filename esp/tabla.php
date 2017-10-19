@@ -41,7 +41,7 @@ function mayuscula($variable) {
 
 ?>
   <div class="col-md-12">
-    <table class="table table-bordered table-condensed" style="font-size:12px;">
+    <table class="table table-bordered table-condensed" style="font-size:11px;">
       <thead>
         <tr>
           <th colspan="28">CONTACTOS DE LAS ORGANIZACIONES</th>

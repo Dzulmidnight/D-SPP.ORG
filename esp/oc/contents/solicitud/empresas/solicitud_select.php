@@ -488,9 +488,9 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       /*if($mail->Send()){
         
-       echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+       echo "<script>alert('Correo enviado Exitosamente.');</script>";
       }else{
-        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');</script>";
    
       }*/
       $mail->Send();
@@ -833,10 +833,10 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->ClearAttachments();
       /*if($mail->Send()){
         $mail->ClearAddresses();
-        echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+        echo "<script>alert('Correo enviado Exitosamente.');</script>";
       }else{
         $mail->ClearAddresses();
-        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');</script>";
       }*/
       /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
 
@@ -1083,9 +1083,9 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       if($mail->Send()){
         
-       echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+       echo "<script>alert('Correo enviado Exitosamente.');</script>";
       }else{
-        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');</script>";
    
       }
       //$mail->Send();
@@ -1339,10 +1339,10 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       $mail->ClearAttachments();
       /*if($mail->Send()){
         $mail->ClearAddresses();
-        echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+        echo "<script>alert('Correo enviado Exitosamente.');</script>";
       }else{
         $mail->ClearAddresses();
-        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');</script>";
       }*/
 
       /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
@@ -1596,10 +1596,10 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     //$mail->ClearAddresses();
     if($mail->Send()){
       $mail->ClearAddresses();
-      echo "<script>alert('Se ha enviado el Formato, Dictamen e Informe de Evaluación, en breve sera contactado.');location.href ='javascript:history.back()';</script>";
+      echo "<script>alert('Se ha enviado el Formato, Dictamen e Informe de Evaluación, en breve sera contactado.');</script>";
     }else{
       $mail->ClearAddresses();
-      echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+      echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');</script>";
     }
     $mail->ClearAttachments();
   //termina enviar correo a ADM sobre documentación de Evaluación
