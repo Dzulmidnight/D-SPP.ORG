@@ -426,9 +426,9 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $mail->AddAddress($_POST['email']);
   $mail->AddAddress($_POST['contacto1_email']);
   $mail->AddBCC($spp_global);
-  if(!empty($opp['email1'])){
+  if(!empty($opp_detail['email1'])){
     //$mail->AddCC($oc['email1']);
-      $token = strtok($opp['email1'], "\/\,\;");
+      $token = strtok($opp_detail['email1'], "\/\,\;");
       while ($token !== false)
       {
         $mail->AddCC($token);
@@ -436,9 +436,9 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
       }
 
   }
-  if(!empty($opp['email2'])){
+  if(!empty($opp_detail['email2'])){
     //$mail->AddCC($oc['email2']);
-      $token = strtok($opp['email2'], "\/\,\;");
+      $token = strtok($opp_detail['email2'], "\/\,\;");
       while ($token !== false)
       {
         $mail->AddCC($token);
@@ -446,6 +446,8 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
       }
 
   }
+
+
   //se adjunta la cotización
   $mail->AddAttachment($cotizacion_opp);
 

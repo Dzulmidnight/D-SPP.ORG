@@ -185,16 +185,16 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
 
         //$mail->AddBCC($spp_global);
 
-        if(!empty($oc['email1'])){
-          $token = strtok($oc['email1'], "\/\,\;");
+        if(!empty($opp_detail['email1'])){
+          $token = strtok($opp_detail['email1'], "\/\,\;");
           while ($token !== false)
           {
             $mail->AddCC($token);
             $token = strtok('\/\,\;');
           }
         }
-        if(!empty($oc['email2'])){
-          $token = strtok($oc['email2'], "\/\,\;");
+        if(!empty($opp_detail['email2'])){
+          $token = strtok($opp_detail['email2'], "\/\,\;");
           while ($token !== false)
           {
             $mail->AddCC($token);

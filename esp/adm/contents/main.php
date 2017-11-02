@@ -67,5 +67,5 @@ $row_periodo = mysql_query("SELECT * FROM periodo_objecion");
   include('msj_renovacion_certificado.php');
   
   //echo '<p class="alert alert-danger">RENOVACIÓN REGISTRO</p>';
-  //include('msj_renovacion_registro.php');
+  include('msj_renovacion_registro.php');
 ?>
