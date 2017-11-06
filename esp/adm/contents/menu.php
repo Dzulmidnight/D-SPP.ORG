@@ -65,7 +65,7 @@ if (!function_exists("GetSQLValueString")) {
     <a href="?SOLICITUD&select">Solicitudes</a>
   </li>
   <li <?php if(isset($_GET['OPP'])){echo "class='active'"; } ?>>
-    <a href="?OPP&select">Información OPP</a>
+    <a href="?OPP&map">Información OPP</a>
   </li>
   <li <?php if(isset($_GET['OC'])){echo "class='active'"; } ?>>
     <a href="?OC&select">Información OC</a>

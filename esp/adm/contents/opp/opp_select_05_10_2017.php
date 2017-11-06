@@ -543,29 +543,7 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
 
  ?>
 
-<div class="row">
-  <div class="col-md-2">
-    <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-      <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Filtro Avanzado
-    </button>  
-  </div>
-  <div class="col-md-10">
-      <form action="" method="POST">
-        <div class="col-md-12">
-          <div class="input-group">
-            <span class="input-group-btn">
-              <button class="btn btn-success" name="busqueda_palabra" value="1" type="submit">Buscar</button>
-            </span>
-            <input type="text" class="form-control" name="palabra" placeholder="Buscar por: #SPP, Nombre, Abreviacion">
-          </div><!-- /input-group -->
-        </div>
-      </form>
-  </div>  
-</div>
 
-<!-- CUADRO DE BUSQUEDA AVANZADA -->
-<div class="collapse" id="collapseExample">
-  
     <form action="" method="POST">
       <div class="col-md-12 alert alert-info">
         <div class="text-center col-md-12">
@@ -634,11 +612,16 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
         </div>
       </div>
     </form>
-
-</div>
-<!-- TERMINA CUADRO DE BUSQUEDA ACANZADA -->
-
-
+    <form action="" method="POST">
+      <div class="col-md-12">
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button class="btn btn-success" name="busqueda_palabra" value="1" type="submit">Buscar</button>
+          </span>
+          <input type="text" class="form-control" name="palabra" placeholder="Buscar por: #SPP, Nombre, Abreviacion">
+        </div><!-- /input-group -->
+      </div>
+    </form>
 
   
   <!--<div class="panel-body">-->

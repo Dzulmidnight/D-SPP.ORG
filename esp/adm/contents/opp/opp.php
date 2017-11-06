@@ -1,7 +1,32 @@
 <ul class="nav nav-pills">
-	<li role="presentation" <?php if(isset($_GET['select']) || isset($_GET['filed'])){ echo "class='active'"; } ?>>
-		<a href="?OPP&select">OPP</a>
+	
+	<li role="presentation" <?php if(isset($_GET['map'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&map" aria-label="Left Align">
+			<span class="glyphicon glyphicon-globe" aria-hidden="true"></span> Distribución OPP
+		</a>
 	</li>
+	<li role="presentation" class="dropdown">
+	    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+	      Organizaciones <span class="caret"></span>
+	    </a>
+	    <ul class="dropdown-menu">
+			<li>
+				<a href="?OPP&proceso">En Proceso</a>
+			</li>
+			<li>
+				<a href="?OPP&nuevas">Nuevas</a>
+			</li>
+			<li>
+				<a href="?OPP&canceladas">Canceladas</a>
+			</li>
+			<li>
+				<a href="?OPP&archivadas">Archivadas</a>
+			</li>
+	    </ul>
+  	</li>
+	<!--<li role="presentation" <?php if(isset($_GET['select']) || isset($_GET['filed'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&select">OPP</a>
+	</li>-->
 	<li role="presentation" <?php if(isset($_GET['add'])){ echo "class='active'"; } ?>>
 		<a href="?OPP&add" aria-label="Left Align">
 			<span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> Nuevo OPP
@@ -17,10 +42,7 @@
 		</li>
 	<?php
 	}
-	 ?>
-	<li role="presentation">
-		
-	</li>
+	?>
 
 </ul>
 
@@ -38,8 +60,20 @@
 
 
 <?
+if(isset($_GET['map'])){include ("opp_map.php");}
+else
 if(isset($_GET['select'])){include ("opp_select.php");}
 else
+
+if(isset($_GET['proceso'])){include ("opp_proceso.php");}
+else
+if(isset($_GET['nuevas'])){include ("opp_nuevas.php");}
+else
+if(isset($_GET['canceladas'])){include ("opp_canceladas.php");}
+else
+if(isset($_GET['archivadas'])){include ("opp_archivadas.php");}
+else
+
 if(isset($_GET['add'])){include ("opp_add.php");}
 else
 if(isset($_GET['detail'])){include ("opp_detail.php");}
