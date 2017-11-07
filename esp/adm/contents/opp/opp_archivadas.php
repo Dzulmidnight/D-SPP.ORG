@@ -574,19 +574,9 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
           <b style="color:#d35400">Seleccione los parametros de los cuales desea realizar la busqueda</b>
         </div> 
         <div class="row">
-          <div class="col-xs-3">
-            Estatus de la Organización
-            <select name="buscar_oc" class="form-control">
-              <option value=''>Seleccione un estatus</option>
-              <option value="">Certificada</option>
-              <option value="">Solicitud Inicial</option>
-              <option value="">En renovación</option>
-              <option value="">Expirado</option>
-              <option value="">Sin avance</option>
-            </select>
-          </div>
 
-          <div class="col-xs-3">
+
+          <div class="col-xs-4">
             Organismo de Certificación
             <select name="buscar_oc" class="form-control">
               <option value=''>Selecciona un organismo de certificación</option>
@@ -597,7 +587,7 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
                ?>
             </select>
           </div>
-          <div class="col-xs-3">
+          <div class="col-xs-4">
             País
             <select name="buscar_pais" class="form-control">
               <option value=''>Selecciona un país</option>
@@ -608,7 +598,7 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
                ?>
             </select>
           </div>
-          <div class="col-xs-3">
+          <div class="col-xs-4">
             Producto
             <select class="form-control" name="buscar_producto" id="">
               <option value=''>Seleccione un producto</option>
@@ -710,9 +700,9 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
               <button class="btn btn-xs btn-danger" type="subtmit" value="2"  name="eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" >
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
               </button>        
-              <button class="btn btn-xs btn-info" type="subtmit" value="1" name="archivar" data-toggle="tooltip" data-placement="top" title="Archivar">
+              <!--<button class="btn btn-xs btn-info" type="subtmit" value="1" name="archivar" data-toggle="tooltip" data-placement="top" title="Archivar">
                 <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
-              </button> 
+              </button>--> 
           </form>
         </th>
       </tr>      

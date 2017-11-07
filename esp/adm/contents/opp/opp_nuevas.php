@@ -487,7 +487,9 @@ if(isset($_GET['query'])){
 
 
 }else{
-  $query_opp = "SELECT opp.idopp, opp.idoc, opp.password, opp.spp AS 'spp_opp', opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.pais, opp.email, opp.sitio_web, opp.telefono, opp.estatus_opp, opp.estatus_publico, opp.estatus_interno, opp.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', num_socios.numero, MAX(certificado.idcertificado) AS 'idcertificado', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.estatus_opp IS NULL) OR (opp.estatus_opp != 'ARCHIVADO') GROUP BY opp.idopp ORDER BY opp.abreviacion ASC";
+
+  ///CONSULTAMOS LAS ORGANIZACIONES ARCHIVADAS
+  $query_opp = "SELECT opp.idopp, opp.idoc, opp.password, opp.spp AS 'spp_opp', opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.pais, opp.email, opp.sitio_web, opp.telefono, opp.estatus_opp, opp.estatus_publico, opp.estatus_interno, opp.estatus_dspp, oc.idoc, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', estatus_interno.nombre 'nombre_interno', estatus_dspp.nombre 'nombre_dspp', num_socios.numero, MAX(certificado.idcertificado) AS 'idcertificado', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON opp.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp LEFT JOIN certificado ON opp.idopp = certificado.idopp WHERE opp.estatus_opp = 'ARCHIVADO' GROUP BY opp.idopp ORDER BY opp.abreviacion ASC";
 
 
   $queryExportar = "SELECT opp.*, contacto.*  FROM opp LEFT JOIN contacto ON opp.idopp = contacto.idopp WHERE (opp.estatus_opp IS NULL) OR (opp.estatus_opp != 'ARCHIVADO') ORDER BY opp.idopp ASC";
@@ -542,6 +544,98 @@ $row_pais = mysql_query("SELECT pais FROM opp GROUP BY pais", $dspp) or die(mysq
 $query_productos = mysql_query("SELECT producto_general FROM productos WHERE productos.idopp IS NOT NULL AND productos.producto_general IS NOT NULL GROUP BY producto_general ORDER BY productos.producto_general ASC",$dspp) or die(mysql_error());
 
  ?>
+
+<div class="row">
+  <div class="col-md-2">
+    <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+      <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Filtro Avanzado
+    </button>  
+  </div>
+  <div class="col-md-10">
+      <form action="" method="POST">
+        <div class="col-md-12">
+          <div class="input-group">
+            <span class="input-group-btn">
+              <button class="btn btn-success" name="busqueda_palabra" value="1" type="submit">Buscar</button>
+            </span>
+            <input type="text" class="form-control" name="palabra" placeholder="Buscar por: #SPP, Nombre, Abreviacion">
+          </div><!-- /input-group -->
+        </div>
+      </form>
+  </div>  
+</div>
+
+<!-- CUADRO DE BUSQUEDA AVANZADA -->
+<div class="collapse" id="collapseExample">
+  
+    <form action="" method="POST">
+      <div class="col-md-12 alert alert-info">
+        <div class="text-center col-md-12">
+          <b style="color:#d35400">Seleccione los parametros de los cuales desea realizar la busqueda</b>
+        </div> 
+        <div class="row">
+
+
+          <div class="col-xs-4">
+            Organismo de Certificación
+            <select name="buscar_oc" class="form-control">
+              <option value=''>Selecciona un organismo de certificación</option>
+              <?php 
+              while($oc = mysql_fetch_assoc($row_oc)){
+                echo "<option value='$oc[idoc]'>$oc[abreviacion]</option>";
+              }
+               ?>
+            </select>
+          </div>
+          <div class="col-xs-4">
+            País
+            <select name="buscar_pais" class="form-control">
+              <option value=''>Selecciona un país</option>
+              <?php 
+              while($pais = mysql_fetch_assoc($row_pais)){
+                echo "<option value='".$pais['pais']."'>".$pais['pais']."</option>";
+              }
+               ?>
+            </select>
+          </div>
+          <div class="col-xs-4">
+            Producto
+            <select class="form-control" name="buscar_producto" id="">
+              <option value=''>Seleccione un producto</option>
+              <?php 
+              while($lista_productos = mysql_fetch_assoc($query_productos)){
+                echo "<option value='$lista_productos[producto_general]'>$lista_productos[producto_general]</option>";
+              }
+               ?>
+            </select>
+          </div>
+          <!--<div class="col-xs-3">
+            Estatus Certificado
+            <select class="form-control" name="buscar_estatus" id="">
+              <option value=''>Estatus Certificado</option>
+              <option value="13">CERTIFICADA</option>
+              <option value="14">AVISO DE RENOVACIÓN</option>
+              <option value="15">CERTIFICADO POR EXPIRAR</option>
+              <option value="16">CERTIFICADO EXPIRADO</option>
+            </select>
+          </div>-->
+
+          <div class="col-xs-12">
+            <button type="submit" class="btn btn-success" name="busqueda_filtros" style="width:100%" value="1">Filtrar Información</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+</div>
+<!-- TERMINA CUADRO DE BUSQUEDA ACANZADA -->
+
+<div class="row">
+  <div class="col-md-12">
+    <h4>ORGANIZACIONES ARCHIVADAS</h4>
+  </div>  
+</div>
+
   
   <!--<div class="panel-body">-->
   <table class="table table-condensed table-bordered table-hover" style="font-size:11px;">
@@ -606,9 +700,9 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
               <button class="btn btn-xs btn-danger" type="subtmit" value="2"  name="eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" >
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
               </button>        
-              <button class="btn btn-xs btn-info" type="subtmit" value="1" name="archivar" data-toggle="tooltip" data-placement="top" title="Archivar">
+              <!--<button class="btn btn-xs btn-info" type="subtmit" value="1" name="archivar" data-toggle="tooltip" data-placement="top" title="Archivar">
                 <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
-              </button> 
+              </button>--> 
           </form>
         </th>
       </tr>      
@@ -959,3 +1053,14 @@ function guardarDatos(){
 
 
 </script>
+
+<?php 
+  $query = "SELECT * "
+ ?>
+<table class="table table-bordered">
+  <tr>
+    <td>adsfasf</td>
+    <td>adsfasf</td>
+    <td>adsfasf</td>
+  </tr>
+</table>

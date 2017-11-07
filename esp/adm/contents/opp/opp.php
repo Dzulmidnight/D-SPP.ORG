@@ -5,25 +5,20 @@
 			<span class="glyphicon glyphicon-globe" aria-hidden="true"></span> Distribución OPP
 		</a>
 	</li>
-	<li role="presentation" class="dropdown">
-	    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-	      Organizaciones <span class="caret"></span>
-	    </a>
-	    <ul class="dropdown-menu">
-			<li>
-				<a href="?OPP&proceso">En Proceso</a>
-			</li>
-			<li>
-				<a href="?OPP&nuevas">Nuevas</a>
-			</li>
-			<li>
-				<a href="?OPP&canceladas">Canceladas</a>
-			</li>
-			<li>
-				<a href="?OPP&archivadas">Archivadas</a>
-			</li>
-	    </ul>
-  	</li>
+
+	<li <?php if(isset($_GET['proceso'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&proceso&proceso_primera_vez">En Proceso</a>
+	</li>
+	<li <?php if(isset($_GET['nuevas'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&nuevas">Nuevas</a>
+	</li>
+	<li <?php if(isset($_GET['canceladas'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&canceladas">Canceladas</a>
+	</li>
+	<li <?php if(isset($_GET['archivadas'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&archivadas">Archivadas</a>
+	</li>
+
 	<!--<li role="presentation" <?php if(isset($_GET['select']) || isset($_GET['filed'])){ echo "class='active'"; } ?>>
 		<a href="?OPP&select">OPP</a>
 	</li>-->
