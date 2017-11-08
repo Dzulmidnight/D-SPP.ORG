@@ -55,6 +55,13 @@
 
 
 <?
+  function mayuscula($variable) {
+    $variable = strtr(strtoupper($variable),"àèìòùáéíóúçñäëïöü","ÀÈÌÒÙÁÉÍÓÚÇÑÄËÏÖÜ");
+    return $variable;
+  }
+  
+  mysql_select_db($database_dspp, $dspp);
+
 if(isset($_GET['map'])){include ("opp_map.php");}
 else
 if(isset($_GET['select'])){include ("opp_select.php");}
@@ -68,7 +75,6 @@ if(isset($_GET['canceladas'])){include ("opp_canceladas.php");}
 else
 if(isset($_GET['archivadas'])){include ("opp_archivadas.php");}
 else
-
 if(isset($_GET['add'])){include ("opp_add.php");}
 else
 if(isset($_GET['detail'])){include ("opp_detail.php");}
