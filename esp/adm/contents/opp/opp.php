@@ -9,8 +9,8 @@
 	<li <?php if(isset($_GET['proceso'])){ echo "class='active'"; } ?>>
 		<a href="?OPP&proceso&proceso_primera_vez">En Proceso</a>
 	</li>
-	<li <?php if(isset($_GET['nuevas'])){ echo "class='active'"; } ?>>
-		<a href="?OPP&nuevas">Nuevas</a>
+	<li <?php if(isset($_GET['certificadas'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&certificadas&nuevo_certificado">Certificadas</a>
 	</li>
 	<li <?php if(isset($_GET['canceladas'])){ echo "class='active'"; } ?>>
 		<a href="?OPP&canceladas">Canceladas</a>
@@ -69,7 +69,7 @@ else
 
 if(isset($_GET['proceso'])){include ("opp_proceso.php");}
 else
-if(isset($_GET['nuevas'])){include ("opp_nuevas.php");}
+if(isset($_GET['certificadas'])){include ("opp_certificadas.php");}
 else
 if(isset($_GET['canceladas'])){include ("opp_canceladas.php");}
 else
