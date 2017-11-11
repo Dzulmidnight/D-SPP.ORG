@@ -1086,7 +1086,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				<td class="text-center">
 					<?php 
 					if(isset($registros['archivo'])){
-						//echo 'Cargado el: '.date('d/m/Y',$registros['fecha_carga']);
+						echo 'Cargado el: '.date('d/m/Y',$registros['fecha_carga']);
 					?>
 						<a class="btn btn-xs btn-primary" style="width: 100%" href="<?php echo $registros['archivo']; ?>" target="_blank" data-toggle="tooltip" title="Descargar Comprobante">
 							<span class="glyphicon glyphicon-file" aria-hidden="true"></span> Descargar
@@ -1239,7 +1239,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 											</tr>
 											<tr>
 												<td colspan="2">
-													<label for="">Notas <?php echo 'IDADM: '.$_SESSION['idadministrador']; ?></label>
+													<label for="">Notas</label>
 													<textarea class="form-control" rows="4" name="notas_comprobante" id="notas_comprobante" cols="30" rows="10" placeholder="Notas sobre el comprobante de pago"></textarea>
 												</td>
 											</tr>
@@ -1263,7 +1263,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 					if(isset($registros['notas_comprobante'])){
 						echo '<button class="btn btn-xs btn-info" data-toggle="modal" data-target="#notas_comprobante'.$registros['idcomprobante_pago'].'"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>';
 					}else{
-						echo '<button class="btn btn-xs btn-default" data-toggle="modal" data-target="#cargar_comprobante'.$registros['idcomprobante_pago'].'"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>';
+						echo '<button class="btn btn-xs btn-default disabled" data-toggle="modal" data-target="#cargar_comprobante'.$registros['idcomprobante_pago'].'"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>';
 					}
 
 					if($registros['estatus_membresia'] == 'EN ESPERA' && isset($registros['archivo'])){
@@ -1372,7 +1372,9 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 															$detalle = mysql_fetch_assoc($consultar);
 															echo '<span class="alert alert-warning" style="padding:7px;">Administrador: <b style="color:red">'.$detalle['nombre'].'</b></span>';
 														}else if(isset($registros['cargado_idopp'])){
-
+															$consultar = mysql_query("SELECT abreviacion FROM opp WHERE idopp = $registros[cargado_idopp]", $dspp) or die(mysql_error());
+															$detalle = mysql_fetch_assoc($consultar);
+															echo '<span class="alert alert-warning" style="padding:7px;">Organización: <b style="color:red">'.$detalle['nombre'].'</b></span>';
 														}else{
 															echo 'No disponible';
 														}
@@ -1380,6 +1382,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 													</p>
 												</td>
 												<td width="50%">
+													<p>Fecha de carga del comprobante: <b><?php echo '<span style="color:red">'.date('d/m/Y', $registros['fecha_carga']).'</span>'; ?></b></p>
 													<p>
 														<a class="btn btn-sm btn-success" style="width:100%" target="_new" href="<?php echo $registros['archivo']; ?>">Descarga Comprobante</a>
 													</p>
@@ -1388,7 +1391,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 											<tr>
 												<td colspan="2">
 													<label for="">Notas sobre el comprobante de pago</label>
-													<textarea class="form-control" rows="4" name="notas_comprobante" id="notas_comprobante" cols="30" rows="10" placeholder="Notas sobre el comprobante de pago"><?php echo $registros['notas_comprobante']; ?></textarea>
+													<textarea class="form-control" rows="4" name="notas_comprobante" id="notas_comprobante" cols="30" rows="10" placeholder="Notas sobre el comprobante de pago" disabled><?php echo $registros['notas_comprobante']; ?></textarea>
 												</td>
 											</tr>
 										</table>
