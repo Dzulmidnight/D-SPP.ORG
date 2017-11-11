@@ -49,11 +49,14 @@ $correo_finanzas = 'adm@spp.coop';
 
 
 if(isset($_POST['guardar_comprobante']) && !empty($_POST['guardar_comprobante'])){
+	$idadministrador = $_SESSION['idadministrador'];
 	$idsolicitud_certificacion = $_POST['idsolicitud_certificacion'];
 	$idmembresia = $_POST['idmembresia'];
 	$idcomprobante_pago = $_POST['guardar_comprobante'];
 	$monto_transferido = $_POST['monto_transferido'].' '.$_POST['tipo_moneda_transferido'];
 	$monto_recibido = $_POST['monto_recibido'].' '.$_POST['tipo_moneda_recibido'];
+	$notas_comprobante = $_POST['notas_comprobante'];
+	$cargado_idadm = $idadministrador;
 
 	$estatus_dspp = 10; //membresia cargada
 	$estatus_comprobante = 'ENVIADO';
@@ -92,12 +95,14 @@ if(isset($_POST['guardar_comprobante']) && !empty($_POST['guardar_comprobante'])
 	$estatus_membresia = "APROBADA"; //se acepta la membresia
 	$estatus_dspp = 18; //MEMBRESIA APROBADA
 	//actualizamos comprobante_pago
-	$updateSQL = sprintf("UPDATE comprobante_pago SET estatus_comprobante = %s, archivo = %s, monto_transferido = %s, monto_recibido = %s, fecha_registro = %s WHERE idcomprobante_pago = %s",
+	$updateSQL = sprintf("UPDATE comprobante_pago SET estatus_comprobante = %s, archivo = %s, monto_transferido = %s, monto_recibido = %s, fecha_registro = %s, notas_comprobante = %s, cargado_idadm = %s WHERE idcomprobante_pago = %s",
 		GetSQLValueString($estatus_comprobante, "text"),
 		GetSQLValueString($comprobante_pago, "text"),
 		GetSQLValueString($monto_transferido, "text"),
 		GetSQLValueString($monto_recibido, "text"),
 		GetSQLValueString($fecha, "int"),
+		GetSQLValueString($notas_comprobante, "text"),
+		GetSQLValueString($cargado_idadm, "int"),
 		GetSQLValueString($idcomprobante_pago, "int"));
 	$actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 	//actualizamos la membresia
@@ -835,12 +840,12 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 	}else{
 		$q_anio = "AND FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '".$anio_membresia."'";
 	}
-	$query = "SELECT opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, solicitud_certificacion.idsolicitud_certificacion solicitud_certificacion.idoc, solicitud_certificacion.tipo_solicitud,  solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, proceso_certificacion.idproceso_certificacion, oc.abreviacion AS 'abreviacion_oc', proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.monto_transferido, comprobante_pago.monto_recibido, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.validar1, comprobante_pago.aviso2, comprobante_pago.validar2, comprobante_pago.aviso3, comprobante_pago.validar3, comprobante_pago.notificacion_suspender, comprobante_pago.fecha_registro AS 'fecha_carga', comprobante_pago.prorroga_inicio, comprobante_pago.prorroga_fin, comprobante_pago.justificacion FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 $q_estatus $q_pais $q_anio GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC";
+	$query = "SELECT opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, solicitud_certificacion.idsolicitud_certificacion solicitud_certificacion.idoc, solicitud_certificacion.tipo_solicitud,  solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, proceso_certificacion.idproceso_certificacion, oc.abreviacion AS 'abreviacion_oc', proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.monto_transferido, comprobante_pago.monto_recibido, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.validar1, comprobante_pago.aviso2, comprobante_pago.validar2, comprobante_pago.aviso3, comprobante_pago.validar3, comprobante_pago.notificacion_suspender, comprobante_pago.fecha_registro AS 'fecha_carga', comprobante_pago.prorroga_inicio, comprobante_pago.prorroga_fin, comprobante_pago.justificacion, comprobante_pago.notas_comprobante, comprobante_pago.cargado_idadm, comprobante_pago.cargado_idopp FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 $q_estatus $q_pais $q_anio GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC";
 
 	$row_membresias = mysql_query($query, $dspp) or die(mysql_error());
 
 }else{
-	$row_membresias = mysql_query("SELECT opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.idoc, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, oc.abreviacion AS 'abreviacion_oc', proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.monto_transferido, comprobante_pago.monto_recibido, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.validar1, comprobante_pago.aviso2, comprobante_pago.validar2, comprobante_pago.aviso3, comprobante_pago.validar3, comprobante_pago.notificacion_suspender, comprobante_pago.fecha_registro AS 'fecha_carga', comprobante_pago.prorroga_inicio, comprobante_pago.prorroga_fin, comprobante_pago.justificacion FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 AND FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '$anio_actual' GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC", $dspp) or die(mysql_error());
+	$row_membresias = mysql_query("SELECT opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.idoc, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, oc.abreviacion AS 'abreviacion_oc', proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.monto_transferido, comprobante_pago.monto_recibido, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.validar1, comprobante_pago.aviso2, comprobante_pago.validar2, comprobante_pago.aviso3, comprobante_pago.validar3, comprobante_pago.notificacion_suspender, comprobante_pago.fecha_registro AS 'fecha_carga', comprobante_pago.prorroga_inicio, comprobante_pago.prorroga_fin, comprobante_pago.justificacion, comprobante_pago.notas_comprobante, comprobante_pago.cargado_idadm, comprobante_pago.cargado_idopp FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 AND FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '$anio_actual' GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC", $dspp) or die(mysql_error());
 }
 
 
@@ -943,6 +948,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 			<th class="text-center" style="width:140px;">Organización</th>
 			<th class="text-center" style="width:120px;">País</th>
 			<th class="text-center" style="width:110px;">Comprobante</th>
+			<th class="text-center" style="width:65px;"><a data-toggle="tooltip" data-placement="top" title="Notas sobre los comprobantes de pago" href="#">Notas</a></th>
 			<th class="text-center">Fecha dictamen</th>
 			<th class="text-center">Recordatorio 1</th>
 			<th class="text-center">Recordatorio 2</th>
@@ -1073,7 +1079,10 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 						}
 					?>
 				</td>
+				<!-- PAIS DE LA ORGANIZACIÓN -->
 				<td><?php echo $registros['pais'] ?></td>
+
+				<!-- CARGAR O DESCARGAR EL COMPROBANTE DE PAGO -->
 				<td class="text-center">
 					<?php 
 					if(isset($registros['archivo'])){
@@ -1082,7 +1091,6 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 						<a class="btn btn-xs btn-primary" style="width: 100%" href="<?php echo $registros['archivo']; ?>" target="_blank" data-toggle="tooltip" title="Descargar Comprobante">
 							<span class="glyphicon glyphicon-file" aria-hidden="true"></span> Descargar
 						</a>
-
 					<?php
 					}else{
 						echo '<p style="color:red">No disponible</p>';
@@ -1154,7 +1162,6 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 											<input type="hidden" name="idmembresia" value="<?php echo $registros['idmembresia']; ?>">
 											<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
 											<button type="submit" name="aprobar_comprobante" value="<?php echo $registros['idmembresia']; ?>" class="btn btn-success">Autorizar membresia SPP</button>
-											<!--<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" >Guardar Comprobante</button>-->
 										</div>
 									</div>
 								</div>
@@ -1230,6 +1237,12 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 													<input type="file" id="comprobante_de_pago" name="comprobante_de_pago" class="form-control">
 												</td>
 											</tr>
+											<tr>
+												<td colspan="2">
+													<label for="">Notas <?php echo 'IDADM: '.$_SESSION['idadministrador']; ?></label>
+													<textarea class="form-control" rows="4" name="notas_comprobante" id="notas_comprobante" cols="30" rows="10" placeholder="Notas sobre el comprobante de pago"></textarea>
+												</td>
+											</tr>
 										</table>
 									</div>
 									<div class="modal-footer">
@@ -1237,6 +1250,154 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 										<input type="hidden" name="idmembresia" value="<?php echo $registros['idmembresia']; ?>">
 										<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
 										<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" >Guardar Comprobante</button>
+										<!--<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" >Guardar Comprobante</button>-->
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</td>
+				<!-- CONSULTAR NOTAS SOBRE EL COMPROBANTE DE PAGO -->
+				<td class="text-center">
+					<?php 
+					if(isset($registros['notas_comprobante'])){
+						echo '<button class="btn btn-xs btn-info" data-toggle="modal" data-target="#notas_comprobante'.$registros['idcomprobante_pago'].'"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>';
+					}else{
+						echo '<button class="btn btn-xs btn-default" data-toggle="modal" data-target="#cargar_comprobante'.$registros['idcomprobante_pago'].'"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>';
+					}
+
+					if($registros['estatus_membresia'] == 'EN ESPERA' && isset($registros['archivo'])){
+					?>
+						<form action="" method="POST" style="display:inline-block">
+							<!-- BOTON AUTORIZAR MEMBRESIA -->
+							<button class="btn btn-xs btn-success" type="button" data-toggle="modal" data-target="<?php echo '#aprobar_comprobante'.$registros['idcomprobante_pago']; ?>" data-toggle="tooltip" title="Autorizar membresia">
+								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Autorizar
+							</button>
+
+							<!-- INICIA MODAL PARA AUTORIZAR MEMBRESIA -->
+							<div class="modal fade" id="<?php echo 'notas_comprobante'.$registros['idcomprobante_pago']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+											<h4 class="modal-title" id="myModalLabel">Notas sobre el comprobante de pago</h4>
+										</div>
+										<div class="modal-body">
+											<table class="table text-left">
+												<tr>
+													<td width="50%">
+														<p><b>Organización</b></p>
+														<p>
+															<?php echo $registros['nombre_opp'].' (<span style="color:red">'.$registros['abreviacion_opp'].'</span>)'; ?>
+														</p>
+													</td>
+													<td width="50%">
+														<p>
+															<a data-toggle="tooltip" data-placement="top" title="Importe calculado por el sistema" href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><b> Importe de la Membresía SPP:</b></a>
+														</p>
+														<p style="color:red"><?php echo $registros['monto']; ?></p>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<p>
+															<a data-toggle="tooltip" data-placement="top" title="Monto que depósito la organización" href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><b> Monto transferido:</b></a>
+														</p>
+														<p>
+															<input type="text" id="monto_transferido" name="monto_transferido" class="form-control" style="width: 60%;display:inline" placeholder="0000.00">
+															<select class="form-control" style="width: 30%;display: inline" name="tipo_moneda_transferido" id="tipo_moneda_transferido">
+																<option value="USD">USD</option>
+																<option value="MX">MXN</option>
+															</select>
+														</p>
+													</td>
+													<td class="success">
+														<p>
+															<a data-toggle="tooltip" data-placement="top" title="Monto ingresado al final, después de las comisiones" href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><b> Monto recibido:</b></a>
+														</p>
+														<p>
+															<input type="text" id="monto_recibido" name="monto_recibido" class="form-control" style="width: 60%;display:inline" placeholder="0000.00">
+															<select class="form-control" style="width: 30%;display: inline" name="tipo_moneda_recibido" id="tipo_moneda_recibido">
+																<option value="USD">USD</option>
+																<option value="MX">MXN</option>
+															</select>
+														</p>
+													</td>
+												</tr>
+
+											</table>
+										</div>
+										<div class="modal-footer">
+											<input type="hidden" name="idmembresia" value="<?php echo $registros['idmembresia']; ?>">
+											<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+											<button type="submit" name="aprobar_comprobante" value="<?php echo $registros['idmembresia']; ?>" class="btn btn-success">Autorizar membresia SPP</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- TERMINA MODAL PARA AUTORIZAR MEMBRESIA -->
+
+							<!-- BOTON DENEGAR MEMBRESIA -->
+							<button name="rechazar_comprobante" value="<?php echo $registros['idmembresia']; ?>" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Rechazar membresia" onclick="return confirm('¿Desea Rechazar el Comprobante de Pago?');" >
+								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Rechazar
+							</button>
+
+							<input type="hidden" name="idcomprobante_pago" value="<?php echo $registros['idcomprobante_pago']; ?>">
+							<input type="hidden" name="idsolicitud_certificacion" value="<?php echo $registros['idsolicitud_certificacion']; ?>">
+						</form>
+					<?php
+					}
+					 ?>
+
+					<!-- MODAL PARA CONSULTAR LAS NOTAS DEL COMPROBANTE DE PAGO -->
+					<form action="" method="POST" enctype="multipart/form-data">
+						<div class="modal fade" id="<?php echo 'notas_comprobante'.$registros['idcomprobante_pago']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<h4 class="modal-title" id="myModalLabel">Notas sobre el comprobante de pago</h4>
+									</div>
+									<div class="modal-body">
+										<table class="table text-left">
+											<tr>
+												<td width="50%">
+													<p>
+														<a data-toggle="tooltip" data-placement="top" title="Administrador u Organización encargada de cargar el comprobante" href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><b> Cargado por:</b></a>
+													</p>
+													<p>
+														<?php 
+														if(isset($registros['cargado_idadm'])){
+															$consultar = mysql_query("SELECT nombre FROM adm WHERE idadm = $registros[cargado_idadm]", $dspp) or die(mysql_error());
+															$detalle = mysql_fetch_assoc($consultar);
+															echo '<span class="alert alert-warning" style="padding:7px;">Administrador: <b style="color:red">'.$detalle['nombre'].'</b></span>';
+														}else if(isset($registros['cargado_idopp'])){
+
+														}else{
+															echo 'No disponible';
+														}
+														 ?>
+													</p>
+												</td>
+												<td width="50%">
+													<p>
+														<a class="btn btn-sm btn-success" style="width:100%" target="_new" href="<?php echo $registros['archivo']; ?>">Descarga Comprobante</a>
+													</p>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="2">
+													<label for="">Notas sobre el comprobante de pago</label>
+													<textarea class="form-control" rows="4" name="notas_comprobante" id="notas_comprobante" cols="30" rows="10" placeholder="Notas sobre el comprobante de pago"><?php echo $registros['notas_comprobante']; ?></textarea>
+												</td>
+											</tr>
+										</table>
+									</div>
+									<div class="modal-footer">
+										<input type="hidden" name="idsolicitud_certificacion" value="<?php echo $registros['idsolicitud_certificacion']; ?>">
+										<input type="hidden" name="idmembresia" value="<?php echo $registros['idmembresia']; ?>">
+										<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+										<!--<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" >Guardar Comprobante</button>-->
 										<!--<button type="submit" name="guardar_comprobante" value="<?php echo $registros['idcomprobante_pago']; ?>" class="btn btn-primary" >Guardar Comprobante</button>-->
 									</div>
 								</div>

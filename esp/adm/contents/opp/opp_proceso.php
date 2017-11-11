@@ -548,8 +548,8 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
 <div class="row">
   <div class="col-md-12">
     <div class="btn-group" role="group" aria-label="...">
-      <a class="btn btn-sm <?php if(isset($_GET['proceso_primera_vez'])){ echo 'btn-warning'; }else{ echo 'btn-default'; } ?>" href="?OPP&proceso&proceso_primera_vez">1ª Vez</a>
-      <a class="btn btn-sm <?php if(isset($_GET['proceso_renovacion'])){ echo 'btn-warning'; }else{ echo 'btn-default'; } ?>" href="?OPP&proceso&proceso_renovacion">Renovación</a>
+      <a class="btn btn-sm <?php if(isset($_GET['proceso_no_iniciado'])){ echo 'btn-warning'; }else{ echo 'btn-default'; } ?>" href="?OPP&proceso&proceso_no_iniciado.php">No Iniciado</a>
+      <a class="btn btn-sm <?php if(isset($_GET['proceso_primera_vez'])){ echo 'btn-warning'; }else{ echo 'btn-default'; } ?>" href="?OPP&proceso&proceso_primera_vez">Iniciado 1º Vez</a>
     </div>
     <hr style="margin-top:0px;">
   </div>
@@ -558,8 +558,8 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
   <?php 
   if(isset($_GET['proceso_primera_vez'])){
     include('proceso_primera_vez.php');
-  }else if(isset($_GET['proceso_renovacion'])){
-    include('proceso_renovacion.php');
+  }else if(isset($_GET['proceso_no_iniciado'])){
+    include('proceso_no_iniciado.php');
   }else{
     echo 'NADA';
   }

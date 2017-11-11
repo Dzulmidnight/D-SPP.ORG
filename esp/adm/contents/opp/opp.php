@@ -5,7 +5,9 @@
 			<span class="glyphicon glyphicon-globe" aria-hidden="true"></span> Distribución OPP
 		</a>
 	</li>
-
+	<li <?php if(isset($_GET['sin_solicitud'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&sin_solicitud">Sin Solicitud</a>
+	</li>
 	<li <?php if(isset($_GET['proceso'])){ echo "class='active'"; } ?>>
 		<a href="?OPP&proceso&proceso_primera_vez">En Proceso</a>
 	</li>
@@ -14,6 +16,9 @@
 	</li>
 	<li <?php if(isset($_GET['canceladas'])){ echo "class='active'"; } ?>>
 		<a href="?OPP&canceladas">Canceladas</a>
+	</li>
+	<li <?php if(isset($_GET['suspendidas'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&suspendidas">Suspendidas</a>
 	</li>
 	<li <?php if(isset($_GET['archivadas'])){ echo "class='active'"; } ?>>
 		<a href="?OPP&archivadas">Archivadas</a>
@@ -64,12 +69,15 @@
 
 if(isset($_GET['map'])){include ("opp_map.php");}
 else
+if(isset($_GET['sin_solicitud'])){include ("opp_sin_solicitud.php");}
+else
 if(isset($_GET['select'])){include ("opp_select.php");}
 else
-
 if(isset($_GET['proceso'])){include ("opp_proceso.php");}
 else
 if(isset($_GET['certificadas'])){include ("opp_certificadas.php");}
+else
+if(isset($_GET['suspendidas'])){include ("opp_suspendidas.php");}
 else
 if(isset($_GET['canceladas'])){include ("opp_canceladas.php");}
 else
