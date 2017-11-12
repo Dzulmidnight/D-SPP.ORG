@@ -1269,11 +1269,6 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 					if($registros['estatus_membresia'] == 'EN ESPERA' && isset($registros['archivo'])){
 					?>
 						<form action="" method="POST" style="display:inline-block">
-							<!-- BOTON AUTORIZAR MEMBRESIA -->
-							<button class="btn btn-xs btn-success" type="button" data-toggle="modal" data-target="<?php echo '#aprobar_comprobante'.$registros['idcomprobante_pago']; ?>" data-toggle="tooltip" title="Autorizar membresia">
-								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Autorizar
-							</button>
-
 							<!-- INICIA MODAL PARA AUTORIZAR MEMBRESIA -->
 							<div class="modal fade" id="<?php echo 'notas_comprobante'.$registros['idcomprobante_pago']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 								<div class="modal-dialog" role="document">
@@ -1338,12 +1333,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 							<!-- TERMINA MODAL PARA AUTORIZAR MEMBRESIA -->
 
 							<!-- BOTON DENEGAR MEMBRESIA -->
-							<button name="rechazar_comprobante" value="<?php echo $registros['idmembresia']; ?>" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Rechazar membresia" onclick="return confirm('¿Desea Rechazar el Comprobante de Pago?');" >
-								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Rechazar
-							</button>
 
-							<input type="hidden" name="idcomprobante_pago" value="<?php echo $registros['idcomprobante_pago']; ?>">
-							<input type="hidden" name="idsolicitud_certificacion" value="<?php echo $registros['idsolicitud_certificacion']; ?>">
 						</form>
 					<?php
 					}

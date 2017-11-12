@@ -6,7 +6,10 @@
 		</a>
 	</li>
 	<li <?php if(isset($_GET['sin_solicitud'])){ echo "class='active'"; } ?>>
-		<a href="?OPP&sin_solicitud">Sin Solicitud</a>
+		<a href="?OPP&sin_solicitud">1.- En Proceso</a>
+	</li>
+	<li <?php if(isset($_GET['proceso_prueba'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&proceso_prueba">2.- En Proceso Prueba</a>
 	</li>
 	<li <?php if(isset($_GET['proceso'])){ echo "class='active'"; } ?>>
 		<a href="?OPP&proceso&proceso_primera_vez">En Proceso</a>
@@ -70,6 +73,8 @@
 if(isset($_GET['map'])){include ("opp_map.php");}
 else
 if(isset($_GET['sin_solicitud'])){include ("opp_sin_solicitud.php");}
+else
+if(isset($_GET['proceso_prueba'])){include ("opp_proceso_prueba.php");}
 else
 if(isset($_GET['select'])){include ("opp_select.php");}
 else

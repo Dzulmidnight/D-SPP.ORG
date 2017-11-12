@@ -405,10 +405,11 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
   $insertar = mysql_query($insertSQL,$dspp) or die(mysql_error());
 
   //actualizamos el comprobante de pago membresia
-  $updateSQL = sprintf("UPDATE comprobante_pago SET estatus_comprobante = %s, archivo = %s, fecha_registro = %s WHERE idcomprobante_pago = %s",
+  $updateSQL = sprintf("UPDATE comprobante_pago SET estatus_comprobante = %s, archivo = %s, fecha_registro = %s, cargado_idopp = %s WHERE idcomprobante_pago = %s",
     GetSQLValueString($estatus_comprobante, "text"),
     GetSQLValueString($comprobante_pago, "text"),
     GetSQLValueString($fecha, "int"),
+    GetSQLValueString($idopp, "int"),
     GetSQLValueString($_POST['idcomprobante_pago'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 

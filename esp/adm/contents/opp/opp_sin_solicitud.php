@@ -201,7 +201,11 @@
     </td>
     <!-- ESTATUS OPP -->
     <td>
-      <?php echo $informacion['opp_estatus_opp']; ?>
+      <?php 
+      $consultar10 = mysql_query("SELECT nombre FROM estatus_dspp WHERE idestatus_dspp = '$informacion[opp_estatus_opp]'", $dspp) or die(mysql_error());
+      $detalle10 = mysql_fetch_assoc($consultar10); 
+      echo $informacion['opp_estatus_opp'].' - <span style="color:green">'.$detalle10['nombre'].'</span>'; 
+      ?>
     </td>
     <!-- ESTATUS PUBLICO -->
     <td>
@@ -211,16 +215,24 @@
     </td>
     <!-- ESTATUS INTERNO -->
     <td>
-      <?php 
-        echo '<p>SOLICITUD: '.$informacion['solicitud_estatus_interno'].'</p>';
-        echo '<p>OPP: '.$informacion['opp_estatus_interno'].'</p>';
+      <?php
+      $consultar3 = mysql_query("SELECT nombre FROM estatus_interno WHERE idestatus_interno = '$informacion[solicitud_estatus_interno]'", $dspp) or die(mysql_error());
+      $detalle3 = mysql_fetch_assoc($consultar3);
+        echo '<p>SOLICITUD: '.$informacion['solicitud_estatus_interno'].' - <span style="color:blue">'.$detalle3['nombre'].'</span></p>';
+      $consultar4 = mysql_query("SELECT nombre FROM estatus_interno WHERE idestatus_interno = '$informacion[opp_estatus_interno]'", $dspp) or die(mysql_error());
+      $detalle4 = mysql_fetch_assoc($consultar4);
+        echo '<p>OPP: '.$informacion['opp_estatus_interno'].' - <span style="color:red">'.$detalle4['nombre'].'</span></p>';
        ?>
     </td>
     <!-- ESTATUS DSPP -->
     <td>
-      <?php 
-        echo '<p>SOLICITUD: '.$informacion['solicitud_estatus_dspp'].'</p>';
-        echo '<p>OPP: '.$informacion['opp_estatus_dspp'].'</p>';
+      <?php
+      $consultar5 = mysql_query("SELECT nombre FROM estatus_dspp WHERE idestatus_dspp = '$informacion[solicitud_estatus_dspp]'", $dspp) or die(mysql_error());
+      $detalle5 = mysql_fetch_assoc($consultar5);
+        echo '<p>SOLICITUD: '.$informacion['solicitud_estatus_dspp'].' - <span style="color:blue">'.$detalle5['nombre'].'</span></p>';
+      $consultar6 = mysql_query("SELECT nombre FROM estatus_dspp WHERE idestatus_dspp = '$informacion[opp_estatus_dspp]'", $dspp) or die(mysql_error());
+      $detalle7 = mysql_fetch_assoc($consultar6);
+        echo '<p>OPP: '.$informacion['opp_estatus_dspp'].' - <span style="color:red">'.$detalle7['nombre'].'</span></p>';
        ?>
     </td>
     <!-- ULTIMA FECHA DE CERTIFICADO -->
