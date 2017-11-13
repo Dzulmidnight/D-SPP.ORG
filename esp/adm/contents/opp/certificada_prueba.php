@@ -663,12 +663,14 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
   echo '<p>'.$total.'</p>';
   echo '<p>'.$ids.'</p>';*/
 
+
+
   //$query = "SELECT opp.idopp, opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE opp.idopp = 11 OR opp.idopp = 13 OR opp.idopp = 18 OR opp.idopp = 19 OR opp.idopp = 41 OR opp.idopp = 45 OR opp.idopp = 51 OR opp.idopp = 74 OR opp.idopp = 78 OR opp.idopp = 79 OR opp.idopp = 87 OR opp.idopp = 93 OR opp.idopp = 94 OR opp.idopp = 119 OR opp.idopp = 150 OR opp.idopp = 151 OR opp.idopp = 202 OR opp.idopp = 209 OR opp.idopp = 221 OR opp.idopp = 226 OR opp.idopp = 228 OR opp.idopp = 240 OR  opp.idopp = 242 OR opp.idopp = 95 OR opp.idopp = 115 OR opp.idopp = 156 OR opp.idopp = 171 OR opp.idopp = 208 OR opp.idopp = 218 OR opp.idopp = 225 OR opp.idopp = 229 OR opp.idopp = 213 OR opp.idopp = 227 OR opp.idopp = 244 OR opp.idopp = 245 OR opp.idopp = 248  OR opp.idopp = 10 OR opp.idopp = 17 OR opp.idopp = 25 OR opp.idopp = 26 OR opp.idopp = 38 OR opp.idopp = 48 OR opp.idopp = 50 OR opp.idopp = 54 OR opp.idopp = 55 OR opp.idopp = 56 OR opp.idopp = 61 OR opp.idopp = 70 OR opp.idopp = 71 OR opp.idopp = 72 OR opp.idopp = 77 OR opp.idopp = 82 OR opp.idopp = 90 OR opp.idopp = 102 OR opp.idopp = 107 OR opp.idopp = 118 OR opp.idopp = 125 OR opp.idopp = 128 OR opp.idopp = 129 OR opp.idopp = 131 OR opp.idopp = 136 OR opp.idopp = 152 OR opp.idopp = 184 OR opp.idopp = 193 OR opp.idopp = 194 GROUP BY opp.idopp ORDER BY opp.idopp";
   $query = "SELECT opp.idopp, opp.abreviacion, solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.tipo_solicitud, COUNT(idsolicitud_certificacion) AS 'total_solicitudes' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE (opp.estatus_opp != 'CANCELADO' AND opp.estatus_opp != 'SUSPENDIDO' AND opp.estatus_opp != 'CERTIFICADO' AND opp.estatus_opp != 'ARCHIVADO') AND opp.estatus_opp = 0 OR opp.estatus_opp IS NULL OR opp.estatus_opp = 1 OR opp.estatus_opp = 4 GROUP BY opp.idopp ORDER BY opp.idopp";
   $consultar = mysql_query($query,$dspp) or die(mysql_error());
   $cont = 1;
   echo '<table class="table table-bordered">';
-  while($detalle = mysql_fetch_assoc($consultar)){
+  /*while($detalle = mysql_fetch_assoc($consultar)){
     echo '<tr>';
       echo '<td>'.$cont.'</td>';
       echo '<td>'.$detalle['idopp'].'</td>';
@@ -677,31 +679,60 @@ $query_productos = mysql_query("SELECT producto_general FROM productos WHERE pro
       echo '<td>TOTAL: '.$detalle['total_solicitudes'].'</td>';
     echo '</tr>';
     $cont++;
-  }
+  }*/
   echo '</table>';
 
   $array_opp = '';
-  $consultar_numero = mysql_query("SELECT opp.idopp, solicitud_certificacion.idsolicitud_certificacion, COUNT(idsolicitud_certificacion) AS 'total_solicitudes' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE (opp.estatus_opp != 'CANCELADO' AND opp.estatus_opp != 'SUSPENDIDO' AND opp.estatus_opp != 'CERTIFICADO' AND opp.estatus_opp != 'ARCHIVADO') AND opp.estatus_opp = 0 OR opp.estatus_opp IS NULL OR opp.estatus_opp = 1 OR opp.estatus_opp = 4 GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+  $array_opp2 = '';
+  $consultar_numero = mysql_query("SELECT opp.idopp, opp.abreviacion, solicitud_certificacion.idsolicitud_certificacion, COUNT(idsolicitud_certificacion) AS 'total_solicitudes' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE (opp.estatus_opp != 'CANCELADO' AND opp.estatus_opp != 'SUSPENDIDO' AND opp.estatus_opp != 'CERTIFICADO' AND opp.estatus_opp != 'ARCHIVADO') AND opp.estatus_opp = 0 OR opp.estatus_opp IS NULL OR opp.estatus_opp = 1 OR opp.estatus_opp = 4 GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
   $num_registros = mysql_num_rows($consultar_numero);
   $contador = 1;
   while ($detalle_numero = mysql_fetch_assoc($consultar_numero)) {
     if($detalle_numero['total_solicitudes'] <= 1){
       if($contador < $num_registros){
-        $array_opp .= 'opp.idopp = '.$detalle_numero['idopp'].' OR ';
+        $array_opp .= 'opp.idopp(<span style="color:red">'.$detalle_numero['abreviacion'].'</span>) = '.$detalle_numero['idopp'].' OR ';
+        $array_opp2 .= 'opp.idopp != '.$detalle_numero['idopp'].' AND ';
       }else{
-        $array_opp .= 'opp.idopp = '.$detalle_numero['idopp'];
+        $array_opp .= 'opp.idopp(<span style="color:red">'.$detalle_numero['abreviacion'].'</span>) = '.$detalle_numero['idopp'];
+        $array_opp2 .= 'opp.idopp != '.$detalle_numero['idopp'];
       }
     }
     $contador++;
   }
+
   echo '<p>'.$array_opp.'</p>';
+  echo '<br>';
+  echo '<p>'.$array_opp2.'</p>';
 
+  echo '<h5>ARCHIVADAS</h5>';
 
+  $array_archivadas = '';
+  $array_archivadas2 = '';
+  $contador = 1;
+  $opp_archivadas = mysql_query("SELECT opp.idopp, opp.abreviacion, solicitud_certificacion.idsolicitud_certificacion FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE opp.estatus_opp = 'ARCHIVADO' GROUP BY opp.idopp ORDER BY opp.nombre", $dspp) or die(mysql_error());
+  $total_archivadas = mysql_num_rows($opp_archivadas);
+  echo '<p>'.$total_archivadas.'</p>';
+  while($archivadas = mysql_fetch_assoc($opp_archivadas)){
+    if($contador < $total_archivadas){
+      $array_archivadas2 .= 'opp.idopp(<span style="color:red">'.$archivadas['abreviacion'].'</span>) = '.$archivadas['idopp'].' OR ';
+      $array_archivadas .= 'opp.idopp != '.$archivadas['idopp'].' AND ';
+    }else{
+      $array_archivadas2 .= 'opp.idopp(<span style="color:red">'.$archivadas['abreviacion'].'</span>) = '.$archivadas['idopp'];
+      $array_archivadas .= 'opp.idopp != '.$archivadas['idopp'];
+    }
+    $contador++;
+  }
+  echo $array_archivadas2;
+  echo '<hr>';
   //$query = "SELECT opp.idopp, opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_fin FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE (opp.estatus_opp != 'CANCELADO' AND opp.estatus_opp != 'SUSPENDIDO' AND opp.estatus_opp != 'CERTIFICADO' AND opp.estatus_opp != 'ARCHIVADO' AND solicitud_certificacion.tipo_solicitud != 'RENOVACION') AND opp.estatus_opp = 0 OR opp.estatus_opp IS NULL OR opp.estatus_opp = 1 OR opp.estatus_opp = 4 GROUP BY opp.idopp ORDER BY opp.idopp";
-  $query = "SELECT opp.idopp, opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_fin FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp ORDER BY opp.abreviacion";
+  $query_tota_opps = mysql_query("SELECT idopp FROM opp GROUP BY idopp",$dspp) or die(mysql_error());
+  $total_opps = mysql_num_rows($query_tota_opps);
+  echo 'TOTAL DE OPPS: '.$total_opps;
+  $query = "SELECT opp.idopp, opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_fin FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas GROUP BY opp.idopp ORDER BY opp.abreviacion";
 
   $consultar = mysql_query($query,$dspp) or die(mysql_error());
   $total_organizaciones = mysql_num_rows($consultar);
+
 
 
  ?> 

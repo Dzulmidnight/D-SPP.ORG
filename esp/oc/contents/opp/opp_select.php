@@ -360,7 +360,7 @@ function preguntar(){
   <hr>
     <div class="row">
       <div class="col-md-4" >
-        <button class="btn btn-sm btn-primary" onclick="guardarDatos()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Cambios</button><!-- BOTON GUARDAR DATOS -->
+        <button class="btn btn-sm btn-primary" onclick="guardarDatos()" disabled><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Cambios</button><!-- BOTON GUARDAR DATOS -->
         | <span class="alert alert-warning" style="padding:7px;">Total OPP: <?php echo $totalOPP; ?></span>
       </div>
       <form action="" method="POST">
