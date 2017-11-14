@@ -14,6 +14,9 @@
 	<li <?php if(isset($_GET['certificadas'])){ echo "class='active'"; } ?>>
 		<a href="?OPP&certificadas">Certificadas</a>
 	</li>
+	<li <?php if(isset($_GET['canceladas'])){ echo "class='active'"; } ?>>
+		<a href="?OPP&canceladas">Canceladas</a>
+	</li>
 	<li <?php if(isset($_GET['archivadas'])){ echo "class='active'"; } ?>>
 		<a href="?OPP&archivadas">Archivadas</a>
 	</li>
@@ -84,7 +87,8 @@ if(isset($_GET['certificadas'])){include ("certificadas.php");}
 else
 if(isset($_GET['archivadas'])){include ("archivadas.php");}
 else
-
+if(isset($_GET['canceladas'])){include ("canceladas.php");}
+else
 
 
 if(isset($_GET['sin_solicitud'])){include ("opp_sin_solicitud.php");}
@@ -103,8 +107,8 @@ if(isset($_GET['certificadas'])){include ("opp_certificadas.php");}
 else
 if(isset($_GET['suspendidas'])){include ("opp_suspendidas.php");}
 else
-if(isset($_GET['canceladas'])){include ("opp_canceladas.php");}
-else
+//13_11_2017if(isset($_GET['canceladas'])){include ("opp_canceladas.php");}
+//13_11_2017else
 if(isset($_GET['archivadas'])){include ("opp_archivadas.php");}
 else
 if(isset($_GET['add'])){include ("opp_add.php");}
