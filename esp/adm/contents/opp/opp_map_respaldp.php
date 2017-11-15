@@ -2,6 +2,51 @@
 require_once('../Connections/dspp.php');
 mysql_select_db($database_dspp, $dspp);
 
+function sanear_string($string)
+{
+ 
+    $string = trim($string);
+ 
+    $string = str_replace(
+        array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'),
+        array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'),
+        $string
+    );
+ 
+    $string = str_replace(
+        array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'),
+        array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'),
+        $string
+    );
+ 
+    $string = str_replace(
+        array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'),
+        array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'),
+        $string
+    );
+ 
+    $string = str_replace(
+        array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'),
+        array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'),
+        $string
+    );
+ 
+    $string = str_replace(
+        array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'),
+        array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'),
+        $string
+    );
+ 
+    $string = str_replace(
+        array('ñ', 'Ñ', 'ç', 'Ç'),
+        array('n', 'N', 'c', 'C',),
+        $string
+    );
+
+ 
+ 
+    return $string;
+}
   /// CONSULTAMOS LAS ORGANIZACONES QUE ESTAN EN PROCESO Y POR ESO NO DEBEN ESTAR EN LAS CERTIFICADAS
   $array_opp = '';
   $array_opp2 = '';
@@ -97,7 +142,7 @@ $mapa = "['Germany', 200],['United States', 300],['Brazil', 400],['Canada', 500]
         'packages':['geochart'],
         // Note: you will need to get a mapsApiKey for your project.
         // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-        'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+        'mapsApiKey': 'AIzaSyB0yHe2WVMjkilm056vaEN3CBUYFB3aa-w'
       });
       google.charts.setOnLoadCallback(drawRegionsMap);
 
