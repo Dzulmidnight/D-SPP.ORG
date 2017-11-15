@@ -15,26 +15,16 @@ mysql_select_db($database_dspp, $dspp);
 
       function drawRegionsMap() {
         var data = google.visualization.arrayToDataTable([
-          ['Country', 'Organizaciones'],
-         <?php 
-         //$query = "SELECT pais FROM opp GROUP BY pais";
-         $query = "SELECT pais, COUNT(idopp) AS 'numero' FROM opp GROUP BY pais";
-         $consultar = mysql_query($query,$dspp) or die(mysql_error());
-
-         while($informacion = mysql_fetch_assoc($consultar)){
-			echo "['$informacion[pais]', $informacion[numero]],";
-		}
-
-		echo "]);";
-		?>  
-          /*['Germany', 200],
+          ['Country', 'Popularity'],
+          ['Germany', 200],
           ['United States', 300],
           ['Brazil', 400],
           ['Canada', 500],
           ['France', 600],
-          ['RU', 700]
-        ]);*/
-
+          ['RU', 700],
+        ]);
+ 
+          
         var options = {colorAxis: {colors: ['#27ae60', '#e67e22', '#e74c3c']}};
         /*var options = {
         	colorAxis: {values: [1, 10, 100, 1000], colors: ['green', '#D1E231', 'orange' ,'red'],},

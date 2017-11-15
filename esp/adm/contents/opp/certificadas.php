@@ -479,12 +479,14 @@ if (!empty($_SERVER['QUERY_STRING'])) {
   if(isset($_POST['palabra'])){
     //// BUSQUEDA POR PALABRAS
     $palabra = $_POST['palabra'];
-    $query = "SELECT opp.idopp, opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas AND (opp.spp LIKE '%".$palabra."%' OR opp.nombre LIKE '%".$palabra."%' OR opp.abreviacion LIKE '%".$palabra."%') GROUP BY opp.idopp ORDER BY opp.abreviacion";
+    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas AND (opp.spp LIKE '%".$palabra."%' OR opp.nombre LIKE '%".$palabra."%' OR opp.abreviacion LIKE '%".$palabra."%') GROUP BY opp.idopp ORDER BY opp.abreviacion";
   }else if(isset($_POST['busqueda_filtros']) && $_POST['busqueda_filtros'] == 1){
     //// BUSQUEDA DE ACUERDO A LOS FILTROS AVANZADOS
     $buscar_oc = $_POST['buscar_oc'];
     $buscar_pais = $_POST['buscar_pais'];
     $buscar_producto = $_POST['buscar_producto'];
+    $buscar_estatus = $_POST['buscar_estatus'];
+    $productos = '';
 
     if(empty($buscar_oc)){
       $q_oc = '';
@@ -495,29 +497,53 @@ if (!empty($_SERVER['QUERY_STRING'])) {
     if(empty($buscar_pais)){
       $q_pais = '';
     }else{
-      $q_pais = 'AND opp.pais = "'.$buscar_oc.'"';
+      $q_pais = 'AND opp.pais = "'.$buscar_pais.'"';
+    }
+    if(empty($buscar_estatus)){
+      $q_estatus = '';
+    }else{
+      switch ($buscar_estatus) {
+        case '13':
+          $q_estatus = 'AND (opp.estatus_opp = 13 OR opp.estatus_opp = 14 OR opp.estatus_opp = 15)';
+          break;
+        case '14':
+          $q_estatus = 'AND opp.estatus_opp = 14';
+          break;
+        case '15':
+          $q_estatus = 'AND opp.estatus_opp = 15';
+          break;
+        case '16':
+          $q_estatus = 'AND opp.estatus_opp = 16';
+          break;
+        default:
+          $q_estatus = '';
+          break;
+      }
     }
 
-    /*13_11_2017if(empty($buscar_producto)){
+    if(empty($buscar_producto)){
       $array_productos = '';
       //SELECT productos.idopp FROM productos INNER JOIN opp ON productos.idopp = opp.idopp WHERE producto_general = 'CAFE' AND opp.pais LIKE '%ecuador%' GROUP BY productos.idopp
     }else{
       $array_productos = '';
       $contador = 1;
-      $consultar_productos = mysql_query("SELECT productos.idopp FROM productos INNER JOIN opp ON productos.idopp = opp.idopp WHERE producto_general LIKE '%$buscar_producto%' $q_pais $q_oc GROUP BY idopp", $dspp) or die(mysql_error());
+      $consultar_productos = mysql_query("SELECT productos.idopp FROM productos INNER JOIN opp ON productos.idopp = opp.idopp WHERE producto_general LIKE '%$buscar_producto%' GROUP BY idopp", $dspp) or die(mysql_error());
       $total_productos = mysql_num_rows($consultar_productos);
-
 
       while($q_productos = mysql_fetch_assoc($consultar_productos)){
         if($contador < $total_productos){
-          $array_productos .= 'opp.idopp = '.$archivadas['idopp'].' OR ';
+          $array_productos .= 'opp.idopp = '.$q_productos['idopp'].' OR ';
         }else{
-          $array_productos .= 'opp.idopp = '.$archivadas['idopp'];
+          $array_productos .= 'opp.idopp = '.$q_productos['idopp'];
         }
         $contador++;
       }
-
-    }13_11_2017*/
+      if(empty($array_productos)){
+        $productos = '';
+      }else{
+        $productos = 'AND ('.$array_productos.')';
+      }
+    }
 
     /*$estatus_membresia = $_POST['estatus_membresia'];
     if(empty($estatus_membresia)){
@@ -544,15 +570,17 @@ if (!empty($_SERVER['QUERY_STRING'])) {
       $q_anio = "AND FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '".$anio_membresia."'";
     }*/
 
-    $query = "SELECT opp.idopp, opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas $q_oc $q_pais  GROUP BY opp.idopp ORDER BY opp.abreviacion";
+    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas ".$q_oc." ".$q_pais." ".$q_estatus." ".$productos." GROUP BY opp.idopp ORDER BY opp.abreviacion";
   }else{
     /// CONSULTA POR DEFAULT
-    $query = "SELECT opp.idopp, opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas GROUP BY opp.idopp ORDER BY opp.abreviacion";
+    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas GROUP BY opp.idopp ORDER BY opp.abreviacion";
   }
-
-  if(isset($array_productos)){
-    echo $array_productos;
-  }
+  /*echo $q_estatus.'<br>';
+  echo $query;*/
+/*14_11_2017  echo $productos;
+  echo '<hr>';
+  echo $query;
+  14_11_2017*/
   $consultar = mysql_query($query,$dspp) or die(mysql_error());
   $total_organizaciones = mysql_num_rows($consultar);
  ?>
@@ -581,6 +609,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
   </div>  
 </div>
 
+
 <!-- CUADRO DE BUSQUEDA AVANZADA -->
 <div class="collapse" id="collapseExample">
   
@@ -592,7 +621,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
         <div class="row">
 
 
-          <div class="col-xs-4">
+          <div class="col-xs-3">
             Organismo de Certificación
             <select name="buscar_oc" class="form-control">
               <option value=''>Selecciona un organismo de certificación</option>
@@ -604,7 +633,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
                ?>
             </select>
           </div>
-          <div class="col-xs-4">
+          <div class="col-xs-3">
             País
             <select name="buscar_pais" class="form-control">
               <option value=''>Selecciona un país</option>
@@ -616,7 +645,17 @@ if (!empty($_SERVER['QUERY_STRING'])) {
                ?>
             </select>
           </div>
-          <div class="col-xs-4">
+          <div class="col-xs-3">
+            Estatus del Certificado
+            <select name="buscar_estatus" class="form-control">
+              <option value=''>Selecciona un estatus</option>
+              <option value="13">Certificado</option>
+              <option value="14">Aviso de Renovación</option>
+              <option value="15">Certificado por Expirar</option>
+              <option value="16">Certificado Expirado</option>
+            </select>
+          </div>
+          <div class="col-xs-3">
             Producto
             <select class="form-control" name="buscar_producto" id="">
               <option value=''>Seleccione un producto</option>
@@ -652,11 +691,11 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 
         <form name="formulario1" method="POST" action="../../reportes/lista_opp.php">
           <input type="hidden" name="lista_pdf" value="1">
-          <input type="hidden" name="query_pdf" value="<?php echo $query_opp; ?>">
+          <input type="hidden" name="query_pdf" value="<?php echo $query; ?>">
         </form> 
         <form name="formulario2" method="POST" action="../../reportes/lista_opp.php">
           <input type="hidden" name="lista_excel" value="2">
-          <input type="hidden" name="query_excel" value="<?php echo $query_opp; ?>">
+          <input type="hidden" name="query_excel" value="<?php echo $query; ?>">
         </form>
       </th>
       <th class="success text-center" colspan="6">
@@ -671,7 +710,8 @@ if (!empty($_SERVER['QUERY_STRING'])) {
       <th>OC</th>
 
       <th>ULTIMA FECHA DE CERTIFICADO</th>
-      <th>ESTATUS OPP</th>
+      <!--14_11_2017<th>ESTATUS OPP</th>-->
+      <th>ESTATUS CERTIFICADO</th>
 
       
       <!--13_11_2017<th>ESTATUS PUBLICO</th>13_11_2017-->
