@@ -476,6 +476,9 @@ if (!empty($_SERVER['QUERY_STRING'])) {
   $query_tota_opps = mysql_query("SELECT idopp FROM opp GROUP BY idopp",$dspp) or die(mysql_error());
   $total_opps = mysql_num_rows($query_tota_opps);
 
+  
+
+  ///// CONSULTAMOS LOS CUADROS DE BUSQUEDA -//////////////////////////
   if(isset($_POST['palabra'])){
     //// BUSQUEDA POR PALABRAS
     $palabra = $_POST['palabra'];
@@ -902,15 +905,15 @@ if (!empty($_SERVER['QUERY_STRING'])) {
     <!-- PRODUCTOS DE LA ORGANIZACIÓN -->
     <td>
     <?php 
-    $query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idsolicitud_certificacion = '$informacion[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
-    $productos = mysql_fetch_assoc($query_productos);
-    if(empty($productos['lista_productos'])){
-      $query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idopp = '$informacion[idopp]'", $dspp) or die(mysql_error());
+      $query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idsolicitud_certificacion = '$informacion[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
       $productos = mysql_fetch_assoc($query_productos);
-      echo $productos['lista_productos'];
-    }else{
-      echo '<p style="color:green">'.$productos['lista_productos'].'</p>';
-    }
+      if(empty($productos['lista_productos'])){
+        $query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idopp = '$informacion[idopp]'", $dspp) or die(mysql_error());
+        $productos = mysql_fetch_assoc($query_productos);
+        echo $productos['lista_productos'];
+      }else{
+        echo '<p style="color:green">'.$productos['lista_productos'].'</p>';
+      }
      ?>
     </td>
     <!-- NUMERO DE SOCIOS DE LA ORGANIZACIÓN -->

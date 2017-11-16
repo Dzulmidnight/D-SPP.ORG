@@ -506,6 +506,7 @@
     $objWriter->save('php://output');
     exit;
   }
+  /***************** LISTA DE EXCEL, ORGANIZACIONES CERTIFICADAS **************************/
   if(isset($_POST['lista_excel']) && $_POST['lista_excel'] == 2){
     $query = $_POST['query_excel'];
     $row_opp = mysql_query($query,$dspp) or die(mysql_error()); 
@@ -747,4 +748,249 @@
     $objWriter->save('php://output');
     exit;
   }
+
+  /***************** LISTA DE EXCEL, ORGANIZACIONES EN PROCESO **************************/
+  /***************** LISTA DE EXCEL, ORGANIZACIONES EN PROCESO **************************/
+  if(isset($_POST['lista_excel']) && $_POST['lista_excel'] == 2){
+    $query = $_POST['query_excel'];
+    $row_opp = mysql_query($query,$dspp) or die(mysql_error()); 
+    // Se crea el objeto PHPExcel
+    $objPHPExcel = new PHPExcel();
+
+    // Se asignan las propiedades del libro
+    $objPHPExcel->getProperties()->setCreator("spp global") //Autor
+               ->setLastModifiedBy("spp global") //Ultimo usuario que lo modificó
+               ->setTitle("Reporte OPPs")
+               ->setSubject("Reporte OPPs")
+               ->setDescription("Reporte OPPs")
+               ->setKeywords("")
+               ->setCategory("Reporte OPPs");
+
+    $tituloReporte = "Lista de Organizaciones de Pequeños Productores";
+    $titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO', 'FECHA SIGUIENTE EVALUACIÓN', 'ESTATUS CERTIFICADO', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', '#SPP', 'PASSWORD', 'CORREO ORGANIZACIÓN', 'CORREOS SOLICITUD', 'TELÉFONO ORGANIZACIÓN');
+    
+    $objPHPExcel->setActiveSheetIndex(0)
+                ->mergeCells('A1:M1');
+            
+    // Se agregan los titulos del reporte
+    $objPHPExcel->setActiveSheetIndex(0)
+          ->setCellValue('A1',$tituloReporte)
+                ->setCellValue('A3',  $titulosColumnas[0])
+                ->setCellValue('B3',  $titulosColumnas[1])
+                ->setCellValue('C3',  $titulosColumnas[2])
+                ->setCellValue('D3',  $titulosColumnas[3])
+                ->setCellValue('E3',  $titulosColumnas[4])
+                ->setCellValue('F3',  $titulosColumnas[5])
+                ->setCellValue('G3',  $titulosColumnas[6])
+                ->setCellValue('H3',  $titulosColumnas[7])
+                ->setCellValue('I3',  $titulosColumnas[8])
+                ->setCellValue('J3',  $titulosColumnas[9])
+                ->setCellValue('K3',  $titulosColumnas[10])
+                ->setCellValue('L3',  $titulosColumnas[11])
+                ->setCellValue('M3',  $titulosColumnas[12]);
+    
+    //Se agregan los datos de los alumnos
+    $i = 4;
+    $contador = 1;
+    while ($opp = mysql_fetch_assoc($row_opp)) {
+      $vigencia = '';
+      if(isset($opp['vigencia_fin'])){
+        $vigencia = $opp['vigencia_fin'];
+      }else{
+        $consulta_certificado = mysql_query("SELECT idcertificado, vigencia_inicio, vigencia_fin FROM certificado WHERE idopp = '$opp[idopp]'", $dspp) or die(mysql_error());
+        $detalle_certificado = mysql_fetch_assoc($consulta_certificado);
+
+        if(isset($detalle_certificado['vigencia_fin'])){
+          $vigencia = $detalle_certificado['vigencia_fin'];
+        }
+      }
+
+
+      /*$productos = '';
+      $query_producto = mysql_query("SELECT * FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
+      $total = mysql_num_rows($query_producto);
+      $cont = 1;
+      while($row_producto = mysql_fetch_assoc($query_producto)){
+        if($cont < $total){
+          $productos .= $row_producto['producto'].", ";
+        }else{
+          $productos .= $row_producto['producto'];
+        }
+        $cont++;
+      }*/
+
+      $query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idsolicitud_certificacion = '$opp[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
+      $productos = mysql_fetch_assoc($query_productos);
+      if(empty($productos['lista_productos'])){
+        $query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idopp = '$opp[idopp]'", $dspp) or die(mysql_error());
+        $productos = mysql_fetch_assoc($query_productos);
+      }
+
+      $estatus_certificado = '';
+      if($opp['opp_estatus_opp'] != 'CERTIFICADO' && $opp['opp_estatus_opp'] != 'CANCELADO'){
+        $consultar = mysql_query("SELECT nombre FROM estatus_dspp WHERE idestatus_dspp = $opp[opp_estatus_opp]", $dspp) or die(mysql_error());
+        $detalle = mysql_fetch_assoc($consultar);
+        $estatus_certificado = $detalle['nombre'];
+      }else{
+        $estatus_certificado = $opp['opp_estatus_opp'];
+      }
+
+      /*14_11_2017$correos_contactos = '';
+      $query_correos = mysql_query("SELECT DISTINCT(email1 SEPARATOR ', ')) AS 'correos_contactos' FROM contactos WHERE email1 != '$opp[email]' AND idopp = '$opp[idopp]'", $dspp) or die(mysql_error());
+      $row_correos = mysql_fetch_assoc($query_correos);
+      if(isset($row_correos['correos_contactos'])){
+        $correos_contactos = $row_correos['correos_contactos'];
+      }14_11_2017*/
+
+      $correos_contactos = '';
+      $query_contactos = mysql_query("SELECT email1 FROM contactos WHERE idopp = $opp[idopp] GROUP BY email1", $dspp) or die(mysql_error());
+      $total = mysql_num_rows($query_contactos);
+      $cont = 1;
+      while($row_contactos = mysql_fetch_assoc($query_contactos)){
+        if($cont < $total){
+          if($row_contactos['email1'] != $opp['email']){
+            $correos_contactos .= $row_contactos['email1'].", ";
+          }
+        }else{
+          if($row_contactos['email1'] != $opp['email']){
+            $correos_contactos .= $row_contactos['email1'];
+          }
+        }
+        $cont++;
+      }
+
+
+      $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$i,  $contador)
+                ->setCellValue('B'.$i,  mayuscula($opp['nombre_opp']))
+                ->setCellValue('C'.$i,  mayuscula($opp['abreviacion_opp']))
+                ->setCellValue('D'.$i,  mayuscula($opp['pais']))
+                ->setCellValue('E'.$i,  mayuscula($productos['lista_productos']))
+                ->setCellValue('F'.$i,  $vigencia)
+                ->setCellValue('G'.$i,  mayuscula($estatus_certificado))
+                ->setCellValue('H'.$i,  mayuscula($opp['abreviacion_oc']))
+                ->setCellValue('I'.$i,  $opp['spp'])
+                ->setCellValue('J'.$i,  $opp['password'])
+                ->setCellValue('K'.$i,  $opp['email'])
+                ->setCellValue('L'.$i,  $correos_contactos)
+                ->setCellValue('M'.$i,  $opp['telefono']);
+          $i++;
+          $contador++;
+    }
+    $estiloTituloReporte = array(
+          'font' => array(
+            'name'      => 'Verdana',
+              'bold'      => true,
+              'italic'    => false,
+                'strike'    => false,
+                'size' =>16,
+                'color'     => array(
+                    'rgb' => '000000'
+                  )
+            ),
+          'fill' => array(
+        'type'  => PHPExcel_Style_Fill::FILL_SOLID,
+        'color' => array('rgb' => 'FFFFFF')
+      ),
+            'borders' => array(
+                'allborders' => array(
+                  'style' => PHPExcel_Style_Border::BORDER_NONE                    
+                )
+            ), 
+            'alignment' =>  array(
+              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+              'vertical'   => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+              'rotation'   => 0,
+              'wrap'          => TRUE
+        )
+        );
+
+    $estiloTituloColumnas = array(
+            'font' => array(
+                'name'      => 'Arial',
+                'bold'      => true,                          
+                'color'     => array(
+                    'rgb' => '#191919'
+                )
+            ),
+            /*'fill'  => array(
+        'type'    => PHPExcel_Style_Fill::FILL_SOLID,
+        'color'   => array('argb' => 'FFd9b7f4')
+      ),*/
+
+            'fill'  => array(
+        'type'    => PHPExcel_Style_Fill::FILL_SOLID,
+        'color'   => array('rgb' => 'B8D186')
+      ),
+            'borders' => array(
+              'top'     => array(
+                    'style' => PHPExcel_Style_Border::BORDER_MEDIUM ,
+                    'color' => array(
+                        'rgb' => '143860'
+                    )
+                ),
+                'bottom'     => array(
+                    'style' => PHPExcel_Style_Border::BORDER_MEDIUM ,
+                    'color' => array(
+                        'rgb' => '143860'
+                    )
+                )
+            ),
+      'alignment' =>  array(
+              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+              'vertical'   => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+              'wrap'          => TRUE
+        ));
+
+    $estiloInformacion = new PHPExcel_Style();
+    $estiloInformacion->applyFromArray(
+      array(
+              'font' => array(
+                'name'      => 'Arial',               
+                'color'     => array(
+                    'rgb' => '000000'
+                )
+            ),
+            /*'fill'  => array(
+        'type'    => PHPExcel_Style_Fill::FILL_SOLID,
+        'color'   => array('argb' => 'FFd9b7f4')
+      ),*/
+            'borders' => array(
+                'left'     => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN ,
+                  'color' => array(
+                    'rgb' => '3a2a47'
+                    )
+                )             
+            )
+        ));
+
+    $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->applyFromArray($estiloTituloReporte);
+    $objPHPExcel->getActiveSheet()->getStyle('A3:M3')->applyFromArray($estiloTituloColumnas);   
+    $objPHPExcel->getActiveSheet()->setSharedStyle($estiloInformacion, "A4:M".($i-1));
+        
+    for($i = 'A'; $i <= 'M'; $i++){
+      $objPHPExcel->setActiveSheetIndex(0)      
+        ->getColumnDimension($i)->setAutoSize(TRUE);
+    }
+    
+    // Se asigna el nombre a la hoja
+    $objPHPExcel->getActiveSheet()->setTitle('Lista organizaciones');
+
+    // Se activa la hoja para que sea la que se muestre cuando el archivo se abre
+    $objPHPExcel->setActiveSheetIndex(0);
+    // Inmovilizar paneles 
+    //$objPHPExcel->getActiveSheet(0)->freezePane('A4');
+    $objPHPExcel->getActiveSheet(0)->freezePaneByColumnAndRow(0,4);
+
+    // Se manda el archivo al navegador web, con el nombre que se indica (Excel2007)
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="Lista_organizaciones.xls"');
+    header('Cache-Control: max-age=0');
+
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+    $objWriter->save('php://output');
+    exit;
+  }
+
  ?>

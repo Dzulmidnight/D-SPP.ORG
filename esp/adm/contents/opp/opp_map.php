@@ -103,33 +103,12 @@ function sanear_string($string)
 
 
 
-$array_certificadas = '';
-$query = "";
-$row_certificadas = mysql_query("SELECT opp.idopp,  opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
-$total_certificadas = mysql_num_rows($row_certificadas);
-$contador_opps = 0;
-/*while($certificadas = mysql_fetch_assoc($row_certificadas)){
-    if($contador < $total_certificadas){
-      $array_certificadas .= 'opp.idopp = '.$certificadas ['idopp'].' OR ';
-    }else{
-      $array_certificadas .= 'opp.idopp = '.$certificadas ['idopp'];
-    }
-    $contador++;
-}*/
- $row_paises = mysql_query("SELECT pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
- $contador = 0;
- $mapa = '';
- //$consultar = mysql_query($query,$dspp) or die(mysql_error());
-  while($paises = mysql_fetch_assoc($row_paises)){
-    $row_certificadas = mysql_query("SELECT opp.idopp, opp.pais, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas AND opp.pais = '$paises[pais]' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
-    $opps_certificadas = mysql_fetch_assoc($row_certificadas);
-    $total_certificadas = mysql_num_rows($row_certificadas);
-    
-    if($total_certificadas > 0){
-      $mapa = "['$paises[pais]', $total_certificadas],";
-    }
-    //echo 'PAIS: '.$paises['pais'].' - Num: '.$otro_total.'<br>';
-  }
+  $array_certificadas = '';
+  $query = "";
+  $row_certificadas = mysql_query("SELECT opp.idopp,  opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+  $organizaciones_certificadas = mysql_num_rows($row_certificadas);
+  $contador_opps = 0;
+
 
 ?>
 
@@ -140,15 +119,15 @@ $contador_opps = 0;
         'packages':['geochart'],
         // Note: you will need to get a mapsApiKey for your project.
         // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-        // PRUEBA 'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
-        'mapsApiKey': 'AIzaSyB0yHe2WVMjkilm056vaEN3CBUYFB3aa-w'
+        'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+        //'mapsApiKey': 'AIzaSyB0yHe2WVMjkilm056vaEN3CBUYFB3aa-w'
       });
 
       google.charts.setOnLoadCallback(drawRegionsMap);
 
       function drawRegionsMap() {
         var data = google.visualization.arrayToDataTable([
-          ['Country', 'Organizaciones'],
+          ['Pais', 'Nº Organizaciones'],
          <?php 
          //$query = "SELECT pais FROM opp GROUP BY pais";
          $row_paises = mysql_query("SELECT pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
@@ -174,7 +153,9 @@ $contador_opps = 0;
           ['RU', 700]
         ]);*/
 
-        var options = {colorAxis: {colors: ['#27ae60', '#e67e22', '#e74c3c']}};
+        var options = {
+          colorAxis: {colors: ['#27ae60', '#e67e22', '#e74c3c']}
+        };
         /*var options = {
           colorAxis: {values: [1, 10, 100, 1000], colors: ['green', '#D1E231', 'orange' ,'red'],},
       backgroundColor: '#81d4fa',
@@ -188,14 +169,14 @@ $contador_opps = 0;
       }
     </script>
     <div class="row">
-    <div class="col-md-9">
-      <h4>MAPA DE ORGANIZACIONES SPP CERTIFICADAS</h4>
-      <div class="col-xs-12">
-        <div id="regions_div" style="width: 900px; height: 400px;"></div>
+      <div class="col-md-12">
+        <h4>MAPA DE ORGANIZACIONES SPP CERTIFICADAS: <?php echo '<span style="color:red">'.$organizaciones_certificadas.'</span>'; ?></h4>
+        <div class="col-lg-9">
+          <div id="regions_div" style="width: 1000px; height: 650px;"></div>
+        </div>
       </div>
-    </div>
 
-    <div class="col-md-3" style="height: 500px;overflow: scroll;">
+    <!--<div class="col-md-3" style="height: 500px;overflow: scroll;">
       <table class="table table-bordered table-striped table-condensed" style="font-size:12px;">
         <tr style="background-color:#4caf50;color:#ffffff">
           <th>#</th>
@@ -221,6 +202,6 @@ $contador_opps = 0;
         }
          ?>
       </table>
-    </div>
+    </div>-->
 
     </div>
