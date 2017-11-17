@@ -830,10 +830,6 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         <p>
                           DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO y ACUSE DE RECIBO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
                         </p>
-                        <p>
-                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
-                        </p>
-
                       </td>
                     </tr>
                     <tr>
@@ -854,10 +850,6 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         <p>
                           AFTER MAKING PAYMENT, PLEASE <span style="color:red">UPLOAD "SIGNED USER´S CONTRACT" AND "ACKNOWLEDGEMENT OF RECEIPT"</span> AND ALSO <span style="color:red">THE "RECEIPT OF PAYMENT"</span> THROUGH THE D-SPP SYSTEM, BY ENTERING YOUR ACCOUNT AS AN SPO (Small Producers’ Organization) IN THE FOLLOWING LINK: <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>
                         </p>
-                        <p>
-                          3.  After SPP Global has confirmed through the System that payment has been received in the SPP Global account, your Certificate will be made available to you.
-                        </p>
-
                       </td>
                     </tr>
 

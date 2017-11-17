@@ -146,50 +146,100 @@ mysql_select_db($database_dspp, $dspp);
 			     <th scope="col" align="left" width="280"><p>Á: <span style="color:red"><?php echo $nombre_opp; ?></span></p></th>
 			    </tr>
 
-			    <tr>
-			      <td colspan="2" style="text-align:justify">
-			      	<p>
-			      		1. Nous, <span style="color:red"><?php echo $oc['nombre'] ?></span>, Organisme de Certification autorisé par SPP Global, avons l'honneur de vous informer par la présente du résultat positif de l'évaluation SPP.
-			      	</p>
-					<p>
-						2. Pour terminer le processus, merci de lire de manière attentive les documents joints et ensuite de signer le <span style="color:red">Contrat d'utilisation et l'Accusé de réception</span>. Veuillez compléter les informations de votre organisation et le représentant légal dans les textes marqués en rouge dans le contrat d'utilisation.
-					</p>
-					<p>
-						3. Une fois que vous aurez signé les documenst indiqués, accédez à votre compte et téléchargez les documents pour qu'ils soient revus par SPP Global.
-					</p>
+<tr>
+                    <td colspan="2">
+                      <p>
+                        1. Nous <span style="color:red"><?php echo $oc['nombre'] ?></span>, comme Organisme de certification autorisé par SPP Global, avons l\'honneur de vous informer par la présente que le résultat de l\'évaluation SPP est <span style="color:red">positif</span>.
+                      </p>
+                      <p>
+                        2. Pour terminer le processus, merci de lire de manière attentive les documents joints et ensuite de signer le Contrat d\'utilisation et l\'Accusé de réception. Veuillez compléter les informations de votre organisation et le représentant légal dans les textes marqués en rouge dans le contrat d\'utilisation.
+                      </p>
 
-			        <p>
-			        	4. Une fois que SPP Global aura confirmé au travers du système la réception des documents, il sera procédé à la délivrance du certificat.
-			        </p>
-			      </td>
-			    </tr>
-			    <tr>
-			      <td><p><strong>Documents annexes</strong></p></td>
-			    </tr>
-			    <tr>
-			      <td>
-			        <ul>
-			        	<li>Contrat d'utilisation</li>
-			        	<li>Manuel SPP</li>
-			        	<li>Accusé de réception</li>
-			        	<li>Coordonnées bancaires</li>
-			        </ul>
-			      </td>
-			    </tr>
-			    <tr>
-			      <td colspan="2" style="text-align:justify">
-			        <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
-			        <p>
-			        	Adicionalmente se solicita de la manera más atenta, se proceda con el <span style="color:red">pago de membresìa a SPP Global</span>, de acuerdo al monto indicado de: <strong style="color:red;">$ xxx</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de <span style="color:red">entrar a su cuenta y cargar el comprobante bancario</span>.
-			        </p>
-			        <p>
-			          LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
-			        </p>
-			        <p>
-			          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
-			        </p>
-			      </td>
-			    </tr>
+                      <p>
+                        3. Une fois que vous aurez signé les documenst indiqués, accédez à votre compte et téléchargez les documents pour qu\'ils soient revus par SPP Global.
+                      </p>
+
+                      <p>
+                        4. Une fois que SPP Global aura confirmé au travers du système la réception des documents, il sera procédé à la délivrance du certificat.
+                      </p>
+
+
+                      <p>
+                        <b>Adhésion</b>
+                      </p>
+                      <p>
+                        Nous demandons le moyen le plus prudent de procéder au paiement de l\'adhésion à SPP Global. Selon le nombre de membres, le montant de l\'adhésion est de: <strong style="color:red">XXX USD</strong>. (Les coordonnées bancaires sont jointes, veuillez lire les Dispositions générales de paiement)
+                      </p>
+                      <p>
+                        L\'organisation des petits producteurs (OPP) aura un délai maximum de 30 jours civils pour effectuer le paiement et télécharger votre reçu au D-SPP.
+                      </p>
+                      <p>
+                        En cas de problème pour effectuer le paiement en temps voulu, veuillez informer le secteur Administration et Finance de SPP Global (adm@spp.coop).
+                      </p>
+                      <p>
+                        Si vous ne parvenez pas à recevoir un paiement ou une communication de l\'OPP, vous enverrez malheureusement la suspension de votre certificat.
+                      </p>
+
+                      <hr>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td><p><strong>DOCUMENTS ATTACHÉS / ATTACHED DOCUMENTS</strong></p></td>
+                  </tr>
+                    <tr style="color:#000">
+                      <td>
+				        <ul>
+				        	<li>Contrat d'utilisation</li>
+				        	<li>Manuel SPP</li>
+				        	<li>Accusé de réception</li>
+				        	<li>Coordonnées bancaires</li>
+				        </ul>
+                      </td>
+                    </tr>
+                  
+                  <tr>
+                    <td colspan="2">
+                      <h3>English Below</h3>
+                    </td>
+                  </tr>
+
+                  <tr style="font-style: italic; color: #797979;">
+                    <td colspan="2">
+                      <p>
+                        1. We, <span style="color:red"><?php echo $oc['nombre'] ?></span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a <span style="color:red">positive</span> result.
+                      </p>
+                      <p>
+                        2. In order to complete the process, the most careful request is to read the attached documents and subsequently sign the <span style="color:red">User´s Contract and Confirmation of Receipt</span> . Please complete the information of your organization and the legal representative in the texts marked in red within the Contract of Use.
+                      </p>
+                      <p>
+                        3. Once you have signed the indicated documents, enter your account as Small Producers Organization (OPP) within the d-spp.org system and upload the documents so that they are reviewed by SPP Global.
+                      </p>
+                      <p>
+                        4. Once SPP Global confirms the receipt of the documents in the SPP Global account through the System, the Certificate will be delivered.
+                      </p>
+                      <p>
+                        <b>Membership</b>
+                      </p>
+                      <p>
+                        We request the most careful way to <span style="color:red">proceed with the payment of membership to SPP Global</span>. According to the number of members, the amount of the membership is: <strong style="color:red">XXX USD</strong>. (The bank details are attached, please read the General Payment Provisions)
+                      </p>
+
+                      <p>
+                        The Small Producers Organization (OPP) will have a maximum deadline of 30 calendar days to make the payment and load your receipt to the D-SPP.
+                      </p>
+                      <p>
+                        In case of any problems to make the payment in due time, please inform the Administration and Finance area of SPP Global (adm@spp.coop).
+                      </p>
+                      <p>
+                        Failure to receive payment or communication from the OPP, will unfortunately send the Suspension of your Certificate.
+                      </p>
+
+                      <hr>
+                    </td>
+                  </tr>
+
+
 			    <tr>
 			      <td colspan="2">
 			        <p>En cas de doute ou de question, merci d'écrire à <span style="color:red"><?php echo $oc['email1']; if(isset($oc['email2'])){echo ' ó '.$oc['email2']; } ?></span></p>

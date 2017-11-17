@@ -649,7 +649,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       ///termina envio de mensaje dictamen positivo
     ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
-    }else{ 
+    }else if($_POST['tipo_solicitud'] == 'NUEVA'){ 
     ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
       $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
         GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -707,8 +707,197 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->AddAttachment($archivo_dictamen);
       }
 
-      $documentacion = mysql_fetch_assoc($row_documentacion);
+      //$documentacion = mysql_fetch_assoc($row_documentacion);
       /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
+
+      $cuerpo_mensaje = '
+            <html>
+            <head>
+              <meta charset="utf-8">
+            </head>
+            <body>
+              <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; text-align:justify" border="0" width="650px">
+                <tbody>
+                  <tr>
+                    <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                    <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICATION D\'AVIS</span></p></th>
+
+                  </tr>
+                  <tr>
+                   <th scope="col" align="left" width="280"><p>Pour: <span style="color:red">'.$detalle_opp['nombre'].' - ('.$detalle_opp['abreviacion_opp'].')</span></p></th>
+                  </tr>
+
+                  <tr>
+                    <td colspan="2">
+                      <p>
+                        1. Nous <span style="color:red">'.$detalle_oc['nombre'].'</span>, comme Organisme de certification autorisé par SPP Global, avons l\'honneur de vous informer par la présente que le résultat de l\'évaluation SPP est <span style="color:red">positif</span>.
+                      </p>
+                      <p>
+                        2. Pour terminer le processus, merci de lire de manière attentive les documents joints et ensuite de signer le Contrat d\'utilisation et l\'Accusé de réception. Veuillez compléter les informations de votre organisation et le représentant légal dans les textes marqués en rouge dans le contrat d\'utilisation.
+                      </p>
+
+                      <p>
+                        3. Une fois que vous aurez signé les documenst indiqués, accédez à votre compte et téléchargez les documents pour qu\'ils soient revus par SPP Global.
+                      </p>
+
+                      <p>
+                        4. Une fois que SPP Global aura confirmé au travers du système la réception des documents, il sera procédé à la délivrance du certificat.
+                      </p>
+
+
+                      <p>
+                        <b>Adhésion</b>
+                      </p>
+                      <p>
+                        Nous demandons le moyen le plus prudent de procéder au paiement de l\'adhésion à SPP Global. Selon le nombre de membres, le montant de l\'adhésion est de: <strong style="color:red">'.$_POST['total_membresia'].'</strong>. (Les coordonnées bancaires sont jointes, veuillez lire les Dispositions générales de paiement)
+                      </p>
+                      <p>
+                        L\'organisation des petits producteurs (OPP) aura un délai maximum de 30 jours civils pour effectuer le paiement et télécharger votre reçu au D-SPP.
+                      </p>
+                      <p>
+                        En cas de problème pour effectuer le paiement en temps voulu, veuillez informer le secteur Administration et Finance de SPP Global (adm@spp.coop).
+                      </p>
+                      <p>
+                        Si vous ne parvenez pas à recevoir un paiement ou une communication de l\'OPP, vous enverrez malheureusement la suspension de votre certificat.
+                      </p>
+
+                      <hr>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td><p><strong>DOCUMENTS ATTACHÉS / ATTACHED DOCUMENTS</strong></p></td>
+                  </tr>
+                    <tr style="color:#000">
+                      <td>
+                        <ul>
+                          '.$documentacion_nombres.'
+                        </ul>
+                      </td>
+                    </tr>
+
+                  <tr>
+                    <td colspan="2">
+                      <h3>English Below</h3>
+                    </td>
+                  </tr>
+
+                  <tr style="font-style: italic; color: #797979;">
+                    <td colspan="2">
+                      <p>
+                        1. We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a <span style="color:red">positive</span> result.
+                      </p>
+                      <p>
+                        2. In order to complete the process, the most careful request is to read the attached documents and subsequently sign the <span style="color:red">User´s Contract and Confirmation of Receipt</span> . Please complete the information of your organization and the legal representative in the texts marked in red within the Contract of Use.
+                      </p>
+                      <p>
+                        3. Once you have signed the indicated documents, enter your account as Small Producers Organization (OPP) within the d-spp.org system and upload the documents so that they are reviewed by SPP Global.
+                      </p>
+                      <p>
+                        4. Once SPP Global confirms the receipt of the documents in the SPP Global account through the System, the Certificate will be delivered.
+                      </p>
+                      <p>
+                        <b>Membership</b>
+                      </p>
+                      <p>
+                        We request the most careful way to <span style="color:red">proceed with the payment of membership to SPP Global</span>. According to the number of members, the amount of the membership is: <strong style="color:red">'.$_POST['total_membresia'].'</strong>. (The bank details are attached, please read the General Payment Provisions)
+                      </p>
+
+                      <p>
+                        The Small Producers Organization (OPP) will have a maximum deadline of 30 calendar days to make the payment and load your receipt to the D-SPP.
+                      </p>
+                      <p>
+                        In case of any problems to make the payment in due time, please inform the Administration and Finance area of SPP Global (adm@spp.coop).
+                      </p>
+                      <p>
+                        Failure to receive payment or communication from the OPP, will unfortunately send the Suspension of your Certificate.
+                      </p>
+
+                      <hr>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td colspan="2">
+                      <p>En cas de doute ou de clarification, veuillez écrire à <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </body>
+            </html>
+      ';
+
+      if(isset($archivo_dictamen)){
+        $mail->AddAttachment($archivo_dictamen);
+      }
+      if(isset($detalle_opp['contacto1_email'])){
+        $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
+      }
+      if(isset($detalle_opp['contacto2_email'])){
+        $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(isset($detalle_opp['adm1_email'])){
+        $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(isset($detalle_opp['email'])){
+        $token = strtok($detalle_opp['email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(isset($correos_oc['email1'])){
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(isset($correos_oc['email2'])){
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      $mail->AddBCC($spp_global);
+      $mail->AddBCC($finanzas_spp);
+
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+
+      /*if($mail->Send()){
+        
+       echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+      }else{
+        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');location.href ='javascript:history.back()';</script>";
+   
+      }*/
+      $mail->Send();
+      $mail->ClearAddresses();
+      $mail->ClearAttachments();
+
 
       $asunto = "D-SPP | Formulaire d'évaluation";
 
@@ -1900,7 +2089,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud_certificacion']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
                         <input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
                         <?php 
                         if(empty($solicitud['idmembresia']) && $solicitud['estatus_opp'] != '8'){
                         ?>
@@ -1982,7 +2171,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 <?php
                                 }else{
                                 ?>
-                                  <p class="alert alert-info">Por favor cargue los siguientes documentos:</p>
+                                  <p class="alert alert-info">Veuillez charger les documents suivants:</p>
                                   <p class="alert alert-info">
 
                                     Formulaire d'évaluation
@@ -1995,7 +2184,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                     <input type="file" class="form-control" name="dictamen_evaluacion" >
 
                                   </p>
-                                  <button type="submit" class="btn btn-success" style="width:100%" name="cargar_documentos" value="1">Enviar Documentos</button>
+                                  <button type="submit" class="btn btn-success" style="width:100%" name="cargar_documentos" value="1">Envoyer des documents</button>
                                 <?php
                                 }
 
