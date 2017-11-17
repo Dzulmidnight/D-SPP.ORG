@@ -624,7 +624,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       ///termina envio de mensaje dictamen positivo
     ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
-    }else{ 
+    }else if($_POST['tipo_solicitud'] == 'NUEVA'){ 
     ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
       $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
         GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -2436,11 +2436,11 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <?php 
                         if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                         ?>
-                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validarRenovacion()" style="width:100%; display:none" >Enviar Dictamen</button>
+                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validarRenovacion()" style="width:100%; display:none" >Enviar Dictamen 4</button>
                         <?php
                         }else{
                         ?>
-                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Enviar Dictamen</button>
+                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Enviar Dictamen 2</button>
                         <?php
                         }
                          ?>
@@ -2460,7 +2460,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 echo "No Disponible";
               }
                ?>
-               <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
+               <input type="text" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
                <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
             </form>
           </td>
@@ -2689,7 +2689,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                       </div>
 
                       <div class="modal-footer">
-                        <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
+                        <input type="text" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
                         <input type="hidden" name="fecha_sistema" value="<?php echo time(); ?>">
                         <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">

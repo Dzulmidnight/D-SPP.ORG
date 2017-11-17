@@ -650,7 +650,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       ///termina envio de mensaje dictamen positivo
     ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
-    }else{ 
+    }else if($_POST['tipo_solicitud'] == 'NUEVA'){ 
     ////////// SE ENVIA DICTAMEN POSITIVO PRIMERA VEZ ////////////////////
       $updateSQL = sprintf("UPDATE solicitud_certificacion SET estatus_interno = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
         GetSQLValueString($_POST['estatus_interno'], "int"),
@@ -710,6 +710,230 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
       $documentacion = mysql_fetch_assoc($row_documentacion);
 
+      ///// SE ENVIA EL DICTAMEN A LA ORGANIZACIÓN SOLICITANDO EL PAGO DE LA MEMBRESIA
+
+      $asunto = "D-SPP | NOTIFICACIÓN DE DICTAMEN (NOTIFICATION OF RESOLUTION)";
+
+      if(!empty($_POST['mensajeOPP'])){
+        $cuerpo_mensaje = '
+              <html>
+              <head>
+                <meta charset="utf-8">
+              </head>
+              <body>
+                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+                  <tbody>
+                    <tr>
+                      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN / NOTIFICATION OF RESOLUTION</span></p></th>
+
+                    </tr>
+                    <tr>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].' - ('.$detalle_opp['abreviacion_opp'].')</span></p></th>
+                    </tr>
+
+                    <tr>
+                      <td colspan="2" style="text-align:justify">
+                        <p>'.$_POST['mensajeOPP'].'</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><p><strong>DOCUMENTOS ANEXOS</strong></p></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <ul>
+                          '.$documentacion_nombres.'
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2" style="text-align:justify">
+                        <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
+                        <p>
+                          ADICIONALMENTE SE SOLICITA DE LA MANERA MÁS ATENTA REALIZAR EL PAGO CORRESPONDIENTE A LA MEMBRESIA SPP POR EL IMPORTE DE: <span style="color:red;">'.$_POST['total_membresia'].'</span>
+                        </p>
+                        <p>
+                          LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
+                        </p>
+                        <p>
+                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO y ACUSE DE RECIBO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                      <hr>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </body>
+              </html>
+        ';
+      }else{
+        $cuerpo_mensaje = '
+              <html>
+              <head>
+                <meta charset="utf-8">
+              </head>
+              <body>
+                <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+                  <tbody>
+                    <tr>
+                      <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                      <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">NOTIFICACIÓN DE DICTAMEN / NOTIFICATION OF RESOLUTION </span></p></th>
+
+                    </tr>
+                    <tr>
+                     <th scope="col" align="left" width="280"><p>Para: <span style="color:red">'.$detalle_opp['nombre'].' - ('.$detalle_opp['abreviacion_opp'].')</span></p></th>
+                    </tr>
+                    <tr>
+                      <td colspan="2" style="text-align:justify;color:#000">
+
+                        <p>1. Nosotros <span style="color:red">'.$detalle_oc['nombre'].'</span>, como Organismo de Certificación autorizado por SPP Global, nos complace informar por este medio que la evaluación SPP fue concluida con resultado positivo.</p>
+                        <p>
+                          2. Para concluir el proceso, se solicita de la manera más atenta leer los documentos anexos y posteriormente <span style="color:red">firmar el Contrato de Uso y Acuse de Recibo</span>. Favor de completar los datos de su organización y del representante legal en los <span style="color:red">textos marcados en color rojo dentro del Contrato de Uso</span>.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2" style="text-align:justify;font-style: italic;">
+
+                        <p>1. We, <span style="color:red">'.$detalle_oc['nombre'].'</span>, as a Certification Entity authorized by SPP Global, are pleased to inform you, by this means, that the SPP evaluation has been concluded with a “positive” result.</p>
+                        <p>
+                          2. In order to complete the process, the most careful request is to read the attached documents and subsequently sign <span style="color:red">the User´s Contract and Confirmation of Receipt </span>. Please complete the information of your organization and the legal representative in <span style="color:red">the texts marked in red</span> within the Contract of Use.
+                        </p>
+                      </td>
+                    </tr>
+
+                    <tr style="color:#000">
+                      <td><p><strong>DOCUMENTOS ANEXOS / ATTACHED DOCUMENTS</strong></p></td>
+                    </tr>
+                    <tr style="color:#000">
+                      <td>
+                        <ul>
+                          '.$documentacion_nombres.'
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2" style="color:#000;text-align:justify">
+                        <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
+                        <p>
+                          Adicionalmente se solicita de la manera más atenta, se proceda con el <span style="color:red">pago de membresía a SPP Global</span>, de acuerdo al monto indicado de: <strong style="color:red;">'.$_POST['total_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de <span style="color:red">entrar a su cuenta y cargar el comprobante bancario</span>.
+                        </p>
+                        <p>
+                          LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
+                        </p>
+                        <p>
+                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO y ACUSE DE RECIBO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE OPP(Organización de Pequeños Productores) EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>.
+                        </p>
+                        <p>
+                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
+                        </p>
+
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <b>English Below</b>
+                        <hr>
+                      </td>
+                    </tr>
+                    <tr style="font-style: italic;">
+                      <td colspan="2" style="text-align:justify">
+                        <p style="color:red"><strong>SPP MEMBERSHIP</strong></p>
+                        <p>
+                          In order to complete the process, you are asked to please proceed with payment of the membership fee to SPP Global, in the following amount: <strong style="color:red;">'.$_POST['total_membresia'].'</strong>. (Bank information is attached. Please read the General Payment Provisions to avoid interest charges.) After payment has been made, please <span style="color:red">enter your account in the D-SPP system and upload the bank receipt.</span>
+                        </p>
+                        <p>
+                          BANK INFORMATION ATTACHED TO EMAIL
+                        </p>
+                        <p>
+                          AFTER MAKING PAYMENT, PLEASE <span style="color:red">UPLOAD "SIGNED USER´S CONTRACT" AND "ACKNOWLEDGEMENT OF RECEIPT"</span> AND ALSO <span style="color:red">THE "RECEIPT OF PAYMENT"</span> THROUGH THE D-SPP SYSTEM, BY ENTERING YOUR ACCOUNT AS AN SPO (Small Producers’ Organization) IN THE FOLLOWING LINK: <a href="http://d-spp.org/esp/?OPP">http://d-spp.org/esp/?OPP</a>
+                        </p>
+                        <p>
+                          3.  After SPP Global has confirmed through the System that payment has been received in the SPP Global account, your Certificate will be made available to you.
+                        </p>
+
+                      </td>
+                    </tr>
+
+                    <tr style="">
+                      <td colspan="2">
+                      <hr>
+                        <p>En caso de cualquier duda o aclaración por favor escribir a <span style="color:red">'.$correos_oc['email1'].', '.$correos_oc['email2'].'</span></p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </body>
+              </html>
+        ';
+      }
+      if(!empty($detalle_opp['contacto1_email'])){
+        $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
+      }
+      if(!empty($detalle_opp['contacto2_email'])){
+        $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(!empty($detalle_opp['adm1_email'])){
+        $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(!empty($detalle_opp['email'])){
+        $token = strtok($detalle_opp['email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(isset($correos_oc['email1'])){
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+      if(isset($correos_oc['email2'])){
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddCC($token);
+          $token = strtok('\/\,\;');
+        }
+      }
+
+      $mail->AddBCC($spp_global);
+      $mail->AddBCC($finanzas_spp);
+
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+      $mail->ClearAttachments();
+
+      ///// SE ENVIA CORREO AL ORGANISMO DE CERTIFICACIÓN, PARA QUE CARGUE LOS FORMATOS DE EVALUACIÓN
 
       $asunto = "D-SPP | Formatos de Evaluación";
 
@@ -1952,11 +2176,11 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <?php 
                         if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                         ?>
-                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validarRenovacion()" style="width:100%; display:none" >Enviar Dictamen</button>
+                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validarRenovacion()" style="width:100%; display:none" >Enviar Dictamen 1</button>
                         <?php
                         }else{
                         ?>
-                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Enviar Dictamen</button>
+                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Enviar Dictamen 2</button>
                         <?php
                         }
                          ?>
@@ -1976,7 +2200,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                 echo "No Disponible";
               }
                ?>
-               <input type="hidden" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
+               <input type="text" name="tipo_solicitud" value="<?php echo $solicitud['tipo_solicitud']; ?>">
                <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
             </form>
           </td>

@@ -620,11 +620,11 @@ $timeActual = time();
 
         <form name="formulario1" method="POST" action="../../reportes/lista_opp.php">
           <input type="hidden" name="lista_pdf" value="1">
-          <input type="hidden" name="query_pdf" value="<?php echo $query_opp; ?>">
+          <input type="hidden" name="query_pdf" value="<?php echo $query; ?>">
         </form> 
         <form name="formulario2" method="POST" action="../../reportes/lista_opp.php">
           <input type="hidden" name="lista_excel_en_proceso" value="2">
-          <input type="hidden" name="query_excel" value="<?php echo $query_opp; ?>">
+          <input type="hidden" name="query_excel" value="<?php echo $query; ?>">
         </form>
       </th>
       <th class="success text-center" colspan="6">
