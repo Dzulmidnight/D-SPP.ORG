@@ -425,7 +425,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
   /// CONSULTAMOS LAS ORGANIZACONES QUE ESTAN EN PROCESO Y POR ESO NO DEBEN ESTAR EN LAS CERTIFICADAS
   $array_opp = '';
   $array_opp2 = '';
-  $consultar_numero = mysql_query("SELECT opp.idopp, opp.abreviacion, solicitud_certificacion.idsolicitud_certificacion, COUNT(idsolicitud_certificacion) AS 'total_solicitudes' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE (opp.estatus_opp != 'CANCELADO' AND opp.estatus_opp != 'SUSPENDIDO' AND opp.estatus_opp != 'CERTIFICADO' AND opp.estatus_opp != 'ARCHIVADO') AND opp.estatus_opp = 0 OR opp.estatus_opp IS NULL OR opp.estatus_opp = 1 OR opp.estatus_opp = 4 GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+  $consultar_numero = mysql_query("SELECT opp.idopp, opp.estatus_interno, opp.abreviacion, solicitud_certificacion.idsolicitud_certificacion, COUNT(idsolicitud_certificacion) AS 'total_solicitudes' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE (opp.estatus_opp != 'CANCELADO' AND opp.estatus_opp != 'SUSPENDIDO' AND opp.estatus_opp != 'CERTIFICADO' AND opp.estatus_opp != 'ARCHIVADO') AND opp.estatus_opp = 0 OR opp.estatus_opp IS NULL OR opp.estatus_opp = 1 OR opp.estatus_opp = 4 GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
   $num_registros = mysql_num_rows($consultar_numero);
   $contador = 1;
   while ($detalle_numero = mysql_fetch_assoc($consultar_numero)) {
@@ -446,7 +446,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
   $array_archivadas = '';
   $array_archivadas2 = '';
   $contador = 1;
-  $opp_archivadas = mysql_query("SELECT opp.idopp, opp.abreviacion, solicitud_certificacion.idsolicitud_certificacion FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE opp.estatus_opp = 'ARCHIVADO' GROUP BY opp.idopp ORDER BY opp.nombre", $dspp) or die(mysql_error());
+  $opp_archivadas = mysql_query("SELECT opp.idopp, opp.estatus_interno, opp.abreviacion, solicitud_certificacion.idsolicitud_certificacion FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE opp.estatus_opp = 'ARCHIVADO' GROUP BY opp.idopp ORDER BY opp.nombre", $dspp) or die(mysql_error());
   $total_archivadas = mysql_num_rows($opp_archivadas);
 
   while($archivadas = mysql_fetch_assoc($opp_archivadas)){
@@ -500,7 +500,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
     if(empty($buscar_pais)){
       $q_pais = '';
     }else{
-      $q_pais = 'AND opp.pais = "'.$buscar_pais.'"';
+      $q_pais = "AND opp.pais = '$buscar_pais'";
     }
     if(empty($buscar_estatus)){
       $q_estatus = '';
@@ -586,14 +586,11 @@ if (!empty($_SERVER['QUERY_STRING'])) {
   14_11_2017*/
   $consultar = mysql_query($query,$dspp) or die(mysql_error());
   $total_organizaciones = mysql_num_rows($consultar);
+
  ?>
 
 <div class="row">
-  <div class="col-md-12">
-    <h4>EN PROCESO</h4>
 
-
-  </div>  
   <div class="col-md-2">
     <button class="btn btn-sm btn-danger" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
       <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Filtro Avanzado
@@ -717,10 +714,11 @@ if (!empty($_SERVER['QUERY_STRING'])) {
       <th>ESTATUS CERTIFICADO</th>
 
       
-      <!--13_11_2017<th>ESTATUS PUBLICO</th>13_11_2017-->
-      <!--13_11_2017<th>ESTATUS INTERNO</th>
-      <th>ESTATUS DSPP</th>13_11_2017-->
-      <th><a href="#" data-toggle="tooltip" title="Ultimo tipo de solicitud registrado"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> TIPO SOLICITUD</a></th>
+     <!--<th>ESTATUS PUBLICO</th>-->
+      <!--<th>ESTATUS INTERNO</th>-->
+      <!--<th>ESTATUS DSPP</th>-->
+      <!--17_11_2017<th><a href="#" data-toggle="tooltip" title="Ultimo tipo de solicitud registrado"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> TIPO SOLICITUD</a></th>-->
+      <th>ESTATUS ORGANIZACIÓN</th>
       <th>ID SOLICITUD</th>
       <th>PROCESO SOLICITUD</th>
 
@@ -826,7 +824,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
        ?>
     </td>
     <!-- ESTATUS INTERNO -->
-    <!--13_11_2017<td>
+    <!--<td>
       <?php
       $consultar3 = mysql_query("SELECT nombre FROM estatus_interno WHERE idestatus_interno = '$informacion[solicitud_estatus_interno]'", $dspp) or die(mysql_error());
       $detalle3 = mysql_fetch_assoc($consultar3);
@@ -835,9 +833,9 @@ if (!empty($_SERVER['QUERY_STRING'])) {
       $detalle4 = mysql_fetch_assoc($consultar4);
         echo '<p>OPP: '.$informacion['opp_estatus_interno'].' - <span style="color:red">'.$detalle4['nombre'].'</span></p>';
        ?>
-    </td>
+    </td>-->
     <!-- ESTATUS DSPP -->
-    <!--13_11_2017<td>
+    <!--<td>
       <?php
       $consultar5 = mysql_query("SELECT nombre FROM estatus_dspp WHERE idestatus_dspp = '$informacion[solicitud_estatus_dspp]'", $dspp) or die(mysql_error());
       $detalle5 = mysql_fetch_assoc($consultar5);
@@ -850,14 +848,22 @@ if (!empty($_SERVER['QUERY_STRING'])) {
     <!-- TIPO SOLICITUD -->
     <td>
       <?php
-      $query_tipo = mysql_query("SELECT solicitud_certificacion.tipo_solicitud FROM solicitud_certificacion WHERE idsolicitud_certificacion = '$informacion[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
-      $tipo_solicitud = mysql_fetch_assoc($query_tipo);
-      if($tipo_solicitud['tipo_solicitud'] == 'NUEVA'){
-        echo '<p class="bg-success">'.$tipo_solicitud['tipo_solicitud'].'</p>';
-      }else if($tipo_solicitud['tipo_solicitud'] == 'RENOVACION'){
-        echo '<p class="bg-warning">'.$tipo_solicitud['tipo_solicitud'].'</p>';
+      /*$estado = mysql_query("SELECT estatus_interno FROM estatus_interno WHERE idestatus_interno = '$informacion[solicitud_estatus_interno]'", $dspp) or die(mysql_error());
+      $detalle_estado = mysql_fetch_assoc($estado);*/
+      if($informacion['opp_estatus_interno'] == 11){
+        echo '<span style="color:red">SUSPENDIDA</span>';
+      }else if($informacion['opp_estatus_interno'] == 12){
+        echo '<span style="color:red">INACTIVA</span>';
       }else{
-        echo '<p style="color:red">NO DISPONIBLE</p>';
+        $query_tipo = mysql_query("SELECT solicitud_certificacion.tipo_solicitud FROM solicitud_certificacion WHERE idsolicitud_certificacion = '$informacion[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
+        $tipo_solicitud = mysql_fetch_assoc($query_tipo);
+        if($tipo_solicitud['tipo_solicitud'] == 'NUEVA'){
+          echo '<p class="bg-success">'.$tipo_solicitud['tipo_solicitud'].'</p>';
+        }else if($tipo_solicitud['tipo_solicitud'] == 'RENOVACION'){
+          echo '<p class="bg-warning">'.$tipo_solicitud['tipo_solicitud'].'</p>';
+        }else{
+          echo '<p style="color:red">NO DISPONIBLE</p>';
+        }
       }
        ?>
     </td>
