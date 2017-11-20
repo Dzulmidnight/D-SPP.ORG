@@ -119,8 +119,8 @@ function sanear_string($string)
         'packages':['geochart'],
         // Note: you will need to get a mapsApiKey for your project.
         // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-        'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
-        //'mapsApiKey': 'AIzaSyB0yHe2WVMjkilm056vaEN3CBUYFB3aa-w'
+        //'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+        'mapsApiKey': 'AIzaSyB0yHe2WVMjkilm056vaEN3CBUYFB3aa-w'
       });
 
       google.charts.setOnLoadCallback(drawRegionsMap);

@@ -308,7 +308,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 								//$marca_cliente = $_POST[$array3[$i]];
 								//$sin_cliente = $_POST[$array4[$i]];
 
-								$str = iconv($charset, 'ASCII//TRANSLIT', $producto_general[$i]);
+								/*$str = iconv($charset, 'ASCII//TRANSLIT', $producto_general[$i]);
 								$producto_general[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
 								$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
@@ -318,7 +318,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 								$destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
 								$str = iconv($charset, 'ASCII//TRANSLIT', $materia[$i]);
-								$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+								$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));*/
 
 
 							    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto_general, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
@@ -664,7 +664,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 							//$marca_cliente = $_POST[$array3[$i]];
 							//$sin_cliente = $_POST[$array4[$i]];
 
-							$str = iconv($charset, 'ASCII//TRANSLIT', $producto_general[$i]);
+							/*$str = iconv($charset, 'ASCII//TRANSLIT', $producto_general[$i]);
 							$producto_general[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
 							$str = iconv($charset, 'ASCII//TRANSLIT', $producto[$i]);
@@ -674,7 +674,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 							$destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
 							$str = iconv($charset, 'ASCII//TRANSLIT', $materia[$i]);
-							$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+							$materia[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));*/
 
 
 						    $insertSQL = sprintf("INSERT INTO productos (idopp, idsolicitud_certificacion, producto_general, producto, volumen, terminado, materia, destino, marca_propia, marca_cliente, sin_cliente) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
@@ -1336,10 +1336,10 @@ $opp = mysql_fetch_assoc($row_opp);
 					</tr>
 					<tr>
 						<td>
-							<input type="text" class="form-control" name="producto_general[0]" id="exampleInputEmail1" placeholder="General product">
+							<input type="text" class="form-control" name="producto_general[0]" id="exampleInputEmail1" onBlur="ponerMayusculas(this)" placeholder="General product">
 						</td>
 						<td>
-							<input type="text" class="form-control" name="producto[0]" id="exampleInputEmail1" placeholder="Specific product">
+							<input type="text" class="form-control" name="producto[0]" id="exampleInputEmail1" onBlur="ponerMayusculas(this)" placeholder="Specific product">
 						</td>
 						<td>
 							<input type="text" class="form-control" name="volumen[0]" id="exampleInputEmail1" placeholder="Volume">
@@ -1412,6 +1412,14 @@ $opp = mysql_fetch_assoc($row_opp);
 	
   function validar(){
 
+	resp1 = document.getElementById("resp1").value;
+	if ( resp1 == null || resp1.length == 0 || /^\s+$/.test(resp1)) {
+	// Si no se cumple la condicion...
+	    alert('YOU MUST ENTER THE NUMBER OF PARTNERS');
+	    document.getElementById("resp1").focus();
+	    return false;
+	}
+
     tipo_solicitud = document.getElementsByName("tipo_solicitud");
     tuvo_ventas = document.getElementsByName("op_preg12");
     opcion_venta = document.getElementsByName("op_preg13");
@@ -1470,6 +1478,11 @@ $opp = mysql_fetch_assoc($row_opp);
 
 </script>
 <script>
+function ponerMayusculas(nombre) 
+{ 
+    nombre.value=nombre.value.toUpperCase(); 
+} 
+
 var contador=0;
 	function tablaCertificaciones()
 	{
@@ -1524,9 +1537,9 @@ var contador=0;
 	  var cell8 = row.insertCell(7);
 	  var cell9 = row.insertCell(8);
 
-	  cell1.innerHTML = '<input type="text" class="form-control" name="producto_general['+cont+']" id="exampleInputEmail1" placeholder="General product">';
+	  cell1.innerHTML = '<input type="text" class="form-control" name="producto_general['+cont+']" id="exampleInputEmail1" onBlur="ponerMayusculas(this)" placeholder="General product">';
 
-	  cell2.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Specific Product">';
+	  cell2.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" onBlur="ponerMayusculas(this)" placeholder="Specific Product">';
 	  
 	  cell3.innerHTML = '<input type="text" class="form-control" name="volumen['+cont+']" id="exampleInputEmail1" placeholder="Volume">';
 	  
