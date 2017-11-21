@@ -2,69 +2,28 @@
 require_once('../Connections/dspp.php');
 mysql_select_db($database_dspp, $dspp);
 
-function sanear_string($string)
-{
- 
-    $string = trim($string);
- 
-    $string = str_replace(
-        array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'),
-        array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'),
-        $string
-    );
- 
-    $string = str_replace(
-        array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'),
-        array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'),
-        $string
-    );
- 
-    $string = str_replace(
-        array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'),
-        array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'),
-        $string
-    );
- 
-    $string = str_replace(
-        array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'),
-        array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'),
-        $string
-    );
- 
-    $string = str_replace(
-        array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'),
-        array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'),
-        $string
-    );
- 
-    $string = str_replace(
-        array('ñ', 'Ñ', 'ç', 'Ç'),
-        array('n', 'N', 'c', 'C',),
-        $string
-    );
 
- 
- 
-    return $string;
-}
   /// CONSULTAMOS LAS ORGANIZACONES QUE ESTAN EN PROCESO Y POR ESO NO DEBEN ESTAR EN LAS CERTIFICADAS
-  $array_opp = '';
-  $array_opp2 = '';
-  $consultar_numero = mysql_query("SELECT opp.idopp, opp.abreviacion, solicitud_certificacion.idsolicitud_certificacion, COUNT(idsolicitud_certificacion) AS 'total_solicitudes' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE (opp.estatus_opp != 'CANCELADO' AND opp.estatus_opp != 'SUSPENDIDO' AND opp.estatus_opp != 'CERTIFICADO' AND opp.estatus_opp != 'ARCHIVADO') AND opp.estatus_opp = 0 OR opp.estatus_opp IS NULL OR opp.estatus_opp = 1 OR opp.estatus_opp = 4 GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+  $array_proceso = '';
+  $array_proceso2 = '';
+
+  $consultar_numero = mysql_query("SELECT opp.idopp, solicitud_certificacion.idsolicitud_certificacion, COUNT(idsolicitud_certificacion) AS 'total_solicitudes' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE (opp.estatus_opp != 'CANCELADO' AND opp.estatus_opp != 'SUSPENDIDO' AND opp.estatus_opp != 'CERTIFICADO' AND opp.estatus_opp != 'ARCHIVADO') AND opp.estatus_opp = 0 OR opp.estatus_opp IS NULL OR opp.estatus_opp = 1 OR opp.estatus_opp = 4 GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+  $total_en_proceso = mysql_num_rows($consultar_numero);
   $num_registros = mysql_num_rows($consultar_numero);
   $contador = 1;
   while ($detalle_numero = mysql_fetch_assoc($consultar_numero)) {
     if($detalle_numero['total_solicitudes'] <= 1){
       if($contador < $num_registros){
-        $array_opp .= 'opp.idopp(<span style="color:red">'.$detalle_numero['abreviacion'].'</span>) = '.$detalle_numero['idopp'].' OR ';
-        $array_opp2 .= 'opp.idopp != '.$detalle_numero['idopp'].' AND ';
+        $array_proceso .= 'opp.idopp != '.$detalle_numero['idopp'].' AND ';
+        $array_proceso2 .= 'opp.idopp = '.$detalle_numero['idopp'].' OR ';
       }else{
-        $array_opp .= 'opp.idopp(<span style="color:red">'.$detalle_numero['abreviacion'].'</span>) = '.$detalle_numero['idopp'];
-        $array_opp2 .= 'opp.idopp != '.$detalle_numero['idopp'];
+        $array_proceso .= 'opp.idopp != '.$detalle_numero['idopp'];
+        $array_proceso2 .= 'opp.idopp = '.$detalle_numero['idopp'];
       }
     }
     $contador++;
   }
+
 
 
   //CONSULTAMOS LAS ORGANIZACIONES QUE ESTAN "ARCHIVADAS" Y POR ESO NO DEBEN ESTAR ENTRE LAS CERTIFICADAS
@@ -76,39 +35,45 @@ function sanear_string($string)
 
   while($archivadas = mysql_fetch_assoc($opp_archivadas)){
     if($contador < $total_archivadas){
-      $array_archivadas2 .= 'opp.idopp(<span style="color:red">'.$archivadas['abreviacion'].'</span>) = '.$archivadas['idopp'].' OR ';
       $array_archivadas .= 'opp.idopp != '.$archivadas['idopp'].' AND ';
+      $array_archivadas2 .= 'opp.idopp = '.$archivadas['idopp'].' OR ';
     }else{
-      $array_archivadas2 .= 'opp.idopp(<span style="color:red">'.$archivadas['abreviacion'].'</span>) = '.$archivadas['idopp'];
       $array_archivadas .= 'opp.idopp != '.$archivadas['idopp'];
+      $array_archivadas2 .= 'opp.idopp = '.$archivadas['idopp'];
     }
     $contador++;
   }
 
+
   //CONSULTAMOS LAS ORGANIZACIONES CANCELADAS
   $array_canceladas = '';
+  $array_canceladas2 = '';
   $contador = 1;
   $query_canceladas = mysql_query("SELECT opp.idopp FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp WHERE opp.estatus_interno = 10 OR solicitud_certificacion.estatus_interno = 10 OR opp.estatus_opp = 'CANCELADO' ORDER BY opp.nombre", $dspp) or die(mysql_error());
   $total_canceladas = mysql_num_rows($query_canceladas);
   while($canceladas = mysql_fetch_assoc($query_canceladas)){
     if($contador < $total_canceladas){
       $array_canceladas .= 'opp.idopp != '.$canceladas['idopp'].' AND ';
+      $array_canceladas2 .= 'opp.idopp = '.$canceladas['idopp'].' OR ';
     }else{
       $array_canceladas .= 'opp.idopp != '.$canceladas['idopp'];
+      $array_canceladas2 .= 'opp.idopp = '.$canceladas['idopp'];
     }
     $contador++;
   }
-  $query_tota_opps = mysql_query("SELECT idopp FROM opp GROUP BY idopp",$dspp) or die(mysql_error());
-  $total_opps = mysql_num_rows($query_tota_opps);
-
-
 
   $array_certificadas = '';
   $query = "";
-  $row_certificadas = mysql_query("SELECT opp.idopp,  opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
-  $organizaciones_certificadas = mysql_num_rows($row_certificadas);
+  $row_certificadas = mysql_query("SELECT opp.idopp, MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_proceso AND $array_archivadas AND $array_canceladas GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+  $total_certificadas2 = mysql_num_rows($row_certificadas);
   $contador_opps = 0;
 
+  $tipo_mapa = '';
+  if(isset($_POST['tipo_mapa'])){
+    $tipo_mapa = $_POST['tipo_mapa'];
+  }else{  
+    $tipo_mapa = 'CERTIFICADAS';
+  }
 
 ?>
 
@@ -129,18 +94,57 @@ function sanear_string($string)
         var data = google.visualization.arrayToDataTable([
           ['Pais', 'Nº Organizaciones'],
          <?php 
-         //$query = "SELECT pais FROM opp GROUP BY pais";
-         $row_paises = mysql_query("SELECT pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
-         //$consultar = mysql_query($query,$dspp) or die(mysql_error());
-          while($paises = mysql_fetch_assoc($row_paises)){
-            $row_certificadas = mysql_query("SELECT opp.idopp, opp.pais, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas AND opp.pais = '$paises[pais]' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
-            $total_certificadas = mysql_fetch_assoc($row_certificadas);
-            $otro_total = mysql_num_rows($row_certificadas);
-            if($otro_total > 0){
-              echo "['$paises[pais]', $otro_total],";
-            }
-            //echo 'PAIS: '.$paises['pais'].' - Num: '.$otro_total.'<br>';
-          }
+         switch ($tipo_mapa) {
+           case 'CERTIFICADAS':
+              $row_paises = mysql_query("SELECT pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
+              while($paises = mysql_fetch_assoc($row_paises)){
+                $row_certificadas = mysql_query("SELECT opp.idopp, opp.pais, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_proceso AND $array_archivadas AND $array_canceladas AND opp.pais = '$paises[pais]' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+
+                $total_certificadas = mysql_num_rows($row_certificadas);
+                if($total_certificadas > 0){
+                  echo "['$paises[pais]', $total_certificadas],";
+                }
+              }
+             break;
+           case 'EN PROCESO':
+              $row_paises = mysql_query("SELECT pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
+              while($paises2 = mysql_fetch_assoc($row_paises)){
+                $row_en_proceso = mysql_query("SELECT opp.idopp, opp.pais, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_proceso2 AND opp.pais = '$paises2[pais]' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+
+                $total_en_proceso = mysql_num_rows($row_en_proceso);
+                if($total_en_proceso > 0){
+                  echo "['$paises2[pais]', $total_en_proceso],";
+                }
+              }
+             break;
+           case 'CANCELADAS':
+              $row_paises = mysql_query("SELECT pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
+              while($paises = mysql_fetch_assoc($row_paises)){
+                $row_canceladas = mysql_query("SELECT opp.idopp, opp.pais, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_canceladas2 AND opp.pais = '$paises[pais]' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+
+                $otro_canceladas = mysql_num_rows($row_canceladas);
+                if($otro_canceladas > 0){
+                  echo "['$paises[pais]', $otro_canceladas],";
+                }
+              }
+             break;
+           case 'ARCHIVADAS':
+              $row_paises = mysql_query("SELECT pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
+              while($paises = mysql_fetch_assoc($row_paises)){
+                $row_archivadas = mysql_query("SELECT opp.idopp, opp.pais, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_archivadas2 AND opp.pais = '$paises[pais]' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
+                
+                $otro_archivadas = mysql_num_rows($row_archivadas);
+                if($otro_archivadas > 0){
+                  echo "['$paises[pais]', $otro_archivadas],";
+                }
+              }
+             break;
+
+           default:
+             # code...
+             break;
+         }
+
 
 
     echo "]);";
@@ -170,38 +174,39 @@ function sanear_string($string)
     </script>
     <div class="row">
       <div class="col-md-12">
-        <h4>MAPA DE ORGANIZACIONES SPP CERTIFICADAS: <?php echo '<span style="color:red">'.$organizaciones_certificadas.'</span>'; ?></h4>
-        <div class="col-lg-9">
-          <div id="regions_div" style="width: 1000px; height: 650px;"></div>
-        </div>
+        <h4>MAPA DE ORGANIZACIONES SPP CERTIFICADAS: 
+          <?php
+          switch ($tipo_mapa) {
+            case 'CERTIFICADAS':
+              echo '<span style="color:red">'.$total_certificadas2.'</span>'; 
+              break;
+            case 'EN PROCESO':
+              echo '<span style="color:red">'.$total_en_proceso.'</span>'; 
+              break;
+            case 'CANCELADAS':
+              echo '<span style="color:red">'.$total_canceladas.'</span>'; 
+              break;
+            case 'ARCHIVADAS':
+              echo '<span style="color:red">'.$total_archivadas.'</span>'; 
+              break;
+            default:
+              # code...
+              break;
+          }
+          ?>
+        </h4>
+        <form action="" method="POST">
+          <select name="tipo_mapa" id="tipo_mapa" onchange="this.form.submit()">
+            <option <?php if($tipo_mapa == 'CERTIFICADAS'){echo 'selected'; } ?> value="CERTIFICADAS">CERTIFICADAS</option>
+            <option <?php if($tipo_mapa == 'EN PROCESO'){echo 'selected'; } ?> value="EN PROCESO">EN PROCESO</option>
+            <option <?php if($tipo_mapa == 'CANCELADAS'){echo 'selected'; } ?> value="CANCELADAS">CANCELADAS</option>
+            <option <?php if($tipo_mapa == 'ARCHIVADAS'){echo 'selected'; } ?> value="ARCHIVADAS">ARCHIVADAS</option>
+          </select>
+        </form>
+      </div>
+      <div class="col-lg-12">
+        <div id="regions_div" style="width: 1000px; height: 650px;"></div>
       </div>
 
-    <!--<div class="col-md-3" style="height: 500px;overflow: scroll;">
-      <table class="table table-bordered table-striped table-condensed" style="font-size:12px;">
-        <tr style="background-color:#4caf50;color:#ffffff">
-          <th>#</th>
-          <th>País</th>
-          <th>Organizaciones</th>
-        </tr>
-        <?php 
-        $row_paises = mysql_query("SELECT pais FROM opp GROUP BY pais", $dspp) or die(mysql_error());
-        $contador_paises = 1;
-        while($paises = mysql_fetch_assoc($row_paises)){
-          $row_certificadas = mysql_query("SELECT opp.idopp, opp.pais, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas AND opp.pais = '$paises[pais]' GROUP BY opp.idopp ORDER BY opp.idopp", $dspp) or die(mysql_error());
-          $total_certificadas = mysql_fetch_assoc($row_certificadas);
-          $otro_total = mysql_num_rows($row_certificadas);
-          //echo 'PAIS: '.$paises['pais'].' - Num: '.$otro_total.'<br>';
-          if($otro_total > 0){
-            echo '<tr>';
-              echo '<td>'.$contador_paises.'</td>';
-              echo '<td>'.$paises['pais'].'</td>';
-              echo '<td>'.$otro_total.'</td>';
-            echo '</tr>';
-            $contador_paises++;
-          }
-        }
-         ?>
-      </table>
-    </div>-->
 
     </div>

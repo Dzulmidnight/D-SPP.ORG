@@ -191,7 +191,7 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
   <script src="../chosen/chosen.jquery.js" type="text/javascript"></script>
 
   <script type="text/javascript">
-    var config = {
+    /*var config = {
       '.chosen-select'           : {},
       '.chosen-select-deselect'  : {allow_single_deselect:true},
       '.chosen-select-no-single'z : {disable_search_threshold:10},
@@ -200,7 +200,7 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
     }
     for (var selector in config) {
       $(selector).chosen(config[selector]);
-    }
+    }*/
   </script>
   
     <script>
