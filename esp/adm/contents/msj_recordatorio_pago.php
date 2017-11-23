@@ -5,7 +5,7 @@
   $diez_dias = 864000;
   $veinte_dias = $diez_dias*2;
 
-  $query = "SELECT opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais,  solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.aviso2, comprobante_pago.aviso3, comprobante_pago.notificacion_suspender FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC";
+  $query = "SELECT opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais,  solicitud_certificacion.idoc, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.aviso2, comprobante_pago.aviso3, comprobante_pago.notificacion_suspender FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC";
   $ejecutar = mysql_query($query, $dspp) or die(mysql_error());
   $contador = 1;
   while($registros = mysql_fetch_assoc($ejecutar)){ //// inicia while
@@ -131,11 +131,13 @@
 
         }
 
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
-        $mail->ClearAddresses();
+        if($registros['idoc'] != 15){
+          $mail->Subject = utf8_decode($asunto);
+          $mail->Body = utf8_decode($cuerpo_mensaje);
+          $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+          $mail->Send();
+          $mail->ClearAddresses();
+        }
 
 
       }
@@ -257,11 +259,14 @@
           }
 
         }
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
-        $mail->ClearAddresses();
+        if($registros['idoc'] != 15){
+          $mail->Subject = utf8_decode($asunto);
+          $mail->Body = utf8_decode($cuerpo_mensaje);
+          $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+          $mail->Send();
+          $mail->ClearAddresses();
+        }
+
 
       }
     }
@@ -381,13 +386,15 @@
           }
 
         }
-        $mail->AddBCC("cert@spp.coop");
-        $mail->AddBCC("adm@spp.coop");
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
-        $mail->ClearAddresses();
+        if($registros['idoc'] != 15){
+          $mail->AddBCC("cert@spp.coop");
+          $mail->AddBCC("adm@spp.coop");
+          $mail->Subject = utf8_decode($asunto);
+          $mail->Body = utf8_decode($cuerpo_mensaje);
+          $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+          $mail->Send();
+          $mail->ClearAddresses();
+        }
 
       }
     }
@@ -483,14 +490,16 @@
             </body>
             </html>
       ';
+      if($registros['idoc'] != 15){
+        $mail->AddAddress("cert@spp.coop");
+        $mail->AddAddress("adm@spp.coop");
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_mensaje);
+        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+      }
 
-      $mail->AddAddress("cert@spp.coop");
-      $mail->AddAddress("adm@spp.coop");
-      $mail->Subject = utf8_decode($asunto);
-      $mail->Body = utf8_decode($cuerpo_mensaje);
-      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-      $mail->Send();
-      $mail->ClearAddresses();
     }
   
 

@@ -545,23 +545,27 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
           $token = strtok('\/\,\;');
         }
       }
-      $mail->AddBCC($spp_global);
-      $mail->AddBCC($finanzas_spp);
+      /// si la certificadora es diferente a BIOTROPICO se envian los mensajes
+      if($idoc != 15){
+        $mail->AddBCC($spp_global);
+        $mail->AddBCC($finanzas_spp);
 
-      $mail->Subject = utf8_decode($asunto);
-      $mail->Body = utf8_decode($cuerpo_mensaje);
-      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_mensaje);
+        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
 
-      /*if($mail->Send()){
-        
-       echo "<script>alert('Correo enviado Exitosamente.');</script>";
-      }else{
-        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');</script>";
-   
-      }*/
-      $mail->Send();
-      $mail->ClearAddresses();
-      $mail->ClearAttachments();
+        /*if($mail->Send()){
+          
+         echo "<script>alert('Correo enviado Exitosamente.');</script>";
+        }else{
+          echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');</script>";
+     
+        }*/
+        $mail->Send();
+        $mail->ClearAddresses();
+        $mail->ClearAttachments();
+      }
+
       
       /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
 
@@ -915,15 +919,18 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         }
       }
 
-      $mail->AddBCC($spp_global);
-      $mail->AddBCC($finanzas_spp);
 
-      $mail->Subject = utf8_decode($asunto);
-      $mail->Body = utf8_decode($cuerpo_mensaje);
-      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-      $mail->Send();
-      $mail->ClearAddresses();
-      $mail->ClearAttachments();
+      if($idoc != 15){
+        $mail->AddBCC($spp_global);
+        $mail->AddBCC($finanzas_spp);
+
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_mensaje);
+        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+        $mail->ClearAttachments();
+      }
 
       ///// SE ENVIA CORREO AL ORGANISMO DE CERTIFICACIÓN, PARA QUE CARGUE LOS FORMATOS DE EVALUACIÓN
 
@@ -1211,24 +1218,26 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         }
       }
 
-      $mail->AddBCC($spp_global);
-      $mail->AddBCC($finanzas_spp);
-      $mail->AddBCC($direccion);
+      if($idoc != 15){
+        $mail->AddBCC($spp_global);
+        $mail->AddBCC($finanzas_spp);
+        $mail->AddBCC($direccion);
 
-      $mail->Subject = utf8_decode($asunto);
-      $mail->Body = utf8_decode($cuerpo_mensaje);
-      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_mensaje);
+        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
 
-      if($mail->Send()){
-        
-       echo "<script>alert('Correo enviado Exitosamente.');</script>";
-      }else{
-        echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');</script>";
-   
+        if($mail->Send()){
+          
+         echo "<script>alert('Correo enviado Exitosamente.');</script>";
+        }else{
+          echo "<script>alert('Error, no se pudo enviar el correo, por favor contacte al administrador: soporte@d-spp.org');</script>";
+     
+        }
+        //$mail->Send();
+        $mail->ClearAddresses();
+        $mail->ClearAttachments();
       }
-      //$mail->Send();
-      $mail->ClearAddresses();
-      $mail->ClearAttachments();
       ///termina envio de mensaje dictamen positivo
     //09_04_2017}
     ///********************************* TERMINA DICTAMEN NEGATIVO RENOVACION*********************************************

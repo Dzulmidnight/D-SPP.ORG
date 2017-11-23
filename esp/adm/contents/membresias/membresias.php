@@ -1524,11 +1524,13 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 
 								}
 
-								$mail->Subject = utf8_decode($asunto);
-								$mail->Body = utf8_decode($cuerpo_mensaje);
-								$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-								$mail->Send();
-								$mail->ClearAddresses();
+								if($registros['idoc'] != 15){
+									$mail->Subject = utf8_decode($asunto);
+									$mail->Body = utf8_decode($cuerpo_mensaje);
+									$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+									$mail->Send();
+									$mail->ClearAddresses();
+								}
 
 
 					 		}else{
@@ -1656,11 +1658,13 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 									}
 
 								}
-								$mail->Subject = utf8_decode($asunto);
-								$mail->Body = utf8_decode($cuerpo_mensaje);
-								$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-								$mail->Send();
-								$mail->ClearAddresses();
+								if($registros['idoc'] != 15){
+									$mail->Subject = utf8_decode($asunto);
+									$mail->Body = utf8_decode($cuerpo_mensaje);
+									$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+									$mail->Send();
+									$mail->ClearAddresses();
+								}
 
 					 		}else{
 					 			//echo '<p style="color:green">ACTIVO</p>';
@@ -1786,13 +1790,15 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 									}
 
 								}
-								$mail->AddBCC("cert@spp.coop");
-								$mail->AddBCC("adm@spp.coop");
-								$mail->Subject = utf8_decode($asunto);
-								$mail->Body = utf8_decode($cuerpo_mensaje);
-								$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-								$mail->Send();
-								$mail->ClearAddresses();
+								if($registros['idoc'] != 15){
+									$mail->AddBCC("cert@spp.coop");
+									$mail->AddBCC("adm@spp.coop");
+									$mail->Subject = utf8_decode($asunto);
+									$mail->Body = utf8_decode($cuerpo_mensaje);
+									$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+									$mail->Send();
+									$mail->ClearAddresses();
+								}
 
 					 		}else{
 					 			//echo '<p style="color:green">ACTIVO</p>';
@@ -1892,13 +1898,15 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 							      </html>
 							';
 
-							$mail->AddAddress("cert@spp.coop");
-							$mail->AddAddress("adm@spp.coop");
-							$mail->Subject = utf8_decode($asunto);
-							$mail->Body = utf8_decode($cuerpo_mensaje);
-							$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-							$mail->Send();
-							$mail->ClearAddresses();
+							if($registros['idoc'] != 15){
+								$mail->AddAddress("cert@spp.coop");
+								$mail->AddAddress("adm@spp.coop");
+								$mail->Subject = utf8_decode($asunto);
+								$mail->Body = utf8_decode($cuerpo_mensaje);
+								$mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+								$mail->Send();
+								$mail->ClearAddresses();
+							}
 					 	}
 					 ?>
 				</td>
