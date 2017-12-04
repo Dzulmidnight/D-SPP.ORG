@@ -487,66 +487,67 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         ';
       }
 
-      $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE nombre = 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
-      $documentacion = mysql_fetch_assoc($row_documentacion);
-
-      $mail->AddAttachment($documentacion['archivo']);
-
-
-      if(isset($archivo_dictamen)){
-        $mail->AddAttachment($archivo_dictamen);
-      }
-      if(isset($detalle_opp['contacto1_email'])){
-        $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-
-      }
-      if(isset($detalle_opp['contacto2_email'])){
-        $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_opp['adm1_email'])){
-        $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_opp['email'])){
-        $token = strtok($detalle_opp['email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email1'])){
-        $token = strtok($correos_oc['email1'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email2'])){
-        $token = strtok($correos_oc['email2'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      /// si la certificadora es diferente a BIOTROPICO se envian los mensajes
       if($idoc != 15){
+        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE nombre = 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
+        $documentacion = mysql_fetch_assoc($row_documentacion);
+
+        $mail->AddAttachment($documentacion['archivo']);
+
+
+        if(isset($archivo_dictamen)){
+          $mail->AddAttachment($archivo_dictamen);
+        }
+        if(isset($detalle_opp['contacto1_email'])){
+          $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+
+        }
+        if(isset($detalle_opp['contacto2_email'])){
+          $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(isset($detalle_opp['adm1_email'])){
+          $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(isset($detalle_opp['email'])){
+          $token = strtok($detalle_opp['email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(isset($correos_oc['email1'])){
+          $token = strtok($correos_oc['email1'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(isset($correos_oc['email2'])){
+          $token = strtok($correos_oc['email2'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+      /// si la certificadora es diferente a BIOTROPICO se envian los mensajes
+
         $mail->AddBCC($spp_global);
         $mail->AddBCC($finanzas_spp);
 
@@ -869,58 +870,57 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               </html>
         ';
       }
-      if(!empty($detalle_opp['contacto1_email'])){
-        $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-
-      }
-      if(!empty($detalle_opp['contacto2_email'])){
-        $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(!empty($detalle_opp['adm1_email'])){
-        $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(!empty($detalle_opp['email'])){
-        $token = strtok($detalle_opp['email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email1'])){
-        $token = strtok($correos_oc['email1'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email2'])){
-        $token = strtok($correos_oc['email2'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-
-
       if($idoc != 15){
+        if(!empty($detalle_opp['contacto1_email'])){
+          $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+
+        }
+        if(!empty($detalle_opp['contacto2_email'])){
+          $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(!empty($detalle_opp['adm1_email'])){
+          $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(!empty($detalle_opp['email'])){
+          $token = strtok($detalle_opp['email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(isset($correos_oc['email1'])){
+          $token = strtok($correos_oc['email1'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(isset($correos_oc['email2'])){
+          $token = strtok($correos_oc['email2'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+
         $mail->AddBCC($spp_global);
         $mail->AddBCC($finanzas_spp);
 
@@ -1165,60 +1165,61 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               </html>
         ';
       }
-   
-      if(!empty($archivo)){
-        $mail->AddAttachment($archivo);
-      }
-      if(isset($detalle_opp['contacto1_email'])){
-        $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_opp['contacto2_email'])){
-        $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_opp['adm1_email'])){
-        $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_opp['email'])){
-        $token = strtok($detalle_opp['email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email1'])){
-        $token = strtok($correos_oc['email1'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email2'])){
-        $token = strtok($correos_oc['email2'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-      }
 
       if($idoc != 15){
+        if(!empty($archivo)){
+          $mail->AddAttachment($archivo);
+        }
+        if(isset($detalle_opp['contacto1_email'])){
+          $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(isset($detalle_opp['contacto2_email'])){
+          $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(isset($detalle_opp['adm1_email'])){
+          $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(isset($detalle_opp['email'])){
+          $token = strtok($detalle_opp['email'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(isset($correos_oc['email1'])){
+          $token = strtok($correos_oc['email1'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+        if(isset($correos_oc['email2'])){
+          $token = strtok($correos_oc['email2'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
+        }
+
+
         $mail->AddBCC($spp_global);
         $mail->AddBCC($finanzas_spp);
         $mail->AddBCC($direccion);
@@ -1433,7 +1434,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
 
 /// INICIA ENVIO DE LA AMPLIACIÓN
 if(isset($_POST['enviar_ampliacion']) && $_POST['enviar_ampliacion'] == 1){
-  $estatus_dspp = 13; // CERTIFICADA
+  $estatus_dspp = 23; // AMPLIACIÓN
+  $estatus_interno = 13; // CERTIFICADA
   $rutaArchivo = "../../archivos/ocArchivos/ampliaciones/";
   if(!empty($_FILES['ampliacion']['name'])){
       $_FILES["ampliacion"]["name"];
@@ -1454,10 +1456,11 @@ if(isset($_POST['enviar_ampliacion']) && $_POST['enviar_ampliacion'] == 1){
 
 
   //insertamos el proceso de certificacion
-  $estatus_proceso = 12; //es el estatus_dspp (certificado emitido)
+  $estatus_proceso = 23; //es el estatus_dspp (AMPLIACIÓN) 
   $nombre_archivo = "AMPLIACIÓN";
-  $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, nombre_archivo, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+  $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_interno, estatus_dspp, nombre_archivo, archivo, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
+    GetSQLValueString($estatus_interno, "int"),
     GetSQLValueString($estatus_proceso, "int"),
     GetSQLValueString($nombre_archivo, "text"),
     GetSQLValueString($ampliacion, "text"),
@@ -1472,8 +1475,8 @@ if(isset($_POST['enviar_ampliacion']) && $_POST['enviar_ampliacion'] == 1){
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
   //ACTUALIZAMOS A LA OPP
-  $estatus_dspp = 13; //certificada
-  $estatus_interno = 13; //dictamen_positivo
+  $estatus_dspp = 23; //AMPLIACIÓN
+  $estatus_interno = 13; //ampliación
   $estatus_publico = 2; //certificado
   $estatus_opp = "CERTIFICADO";
   $updateSQL = sprintf("UPDATE opp SET estatus_opp = %s, estatus_publico = %s, estatus_interno = %s, estatus_dspp = %s WHERE idopp = %s",
@@ -1774,7 +1777,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <td colspan="3">
             <h4>Visualizando solicitudes:</h4> 
           </td>
-          <td class="info">
+          <td class="info" colspan="2">
             <?php 
             
             $row_anio = mysql_query("SELECT FROM_UNIXTIME(fecha_registro,'%Y') AS 'anio' FROM solicitud_certificacion GROUP BY FROM_UNIXTIME(fecha_registro,'%Y') ORDER BY anio DESC", $dspp) or die(mysql_error());
@@ -2482,8 +2485,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               //// SI SE HA CARGADO LA AMPLIACIÓN, TENEMOS LA OPCIÓN DE DESCARGARLA
                               if(!empty($ampliacion['idampliacion'])){
                               ?>
-                                <p class="alert alert-info">Se ha cargado el AMPLIACIÓN, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
-                                <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
+                                <p class="alert alert-info">Se ha cargado la AMPLIACIÓN</p>
+                                <a href="<?php echo $ampliacion['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Ampliación</a>
                               <?php
                               }else{
                               ///// SI NO SE HA CARGADO LA AMPLIACIÓN, HABILITAMOS LA OPCIÓN PARA CARGARLA

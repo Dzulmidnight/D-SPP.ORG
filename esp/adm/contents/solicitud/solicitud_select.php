@@ -1525,7 +1525,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                     echo "<button class='btn btn-sm btn-default' disabled>Proceso Certificación</button>";
                   }
                 }else{
-                  if(isset($periodo_objecion['estatus_objecion']) && $periodo_objecion['estatus_objecion'] == 'FINALIZADO' && isset($periodo_objecion['documento'])){
+                  if(isset($periodo_objecion['estatus_objecion']) && $periodo_objecion['estatus_objecion'] == 'FINALIZADO'){
                   ?>
                     <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud']; ?>">Proceso Certificación</button>
                   <?php

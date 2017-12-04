@@ -1,4 +1,4 @@
- <?php 
+<?php 
 include_once("../../PHPMailer/class.phpmailer.php");
 include_once("../../PHPMailer/class.smtp.php");
 
@@ -7,10 +7,10 @@ $mail->IsSMTP();
 //$mail->SMTPSecure = "ssl";
 $mail->Host = "mailtrap.io";
 //$mail->Port = 25;
-$mail->Port = 2525;
+$mail->Port = 25;
 $mail->SMTPAuth = true;
-$mail->Username = "c1964e91a87e55";
-$mail->Password = "7e87bca11dc4a5";
+$mail->Username = "99f9a8c6200b52";
+$mail->Password = "943bba851a952d";
 //$mail->SMTPDebug = 1;
 
 $mail->From = "soporte@d-spp.org";
@@ -19,22 +19,22 @@ $mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
 
 $correoCert = "cert@spp.coop";
 
+
 /*
-$mail = new PHPMailer();
+$mail = new PHPMailer(true);
 $mail->IsSMTP();
-//$mail->SMTPSecure = "ssl";
-$mail->Host = "mail.d-spp.org";
-//$mail->Port = 25;
-$mail->Port = 25;
 $mail->SMTPAuth = true;
+$mail->SMTPSecure = "ssl";
+
+$mail->Port = 465;
+$mail->Host = "mail.d-spp.org";
 $mail->Username = "soporte@d-spp.org";
-$mail->Password = "fDfMxo=fHxQ^";
-//$mail->SMTPDebug = 1;
+$mail->Password = "*2w{.?bwxxop";
 
 $mail->From = "soporte@d-spp.org";
 $mail->FromName = utf8_decode("CERTIFICACIÓN-CERTIFICATION SPP");
-$mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
 
-$correoCert = "cert@spp.coop";*/
+$mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
+*/
 
  ?>
