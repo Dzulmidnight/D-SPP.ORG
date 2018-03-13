@@ -848,7 +848,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 	$palabra = $_POST['palabra'];
 	$row_membresias = mysql_query("SELECT opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.idoc, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, oc.abreviacion AS 'abreviacion_oc', proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.monto_transferido, comprobante_pago.monto_recibido, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.validar1, comprobante_pago.aviso2, comprobante_pago.validar2, comprobante_pago.aviso3, comprobante_pago.validar3, comprobante_pago.notificacion_suspender, comprobante_pago.fecha_registro AS 'fecha_carga', comprobante_pago.prorroga_inicio, comprobante_pago.prorroga_fin, comprobante_pago.justificacion, comprobante_pago.notas_comprobante, comprobante_pago.cargado_idadm, comprobante_pago.cargado_idopp FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 AND opp.spp LIKE '%$palabra%' OR opp.nombre LIKE '%$palabra%' OR  opp.abreviacion LIKE '%$palabra%' GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC", $dspp) or die(mysql_error());
 }else{
-	$row_membresias = mysql_query("SELECT opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.idoc, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, oc.abreviacion AS 'abreviacion_oc', proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.monto_transferido, comprobante_pago.monto_recibido, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.validar1, comprobante_pago.aviso2, comprobante_pago.validar2, comprobante_pago.aviso3, comprobante_pago.validar3, comprobante_pago.notificacion_suspender, comprobante_pago.fecha_registro AS 'fecha_carga', comprobante_pago.prorroga_inicio, comprobante_pago.prorroga_fin, comprobante_pago.justificacion, comprobante_pago.notas_comprobante, comprobante_pago.cargado_idadm, comprobante_pago.cargado_idopp FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 AND FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '$anio_actual' GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC", $dspp) or die(mysql_error());
+	$row_membresias = mysql_query("SELECT opp.spp, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.idoc, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email, solicitud_certificacion.adm2_email, oc.abreviacion AS 'abreviacion_oc', proceso_certificacion.idproceso_certificacion, proceso_certificacion.idsolicitud_certificacion, proceso_certificacion.fecha_registro AS 'fecha_dictamen', membresia.idmembresia, membresia.idopp, membresia.idcomprobante_pago, membresia.estatus_membresia, membresia.fecha_registro AS 'fecha_activacion', comprobante_pago.monto, comprobante_pago.monto_transferido, comprobante_pago.monto_recibido, comprobante_pago.estatus_comprobante, comprobante_pago.archivo, comprobante_pago.aviso1, comprobante_pago.validar1, comprobante_pago.aviso2, comprobante_pago.validar2, comprobante_pago.aviso3, comprobante_pago.validar3, comprobante_pago.notificacion_suspender, comprobante_pago.fecha_registro AS 'fecha_carga', comprobante_pago.prorroga_inicio, comprobante_pago.prorroga_fin, comprobante_pago.justificacion, comprobante_pago.notas_comprobante, comprobante_pago.cargado_idadm, comprobante_pago.cargado_idopp FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 AND (FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '$anio_actual' OR FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '2017') GROUP BY membresia.idsolicitud_certificacion ORDER BY proceso_certificacion.fecha_registro DESC", $dspp) or die(mysql_error());
 }
 
 ?>
@@ -904,7 +904,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 						 ?>
 					</select>
 				</th>
-				<th>
+				<th colspan="2">
 					<h5>Año</h5>
 					<?php
 					$row_anio = mysql_query("SELECT proceso_certificacion.idsolicitud_certificacion, FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') AS 'anio', proceso_certificacion.fecha_registro AS 'fecha_dictamen' FROM proceso_certificacion INNER JOIN solicitud_certificacion ON proceso_certificacion.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion INNER JOIN membresia ON proceso_certificacion.idsolicitud_certificacion = membresia.idsolicitud_certificacion INNER JOIN opp ON solicitud_certificacion.idopp = opp.idopp INNER JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE proceso_certificacion.estatus_interno = 8 GROUP BY anio ORDER BY anio DESC", $dspp) or die(mysql_error());
@@ -1419,7 +1419,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				<td>
 					<?php echo '<span class="'.$clase_aviso1.'">'.date('d/m/Y', $recordatorio1).'</span>'; ?>
 					<?php 
-					 	if(!$registros['aviso1'] && $registros['estatus_comprobante'] != 'ACEPTADO'){
+					 	if(!$registros['aviso1'] && $registros['estatus_comprobante'] == 'EN ESPERA'){
 					 		if($fecha_actual >= $recordatorio1){
 
 					 			$query = "UPDATE comprobante_pago SET aviso1 = $fecha_actual WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
@@ -1554,7 +1554,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				<td>
 					<?php echo '<span class="'.$clase_aviso2.'">'.date('d/m/Y', $recordatorio2).'</span>'; ?>
 					<?php 
-					 	if(!$registros['aviso2'] && $registros['estatus_comprobante'] != 'ACEPTADO'){
+					 	if(!$registros['aviso2'] && $registros['estatus_comprobante'] == 'EN ESPERA'){
 					 		if($fecha_actual >= $recordatorio2){
 					 			//echo '<p style="color:red">ENVIADO</p>';
 					 			$query = "UPDATE comprobante_pago SET aviso2 = $fecha_actual WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
@@ -1686,7 +1686,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				<td>
 					<?php echo '<span class="'.$clase_aviso3.'">'.date('d/m/Y', $alerta_suspension).'</span>'; ?>
 					<?php 
-					 	if(!$registros['aviso3'] && $registros['estatus_comprobante'] != 'ACEPTADO'){
+					 	if(!$registros['aviso3'] && $registros['estatus_comprobante'] == 'EN ESPERA'){
 					 		if($fecha_actual >= $alerta_suspension){
 					 			//echo '<p style="color:red">ENVIADO</p>';
 					 			$query = "UPDATE comprobante_pago SET aviso3 = $fecha_actual WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
@@ -1816,7 +1816,7 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 					 	}
 
 					 	/// Se envia el correo a los administradores para suspender a la organización
-					 	if(($registros['aviso3'] && !$registros['notificacion_suspender'] && $registros['estatus_comprobante'] != 'ACEPTADO' && !$registros['archivo']) && ($fecha_actual >= $correo_suspender)){
+					 	if(($registros['aviso3'] && !$registros['notificacion_suspender'] && $registros['estatus_comprobante'] == 'EN ESPERA' && !$registros['archivo']) && ($fecha_actual >= $correo_suspender)){
 				 			//echo '<p style="color:red">ENVIADO</p>';
 				 			$query = "UPDATE comprobante_pago SET notificacion_suspender = $fecha_actual WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
 				 			$updateSQL = mysql_query($query, $dspp) or die(mysql_error());

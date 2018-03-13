@@ -110,7 +110,7 @@ $ruta_croquis = "../../archivos/oppArchivos/croquis/";
 	}
 
   // ACTUALIZAMOS LA INFORMACION DE LA SOLICITUD
-	$updateSQL = sprintf("UPDATE solicitud_certificacion SET resp1 = %s, resp2 = %s, resp3 = %s, resp4 = %s, op_preg1 = %s, preg1_1 = %s, preg1_2 = %s, preg1_3 = %s, preg1_4 = %s, op_preg2 = %s, op_preg3 = %s, produccion = %s, procesamiento = %s, exportacion = %s, op_preg5 = %s, op_preg6 = %s, op_preg7 = %s, op_preg8 = %s, op_preg10 = %s, op_preg14 = %s, op_preg15 = %s WHERE idsolicitud_certificacion = %s",
+	$updateSQL = sprintf("UPDATE solicitud_certificacion SET resp1 = %s, resp2 = %s, resp3 = %s, resp4 = %s, op_preg1 = %s, preg1_1 = %s, preg1_2 = %s, preg1_3 = %s, preg1_4 = %s, op_preg2 = %s, op_preg3 = %s, produccion = %s, procesamiento = %s, exportacion = %s, op_preg5 = %s, op_preg6 = %s, op_preg7 = %s, op_preg8 = %s, op_preg10 = %s, op_preg14 = %s, op_preg15 = %s, responsable = %s WHERE idsolicitud_certificacion = %s",
 	       GetSQLValueString($_POST['resp1'], "text"),
 	       GetSQLValueString($_POST['resp2'], "text"),
 	       GetSQLValueString($_POST['resp3'], "text"),
@@ -134,6 +134,7 @@ $ruta_croquis = "../../archivos/oppArchivos/croquis/";
 	       //GetSQLValueString($op_preg13, "text"),
 	       GetSQLValueString($_POST['op_preg14'], "text"),
 	       GetSQLValueString($croquis, "text"),
+	       GetSQLValueString($_POST['responsable'], "text"),
 	       GetSQLValueString($idsolicitud_certificacion, "int"));
 	$actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
@@ -993,7 +994,7 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
 				<input type="hidden" name="idopp" value="<?php echo $solicitud['id_opp']; ?>">
 				<input type="hidden" name="fecha_registro" value="<?php echo $solicitud['fecha_registro']; ?>">
-				<input type="text" class="form-control" id="responsable" value="<?php echo $solicitud['responsable']; ?>" >	
+				<input type="text" class="form-control" name="responsable" id="responsable" value="<?php echo $solicitud['responsable']; ?>" >	
 
 				<p>
 					<b>Organismo de Certificación que recibe la solicitud:</b>

@@ -26,7 +26,7 @@
 
   // consultamos la información de la EMPRESA de acuerdo al certificado
 
-  $row_certificado = mysql_query("SELECT empresa.idempresa, empresa.spp, empresa.nombre, empresa.abreviacion, empresa.password, empresa.email, empresa.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN empresa ON certificado.idempresa = empresa.idempresa INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%".$anio_actual."%' ORDER BY certificado.vigencia_fin ASC", $dspp) or die(mysql_error());
+  $row_certificado = mysql_query("SELECT empresa.idempresa, empresa.spp, empresa.nombre, empresa.abreviacion, empresa.password, empresa.email, empresa.pais, certificado.idcertificado, certificado.entidad, certificado.vigencia_inicio, certificado.vigencia_fin, oc.email1 AS 'oc_email1', oc.email2 AS 'oc_email2' FROM certificado INNER JOIN empresa ON certificado.idempresa = empresa.idempresa INNER JOIN oc ON certificado.entidad = oc.idoc WHERE certificado.vigencia_inicio LIKE '%2017%' OR certificado.vigencia_inicio LIKE '%2018%' OR certificado.idcertificado = 118 ORDER BY certificado.vigencia_fin ASC", $dspp) or die(mysql_error());
 
   ?>
   <table class="table table-bordered" style="font-size:10px;">
@@ -161,6 +161,8 @@
                   $mail->AddBCC($finanzas_spp);
                   $mail->AddBCC($asistencia_spp);
 
+
+
                         // Definimos el mensaje general que se utilizara en el 1º aviso
                         $mensaje_general = '
                           <html>
@@ -185,6 +187,15 @@
                                     
                                       <p>Queremos enfatizar que actualmente existen políticas para la suspensión y/o cancelación del registro por lo que si ustedes no solicitan a tiempo pueden ser acreedores de una suspensión.</p>
                                       
+                                      <p>
+                                        A continuación se muestra su <b>#SPP y su contraseña, necesarios para poder iniciar sesión</b>: <a href="http://d-spp.org/esp/?COM" target="_new">www.d-spp.org/esp/?COM</a></i>
+                                      </p>
+                                      <p>
+                                        <b>Usuario(#SPP) / User: </b> <span style="color:#27ae60;">'.$certificado['spp'].'</span>
+                                        <br>
+                                        <b>Contraseña / Password:</b> <span style="color:#27ae60;">'.$certificado['password'].'</span>
+                                      </p>
+
                                       <p>Agradeciendo su atención, nos despedimos y enviamos saludos del SPP GLOBAL.</p>
 
                                       <p style="color:#2c3e50"><b>En caso de haber iniciado ya su proceso de renovación del registro por favor hacer caso omiso a este mensaje</b></p>
@@ -201,6 +212,16 @@
                                     
                                       <p>We want to emphasize that currently there are policies for the suspension and / or cancellation of the registration so that if you do not apply on time you can be liable for a suspension.</p>
                                       
+                                      <p>
+                                        Below is your <b>#SPP and password needed to log in </b>: <a href="http://d-spp.org/en/?COM" target="_new">www.d-spp.org/en/?COM</a></i>.
+                                      </p>
+                                      <p>
+                                        <b>Usuario(#SPP) / User: </b> <span style="color:#27ae60;">'.$certificado['spp'].'</span>
+                                        <br>
+                                        <b>Contraseña / Password:</b> <span style="color:#27ae60;">'.$certificado['password'].'</span>
+                                      </p>
+
+
                                       <p>Thank you for your attention, we said goodbye and we send greetings from SPP GLOBAL.</p>
 
                                       <p style="color:#2c3e50"><b>If you have already started your registration renewal process please ignore this message</b></p>

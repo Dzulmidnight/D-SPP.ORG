@@ -712,6 +712,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                   <a href="#" data-toggle="tooltip" title="Esta solicitud se encuentra en Proceso de Renovación del Certificado por lo tanto no aplica el periodo de objeción" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>SOLICITUD EN RENOVACIÓN</a>  
                 <?php
                 }else{
+
                   if(empty($objecion['idperiodo_objecion'])){
                     echo "No Disponible";
                   }else if($objecion['estatus_objecion'] == 'EN ESPERA'){ // no se muestra nada si esta en espera
@@ -726,13 +727,15 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                      ?>
                       <p class="alert alert-info" style="margin-bottom:0;padding:2px;">Inicio: <?php echo date('d/m/Y', $objecion['fecha_inicio']); ?></p>
                       <p class="alert alert-danger" style="margin-bottom:0;padding:2px;">Fin: <?php echo date('d/m/Y', $objecion['fecha_fin']); ?></p>
-
+                      <!-- 03_08_2018
                      <p class="alert alert-success" style="margin-bottom:0;padding:2px;">Dictamen: <?php echo $objecion['dictamen']; ?></p>
                      <a class="btn btn-info" style="font-size:12px;width:100%;" href='<?php echo $objecion['documento']; ?>' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Resolución</a> 
+                      03_08_2018 -->
 
                     <?php
                     }
                   }  
+
                 }              
                 ?>
               </td>

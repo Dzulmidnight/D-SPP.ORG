@@ -28,15 +28,23 @@ $dia = 24;
 //24 hr = 1dia
 
 //consultamos las solicitudes que tiene en el año
-$row_solicitudes = mysql_query("SELECT idsolicitud_certificacion, fecha_registro FROM solicitud_certificacion WHERE idopp = $idopp AND FROM_UNIXTIME(fecha_registro,'%Y') = $ano_actual", $dspp) or die(mysql_error());
+$row_solicitudes = mysql_query("SELECT idsolicitud_certificacion, fecha_registro , estatus_dspp FROM solicitud_certificacion WHERE idopp = $idopp AND FROM_UNIXTIME(fecha_registro,'%Y') = $ano_actual", $dspp) or die(mysql_error());
 $solicitud = mysql_fetch_assoc($row_solicitudes);
 $total = mysql_num_rows($row_solicitudes);
 
 $diferencia = $tiempo_actual - $solicitud['fecha_registro'];
 
+
 $minutos = round($diferencia / $min);
 $horas = round($minutos / $hr);
-$dias = round($horas / $dia);
+
+if($solicitud['estatus_dspp'] == 17){
+	$dias = 101;
+}else{
+	$dias = round($horas / $dia);
+}
+
+
 
 /*08_05_2017
 echo "<br>EL TOTAL ES: ".$total;

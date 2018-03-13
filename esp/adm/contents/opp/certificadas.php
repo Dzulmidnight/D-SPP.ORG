@@ -585,6 +585,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
   echo $query;
   14_11_2017*/
   $consultar = mysql_query($query,$dspp) or die(mysql_error());
+  echo $query;
   $total_organizaciones = mysql_num_rows($consultar);
 
  ?>

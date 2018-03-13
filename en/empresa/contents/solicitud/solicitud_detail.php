@@ -720,10 +720,18 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
             while($row_certificacion = mysql_fetch_assoc($certificacion_detalle)){
             ?>
               <tr class="text-center">
-                <td><input type="text" class="form-control" name="certificacion_actual[]" id="exampleInputEmail1" placeholder="CERTIFICATION" value="<?echo $row_certificacion['certificacion']?>"></td>
-                <td><input type="text" class="form-control" name="certificadora_actual[]" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY" value="<?echo $row_certificacion['certificadora']?>"></td>
-                <td><input type="text" class="form-control" name="ano_inicial_actual[]" id="exampleInputEmail1" placeholder="STARTING YEAR" value="<?echo $row_certificacion['ano_inicial']?>"></td>
-                <td><input type="text" class="form-control" name="interrumpida_actual[]" id="exampleInputEmail1" placeholder="HAS BEEN INTERRUPTED?" value="<?echo $row_certificacion['interrumpida']?>"></td>
+                <td>
+                  <input type="text" class="form-control" name="certificacion_actual[]" id="exampleInputEmail1" placeholder="CERTIFICATION" value="<?echo $row_certificacion['certificacion']?>">
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="certificadora_actual[]" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY" value="<?echo $row_certificacion['certificadora']?>">
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="ano_inicial_actual[]" id="exampleInputEmail1" placeholder="STARTING YEAR" value="<?echo $row_certificacion['ano_inicial']?>">
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="interrumpida_actual[]" id="exampleInputEmail1" placeholder="HAS BEEN INTERRUPTED?" value="<?echo $row_certificacion['interrumpida']?>">
+                </td>
                 <input type="hidden" name="idcertificacion[]" value="<?echo $row_certificacion['idcertificacion']?>">
               </tr>
             <?php 
@@ -934,26 +942,6 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 </script>
 
 <script>
-var contador=0;
-  function tablaCertificaciones()
-  {
-
-  var table = document.getElementById("tablaCertificaciones");
-    {
-    var row = table.insertRow(2);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-
-    cell1.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION">';
-    cell2.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY">';
-    cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="STARTED DATE">';
-    cell4.innerHTML = '<div class="col-xs-6">YES<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
-    }
-    contador++;
-  } 
-
   function tablaEmpresas()
   {
     contador++;
@@ -993,14 +981,13 @@ var contador=0;
     document.getElementById('tablaVentas').style.display = 'none';
   }   
 
+  //// GENERAR LA TABLA DE PRODUCTOS
   var cont=0;
   function tablaProductos()
   {
 
   var table = document.getElementById("tablaProductos");
     {
-
-
     var row = table.insertRow(1);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
@@ -1025,5 +1012,27 @@ var contador=0;
     }
 
   } 
+  //// GENERAR LA TABLA DE CERTIFICACIONES
+  var contador=0;
+  function tablaCertificaciones()
+  {
+
+  var table = document.getElementById("tablaCertificaciones");
+    {
+    var row = table.insertRow(1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+
+    cell1.innerHTML = '<input type="text" class="form-control" name="certificacion['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION">';
+    cell2.innerHTML = '<input type="text" class="form-control" name="certificadora['+contador+']" id="exampleInputEmail1" placeholder="CERTIFICATION ENTITY">';
+    cell3.innerHTML = '<input type="text" class="form-control" name="ano_inicial['+contador+']" id="exampleInputEmail1" placeholder="STARTED DATE">';
+    cell4.innerHTML = '<div class="col-xs-6">YES<input type="radio" class="form-control" name="interrumpida['+contador+']" value="SI"></div><div class="col-xs-6">NO<input type="radio" class="form-control" name="interrumpida['+contador+']" value="NO"></div>';
+    }
+    contador++;
+  } 
+
+
 
 </script>

@@ -487,7 +487,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         ';
       }
 
-      if($idoc != 15){
+
         $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE nombre = 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
         $documentacion = mysql_fetch_assoc($row_documentacion);
 
@@ -565,7 +565,6 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->Send();
         $mail->ClearAddresses();
         $mail->ClearAttachments();
-      }
 
       
       /// INICIA MENSAJE "CARGAR DOCUMENTOS DE EVALUACIÓN"
@@ -870,7 +869,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               </html>
         ';
       }
-      if($idoc != 15){
+
         if(!empty($detalle_opp['contacto1_email'])){
           $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
           while ($token !== false)
@@ -930,7 +929,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->Send();
         $mail->ClearAddresses();
         $mail->ClearAttachments();
-      }
+      
 
       ///// SE ENVIA CORREO AL ORGANISMO DE CERTIFICACIÓN, PARA QUE CARGUE LOS FORMATOS DE EVALUACIÓN
 
@@ -977,7 +976,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     <li>Se desplegara una ventan donde podra cargar la documentación</li>
                   </ol>
                   <p style="color:red">
-                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                    Después de haber cargado los documentos puede proceder a cargar el Certificado.
                   </p>
                 </td>
               </tr>
@@ -1166,7 +1165,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         ';
       }
 
-      if($idoc != 15){
+
         if(!empty($archivo)){
           $mail->AddAttachment($archivo);
         }
@@ -1238,7 +1237,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         //$mail->Send();
         $mail->ClearAddresses();
         $mail->ClearAttachments();
-      }
+      
       ///termina envio de mensaje dictamen positivo
     //09_04_2017}
     ///********************************* TERMINA DICTAMEN NEGATIVO RENOVACION*********************************************
@@ -1405,8 +1404,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
       </body>
     </html>
   ';
-    $mail->AddAddress($spp_global);
-    $mail->AddBCC($direccion);
+    //21-12-2017$mail->AddAddress($spp_global);
+    //21-12-2017$mail->AddBCC($direccion);
     $mail->AddAttachment($formato);
     $mail->AddAttachment($informe);
     $mail->AddAttachment($dictamen);
@@ -2418,7 +2417,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 }
 
                               }else{
-                                echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" la membresia</p>";
+                                //21-12-2017 echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" la membresia</p>";
                               }
                             }else{
                             ////////// SOLICITUD NUEVA ///////////////////
@@ -2515,7 +2514,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                                   if($solicitud['tipo_solicitud'] == 'RENOVACION'){ // EN CASO DE QUE SEA UNA SOLICITUD EN RENOVACIÓN
                                     // inicia validación ///
-                                    if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO')){
+                                    /* 21-12-2017 if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO')){21-12-2017*/
                                       if(isset($solicitud['idcertificado'])){
                                         $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                                         $certificado = mysql_fetch_assoc($row_certificado);
@@ -2545,15 +2544,15 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>  
                                       <?php
                                       }
-                                    }else{
+                                    /* 21-12-2017}else{
                                       echo '<p class="alert alert-warning">
                                       Una vez aprobada la documentación necesaria por parte de SPP Global, podra cargar el Certificado SPP.
                                       </p> ';
-                                    }
+                                    }21-12-2017*/
                                     // termina validación //
                                   }else{ /// EN CASO DE QUE SEA UNA NUEVA SOLICITUD
                                     // inicia validación ///
-                                    if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO')){
+                                    /*21-12-2017 if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO')){ 21-12-2017*/
                                       if(isset($solicitud['idcertificado'])){
                                         $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                                         $certificado = mysql_fetch_assoc($row_certificado);
@@ -2583,22 +2582,22 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                         <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>  
                                       <?php
                                       }
-                                    }else{
+                                    /* 21-12-2017}else{
                                       echo '<p class="alert alert-warning">
                                       Una vez aprobado el "Contrato de Uso" podra cargar el Certificado correspondiente.
                                       </p> ';
-                                    }
+                                    }21-12-2017*/
                                     // termina validación //
                                   }
                               }else{
                               //// SE MUESTRA SI AUN NO SE HAN CARGADO LOS DOCUMENTOS DE EVALUACIÓN
                                 if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                                   echo '<p class="alert alert-warning">
-                                    Aun no se han cargado los documentos de evaluación.
+                                    Una vez cargados los documentos de evaluación podra cargar el Certificado correspondiente.
                                   </p> ';
                                 }else{
                                   echo '<p class="alert alert-warning">
-                                    Una vez aprobada la documentación necesaria por parte de SPP Global, podra cargar el Certificado SPP.
+                                    Una vez cargados los documentos de evaluación podra cargar el Certificado correspondiente.
                                   </p> ';
                                 }
                               }
@@ -2629,10 +2628,16 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           </td>
           <td>
             <form action="../../reportes/solicitud.php" method="POST" target="_new">
-              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
+              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Solicitud en PDF" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
               <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
               <input type="hidden" name="generar_formato" value="1">
+            </form>
+            <form action="../../reportes/solicitud_excel.php" method="POST" target="_new">
+              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Solicitud en excel" target="_new" type="submit" ><img src="../../img/excel.png" style="height:30px;" alt=""></button>
+
+              <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
+              <input type="hidden" name="generar_excel" value="2">
             </form>
           </td>
 
@@ -2688,27 +2693,3 @@ function ventanaNueva(documento,ancho,alto,nombreVentana){
      
 //-->
 </script>
-<!--<table>
-<tr>
-<td width="20"><?php if ($pageNum_opp > 0) { // Show if not first page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, 0, $queryString_opp); ?>">
-<span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not first page ?></td>
-<td width="20"><?php if ($pageNum_opp > 0) { // Show if not first page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, max(0, $pageNum_opp - 1), $queryString_opp); ?>">
-<span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not first page ?></td>
-<td width="20"><?php if ($pageNum_opp < $totalPages_opp) { // Show if not last page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, min($totalPages_opp, $pageNum_opp + 1), $queryString_opp); ?>">
-<span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not last page ?></td>
-<td width="20"><?php if ($pageNum_opp < $totalPages_opp) { // Show if not last page ?>
-<a href="<?php printf("%s?pageNum_opp=%d%s", $currentPage, $totalPages_opp, $queryString_opp); ?>">
-<span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
-</a>
-<?php } // Show if not last page ?></td>
-</tr>
-</table>-->

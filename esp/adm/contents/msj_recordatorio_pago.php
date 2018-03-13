@@ -17,7 +17,7 @@
     $correo_suspender = $veinte_dias + $diez_dias;
 
     /// notificación 1º aviso
-    if(!$registros['aviso1'] && $registros['estatus_comprobante'] != 'ACEPTADO'){
+    if(!$registros['aviso1'] && $registros['estatus_comprobante'] == 'EN ESPERA'){
       if($fecha_actual >= $recordatorio1){
 
         $query = "UPDATE comprobante_pago SET aviso1 = 1 WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
@@ -145,7 +145,7 @@
 
 
     /// notificación 2º aviso
-    if(!$registros['aviso2'] && $registros['estatus_comprobante'] != 'ACEPTADO'){
+    if(!$registros['aviso2'] && $registros['estatus_comprobante'] == 'EN ESPERA'){
       if($fecha_actual >= $recordatorio2){
 
         $query = "UPDATE comprobante_pago SET aviso2 = 1 WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
@@ -272,7 +272,7 @@
     }
 
     /// notificación 3º aviso
-    if(!$registros['aviso3'] && $registros['estatus_comprobante'] != 'ACEPTADO'){
+    if(!$registros['aviso3'] && $registros['estatus_comprobante'] == 'EN ESPERA'){
       if($fecha_actual >= $alerta_suspension){
 
         $query = "UPDATE comprobante_pago SET aviso3 = 1 WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
@@ -399,7 +399,7 @@
       }
     }
     /// Se envia el correo a los administradores para suspender a la organización
-    if(($registros['aviso3'] && !$registros['notificacion_suspender'] && $registros['estatus_comprobante'] != 'ACEPTADO' && !$registros['archivo']) && ($fecha_actual >= $correo_suspender)){
+    if(($registros['aviso3'] && !$registros['notificacion_suspender'] && $registros['estatus_comprobante'] == 'EN ESPERA' && !$registros['archivo']) && ($fecha_actual >= $correo_suspender)){
       //echo '<p style="color:red">ENVIADO</p>';
       $query = "UPDATE comprobante_pago SET notificacion_suspender = 1 WHERE idcomprobante_pago = $registros[idcomprobante_pago]";
       $updateSQL = mysql_query($query, $dspp) or die(mysql_error());

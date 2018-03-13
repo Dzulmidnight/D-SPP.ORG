@@ -681,20 +681,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         </ul>
                       </td>
                     </tr>
-                    <tr>
-                      <td colspan="2" style="text-align:justify">
-                        <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
-                        <p>
-                          ADICIONALMENTE SE SOLICITA DE LA MANERA MÁS ATENTA REALIZAR EL PAGO CORRESPONDIENTE A LA MEMBRESIA SPP POR EL IMPORTE DE: <span style="color:red;">'.$_POST['total_membresia'].'</span>
-                        </p>
-                        <p>
-                          LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
-                        </p>
-                        <p>
-                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO y ACUSE DE RECIBO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE EMPRESA EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>.
-                        </p>
-                      </td>
-                    </tr>
+
                     <tr>
                       <td colspan="2">
                       <hr>
@@ -752,43 +739,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                         </ul>
                       </td>
                     </tr>
-                    <tr>
-                      <td colspan="2" style="text-align:justify">
-                        <p style="color:red"><strong>MEMBRESÍA SPP</strong></p>
-                        <p>
-                          Adicionalmente se solicita de la manera más atenta, se proceda con el <span style="color:red">pago de membresía a SPP Global</span>, de acuerdo al monto indicado de: <strong style="color:red;">'.$_POST['total_membresia'].'</strong>. (Se anexan los datos bancarios, favor de leer las Disposiciones Generales de Pago para evitar se generen intereses). Una vez que haya realizado el pago, favor de <span style="color:red">entrar a su cuenta y cargar el comprobante bancario</span>.
-                        </p>
-                        <p>
-                          LOS DATOS BANCARIOS SE ENCUENTRAN ANEXOS AL CORREO.
-                        </p>
-                        <p>
-                          DESPUÉS DE REALIZAR EL PAGO POR FAVOR PROCEDA A CARGAR EL <span style="color:red">CONTRATO DE USO y ACUSE DE RECIBO FIRMADO</span> ASÍ MISMO EL <span style="color:red">COMPROBANTE DE PAGO</span> POR MEDIO DEL SISTEMA D-SPP, ESTO INGRESANDO EN SU CUENTA DE EMPRESA EN LA SIGUIENTE DIRECCIÓN <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>.
-                        </p>
-                        <p>
-                          3. Una vez que SPP Global confirme a través del Sistema la recepción de los documentos y la recepción del pago en la cuenta de SPP Global, procederemos a hacer entrega del Certificado.
-                        </p>
 
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td colspan="2" style="text-align:justify">
-                        <p style="color:red"><strong>SPP MEMBERSHIP</strong></p>
-                        <p>
-                          In order to complete the process, you are asked to please proceed with payment of the membership fee to SPP Global, in the following amount: <strong style="color:red;">'.$_POST['total_membresia'].'</strong>. (Bank information is attached. Please read the General Payment Provisions to avoid interest charges.) After payment has been made, please <span style="color:red">enter your account in the D-SPP system and upload the bank receipt.</span>
-                        </p>
-                        <p>
-                          BANK INFORMATION ATTACHED TO EMAIL
-                        </p>
-                        <p>
-                          AFTER MAKING PAYMENT, PLEASE <span style="color:red">UPLOAD “SIGNED USER’S CONTRACT AND ACKNOWLEDGEMENT OF RECEIPT</span> AND ALSO <span style="color:red">THE “RECEIPT OF PAYMENT”</span> THROUGH THE D-SPP SYSTEM, BY ENTERING YOUR ACCOUNT AS A COMPANY IN THE FOLLOWING LINK: <a href="http://d-spp.org/esp/?COM">http://d-spp.org/esp/?COM</a>
-                        </p>
-                        <p>
-                          3.  After SPP Global has confirmed through the System that payment has been received in the SPP Global account, your Certificate will be made available to you.
-                        </p>
-
-                      </td>
-                    </tr>
 
                     <tr>
                       <td colspan="2">
@@ -802,24 +753,62 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               </html>
         ';
       }
+
+
+
+
       if(!empty($detalle_empresa['contacto1_email'])){
-        $mail->AddAddress($detalle_empresa['contacto1_email']);
+        $token = strtok($detalle_empresa['contacto1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(!empty($detalle_empresa['contacto2_email'])){
-        $mail->AddAddress($detalle_empresa['contacto2_email']);
+        $token = strtok($detalle_empresa['contacto2_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(!empty($detalle_empresa['adm1_email'])){
-        $mail->AddAddress($detalle_empresa['adm1_email']);
+        $token = strtok($detalle_empresa['adm1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
       if(!empty($detalle_empresa['email'])){
-        $mail->AddAddress($detalle_empresa['email']);
+        $token = strtok($detalle_empresa['email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
-      if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
+      if(!empty($detalle_empresa['email1'])){
+        $token = strtok($detalle_empresa['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
-      if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+      if(!empty($detalle_empresa['email2'])){
+        $token = strtok($detalle_empresa['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
+
+
+
+
 
       $mail->AddBCC($spp_global);
       $mail->AddBCC($finanzas_spp);
@@ -897,12 +886,24 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         </body>
         </html>
       ';
-      if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
+
+      if(!empty($correos_oc['email1'])){
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
-      if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+      if(!empty($correos_oc['email2'])){
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
+
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -1054,24 +1055,59 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       if(!empty($archivo)){
         $mail->AddAttachment($archivo);
       }
-      if(isset($detalle_empresa['contacto1_email'])){
-        $mail->AddAddress($detalle_empresa['contacto1_email']);
+
+
+
+      if(!empty($detalle_empresa['contacto1_email'])){
+        $token = strtok($detalle_empresa['contacto1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
-      if(isset($detalle_empresa['contacto2_email'])){
-        $mail->AddAddress($detalle_empresa['contacto2_email']);
+      if(!empty($detalle_empresa['contacto2_email'])){
+        $token = strtok($detalle_empresa['contacto2_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
-      if(isset($detalle_empresa['adm1_email'])){
-        $mail->AddAddress($detalle_empresa['adm1_email']);
+      if(!empty($detalle_empresa['adm1_email'])){
+        $token = strtok($detalle_empresa['adm1_email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
-      if(isset($detalle_empresa['email'])){
-        $mail->AddAddress($detalle_empresa['email']);
+      if(!empty($detalle_empresa['email'])){
+        $token = strtok($detalle_empresa['email'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
-      if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
+      if(!empty($correos_oc['email1'])){
+        $token = strtok($correos_oc['email1'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
-      if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+      if(!empty($correos_oc['email2'])){
+        $token = strtok($correos_oc['email2'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
       }
+
+
 
       $mail->AddBCC($spp_global);
       $mail->AddBCC($finanzas_spp);
@@ -2378,7 +2414,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                 }
 
                               }else{
-                                echo "<p class='alert alert-danger'>Aun no se ha \"Aprobado\" la membresia</p>";
+                                
                               }
                             }else{
                               //22_03_2017if($solicitud['estatus_contrato'] == 'ACEPTADO' && $proceso_certificacion['estatus_membresia'] == "APROBADA"){
@@ -2447,7 +2483,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
                                 if($solicitud['tipo_solicitud'] == 'RENOVACION'){ // EN CASO DE QUE SEA UNA SOLICITUD EN RENOVACIÓN
                                   // inicia validación ///
-                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO')){
+                                  /*21-12-2017if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO')){*/
                                     if(isset($solicitud['idcertificado'])){
                                       $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                                       $certificado = mysql_fetch_assoc($row_certificado);
@@ -2477,16 +2513,11 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>  
                                     <?php
                                     }
-                                  }else{
-                                    echo '<p class="alert alert-warning">
-                                    Una vez aprobada la "Membresia SPP" podra cargar el Certificado correspondiente.
-                                    </p> ';
-                                  }
-                                  // termina validación //
+
                                 }else{ /// EN CASO DE QUE SEA UNA NUEVA SOLICITUD
                                   // inicia validación ///
                                   //09_05_2017 if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO' && $proceso_certificacion['estatus_membresia'] == "APROBADA")){
-                                  if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO')){
+                                  /*21-12-2017if(($formato['estatus_formato'] == 'ACEPTADO' && $informe['estatus_informe'] == 'ACEPTADO' && $dictamen['estatus_dictamen'] == 'ACEPTADO') && ($solicitud['estatus_contrato'] == 'ACEPTADO')){21-12-2017*/
                                     if(isset($solicitud['idcertificado'])){
                                       $row_certificado = mysql_query("SELECT * FROM certificado WHERE idcertificado = $solicitud[idcertificado]", $dspp) or die(mysql_error());
                                       $certificado = mysql_fetch_assoc($row_certificado);
@@ -2516,21 +2547,16 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       <button type="submit" name="enviar_certificado" value="1" class="btn btn-success" style="width:100%">Enviar Certificado</button>  
                                     <?php
                                     }
-                                  }else{
-                                    echo '<p class="alert alert-warning">
-                                    Una vez aprobado el "Contrato de Uso" y la "Membresia SPP" podra cargar el Certificado correspondiente.
-                                    </p> ';
-                                  }
-                                  // termina validación //
+
                                 }
                             }else{
                               if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                                 echo '<p class="alert alert-warning">
-                                  Una vez que se ha aprobado la "Membresia SPP" podrá cargar el certificado correspondiente.
+                                  Una vez cargados los documentos de evaluación podra certificado correspondiente.
                                 </p> ';
                               }else{
                                 echo '<p class="alert alert-warning">
-                                  Una vez que se ha aprobado el "Contrato de Uso" y la "Membresia SPP" podrá cargar el certificado correspondiente.
+                                  Una vez cargados los documentos de evaluación podra certificado correspondiente.
                                 </p> ';
                               }
                             }

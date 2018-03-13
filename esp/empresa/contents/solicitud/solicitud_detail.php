@@ -338,12 +338,13 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
     for ($i=0;$i<count($producto);$i++) { 
       if($producto[$i] != NULL){
           
-
+          /*18_12_2017
           $str = iconv($charset, 'ASCII//TRANSLIT', $destino[$i]);
           $destino[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
 
           $str = iconv($charset, 'ASCII//TRANSLIT', $origen[$i]);
           $origen[$i] =  strtoupper(preg_replace("/[^a-zA-Z0-9\s\.\,]/", '', $str));
+          18_12_2017*/
 
 
             $insertSQL = sprintf("INSERT INTO productos (idempresa, idsolicitud_registro, producto, volumen_estimado, volumen_terminado, volumen_materia, origen, destino) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
@@ -959,7 +960,7 @@ var contador=0;
 
   var table = document.getElementById("tablaCertificaciones");
     {
-    var row = table.insertRow(2);
+    var row = table.insertRow(1);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);

@@ -99,7 +99,7 @@ if(isset($_POST['guardar_cambios']) && $_POST['guardar_cambios'] == "1"){
 
 
   // ACTUALIZAMOS LA INFORMACION DE LA SOLICITUD
-  $updateSQL = sprintf("UPDATE solicitud_certificacion SET resp1 = %s, resp2 = %s, resp3 = %s, resp4 = %s, op_preg1 = %s, preg1_1 = %s, preg1_2 = %s, preg1_3 = %s, preg1_4 = %s, op_preg2 = %s, op_preg3 = %s, produccion = %s, procesamiento = %s, exportacion = %s, op_preg5 = %s, op_preg6 = %s, op_preg7 = %s, op_preg8 = %s, op_preg10 = %s, op_preg14 = %s WHERE idsolicitud_certificacion = %s",
+  $updateSQL = sprintf("UPDATE solicitud_certificacion SET resp1 = %s, resp2 = %s, resp3 = %s, resp4 = %s, op_preg1 = %s, preg1_1 = %s, preg1_2 = %s, preg1_3 = %s, preg1_4 = %s, op_preg2 = %s, op_preg3 = %s, produccion = %s, procesamiento = %s, exportacion = %s, op_preg5 = %s, op_preg6 = %s, op_preg7 = %s, op_preg8 = %s, op_preg10 = %s, op_preg14 = %s, responsable = %s WHERE idsolicitud_certificacion = %s",
          GetSQLValueString($_POST['resp1'], "text"),
          GetSQLValueString($_POST['resp2'], "text"),
          GetSQLValueString($_POST['resp3'], "text"),
@@ -122,6 +122,7 @@ if(isset($_POST['guardar_cambios']) && $_POST['guardar_cambios'] == "1"){
          //GetSQLValueString($op_preg12, "text"),
          //GetSQLValueString($op_preg13, "text"),
          GetSQLValueString($_POST['op_preg14'], "text"),
+         GetSQLValueString($_POST['responsable'], "text"),
          GetSQLValueString($idsolicitud_certificacion, "int"));
   $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
 
@@ -871,7 +872,11 @@ $solicitud = mysql_fetch_assoc($ejecutar);
           <textarea name="op_preg2" id="op_preg2" class="form-control"><?php echo $solicitud['op_preg2']; ?></textarea>
 
           <label for="op_preg3">
-            3. MENCIONE SI SU ORGANIZACIÓN QUIERE INCLUIR ALGÚN CALIFICATIVO ADICIONAL PARA USO COMPLEMENTARIO CON EL DISEÑO GRÁFICO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES.<sup>4</sup>
+            3. MENCIONE SI SU ORGANIZACIÓN QUIERE INCLUIR ALGÚN CALIFICATIVO ADICIONAL PARA USO COMPLEMENTARIO CON EL DISEÑO GRÁFICO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES.
+            <br>
+            <small>
+              <sup>4</sup> Revisar el Reglamento Gráfico y la lista de Calificativos Complementarios opcionales vigentes.
+            </small>
           </label>
           <input type="text" class="form-control" id="op_preg3" name="op_preg3" value="<?php echo $solicitud['op_preg3']; ?>">
 
@@ -1162,7 +1167,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
         <label for="responsable">
           <p style="font-size:14px;"><strong>Nombre de la persona que se responsabiliza de la veracidad de la información del formato y que le dará seguimiento a la solicitud de parte del solicitante:</strong></p>
         </label>
-        <input type="text" class="form-control" id="responsable" value="<?php echo $solicitud['responsable']; ?>" > 
+        <input type="text" class="form-control" id="responsable" name="responsable" value="<?php echo $solicitud['responsable']; ?>" > 
         <input type="hidden" name="fecha_registro" value="<?php echo $solicitud['fecha_registro'] ?>">
         <input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
 

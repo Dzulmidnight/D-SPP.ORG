@@ -575,14 +575,10 @@
         }
         $cont++;
       }*/
-
-      $query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idsolicitud_certificacion = '$opp[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
+      $productos = '';
+      $query_productos = mysql_query("SELECT GROUP_CONCAT(certificacion SEPARATOR ', ') AS 'lista_productos' FROM certificaciones WHERE idsolicitud_certificacion = '$opp[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
       $productos = mysql_fetch_assoc($query_productos);
-      if(empty($productos['lista_productos'])){
-        $query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idopp = '$opp[idopp]'", $dspp) or die(mysql_error());
-        $productos = mysql_fetch_assoc($query_productos);
-      }
-
+ 
       $estatus_certificado = '';
       if($opp['opp_estatus_opp'] != 'CERTIFICADO' && $opp['opp_estatus_opp'] != 'CANCELADO'){
         $consultar = mysql_query("SELECT nombre FROM estatus_dspp WHERE idestatus_dspp = $opp[opp_estatus_opp]", $dspp) or die(mysql_error());

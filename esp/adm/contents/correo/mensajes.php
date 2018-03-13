@@ -45,63 +45,97 @@ $rutaArchivo = "../../archivos/recursos/";
 
 if(isset($_POST['enviar_prueba']) && $_POST['enviar_prueba'] == 3){
 
-      $asunto = "D-SPP | Formatos de Evaluación";
+      $asunto = "D-SPP | Aviso Notificación de Intenciones de Certificación / Intentions Notification of certification";
 
-      $cuerpo_mensaje = '
-        <html>
+    $cuerpo_mensaje = '
+      <html>
         <head>
           <meta charset="utf-8">
+          <style>
+            table, td, th {    
+                border: 1px solid #ddd;
+                text-align: left;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                padding: 15px;
+            }
+            span{
+              color: #34495e;
+            }
+          </style>
         </head>
         <body>
-          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+        
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="700px">
+            <thead>
+              <tr>
+                <th>
+                  <img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+                </th>
+                <th style="text-align:left">
+                  D-SPP | <span>Notificación de Intenciones de Certificación, Registro y Autorización</span> / <i>Notification of Certification, Registration and Authorization Intents</i>
+                </th>
+              </tr>
+            </thead>
             <tbody>
-              <tr>
-                <th rowspan="2" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                <th scope="col" align="left" width="280"><p>Asunto: <span style="color:red">Cargar Formato, Dictamen e Informe de Evaluación</span></p></th>
 
-              </tr>
-              <tr>
-               <th scope="col" align="left" width="280"><p>OPP: <span style="color:red">Cooperativa Muitiservicios de Productores Cañeros de Cuidad Antigua R.L. COOPROCA R.L.</span></p></th>
-              </tr>
+              <tr style="width:100%">
+                <td colspan="2">
+                  <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
 
-              <tr>
-                <td colspan="2">
-                 <p>SPP GLOBLA notifica que la OPP: Cooperativa Muitiservicios de Productores Cañeros de Cuidad Antigua R.L. COOPROCA R.L. , ha cumplido con la documentación necesaria.</p>
-                 <p>
-                  Por favor procedan a ingresar en su cuenta de OC dentro del sistema D-SPP para poder cargar los siguientes documentos: 
-                     <ul style="color:red">
-                       <li>Formato de Evaluación</li>
-                       <li>Informe de Evaluación</li>
-                       <li>Dictamen de Evaluación</li>
-                     </ul>
-
-                 </p>
+                    <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                      <td >Tipo / Type</td>
+                      <td >Nombre de la organización / <i>Organization name</i></td>
+                      <td >Abreviación / <i>Short name</i></td>
+                      <td >País / <i>Country</i></td>
+                      <td >Organismo de Certificación / <i>Certification Entity</i></td>
+                      <td >Alcance / <i>Scope</i></td>
+                      <td >Países en los que ofrecerá servicio / <i>Countries   in which it will offer its services</i></td>
+                      <td >Fecha de solicitud / <i>Date of application</i></td>
+                      <td >Fin período de objeción / <i>Objection period end</i></td>
+                    </tr>
+                    <tr style="font-size:12px">
+                      <td ><span>OC</span> / <i>CE</i></td>
+                      <td ><span>Certification of Environmental Standards GmbH</span></td>
+                      <td><span>CERES</span></td>
+                      <td><span>Alemania</span> / <i>Germany</i></td>
+                      <td><span>SPP GLOBAL</span></td>
+                      
+                      <td><span>Certificación de OPP y Registro de empresas</span> / <i>Certification of SPO and Registration of companies</i></td>
+                      <td><span>A nivel mundial</span> / <i>Worldwide</i></td>
+                      <td><span>31/01/2018</span></td>
+                      <td><span>17/02/2018</span></td>
+                    </tr>
                 </td>
+                </table>
               </tr>
-              <tr>
-                <td colspan="2">
-                  ¿Pasos para cargar la documentación?. Para poder cargar la documentación debe seguir los siguiente pasos:
-                  <ol>
-                    <li>Dar clic en la opción "SOLICITUDES"</li>
-                    <li>Seleccionar "Solicitudes OPP"</li>
-                    <li>Posicionarse en la columna "Certificado" y dar clic en el boton "Cargar Certificado"</li>
-                    <li>Se desplegara una ventan donde podra cargar la documentación</li>
-                  </ol>
-                  <p style="color:red">
-                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <p>Para cualquier duda o aclaración por favor escribir a: <span style="color:red">cert@spp.coop</span> o <span style="color:red">soporte@d-spp.org</span></p>
-                </td>
-              </tr>
+          <tr>
+            <td style="text-align:justify;" colspan="2">
+              <span>
+              SPP GLOBAL publica y notifica las "Intenciones de Certificación, Registro o Autorización" basada en nuevas solicitudes de: 1) Certificación de Organizaciones de Pequeños Productores, 2) Registro de Compradores y otros actores y 3) Autorización de Organismos de Certificación, con el objetivo de informarles y recibir las eventuales objeciones contra la incorporación de los solicitantes.
+              Estas eventuales objeciones presentadas deben estar sustentadas con información concreta y verificable con respecto a incumplimientos de la Normatividad del SPP y/o nuestro Código de Conducta (disponibles en <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a>, en el área de Funcionamiento). Las objeciones presentadas y enviadas a <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> serán tomadas en cuenta en los procesos de certificación, registro o autorización.
+              Estas notificaciones son enviadas por SPP GLOBAL en un lapso menor a 24 horas a partir del momento en que le llegue la solicitud correspondiente. Si se presentan objeciones antes de que el solicitante se Certifique, Registre o Autorice su tratamiento por parte del Organismo de Certificación debe ser parte de la misma evaluación documental. Si la objeción se presenta cuando el Solicitante ya esta Certificado se aplica el Procedimiento de Inconformidades del Símbolo de Pequeños Productores. Las nuevas intenciones de Certificación, Registro o Autorización, se detallan al inicio de este documento.
+              </span>
+              <br><br>
+              <i>
+                SPP GLOBAL publishes and notifies the "Certification, Registration and Authorization Intentions" based on new applications submitted for: 1) Certification of Small Producers\' Organizations, 2) Registration of Buyers and other stakeholders, and 3) Authorization of Certification Entities, with the objective of keeping you informed and receiving any objections to the incorporation of any new applicants into the system.
+                Any objections submitted must be supported with concrete, verifiable information regarding non-compliance with the Standards and/or Code of Conduct of the Small Producers\' Symbol (available at <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a> in the section on Operation). The objections submitted and sent to <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> will be taken into consideration during certification, registration and authorization processes.
+                These notifications are sent by SPP GLOBAL in a period of less than 24 hours from the time a corresponding application is received. If objections are presented before getting the Certification, Registration or Authorization, the Certification Entity must incorporate them as part of the same evaluation-process. If the objection is presented when the applicant has already been certified, the SPP Dissents Procedure has to be applied. The new intentions for Certification, Registration and Authorization are detailed at the beginning (of this document).
+              </i>
+            </td>
+          </tr>
             </tbody>
           </table>
+
         </body>
-        </html>
-      ';
+      </html>
+    ';
       /*if(isset($correos_oc['email1'])){
         $token = strtok($correos_oc['email1'], "\/\,\;");
         while ($token !== false)
@@ -146,28 +180,91 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
           //$mail->AddAttachment($archivo2);
     }
 
-    $asunto = $_POST['asunto'];
-    $contenido = $_POST['contenido'];
+    $asunto = "D-SPP | Aviso Notificación de Intenciones de Certificación / Intentions Notification of certification";
 
     $cuerpo_mensaje = '
       <html>
         <head>
           <meta charset="utf-8">
+          <style>
+            table, td, th {    
+                border: 1px solid #ddd;
+                text-align: left;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                padding: 15px;
+            }
+            span{
+              color: #34495e;
+            }
+          </style>
         </head>
         <body>
-    
-          <table style="font-family: Tahoma, Geneva, sans-serif;"  border="0" width="650px">
+        
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="700px">
             <thead>
               <tr>
-                <th scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                <th scope="col" align="left" width="280"><strong>Asunto: <span style="color:red">'.$asunto.'</span> </strong></th>
+                <th>
+                  <img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+                </th>
+                <th style="text-align:left">
+                  D-SPP | <span>Notificación de Intenciones de Certificación, Registro y Autorización</span> / <i>Notification of Certification, Registration and Authorization Intents</i>
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr style="padding-top:20px;">
-                <td colspan="2">'.$contenido.'</td>
+
+              <tr style="width:100%">
+                <td colspan="2">
+                  <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+
+                    <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                      <td >Tipo / Type</td>
+                      <td >Nombre de la organización / <i>Organization name</i></td>
+                      <td >Abreviación / <i>Short name</i></td>
+                      <td >País / <i>Country</i></td>
+                      <td >Organismo de Certificación / <i>Certification Entity</i></td>
+                      <td >Alcance / <i>Scope</i></td>
+                      <td >Países en los que ofrecerá servicio / <i>Countries   in which it will offer its services</i></td>
+                      <td >Fecha de solicitud / <i>Date of application</i></td>
+                      <td >Fin período de objeción / <i>Objection period end</i></td>
+                    </tr>
+                    <tr style="font-size:12px">
+                      <td ><span>OC</span> / <i>CE</i></td>
+                      <td ><span>Certification of Environmental Standards GmbH</span></td>
+                      <td><span>CERES</span></td>
+                      <td><span>Alemania</span> / <i>Germany</i></td>
+                      <td><span>SPP GLOBAL</span></td>
+                      
+                      <td><span>Certificación de OPP y Registro de empresas</span> / <i>Certification of SPO and Registration of companies</i></td>
+                      <td><span>A nivel mundial</span> / <i>Worldwide</i></td>
+                      <td><span>31/01/2018</span></td>
+                      <td><span>17/02/2018</span></td>
+                    </tr>
+                </td>
+                </table>
               </tr>
-              
+          <tr>
+            <td style="text-align:justify;" colspan="2">
+              <span>
+              SPP GLOBAL publica y notifica las "Intenciones de Certificación, Registro o Autorización" basada en nuevas solicitudes de: 1) Certificación de Organizaciones de Pequeños Productores, 2) Registro de Compradores y otros actores y 3) Autorización de Organismos de Certificación, con el objetivo de informarles y recibir las eventuales objeciones contra la incorporación de los solicitantes.
+              Estas eventuales objeciones presentadas deben estar sustentadas con información concreta y verificable con respecto a incumplimientos de la Normatividad del SPP y/o nuestro Código de Conducta (disponibles en <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a>, en el área de Funcionamiento). Las objeciones presentadas y enviadas a <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> serán tomadas en cuenta en los procesos de certificación, registro o autorización.
+              Estas notificaciones son enviadas por SPP GLOBAL en un lapso menor a 24 horas a partir del momento en que le llegue la solicitud correspondiente. Si se presentan objeciones antes de que el solicitante se Certifique, Registre o Autorice su tratamiento por parte del Organismo de Certificación debe ser parte de la misma evaluación documental. Si la objeción se presenta cuando el Solicitante ya esta Certificado se aplica el Procedimiento de Inconformidades del Símbolo de Pequeños Productores. Las nuevas intenciones de Certificación, Registro o Autorización, se detallan al inicio de este documento.
+              </span>
+              <br><br>
+              <i>
+                SPP GLOBAL publishes and notifies the "Certification, Registration and Authorization Intentions" based on new applications submitted for: 1) Certification of Small Producers\' Organizations, 2) Registration of Buyers and other stakeholders, and 3) Authorization of Certification Entities, with the objective of keeping you informed and receiving any objections to the incorporation of any new applicants into the system.
+                Any objections submitted must be supported with concrete, verifiable information regarding non-compliance with the Standards and/or Code of Conduct of the Small Producers\' Symbol (available at <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a> in the section on Operation). The objections submitted and sent to <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> will be taken into consideration during certification, registration and authorization processes.
+                These notifications are sent by SPP GLOBAL in a period of less than 24 hours from the time a corresponding application is received. If objections are presented before getting the Certification, Registration or Authorization, the Certification Entity must incorporate them as part of the same evaluation-process. If the objection is presented when the applicant has already been certified, the SPP Dissents Procedure has to be applied. The new intentions for Certification, Registration and Authorization are detailed at the beginning (of this document).
+              </i>
+            </td>
+          </tr>
             </tbody>
           </table>
 
@@ -332,8 +429,9 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
       }
 
         $mail->AddBCC($administrador);
+        //$mail->AddAddress('cert@spp.coop');
 
-        $mail->AddAddress('dspporg@d-spp.org');
+        //$mail->AddAddress('dspporg@d-spp.org');
         $mail->Subject = utf8_decode($asunto);
         $mail->Body = utf8_decode($cuerpo_mensaje);
         $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -402,8 +500,8 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
 
 </form>
 
-<!--<form action="" method="POST">
+<form action="" method="POST">
   <p>Correo particular</p>
   <input type="text" name="enviar_prueba" value="3">
   <input type="submit" value="enviar">
-</form>-->
+</form>
