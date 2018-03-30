@@ -1,0 +1,70 @@
+<!DOCTYPE html> 
+<html lang="es"> 
+    <head>     <meta charset="UTF-8">     
+        <title>Fichas V2.0</title>     
+        <style>         
+            body
+            {
+                margin: 0px;
+                padding: 0px;
+                font-family: Arial;
+            }         
+            .main-wrapper{             
+                width: 21.6cm;             
+                height: 27.9cm;             
+                padding: 0.75cm;         
+            }         
+            .ficha-wrapp{             
+                width: 7cm;             
+                height: 4.5cm;             
+                border:1px solid #000;             
+                display: inline-block;             
+                margin: -2px 0px;         
+            }         
+       
+            .logo img{             
+                height: 1.5cm;             
+                width: 6.8cm;             
+                margin-top:0.1cm;             
+                margin-left: 0.1cm;         
+            }         
+        </style>      
+    </head> 
+    <body class="main-wrapper">      
+
+        <table class="ficha-wrapp" style="border: 1px solid black;width:7cm;font-size:11px;">
+            <tr>
+                <td class="logo" colspan="2">
+                    <img src="http://inforganic.net/images/optic_fiber.png" alt=""  >
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    <b>PIN: </b><b style="font-size:16px;color:#c0392b">%u_username%</b>
+                </td>
+                <td>
+                    <b>Precio $: </b><b style="font-size:12px;color:#c0392b">%u_moneyPaid%</b>
+                </td>
+            </tr>
+            <tr>
+
+                <td>
+                    <b>Tiempo: </b><b style="font-size:12px;color:#c0392b">%u_limitUptime%</b>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border-top: 1px solid #000;padding:10px;">
+                    <p style="margin-top:0px;">Instrucciones</p>
+                    <ol>
+                        <li>
+                            Conectate a la Red OPTIC_FIBER_WIFI.
+                        </li>
+                        <li>
+                            Con tu navegador Web  ingresa a esta "<b><i>www.Inforganic.net </i></b>" e ingresa el <b>PIN</b> en ambos casos.
+                        </li>
+                    </ol>
+                </td>
+            </tr>
+        </table>
+    </body> 
+</html>﻿

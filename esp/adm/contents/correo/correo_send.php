@@ -8,6 +8,21 @@ require_once('../Connections/mail.php');
   if(isset($_POST['enviarA'])){
     $asunto = $_POST['asunto'];
     $mensaje = $_POST['mensaje'];
+    $cuerpo = '';
+    $cuerpo .= '
+      <table>
+        <tr>
+          <td colspan="2">
+            <img src="http://d-spp.org/img/FUNDEPPO.jpg" alt="" width="160px">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">'.$mensaje.'</td>
+        </tr>
+
+      </table>
+    
+    ';
 
     if(!empty($_FILES['archivo']['name'])){
         $_FILES["archivo"]["name"];
@@ -16,8 +31,8 @@ require_once('../Connections/mail.php');
           $mail->AddAttachment($archivo);
     }
         $mail->Subject = utf8_decode($asunto);
-        $mail->Body = $mensaje;
-        $mail->MsgHTML($mensaje);
+        $mail->Body = $cuerpo;
+        $mail->MsgHTML($cuerpo);
 
 
     foreach($_POST['enviarA'] as $enviarA){
@@ -28,34 +43,98 @@ require_once('../Connections/mail.php');
         $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
 
         while($correo = mysql_fetch_assoc($ejecutar)){
-          $mail->AddAddress($correo['email']);
+
+          if(!empty($correo['email'])){
+            //$mail->AddAddress($email_oc['email1']);
+            $token = strtok($correo['email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+
+          }
+
         }
           $mail->Send();
           $mail->ClearAddresses(); 
         /* SE ENVIA EL CORREO A LOS OPPs*/
 
-        $query = "SELECT email FROM com WHERE email != ''";
+        $query = "SELECT email FROM empresa WHERE email != ''";
         $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
 
         while($correo = mysql_fetch_assoc($ejecutar)){
-          $mail->AddAddress($correo['email']);
+
+          if(!empty($correo['email'])){
+            //$mail->AddAddress($email_oc['email1']);
+            $token = strtok($correo['email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+
+          }
+
         }
           $mail->Send();
           $mail->ClearAddresses(); 
         /* SE ENVIA EL CORREO A LOS OPPs*/
 
+      //// inicia envio a correo OC
+        $query_oc = "SELECT email1, email2 FROM oc";
+        $ejecutar = mysql_query($query_oc,$dspp) or die(mysql_error());
 
-        $query = "SELECT email FROM oc WHERE email != ''";
-        $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
 
-        while($correo = mysql_fetch_assoc($ejecutar)){
-          $mail->AddAddress($correo['email']);
+        while($email_oc = mysql_fetch_assoc($ejecutar)){
+          if(!empty($email_oc['email1'])){
+            //$mail->AddAddress($email_oc['email1']);
+            $token = strtok($email_oc['email1'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+
+          }
+          if(!empty($email_oc['email2'])){
+            //$mail->AddAddress($email_oc['email2']);
+            $token = strtok($email_oc['email2'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+
+          }
         }
+
           $mail->Send();
           $mail->ClearAddresses(); 
+
+
+
+        //// ENVIO DE NOTIFICACIONES A LAS LISTAS DE CONTACTOS APROBADAS
+        $query_contactos = mysql_query("SELECT lista_contactos.idlista_contactos, contactos.lista_contactos, contactos.email1, contactos.email2 FROM lista_contactos INNER JOIN contactos ON lista_contactos.idlista_contactos = contactos.lista_contactos WHERE lista_contactos.notificaciones = 1", $dspp) or die(mysql_error());
+
+        while($lista_contactos = mysql_fetch_assoc($query_contactos)){
+          if(!empty($lista_contactos['email1'])){
+            $mail->AddAddress($lista_contactos['email1']);
+          }
+          if(!empty($lista_contactos['email2'])){
+            $mail->AddAddress($lista_contactos['email2']);
+          }
+        }
+
+        $mail->Send();
+        $mail->ClearAddresses();
+
+
+
+
         /* SE ENVIA EL CORREO A LOS OCs*/
 
-        $query = "SELECT email FROM adm WHERE email != ''";
+        /*$query = "SELECT email FROM adm WHERE email != ''";
         $ejecutar = mysql_query($query,$dspp) or die(mysql_error());
 
         while($correo = mysql_fetch_assoc($ejecutar)){
@@ -65,12 +144,12 @@ require_once('../Connections/mail.php');
           $mail->ClearAddresses(); 
         /* SE ENVIA EL CORREO A LOS ADMs*/
 
-
+/*
           if($mail->Send()){
             echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
           }else{
                 echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
-          }
+          }*/
 
 
       }else{

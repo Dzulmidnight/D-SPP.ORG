@@ -130,6 +130,8 @@
       include('contactos_empresas.php');
     }else if($_GET['select'] == 'otros_contactos'){
       include('otros_contactos.php');
+    }else if($_GET['select'] == 'enviar'){
+      include('mensajes.php');
     }
     ?>
 
