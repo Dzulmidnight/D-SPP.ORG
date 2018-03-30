@@ -19,7 +19,7 @@
 
     $solicitud = mysql_fetch_assoc($row_solicitud);
 
-	$query_certificaciones = "SELECT * FROM certificaciones WHERE idsolicitud_certificacion = '$solicitud[idsolicitud_certificacion]'";
+  $query_certificaciones = "SELECT * FROM certificaciones WHERE idsolicitud_certificacion = '$solicitud[idsolicitud_certificacion]'";
     $row_certificaciones = mysql_query($query_certificaciones, $dspp) or die(mysql_error());
 
     $total_certificaciones = mysql_num_rows($row_certificaciones);
@@ -54,10 +54,10 @@
     $objPHPExcel->setActiveSheetIndex(0)
                 ->mergeCells('A1:H1')
                 //preguntas
-                	->mergeCells('A3:B3')
-                	->mergeCells('C3:D3')
-                	->mergeCells('E3:F3')
-                	->mergeCells('G3:H3')
+                  ->mergeCells('A3:B3')
+                  ->mergeCells('C3:D3')
+                  ->mergeCells('E3:F3')
+                  ->mergeCells('G3:H3')
                     //respuestas
                     ->mergeCells('A4:B4')
                     ->mergeCells('C4:D4')
@@ -65,51 +65,51 @@
                     ->mergeCells('G4:H4')
                 // DATOS GENERALES
                 ->mergeCells('A6:H6')
-                	->mergeCells('A8:B8')
-               	// PERSONAS DE CONTACTO
+                  ->mergeCells('A8:B8')
+                // PERSONAS DE CONTACTO
                 ->mergeCells('A11:H11')
-                	// titulos
-                	->mergeCells('A13:B13')
-                	->mergeCells('C13:D13')
-                	->mergeCells('E13:F13')
-                	->mergeCells('G13:H13')
+                  // titulos
+                  ->mergeCells('A13:B13')
+                  ->mergeCells('C13:D13')
+                  ->mergeCells('E13:F13')
+                  ->mergeCells('G13:H13')
 
-                	->mergeCells('A14:B14')
-                	->mergeCells('C14:D14')
-                	->mergeCells('E14:F14')
-                	->mergeCells('G14:H14')
+                  ->mergeCells('A14:B14')
+                  ->mergeCells('C14:D14')
+                  ->mergeCells('E14:F14')
+                  ->mergeCells('G14:H14')
 
-                	->mergeCells('A15:B15')
-                	->mergeCells('C15:D15')
-                	->mergeCells('E15:F15')
-                	->mergeCells('G15:H15')
+                  ->mergeCells('A15:B15')
+                  ->mergeCells('C15:D15')
+                  ->mergeCells('E15:F15')
+                  ->mergeCells('G15:H15')
 
-                	->mergeCells('A16:B16')
-                	->mergeCells('C16:D16')
-                	->mergeCells('E16:F16')
-                	->mergeCells('G16:H16')
+                  ->mergeCells('A16:B16')
+                  ->mergeCells('C16:D16')
+                  ->mergeCells('E16:F16')
+                  ->mergeCells('G16:H16')
 
-                	->mergeCells('A17:B17')
-                	->mergeCells('C17:D17')
-                	->mergeCells('E17:F17')
-                	->mergeCells('G17:H17')
+                  ->mergeCells('A17:B17')
+                  ->mergeCells('C17:D17')
+                  ->mergeCells('E17:F17')
+                  ->mergeCells('G17:H17')
                 // DATOS DE OPERACIÓN
                 ->mergeCells('A19:H19')
-                	->mergeCells('A21:B21')
-                	->mergeCells('C21:D21')
-                	->mergeCells('E21:F21')
-                	->mergeCells('G21:H21')
+                  ->mergeCells('A21:B21')
+                  ->mergeCells('C21:D21')
+                  ->mergeCells('E21:F21')
+                  ->mergeCells('G21:H21')
 
-                	->mergeCells('A22:B22')
-                	->mergeCells('C22:D22')
-                	->mergeCells('E22:F22')
-                	->mergeCells('G22:H22')
+                  ->mergeCells('A22:B22')
+                  ->mergeCells('C22:D22')
+                  ->mergeCells('E22:F22')
+                  ->mergeCells('G22:H22')
                 /// TABLA DE CERTIFICACIONES
                 ->mergeCells('A27:H27')
-                	->mergeCells('A28:B28')
-                	->mergeCells('C28:D28')
-                	->mergeCells('E28:F28')
-                	->mergeCells('G28:H28')
+                  ->mergeCells('A28:B28')
+                  ->mergeCells('C28:D28')
+                  ->mergeCells('E28:F28')
+                  ->mergeCells('G28:H28')
                 /// ENCABEZADO TABLA PRODUCTOS
                 ->mergeCells('A'.$encabezadoProductos.':H'.$encabezadoProductos);
             
@@ -177,11 +177,11 @@
     $porcentajeVentas = '';
 
     if($solicitud['produccion']){
-    	$alcance_opp .= 'PRODUCCIÓN - ';
+      $alcance_opp .= 'PRODUCCIÓN - ';
     }else if($solicitud['procesamiento']){
-		$alcance_opp .= 'PROCESAMIENTO - ';
+    $alcance_opp .= 'PROCESAMIENTO - ';
     }else if($solicitud['exportacion']){
-		$alcance_opp .= 'EXPORTACIÓN - ';
+    $alcance_opp .= 'EXPORTACIÓN - ';
     }
 
     $query_porcentajeVentas = "SELECT * FROM porcentaje_productoVentas WHERE idsolicitud_certificacion = $solicitud[idsolicitud_certificacion]";
@@ -190,18 +190,18 @@
     $porcentajes = mysql_fetch_assoc($row_porcentajeVentas);
 
     if(!empty($porcentajes['organico'])){
-    	$porcentajeVentas .= 'ORGANICO: '.$porcentajes['organico'].'%, ';
+      $porcentajeVentas .= 'ORGANICO: '.$porcentajes['organico'].'%, ';
     }else if(!empty($porcentajes['comercio_justo'])){
-    	$porcentajeVentas .= 'COMERCIO JUSTO: '.$porcentajes['comercio_justo'].'%, ';
+      $porcentajeVentas .= 'COMERCIO JUSTO: '.$porcentajes['comercio_justo'].'%, ';
     }else if(!empty($porcentajes['spp'])){
-    	$porcentajeVentas .= 'SPP: '.$porcentajes['spp'].'%, ';
+      $porcentajeVentas .= 'SPP: '.$porcentajes['spp'].'%, ';
     }else if(!empty($porcentajes['sin_certificado'])){
-    	$porcentajeVentas .= 'OTRO: '.$porcentajes['sin_certificado'].'%, ';
+      $porcentajeVentas .= 'OTRO: '.$porcentajes['sin_certificado'].'%, ';
     }
 
 
     $objPHPExcel->setActiveSheetIndex(0)
-    			// INFORMACIÓN SOLICITUD
+          // INFORMACIÓN SOLICITUD
                 ->setCellValue('A4',  date('Y-m-d', $solicitud['fecha_registro']))
                 ->setCellValue('C4', $solicitud['tipo_solicitud'])
                 ->setCellValue('E4', $solicitud['spp_opp'])
@@ -242,26 +242,26 @@
                 ->setCellValue('C22', $solicitud['resp2'])
                 ->setCellValue('E22', $solicitud['resp3'])
                 ->setCellValue('G22', $solicitud['resp4'])
-                	/// preguntas
-                	->setCellValue('A25', $solicitud['op_preg1'])
-                	->setCellValue('B25', $solicitud['op_preg2'])
-                	->setCellValue('C25', $solicitud['op_preg3'])
-                	->setCellValue('D25', $alcance_opp)
-                	->setCellValue('E25', $solicitud['op_preg5'])
-                	->setCellValue('F25', $solicitud['op_preg6'])
-                	->setCellValue('G25', $solicitud['op_preg7'])
-                	->setCellValue('H25', $solicitud['op_preg8']);
- 				
+                  /// preguntas
+                  ->setCellValue('A25', $solicitud['op_preg1'])
+                  ->setCellValue('B25', $solicitud['op_preg2'])
+                  ->setCellValue('C25', $solicitud['op_preg3'])
+                  ->setCellValue('D25', $alcance_opp)
+                  ->setCellValue('E25', $solicitud['op_preg5'])
+                  ->setCellValue('F25', $solicitud['op_preg6'])
+                  ->setCellValue('G25', $solicitud['op_preg7'])
+                  ->setCellValue('H25', $solicitud['op_preg8']);
+        
 
- 				      // TABLA CERTIFICACIONES
+              // TABLA CERTIFICACIONES
                   $contador = $nomCertificaciones;
                 while($certificaciones = mysql_fetch_assoc($row_certificaciones)){
-                	$objPHPExcel->setActiveSheetIndex(0)
-                	->setCellValue('A'.$contador, $certificaciones['certificacion'])
-                	->setCellValue('C'.$contador, $certificaciones['certificadora'])
-                	->setCellValue('E'.$contador, $certificaciones['ano_inicial'])
-                	->setCellValue('G'.$contador, $certificaciones['interrumpida']);
-                	$contador++;
+                  $objPHPExcel->setActiveSheetIndex(0)
+                  ->setCellValue('A'.$contador, $certificaciones['certificacion'])
+                  ->setCellValue('C'.$contador, $certificaciones['certificadora'])
+                  ->setCellValue('E'.$contador, $certificaciones['ano_inicial'])
+                  ->setCellValue('G'.$contador, $certificaciones['interrumpida']);
+                  $contador++;
                 }
                 /// Preguntas despues de la tabla certificaciones
                 $objPHPExcel->setActiveSheetIndex(0)
@@ -274,16 +274,16 @@
 
               // Productos de la tabla productos
               while($productos = mysql_fetch_assoc($row_productos)){
-              	$objPHPExcel->setActiveSheetIndex(0)
-              	->setCellValue('A'.$nomProductos, $productos['producto'])
-              	->setCellValue('B'.$nomProductos, $productos['volumen'])
-              	->setCellValue('C'.$nomProductos, $productos['terminado'])
-              	->setCellValue('D'.$nomProductos, $productos['materia'])
-              	->setCellValue('E'.$nomProductos, $productos['destino'])
-              	->setCellValue('F'.$nomProductos, $productos['marca_propia'])
-              	->setCellValue('G'.$nomProductos, $productos['marca_cliente'])
-              	->setCellValue('H'.$nomProductos, $productos['sin_cliente']);
-              	$nomProductos++;
+                $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$nomProductos, $productos['producto'])
+                ->setCellValue('B'.$nomProductos, $productos['volumen'])
+                ->setCellValue('C'.$nomProductos, $productos['terminado'])
+                ->setCellValue('D'.$nomProductos, $productos['materia'])
+                ->setCellValue('E'.$nomProductos, $productos['destino'])
+                ->setCellValue('F'.$nomProductos, $productos['marca_propia'])
+                ->setCellValue('G'.$nomProductos, $productos['marca_cliente'])
+                ->setCellValue('H'.$nomProductos, $productos['sin_cliente']);
+                $nomProductos++;
               }
 
     $estiloTituloColumnas = array(
@@ -313,7 +313,7 @@
               'wrap'          => TRUE
         ));
 
-	$estiloPreguntas = array(
+  $estiloPreguntas = array(
             
 
             'fill'  => array(
@@ -328,7 +328,7 @@
         ));
 
  
-	/// APLICAR FORMATO DE COLOR Y TIPO DE TEXTO A LAS CELDAS
+  /// APLICAR FORMATO DE COLOR Y TIPO DE TEXTO A LAS CELDAS
     $objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($estiloTituloColumnas);
     $objPHPExcel->getActiveSheet()->getStyle('A6')->applyFromArray($estiloTituloColumnas);
     $objPHPExcel->getActiveSheet()->getStyle('A11')->applyFromArray($estiloTituloColumnas);
@@ -396,7 +396,7 @@
 
 
     /// AJUSTAR EL TEXTO DE LAS COLUMNAS
-	$objPHPExcel->getActiveSheet()->getStyle('A1:H1'.$objPHPExcel->getActiveSheet()->getHighestRow())
+  $objPHPExcel->getActiveSheet()->getStyle('A1:H1'.$objPHPExcel->getActiveSheet()->getHighestRow())
     ->getAlignment()->setWrapText(true);
    
     //$objPHPExcel->getActiveSheet()->getStyle('A3:K3')->applyFromArray($estiloTituloColumnas);   

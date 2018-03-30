@@ -996,7 +996,7 @@ if($dias < 100){
 							<td>Pays de Destination</td>
 							<td>Marque Propre</td>
 							<td>Marque d’un Client</td>
-							<td>Sans client encore?</td>
+							<td>C</td>
 							<td>
 								<button type="button" onclick="tablaProductos()" class="btn btn-primary" aria-label="Left Align">
 								  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -1039,14 +1039,14 @@ if($dias < 100){
 						</tr>				
 						<tr>
 							<td colspan="9">
-								<h6><sup>6</sup> La información proporcionada en esta sección será tratada con plena confidencialidad. Favor de insertar filas adicionales de ser necesario.</h6>
+								<h6><sup>6</sup> Les informations fournies dans cette section seront traitées en toute confidentialité. Veuillez insérer des lignes supplémentaires si nécessaire</h6>
 							</td>
 						</tr>
 					</table>
 				</div>
 
 				<div class="col-lg-12 text-center alert alert-success" style="padding:7px;">
-					<b>COMPROMISOS</b>
+					<b>ENGAGEMENTS</b>
 				</div>
 				<div class="col-lg-12 text-justify">
 					<p>

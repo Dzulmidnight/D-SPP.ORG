@@ -539,7 +539,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     <li>Se desplegara una ventan donde podra cargar la documentación</li>
                   </ol>
                   <p style="color:red">
-                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                    Una vez que cargue los documentos, puede cargar el Registro SPP.
                   </p>
                 </td>
               </tr>
@@ -879,7 +879,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     <li>Se desplegara una ventan donde podra cargar la documentación</li>
                   </ol>
                   <p style="color:red">
-                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                    Una vez que cargue los documentos, puede cargar el Registro SPP.
                   </p>
                 </td>
               </tr>
@@ -1568,7 +1568,8 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
             </tr>
             <tr>
               <td coslpan="2">
-                <p><span style="color:red">En caso de que los documentos sean aprobados se notificara al OC para que puedar cargar y enviar el certificado.</span></p>
+                <p><span style="color:red">Una vez que cargue los documentos, puede cargar el Registro
+                 SPP.</span></p>
               </td>
             </tr>
           </tbody>

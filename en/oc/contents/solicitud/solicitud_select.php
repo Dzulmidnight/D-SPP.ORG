@@ -607,7 +607,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     <li>Se desplegara una ventan donde podra cargar la documentación</li>
                   </ol>
                   <p style="color:red">
-                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                    Una vez que cargue los documentos, puede cargar el Certificado SPP.
                   </p>
                 </td>
               </tr>
@@ -976,7 +976,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     <li>Se desplegara una ventan donde podra cargar la documentación</li>
                   </ol>
                   <p style="color:red">
-                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                    Una vez que cargue los documentos, puede cargar el Certificado SPP.
                   </p>
                 </td>
               </tr>
@@ -1721,7 +1721,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
             </tr>
             <tr>
               <td coslpan="2">
-                <p><span style="color:red">En caso de que los documentos sean aprobados se notificara al OC para que puedar cargar y enviar el certificado.</span></p>
+                <p><span style="color:red">Una vez que cargue los documentos, puede cargar el Certificado SPP.</span></p>
               </td>
             </tr>
           </tbody>
@@ -2671,6 +2671,12 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
 
               <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
               <input type="hidden" name="generar_formato" value="1">
+            </form>
+            <form action="../../reportes/solicitud_excel_en.php" method="POST" target="_new">
+              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Solicitud en excel" target="_new" type="submit" ><img src="../../img/excel.png" style="height:30px;" alt=""></button>
+
+              <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
+              <input type="hidden" name="generar_excel" value="2">
             </form>
           </td>
 

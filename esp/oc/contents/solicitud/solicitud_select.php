@@ -612,7 +612,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     <li>Se desplegara una ventan donde podra cargar la documentación</li>
                   </ol>
                   <p style="color:red">
-                    Se notificara una vez que sea aprobada la documentación para poder cargar el certificado.
+                    Una vez que cargue los documentos, puede cargar el Certificado SPP.
                   </p>
                 </td>
               </tr>
@@ -976,7 +976,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                     <li>Se desplegara una ventan donde podra cargar la documentación</li>
                   </ol>
                   <p style="color:red">
-                    Después de haber cargado los documentos puede proceder a cargar el Certificado.
+                    Una vez que cargue los documentos, puede cargar el Certificado SPP.
                   </p>
                 </td>
               </tr>
@@ -2633,8 +2633,14 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
               <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
               <input type="hidden" name="generar_formato" value="1">
             </form>
-            <form action="../../reportes/solicitud_excel.php" method="POST" target="_new">
+            <form action="../../reportes/solicitud_excel_esp.php" method="POST" target="_new">
               <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Solicitud en excel" target="_new" type="submit" ><img src="../../img/excel.png" style="height:30px;" alt=""></button>
+
+              <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
+              <input type="hidden" name="generar_excel" value="2">
+            </form>
+            <form action="../../reportes/solicitud_excel2_esp.php" method="POST" target="_new">
+              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Datos excel" target="_new" type="submit" ><img src="../../img/base_de_datos.png" style="height:30px;" alt=""></button>
 
               <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
               <input type="hidden" name="generar_excel" value="2">

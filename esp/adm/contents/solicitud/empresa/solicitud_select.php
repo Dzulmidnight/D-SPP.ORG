@@ -1976,7 +1976,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
               <!---- inicia CONSULTAR SOLICITUD ---->
               <td>
                 <!--<a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Visualizar Solicitud" href="?SOLICITUD&idsolicitud=<?php echo $solicitud['idsolicitud']; ?>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>-->
-                <form action="../../reportes/solicitud.php" method="POST" target="_new">
+                <form action="../../reportes/solicitud_empresa.php" method="POST" target="_new">
                   <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
                   <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud']; ?>">
