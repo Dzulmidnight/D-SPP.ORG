@@ -199,42 +199,46 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	// INGRESAMOS LOS CONTACTOS DE LA SOLICITUD A LA TABLA DE CONTACTOS
 	if(!empty($_POST['contacto1_nombre'])){
-		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
+		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1, idsolicitud_certificacion) VALUES (%s, %s, %s, %s, %s, %s)",
 			GetSQLValueString($idopp, "int"),
 			GetSQLValueString($_POST['contacto1_nombre'], "text"),
 			GetSQLValueString($_POST['contacto1_cargo'], "text"),
 			GetSQLValueString($_POST['contacto1_telefono'], "text"),
-			GetSQLValueString($_POST['contacto1_email'], "text"));
+			GetSQLValueString($_POST['contacto1_email'], "text"),
+			GetSQLValueString($idsolicitud_certificacion, "int"));
 		$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
 	}
 	if(!empty($_POST['contacto2_nombre'])){
-		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
+		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1, idsolicitud_certificacion) VALUES (%s, %s, %s, %s, %s, %s)",
 			GetSQLValueString($idopp, "int"),
 			GetSQLValueString($_POST['contacto2_nombre'], "text"),
 			GetSQLValueString($_POST['contacto2_cargo'], "text"),
 			GetSQLValueString($_POST['contacto2_telefono'], "text"),
-			GetSQLValueString($_POST['contacto2_email'], "text"));
+			GetSQLValueString($_POST['contacto2_email'], "text"),
+			GetSQLValueString($idsolicitud_certificacion, "int"));
 		$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
 	}
 	if(!empty($_POST['adm1_nombre'])){
-		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
+		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1, idsolicitud_certificacion) VALUES (%s, %s, %s, %s, %s, %s)",
 			GetSQLValueString($idopp, "int"),
 			GetSQLValueString($_POST['adm1_nombre'], "text"),
 			GetSQLValueString('ADMINISTRATIVO', "text"),
 			GetSQLValueString($_POST['adm1_telefono'], "text"),
-			GetSQLValueString($_POST['adm1_email'], "text"));
+			GetSQLValueString($_POST['adm1_email'], "text"),
+			GetSQLValueString($idsolicitud_certificacion, "int"));
 		$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
 	}
 	if(!empty($_POST['contacto2_nombre'])){
-		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1) VALUES (%s, %s, %s, %s, %s)",
+		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1, idsolicitud_certificacion) VALUES (%s, %s, %s, %s, %s, %s)",
 			GetSQLValueString($idopp, "int"),
 			GetSQLValueString($_POST['contacto2_nombre'], "text"),
 			GetSQLValueString('ADMINISTRATIVO', "text"),
 			GetSQLValueString($_POST['contacto2_telefono'], "text"),
-			GetSQLValueString($_POST['contacto2_email'], "text"));
+			GetSQLValueString($_POST['contacto2_email'], "text"),
+			GetSQLValueString($idsolicitud_certificacion, "int"));
 		$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
 	}

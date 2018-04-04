@@ -48,6 +48,8 @@ $fecha = time();
 $spp_global = "cert@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 
+
+
 if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
   $idperiodo_objecion = $_POST['idperiodo_objecion2'];
 
@@ -1238,7 +1240,68 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
 
   /* TERMINA PAGINACIÓN*/
 
+if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
+  //$idsolicitud_certificacion = $_POST['idsolicitud_certificacion'];
 
+  //$query_solicitud = "SELECT idopp, contacto1_nombre, contacto1_cargo, contacto1_email, contacto1_telefono, contacto2_nombre, contacto2_cargo, contacto2_email, contacto2_telefono, adm1_nombre, adm1_email, adm1_telefono, adm2_nombre, adm2_email, adm2_telefono  FROM solicitud_certificacion WHERE idsolicitud_certificacion = '$idsolicitud_certificacion'";
+  //$row_solicitud_cert = mysql_query($query_solicitud, $dspp) or die(mysql_error());
+
+  //$solicitud = mysql_fetch_assoc($row_solicitud_cert);
+
+  $row_solicitudes = mysql_query("SELECT idopp, contacto1_nombre, contacto1_cargo, contacto1_email, contacto1_telefono, contacto2_nombre, contacto2_cargo, contacto2_email, contacto2_telefono, adm1_nombre, adm1_email, adm1_telefono, adm2_nombre, adm2_email, adm2_telefono  FROM solicitud_certificacion", $dspp) or die(mysql_error());
+
+  while($solicitud = mysql_fetch_assoc($row_solicitudes)){
+
+
+
+  }
+
+  if(isset($solicitud['contacto1_nombre'])){
+    $insertSQL = sprintf("INSERT INTO contactos (idopp, nombre, cargo, telefono1, email1, idsolicitud_certificacion) VALUES (%s, %s, %s, %s, %s, %s)",
+      GetSQLValueString($solicitud['idopp'], 'text'),
+      GetSQLValueString($solicitud['contacto1_nombre'], 'text'),
+      GetSQLValueString($solicitud['contacto1_cargo'], 'text'),
+      GetSQLValueString($solicitud['contacto1_telefono'], 'text'),
+      GetSQLValueString($solicitud['contacto1_email'], 'text'),
+      GetSQLValueString($idsolicitud_certificacion, 'int'));
+    $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+  }
+
+  if(isset($solicitud['contacto2_nombre'])){
+    $insertSQL = sprintf("INSERT INTO contactos (idopp, nombre, cargo, telefono1, email1, idsolicitud_certificacion) VALUES (%s, %s, %s, %s, %s, %s)",
+      GetSQLValueString($solicitud['idopp'], 'text'),
+      GetSQLValueString($solicitud['contacto2_nombre'], 'text'),
+      GetSQLValueString($solicitud['contacto2_cargo'], 'text'),
+      GetSQLValueString($solicitud['contacto2_telefono'], 'text'),
+      GetSQLValueString($solicitud['contacto2_email'], 'text'),
+      GetSQLValueString($idsolicitud_certificacion, 'int'));
+    $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+  }
+
+  if(isset($solicitud['adm1_nombre'])){
+    $insertSQL = sprintf("INSERT INTO contactos (idopp, nombre, cargo, telefono1, email1, idsolicitud_certificacion) VALUES (%s, %s, %s, %s, %s, %s)",
+      GetSQLValueString($solicitud['idopp'], 'text'),
+      GetSQLValueString($solicitud['adm1_nombre'], 'text'),
+      GetSQLValueString('Administrativo', 'text'),
+      GetSQLValueString($solicitud['adm1_telefono'], 'text'),
+      GetSQLValueString($solicitud['adm1_email'], 'text'),
+      GetSQLValueString($idsolicitud_certificacion, 'int'));
+    $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+  }
+
+  if(isset($solicitud['adm2_nombre'])){
+    $insertSQL = sprintf("INSERT INTO contactos (idopp, nombre, cargo, telefono1, email1, idsolicitud_certificacion) VALUES (%s, %s, %s, %s, %s, %s)",
+      GetSQLValueString($solicitud['idopp'], 'text'),
+      GetSQLValueString($solicitud['adm2_nombre'], 'text'),
+      GetSQLValueString('Administrativo', 'text'),
+      GetSQLValueString($solicitud['adm2_telefono'], 'text'),
+      GetSQLValueString($solicitud['adm2_email'], 'text'),
+      GetSQLValueString($idsolicitud_certificacion, 'int'));
+    $insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
+  }
+
+  
+}
 ?>
 <div class="row">
   <?php 
@@ -1856,6 +1919,11 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
 
                   <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
                   <input type="hidden" name="generar_formato" value="1">
+                </form>
+                <form action="" method="POST">
+                  <input type="text" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
+                  <button type="submit" name="anclar" value="1">Anclar</button>
+
                 </form>
 
               </td>

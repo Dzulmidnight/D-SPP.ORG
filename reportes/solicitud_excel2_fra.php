@@ -83,29 +83,29 @@ if($solicitud['produccion']){
     // Se asignan las propiedades del libro
     $objPHPExcel->getProperties()->setCreator("spp global") //Autor
                ->setLastModifiedBy("spp global") //Ultimo usuario que lo modificó
-               ->setTitle("SOLICITUD DE CERTIFICACIÓN")
-               ->setSubject("SOLICITUD DE CERTIFICACIÓN")
-               ->setDescription("SOLICITUD DE CERTIFICACIÓN")
-               ->setKeywords("SOLICITUD DE CERTIFICACIÓN")
-               ->setCategory("SOLICITUD DE CERTIFICACIÓN");
+               ->setTitle("Demande de Certification")
+               ->setSubject("Demande de Certification")
+               ->setDescription("Demande de Certification")
+               ->setKeywords("Demande de Certification")
+               ->setCategory("Demande de Certification");
 
-    $tituloReporte = "SOLICITUD DE CERTIFICACIÓN";
+    $tituloReporte = "Demande de Certification";
 
           
     ///// HOJA DE DATOS GENERALES ////
     $objPHPExcel->setActiveSheetIndex(0)
           //// TITULOS
-          ->setCellValue('A3','FECHA DE ELABORACIÓN')
-          ->setCellValue('A4', 'TIPO DE SOLICITUD')
-          ->setCellValue('A5', 'CODIGO DE IDENTIFICACIÓN SPP')
-          ->setCellValue('A6', 'TIPO DE PROCEDIMIENTO DE CERTIFICACIÓN')
-          ->setCellValue('A7', 'NOMBRE COMPLETO DE LA ORGANIZACIÓN')
-          ->setCellValue('A8', 'DIRECCIÓN COMPLETA DE SUS OFICINAS')
-          ->setCellValue('A9', 'PAÍS')
-          ->setCellValue('A10', 'CORREO ELECTRONICO')
-          ->setCellValue('A11', 'TELEFONO DE LA ORGANIZACIÓN')
-          ->setCellValue('A12', 'SITIO WEB')
-          ->setCellValue('A13', 'DIRECCIÓN FISCAL')
+          ->setCellValue('A3','DATE DE REALISATION')
+          ->setCellValue('A4', 'TYPE DE DEMANDE')
+          ->setCellValue('A5', 'CODE D’IDENTIFICATION SPP (#SPP)')
+          ->setCellValue('A6', 'PROCEDURE DE CERTIFICATION')
+          ->setCellValue('A7', 'DENOMINATION SOCIALE COMPLETE DE L’ORGANISATION DE PETITS PRODUCTEURS:  ')
+          ->setCellValue('A8', 'ADRESSE COMPLETE DU SIEGE SOCIAL')
+          ->setCellValue('A9', 'PAYS')
+          ->setCellValue('A10', 'ADRESSE MAIL')
+          ->setCellValue('A11', 'TELEPHONE')
+          ->setCellValue('A12', 'SITE WEB')
+          ->setCellValue('A13', 'ADRESSE FISCALE')
           ->setCellValue('A14', 'RFC')
           ->setCellValue('A15', 'RUC')
           //// INFORMACIÓN
@@ -126,7 +126,7 @@ if($solicitud['produccion']){
           ->setCellValue('B15', $solicitud['ruc']);
 
     // NOMBRE DE LA PESTAÑA(hoja)
-    $objPHPExcel->getActiveSheet(0)->setTitle('DATOS GENERALES');
+    $objPHPExcel->getActiveSheet(0)->setTitle('INFORMATIONS GENERALES');
 
 
     /// AJUSTAR EL TEXTO DE LAS COLUMNAS
@@ -147,40 +147,40 @@ if($solicitud['produccion']){
     ///// HOJA PERSONAS DE CONTACTO ////
     $objPHPExcel->setActiveSheetIndex(1)
           //// TITULOS
-          ->setCellValue('A3', 'NOMBRE')
-          ->setCellValue('A4', 'CARGO')
-          ->setCellValue('A5', 'CORREO ELECTRONICO')
-          ->setCellValue('A6', 'TELEFONO')
+          ->setCellValue('A3', 'NOM')
+          ->setCellValue('A4', 'FONCTION')
+          ->setCellValue('A5', 'ADRESSE MAIL')
+          ->setCellValue('A6', 'TELEPHONE')
             //datos
             ->setCellValue('B3', $solicitud['contacto1_nombre']) 
             ->setCellValue('B4', $solicitud['contacto1_cargo'])
             ->setCellValue('B5', $solicitud['contacto1_email'])
             ->setCellValue('B6', $solicitud['contacto1_telefono'])
           /// TITULOS
-          ->setCellValue('A3', 'NOMBRE')
-          ->setCellValue('A4', 'CARGO')
-          ->setCellValue('A5', 'CORREO ELECTRONICO')
-          ->setCellValue('A6', 'TELEFONO')
+          ->setCellValue('A3', 'NOM')
+          ->setCellValue('A4', 'FONCTION')
+          ->setCellValue('A5', 'ADRESSE MAIL')
+          ->setCellValue('A6', 'TELEPHONE')
             /// datos
             ->setCellValue('B7', $solicitud['contacto2_nombre'])
             ->setCellValue('B8', $solicitud['contacto2_cargo'])
             ->setCellValue('B9', $solicitud['contacto2_email'])
             ->setCellValue('B10', $solicitud['contacto2_telefono'])
           /// TITULOS
-          ->setCellValue('A3', 'NOMBRE')
-          ->setCellValue('A4', 'CARGO')
-          ->setCellValue('A5', 'CORREO ELECTRONICO')
-          ->setCellValue('A6', 'TELEFONO')
+          ->setCellValue('A3', 'NOM')
+          ->setCellValue('A4', 'FONCTION')
+          ->setCellValue('A5', 'ADRESSE MAIL')
+          ->setCellValue('A6', 'TELEPHONE')
             // datos
             ->setCellValue('B11', $solicitud['adm1_nombre'])
             ->setCellValue('B12', $solicitud['adm1_email'])
             ->setCellValue('B13', 'ADMINISTRADOR')
             ->setCellValue('B14', $solicitud['adm1_telefono'])
           /// contactos
-          ->setCellValue('A3', 'NOMBRE')
-          ->setCellValue('A4', 'CARGO')
-          ->setCellValue('A5', 'CORREO ELECTRONICO')
-          ->setCellValue('A6', 'TELEFONO')
+          ->setCellValue('A3', 'NOM')
+          ->setCellValue('A4', 'FONCTION')
+          ->setCellValue('A5', 'ADRESSE MAIL')
+          ->setCellValue('A6', 'TELEPHONE')
             // datos
             ->setCellValue('B15', $solicitud['adm2_nombre'])
             ->setCellValue('B16', $solicitud['adm2_email'])
@@ -188,7 +188,7 @@ if($solicitud['produccion']){
             ->setCellValue('B18', $solicitud['adm2_telefono']);
 
     // NOMBRE DE LA PESTAÑA(hoja)
-    $objPHPExcel->getActiveSheet(1)->setTitle('PERSONAS DE CONTACTO');
+    $objPHPExcel->getActiveSheet(1)->setTitle('PERSONNE A CONTACTER');
 
     /// AJUSTAR EL TEXTO DE LAS COLUMNAS
     $objPHPExcel->getActiveSheet(1)->getStyle('A1:B1'.$objPHPExcel->getActiveSheet(1)->getHighestRow())
@@ -208,18 +208,18 @@ if($solicitud['produccion']){
     ///// HOJA DATOS DE OPERACIÓN ////
     $objPHPExcel->setActiveSheetIndex(2)
           //// TITULOS
-          ->setCellValue('A3', 'NÚMERO DE SOCIOS PRODUCTORES')
-          ->setCellValue('A4', 'NÚMERO DE SOCIOS PRODUCTORES DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACIÓN ')
-          ->setCellValue('A5', 'VOLUMEN(ES) DE PRODUCCIÓN TOTAL POR PRODUCTO (UNIDAD DE MEDIDA) ')
-          ->setCellValue('A6', 'TAMAÑO MÁXIMO DE LA UNIDAD DE PRODUCCIÓN POR PRODUCTOR DEL (DE LOS) PRODUCTO(S) A INCLUIR EN LA CERTIFICACIÓN:')
-          ->setCellValue('A7', '1.- EXPLIQUE SI SE TRATA DE UNA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES DE 1ER, 2DO, 3ER O 4TO GRADO, ASÍ COMO EL NÚMERO DE OPP DE 3ER, 2DO O 1ER GRADO, Y EL NÚMERO DE COMUNIDADES, ZONAS O GRUPOS DE TRABAJO, EN SU CASO, CON LAS QUE CUENTA:')
-          ->setCellValue('A8', '2. ESPECIFIQUE QUE? PRODUCTO(S) QUIERE INCLUIR EN EL CERTIFICADO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES PARA LOS CUALES EL ORGNISMO DE CERTIFICACIÓN REALIZARÁ LA EVALUACIÓN.')
-          ->setCellValue('A9', '3. MENCIONE SI SU ORGANIZACIÓN QUIERE INCLUIR ALGÚN CALIFICATIVO ADICIONAL PARA USO COMPLEMENTARIO CON EL DISEÑO GRÁFICO DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES.')
-          ->setCellValue('A10', '4. INDIQUE EL ALCANCE QUE TIENE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES:')
-          ->setCellValue('A11', '5. ESPECIFIQUE SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA:')
-          ->setCellValue('A12', '6. SI SUBCONTRATA LOS SERVICIOS DE PLANTAS DE PROCESAMIENTO, EMPRESAS DE COMERCIALIZACIÓN O EMPRESAS QUE REALICEN LA IMPORTACIÓN O EXPORTACIÓN, INDIQUE SI ESTAS EMPRESAS VAN A REALIZAR EL REGISTRO BAJO EL PROGRAMA DEL SPP O SERÁN CONTROLADAS A TRAVE?S DE LA ORGANIZACIÓN DE PEQUEÑOS PRODUCTORES:')
-          ->setCellValue('A13', '7. ADICIONAL A SUS OFICINAS CENTRALES, ESPECIFIQUE CUÁNTOS CENTROS DE ACOPIO, ÁREAS DE PROCESAMIENTO U OFICINAS ADICIONALES TIENEN:')
-          ->setCellValue('A14', '8. ¿CUENTA CON UN SISTEMA DE CONTROL INTERNO PARA DAR CUMPLIMIENTO A LOS CRITERIOS DE LA NORMA GENERAL DEL SÍMBOLO DE PEQUEÑOS PRODUCTORES?, EN SU CASO, EXPLIQUE:')
+          ->setCellValue('A3', 'NOMBRE DE MEMBRES PRODUCTEURS')
+          ->setCellValue('A4', 'NOMBRE DE MEMBRES PRODUCTEURS DU (DES) PRODUIT(S) A INCLUIRE DANS LA CERTIFICATION  ')
+          ->setCellValue('A5', 'VOLUME(S) DE PRODUCTION TOTALE PAR PRODUIT (UNITE DE MESURE)')
+          ->setCellValue('A6', 'TAILLE MAXIMALE DE L’UNITE DE PRODUCTION PAR PRODUCTEUR DU (DES) PRODUIT(S) A INCLURE DANS LA CERTIFICATION')
+          ->setCellValue('A7', '1. INDIQUEZ-S’IL S’AGIT D’UNE ORGANISATION DE PETITS PRODUCTEURS DE 1er, 2eme, 3eme OU 4eme NIVEAU, AINSI QUE LE NOMBRE D’OPP DE 3eme, 2eme OU 1er NIVEAU ET LE NOMBRE DE COMMUNAUTES, DE ZONES OU DE GROUPES DE TRAVAIL DONT VOUS DISPOSEZ')
+          ->setCellValue('A8', '2. INDIQUEZ QUEL(S) PRODUIT(S) VOUS SOUHAITEZ INCLURE DANS LA CERTIFICATION DU SYMBOLE DES PETITS PRODUCTEURS POUR LE(S) QUEL (S) L’ORGANISME DE CERTIFICATION REALIZERA L’EVALUATION')
+          ->setCellValue('A9', '3. INDIQUEZ SI VOTRE ORGANISATION SOUHAITE INCLURE UNE QUALIFICATION OPTIONNELLE POUR UNE UTILISATION COMPLEMENTAIRE AVEC LE LOGO GRAPHIQUE DU SYMBOLE DES PETITS PRODUCTEURS')
+          ->setCellValue('A10', '4. MARQUEZ D’UNE CROIX L’ACTIVITE EXERCEE PAR L’ORGANISATION DES PETITS PRODUCTEURS')
+          ->setCellValue('A11', '5. INDIQUEZ SI VOUS UTILISEZ EN SOUS-TRAITANCE LES SERVICES D’USINES DE TRANSFORMATION, D’ENTREPRISES DE COMMERCIALISATION OU D’ENTREPRISES D’IMPORT/EXPORT, LE CAS ECHEANT, MENTIONNEZ LE TYPE DE SERVICE REALISE')
+          ->setCellValue('A12', '6. SI VOUS SOUS-TRAITEZ DES SERVICES A DES USINES DE TRANSFORMATION, A DES ENTREPRISES DE COMMERCIALISATION OU A DES ENTREPRISES D’IMPORT/EXPORT, INDIQUEZ SI CELLES-CI SONT ENREGISTREES, EN COURS D’ENREGISTREMENT SOUS LE PROGRAMME DU SPP OU SI ELLES SERONT CONTROLEES AU TRAVERS DE L’ORGANISATION DE PETITS PRODUCTEURS')
+          ->setCellValue('A13', '7. EN PLUS DE VOTRE SIEGE SOCIAL, INDIQUEZ LE NOMBRE DE CENTRES DE COLLECTE, DE TRANSFORMATION OU DE BUREAUX SUPPLEMENTAIRES QUE VOUS POSSEDEZ')
+          ->setCellValue('A14', '8. EST-CE QUE VOUS DISPOSEZ D’UN SYSTEME DE CONTROLE INTERNE AFIN DE RESPECTER LES CRITERES DE LA NORME GENERALE DU SYMBOLE DES PETITS PRODUCTEURS? DANS CE CAS VEUILLEZ EXPLIQUER')
 
             // datos
             ->setCellValue('B3', $solicitud['resp1'])
@@ -236,7 +236,7 @@ if($solicitud['produccion']){
             ->setCellValue('B14', $solicitud['op_preg8']);
 
     // NOMBRE DE LA PESTAÑA(hoja)
-    $objPHPExcel->getActiveSheet(2)->setTitle('DATOS DE OPERACIÓN');
+    $objPHPExcel->getActiveSheet(2)->setTitle('DONNÉES D\'OPÉRATION');
 
     /// AJUSTAR EL TEXTO DE LAS COLUMNAS
     $objPHPExcel->getActiveSheet(2)->getStyle('A1:B1'.$objPHPExcel->getActiveSheet(2)->getHighestRow())
@@ -283,14 +283,14 @@ if($solicitud['produccion']){
               $objPHPExcel->setActiveSheetIndex(3)
 
               /// TITULOS
-              ->setCellValue('A'.$contador++, 'CERTIFICACIÓN')
+              ->setCellValue('A'.$contador++, 'CERTIFICATION')
               ->setCellValue('B'.$contador1++, $certificaciones['certificacion'])
-              ->setCellValue('A'.$contador++, 'CERTIFICADORA')
+              ->setCellValue('A'.$contador++, 'CERTIFICATEUR')
               ->setCellValue('B'.$contador1++, $certificaciones['certificadora'])
                 /// datos
-                ->setCellValue('A'.$contador++, 'AÑO INICIAL DE LA CERTIFICACIÓN')
+                ->setCellValue('A'.$contador++, 'ANNEE DE LA CERTIFICATION')
                 ->setCellValue('B'.$contador1++, $certificaciones['ano_inicial'])
-                ->setCellValue('A'.$contador++, '¿HA SIDO INTERRUMPIDA?')
+                ->setCellValue('A'.$contador++, 'A-T-ELLE ETE INTERROMPUE?')
                 ->setCellValue('B'.$contador1++, $certificaciones['interrumpida']);
 
                 $contador++;
@@ -298,23 +298,23 @@ if($solicitud['produccion']){
             }
             $objPHPExcel->setActiveSheetIndex(3)
 
-              ->setCellValue('A'.$contador+=2, 'DE LAS CERTIFICACIONES CON LAS QUE CUENTA, EN SU MÁS RECIENTE EVALUACIÓN INTERNA Y EXTERNA, ¿CUÁNTOS INCUMPLIMIENTOS SE IDENTIFICARON? Y EN SU CASO, ¿ESTÁN RESUELTOS O CUÁL ES SU ESTADO?')
+              ->setCellValue('A'.$contador+=2, 'PARMI LES CERTIFICATIONS DONT VOUS DISPOSEZ ET LORS DE LEUR PLUS RECENTE EVALUATION INTERNE ET EXTERNE, COMBIEN DE NON CONFORMITES ONT ETE IDENTIFIEES? CELLES-CI ONT-ELLES ETE RESOLUES? QUEL EST LEUR ETAT ACTUEL?')
                 ->setCellValue('B'.$contador1+=2, $solicitud['op_preg10'])
               
-              ->setCellValue('A'.$contador++, '¿TUVO VENTAS SPP DURANTE EL CICLO DE CERTIFICACIÓN ANTERIOR?')
+              ->setCellValue('A'.$contador++, 'AVEZ-VOUS REALISE DES VENTES SOUS LE SPP DURANT LE CYCLE DE CERTIFICATION ANTERIEUR ?')
                 ->setCellValue('B'.$contador1++, $solicitud['op_preg12'])
               
-              ->setCellValue('A'.$contador++, 'SI SU RESPUESTA FUE POSITIVA, FAVOR DE INIDICAR EL RANGO DEL VALOR TOTAL DE SUS VENTAS SPP DEL CICLO ANTERIOR')
+              ->setCellValue('A'.$contador++, 'LE CAS ECHEANT, MERCI DE MARQUER D’UNE CROIX LE RANG DE LA VALEUR TOTALE DE VOS VENTES SOUS LE SPP POUR LE CYCLE ANTERIEUR SELON LE TABLEAU SUIVANT')
                 ->setCellValue('B'.$contador1++, $solicitud['op_preg13'])
               
-              ->setCellValue('A'.$contador++, 'DEL TOTAL DE SUS VENTAS ¿QUÉ PORCENTAJE DEL PRODUCTO CUENTA CON LA CERTIFICACIÓN DE ORGÁNICO, COMERCIO JUSTO Y/O SÍMBOLO DE PEQUEÑOS PRODUCTORES?')
+              ->setCellValue('A'.$contador++, 'SUR L’ENSEMBLE DE VOS VENTES, QUEL EST LE POURCENTAGE REALISE SOUS LES CERTIFICATIONS BIOLOGIQUES, DU COMMERCE EQUITABLE ET / OU DU SYMBOLE DES PETITS PRODUCTEURS ?')
                 ->setCellValue('B'.$contador1++, $porcentajeVentas)
               
-              ->setCellValue('A'.$contador++, 'FECHA ESTIMADA PARA COMENZAR A USAR EL SÍMBOLO DE PEQUEÑOS PRODUCTORES:')
+              ->setCellValue('A'.$contador++, 'DATE ESTIMEE DE DEBUT D’UTILISATION DU SYMBOLE DES PETITS PRODUCTEURS')
                 ->setCellValue('B'.$contador1++, $solicitud['op_preg14']);
                 
     // NOMBRE DE LA PESTAÑA(hoja)
-    $objPHPExcel->getActiveSheet(3)->setTitle('CERTIFICACIONES');
+    $objPHPExcel->getActiveSheet(3)->setTitle('CERTIFICATIONS');
 
     /// AJUSTAR EL TEXTO DE LAS COLUMNAS
     $objPHPExcel->getActiveSheet(3)->getStyle('A1:B1'.$objPHPExcel->getActiveSheet(3)->getHighestRow())
@@ -340,28 +340,28 @@ if($solicitud['produccion']){
             while($productos = mysql_fetch_assoc($row_productos)){
               $objPHPExcel->setActiveSheetIndex(4)
 
-              ->setCellValue('A'.$contador++, 'PRODUCTO')
+              ->setCellValue('A'.$contador++, 'PRODUIT')
                 ->setCellValue('B'.$contador1++, $productos['producto'])
 
-              ->setCellValue('A'.$contador++, 'VOLUMEN TOTAL ESTIMADO A COMERCIALIZAR')
+              ->setCellValue('A'.$contador++, 'Volume Total Estimé à Commercialiser')
                 ->setCellValue('B'.$contador1++, $productos['volumen'])
 
-              ->setCellValue('A'.$contador++, 'PRODUCTO TERMINADO')
+              ->setCellValue('A'.$contador++, 'Produit Finit')
                 ->setCellValue('B'.$contador1++, $productos['terminado'])
 
-              ->setCellValue('A'.$contador++, 'MATERIA PRIMA')
+              ->setCellValue('A'.$contador++, 'Matière Première')
                 ->setCellValue('B'.$contador1++, $productos['materia'])
 
-              ->setCellValue('A'.$contador++, 'PAÍS(ES) DE DESTINO')
+              ->setCellValue('A'.$contador++, 'Pays de Destination')
                 ->setCellValue('B'.$contador1++, $productos['destino'])
 
-              ->setCellValue('A'.$contador++, 'MARCA PROPIA')
+              ->setCellValue('A'.$contador++, 'Marque Propre')
                 ->setCellValue('B'.$contador1++, $productos['marca_propia'])
 
-              ->setCellValue('A'.$contador++, 'MARCA DE UN CLIENTE')
+              ->setCellValue('A'.$contador++, 'Marque d’un Client')
                 ->setCellValue('B'.$contador1++, $productos['marca_cliente'])
 
-              ->setCellValue('A'.$contador++, 'SIN CLIENTE AUN')
+              ->setCellValue('A'.$contador++, 'Pas encore de client')
                 ->setCellValue('B'.$contador1++, $productos['sin_cliente']);
               
               $contador++;
@@ -370,7 +370,7 @@ if($solicitud['produccion']){
             }
             
     // NOMBRE DE LA PESTAÑA(hoja)
-    $objPHPExcel->getActiveSheet(4)->setTitle('PRODUCTOS');
+    $objPHPExcel->getActiveSheet(4)->setTitle('PRODUITS');
     /// AJUSTAR EL TEXTO DE LAS COLUMNAS
     $objPHPExcel->getActiveSheet(4)->getStyle('A1:B1'.$objPHPExcel->getActiveSheet(4)->getHighestRow())
       ->getAlignment()->setWrapText(true);

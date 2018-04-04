@@ -1836,10 +1836,21 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           </td>
           <!---- INICIA PROCESO DE CERTIFICACIÓN ---->
           <td>
-            <?php echo $solicitud['dictamen']; ?>
             <form action="" method="POST" enctype="multipart/form-data">
               <?php 
               if((isset($solicitud['dictamen']) && $solicitud['dictamen'] == 'POSITIVO') || ($solicitud['tipo_solicitud']) == 'RENOVACION' && !empty($solicitud['fecha_aceptacion'])){
+                $row_ultimo_estatus = mysql_query("SELECT proceso_certificacion.estatus_interno, estatus_interno.nombre_frances FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_certificacion = '$solicitud[idsolicitud]' AND proceso_certificacion.idproceso_certificacion = (SELECT MAX(proceso_certificacion.idproceso_certificacion) FROM proceso_certificacion WHERE idsolicitud_certificacion = '$solicitud[idsolicitud]')");
+              $ultimo_estatus = mysql_fetch_assoc($row_ultimo_estatus);
+              
+              if(!empty($ultimo_estatus['nombre_frances'])){
+                echo '<p>
+                  Dernier statut: <b class="bg-success">'.$ultimo_estatus['nombre_frances'].'</b>
+                </p>';
+              }else{
+               echo '<p>
+                  Dernier statut: <b class="bg-danger">Non mis à jour</b>
+                </p>';
+              }
               ?>
                 <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_certificacion']; ?>">Processus de certification</button>
 
@@ -2552,6 +2563,12 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             </form>
             <form action="../../reportes/solicitud_excel_fra.php" method="POST" target="_new">
               <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Solicitud en excel" target="_new" type="submit" ><img src="../../img/excel.png" style="height:30px;" alt=""></button>
+
+              <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
+              <input type="hidden" name="generar_excel" value="2">
+            </form>
+            <form action="../../reportes/solicitud_excel2_fra.php" method="POST" target="_new">
+              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Données Excel" target="_new" type="submit" ><img src="../../img/base_de_datos.png" style="height:30px;" alt=""></button>
 
               <input type="hidden" name="idsolicitud_certificacion" value="<?php echo $solicitud['idsolicitud']; ?>">
               <input type="hidden" name="generar_excel" value="2">
