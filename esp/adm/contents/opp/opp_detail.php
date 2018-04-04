@@ -442,11 +442,11 @@ $opp = mysql_fetch_assoc($row_opp);
   
   <!---- INICIA SECCIÓN CONTACTOS ---->
   <?php 
-  //$row_contactos = mysql_query("SELECT * FROM contactos WHERE idopp = $_GET[idopp]", $dspp) or die(mysql_error());
+  $row_contactos = mysql_query("SELECT * FROM contactos WHERE idopp = '$_GET[idopp]' AND idsolicitud_certificacion = (SELECT MAX(idsolicitud_certificacion) FROM solicitud_certificacion WHERE idopp = '$_GET[idopp]')", $dspp) or die(mysql_error());
   
-  $query_contactos = "SELECT contacto1_nombre, contacto1_cargo, contacto1_email, contacto1_telefono, contacto2_nombre, contacto2_cargo, contacto2_email, contacto2_telefono, adm1_nombre, adm1_email, adm1_telefono, adm2_nombre, adm2_email, adm2_telefono FROM solicitud_certificacion WHERE idopp = '$_GET[idopp]'";
+  /*$query_contactos = "SELECT contacto1_nombre, contacto1_cargo, contacto1_email, contacto1_telefono, contacto2_nombre, contacto2_cargo, contacto2_email, contacto2_telefono, adm1_nombre, adm1_email, adm1_telefono, adm2_nombre, adm2_email, adm2_telefono FROM solicitud_certificacion WHERE idopp = '$_GET[idopp]'";
   $row_contactos = mysql_query($query_contactos);
-  $num_contactos = mysql_num_rows($row_contactos);
+  */$num_contactos = mysql_num_rows($row_contactos);
 
   $contacto = mysql_fetch_assoc($row_contactos);
 
@@ -463,7 +463,35 @@ $opp = mysql_fetch_assoc($row_opp);
         </tr>
       </thead>
       <tbody style="font-size:12px;">
+        <?php 
+        echo '<h4>'.$num_contactos.'</h4>';
+        while($contacto = mysql_fetch_assoc($row_contactos)){
+          echo $contacto['idcontacto'];
+        ?>
+        <tr>
+          <td>
+            <?php echo '#'.$contacto['idsolicitud_certificacion']; ?>
+            <?php echo '<a href="?OPP&detail&idopp='.$_GET['idopp'].'&contacto='.$contacto['idcontacto'].'"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> '.$contacto['nombre'].'</a>'; ?><a href=""></a>
+          </td>
+          <td>
+            <?php echo $contacto['cargo']; ?>
+              
+            </td>
+          <td>
+            <form action="" method="post" name="formularioEliminar" ONSUBMIT="return preguntar();">
+              <button class="btn btn-sm btn-danger" type="subtmit" value="Eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+              </button>        
+
+              <input type="hidden" value="1" name="eliminar_contacto" />
+              <input type="hidden" value="<?php echo $contacto['idcontacto']; ?>" name="idcontacto" />
+            </form>
+          </td>
+        </tr>
         <?php
+        }
+         ?>
+        <?php /*
             if(isset($contacto['contacto1_nombre'])){
               ?>
               <tr>
@@ -508,7 +536,7 @@ $opp = mysql_fetch_assoc($row_opp);
                   </td>
                 </tr>
               <?php
-            }
+            }*/
         ?>    
         <!--<td><?php echo '<a href="?OPP&detail&idopp='.$_GET['idopp'].'&contacto='.$contacto['idcontacto'].'"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> '.$contacto['nombre'].'</a>'; ?><a href=""></a> </td>
               <td><?php echo $contacto['cargo']; ?></td>
