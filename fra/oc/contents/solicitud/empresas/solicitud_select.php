@@ -1792,7 +1792,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
       <tbody>
       <?php 
       while($solicitud = mysql_fetch_assoc($row_solicitud)){
-          $query_proceso = "SELECT proceso_certificacion.*, proceso_certificacion.idsolicitud_registro, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', estatus_dspp.idestatus_dspp, estatus_dspp.nombre AS 'nombre_dspp', membresia.idmembresia, membresia.estatus_membresia, membresia.idcomprobante_pago, membresia.fecha_registro FROM proceso_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON proceso_certificacion.idsolicitud_registro = membresia.idsolicitud_registro WHERE proceso_certificacion.idsolicitud_registro =  $solicitud[idsolicitud] ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
+          $query_proceso = "SELECT proceso_certificacion.*, proceso_certificacion.idsolicitud_registro, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', estatus_dspp.idestatus_dspp, estatus_dspp.nombre_frances AS 'nombre_dspp', membresia.idmembresia, membresia.estatus_membresia, membresia.idcomprobante_pago, membresia.fecha_registro FROM proceso_certificacion LEFT JOIN estatus_publico ON proceso_certificacion.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_dspp ON proceso_certificacion.estatus_dspp = estatus_dspp.idestatus_dspp LEFT JOIN membresia ON proceso_certificacion.idsolicitud_registro = membresia.idsolicitud_registro WHERE proceso_certificacion.idsolicitud_registro =  $solicitud[idsolicitud] ORDER BY proceso_certificacion.idproceso_certificacion DESC LIMIT 1";
           $ejecutar = mysql_query($query_proceso,$dspp) or die(mysql_error());
           $proceso_certificacion = mysql_fetch_assoc($ejecutar);
 
@@ -1830,16 +1830,16 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             if(isset($solicitud['cotizacion_empresa'])){
             ?>
               <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="<?php echo "#cotizacion".$solicitud['idsolicitud_registro']; ?>" title="Reemplazar Cotización"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
-                <a href='<?php echo $solicitud['cotizacion_empresa']; ?>' class='btn btn-sm btn-success' style='font-size:12px;color:white;height:30px;' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Descargar Cotización</a>
+                <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="<?php echo "#cotizacion".$solicitud['idsolicitud_registro']; ?>" title="Remplacer la cotation"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                <a href='<?php echo $solicitud['cotizacion_empresa']; ?>' class='btn btn-sm btn-success' style='font-size:12px;color:white;height:30px;' target='_blank'><span class='glyphicon glyphicon-download' aria-hidden='true'></span> Télécharger le devis</a>
               </div>
             <?php
                if($proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN
-                echo "<p class='alert alert-success' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                echo "<p class='alert alert-success' style='padding:7px;'>Statut: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }else if($proceso_certificacion['estatus_dspp'] == 17){ // SE RECHAZA LA COTIZACIÓN
-                echo "<p class='alert alert-danger' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                echo "<p class='alert alert-danger' style='padding:7px;'>Statut: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }else{
-                echo "<p class='alert alert-info' style='padding:7px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
+                echo "<p class='alert alert-info' style='padding:7px;'>Statut: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                }
 
             }else{ // INICIA CARGAR COTIZACIÓN
@@ -1854,11 +1854,11 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                   <div class="modal-content">
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <h4 class="modal-title" id="myModalLabel">Reemplazar Cotización Actual</h4>
+                      <h4 class="modal-title" id="myModalLabel">Remplacer la cotation actuelle</h4>
                     </div>
                     <div class="modal-body">
                       <div class="form-group">
-                        <label for="nueva_cotizacion">Nueva Cotización</label>
+                        <label for="nueva_cotizacion">Nouvelle cotation</label>
                         <input type="file" id="nueva_cotizacion" name="nueva_cotizacion">
                         <input type="hidden" name="cotizacion_actual" value="<?php echo $solicitud['cotizacion_empresa']; ?>">
                         <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
@@ -1866,8 +1866,8 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                     </div>
 
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                      <button type="submit" name="reemplazar_cotizacion" value="1" class="btn btn-primary">Reemplazar Cotización</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                      <button type="submit" name="reemplazar_cotizacion" value="1" class="btn btn-primary">Remplacer la cotation actuelle</button>
                     </div>                    
 
                   </div>
@@ -1881,7 +1881,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <?php
             if($solicitud['tipo_solicitud'] == 'RENOVACION'){
             ?>
-              <a href="#" data-toggle="tooltip" title="Esta solicitud se encuentra en Proceso de Renovación del Registro por lo tanto no aplica el periodo de objeción" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>SOLICITUD EN RENOVACIÓN</a>
+              <a href="#" data-toggle="tooltip" title="Cette demande est en cours de renouvellement du Registre ne s'applique donc pas la période d'objection" style="padding:7px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Demande de renouvellement</a>
             <?php
             }else{
               if(isset($solicitud['idperiodo_objecion']) && $solicitud['estatus_objecion'] != 'EN ESPERA'){
@@ -1909,8 +1909,22 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <form action="" method="POST" enctype="multipart/form-data">
               <?php 
               if((isset($solicitud['dictamen']) && $solicitud['dictamen'] == 'POSITIVO') || ($solicitud['tipo_solicitud']) == 'RENOVACION' && !empty($solicitud['fecha_aceptacion'])){
+
+                /*$row_ultimo_estatus = mysql_query("SELECT proceso_certificacion.estatus_interno, estatus_interno.nombre_frances FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_registro = '$solicitud[idsolicitud_registro]' AND proceso_certificacion.idproceso_certificacion = (SELECT MAX(proceso_certificacion.idproceso_certificacion) FROM proceso_certificacion WHERE idsolicitud_registro = '$solicitud[idsolicitud_registro]')");
+                $ultimo_estatus = mysql_fetch_assoc($row_ultimo_estatus);
+              
+                if(!empty($ultimo_estatus['nombre_frances'])){
+                  echo '<p>
+                    Dernier statut: <b class="bg-success">'.$ultimo_estatus['nombre_frances'].'</b>
+                  </p>';
+                }else{
+                  echo '<p>
+                    Dernier statut: <b class="bg-danger">Non mis à jour</b>
+                  </p>';
+                }
+                */
               ?>
-                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_registro']; ?>">Proceso Certificación</button>
+                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_registro']; ?>">Processus de certification</button>
 
                 <!-- inicia modal proceso de certificación -->
                 <div id="<?php echo "certificacion".$solicitud['idsolicitud_registro']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -1918,15 +1932,15 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Proceso de Certificación</h4>
+                        <h4 class="modal-title" id="myModalLabel">Processus de certification</h4>
                       </div>
                       <div class="modal-body"><!-- INICIA MODAL BODY -->
                         <div class="row"><!--INICIA ROW-->
                           <?php 
 
-                          $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_registro = '$solicitud[idsolicitud]' AND proceso_certificacion.estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
+                          $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre_frances FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_registro = '$solicitud[idsolicitud]' AND proceso_certificacion.estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
                           while($historial_certificacion = mysql_fetch_assoc($row_proceso_certificacion)){
-                            echo "<div class='col-md-10'>Proceso: $historial_certificacion[nombre]</div>";
+                            echo "<div class='col-md-10'>Proceso: $historial_certificacion[nombre_frances]</div>";
                             echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$historial_certificacion['fecha_registro'])."</div>";
                           }
 
@@ -1934,11 +1948,11 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           ?>
                           <div class="col-md-12">
                             <select class="form-control" name="estatus_interno" id="<?php echo 'statusSelect'.$solicitud['idsolicitud']; ?>" onchange="<?php echo 'funcionSelect'.$solicitud['idsolicitud'].'()'; ?>">
-                              <option value="">Seleccione el proceso en el que se encuentra</option>
+                              <option value="">Sélectionnez le processus dans lequel vous êtes</option>
                               <?php 
                               $row_estatus_interno = mysql_query("SELECT * FROM estatus_interno",$dspp) or die(mysql_error());
                               while($estatus_interno = mysql_fetch_assoc($row_estatus_interno)){
-                                echo "<option value='$estatus_interno[idestatus_interno]'>$estatus_interno[nombre]</option>";
+                                echo "<option value='$estatus_interno[idestatus_interno]'>$estatus_interno[nombre_frances]</option>";
                               }
                                ?>
                             </select>                        
@@ -2273,19 +2287,19 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud_registro']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
                         <input type="hidden" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
                         <?php 
                         if(empty($solicitud['idmembresia']) && $solicitud['estatus_empresa'] != 8){
                         ?>
-                        <button type="submit" class="btn btn-success" style="width:100%" id="<?php echo 'boton1'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1">Guardar Proceso</button>
+                        <button type="submit" class="btn btn-success" style="width:100%" id="<?php echo 'boton1'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1">Enregistrer le processus</button>
                         <?php 
                         if($solicitud['tipo_solicitud'] == 'RENOVACION'){
                         ?>
-                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1" onclick="return validarRenovacion()" style="width:100%; display:none" >Enviar Dictamen</button>
+                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1" onclick="return validarRenovacion()" style="width:100%; display:none" >Envoyer l'avis</button>
                         <?php
                         }else{
                         ?>
-                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Enviar Dictamen</button>
+                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Envoyer l'avis</button>
                         <?php
                         }
                          ?>
@@ -2314,7 +2328,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- INICIA SECCION CERTIFICADO ------>
           <form action="" method="POST" enctype="multipart/form-data">
           <td>
-            <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud']; ?>">Cargar Certificado</button>
+            <button type="button" class="btn btn-sm btn-info" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud']; ?>">Télécharger le certificat</button>
           </td>
                 <!-- inicia modal estatus_Certificado -->
 
@@ -2325,7 +2339,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">Cargar Certificado</h4>
+                        <h4 class="modal-title" id="myModalLabel">Télécharger le certificat</h4>
                       </div>
                       <div class="modal-body">
                         <div class="row">
@@ -2429,7 +2443,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           </div>
                           
                           <div class="col-md-6">
-                            <h4 style="font-size:14px;">Cargar Certificado</h4>
+                            <h4 style="font-size:14px;">Télécharger le certificat</h4>
                             <?php 
                             if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idformato_evaluacion']) && isset($solicitud['idinforme_evaluacion'])){
 
@@ -2540,7 +2554,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud']; ?>">
                         <input type="hidden" name="idoc" value="<?php echo $solicitud['idoc']; ?>">
                         <input type="hidden" name="idempresa" value="<?php echo $solicitud['idempresa']; ?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                       </div>
                     </div>
                   </div>
@@ -2550,14 +2564,26 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
           <!---- TERMINA SECCION CERTIFICADO ------>
             </form>
           <td>
-            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Consultar Solicitud" href="?SOLICITUD&IDsolicitud_empresa=<?php echo $solicitud['idsolicitud']; ?>">Consultar</a>
+            <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Détail de la demande" href="?SOLICITUD&IDsolicitud_empresa=<?php echo $solicitud['idsolicitud']; ?>">Détail de la demande</a>
           </td>
           <td>
             <form action="../../reportes/solicitud_empresa.php" method="POST" target="_new">
-              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Descargar solicitud" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
+              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Demande de téléchargement" target="_new" type="submit" ><img src="../../img/pdf.png" style="height:30px;" alt=""></button>
 
               <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud']; ?>">
               <input type="hidden" name="generar_formato" value="1">
+            </form>
+            <form action="../../reportes/empresa/solicitud_excel_fra.php" method="POST" target="_new">
+              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Demande en Excel" target="_new" type="submit" ><img src="../../img/excel.png" style="height:30px;" alt=""></button>
+
+              <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud']; ?>">
+              <input type="hidden" name="generar_excel" value="2">
+            </form>
+            <form action="../../reportes/empresa/solicitud_excel2_fra.php" method="POST" target="_new">
+              <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Données en Excel" target="_new" type="submit" ><img src="../../img/base_de_datos.png" style="height:30px;" alt=""></button>
+
+              <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud']; ?>">
+              <input type="hidden" name="generar_excel" value="2">
             </form>
           </td>
 

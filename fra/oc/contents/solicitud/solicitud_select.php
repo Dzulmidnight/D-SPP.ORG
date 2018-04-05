@@ -1839,7 +1839,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
             <form action="" method="POST" enctype="multipart/form-data">
               <?php 
               if((isset($solicitud['dictamen']) && $solicitud['dictamen'] == 'POSITIVO') || ($solicitud['tipo_solicitud']) == 'RENOVACION' && !empty($solicitud['fecha_aceptacion'])){
-                $row_ultimo_estatus = mysql_query("SELECT proceso_certificacion.estatus_interno, estatus_interno.nombre_frances FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_certificacion = '$solicitud[idsolicitud]' AND proceso_certificacion.idproceso_certificacion = (SELECT MAX(proceso_certificacion.idproceso_certificacion) FROM proceso_certificacion WHERE idsolicitud_certificacion = '$solicitud[idsolicitud]')");
+                /*$row_ultimo_estatus = mysql_query("SELECT proceso_certificacion.estatus_interno, estatus_interno.nombre_frances FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_certificacion = '$solicitud[idsolicitud]' AND proceso_certificacion.idproceso_certificacion = (SELECT MAX(proceso_certificacion.idproceso_certificacion) FROM proceso_certificacion WHERE idsolicitud_certificacion = '$solicitud[idsolicitud]')");
               $ultimo_estatus = mysql_fetch_assoc($row_ultimo_estatus);
               
               if(!empty($ultimo_estatus['nombre_frances'])){
@@ -1850,7 +1850,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                echo '<p>
                   Dernier statut: <b class="bg-danger">Non mis à jour</b>
                 </p>';
-              }
+              }*/
               ?>
                 <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_certificacion']; ?>">Processus de certification</button>
 
