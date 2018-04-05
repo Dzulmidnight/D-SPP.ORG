@@ -545,7 +545,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 				<h3 class="text-center">Demande d'enregistrement pour les Acheteurs et autres acteurs</h3>
 			</div>
 
-			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
+			<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DONNÉES GÉNÉRALES</b></div>
 
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
 
@@ -618,7 +618,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
 			<div class="row">
 				<div class="col-md-6">
-					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMATIONS GNERALES</div>
+					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">INFORMATIONS GENERALES</div>
 					<label for="fecha_elaboracion">DATE DE REALISATION</label>
 					<input type="text" class="form-control" id="fecha_elaboracion" name="fecha_elaboracion" value="<?php echo date('Y-m-d', time()); ?>" readonly>	
 
@@ -753,7 +753,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 
 
 					<label for="preg2">
-						2.	NOMSDESPROPRIETAIRESDEL’ENTREPRISE?
+						2.	NOMS DES PROPRIÉTAIRES DE L'ENTREPRISE?
 					</label>
 					<textarea name="preg2" id="preg2" class="form-control"></textarea>
 
@@ -794,7 +794,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 					Non <input type="radio" class="form-control" name="preg6" onclick="ocultar_empresas()" id="preg6" value="NO">
 				</div>
 
-				<p>SI LA RESPUESTA ES AFIRMATIVA, MENCIONE EL NOMBRE Y EL SERVICIO QUE REALIZA</p>
+				<p>SI LA RÉPONSE EST AFFIRMATIVE, ELLE MENE LE NUMÉRO ET LE SERVICE QU'ELLE FAIT</p>
 				<div id="contenedor_tablaEmpresas" class="col-md-12" style="display:none">
 					<table class="table table-bordered" id="tablaEmpresas">
 						<tr>
