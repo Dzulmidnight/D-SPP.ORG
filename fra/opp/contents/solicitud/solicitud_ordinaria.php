@@ -248,10 +248,10 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 		$insertar = mysql_query($insertSQL, $dspp) or die(mysql_error());
 
 	}
-	if(!empty($_POST['contacto2_nombre'])){
+	if(!empty($_POST['adm2_nombre'])){
 		$insertSQL = sprintf("INSERT INTO contactos(idopp, nombre, cargo, telefono1, email1, idsolicitud_certificacion) VALUES (%s, %s, %s, %s, %s, %s)",
 			GetSQLValueString($idopp, "int"),
-			GetSQLValueString($_POST['contacto2_nombre'], "text"),
+			GetSQLValueString($_POST['adm2_nombre'], "text"),
 			GetSQLValueString('ADMINISTRATIVO', "text"),
 			GetSQLValueString($_POST['contacto2_telefono'], "text"),
 			GetSQLValueString($_POST['contacto2_email'], "text"),

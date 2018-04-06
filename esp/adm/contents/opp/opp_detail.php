@@ -441,20 +441,21 @@ $opp = mysql_fetch_assoc($row_opp);
   </div>
   
   <!---- INICIA SECCIÓN CONTACTOS ---->
-  <?php 
-  $row_contactos = mysql_query("SELECT * FROM contactos WHERE idopp = '$_GET[idopp]' AND idsolicitud_certificacion = (SELECT MAX(idsolicitud_certificacion) FROM solicitud_certificacion WHERE idopp = '$_GET[idopp]')", $dspp) or die(mysql_error());
+  <?php
+  $query_contactos = "SELECT * FROM contactos WHERE idopp = '$_GET[idopp]' AND idsolicitud_certificacion = (SELECT MAX(idsolicitud_certificacion) FROM contactos WHERE idopp = '$_GET[idopp]')";
+  $row_contactos = mysql_query($query_contactos, $dspp) or die(mysql_error());
   
   /*$query_contactos = "SELECT contacto1_nombre, contacto1_cargo, contacto1_email, contacto1_telefono, contacto2_nombre, contacto2_cargo, contacto2_email, contacto2_telefono, adm1_nombre, adm1_email, adm1_telefono, adm2_nombre, adm2_email, adm2_telefono FROM solicitud_certificacion WHERE idopp = '$_GET[idopp]'";
   $row_contactos = mysql_query($query_contactos);
   */$num_contactos = mysql_num_rows($row_contactos);
 
-  $contacto = mysql_fetch_assoc($row_contactos);
+
 
    ?>
   <div class="col-md-4">
     <h4>Contacto(s) de la Organización</h4>
     <a class="btn btn-sm btn-primary" href="?OPP&detail&idopp=<?php echo $_GET['idopp']; ?>&addContacto" style="width:100%"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Nuevo Contacto</a>
-
+  
     <table class="table table-hover table-condensed">
       <thead>
         <tr class="success" >
@@ -463,10 +464,8 @@ $opp = mysql_fetch_assoc($row_opp);
         </tr>
       </thead>
       <tbody style="font-size:12px;">
-        <?php 
-        echo '<h4>'.$num_contactos.'</h4>';
+        <?php
         while($contacto = mysql_fetch_assoc($row_contactos)){
-          echo $contacto['idcontacto'];
         ?>
         <tr>
           <td>
