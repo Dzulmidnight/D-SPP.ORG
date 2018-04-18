@@ -447,7 +447,8 @@ $opp = mysql_fetch_assoc($row_opp);
   
   /*$query_contactos = "SELECT contacto1_nombre, contacto1_cargo, contacto1_email, contacto1_telefono, contacto2_nombre, contacto2_cargo, contacto2_email, contacto2_telefono, adm1_nombre, adm1_email, adm1_telefono, adm2_nombre, adm2_email, adm2_telefono FROM solicitud_certificacion WHERE idopp = '$_GET[idopp]'";
   $row_contactos = mysql_query($query_contactos);
-  */$num_contactos = mysql_num_rows($row_contactos);
+  */
+  $num_contactos = mysql_num_rows($row_contactos);
 
 
 

@@ -523,10 +523,10 @@
                ->setCategory("Reporte OPPs");
 
     $tituloReporte = "LISTA DE ORGANIZACIONES DE PEQUEÑOS PRODUCTORES CERTIFICADAS";
-    $titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO', 'FECHA SIGUIENTE EVALUACIÓN', 'ESTATUS CERTIFICADO', 'ESTATUS ORGANIZACIÓN', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', '#SPP', 'PASSWORD', 'CORREO ORGANIZACIÓN', 'CORREOS SOLICITUD', 'TELÉFONO ORGANIZACIÓN');
+    $titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO(S)', 'FECHA SIGUIENTE EVALUACIÓN', 'ESTATUS CERTIFICADO', 'ESTATUS ORGANIZACIÓN', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', '#SPP', 'PASSWORD', 'CORREO ORGANIZACIÓN', 'CORREOS SOLICITUD', 'TELÉFONO ORGANIZACIÓN', 'Nº DE SOCIOS');
     
     $objPHPExcel->setActiveSheetIndex(0)
-                ->mergeCells('A1:N1');
+                ->mergeCells('A1:O1');
             
     // Se agregan los titulos del reporte
     $objPHPExcel->setActiveSheetIndex(0)
@@ -544,12 +544,24 @@
                 ->setCellValue('K3',  $titulosColumnas[10])
                 ->setCellValue('L3',  $titulosColumnas[11])
                 ->setCellValue('M3',  $titulosColumnas[12])
-                ->setCellValue('N3',  $titulosColumnas[13]);
+                ->setCellValue('N3',  $titulosColumnas[13])
+                ->setCellValue('O3',  $titulosColumnas[14]);
     
     //Se agregan los datos de los alumnos
     $i = 4;
     $contador = 1;
     while ($opp = mysql_fetch_assoc($row_opp)) {
+      $consultar_socios = mysql_query("SELECT resp1 FROM solicitud_certificacion WHERE idsolicitud_certificacion = '$opp[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
+      $socios = mysql_fetch_assoc($consultar_socios);
+      $num_socios = '';
+      if(isset($socios['resp1'])){
+        $num_socios = $socios['resp1'];
+      }else{
+        $consultar_socios = mysql_query("SELECT numero FROM num_socios WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
+        $socios = mysql_fetch_assoc($consultar_socios);
+        $num_socios = $socios['numero'];
+      }
+
       $vigencia = '';
       if(isset($opp['vigencia_fin'])){
         $vigencia = $opp['vigencia_fin'];
@@ -576,7 +588,7 @@
         $cont++;
       }*/
       $productos = '';
-      $query_productos = mysql_query("SELECT GROUP_CONCAT(certificacion SEPARATOR ', ') AS 'lista_productos' FROM certificaciones WHERE idsolicitud_certificacion = '$opp[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
+      $query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idsolicitud_certificacion = '$opp[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
       $productos = mysql_fetch_assoc($query_productos);
  
       $estatus_certificado = '';
@@ -659,7 +671,8 @@
                 ->setCellValue('K'.$i,  $opp['password'])
                 ->setCellValue('L'.$i,  $opp['email'])
                 ->setCellValue('M'.$i,  $correos_contactos)
-                ->setCellValue('N'.$i,  $opp['telefono']);
+                ->setCellValue('N'.$i,  $opp['telefono'])
+                ->setCellValue('O'.$i,  $num_socios);
           $i++;
           $contador++;
     }
@@ -751,15 +764,26 @@
             )
         ));
 
-    $objPHPExcel->getActiveSheet()->getStyle('A1:N1')->applyFromArray($estiloTituloReporte);
-    $objPHPExcel->getActiveSheet()->getStyle('A3:N3')->applyFromArray($estiloTituloColumnas);   
-    $objPHPExcel->getActiveSheet()->setSharedStyle($estiloInformacion, "A4:N".($i-1));
+    $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->applyFromArray($estiloTituloReporte);
+    $objPHPExcel->getActiveSheet()->getStyle('A3:O3')->applyFromArray($estiloTituloColumnas);   
+    $objPHPExcel->getActiveSheet()->setSharedStyle($estiloInformacion, "A4:O".($i-1));
         
-    for($i = 'A'; $i <= 'N'; $i++){
+    /*for($i = 'A'; $i <= 'O'; $i++){
       $objPHPExcel->setActiveSheetIndex(0)      
         ->getColumnDimension($i)->setAutoSize(TRUE);
-    }
+    }*/
     
+/// AJUSTAR EL TEXTO DE LAS COLUMNAS
+    $objPHPExcel->getActiveSheet(0)->getStyle('A1:P1'.$objPHPExcel->getActiveSheet(0)->getHighestRow())
+      ->getAlignment()->setWrapText(true);
+    //$objPHPExcel->getActiveSheet()->getStyle('A3:K3')->applyFromArray($estiloTituloColumnas);   
+    /// APLICAR TAMAÑO PREDEFINIDO A LAS COLUMNAS
+    for($i = 'A'; $i <= 'P'; $i++){
+      $objPHPExcel->setActiveSheetIndex(0)      
+        ->getColumnDimension($i)->setWidth(40);
+    }
+
+
     // Se asigna el nombre a la hoja
     $objPHPExcel->getActiveSheet()->setTitle('Lista organizaciones');
 

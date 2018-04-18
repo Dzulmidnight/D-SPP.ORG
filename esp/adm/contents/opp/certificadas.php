@@ -929,11 +929,11 @@ if (!empty($_SERVER['QUERY_STRING'])) {
     if(isset($informacion['idsolicitud_certificacion'])){
       $consultar_socios = mysql_query("SELECT resp1 FROM solicitud_certificacion WHERE idsolicitud_certificacion = $informacion[idsolicitud_certificacion]", $dspp) or die(mysql_error());
       $socios = mysql_fetch_assoc($consultar_socios);
-      echo $socios['resp1'];
+      echo '<span style="color:green">'.$socios['resp1'].'</span>';
     }else{
       $consultar_socios = mysql_query("SELECT numero FROM num_socios WHERE idopp = $informacion[idopp]", $dspp) or die(mysql_error());
       $socios = mysql_fetch_assoc($consultar_socios);
-      echo '<span style="color:green">'.$socios['numero'].'</span>';
+      echo '<span style="color:red">'.$socios['numero'].'</span>';
     }
     ?>
     </td>

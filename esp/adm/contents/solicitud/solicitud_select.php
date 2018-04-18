@@ -1161,7 +1161,12 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
 
 if(isset($_POST['filtrar']) && $_POST['filtrar'] == 1){
   $pais = $_POST['filtrar_pais'];
-  $oc = $_POST['filtrar_oc'];
+  if(isset($_GET['oc'])){
+    $oc = $_GET['oc'];
+  }else{
+    $oc = $_POST['filtrar_oc'];
+  }
+  
   $tipo_solicitud = $_POST['filtrar_tipo'];
 
   if(!empty($pais) && !empty($oc) && !empty($tipo_solicitud)){
@@ -1189,9 +1194,8 @@ if(isset($_POST['filtrar']) && $_POST['filtrar'] == 1){
 //////// TERMINAN CAMPOS DE BUSQUEDA
 
 
-$row_solicitud = mysql_query($query, $dspp) or die(mysql_error());
-$total_solicitudes = mysql_num_rows($row_solicitud);
-
+$row_solicitud2 = mysql_query($query, $dspp) or die(mysql_error());
+$total_solicitudes = mysql_num_rows($row_solicitud2);
 
   /* INICIA PAGINACION */
     //limitamos la consulta
@@ -1220,23 +1224,28 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
   $paginacion .= "</p>";
 
   if($total_paginas > 1){
+    $idoc = '';
+    if(isset($_POST['filtrar_oc'])){
+      $idoc = $_POST['filtrar_oc'];
+    }
     $paginacion .= '<nav aria-label="Page navigation">';
       $paginacion .= '<ul class="pagination">';
-        $paginacion .= ($pagina != 1)?'<li><a href="?SOLICITUD&select&p='.($pagina-1).'" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a></li>':'';
+        $paginacion .= ($pagina != 1)?'<li><a href="?SOLICITUD&select&p='.($pagina-1).'&oc='.$idoc.'" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a></li>':'';
 
       for ($i=1; $i <= $total_paginas; $i++) {
         //si muestro el indice de la pagina actual, no coloco enlace
         $actual = "<li class='active'><a href='#'>".$pagina."</a></li>";
         //si el indice no corresponde con la pagina mostrada actualmente, coloco el enlace para ir a esa pagina
-        $enlace = '<li><a href="?SOLICITUD&select&p='.$i.'">'.$i.'</a></li>';
+        $enlace = '<li><a href="?SOLICITUD&select&p='.$i.'&oc='.$idoc.'">'.$i.'</a></li>';
 
         $paginacion .= ($pagina == $i)?$actual:$enlace;
       }
-      $paginacion .= ($pagina!=$total_paginas)?"<li><a href='?SOLICITUD&select&p=".($pagina+1)."' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>":"";
+      $paginacion .= ($pagina!=$total_paginas)?"<li><a href='?SOLICITUD&select&p=".($pagina+1)."&oc=".$idoc."' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>":"";
       $paginacion .= "</ul>";
     $paginacion .= "</nav>";
   }
   $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
+  
 
   /* TERMINA PAGINACIÓN*/
 
@@ -1331,7 +1340,11 @@ if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
                 <?php 
                 $row_oc = mysql_query("SELECT oc.idoc, oc.abreviacion FROM oc", $dspp) or die(mysql_error());
                 while($oc = mysql_fetch_assoc($row_oc)){
-                  echo "<option value='$oc[idoc]'>$oc[abreviacion]</option>";
+                  if(isset($_GET['oc']) && ($_GET['oc'] == $row_oc['idoc'])){
+                    echo "<option value='$oc[idoc]' selected>$oc[abreviacion]</option>";
+                  }else{
+                    echo "<option value='$oc[idoc]'>$oc[abreviacion]</option>";
+                  }
                 }
                  ?>
               </select>
