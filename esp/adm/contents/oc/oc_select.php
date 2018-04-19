@@ -45,7 +45,7 @@ if (isset($_GET['pageNum_oc'])) {
 }
 $startdetalle_oc = $pageNum_oc * $maxRows_oc;
 
-$query_oc = "SELECT * FROM oc ORDER BY nombre ASC";
+$query_oc = "SELECT * FROM oc ORDER BY idoc ASC";
 $query_limit_oc = sprintf("%s LIMIT %d, %d", $query_oc, $startdetalle_oc, $maxRows_oc);
 $oc = mysql_query($query_limit_oc, $dspp) or die(mysql_error());
 //$detalle_oc = mysql_fetch_assoc($oc);
