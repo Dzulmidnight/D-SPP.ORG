@@ -180,7 +180,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
           //$mail->AddAttachment($archivo2);
     }
 
-    $asunto = "D-SPP | Aviso Notificación de Intenciones de Certificación / Intentions Notification of certification";
+    $asunto = "D-SPP | Comunicado, Responsable de Certificación y Calidad / Communique, Person in charge of Certification and Quality";
 
     $cuerpo_mensaje = '
       <html>
@@ -214,57 +214,17 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
                   <img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" />
                 </th>
                 <th style="text-align:left">
-                  D-SPP | <span>Notificación de Intenciones de Certificación, Registro y Autorización</span> / <i>Notification of Certification, Registration and Authorization Intents</i>
+                  D-SPP | '.$_POST['asunto'].'
                 </th>
               </tr>
             </thead>
             <tbody>
-
-              <tr style="width:100%">
-                <td colspan="2">
-                  <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-
-                    <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                      <td >Tipo / Type</td>
-                      <td >Nombre de la organización / <i>Organization name</i></td>
-                      <td >Abreviación / <i>Short name</i></td>
-                      <td >País / <i>Country</i></td>
-                      <td >Organismo de Certificación / <i>Certification Entity</i></td>
-                      <td >Alcance / <i>Scope</i></td>
-                      <td >Países en los que ofrecerá servicio / <i>Countries   in which it will offer its services</i></td>
-                      <td >Fecha de solicitud / <i>Date of application</i></td>
-                      <td >Fin período de objeción / <i>Objection period end</i></td>
-                    </tr>
-                    <tr style="font-size:12px">
-                      <td ><span>OC</span> / <i>CE</i></td>
-                      <td ><span>Certification of Environmental Standards GmbH</span></td>
-                      <td><span>CERES</span></td>
-                      <td><span>Alemania</span> / <i>Germany</i></td>
-                      <td><span>SPP GLOBAL</span></td>
-                      
-                      <td><span>Certificación de OPP y Registro de empresas</span> / <i>Certification of SPO and Registration of companies</i></td>
-                      <td><span>A nivel mundial</span> / <i>Worldwide</i></td>
-                      <td><span>31/01/2018</span></td>
-                      <td><span>17/02/2018</span></td>
-                    </tr>
-                </td>
-                </table>
+              <tr>
+                <td colspan="2" style="color:#2d3436">'.$_POST['contenido'].'</td>
               </tr>
-          <tr>
-            <td style="text-align:justify;" colspan="2">
-              <span>
-              SPP GLOBAL publica y notifica las "Intenciones de Certificación, Registro o Autorización" basada en nuevas solicitudes de: 1) Certificación de Organizaciones de Pequeños Productores, 2) Registro de Compradores y otros actores y 3) Autorización de Organismos de Certificación, con el objetivo de informarles y recibir las eventuales objeciones contra la incorporación de los solicitantes.
-              Estas eventuales objeciones presentadas deben estar sustentadas con información concreta y verificable con respecto a incumplimientos de la Normatividad del SPP y/o nuestro Código de Conducta (disponibles en <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a>, en el área de Funcionamiento). Las objeciones presentadas y enviadas a <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> serán tomadas en cuenta en los procesos de certificación, registro o autorización.
-              Estas notificaciones son enviadas por SPP GLOBAL en un lapso menor a 24 horas a partir del momento en que le llegue la solicitud correspondiente. Si se presentan objeciones antes de que el solicitante se Certifique, Registre o Autorice su tratamiento por parte del Organismo de Certificación debe ser parte de la misma evaluación documental. Si la objeción se presenta cuando el Solicitante ya esta Certificado se aplica el Procedimiento de Inconformidades del Símbolo de Pequeños Productores. Las nuevas intenciones de Certificación, Registro o Autorización, se detallan al inicio de este documento.
-              </span>
-              <br><br>
-              <i>
-                SPP GLOBAL publishes and notifies the "Certification, Registration and Authorization Intentions" based on new applications submitted for: 1) Certification of Small Producers\' Organizations, 2) Registration of Buyers and other stakeholders, and 3) Authorization of Certification Entities, with the objective of keeping you informed and receiving any objections to the incorporation of any new applicants into the system.
-                Any objections submitted must be supported with concrete, verifiable information regarding non-compliance with the Standards and/or Code of Conduct of the Small Producers\' Symbol (available at <a href="http://www.spp.coop/"><strong>www.spp.coop</strong></a> in the section on Operation). The objections submitted and sent to <a href="cert@spp.coop"><strong>cert@spp.coop</strong></a> will be taken into consideration during certification, registration and authorization processes.
-                These notifications are sent by SPP GLOBAL in a period of less than 24 hours from the time a corresponding application is received. If objections are presented before getting the Certification, Registration or Authorization, the Certification Entity must incorporate them as part of the same evaluation-process. If the objection is presented when the applicant has already been certified, the SPP Dissents Procedure has to be applied. The new intentions for Certification, Registration and Authorization are detailed at the beginning (of this document).
-              </i>
-            </td>
-          </tr>
+              <tr>
+                <td colspan="2" style="font-style:italic">'.$_POST['contenido_ingles'].'</td>
+              </tr>
             </tbody>
           </table>
 
@@ -313,7 +273,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
           $token = strtok($oc['email1'], "\/\,\;");
           while ($token !== false)
           {
-            $mail->AddBCC($token);
+            $mail->AddAddress($token);
             $token = strtok('\/\,\;');
           }
         }
@@ -323,7 +283,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
           $token = strtok($oc['email2'], "\/\,\;");
           while ($token !== false)
           {
-            $mail->AddBCC($token);
+            $mail->AddAddress($token);
             $token = strtok('\/\,\;');
           }
         }
@@ -488,6 +448,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
 	<div class="col-md-10">
     <input type="text" name="asunto" class="form-control" placeholder="Asunto del Correo">
 		<textarea class="editor_texto" name="contenido" id="" cols="30" rows="10"></textarea>
+    <textarea class="editor_texto" name="contenido_ingles" id="" cols="30" rows="10"></textarea>
 
     Archivo 1<input type="file" name="archivo1" value="">
     Archivo 2<input type="file" name="archivo2" value="">

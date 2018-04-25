@@ -523,10 +523,10 @@
                ->setCategory("Reporte OPPs");
 
     $tituloReporte = "LISTA DE ORGANIZACIONES DE PEQUEÑOS PRODUCTORES CERTIFICADAS";
-    $titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'OC', 'ULTIMA FECHA DE CERTIFICADO', 'ESTATUS CERTIFICADO', 'ESTATUS ORGANIZACIÓN', 'PROCESO SOLICITUD', 'PRODUCTO(S)', 'Nº DE SOCIOS');
+    $titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO(S)', 'FECHA SIGUIENTE EVALUACIÓN', 'ESTATUS CERTIFICADO', 'ESTATUS ORGANIZACIÓN', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', '#SPP', 'PASSWORD', 'CORREO ORGANIZACIÓN', 'CORREOS SOLICITUD', 'TELÉFONO ORGANIZACIÓN', 'Nº DE SOCIOS');
     
     $objPHPExcel->setActiveSheetIndex(0)
-                ->mergeCells('A1:K1');
+                ->mergeCells('A1:O1');
             
     // Se agregan los titulos del reporte
     $objPHPExcel->setActiveSheetIndex(0)
@@ -541,7 +541,11 @@
                 ->setCellValue('H3',  $titulosColumnas[7])
                 ->setCellValue('I3',  $titulosColumnas[8])
                 ->setCellValue('J3',  $titulosColumnas[9])
-                ->setCellValue('K3',  $titulosColumnas[10]);
+                ->setCellValue('K3',  $titulosColumnas[10])
+                ->setCellValue('L3',  $titulosColumnas[11])
+                ->setCellValue('M3',  $titulosColumnas[12])
+                ->setCellValue('N3',  $titulosColumnas[13])
+                ->setCellValue('O3',  $titulosColumnas[14]);
     
     //Se agregan los datos de los alumnos
     $i = 4;
@@ -568,21 +572,8 @@
         if(isset($detalle_certificado['vigencia_fin'])){
           $vigencia = $detalle_certificado['vigencia_fin'];
         }
-        
       }
 
-      $vigencia_inicio = '';
-      if(isset($opp['vigencia_inicio'])){
-        $vigencia_inicio = $opp['vigencia_inicio'];
-      }else{
-        $consulta_certificado = mysql_query("SELECT idcertificado, vigencia_inicio, vigencia_inicio FROM certificado WHERE idopp = '$opp[idopp]'", $dspp) or die(mysql_error());
-        $detalle_certificado = mysql_fetch_assoc($consulta_certificado);
-
-        if(isset($detalle_certificado['vigencia_inicio'])){
-          $vigencia_inicio = $detalle_certificado['vigencia_inicio'];
-        }
-        
-      }
 
       /*$productos = '';
       $query_producto = mysql_query("SELECT * FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
@@ -652,38 +643,6 @@
           $tipo_solicitud = 'NO DISPONIBLE';
         }
       }
-
-
-      $proceso_solicitud = '';
-      if(isset($opp['idsolicitud_certificacion'])){
-        $proceso = mysql_query("SELECT idestatus_dspp, nombre FROM estatus_dspp WHERE idestatus_dspp = '$opp[solicitud_estatus_dspp]'", $dspp) or die(mysql_error());
-        $info_proceso = mysql_fetch_assoc($proceso);
-
-        if($opp['solicitud_estatus_dspp'] == 9){
-          $proceso_interno = mysql_query("SELECT nombre FROM estatus_interno WHERE idestatus_interno = '$opp[solicitud_estatus_interno]'", $dspp) or die(mysql_error());
-          $info_proceso_interno = mysql_fetch_assoc($proceso_interno);
-          //13_11_2018echo '('.$opp['solicitud_estatus_dspp'].')'.$info_proceso['nombre'].': <span style="color:green">'.$info_proceso_interno['nombre'].'</span>';
-          $proceso_solicitud = mayuscula($info_proceso['nombre']).' - '.mayuscula($info_proceso_interno['nombre']);
-          //echo mayuscula($info_proceso['nombre']).': <span style="color:green">'.mayuscula($info_proceso_interno['nombre']).'</span>';
-        }else{
-          if($info_proceso['idestatus_dspp'] == 12){
-            if(file_exists($opp['certificado'])){
-              $proceso_solicitud = mayuscula($info_proceso['nombre']);
-              //echo '<a href="'.opp['certificado'].'" target="_new"><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span> '.mayuscula($info_proceso['nombre']).'</a>';
-            }else{
-              $proceso_solicitud = mayuscula($info_proceso['nombre']);
-            }
-            //13_11_2017echo '('.$info_proceso['idestatus_dspp'].')'.$info_proceso['nombre'];
-          }else{
-            //13_11_2018echo '('.$info_proceso['idestatus_dspp'].')'.$info_proceso['nombre'];
-            $proceso_solicitud = mayuscula($info_proceso['nombre']);
-          }
-        }
-      }else{
-        $proceso_solicitud = 'SIN SOLICITUD';
-      }
-      
-
       /*if($row_opp['estatus_interno'] == 11){
         $tipo_solicitud = "SUSPENDIDA";
       }else{
@@ -697,21 +656,23 @@
           $tipo_solicitud = 'NO DISPONIBLE';
         }
       }*/
-      array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'OC', 'ULTIMA FECHA DE CERTIFICADO', 'ESTATUS CERTIFICADO', 'ESTATUS ORGANIZACIÓN', 'PROCESO SOLICITUD', 'PRODUCTO(S)', 'Nº DE SOCIOS');
 
       $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$i,  $contador)
                 ->setCellValue('B'.$i,  mayuscula($opp['nombre_opp']))
                 ->setCellValue('C'.$i,  mayuscula($opp['abreviacion_opp']))
                 ->setCellValue('D'.$i,  mayuscula($opp['pais']))
-                ->setCellValue('E'.$i, mayuscula($opp['abreviacion_oc']))
-                ->setCellValue('F'.$i,  'I: '.$vigencia_inicio.' - F: '.$vigencia)
+                ->setCellValue('E'.$i,  mayuscula($productos['lista_productos']))
+                ->setCellValue('F'.$i,  $vigencia)
                 ->setCellValue('G'.$i,  mayuscula($estatus_certificado))
                 ->setCellValue('H'.$i,  mayuscula($tipo_solicitud))
-                ->setCellValue('I'.$i, $proceso_solicitud)
-                ->setCellValue('J'.$i,  mayuscula($productos['lista_productos']))
-                ->setCellValue('K'.$i,  $num_socios);
-
+                ->setCellValue('I'.$i,  mayuscula($opp['abreviacion_oc']))
+                ->setCellValue('J'.$i,  $opp['spp'])
+                ->setCellValue('K'.$i,  $opp['password'])
+                ->setCellValue('L'.$i,  $opp['email'])
+                ->setCellValue('M'.$i,  $correos_contactos)
+                ->setCellValue('N'.$i,  $opp['telefono'])
+                ->setCellValue('O'.$i,  $num_socios);
           $i++;
           $contador++;
     }
@@ -803,9 +764,9 @@
             )
         ));
 
-    $objPHPExcel->getActiveSheet()->getStyle('A1:K1')->applyFromArray($estiloTituloReporte);
-    $objPHPExcel->getActiveSheet()->getStyle('A3:K3')->applyFromArray($estiloTituloColumnas);   
-    $objPHPExcel->getActiveSheet()->setSharedStyle($estiloInformacion, "A4:K".($i-1));
+    $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->applyFromArray($estiloTituloReporte);
+    $objPHPExcel->getActiveSheet()->getStyle('A3:O3')->applyFromArray($estiloTituloColumnas);   
+    $objPHPExcel->getActiveSheet()->setSharedStyle($estiloInformacion, "A4:O".($i-1));
         
     /*for($i = 'A'; $i <= 'O'; $i++){
       $objPHPExcel->setActiveSheetIndex(0)      
@@ -813,11 +774,11 @@
     }*/
     
 /// AJUSTAR EL TEXTO DE LAS COLUMNAS
-    $objPHPExcel->getActiveSheet(0)->getStyle('A1:K1'.$objPHPExcel->getActiveSheet(0)->getHighestRow())
+    $objPHPExcel->getActiveSheet(0)->getStyle('A1:P1'.$objPHPExcel->getActiveSheet(0)->getHighestRow())
       ->getAlignment()->setWrapText(true);
     //$objPHPExcel->getActiveSheet()->getStyle('A3:K3')->applyFromArray($estiloTituloColumnas);   
     /// APLICAR TAMAÑO PREDEFINIDO A LAS COLUMNAS
-    for($i = 'A'; $i <= 'K'; $i++){
+    for($i = 'A'; $i <= 'P'; $i++){
       $objPHPExcel->setActiveSheetIndex(0)      
         ->getColumnDimension($i)->setWidth(40);
     }
@@ -915,7 +876,7 @@
       /*$query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idsolicitud_certificacion = '$opp[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
       $productos = mysql_fetch_assoc($query_productos);
       if(empty($productos['lista_productos'])){
-        $query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idopp = 'opp[idopp]'", $dspp) or die(mysql_error());
+        $query_productos = mysql_query("SELECT GROUP_CONCAT(producto SEPARATOR ', ') AS 'lista_productos' FROM productos WHERE idopp = '$informacion[idopp]'", $dspp) or die(mysql_error());
         $productos = mysql_fetch_assoc($query_productos);
         //echo $productos['lista_productos'];
       }*//*else{

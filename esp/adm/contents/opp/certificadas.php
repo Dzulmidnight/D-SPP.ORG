@@ -482,7 +482,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
   if(isset($_POST['palabra'])){
     //// BUSQUEDA POR PALABRAS
     $palabra = $_POST['palabra'];
-    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas AND (opp.spp LIKE '%".$palabra."%' OR opp.nombre LIKE '%".$palabra."%' OR opp.abreviacion LIKE '%".$palabra."%') GROUP BY opp.idopp ORDER BY opp.abreviacion";
+    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp'FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE $array_opp2 AND $array_archivadas AND $array_canceladas AND (opp.spp LIKE '%".$palabra."%' OR opp.nombre LIKE '%".$palabra."%' OR opp.abreviacion LIKE '%".$palabra."%') GROUP BY opp.idopp ORDER BY opp.abreviacion";
   }else if(isset($_POST['busqueda_filtros']) && $_POST['busqueda_filtros'] == 1){
     //// BUSQUEDA DE ACUERDO A LOS FILTROS AVANZADOS
     $buscar_oc = $_POST['buscar_oc'];
@@ -573,10 +573,10 @@ if (!empty($_SERVER['QUERY_STRING'])) {
       $q_anio = "AND FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '".$anio_membresia."'";
     }*/
 
-    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas ".$q_oc." ".$q_pais." ".$q_estatus." ".$productos." GROUP BY opp.idopp ORDER BY opp.abreviacion";
+    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE $array_opp2 AND $array_archivadas AND $array_canceladas ".$q_oc." ".$q_pais." ".$q_estatus." ".$productos." GROUP BY opp.idopp ORDER BY opp.abreviacion";
   }else{
     /// CONSULTA POR DEFAULT
-    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp', certificado.idcertificado, certificado.vigencia_inicio, certificado.vigencia_fin, certificado.archivo AS 'certificado' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc LEFT JOIN certificado ON solicitud_certificacion.idsolicitud_certificacion = certificado.idsolicitud_certificacion WHERE $array_opp2 AND $array_archivadas AND $array_canceladas GROUP BY opp.idopp ORDER BY opp.abreviacion";
+    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE $array_opp2 AND $array_archivadas AND $array_canceladas GROUP BY opp.idopp ORDER BY opp.abreviacion";
   }
   /*echo $q_estatus.'<br>';
   echo $query;*/
@@ -741,6 +741,9 @@ if (!empty($_SERVER['QUERY_STRING'])) {
   <?php 
   $contador = 1;
   while($informacion = mysql_fetch_assoc($consultar)){
+    $queryCertificado = mysql_query("SELECT idcertificado, vigencia_inicio, vigencia_fin, archivo FROM certificado WHERE idcertificado = (SELECT MAX(idcertificado) FROM certificado WHERE idopp = '$informacion[idopp]')", $dspp) or die(mysql_error());
+    $certificado = mysql_fetch_assoc($queryCertificado);
+
     echo '<tr>';
       echo '<td style="width:20px;">'.$contador.'</td>';
   ?>
@@ -773,20 +776,41 @@ if (!empty($_SERVER['QUERY_STRING'])) {
     <!-- ULTIMA FECHA DE CERTIFICADO -->
     <td>
       <?php
+      echo '<p>I: '.$certificado['vigencia_inicio'].'</p>';
+      echo '<p class="bg-success">F: '.$certificado['vigencia_fin'].'</p>'
+      /*echo 'LA SOLICITUD ES: '.$informacion['idsolicitud_certificacion'];
+      $queryCertificado = mysql_query("SELECT idcertificado, vigencia_inicio, vigencia_fin, archivo FROM certificado WHERE idsolicitud_certificacion = '$informacion[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
+      $detailCertificado = mysql_fetch_assoc($queryCertificado);
 
-      if(isset($informacion['vigencia_fin'])){
-        echo '<p>I: '.$informacion['vigencia_inicio'].'</p>';
-        echo '<p class="bg-success">F: '.$informacion['vigencia_fin'].'</p>';
+      if(!empty($queryCertificado['vigencia_fin'])){
+        echo '<p style="color:red">I: '.$queryCertificado['vigencia_inicio'].'</p>';
+        echo '<p style="color:red" class="bg-success">F: '.$queryCertificado['vigencia_fin'].'</p>';
       }else{
         $consulta_certificado = mysql_query("SELECT idcertificado, vigencia_inicio, vigencia_fin FROM certificado WHERE idopp = '$informacion[idopp]'", $dspp) or die(mysql_error());
         $detalle_certificado = mysql_fetch_assoc($consulta_certificado);
         if(isset($detalle_certificado['vigencia_fin'])){
-          echo '<p>I: '.$detalle_certificado['vigencia_inicio'].'</p>';
-          echo '<p class="bg-success">F: '.$detalle_certificado['vigencia_fin'].'</p>';
+          echo '<p style="color:blue">I: '.$detalle_certificado['vigencia_inicio'].'</p>';
+          echo '<p style="color:blue" class="bg-success">F: '.$detalle_certificado['vigencia_fin'].'</p>';
+        }else{
+          echo '<span style="color:red">No disponible</span>';
+        }
+      }*/
+/*
+
+      if(isset($informacion['vigencia_fin'])){
+        echo '<p style="color:red">I: '.$informacion['vigencia_inicio'].'</p>';
+        echo '<p style="color:red" class="bg-success">F: '.$informacion['vigencia_fin'].'</p>';
+      }else{
+        $consulta_certificado = mysql_query("SELECT idcertificado, vigencia_inicio, vigencia_fin FROM certificado WHERE idopp = '$informacion[idopp]'", $dspp) or die(mysql_error());
+        $detalle_certificado = mysql_fetch_assoc($consulta_certificado);
+        if(isset($detalle_certificado['vigencia_fin'])){
+          echo '<p style="color:blue">I: '.$detalle_certificado['vigencia_inicio'].'</p>';
+          echo '<p style="color:blue" class="bg-success">F: '.$detalle_certificado['vigencia_fin'].'</p>';
         }else{
           echo '<span style="color:red">No disponible</span>';
         }
       }
+      */
       ?>
     </td>
     <!-- ESTATUS OPP (posiblemente cambiarlo por estatus certificado) -->
@@ -892,8 +916,8 @@ if (!empty($_SERVER['QUERY_STRING'])) {
           echo mayuscula($info_proceso['nombre']).': <span style="color:green">'.mayuscula($info_proceso_interno['nombre']).'</span>';
         }else{
           if($info_proceso['idestatus_dspp'] == 12){
-            if(file_exists($informacion['certificado'])){
-              echo '<a href="'.$informacion['certificado'].'" target="_new"><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span> '.mayuscula($info_proceso['nombre']).'</a>';
+            if(file_exists($certificado['archivo'])){
+              echo '<a href="'.$certificado['archivo'].'" target="_new"><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span> '.mayuscula($info_proceso['nombre']).'</a>';
             }else{
               echo mayuscula($info_proceso['nombre']);
             }

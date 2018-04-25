@@ -1938,7 +1938,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
               $row_ultimo_estatus = mysql_query("SELECT proceso_certificacion.estatus_interno, estatus_interno.nombre FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE proceso_certificacion.idsolicitud_certificacion = '$solicitud[idsolicitud]' AND proceso_certificacion.idproceso_certificacion = (SELECT MAX(proceso_certificacion.idproceso_certificacion) FROM proceso_certificacion WHERE idsolicitud_certificacion = '$solicitud[idsolicitud]')");
               $ultimo_estatus = mysql_fetch_assoc($row_ultimo_estatus);
               
-              if(!empty($ultimo_estatus['nombre'])){
+              /*if(!empty($ultimo_estatus['nombre'])){
                 echo '<p>
                   Ultimo estatus: <b class="bg-success">'.$ultimo_estatus['nombre'].'</b>
                 </p>';
@@ -1946,7 +1946,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                echo '<p>
                   Ultimo estatus: <b class="bg-danger">No actualizado</b>
                 </p>';
-              }
+              }*/
               ?>
               
                 <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_certificacion']; ?>">Proceso Certificación</button>
