@@ -750,16 +750,29 @@ $queryString_empresa = sprintf("&totalRows_empresa=%d%s", $totalRows_empresa, $q
 
             <!-- INICIA SECCION VIGENCIA DEL CERTIFICADO -->
             <?php 
-            $row_certificado = mysql_query("SELECT * FROM certificado WHERE idempresa = $empresa[idempresa] ORDER BY certificado.vigencia_fin DESC LIMIT 1", $dspp) or die(mysql_error());
-            $certificado = mysql_fetch_assoc($row_certificado);
+           // $row_certificado = mysql_query("SELECT * FROM certificado WHERE idempresa = $empresa[idempresa] ORDER BY certificado.vigencia_fin DESC LIMIT 1", $dspp) or die(mysql_error());
+            //$certificado = mysql_fetch_assoc($row_certificado);
+
+             $queryCertificado = mysql_query("SELECT idcertificado, vigencia_inicio, vigencia_fin, archivo FROM certificado WHERE idcertificado = (SELECT MAX(idcertificado) FROM certificado WHERE idempresa = '$empresa[idempresa]')", $dspp) or die(mysql_error());
+              $certificado = mysql_fetch_assoc($queryCertificado);
             ?>
             <td>
               <?php 
-                $vigenciainicio = date('d-m-Y', strtotime($certificado['vigencia_inicio']));
-                $vigenciafin = date('d-m-Y', strtotime($certificado['vigencia_fin']));
-                $timeVencimiento = strtotime($certificado['vigencia_fin']);
-              
-              echo 'I: '.$vigenciainicio;
+            $vigenciainicio = '';
+            $vigenciafin = '';
+            if(!empty($certificado['vigencia_inicio'])){
+              $vigenciainicio = date('d-m-Y', strtotime($certificado['vigencia_inicio']));
+            }
+            if(!empty($certificado['vigencia_fin'])){
+              $vigenciafin = date('d-m-Y', strtotime($certificado['vigencia_fin']));
+            }
+
+            $timeVencimiento = strtotime($certificado['vigencia_fin']);
+          
+            if(isset($vigenciainicio)){
+              echo $vigenciainicio;
+            }
+
                ?>
               <input type="date" name="vigencia_fin<?php echo $empresa['idempresa']; ?>" value="<?php echo $certificado['vigencia_fin']; ?>">
             </td>
