@@ -444,7 +444,15 @@ $empresa = mysql_fetch_assoc($row_empresa);
 
   <!---- INICIA SECCIÓN CONTACTOS ---->
   <?php 
-  $row_contactos = mysql_query("SELECT * FROM contactos WHERE idempresa = $_GET[idempresa]", $dspp) or die(mysql_error());
+  /*$row_contactos = mysql_query("SELECT * FROM contactos WHERE idempresa = $_GET[idempresa]", $dspp) or die(mysql_error());
+  $num_contactos = mysql_num_rows($row_contactos);*/
+
+  $query_contactos = "SELECT * FROM contactos WHERE idempresa = '$_GET[idempresa]' AND idsolicitud_registro = (SELECT MAX(idsolicitud_registro) FROM contactos WHERE idempresa = '$_GET[idempresa]')";
+  $row_contactos = mysql_query($query_contactos, $dspp) or die(mysql_error());
+  
+  /*$query_contactos = "SELECT contacto1_nombre, contacto1_cargo, contacto1_email, contacto1_telefono, contacto2_nombre, contacto2_cargo, contacto2_email, contacto2_telefono, adm1_nombre, adm1_email, adm1_telefono, adm2_nombre, adm2_email, adm2_telefono FROM solicitud_certificacion WHERE idempresa = '$_GET[idempresa]'";
+  $row_contactos = mysql_query($query_contactos);
+  */
   $num_contactos = mysql_num_rows($row_contactos);
 
    ?>
@@ -461,11 +469,79 @@ $empresa = mysql_fetch_assoc($row_empresa);
       </thead>
       <tbody style="font-size:12px;">
         <?php
-        if($num_contactos > 0){
-          while($contacto = mysql_fetch_assoc($row_contactos)){
-          ?>
-            <tr>
-              <td><?php echo '<a href="?EMPRESAS&detail&idempresa='.$_GET['idempresa'].'&contacto='.$contacto['idcontacto'].'"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> '.$contacto['nombre'].'</a>'; ?><a href=""></a> </td>
+        while($contacto = mysql_fetch_assoc($row_contactos)){
+        ?>
+        <tr>
+          <td>
+            <?php echo '#'.$contacto['idsolicitud_registro']; ?>
+            <?php echo '<a href="?EMPRESAS&detail&idempresa='.$_GET['idempresa'].'&contacto='.$contacto['idcontacto'].'"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> '.$contacto['nombre'].'</a>'; ?><a href=""></a>
+          </td>
+          <td>
+            <?php echo $contacto['cargo']; ?>
+              
+            </td>
+          <td>
+            <form action="" method="post" name="formularioEliminar" ONSUBMIT="return preguntar();">
+              <button class="btn btn-sm btn-danger" type="subtmit" value="Eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+              </button>        
+
+              <input type="hidden" value="1" name="eliminar_contacto" />
+              <input type="hidden" value="<?php echo $contacto['idcontacto']; ?>" name="idcontacto" />
+            </form>
+          </td>
+        </tr>
+        <?php
+        }
+         ?>
+        <?php /*
+            if(isset($contacto['contacto1_nombre'])){
+              ?>
+              <tr>
+                <td>
+                  <?php echo $contacto['contacto1_nombre']; ?>
+                </td>
+                <td>
+                  <?php echo $contacto['contacto1_cargo']; ?>
+                </td>  
+              </tr>
+              <?php
+            }if(isset($contacto['contacto2_nombre'])){
+              ?>
+                <tr>
+                  <td>
+                    <?php echo $contacto['contacto2_nombre']; ?>
+                  </td>
+                  <td>
+                    <?php echo $contacto['contacto2_cargo']; ?>
+                  </td>
+                </tr>
+              <?php
+            }if(isset($contacto['adm1_nombre'])){
+              ?>
+                <tr>
+                  <td>
+                    <?php echo $contacto['adm1_nombre']; ?>
+                  </td>
+                  <td>
+                    <?php echo 'Administrativo'; ?>
+                  </td>
+                </tr>
+              <?php
+            }if(isset($contacto['adm2_nombre'])){
+              ?>
+                <tr>
+                  <td>
+                    <?php echo $contacto['adm2_nombre']; ?>
+                  </td>
+                  <td>
+                    <?php echo 'Administrativo'; ?>
+                  </td>
+                </tr>
+              <?php
+            }*/
+        ?>    
+        <!--<td><?php echo '<a href="?OPP&detail&idempresa='.$_GET['idempresa'].'&contacto='.$contacto['idcontacto'].'"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> '.$contacto['nombre'].'</a>'; ?><a href=""></a> </td>
               <td><?php echo $contacto['cargo']; ?></td>
               <td>
                 <form action="" method="post" name="formularioEliminar" ONSUBMIT="return preguntar();">
@@ -476,14 +552,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
                   <input type="hidden" value="1" name="eliminar_contacto" />
                   <input type="hidden" value="<?php echo $contacto['idcontacto']; ?>" name="idcontacto" />
                 </form>
-              </td>
-            </tr>
-          <?php
-          }
-        }else{
-          echo "<tr><td colspan='2'>Sin contactos</td></tr>";
-        }
-        ?>
+              </td>-->
       </tbody>
     </table>
   </div>
