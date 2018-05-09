@@ -32,7 +32,7 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idopp++;
     }
 
-    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.idoc = '$idoc' AND opp.pais = '$pais' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' AND opp.estatus_opp != 'ARCHIVADO' AND opp.estatus_interno != 10 GROUP BY opp.idopp";
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.idoc = '$idoc' AND opp.pais = '$pais' AND '$idopp_producto') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' AND opp.estatus_opp != 'ARCHIVADO' AND opp.estatus_interno != 10 GROUP BY opp.idopp";
 
   }else if(!empty($pais) && !empty($idoc) && empty($producto)){ ///BUSQUEDA DE PAIS Y OC
     $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE (opp.idoc = '$idoc' AND opp.pais = '$pais') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' AND opp.estatus_opp != 'ARCHIVADO' AND opp.estatus_interno != 10 GROUP BY opp.idopp";
@@ -56,7 +56,7 @@ if(isset($_POST['busqueda_palabra']) && $_POST['busqueda_palabra'] == 1){
       $cont_idopp++;
     }
 
-    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE ( opp.pais = '$pais' AND $idopp_producto) AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' AND opp.estatus_opp != 'ARCHIVADO' AND opp.estatus_interno != 10 GROUP BY opp.idopp";
+    $query_opp = "SELECT opp.*, oc.abreviacion AS 'abreviacion_oc', estatus_publico.nombre AS 'nombre_publico', MAX(certificado.vigencia_fin) AS 'fecha_fin' FROM opp LEFT JOIN oc ON opp.idoc = oc.idoc LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico INNER JOIN certificado ON opp.idopp = certificado.idopp WHERE ( opp.pais = '$pais' AND '$idopp_producto') AND opp.estatus_opp != 'NUEVA' AND opp.estatus_opp != 'CANCELADA' AND opp.estatus_opp != 'ARCHIVADO' AND opp.estatus_interno != 10 GROUP BY opp.idopp";
   }else if(!empty($producto) && empty($idoc) && empty($pais)){///BUSQUEDA DE PRODUCTO
     $query_productos = mysql_query("SELECT idopp FROM productos WHERE producto LIKE '%$producto%' GROUP BY idopp", $dspp) or die(mysql_error());
     $total_idopp = mysql_num_rows($query_productos);

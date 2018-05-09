@@ -48,6 +48,7 @@ echo '<h4>Contactos: '.$numContactos.'</h4>';
         <!--<a href="#" target="_blank" onclick="document.formulario1.submit()"><img src="../../img/pdf.png"></a>-->
         <a href="#" onclick="document.formulario2.submit()"><img src="img/excel.png"></a>
 
+<<<<<<< Updated upstream
 
         <form name="formulario2" method="POST" action="reportes/lista_contactos.php">
           <input type="hidden" name="lista_excel" value="2">
@@ -118,5 +119,33 @@ echo '<h4>Contactos: '.$numContactos.'</h4>';
   </tbody>
 </table>
 
+=======
+$query = mysql_query("SELECT contactos.*, opp.abreviacion FROM contactos LEFT JOIN opp ON contactos.idopp = opp.idopp ORDER BY nombre", $dspp) or die(mysql_error());
+$totalContactos = mysql_num_rows($query);
+echo '<h4>'.$totalContactos.'</h4>';
+?>
+<table class="table table-bordered table-condensed" style="font-size: 12px;">
+  <thead>
+    <tr>
+      <th>TIPO</th>
+      <th>NOMBRE</th>
+      <th>ORGANIZACIÓN</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php 
+    while($contactos = mysql_fetch_assoc($query)){
+    ?>
+      <tr>
+        <td><?php echo 'TIPO'; ?></td>
+        <td><?php echo $contactos['nombre']; ?></td>
+        <td><?php echo $contactos['abreviacion']; ?></td>
+      </tr>
+    <?php
+    }
+     ?>
+  </tbody>
+</table>
+>>>>>>> Stashed changes
 </body>
 </html>
