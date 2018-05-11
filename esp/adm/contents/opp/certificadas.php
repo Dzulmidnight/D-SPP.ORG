@@ -198,7 +198,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
     }else{
       switch ($buscar_estatus) {
         case '13':
-          $q_estatus = 'AND (opp.estatus_opp = 13 OR opp.estatus_opp = 14 OR opp.estatus_opp = 15)';
+          $q_estatus = 'AND (opp.estatus_opp = 13 OR opp.estatus_opp = 14 OR opp.estatus_opp = 15 OR opp.estatus_dspp = 13)';
           break;
         case '14':
           $q_estatus = 'AND opp.estatus_opp = 14';
@@ -217,26 +217,55 @@ if (!empty($_SERVER['QUERY_STRING'])) {
     if(empty($buscar_tipo)){
       $array_tipo = '';
     }else{
-      $array_tipo = '';
-      $contador = 1;
-      //$query = "SELECT MAX(idsolicitud_certificacion), idopp, tipo_solicitud FROM solicitud_certificacion WHERE tipo_solicitud = 'NUEVA' GROUP BY idopp";
-      $query = "SELECT solicitud_certificacion.idopp, opp.idopp, solicitud_certificacion.tipo_solicitud FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE (solicitud_certificacion.idsolicitud_certificacion = (SELECT MAX(solicitud_certificacion.idsolicitud_certificacion) FROM solicitud_certificacion WHERE solicitud_certificacion.idopp = opp.idopp)) AND solicitud_certificacion.tipo_solicitud = '".$buscar_tipo."' GROUP BY solicitud_certificacion.idopp";
-      $consultar_tipo = mysql_query($query, $dspp) or die(mysql_error());
-      $total_tipo = mysql_num_rows($consultar_tipo);
+      if($buscar_tipo == 'RENOVACION'){ /////
 
-      while($q_tipo = mysql_fetch_assoc($consultar_tipo)){
-        if($contador < $total_tipo){
-          $array_tipo .= 'opp.idopp = '.$q_tipo['idopp'].' OR ';
-        }else{
-          $array_tipo .= 'opp.idopp = '.$q_tipo['idopp'];
+        $array_tipo = '';
+        $contador = 1;
+        //$query = "SELECT MAX(idsolicitud_certificacion), idopp, tipo_solicitud FROM solicitud_certificacion WHERE tipo_solicitud = 'NUEVA' GROUP BY idopp";
+        $query = "SELECT solicitud_certificacion.idopp, opp.idopp, solicitud_certificacion.tipo_solicitud FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE (solicitud_certificacion.idsolicitud_certificacion = (SELECT MAX(solicitud_certificacion.idsolicitud_certificacion) FROM solicitud_certificacion WHERE solicitud_certificacion.idopp = opp.idopp)) AND (solicitud_certificacion.tipo_solicitud != 'NUEVA' OR solicitud_certificacion.idsolicitud_certificacion IS NULL) GROUP BY opp.idopp";
+        $consultar_tipo = mysql_query($query, $dspp) or die(mysql_error());
+        $total_tipo = mysql_num_rows($consultar_tipo);
+
+        while($q_tipo = mysql_fetch_assoc($consultar_tipo)){
+          if($contador < $total_tipo){
+            $array_tipo .= 'opp.idopp = '.$q_tipo['idopp'].' OR ';
+          }else{
+            $array_tipo .= 'opp.idopp = '.$q_tipo['idopp'];
+          }
+          $contador++;
         }
-        $contador++;
-      }
-      if(empty($array_tipo)){
+        if(empty($array_tipo)){
+          $tipo = '';
+        }else{
+          $tipo = 'AND ('.$array_tipo.')';
+        }
+
+      }else{ ////
         $tipo = '';
-      }else{
-        $tipo = 'AND ('.$array_tipo.')';
-      }
+        $array_tipo = '';
+        $contador = 1;
+        //$query = "SELECT MAX(idsolicitud_certificacion), idopp, tipo_solicitud FROM solicitud_certificacion WHERE tipo_solicitud = 'NUEVA' GROUP BY idopp";
+        $query = "SELECT solicitud_certificacion.idopp, opp.idopp, solicitud_certificacion.tipo_solicitud FROM solicitud_certificacion LEFT JOIN opp ON solicitud_certificacion.idopp = opp.idopp WHERE (solicitud_certificacion.idsolicitud_certificacion = (SELECT MAX(solicitud_certificacion.idsolicitud_certificacion) FROM solicitud_certificacion WHERE solicitud_certificacion.idopp = opp.idopp)) AND solicitud_certificacion.tipo_solicitud = '".$buscar_tipo."' GROUP BY solicitud_certificacion.idopp";
+        $consultar_tipo = mysql_query($query, $dspp) or die(mysql_error());
+        $total_tipo = mysql_num_rows($consultar_tipo);
+
+        while($q_tipo = mysql_fetch_assoc($consultar_tipo)){
+          if($contador < $total_tipo){
+            $array_tipo .= 'opp.idopp = '.$q_tipo['idopp'].' OR ';
+          }else{
+            $array_tipo .= 'opp.idopp = '.$q_tipo['idopp'];
+          }
+          $contador++;
+        }
+        if(empty($array_tipo)){
+          $tipo = '';
+        }else{
+          $tipo = 'AND ('.$array_tipo.')';
+        }
+
+      } /////
+
+
     }
 
     if(empty($buscar_producto)){
@@ -288,11 +317,11 @@ if (!empty($_SERVER['QUERY_STRING'])) {
       $q_anio = "AND FROM_UNIXTIME(proceso_certificacion.fecha_registro,'%Y') = '".$anio_membresia."'";
     }*/
 
-    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE (solicitud_certificacion.idsolicitud_certificacion = (SELECT MAX(idsolicitud_certificacion) FROM solicitud_certificacion WHERE solicitud_certificacion.idopp = opp.idopp) OR solicitud_certificacion.idsolicitud_certificacion IS NULL) AND ($array_opp2 AND $array_archivadas AND $array_canceladas ".$q_oc." ".$q_pais." ".$q_estatus." ".$tipo." ".$productos.") GROUP BY opp.idopp ORDER BY opp.idopp";
+    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', MAX(solicitud_certificacion.idsolicitud_certificacion) AS 'idsolicitud_certificacion', solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE (solicitud_certificacion.idsolicitud_certificacion = (SELECT MAX(idsolicitud_certificacion) FROM solicitud_certificacion WHERE solicitud_certificacion.idopp = opp.idopp) OR solicitud_certificacion.idsolicitud_certificacion IS NULL) AND ($array_opp2 AND $array_archivadas AND $array_canceladas ".$q_oc." ".$q_pais." ".$q_estatus." ".$tipo." ".$productos.") GROUP BY opp.idopp ORDER BY opp.nombre";
   }else{
     /// CONSULTA POR DEFAULT
 
-    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE (solicitud_certificacion.idsolicitud_certificacion = (SELECT MAX(idsolicitud_certificacion) FROM solicitud_certificacion WHERE solicitud_certificacion.idopp = opp.idopp) OR solicitud_certificacion.idsolicitud_certificacion IS NULL) AND ($array_opp2 AND $array_archivadas AND $array_canceladas) GROUP BY opp.idopp ORDER BY opp.idopp";
+    $query = "SELECT opp.idopp, opp.spp, opp.email, opp.telefono, opp.password, opp.sitio_web, opp.nombre AS 'nombre_opp', opp.abreviacion AS 'abreviacion_opp', opp.pais, oc.abreviacion AS 'abreviacion_oc', opp.estatus_opp AS 'opp_estatus_opp', opp.estatus_publico AS 'opp_estatus_publico', opp.estatus_interno AS 'opp_estatus_interno', opp.estatus_dspp AS 'opp_estatus_dspp', solicitud_certificacion.idsolicitud_certificacion, solicitud_certificacion.tipo_solicitud, solicitud_certificacion.estatus_interno AS 'solicitud_estatus_interno', solicitud_certificacion.estatus_dspp AS 'solicitud_estatus_dspp' FROM opp LEFT JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp LEFT JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE (solicitud_certificacion.idsolicitud_certificacion = (SELECT MAX(idsolicitud_certificacion) FROM solicitud_certificacion WHERE solicitud_certificacion.idopp = opp.idopp) OR solicitud_certificacion.idsolicitud_certificacion IS NULL) AND ($array_opp2 AND $array_archivadas AND $array_canceladas) GROUP BY opp.idopp ORDER BY opp.nombre";
   }
   /*echo $q_estatus.'<br>';
   echo $query;*/
@@ -303,7 +332,6 @@ if (!empty($_SERVER['QUERY_STRING'])) {
   $consultar = mysql_query($query,$dspp) or die(mysql_error());
  
   $total_organizaciones = mysql_num_rows($consultar);
-  echo $tipo;
 
  ?>
 
@@ -451,14 +479,15 @@ if (!empty($_SERVER['QUERY_STRING'])) {
       <th>PRODUCTOS</th>
       <th>Nº SOCIOS</th>
       <th>
-        <form  style="margin: 0;padding: 0;" action="" method="POST" >            
+        <!--<form  style="margin: 0;padding: 0;" action="" method="POST" >            
             <button class="btn btn-xs btn-danger disabled" type="subtmit" value="2"  name="eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" >
               <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
             </button>        
             <button class="btn btn-xs btn-info disabled" type="subtmit" value="1" name="archivar" data-toggle="tooltip" data-placement="top" title="Archivar">
               <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
             </button>
-        </form>
+        </form>-->
+        CERTIFICACIONES
       </th>
     </tr>
   </thead>
@@ -613,19 +642,19 @@ if (!empty($_SERVER['QUERY_STRING'])) {
           echo '<p style="color:red">NO DISPONIBLE</p>';
         }
 
-        $query_tipo = mysql_query("SELECT solicitud_certificacion.tipo_solicitud FROM solicitud_certificacion WHERE idopp = '$informacion[idopp]'", $dspp) or die(mysql_error());
+        /*$query_tipo = mysql_query("SELECT solicitud_certificacion.tipo_solicitud FROM solicitud_certificacion WHERE idopp = '$informacion[idopp]'", $dspp) or die(mysql_error());
         $tipo_solicitud = mysql_fetch_assoc($query_tipo);
         $numero_solicitud = mysql_num_rows($query_tipo);
         if($tipo_solicitud['tipo_solicitud'] == 'NUEVA'){
           //echo '<p class="bg-success">'.$tipo_solicitud['tipo_solicitud'].'</p>';
-          echo 'EL NUMERO ES: '.$numero_solicitud;
-          echo '<p>EL TIPO ES: '.$informacion['tipo_solicitud'].'</p>';
+          //echo 'EL NUMERO ES: '.$numero_solicitud;
+          //echo '<p>EL TIPO ES: '.$informacion['tipo_solicitud'].'</p>';
         }else if($tipo_solicitud['tipo_solicitud'] == 'RENOVACION'){
           //echo '<p class="bg-warning">'.$tipo_solicitud['tipo_solicitud'].'</p>';
         }else{
-          echo '<p style="color:red">NO DISPONIBLE</p>';
-          echo 'EL NUMERO ES: '.$numero_solicitud;
-        }
+          //echo '<p style="color:red">NO DISPONIBLE</p>';
+          //echo 'EL NUMERO ES: '.$numero_solicitud;
+        }*/
       }
        ?>
     </td>
@@ -698,7 +727,15 @@ if (!empty($_SERVER['QUERY_STRING'])) {
     }
     ?>
     </td>
-    <td></td>
+    <!-- CERTIFICACIONES CON LAS QUE CUENTA LA OPP -->
+    <td>
+    <?php 
+    $query_certificaciones = mysql_query("SELECT GROUP_CONCAT(certificacion SEPARATOR ', ') AS 'lista_certificaciones' FROM certificaciones WHERE idsolicitud_certificacion = '$informacion[idsolicitud_certificacion]'", $dspp) or die(mysql_error());
+    $certificaciones = mysql_fetch_assoc($query_certificaciones);
+
+      echo '<p style="color:green">'.mayuscula($certificaciones['lista_certificaciones']).'</p>';
+     ?>
+    </td>
 
   <?php
     echo '</tr>';
