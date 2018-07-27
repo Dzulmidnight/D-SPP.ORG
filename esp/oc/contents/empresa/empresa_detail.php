@@ -203,12 +203,13 @@ $empresa = mysql_fetch_assoc($row_empresa);
         <tr>
           <td>Password</td>
           <td>
-            <?php 
-            if($empresa['ver_password']){
+            <?php
+            echo $empresa['password']; 
+            /*if($empresa['ver_password']){
               echo $empresa['password'];
             }else{
               echo "<p class='alert alert-warning' style='padding:7px;'>Información no Disponible</p>";
-            }
+            }*/
              ?>
           </td>
         </tr>

@@ -101,12 +101,30 @@ $asunto_usuario = "D-SPP Datos de Usuario / User Data";
     ';
 
 
-      if(!empty($_POST['email1'])){
+      /*if(!empty($_POST['email1'])){
         $mail->AddAddress($_POST['email1']);
       }
       if(!empty($_POST['email2'])){
         $mail->AddAddress($_POST['email2']);
+      }*/
+
+      if(!empty($_POST['email1'])){
+          $token = strtok($_POST['email1'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
       }
+      if(!empty($_POST['email2'])){
+          $token = strtok($_POST['email2'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+      }
+
 
       $mail->AddBCC('yasser.midnight@gmail.com');
       $mail->AddBCC('cert@spp.coop');

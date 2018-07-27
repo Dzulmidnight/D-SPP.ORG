@@ -523,7 +523,7 @@
                ->setCategory("Reporte OPPs");
 
     $tituloReporte = "LISTA DE ORGANIZACIONES DE PEQUEÑOS PRODUCTORES CERTIFICADAS";
-    $titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'OC', 'ULTIMA FECHA DE CERTIFICADO', 'ESTATUS CERTIFICADO', 'ESTATUS ORGANIZACIÓN', 'PROCESO SOLICITUD', 'PRODUCTO(S)', 'Nº DE SOCIOS');
+    $titulosColumnas = array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'OC', 'ULTIMA FECHA DE CERTIFICADO', 'ESTATUS CERTIFICADO', 'RAZÓN SOCIAL', 'DIRECCIÓN FISCAL', 'RFC', 'RUC');
     
     $objPHPExcel->setActiveSheetIndex(0)
                 ->mergeCells('A1:K1');
@@ -697,7 +697,25 @@
           $tipo_solicitud = 'NO DISPONIBLE';
         }
       }*/
-      array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'OC', 'ULTIMA FECHA DE CERTIFICADO', 'ESTATUS CERTIFICADO', 'ESTATUS ORGANIZACIÓN', 'PROCESO SOLICITUD', 'PRODUCTO(S)', 'Nº DE SOCIOS');
+      array('Nº', 'NOMBRE DE LA ORGANIZACIÓN', 'ABREVIACIÓN', 'PAÍS', 'OC', 'ULTIMA FECHA DE CERTIFICADO', 'ESTATUS CERTIFICADO', 'RAZÓN SOCIAL', 'DIRECCIÓN FISCAL', 'RFC', 'RUC');
+
+      $query_opp = "SELECT razon_social, direccion_fiscal, rfc, ruc FROM opp WHERE idopp = $opp[idopp]";
+      $row_fiscales = mysql_query($query_opp, $dspp) or die(mysql_error());
+      $datos_fiscales = mysql_fetch_assoc($row_fiscales);
+
+      $d_fiscales = '';
+      if(!empty($datos_fiscales['razon_social'])){
+        $d_fiscales .= 'RAZÓN SOCIAL: '.$datos_fiscales['razon_social'];
+      }
+      if(!empty($datos_fiscales['direccion_fiscal'])){
+        $d_fiscales .= 'DIRECCIÓN FISCAL: '.$datos_fiscales['direccion_fiscal'];
+      }
+      if(!empty($datos_fiscales['rfc'])){
+        $d_fiscales .= 'RFC: '.$datos_fiscales['rfc'];
+      }
+      if(!empty($datos_fiscales['ruc'])){
+        $d_fiscales .= 'RUC: '.$datos_fiscales['ruc'];
+      }
 
       $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$i,  $contador)
@@ -707,10 +725,10 @@
                 ->setCellValue('E'.$i, mayuscula($opp['abreviacion_oc']))
                 ->setCellValue('F'.$i,  'I: '.$vigencia_inicio.' - F: '.$vigencia)
                 ->setCellValue('G'.$i,  mayuscula($estatus_certificado))
-                ->setCellValue('H'.$i,  mayuscula($tipo_solicitud))
-                ->setCellValue('I'.$i, $proceso_solicitud)
-                ->setCellValue('J'.$i,  mayuscula($productos['lista_productos']))
-                ->setCellValue('K'.$i,  $num_socios);
+                ->setCellValue('H'.$i,  $datos_fiscales['razon_social'])
+                ->setCellValue('I'.$i,  $datos_fiscales['direccion_fiscal'])
+                ->setCellValue('J'.$i,  $datos_fiscales['rfc'])
+                ->setCellValue('K'.$i,  $datos_fiscales['ruc']);
 
           $i++;
           $contador++;

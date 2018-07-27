@@ -47,6 +47,27 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
 
   $pais = $_POST['pais'];
 
+  $tipo_empresa = '';
+  if(isset($_POST['maquilador'])){
+    $maquilador = $_POST['maquilador'];
+    $tipo_empresa = 'MAQ-';
+  }else{
+    $maquilador = '';
+  }
+  if(isset($_POST['comprador'])){
+    $comprador = $_POST['comprador'];
+    $tipo_empresa = 'COM-';
+  }else{
+    $comprador = '';
+  }
+  if(isset($_POST['intermediario'])){
+    $intermediario = $_POST['intermediario'];
+    $tipo_empresa = 'INT-';
+  }else{
+    $intermediario = '';
+  }
+
+
   $query = "SELECT idempresa, spp, pais FROM empresa WHERE pais = '$pais'";
   $ejecutar_spp = mysql_query($query) or die(mysql_error());
   //$datos_empresa = mysql_fetch_assoc($ejecutar);
@@ -68,14 +89,14 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
     $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
     //$numero =  strlen($contador);
 
-    $spp = "COM-".$paisDigitos."-".$fechaDigitos."-".$contador;
+    $spp = $tipo_empresa.$paisDigitos."-".$fechaDigitos."-".$contador;
 
     while ($datos_empresa = mysql_fetch_assoc($ejecutar_spp)) {
       if($datos_empresa['spp'] == $spp){
         //echo "<b style='color:red'>es igual el OPP con id: $datos_empresa[idf]</b><br>";
         $contador++;
         $contador = str_pad($contador, 3, "0", STR_PAD_LEFT);
-        $spp = "COM-".$paisDigitos."-".$fechaDigitos."-".$contador;
+        $spp = $tipo_empresa.$paisDigitos."-".$fechaDigitos."-".$contador;
       }/*else{
         echo "el id encontrado es: $datos_empresa[idf]<br>";
       }*/
@@ -87,7 +108,7 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
   $logitud = 8;
   $psswd = substr( md5(microtime()), 1, $logitud);
 
-  if(isset($_POST['maquilador'])){
+  /*if(isset($_POST['maquilador'])){
     $maquilador = $_POST['maquilador'];
   }else{
     $maquilador = '';
@@ -101,7 +122,7 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
     $intermediario = $_POST['intermediario'];
   }else{
     $intermediario = '';
-  }
+  }*/
 
 
 

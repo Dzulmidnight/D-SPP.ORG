@@ -1852,6 +1852,78 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
               <td>
                 <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud']; ?>">Consultar Certificado</button>
 
+                <!-- revisamos la documentación que han cargado -->
+                <?php 
+                if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idinforme_evaluacion']) && isset($solicitud['idformato_evaluacion'])){
+                  $query_informe = mysql_query("SELECT * FROM formato_evaluacion WHERE idsolicitud_registro = $solicitud[idsolicitud]", $dspp) or die(mysql_error());
+                  $formato = mysql_fetch_assoc($query_informe);
+
+                  $query_informe = mysql_query("SELECT * FROM informe_evaluacion WHERE idsolicitud_registro = $solicitud[idsolicitud]", $dspp) or die(mysql_error());
+                  $informe = mysql_fetch_assoc($query_informe);
+
+                  $query_informe = mysql_query("SELECT * FROM dictamen_evaluacion WHERE idsolicitud_registro = $solicitud[idsolicitud]", $dspp) or die(mysql_error());
+                  $dictamen = mysql_fetch_assoc($query_informe);
+                ?>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <?php 
+                      if(file_exists($formato['archivo'])){
+                      ?>
+                        <a href="<?php echo $formato['archivo']; ?>" target="_new" style="color:green">
+                          <span class="glyphicon glyphicon-file"></span> Formato
+                        </a>
+                      <?php
+                      }else{
+                      ?>
+                        <a href="#" style="color:red" class="disabled">
+                          <span class="glyphicon glyphicon-remove"></span> Formato
+                        </a>
+                      <?php
+                      }
+                       ?>
+                    </div>
+
+                    <div class="col-md-12">
+                      <?php 
+                      if(file_exists($informe['archivo'])){
+                      ?>
+                        <a href="<?php echo $informe['archivo']; ?>" target="_new" style="color:green">
+                          <span class="glyphicon glyphicon-file"></span> Informe
+                        </a>
+                      <?php
+                      }else{
+                      ?>
+                        <a href="#" style="color:red" class="disabled">
+                          <span class="glyphicon glyphicon-remove"></span> Informe
+                        </a>
+                      <?php
+                      }
+                       ?>
+                    </div>
+
+                    <div class="col-md-12">
+                      <?php 
+                      if(file_exists($dictamen['archivo'])){
+                      ?>
+                        <a href="<?php echo $dictamen['archivo']; ?>" target="_new" style="color:green">
+                          <span class="glyphicon glyphicon-file"></span> Dictamen
+                        </a>
+                      <?php
+                      }else{
+                      ?>
+                        <a href="#" style="color:red" class="disabled">
+                          <span class="glyphicon glyphicon-remove"></span> Dictamen
+                        </a>
+                      <?php
+                      }
+                       ?>
+                    </div>
+
+                  </div>
+                <?php
+                }
+                 ?>
+
                 <!-- inicia modal estatus membresia -->
                 <div id="<?php echo "certificado".$solicitud['idsolicitud']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
@@ -2039,7 +2111,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                 </form>
 
                 <form action="" method="POST">
-                  <input type="text" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud']; ?>">
+                  <input type="hidden" name="idsolicitud_registro" value="<?php echo $solicitud['idsolicitud']; ?>">
                   <button type="submit" name="anclar" value="1">Anclar</button>
 
                 </form>

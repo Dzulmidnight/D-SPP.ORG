@@ -1406,9 +1406,26 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
   ';
     //21-12-2017$mail->AddAddress($spp_global);
     //21-12-2017$mail->AddBCC($direccion);
-    $mail->AddAttachment($formato);
-    $mail->AddAttachment($informe);
-    $mail->AddAttachment($dictamen);
+    if(!empty($formato)){
+      $mail->AddAttachment($formato);
+    }
+    if(!empty($informe)){
+      $mail->AddAttachment($informe);
+    }
+    if(!empty($dictamen)){
+      $mail->AddAttachment($dictamen);
+    }
+
+
+    if(isset($spp_global)){
+      $token = strtok($spp_global, "\/\,\;");
+      while ($token !== false)
+      {
+        $mail->AddAddress($token);
+        $token = strtok('\/\,\;');
+      }
+    }
+
 
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";

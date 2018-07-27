@@ -399,7 +399,13 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
     }
 
     if(isset($_POST['idproducto'])){
-      for ($i=0;$i<count($producto_actual);$i++) { 
+      for ($i=0;$i<count($producto_actual);$i++) {
+        if(isset($_POST['eliminar'.$i])){
+          $eliminar = $_POST['eliminar'.$i];
+        }else{
+          $eliminar = 0;
+        }
+
         if($producto_actual[$i] != NULL){
 
             //$str = iconv($charset, 'ASCII//TRANSLIT', $producto_actual[$i]);
@@ -422,7 +428,11 @@ if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1)
               GetSQLValueString($idproducto[$i], "int"));
             $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
 
-
+            if(isset($eliminar) && $eliminar == 1){
+              $deleteSQL = sprintf("DELETE FROM productos WHERE idproducto = %s",
+                GetSQLValueString($idproducto[$i], "int"));
+              $eliminar = mysql_query($deleteSQL, $dspp) or die(mysql_error());
+            }
 
         }
       }
@@ -483,7 +493,11 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
         <div class="col-md-4">
 
           <input type="hidden" name="actualizar_solicitud" value="1">
-          <button style="color:white" type="submit" class="btn btn-warning form-control"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> ACTUALIZAR SOLICITUD</button>
+
+          <button type="submit" class="btn btn-warning form-control" style="width:250px;color:white; position:fixed;z-index:1;right:0px;" name="buttonEditarInformacion" id="buttonEditarInformacion">
+            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> ACTUALIZAR SOLICITUD
+            <input type="hidden" id="btnEditar" value="0">
+          </button>
         </div>
 
       </div>
@@ -841,61 +855,9 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 
 
       <div class="col-md-12 text-center alert alert-success" style="padding:7px;">DATOS DE PRODUCTOS PARA LOS CUALES QUIERE UTILIZAR EL SÍMBOLO<sup>6</sup></div>
+      <!-- tabla de productos -->
       <div class="col-lg-12">
-        <table class="table table-bordered" id="tablaProductos">
-          <tr>
-            <td>Producto</td>
-            <td>Volumen Total Estimado a Comercializar</td>
-            <td>Volumen como Producto Terminado</td>
-            <td>Volumen como Materia Prima</td>
-            <td>País(es) de Origen</td>
-            <td>País(es) Destino</td> 
-            <td>
-              <button type="button" onclick="tablaProductos()" class="btn btn-primary" aria-label="Left Align">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-              </button>
-              
-            </td>   
-          </tr>
-          <?php 
-          $query_producto_detalle = "SELECT * FROM productos WHERE idsolicitud_registro = $idsolicitud_registro";
-          $producto_detalle = mysql_query($query_producto_detalle, $dspp) or die(mysql_error());
-          $contador = 0;
-          while($row_producto = mysql_fetch_assoc($producto_detalle)){
-          ?>
-            <tr>
-              <td>
-                <input type="text" class="form-control" name="producto_actual[]" id="exampleInputEmail1" placeholder="Producto" value="<?echo $row_producto['producto']?>">
-              </td>
-              <td>
-                <input type="text" class="form-control" name="volumen_estimado_actual[]" id="exampleInputEmail1" placeholder="Volumen Estimado" value="<?echo $row_producto['volumen_estimado']?>">
-              </td>
-        
-              <td>
-                <input type="text" class="form-control" name="volumen_terminado_actual[]" id="exampleInputEmail1" placeholder="Volumen Terminado" value="<?echo $row_producto['volumen_terminado']?>">
-              </td>
-              <td>
-                <input type="text" class="form-control" name="volumen_materia_actual[]" id="exampleInputEmail1" placeholder="Volumen Materia" value="<?echo $row_producto['volumen_materia']?>">
-              </td>
-              <td>
-                <input type="text" class="form-control" name="origen_actual[]" id="exampleInputEmail1" placeholder="Origen" value="<?echo $row_producto['origen']?>">
-              </td>
-              <td>
-                <input type="text" class="form-control" name="destino_actual[]" id="exampleInputEmail1" placeholder="Destino" value="<?echo $row_producto['destino']?>">
-              </td>
-
-                <input type="hidden" name="idproducto[]" value="<?echo $row_producto['idproducto']?>">                     
-            </tr>
-          <?php 
-          $contador++;
-          }
-          ?>        
-          <tr>
-            <td colspan="6">
-              <h6><sup>6</sup> La información proporcionada en esta sección será tratada con plena confidencialidad. Favor de insertar filas adicionales de ser necesario.</h6>
-            </td>
-          </tr>
-        </table>
+        <?php include('tablaProductos.php'); ?>
       </div>
 
       <div class="col-lg-12 text-center alert alert-success" style="padding:7px;">
@@ -1027,19 +989,23 @@ var contador=0;
     var cell3 = row.insertCell(2);
     var cell4 = row.insertCell(3);
     var cell5 = row.insertCell(4);
-    var cell6 = row.insertCell(5);   
+    var cell6 = row.insertCell(5);  
+    var cell7 = row.insertCell(6);
+    var cell8 = row.insertCell(7); 
     
-    cell1.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Producto">';
+    cell1.innerHTML = '';
+    cell2.innerHTML = '<input type="text" class="form-control" name="producto['+cont+']" id="exampleInputEmail1" placeholder="Producto">';
     
-    cell2.innerHTML = '<input type="text" class="form-control" name="volumen_estimado['+cont+']" id="exampleInputEmail1" placeholder="Volumen Estimado">';
+    cell3.innerHTML = '<input type="text" class="form-control" name="volumen_estimado['+cont+']" id="exampleInputEmail1" placeholder="Volumen Estimado">';
     
-    cell3.innerHTML = '<input type="text" class="form-control" name="volumen_terminado['+cont+']" id="exampleInputEmail1" placeholder="Volumen Terminado">';
+    cell4.innerHTML = '<input type="text" class="form-control" name="volumen_terminado['+cont+']" id="exampleInputEmail1" placeholder="Volumen Terminado">';
     
-    cell4.innerHTML = '<input type="text" class="form-control" name="volumen_materia['+cont+']" id="exampleInputEmail1" placeholder="Volumen Materia">';
+    cell5.innerHTML = '<input type="text" class="form-control" name="volumen_materia['+cont+']" id="exampleInputEmail1" placeholder="Volumen Materia">';
     
-    cell5.innerHTML = '<input type="text" class="form-control" name="origen['+cont+']" id="exampleInputEmail1" placeholder="Origen">';
+    cell6.innerHTML = '<input type="text" class="form-control" name="origen['+cont+']" id="exampleInputEmail1" placeholder="Origen">';
     
-    cell6.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destino">';
+    cell7.innerHTML = '<input type="text" class="form-control" name="destino['+cont+']" id="exampleInputEmail1" placeholder="Destino">';
+    cell8.innerHTML = '';
      
   cont++;
     }

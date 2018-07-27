@@ -180,7 +180,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
           //$mail->AddAttachment($archivo2);
     }
 
-    $asunto = "D-SPP | Comunicado, Responsable de Certificación y Calidad / Communique, Person in charge of Certification and Quality";
+    $asunto = "D-SPP | Asistente provisional / Provisional assistan";
 
     $cuerpo_mensaje = '
       <html>
@@ -334,7 +334,7 @@ if(isset($_POST['enviar_correo']) && $_POST['enviar_correo'] == 1){
         $mail->clearAttachments();
         $mail->ClearAddresses();
 
-      echo "<script>alert('LISTA DE OPP');</script>";  
+      echo "<script>alert('LISTA DE CONTACTOS');</script>";  
     }
      if($value == 'empresas'){ /// SE ENVIAN LOS CORREOS A LAS EMPRESAS
       $row_empresa = mysql_query("SELECT email FROM empresa", $dspp);

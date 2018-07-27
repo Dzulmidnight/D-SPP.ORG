@@ -352,7 +352,7 @@ function preguntar(){
   <hr>
     <div class="row">
       <div class="col-md-4" >
-        <button class="btn btn-sm btn-primary" onclick="guardarDatos()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Cambios</button><!-- BOTON GUARDAR DATOS -->
+        <!--<button class="btn btn-sm btn-primary" onclick="guardarDatos()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Cambios</button>--><!-- BOTON GUARDAR DATOS -->
         | <span class="alert alert-warning" style="padding:7px;">Total EMPRESAS: <?php echo $totalEmpresa; ?></span>
       </div>
       <form action="" method="POST">
@@ -436,7 +436,7 @@ function preguntar(){
                   <?php echo $empresa['abreviacion']; ?>
                 </td>
                 <td>
-                  <select name="estatus_interno<?php echo $empresa['idempresa']; ?>">
+                  <!--<select name="estatus_interno<?php echo $empresa['idempresa']; ?>">
                     <option>...</option>
                     <?php 
                     $row_interno = mysql_query("SELECT * FROM estatus_interno", $dspp) or die(mysql_error());
@@ -446,16 +446,26 @@ function preguntar(){
                     <?php
                     }
                      ?>
-                  </select>
+                  </select>-->
                   <?php echo "<p class='alert alert-info' style='padding:7px;'>$empresa[nombre_interno]</p>"; ?>
                 </td>
                 <td>
                   <?php 
+                  $vigenciafin = '';
+                  $timeVencimiento = '';
+                  if(isset($empresa['fecha_fin'])){
                     $vigenciafin = date('d-m-Y', strtotime($empresa['fecha_fin']));
                     $timeVencimiento = strtotime($empresa['fecha_fin']);
-                  
+                  }
+                    
+                    if(!empty($vigenciafin)){
+                    ?>
+                    <b class="bs-alert alert-danger"><?php echo $vigenciafin; ?></b>
+                    <?php
+                    }
                    ?>
-                  <input type="date" name="vigencia_fin<?php echo $empresa['idempresa']; ?>" value="<?php echo $empresa['fecha_fin']; ?>" readonly>
+                   
+                  <!--<input type="date" name="vigencia_fin<?php echo $empresa['idempresa']; ?>" value="<?php echo $empresa['fecha_fin']; ?>" readonly>-->
                 </td>
 
             <!--- INICIA ESTATUS_CERTIFICADO ---->
@@ -492,7 +502,7 @@ function preguntar(){
 
                 <td>
                   <?php 
-                  $row_productos = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa]", $dspp) or die(mysql_error());
+                  $row_productos = mysql_query("SELECT * FROM productos WHERE idempresa = $empresa[idempresa] GROUP BY productos.producto", $dspp) or die(mysql_error());
                   $total_productos = mysql_num_rows($row_productos);
                   if($total_productos == 0){
                     echo "No Disponible";

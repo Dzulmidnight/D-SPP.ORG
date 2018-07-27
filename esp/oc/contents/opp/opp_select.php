@@ -47,7 +47,7 @@ $startRow_opp = $pageNum_opp * $maxRows_opp;
 
 mysql_select_db($database_dspp, $dspp);
 
-if(isset($_POST['buscar']) && $_POST['buscar'] == 1){
+if(!empty($_POST['campo_buscar']) && $_POST['buscar'] == 1){
   $busqueda = $_POST['campo_buscar'];
 
   $query_opp = "SELECT opp.*, estatus_interno.idestatus_interno, estatus_interno.nombre AS 'nombre_interno', MAX(certificado.idcertificado) AS 'idcertificado', MAX(certificado.vigencia_inicio) AS 'fecha_inicio', MAX(certificado.vigencia_fin) AS 'fecha_fin', certificado.estatus_certificado, estatus_publico.idestatus_publico, estatus_publico.nombre AS 'nombre_publico', num_socios.idnum_socios, num_socios.numero FROM opp LEFT JOIN estatus_interno ON opp.estatus_interno = estatus_interno.idestatus_interno LEFT JOIN estatus_publico ON opp.estatus_publico = estatus_publico.idestatus_publico LEFT JOIN certificado ON opp.idopp = certificado.idopp LEFT JOIN num_socios ON opp.idopp = num_socios.idopp WHERE opp.spp LIKE '%$busqueda%' OR opp.nombre LIKE '%$busqueda%' OR opp.abreviacion LIKE '%$busqueda%' AND opp.idoc = $idoc ORDER BY fecha_fin DESC";
@@ -360,7 +360,7 @@ function preguntar(){
   <hr>
     <div class="row">
       <div class="col-md-4" >
-        <button class="btn btn-sm btn-primary" onclick="guardarDatos()" disabled><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Cambios</button><!-- BOTON GUARDAR DATOS -->
+        <!--<button class="btn btn-sm btn-primary" onclick="guardarDatos()" disabled><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Cambios</button>--><!-- BOTON GUARDAR DATOS -->
         | <span class="alert alert-warning" style="padding:7px;">Total OPP: <?php echo $totalOPP; ?></span>
       </div>
       <form action="" method="POST">
@@ -445,7 +445,7 @@ function preguntar(){
                   <?php echo $opp['abreviacion']; ?>
                 </td>
                 <td>
-                  <select name="estatus_interno<?php echo $opp['idopp']; ?>">
+                  <!--<select name="estatus_interno<?php echo $opp['idopp']; ?>">
                     <option>...</option>
                     <?php 
                     $row_interno = mysql_query("SELECT * FROM estatus_interno", $dspp) or die(mysql_error());
@@ -455,16 +455,25 @@ function preguntar(){
                     <?php
                     }
                      ?>
-                  </select>
+                  </select>-->
                   <?php echo "<p class='alert alert-info' style='padding:7px;'>$opp[nombre_interno]</p>"; ?>
                 </td>
                 <td>
                   <?php 
+                  $vigenciafin = '';
+                  $timeVencimiento = '';
+                  if(isset($opp['fecha_fin'])){
                     $vigenciafin = date('d-m-Y', strtotime($opp['fecha_fin']));
                     $timeVencimiento = strtotime($opp['fecha_fin']);
-                  
+                  }
+                    
+                    if(!empty($vigenciafin)){
+                    ?>
+                    <b class="bs-alert alert-danger"><?php echo $vigenciafin; ?></b>
+                    <?php
+                    }
                    ?>
-                  <input type="date" name="vigencia_fin<?php echo $opp['idopp']; ?>" value="<?php echo $opp['fecha_fin']; ?>" readonly>
+                  
                 </td>
 
             <!--- INICIA ESTATUS_CERTIFICADO ---->
@@ -502,7 +511,7 @@ function preguntar(){
 
                 <td>
                   <?php 
-                  $row_productos = mysql_query("SELECT * FROM productos WHERE idopp = $opp[idopp]", $dspp) or die(mysql_error());
+                  $row_productos = mysql_query("SELECT * FROM productos WHERE idopp = $opp[idopp] GROUP BY productos.producto", $dspp) or die(mysql_error());
                   $total_productos = mysql_num_rows($row_productos);
                   if($total_productos == 0){
                     echo "No Disponible";
@@ -515,7 +524,7 @@ function preguntar(){
                    ?>
                 </td>
                 <td>
-                  <input type="number" name="num_socios<?php echo $opp['idopp']; ?>" value="<?php echo $opp['numero']; ?>">
+                  <!--<input type="number" name="num_socios<?php echo $opp['idopp']; ?>" value="<?php echo $opp['numero']; ?>">-->
                   <?php echo $opp['numero']; ?>
                 </td>
                 <td>

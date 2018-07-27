@@ -319,7 +319,7 @@
 							 ->setCategory("Reporte excel");
 
 		$tituloReporte = "Lista de Empresas y Otros Actores";
-		$titulosColumnas = array('Nº', 'NOMBRE DE LA EMPRESA', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO(S) CERTIFICADO', 'FECHA SIGUIENTE EVALUACIÓN', 'ESTATUS', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', '#SPP', 'EMAIL', 'SITIO WEB', 'TELÉFONO');
+		$titulosColumnas = array('Nº', 'NOMBRE DE LA EMPRESA', 'ABREVIACIÓN', 'PAÍS', 'PRODUCTO(S) CERTIFICADO', 'FECHA SIGUIENTE EVALUACIÓN', 'ESTATUS', 'ENTIDAD QUE OTORGÓ EL CERTIFICADO', 'RAZÓN SOCIAL', 'DIRECCIÓN FISCAL', 'RFC', 'RUC');
 		
 		$objPHPExcel->setActiveSheetIndex(0)
         		    ->mergeCells('A1:L1');
@@ -362,6 +362,9 @@
         }
         $cont++;
       }
+      $query_datos = "SELECT razon_social, direccion_fiscal, rfc, ruc FROM empresa WHERE idempresa = $empresa[idempresa]";
+      $row_datos = mysql_query($query_datos, $dspp) or die(mysql_error());
+      $datos_fiscales = mysql_fetch_assoc($row_datos);
 
 			$objPHPExcel->setActiveSheetIndex(0)
         		    ->setCellValue('A'.$i,  $contador)
@@ -372,10 +375,10 @@
             		->setCellValue('F'.$i, 	$vigencia)
             		->setCellValue('G'.$i, 	$empresa['nombre_dspp'])
             		->setCellValue('H'.$i, 	$empresa['abreviacion_oc'])
-            		->setCellValue('I'.$i, 	$empresa['spp_empresa'])
-            		->setCellValue('J'.$i, 	$empresa['email'])
-            		->setCellValue('K'.$i, 	$empresa['sitio_web'])
-            		->setCellValue('L'.$i, 	$empresa['telefono']);
+            		->setCellValue('I'.$i, 	$datos_fiscales['razon_social'])
+            		->setCellValue('J'.$i, 	$datos_fiscales['direccion_fiscal'])
+            		->setCellValue('K'.$i, 	$datos_fiscales['rfc'])
+            		->setCellValue('L'.$i, 	$datos_fiscales['ruc']);
 					$i++;
 					$contador++;
 		}
