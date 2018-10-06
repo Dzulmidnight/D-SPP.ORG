@@ -566,7 +566,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
 				<div class="col-md-6">
 					<div class="col-xs-12">
-						<b>Envoi à l'OC (choisissez l'OC auquel vous souhaitez envoyer la demande) :</b>
+						<b>Envoi d'organisation (sélectionnez l'organisation qui envoie l'application)</b>
 					</div>
 					<div class="col-xs-12">
 						<select class="form-control" name="idopp" id="" required>
@@ -608,19 +608,19 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONNE(S) A CONTACTER</div>
 
 					<label for="persona1">PERSONNE(S) A CONTACTER :</label>
-					<input type="text" class="form-control" id="persona1" name="contacto1_nombre" placeholder="* Nombre Persona 1" required>
+					<input type="text" class="form-control" id="persona1" name="contacto1_nombre" placeholder="* Nombre Persona 1" >
 					<input type="text" class="form-control" id="" name="contacto2_nombre" placeholder="Nombre Persona 2">
 
 					<label for="cargo">FONCTION(S)</label>
-					<input type="text" class="form-control" id="cargo" name="contacto1_cargo" placeholder="* Cargo Persona 1" required>
+					<input type="text" class="form-control" id="cargo" name="contacto1_cargo" placeholder="* Cargo Persona 1" >
 					<input type="text" class="form-control" id="" name="contacto2_cargo" placeholder="Cargo Persona 2">
 
 					<label for="email">ADRESSE MAIL DES PERSONNES A CONTACTER:</label>
-					<input type="email" class="form-control" id="email" name="contacto1_email" placeholder="* Email Persona 1" required>
-					<input type="email" class="form-control" id="" name="contacto2_email" placeholder="Email Persona 2">
+					<input type="text" class="form-control" id="email" name="contacto1_email" placeholder="* Email Persona 1" >
+					<input type="text" class="form-control" id="" name="contacto2_email" placeholder="Email Persona 2">
 
 					<label for="telefono">TELEPHONE</label>
-					<input type="text" class="form-control" id="telefono" name="contacto1_telefono" placeholder="* Telefono Persona 1" required>
+					<input type="text" class="form-control" id="telefono" name="contacto1_telefono" placeholder="* Telefono Persona 1" >
 					<input type="text" class="form-control" id="" name="contacto2_telefono" placeholder="Telefono Persona 2">
 				</div>
 
@@ -632,8 +632,8 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					<input type="text" class="form-control" id="" name="adm2_nombre" placeholder="Nombre Persona 2">
 
 					<label for="email_adm">ADRESSE MAIL DU SERVICE ADMINISTRATIF</label>
-					<input type="email" class="form-control" id="email_adm" name="adm1_email" placeholder="Email Persona 1">
-					<input type="email" class="form-control" id="" name="adm2_email" placeholder="Email Persona 2">
+					<input type="text" class="form-control" id="email_adm" name="adm1_email" placeholder="Email Persona 1">
+					<input type="text" class="form-control" id="" name="adm2_email" placeholder="Email Persona 2">
 
 					<label for="telefono_adm">TELEPHONE</label>
 					<input type="text" class="form-control" id="telefono_adm" name="adm1_telefono" placeholder="Telefono Persona 1">

@@ -2346,20 +2346,20 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                         <input type="hidden" name="idopp" value="<?php echo $solicitud['idopp']; ?>">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                         <?php 
-                        if(empty($solicitud['idmembresia']) && $solicitud['estatus_opp'] != '8' && $solicitud['estatus_interno'] != '13'){
+                        if(empty($solicitud['idmembresia']) && $solicitud['estatus_opp'] != '8' || $solicitud['estatus_opp'] != '13'){
                         ?>
-                        <button type="submit" class="btn btn-success" style="width:100%" id="<?php echo 'boton1'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1">Guardar Proceso</button>
-                        <?php 
-                        if($solicitud['tipo_solicitud'] == 'RENOVACION'){
-                        ?>
-                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validarRenovacion()" style="width:100%; display:none" >Enviar Dictamen</button>
-                        <?php
-                        }else{
-                        ?>
-                        <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Enviar Dictamen</button>
-                        <?php
-                        }
-                         ?>
+                          <button type="submit" class="btn btn-success" style="width:100%" id="<?php echo 'boton1'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1">Guardar Proceso</button>
+                          <?php 
+                          if($solicitud['tipo_solicitud'] == 'RENOVACION'){
+                          ?>
+                            <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validarRenovacion()" style="width:100%; display:none" >Enviar Dictamen</button>
+                          <?php
+                          }else{
+                          ?>
+                            <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_certificacion']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Enviar Dictamen</button>
+                          <?php
+                          }
+                           ?>
                         
                         <?php
                         }
@@ -2517,7 +2517,15 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                               ?>
                                 <p class="alert alert-info">Se ha cargado la AMPLIACIÓN</p>
                                 <a href="<?php echo $ampliacion['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Ampliación</a>
+
+
+                                <h4>Enviar nueva ampliación</h4>
+                                <label for="ampliacion">Por favor seleccione el archivo de la Ampliación</label>
+                                <input type="file" name="ampliacion" id="ampliacion" class="form-control" required>
+                                <button type="submit" name="enviar_ampliacion" value="1" class="btn btn-warning" style="width:100%">Enviar Ampliación</button> 
+
                               <?php
+
                               }else{
                               ///// SI NO SE HA CARGADO LA AMPLIACIÓN, HABILITAMOS LA OPCIÓN PARA CARGARLA
                               ?>

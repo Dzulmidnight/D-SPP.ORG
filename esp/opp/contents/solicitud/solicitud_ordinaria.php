@@ -978,60 +978,61 @@ if($dias < 100){
 		?>
 
 		<form action="" name="" method="POST" enctype="multipart/form-data">
-			<fieldset>
+
 				<div class="col-md-12 alert alert-primary" style="padding:7px;">
 					<h3 class="text-center">Solicitud de Certificación para Organizaciones de Pequeños Productores</h3>
 				</div>
 
 				<div class="col-md-12 text-center alert alert-success" style="padding:7px;"><b>DATOS GENERALES</b></div>
 
-				<div class="col-lg-12 alert alert-info" style="padding:7px;">
+				<div class="row">
 
-						<div class="col-md-12 alert alert-warning" style="padding:5px;">
-							<ul>
-								<li>
-									<b>
-										SI CONTARON CON CERTITICACION DE SPP ANTERIORMENTE (CON EL ORGANISMO DE CERTIFICACIÓN ACTUAL ó CON OTRO ORGANISMO DE CERTIFICACIÓN)DEBEN ELEGIR <span style="color:red">"RENOVACION DEL CERTIFICADO"</span>
-									</b>
-								</li>
-								<li><b>SI ES LA PRIMERA VEZ QUE SE CERTIFICAN DEBEN ELEGIR <span style="color:red">"PRIMERA VEZ"</span></b></li>
-							</ul>
-						</div>
+						
+							<div class="col-md-12 alert alert-warning" style="padding:5px;">
+								<ul>
+									<li>
+										<b>
+											SI CONTARON CON CERTITICACION DE SPP ANTERIORMENTE (CON EL ORGANISMO DE CERTIFICACIÓN ACTUAL ó CON OTRO ORGANISMO DE CERTIFICACIÓN)DEBEN ELEGIR <span style="color:red">"RENOVACION DEL CERTIFICADO"</span>
+										</b>
+									</li>
+									<li><b>SI ES LA PRIMERA VEZ QUE SE CERTIFICAN DEBEN ELEGIR <span style="color:red">"PRIMERA VEZ"</span></b></li>
+								</ul>
+							</div>
 
-					<div class="col-md-6">
-						<div class="col-xs-12">
-							<b>ENVAR AL OC (selecciona el OC al que deseas enviar la solicitud):</b>
-						</div>
-						<div class="col-xs-12">
-							<select class="form-control" name="idoc" id="" required>
-								<option value="">Seleccione un OC</option>
-								<?php 
-								$query = "SELECT idoc, abreviacion FROM oc";
-								$row_oc = mysql_query($query,$dspp) or die(mysql_error());
+							<div class="col-md-6">
+								<div class="col-xs-12">
+									<b>ENVAR AL OC (selecciona el OC al que deseas enviar la solicitud):</b>
+								</div>
+								<div class="col-xs-12">
+									<select class="form-control" name="idoc" id="" required>
+										<option value="">Seleccione un OC</option>
+										<?php 
+										$query = "SELECT idoc, abreviacion FROM oc";
+										$row_oc = mysql_query($query,$dspp) or die(mysql_error());
 
-								while($oc = mysql_fetch_assoc($row_oc)){
-								?>
-								<option value="<?php echo $oc['idoc']; ?>" <?php if($opp['idoc'] == $oc['idoc']){ echo "selected"; } ?>><?php echo $oc['abreviacion']; ?></option>
-								<?php
-								}
-								 ?>
-								 <option value="TODOS">ENVIAR A TODOS LOS OC</option>
-							</select>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="col-md-12">
-							<p class="text-center"><strong>SELECCIONE EL TIPO DE SOLICITUD</strong></p>
-						</div>
-						<div class="col-md-6">
-							<label for="nueva">PRIMERA VEZ</label>
-							<input type="radio" class="form-control" id="nueva" name="tipo_solicitud" value="NUEVA">
-						</div>
-						<div class="col-md-6">
-							<label for="renovacion">RENOVACIÓN DEL CERTIFICADO</label>
-							<input type="radio" class="form-control" id="renovacion" name="tipo_solicitud" value="RENOVACION">
-						</div>
-					</div>
+										while($oc = mysql_fetch_assoc($row_oc)){
+										?>
+										<option value="<?php echo $oc['idoc']; ?>" <?php if($opp['idoc'] == $oc['idoc']){ echo "selected"; } ?>><?php echo $oc['abreviacion']; ?></option>
+										<?php
+										}
+										 ?>
+										 <option value="TODOS">ENVIAR A TODOS LOS OC</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="col-xs-12">
+									<p class="text-center"><strong>SELECCIONE EL TIPO DE SOLICITUD</strong></p>
+								</div>
+								<div class="col-xs-6">
+									<label for="nueva">PRIMERA VEZ</label>
+									<input type="radio" class="form-control" id="nueva" name="tipo_solicitud" value="NUEVA">
+								</div>
+								<div class="col-xs-6">
+									<label for="renovacion">RENOVACIÓN DEL CERTIFICADO</label>
+									<input type="radio" class="form-control" id="renovacion" name="tipo_solicitud" value="RENOVACION">
+								</div>
+							</div>				
 				</div>
 
 				<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
@@ -1099,26 +1100,29 @@ if($dias < 100){
 
 
 				<!------ INICIA INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
-				<div class="col-lg-12">
+
 					<div class="col-md-6">
-						<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONA(S) DE CONTACTO</div>
+						<div class="col-xs-12 text-center alert alert-warning" style="padding:7px;">PERSONA(S) DE CONTACTO</div>
 
-						<label for="persona1">PERSONA(S) DE CONTACTO</label>
-						<input type="text" class="form-control" id="persona1" name="contacto1_nombre" placeholder="* Nombre Persona 1" required>
-						<input type="text" class="form-control" id="" name="contacto2_nombre" placeholder="Nombre Persona 2">
+						<div class="col-xs-12">
+							<div class="row">
+								<label for="persona1">PERSONA(S) DE CONTACTO</label>
+								<input type="text" class="form-control" id="persona1" name="contacto1_nombre" placeholder="* Nombre Persona 1" required>
+								<input type="text" class="form-control" id="" name="contacto2_nombre" placeholder="Nombre Persona 2">
 
-						<label for="cargo">CARGO</label>
-						<input type="text" class="form-control" id="cargo" name="contacto1_cargo" placeholder="* Cargo Persona 1" required>
-						<input type="text" class="form-control" id="" name="contacto2_cargo" placeholder="Cargo Persona 2">
+								<label for="cargo">CARGO</label>
+								<input type="text" class="form-control" id="cargo" name="contacto1_cargo" placeholder="* Cargo Persona 1" required>
+								<input type="text" class="form-control" id="" name="contacto2_cargo" placeholder="Cargo Persona 2">
 
-						<label for="email">CORREO ELECTRÓNICO</label>
-						<input type="email" class="form-control" id="email" name="contacto1_email" placeholder="* Email Persona 1" required>
-						<input type="email" class="form-control" id="" name="contacto2_email" placeholder="Email Persona 2">
+								<label for="email">CORREO ELECTRÓNICO</label>
+								<input type="email" class="form-control" id="email" name="contacto1_email" placeholder="* Email Persona 1" required>
+								<input type="email" class="form-control" id="" name="contacto2_email" placeholder="Email Persona 2">
 
-						<label for="telefono">TELEFONO</label>
-						<input type="text" class="form-control" id="telefono" name="contacto1_telefono" placeholder="* Telefono Persona 1" required>
-						<input type="text" class="form-control" id="" name="contacto2_telefono" placeholder="Telefono Persona 2">
-
+								<label for="telefono">TELEFONO</label>
+								<input type="text" class="form-control" id="telefono" name="contacto1_telefono" placeholder="* Telefono Persona 1" required>
+								<input type="text" class="form-control" id="" name="contacto2_telefono" placeholder="Telefono Persona 2">
+							</div>
+						</div>
 					</div>
 
 					<div class="col-md-6">
@@ -1136,7 +1140,7 @@ if($dias < 100){
 						<input type="text" class="form-control" id="telefono_adm" name="adm1_telefono" placeholder="Telefono Persona 1">
 						<input type="text" class="form-control" id="" name="adm2_telefono" placeholder="Telefono Persona 2">
 					</div>
-				</div>
+
 				<!------ FIN INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>
 
 
@@ -1434,7 +1438,7 @@ if($dias < 100){
 					<input type="submit" class="btn btn-primary form-control" style="color: white;font-size:14px" value="Enviar Solicitud" onclick="return validar()">
 				</div>
 
-			</fieldset>
+	
 		</form>
 	</div>
 

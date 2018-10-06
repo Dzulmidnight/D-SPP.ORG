@@ -320,6 +320,14 @@ $opp = mysql_fetch_assoc($row_opp);
     ?>
     <h4>Datos de: <span style="color:red"><?php echo $opp['nombre']; ?></span> </h4>
     <form action="" id="detalle_contacto" method="POST">
+      <?php 
+      if(isset($opp['fecha_registro'])){
+        $fecha_registro = date('d/m/Y', $opp['fecha_registro']);
+      }else{
+        $fecha_registro = '<span style="color:red">NO DISPONIBLE</span>';
+      }
+       ?>
+      <h4 style="background:#ecf0f1;padding:4px;">FECHA DE REGISTRO: <?= $fecha_registro ?></h4>
       <table class="table table-condensed">
         <tr>
           <td>#SPP</td>

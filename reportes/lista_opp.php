@@ -728,7 +728,7 @@
                 ->setCellValue('H'.$i,  $datos_fiscales['razon_social'])
                 ->setCellValue('I'.$i,  $datos_fiscales['direccion_fiscal'])
                 ->setCellValue('J'.$i,  $datos_fiscales['rfc'])
-                ->setCellValue('K'.$i,  $datos_fiscales['ruc']);
+                ->setCellValue('K'.$i,  $correos_contactos);
 
           $i++;
           $contador++;

@@ -1744,9 +1744,20 @@ if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
 
               <!---- inicia CERTIFICADO ---->
               <td>
-                <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud']; ?>">
-                  Consultar Certificado
-                </button>
+                <?php
+                if($solicitud['tipo_solicitud'] == 'NUEVA'){
+                  $query_contrato = mysql_query("SELECT * FROM contratos WHERE idcontrato = '$solicitud[idcontrato]'", $dspp) or die(mysql_error());
+                  $detalle_contrato = mysql_fetch_assoc($query_contrato);
+                }
+                
+                if(isset($solicitud['idcertificado'])){
+                ?>
+                  <button type="button" class="btn btn-sm btn-success" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud']; ?>">
+                    Consultar Certificado
+                  </button>
+                <?php
+                }
+                ?>
                 <!-- revisamos la documentación que han cargado -->
                 <?php 
                 if(isset($solicitud['iddictamen_evaluacion']) && isset($solicitud['idinforme_evaluacion']) && isset($solicitud['idformato_evaluacion'])){
@@ -1758,63 +1769,130 @@ if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
 
                   $query_informe = mysql_query("SELECT * FROM dictamen_evaluacion WHERE idsolicitud_certificacion = $solicitud[idsolicitud]", $dspp) or die(mysql_error());
                   $dictamen = mysql_fetch_assoc($query_informe);
+
+                  if(!isset($solicitud['idcertificado'])){ // se bloquea el botón, ya que no existe información
+                  ?>
+                    <button type="button" class="btn btn-sm btn-warning" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud']; ?>">
+                      Consultar Información
+                    </button>
+                  <?php
+                  }
                 ?>
+           
                   <div class="row">
-                    <div class="col-md-12">
-                      <?php 
-                      if(file_exists($formato['archivo'])){
-                      ?>
-                        <a href="<?php echo $formato['archivo']; ?>" target="_new" style="color:green">
-                          <span class="glyphicon glyphicon-file"></span> Formato
-                        </a>
-                      <?php
-                      }else{
-                      ?>
-                        <a href="#" style="color:red" class="disabled">
-                          <span class="glyphicon glyphicon-remove"></span> Formato
-                        </a>
-                      <?php
-                      }
-                       ?>
-                    </div>
+                    <div class="">
+                      <div class="col-xs-12">
+                        <?php 
+                        if(file_exists($formato['archivo'])){
+                        ?>
+                          <a href="<?php echo $formato['archivo']; ?>" target="_new" style="color:#27ae60">
+                            <span class="glyphicon glyphicon-file"></span> Formato
+                          </a>
+                        <?php
+                        }else{
+                        ?>
+                          <a href="#" style="color:#e74c3c" class="disabled">
+                            <span class="glyphicon glyphicon-remove"></span> Formato
+                          </a>
+                        <?php
+                        }
+                         ?>
+                      </div>
 
-                    <div class="col-md-12">
-                      <?php 
-                      if(file_exists($informe['archivo'])){
-                      ?>
-                        <a href="<?php echo $informe['archivo']; ?>" target="_new" style="color:green">
-                          <span class="glyphicon glyphicon-file"></span> Informe
-                        </a>
-                      <?php
-                      }else{
-                      ?>
-                        <a href="#" style="color:red" class="disabled">
-                          <span class="glyphicon glyphicon-remove"></span> Informe
-                        </a>
-                      <?php
-                      }
-                       ?>
-                    </div>
+                      <div class="col-xs-12">
+                        <?php 
+                        if(file_exists($informe['archivo'])){
+                        ?>
+                          <a href="<?php echo $informe['archivo']; ?>" target="_new" style="color:#27ae60">
+                            <span class="glyphicon glyphicon-file"></span> Informe
+                          </a>
+                        <?php
+                        }else{
+                        ?>
+                          <a href="#" style="color:#e74c3c" class="disabled">
+                            <span class="glyphicon glyphicon-remove"></span> Informe
+                          </a>
+                        <?php
+                        }
+                         ?>
+                      </div>
 
-                    <div class="col-md-12">
-                      <?php 
-                      if(file_exists($dictamen['archivo'])){
-                      ?>
-                        <a href="<?php echo $dictamen['archivo']; ?>" target="_new" style="color:green">
-                          <span class="glyphicon glyphicon-file"></span> Dictamen
-                        </a>
-                      <?php
-                      }else{
-                      ?>
-                        <a href="#" style="color:red" class="disabled">
-                          <span class="glyphicon glyphicon-remove"></span> Dictamen
-                        </a>
-                      <?php
-                      }
-                       ?>
+                      <div class="col-xs-12">
+                        <?php 
+                        if(file_exists($dictamen['archivo'])){
+                        ?>
+                          <a href="<?php echo $dictamen['archivo']; ?>" target="_new" style="color:#27ae60">
+                            <span class="glyphicon glyphicon-file"></span> Dictamen
+                          </a>
+                        <?php
+                        }else{
+                        ?>
+                          <a href="#" style="color:#e74c3c" class="disabled">
+                            <span class="glyphicon glyphicon-remove"></span> Dictamen
+                          </a>
+                        <?php
+                        }
+                         ?>
+                      </div>
                     </div>
+                    <div class="">
+                      <div class="col-xs-12">
+                        <?php
+                        if(isset($detalle_contrato['idcontrato'])){ /// REVISAMOS SI SE HA CREADO EL ID DEL CONTRATO
 
+                          if(isset($detalle_contrato['contrato']) && file_exists($detalle_contrato['contrato'])){
+                          ?>
+                            <!-- contrato cargado -->
+                            <a href="<?php echo $detalle_contrato['contrato']; ?>" target="_new" style="color:#27ae60" data-toggle="tooltip" title="Archivo disponible">
+                              <span class="glyphicon glyphicon-file"></span> Contrato
+                            </a>
+                          <?php
+                          }else{
+                          ?>
+                            <!-- contrato cargado archivo no encontrado -->
+                            <a href="#" style="color:#e74c3c" data-toggle="tooltip" title="Archivo no encontrado" disabled>
+                              <span class="glyphicon glyphicon-remove"></span> Contrato
+                            </a>
+                          <?php
+                          }
+
+                          //// acuse de recibo 
+                          if(file_exists($detalle_contrato['acuse_recibo'])){
+                          ?>
+                            <a href="<?php echo $detalle_contrato['acuse_recibo']; ?>" target="_new" style="color:#27ae60">
+                              <span class="glyphicon glyphicon-file"></span> Acuse
+                            </a>
+                          <?php
+                          }else if(isset($detalle_contrato['idcontrato'])){
+                          ?>
+                            <a href="#" style="color:#e74c3c" disabled>
+                              <span class="glyphicon glyphicon-remove"></span> Acuse
+                            </a>
+                          <?php
+                          }
+                          /// termina acuse de recibo
+
+
+                        }else{ //// AUN NO SE HA CREADO EL ID DE CONTRATO
+                        ?>
+                          <!-- No se ha cargado el contrao -->
+                          <a href="#" style="color:#f39c12" class="disabled" data-toggle="tooltip" title="Aun no se ha cargado el archivo">
+                            <span class="glyphicon glyphicon-time"></span> Contrato
+                          </a>
+                        <?php
+                        }
+                         ?>
+                      </div>
+
+
+                    </div>
                   </div>
+                <?php
+                }else{
+                ?>
+                    <button type="button" class="btn btn-sm btn-default" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificado".$solicitud['idsolicitud']; ?>">
+                      No disponible
+                    </button>
                 <?php
                 }
                  ?>
@@ -1900,7 +1978,18 @@ if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
                                   <p>
                                     Formato de Evaluación
                                   </p>
-                                  <a href="<?php echo $formato['archivo']; ?>" class="btn btn-success" target="_new">Descargar Formato</a>
+                                  <?php 
+                                  if(file_exists($formato['archivo'])){
+                                    ?>
+                                    <a href="<?php echo $formato['archivo']; ?>" class="btn btn-success" target="_new">Descargar Formato</a>
+                                    <?php
+                                  }else{
+                                    ?>
+                                    <a href="<?php echo $formato['archivo']; ?>" class="btn btn-default" target="_new" disabled>Descargar Formato</a>
+                                    <?php
+                                  }
+                                   ?>
+
                                   <label class="radio-inline">
                                     <input type="radio" name="estatus_formato" id="" value="ACEPTADO" <?php if($formato['estatus_formato'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
                                   </label>
@@ -1914,7 +2003,18 @@ if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
                                   <p>
                                     Informe de Evaluación
                                   </p>
-                                  <a href="<?php echo $informe['archivo']; ?>" class="btn btn-success" target="_new">Descargar Informe</a>
+                                  <?php 
+                                  if(file_exists($informe['archivo'])){
+                                    ?>
+                                    <a href="<?php echo $informe['archivo']; ?>" class="btn btn-success" target="_new">Descargar Informe</a>
+                                    <?php
+                                  }else{
+                                    ?>
+                                    <a href="<?php echo $informe['archivo']; ?>" class="btn btn-default" target="_new" disabled>Descargar Informe</a>
+                                    <?php
+                                  }
+                                   ?>
+
                                   <label class="radio-inline">
                                     <input type="radio" name="estatus_informe" id="" value="ACEPTADO" <?php if($informe['estatus_informe'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
                                   </label>
@@ -1925,7 +2025,18 @@ if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
                                 </div>
                                 <div class="alert alert-info">
                                   <p>Dictamen de Evaluación</p>
-                                  <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-success" target="_new">Descargar Dictamen</a>
+                                  <?php 
+                                  if(file_exists($dictamen['archivo'])){
+                                    ?>
+                                    <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-success" target="_new">Descargar Dictamen</a>
+                                    <?php
+                                  }else{
+                                    ?>
+                                    <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-default" target="_new" disabled>Descargar Dictamen</a>
+                                    <?php
+                                  }
+                                   ?>
+
                                   <label class="radio-inline">
                                     <input type="radio" name="estatus_dictamen" id="inlineRadio1" value="ACEPTADO" <?php if($dictamen['estatus_dictamen'] == 'ACEPTADO'){ echo "checked"; } ?>> ACEPTADO
                                   </label>

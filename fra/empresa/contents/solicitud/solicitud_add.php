@@ -165,9 +165,8 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 
 	// INGRESAMOS LA INFORMACION A LA SOLICITUD DE CERTIFICACION
 
-	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, facturacion_total, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro, estatus_interno ) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	$insertSQL = sprintf("INSERT INTO solicitud_registro (tipo_solicitud, idempresa, idoc, comprador_final, intermediario, maquilador, contacto1_nombre, contacto2_nombre, contacto1_cargo, contacto2_cargo, contacto1_email, contacto2_email, contacto1_telefono, contacto2_telefono, adm1_nombre, adm2_nombre, adm1_email, adm2_email, adm1_telefono, adm2_telefono, preg1, preg2, preg3, preg4, produccion, procesamiento, importacion, preg6, preg7, preg8, preg9, preg10, preg12, preg13, preg14, preg15, responsable, fecha_registro, estatus_interno ) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 		   GetSQLValueString($_POST['tipo_solicitud'], "text"),
-		   GetSQLValueString($_POST['facturacion_total'], "double"),
 		   GetSQLValueString($idempresa, "int"),
            GetSQLValueString($_POST['idoc'], "int"),
            GetSQLValueString($comprador, "int"),
@@ -600,20 +599,7 @@ $empresa = mysql_fetch_assoc($row_empresa);
 					</div>
 				</div>
 			</div>
-			<?php 
-			if($empresa['comprador']){
-			?>
-				<div class="row">
-					<div class="col-md-12 alert alert-info">
-						<b>Valeur totale des ventes (<i>que ce soient des ventes SPP ou non</i>)</b>
-						<br>
-						Note : <i>Cette information est nécessaire pour déterminer le montant de l'adhésion à payer de la part de l'Acheteur final. <a href="#">Règlement des Coûts V8_2017-02-03 , 4.3 (Télécharger)</a> : "Les Acheteurs finaux payent une  adhésion annuelle (en USD) équivalente à un pourcentage du montant total des ventes de l'entreprise, qu'il s'agisse d'achats SPP ou non".</i>
-						<input type="number" step="any" class="form-control" id="facturacion_total" name="facturacion_total" placeholder="Valeur des ventes, saisir seulement des chiffres" required>
-					</div>
-				</div>
-			<?php
-			}
-			 ?>
+
 
 			<!------ INICIA INFORMACION GENERAL Y DATOS FISCALES ------>
 			<div class="row">

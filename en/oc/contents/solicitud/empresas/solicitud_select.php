@@ -1241,12 +1241,12 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                       </div>
                                       <div class="col-xs-12">
                                         <div class="col-xs-12">
-                                          <h4 style="font-size:14px;">ATTACHED FILES: <span style="color:#7f8c8d">Documentation sent to the actor once the Certification Process has completed with a Positive opinion.</span></h4>
+                                          <h4 style="font-size:14px;">ATTACHED FILES: <span style="color:#7f8c8d">Documentation sent to the actor once the Certification Process has completed with a Judgement opinion.</span></h4>
                                           <?php 
-                                          $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND documentacion.nombre != 'Datos Bancarios SPP'", $dspp) or die(mysql_error());
+                                          $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND documentacion.nombre != 'Datos Bancarios SPP' AND idioma = 'EN'", $dspp) or die(mysql_error());
                                           while($documentacion = mysql_fetch_assoc($row_documentacion)){
 
-                                            echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$documentacion[archivo]' target='_blank'>$documentacion[nombre_ingles]</a><br>";
+                                            echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$documentacion[archivo]' target='_blank'>$documentacion[nombre]</a><br>";
                                           }
                                            ?>
                                           <p class="alert alert-warning" style="padding:5px;">
@@ -1255,7 +1255,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                               <input type="radio" name="idioma" id="inlineRadio1" value="ESP"> Spanish
                                             </label>
                                             <label class="radio-inline">
-                                              <input type="radio" name="idioma" id="inlineRadio2" value="EN"> English
+                                              <input type="radio" name="idioma" id="inlineRadio2" value="EN" checked> English
                                             </label>
                                           </p>
         
@@ -1368,7 +1368,7 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                           if($proceso_certificacion['estatus_interno'] != 8){
                           ?>
                             <button type="submit" class="btn btn-success" style="width:100%" id="<?php echo 'boton1'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1">Save Process</button>
-                            <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Send opinion</button>
+                            <button type="submit" class="btn btn-success" id="<?php echo 'boton2'.$solicitud['idsolicitud_registro']; ?>" name="guardar_proceso" value="1" onclick="return validar()" style="width:100%; display:none" >Send Judgement</button>
                           <?php
                           }
                         }                        

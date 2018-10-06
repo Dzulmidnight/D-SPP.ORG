@@ -562,19 +562,29 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 			<div class="col-lg-12 alert alert-info" style="padding:7px;">
 				<div class="col-md-6">
 					<div class="col-xs-12">
-						<b>Send to Certification Entity:</b>
+						<b>Organization sending (select the organization that sends the Application)</b>
 					</div>
 					<div class="col-xs-12">
-						<select class="form-control" name="idopp" id="" required>
-							<option value="">Choose one</option>
-							<?php 
-							while($opp = mysql_fetch_assoc($row_opp)){
-							?>
-							<option value="<?php echo $opp['idopp']; ?>"><?php if(!empty($opp['abreviacion'])){ echo $opp['abreviacion']; }else{ echo $opp['nombre']; } ?></option>
-							<?php
-							}
-							 ?>
-						</select>
+						<?php
+						$numOpp = mysql_num_rows($row_opp);
+						if($numOpp == 0){
+							echo '<p style="font-size:14px;">You do not have any registered organization, you must first register one</p>';
+						}else{
+						?>
+							<select class="form-control" name="idopp" id="" required>
+								<option value="">Choose one</option>
+								<?php 
+								while($opp = mysql_fetch_assoc($row_opp)){
+								?>
+								<option value="<?php echo $opp['idopp']; ?>"><?php if(!empty($opp['abreviacion'])){ echo $opp['nombre']; }else{ echo $opp['nombre']; } ?></option>
+								<?php
+								}
+								 ?>
+							</select>
+
+						<?php
+						}
+						 ?>
 					</div>
 				</div>
 				<div class="col-md-6">
@@ -604,19 +614,19 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">CONTACT PERSON(S) OF APPLICATION</div>
 
 					<label for="persona1">CONTACT PERSON(S)</label>
-					<input type="text" class="form-control" id="persona1" name="contacto1_nombre" placeholder="* Name Person 1" required>
+					<input type="text" class="form-control" id="persona1" name="contacto1_nombre" placeholder="* Name Person 1" >
 					<input type="text" class="form-control" id="" name="contacto2_nombre" placeholder="Name Person 2">
 
 					<label for="cargo">POSITION(S)</label>
-					<input type="text" class="form-control" id="cargo" name="contacto1_cargo" placeholder="* Position Person 1" required>
+					<input type="text" class="form-control" id="cargo" name="contacto1_cargo" placeholder="* Position Person 1" >
 					<input type="text" class="form-control" id="" name="contacto2_cargo" placeholder="Position Person 2">
 
 					<label for="email">EMAIL</label>
-					<input type="email" class="form-control" id="email" name="contacto1_email" placeholder="* Email Person 1" required>
-					<input type="email" class="form-control" id="" name="contacto2_email" placeholder="Email Person 2">
+					<input type="text" class="form-control" id="email" name="contacto1_email" placeholder="* Email Person 1" >
+					<input type="text" class="form-control" id="" name="contacto2_email" placeholder="Email Person 2">
 
 					<label for="telefono">TELEPHONE(S) FOR CONTAC PERSON(S):</label>
-					<input type="text" class="form-control" id="telefono" name="contacto1_telefono" placeholder="* Telephone Person 1" required>
+					<input type="text" class="form-control" id="telefono" name="contacto1_telefono" placeholder="* Telephone Person 1" >
 					<input type="text" class="form-control" id="" name="contacto2_telefono" placeholder="Telephone Person 2">
 				</div>
 
@@ -628,8 +638,8 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 					<input type="text" class="form-control" id="" name="adm2_nombre" placeholder="Name Person 2">
 
 					<label for="email_adm">EMAIL</label>
-					<input type="email" class="form-control" id="email_adm" name="adm1_email" placeholder="Email Person 1">
-					<input type="email" class="form-control" id="" name="adm2_email" placeholder="Email Person 2">
+					<input type="text" class="form-control" id="email_adm" name="adm1_email" placeholder="Email Person 1">
+					<input type="text" class="form-control" id="" name="adm2_email" placeholder="Email Person 2">
 
 					<label for="telefono_adm">TELEPHONE</label>
 					<input type="text" class="form-control" id="telefono_adm" name="adm1_telefono" placeholder="Telephone Person 1">
@@ -952,7 +962,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
     }
      
     if(!seleccionado) {
-      alert("Debes de seleecionar un Tipo de Solicitud");
+      alert("You must select a Type of Application");
       return false;
     }
     //// TERMINA SELECCION TIPO SOLICITUD
@@ -969,7 +979,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
     }
      
     if(!ventas) {
-      alert("Debe seleccionar \"SI\" tuvo ó \"NO\" ventas");
+      alert("You must select whether or not you had sales");
       return false;
     }
     /// TERMINA OPCION DE VENTAS
@@ -985,7 +995,7 @@ $row_opp = mysql_query("SELECT * FROM opp WHERE idoc = $idoc", $dspp) or die(mys
 	    }
 	     
 	    if(!monto) {
-	      alert("Seleccionaste que \"SI\" tuviste ventas, debes seleccionar el monto de ventas SPP");
+	      alert("You selected that if you had sales, you should select the amount of sales spp");
 	      return false;
 	    }
 

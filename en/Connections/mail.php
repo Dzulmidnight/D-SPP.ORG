@@ -5,12 +5,12 @@ include_once("../../PHPMailer/class.smtp.php");
 $mail = new PHPMailer();
 $mail->IsSMTP();
 //$mail->SMTPSecure = "ssl";
-$mail->Host = "mailtrap.io";
+$mail->Host = "smtp.mailtrap.io";
 //$mail->Port = 25;
-$mail->Port = 25;
+$mail->Port = 2525;
 $mail->SMTPAuth = true;
-$mail->Username = "99f9a8c6200b52";
-$mail->Password = "943bba851a952d";
+$mail->Username = "e225ef29a5abae";
+$mail->Password = "bfd5c5a28393c9";
 //$mail->SMTPDebug = 1;
 
 $mail->From = "soporte@d-spp.org";

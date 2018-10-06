@@ -7,7 +7,7 @@ $mail->IsSMTP();
 //$mail->SMTPSecure = "ssl";
 $mail->Host = "smtp.mailtrap.io";
 //$mail->Port = 25;
-$mail->Port = 25;
+$mail->Port = 2525;
 $mail->SMTPAuth = true;
 $mail->Username = "e225ef29a5abae";
 $mail->Password = "bfd5c5a28393c9";

@@ -1,24 +1,31 @@
 <ul class="nav nav-pills">
   <li role="presentation" <?php if(isset($_GET['select'])){ echo "class='active'";} ?>>
     <a href="?SOLICITUD&select">
-      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> SPO applications
+      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> SPO Applications
     </a>
   </li>
   <li role="presentation" <?php if(isset($_GET['select_empresa'])){ echo "class='active'";} ?>>
     <a href="?SOLICITUD&select_empresa" aria-label="Left Align">
-      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Companies applications
+      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Companies Applications
     </a>
   </li>
+  <li role="presentation" <?php if(isset($_GET['select_colectiva'])){ echo "class='active'";} ?>>
+    <a href="?SOLICITUD&select_colectiva" aria-label="Left Align">
+      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Collective Applications
+    </a>
+  </li>
+
   <li role="presentation" <?php if(isset($_GET['add'])){ echo "class='active'";} ?>>
     <div class="btn-group" role="group" aria-label="...">
       <div class="btn-group" role="group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          New Application
+          New application
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-          <li><a href="?SOLICITUD&add"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> SPO Application</a></li>
-          <li><a href="?SOLICITUD&add_empresa"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Company Application</a></li>
+          <li><a href="?SOLICITUD&add"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> SPO application</a></li>
+          <li><a href="?SOLICITUD&add_empresa"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Company application</a></li>
+          <li><a href="?SOLICITUD&add_colectiva"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Collective application</a></li>
         </ul>
       </div>
     </div>
@@ -57,6 +64,9 @@ else if(isset($_GET['add'])){
 else if(isset($_GET['add_empresa'])){
   include ("empresas/solicitud_add.php");
 }
+else if(isset($_GET['add_colectiva'])){
+  include ("colectiva/solicitud_add.php");
+}
 else if(isset($_GET['IDsolicitud'])){
   include ("solicitud_detail.php");
 }
@@ -68,5 +78,11 @@ else if(isset($_GET['IDsolicitud_empresa'])){
 }
 else if(isset($_GET['select_empresa'])){
   include ("empresas/solicitud_select.php");
+}
+else if(isset($_GET['select_colectiva'])){
+  include ("colectiva/solicitud_select.php");
+}
+else if(isset($_GET['IDsolicitud_colectiva'])){
+  include ("colectiva/solicitud_detail.php");
 }
 ?>

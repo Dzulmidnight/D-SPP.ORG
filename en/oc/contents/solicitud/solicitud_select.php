@@ -2229,12 +2229,12 @@ $row_solicitud = mysql_query($query,$dspp) or die(mysql_error());
                                     </div>
                                     <div class="col-xs-12">
                                       <div class="col-xs-12">
-                                        <h4 style="font-size:14px;">ATTACHED FILES: <span style="color:#7f8c8d">Documentation sent to the actor once the Certification Process has completed with a Positive opinion.</span></h4>
+                                        <h4 style="font-size:14px;">ATTACHED FILES: <span style="color:#7f8c8d">Documentation sent to the actor once the Certification Process has completed with a Positive Judgement.</span></h4>
                                         <?php 
-                                        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8", $dspp) or die(mysql_error());
-                                        while($documetacion = mysql_fetch_assoc($row_documentacion)){
+                                        $row_documentacion = mysql_query("SELECT * FROM documentacion WHERE idestatus_interno = 8 AND idioma = 'EN'", $dspp) or die(mysql_error());
+                                        while($documentacion = mysql_fetch_assoc($row_documentacion)){
 
-                                          echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$documetacion[archivo]' target='_blank'>$documetacion[nombre_ingles]</a><br>";
+                                          echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span> <a href='$documentacion[archivo]' target='_blank'>$documentacion[nombre]</a><br>";
                                         }
                                          ?>
                                         <p class="alert alert-warning">

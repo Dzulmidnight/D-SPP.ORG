@@ -484,7 +484,7 @@ mysql_select_db($database_dspp, $dspp);
           $total_certificada += $num_certificadas;
 
           //query EN RENOVACION, se cuentan las OPP con estatus_dspp = certificado expirado y que no tengan estatus_interno "CANCELADO"
-          $row_en_renovacion = mysql_query("SELECT empresa.idempresa, certificado.idempresa, empresa.abreviacion FROM empresa  INNER JOIN certificado ON empresa.idempresa = certificado.idempresa INNER JOIN solicitud_registro ON empresa.idempresa = solicitud_registro.idempresa WHERE  empresa.pais = '$pais[pais]' AND (empresa.estatus_dspp = 16 AND empresa.estatus_interno != 10 AND empresa.estatus_interno != 11) AND (empresa.estatus_interno = 1 OR empresa.estatus_interno = 2 OR empresa.estatus_interno = 3 OR empresa.estatus_interno = 4 OR empresa.estatus_interno = 5 OR empresa.estatus_interno = 6 OR empresa.estatus_interno = 7 OR empresa.estatus_interno = 8 OR empresa.estatus_interno = 9) GROUP BY certificado.idempresa", $dspp);
+          $row_en_renovacion = mysql_query("SELECT empresa.idempresa, certificado.idempresa, empresa.abreviacion FROM empresa  INNER JOIN certificado ON empresa.idempresa = certificado.idempresa INNER JOIN solicitud_registro ON empresa.idempresa = solicitud_registro.idempresa WHERE empresa.fecha_registro < 1525188494 AND empresa.pais = '$pais[pais]' AND (empresa.estatus_dspp = 16 AND empresa.estatus_interno != 10 AND empresa.estatus_interno != 11) AND (empresa.estatus_interno = 1 OR empresa.estatus_interno = 2 OR empresa.estatus_interno = 3 OR empresa.estatus_interno = 4 OR empresa.estatus_interno = 5 OR empresa.estatus_interno = 6 OR empresa.estatus_interno = 7 OR empresa.estatus_interno = 8 OR empresa.estatus_interno = 9) GROUP BY certificado.idempresa", $dspp);
           $num_en_renovacion = mysql_num_rows($row_en_renovacion);
           $total_en_renovacion += $num_en_renovacion;
 
@@ -495,22 +495,22 @@ mysql_select_db($database_dspp, $dspp);
 
 
           //query SUSPENDIDA, en inactivas estamo contando las opp con estatus suspendido(11), falta ver con alejandra si se dejan esta, ya que falta checar lo de "suspencion formal"
-          $row_suspendida = mysql_query("SELECT empresa.idempresa, certificado.idempresa, empresa.abreviacion FROM empresa INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE  empresa.pais = '$pais[pais]' AND empresa.estatus_interno = 11", $dspp);
+          $row_suspendida = mysql_query("SELECT empresa.idempresa, certificado.idempresa, empresa.abreviacion FROM empresa INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.fecha_registro < 1525188494 AND empresa.pais = '$pais[pais]' AND empresa.estatus_interno = 11", $dspp);
           $num_suspendida = mysql_num_rows($row_suspendida);
           $total_suspendida += $num_suspendida;
 
           //query EXPIRADO, se cuentan las OPP con estatus_dspp = certificado expirado y que no tengan estatus_interno "CANCELADO"
-          $row_expirado = mysql_query("SELECT empresa.idempresa, empresa.abreviacion, certificado.idempresa FROM empresa INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE  empresa.pais = '$pais[pais]' AND (empresa.estatus_dspp = 16 AND empresa.estatus_interno != 10 AND estatus_interno != 11 AND empresa.estatus_interno != 12) AND (empresa.estatus_interno != 'CANCELADO' OR empresa.estatus_empresa != 'ARCHIVADO')  GROUP BY certificado.idempresa", $dspp);
+          $row_expirado = mysql_query("SELECT empresa.idempresa, empresa.abreviacion, certificado.idempresa FROM empresa INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.fecha_registro < 1525188494 AND empresa.pais = '$pais[pais]' AND (empresa.estatus_dspp = 16 AND empresa.estatus_interno != 10 AND estatus_interno != 11 AND empresa.estatus_interno != 12) AND (empresa.estatus_interno != 'CANCELADO' OR empresa.estatus_empresa != 'ARCHIVADO')  GROUP BY certificado.idempresa", $dspp);
           $num_expirado = mysql_num_rows($row_expirado);
 
           //$total_expirado = $num_expirado - $num_en_renovacion;
           $total_expirado += $num_expirado;
 
-          $row_expirado2 = mysql_query("SELECT empresa.idempresa, certificado.idempresa FROM empresa  INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE  empresa.pais = '$pais[pais]' AND (empresa.estatus_dspp = 16 AND empresa.estatus_interno != 10 AND estatus_interno != 11 AND empresa.estatus_interno != 12) AND (empresa.estatus_interno != 'CANCELADO' OR empresa.estatus_empresa != 'ARCHIVADO')  GROUP BY certificado.idopp", $dspp);
+          $row_expirado2 = mysql_query("SELECT empresa.idempresa, certificado.idempresa FROM empresa  INNER JOIN certificado ON empresa.idempresa = certificado.idempresa WHERE empresa.fecha_registro < 1525188494 AND empresa.pais = '$pais[pais]' AND (empresa.estatus_dspp = 16 AND empresa.estatus_interno != 10 AND estatus_interno != 11 AND empresa.estatus_interno != 12) AND (empresa.estatus_interno != 'CANCELADO' OR empresa.estatus_empresa != 'ARCHIVADO')  GROUP BY certificado.idopp", $dspp);
           $num_expirado2 = mysql_num_rows($row_expirado2);
 
 
-          $row_inactiva = mysql_query("SELECT empresa.idempresa, empresa.abreviacion FROM empresa WHERE  empresa.pais = '$pais[pais]' AND empresa.estatus_interno = 12", $dspp) or die(mysql_error());
+          $row_inactiva = mysql_query("SELECT empresa.idempresa, empresa.abreviacion FROM empresa WHERE empresa.fecha_registro < 1525188494 AND empresa.pais = '$pais[pais]' AND empresa.estatus_interno = 12", $dspp) or die(mysql_error());
           $num_inactiva = mysql_num_rows($row_inactiva);
 
           $total_inactiva += $num_inactiva;
