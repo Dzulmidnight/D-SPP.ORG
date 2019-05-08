@@ -395,6 +395,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
     GetSQLValueString($estatus_dspp, "int"),
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"));
   $actualizar = mysql_query($updateSQL, $dspp) or die(mysql_error());
+
   //creamos el proceso de certificacion
   $insertSQL = sprintf("INSERT INTO proceso_certificacion(idsolicitud_certificacion, estatus_dspp, nombre_archivo, archivo, fecha_registro) VALUES(%s, %s, %s, %s, %s)",
     GetSQLValueString($_POST['idsolicitud_certificacion'], "int"),
@@ -744,17 +745,17 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                 <?php
                 if($solicitud['tipo_solicitud'] == 'RENOVACION' && $proceso_certificacion['estatus_dspp'] == 5){ // SE ACEPTA LA COTIZACIÓN EN PROCESO DE RENOVACIÓN
                 ?>
-                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
+                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_certificacion']; ?>">Proceso Certificación</button>
                 <?php
                 }else{
                   if(!empty($solicitud['fecha_aceptacion']) && $solicitud['tipo_solicitud'] == 'RENOVACION'){
                   ?>
-                    <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_certificacion']; ?>">Proceso Certificación</button>
                   <?php
                   }else{
                     if(isset($solicitud['estatus_objecion']) && $solicitud['estatus_objecion'] == 'FINALIZADO' && isset($solicitud['documento'])){
                     ?>
-                      <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idperiodo_objecion']; ?>">Proceso Certificación</button>
+                      <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#certificacion".$solicitud['idsolicitud_certificacion']; ?>">Proceso Certificación</button>
                     <?php
                     }else{
                       echo "<button class='btn btn-sm btn-default' disabled>Proceso Certificación</button>";
@@ -766,7 +767,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
               </td>
 
                 <!-- inicia modal proceo de certificación -->
-                <div id="<?php echo "certificacion".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                <div id="<?php echo "certificacion".$solicitud['idsolicitud_certificacion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -780,10 +781,10 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                               Historial Estatus Certificación
                             </div>
                             <?php 
-                            $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre FROM proceso_certificacion INNER JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE idsolicitud_certificacion = $solicitud[idsolicitud_certificacion] AND estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
+                            $row_proceso_certificacion = mysql_query("SELECT proceso_certificacion.*, estatus_interno.nombre FROM proceso_certificacion LEFT JOIN estatus_interno ON proceso_certificacion.estatus_interno = estatus_interno.idestatus_interno WHERE idsolicitud_certificacion = $solicitud[idsolicitud_certificacion] AND estatus_interno IS NOT NULL", $dspp) or die(mysql_error());
                             while($historial_certificacion = mysql_fetch_assoc($row_proceso_certificacion)){
-                            echo "<div class='col-md-10'>Proceso: $historial_certificacion[nombre]</div>";
-                            echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$historial_certificacion['fecha_registro'])."</div>";
+                              echo "<div class='col-md-10'>Proceso: $historial_certificacion[nombre]</div>";
+                              echo "<div class='col-md-2'>Fecha: ".date('d/m/Y',$historial_certificacion['fecha_registro'])."</div>";
                             }
                              ?>
 
@@ -805,19 +806,20 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
               <td>
                 <?php 
                 if(isset($solicitud['idmembresia'])){
-                  $row_membresia = mysql_query("SELECT membresia.*, comprobante_pago.monto, comprobante_pago.estatus_comprobante, comprobante_pago.archivo FROM membresia LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE idmembresia = $solicitud[idmembresia]", $dspp) or die(mysql_error());
+                  $query = "SELECT membresia.*, comprobante_pago.monto as 'monto_de_membresia', comprobante_pago.estatus_comprobante as 'estatus_del_comprobante', comprobante_pago.archivo FROM membresia LEFT JOIN comprobante_pago ON membresia.idcomprobante_pago = comprobante_pago.idcomprobante_pago WHERE idmembresia = $solicitud[idmembresia]";
+                  $row_membresia = mysql_query($query, $dspp) or die(mysql_error());
                   $membresia = mysql_fetch_assoc($row_membresia);
                 ?>
-                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#membresia".$solicitud['idperiodo_objecion']; ?>">Estatus Membresia</button>
+                  <button type="button" class="btn btn-sm btn-primary" style="width:100%" data-toggle="modal" data-target="<?php echo "#membresia".$solicitud['idmembresia']; ?>">Estatus Membresia</button>
                 <?php
                 }else{
+
                   echo "MEMBRESIA";
                 }
                  ?>
-
                 <!-- inicia modal estatus membresia -->
 
-                <div id="<?php echo "membresia".$solicitud['idperiodo_objecion']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                <div id="<?php echo "membresia".$solicitud['idmembresia']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                       <!--- INICIA FORMULARIO MEMBRECIA -->
@@ -831,15 +833,15 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                         <div class="modal-body">
                           <div class="row">
                             <div class="col-md-6">
-                              <p class="alert alert-info">Debe cargar el comprobante de pago de la membresia SPP por el monto de <b style="color:red;"><?php echo $membresia['monto'] ?></b>, una vez cargado debe dar clic en enviar. Sera notificado por correo una vez que sea aprobada su membresia</p>
-                              <p class="alert alert-warning">Estatus Actual: <?php echo $membresia['estatus_comprobante']; ?></p>
+                              <p class="alert alert-info">Debe cargar el comprobante de pago de la membresia SPP por el monto de <b style="color:red;"><?php echo $membresia['monto_de_membresia'] ?></b>, una vez cargado debe dar clic en enviar. Sera notificado por correo una vez que sea aprobada su membresia</p>
+                              <p class="alert alert-warning">Estatus Actual: <?php echo $membresia['estatus_del_comprobante']; ?></p>
                             </div>
                             <div class="col-md-6">
                               <?php 
-                              if(isset($membresia['archivo'] )){
-                                if($membresia['estatus_comprobante'] == 'ACEPTADO'){
+                              if($membresia['estatus_del_comprobante'] == 'ACEPTADO'){
+                                if($membresia['estatus_del_comprobante'] == 'ACEPTADO'){
                                   echo "<h4 class='alert alert-success'>Felicidades tu membresía se encuentra activa</h4>";
-                                }else if($membresia['estatus_comprobante'] == 'RECHAZADO'){
+                                }else if($membresia['estatus_del_comprobante'] == 'RECHAZADO'){
                                   echo "<p class='alert alert-warning'>Se han encontrado irregularidades en su comprobante de pago, por favor reviselo y cargue otro</p>";
                                   echo "<p>Observaciones: $membresia[observaciones]</p>";
                                 ?>
@@ -849,15 +851,19 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                                   </p>
                                 <?php
                                 }else{
-                                  echo "SE HA CARGADO EL COMPRANTE POR FAVOR ESPERE";
+                                  echo "<p>El comprobante de pago ha sido enviado, se le notificara cuando haya sido verificado.</p>";
                                 }
                               }else{
-                              ?>
-                                <p class="alert alert-info">
-                                  Cargar Comprobante de pago
-                                  <input type="file" class="form-control" name="comprobante_pago">
-                                </p>
-                              <?php
+                                if($membresia['estatus_del_comprobante'] == 'ENVIADO'){
+                                  echo "SE HA CARGADO EL COMPRANTE POR FAVOR ESPERE";
+                                }else{
+                                ?>
+                                  <p class="alert alert-info">
+                                    Cargar Comprobante de pago
+                                    <input type="file" class="form-control" name="comprobante_pago">
+                                  </p>
+                                <?php
+                                }
                               }
                               ?>
                             </div>
@@ -868,7 +874,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud_certificacion);
                           <input type="hidden" name="idcomprobante_pago" value="<?php echo $membresia['idcomprobante_pago']; ?>">
                           <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                           <?php 
-                          if($membresia['estatus_comprobante'] == 'RECHAZADO' || $membresia['estatus_comprobante'] == 'EN ESPERA'){
+                          if(($membresia['estatus_del_comprobante'] == 'RECHAZADO') || ($membresia['estatus_del_comprobante'] == 'EN ESPERA')){
                             echo '<button type="submit" class="btn btn-primary" name="enviar_comprobante" value="1">Enviar Comprobante</button>';
                           }
                            ?>

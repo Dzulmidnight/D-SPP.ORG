@@ -110,7 +110,21 @@ $ruta_croquis = "../../archivos/oppArchivos/croquis/";
 	}
 
   // ACTUALIZAMOS LA INFORMACION DE LA SOLICITUD
-	$updateSQL = sprintf("UPDATE solicitud_certificacion SET resp1 = %s, resp2 = %s, resp3 = %s, resp4 = %s, op_preg1 = %s, preg1_1 = %s, preg1_2 = %s, preg1_3 = %s, preg1_4 = %s, op_preg2 = %s, op_preg3 = %s, produccion = %s, procesamiento = %s, exportacion = %s, op_preg5 = %s, op_preg6 = %s, op_preg7 = %s, op_preg8 = %s, op_preg10 = %s, op_preg14 = %s, op_preg15 = %s, responsable = %s WHERE idsolicitud_certificacion = %s",
+	$updateSQL = sprintf("UPDATE solicitud_certificacion SET contacto1_nombre = %s, contacto2_nombre = %s, contacto1_cargo = %s, contacto2_cargo = %s, contacto1_email = %s, contacto2_email = %s, contacto1_telefono = %s, contacto2_telefono = %s, adm1_nombre = %s, adm2_nombre = %s, adm1_email = %s, adm2_email = %s, adm1_telefono = %s, adm2_telefono = %s, resp1 = %s, resp2 = %s, resp3 = %s, resp4 = %s, op_preg1 = %s, preg1_1 = %s, preg1_2 = %s, preg1_3 = %s, preg1_4 = %s, op_preg2 = %s, op_preg3 = %s, produccion = %s, procesamiento = %s, exportacion = %s, op_preg5 = %s, op_preg6 = %s, op_preg7 = %s, op_preg8 = %s, op_preg10 = %s, op_preg14 = %s, op_preg15 = %s, responsable = %s WHERE idsolicitud_certificacion = %s",
+		   GetSQLValueString($_POST['persona1'], "text"),
+		   GetSQLValueString($_POST['persona2'], "text"),
+		   GetSQLValueString($_POST['cargo1'], "text"),
+		   GetSQLValueString($_POST['cargo2'], "text"),
+		   GetSQLValueString($_POST['email1'], "text"),
+		   GetSQLValueString($_POST['email2'], "text"),
+		   GetSQLValueString($_POST['telefono1'], "text"),
+		   GetSQLValueString($_POST['telefono2'], "text"),
+		   GetSQLValueString($_POST['persona_adm1'], "text"),
+		   GetSQLValueString($_POST['persona_adm2'], "text"),
+		   GetSQLValueString($_POST['email_adm1'], "text"),
+		   GetSQLValueString($_POST['email_adm2'], "text"),
+		   GetSQLValueString($_POST['telefono_adm1'], "text"),
+		   GetSQLValueString($_POST['telefono_adm1'], "text"),
 	       GetSQLValueString($_POST['resp1'], "text"),
 	       GetSQLValueString($_POST['resp2'], "text"),
 	       GetSQLValueString($_POST['resp3'], "text"),
@@ -582,20 +596,20 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONA(S) DE CONTACTO</div>
 
 					<label for="persona1">PERSONA(S) DE CONTACTO</label>
-					<input type="text" class="form-control" id="persona1" value="<?php echo $solicitud['contacto1_nombre']; ?>"  readonly>
-					<input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_nombre']; ?>" placeholder="Nombre Persona 2" readonly>
+					<input type="text" class="form-control" id="persona1"  name="persona1" value="<?php echo $solicitud['contacto1_nombre']; ?>"  >
+					<input type="text" class="form-control" id="persona2" name="persona2" value="<?php echo $solicitud['contacto2_nombre']; ?>" placeholder="Nombre Persona 2" >
 
 					<label for="cargo">CARGO</label>
-					<input type="text" class="form-control" id="cargo" value="<?php echo $solicitud['contacto1_cargo']; ?>" placeholder="* Cargo Persona 1" readonly>
-					<input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_cargo']; ?>" palceholder="Cargo Persona 2" readonly>
+					<input type="text" class="form-control" id="cargo1" name="cargo1" value="<?php echo $solicitud['contacto1_cargo']; ?>" placeholder="* Cargo Persona 1" >
+					<input type="text" class="form-control" id="cargo2" name="cargo2" value="<?php echo $solicitud['contacto2_cargo']; ?>" palceholder="Cargo Persona 2" >
 
 					<label for="email">CORREO ELECTRÓNICO</label>
-					<input type="email" class="form-control" id="email" value="<?php echo $solicitud['contacto1_email']; ?>" placeholder="* Email Persona 1" readonly>
-					<input type="email" class="form-control" id="" value="<?php echo $solicitud['contacto2_email']; ?>" placeholder="Email Persona 2" readonly>
+					<input type="email" class="form-control" id="email1" name="email1" value="<?php echo $solicitud['contacto1_email']; ?>" placeholder="* Email Persona 1" >
+					<input type="email" class="form-control" id="email2" name="email2" value="<?php echo $solicitud['contacto2_email']; ?>" placeholder="Email Persona 2" >
 
 					<label for="telefono">TELEFONO</label>
-					<input type="text" class="form-control" id="telefono" value="<?php echo $solicitud['contacto1_telefono']; ?>" placeholder="* Telefono Persona 1" readonly>
-					<input type="text" class="form-control" id="" value="<?php echo $solicitud['contacto2_telefono']; ?>" placeholder="Telefono Persona 2" readonly>
+					<input type="text" class="form-control" id="telefono1" name="telefono1" value="<?php echo $solicitud['contacto1_telefono']; ?>" placeholder="* Telefono Persona 1" >
+					<input type="text" class="form-control" id="telefono2" name="telefono2" value="<?php echo $solicitud['contacto2_telefono']; ?>" placeholder="Telefono Persona 2" >
 
 				</div>
 
@@ -603,16 +617,16 @@ $row_pais = mysql_query("SELECT * FROM paises", $dspp) or die(mysql_error());
 					<div class="col-md-12 text-center alert alert-warning" style="padding:7px;">PERSONA(S) ÁREA ADMINISTRATIVA</div>
 
 					<label for="persona_adm">PERSONA(S) DEL ÁREA ADMINSITRATIVA</label>
-					<input type="text" class="form-control" id="persona_adm" value="<?php echo $solicitud['adm1_nombre']; ?>" placeholder="Nombre Persona 1" readonly>
-					<input type="text" class="form-control" id="" value="<?php echo $solicitud['adm2_nombre']; ?>" placeholder="Nombre Persona 2" readonly>
+					<input type="text" class="form-control" id="persona_adm1" name="persona_adm1" value="<?php echo $solicitud['adm1_nombre']; ?>" placeholder="Nombre Persona 1" >
+					<input type="text" class="form-control" id="persona_adm2" name="persona_adm2" value="<?php echo $solicitud['adm2_nombre']; ?>" placeholder="Nombre Persona 2" >
 
 					<label for="email_adm">CORREO ELECTRÓNICO</label>
-					<input type="email" class="form-control" id="email_adm" value="<?php echo $solicitud['adm1_email']; ?>" placeholder="Email Persona 1" readonly>
-					<input type="email" class="form-control" id="" value="<?php echo $solicitud['adm2_email']; ?>" placeholder="Email Persona 2" readonly>
+					<input type="email" class="form-control" id="email_adm1" name="email_adm1" value="<?php echo $solicitud['adm1_email']; ?>" placeholder="Email Persona 1" >
+					<input type="email" class="form-control" id="email_adm2" name="email_adm2" value="<?php echo $solicitud['adm2_email']; ?>" placeholder="Email Persona 2" >
 
 					<label for="telefono_adm">TELÉFONO</label>
-					<input type="text" class="form-control" id="telefono_adm" value="<?php echo $solicitud['adm1_telefono']; ?>" placeholder="Telefono Persona 1" readonly>
-					<input type="text" class="form-control" id="" value="<?php echo $solicitud['adm2_telefono']; ?>" placeholder="Telefono Persona 2" readonly>
+					<input type="text" class="form-control" id="telefono_adm1" name="telefono_adm1" value="<?php echo $solicitud['adm1_telefono']; ?>" placeholder="Telefono Persona 1" >
+					<input type="text" class="form-control" id="telefono_adm2" name="telefono_adm2" value="<?php echo $solicitud['adm2_telefono']; ?>" placeholder="Telefono Persona 2" >
 				</div>
 			</div>
 			<!------ FIN INFORMACION CONTACTOS Y AREA ADMINISTRATIVA ------>

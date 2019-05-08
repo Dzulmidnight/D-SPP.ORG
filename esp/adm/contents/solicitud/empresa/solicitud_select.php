@@ -1577,6 +1577,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                   echo "No Disponible";
                 } // TERMINA CARGAR COTIZACIÓN
                  ?>
+                 <p>Fecha aceptación: <span style="color:red"><?= date('d/m/Y', $solicitud['fecha_aceptacion']); ?></span></p>
               </td>
               <!---- termina COTIZACIÓN ---->
               
@@ -2012,6 +2013,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                                   <label class="radio-inline">
                                     <input type="radio" name="estatus_formato" id="" value="RECHAZADO" <?php if($formato['estatus_formato'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
                                   </label>
+                                  <p>Registro <span style="color:red"><?= date('d/m/Y', $formato['fecha_registro']); ?></span></p>
 
                                 </div>
 
@@ -2026,6 +2028,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                                   <label class="radio-inline">
                                     <input type="radio" name="estatus_informe" id="" value="RECHAZADO" <?php if($informe['estatus_informe'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
                                   </label>
+                                  <p>Informe <span style="color:red"><?= date('d/m/Y', $informe['fecha_registro']); ?></span></p>
 
                                 </div>
                                 <div class="alert alert-info">
@@ -2037,6 +2040,7 @@ $total_solicitudes = mysql_num_rows($row_solicitud);
                                   <label class="radio-inline">
                                     <input type="radio" name="estatus_dictamen" id="inlineRadio2" value="RECHAZADO" <?php if($dictamen['estatus_dictamen'] == 'RECHAZADO'){ echo "checked"; } ?>> RECHAZADO
                                   </label>
+                                  <p>Dictamen <span style="color:red"><?= date('d/m/Y', $dictamen['fecha_registro']); ?></span></p>
 
                                 </div>
                                 <input type="hidden" name="idformato_evaluacion" value="<?php echo $formato['idformato_evaluacion']; ?>">

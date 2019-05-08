@@ -161,24 +161,27 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
           </body>
           </html>
         ';
-        if(!empty($empresa_detail['email'])){
-          $mail->AddAddress($empresa_detail['email']);
-        }
-        if(!empty($empresa_detail['contacto1_email'])){
-          $mail->AddAddress($empresa_detail['contacto1_email']);
-        }
-        if(!empty($empresa_detail['contacto2_email'])){
-          $mail->AddAddress($empresa_detail['contacto2_email']);
-        }
+
+        // Omitir notificaciones TERO
+        if($idoc != 19){
+            if(!empty($empresa_detail['email'])){
+              $mail->AddAddress($empresa_detail['email']);
+            }
+            if(!empty($empresa_detail['contacto1_email'])){
+              $mail->AddAddress($empresa_detail['contacto1_email']);
+            }
+            if(!empty($empresa_detail['contacto2_email'])){
+              $mail->AddAddress($empresa_detail['contacto2_email']);
+            }
+            if(!empty($oc['email1'])){
+              $mail->AddCC($oc['email1']);
+            }
+            if(!empty($oc['email2'])){
+              $mail->AddCC($oc['email2']);
+            }
+        } // END Omitir notificaciones TERO
 
         $mail->AddBCC($spp_global);
-
-        if(!empty($oc['email1'])){
-          $mail->AddCC($oc['email1']);
-        }
-        if(!empty($oc['email2'])){
-          $mail->AddCC($oc['email2']);
-        }
         //se adjunta la cotización
         $mail->AddAttachment($archivo);
 
@@ -423,59 +426,64 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       if(isset($archivo_dictamen)){
         $mail->AddAttachment($archivo_dictamen);
       }
-      if(isset($detalle_empresa['contacto1_email'])){
 
-        $token = strtok($detalle_empresa['contacto1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_empresa['contacto2_email'])){
-        $token = strtok($detalle_empresa['contacto2_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
+      // Omitir notificaciones TERO
+      if($idoc != 19){
+          if(isset($detalle_empresa['contacto1_email'])){
 
-      }
-      if(isset($detalle_empresa['adm1_email'])){
-        $token = strtok($detalle_empresa['adm1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_empresa['email'])){
-        $token = strtok($detalle_empresa['email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
+            $token = strtok($detalle_empresa['contacto1_email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($detalle_empresa['contacto2_email'])){
+            $token = strtok($detalle_empresa['contacto2_email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
 
-      }
-      if(isset($correos_oc['email1'])){
-        $token = strtok($correos_oc['email1'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
+          }
+          if(isset($detalle_empresa['adm1_email'])){
+            $token = strtok($detalle_empresa['adm1_email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($detalle_empresa['email'])){
+            $token = strtok($detalle_empresa['email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
 
-      }
-      if(isset($correos_oc['email2'])){
-        $token = strtok($correos_oc['email2'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
+          }
+          if(isset($correos_oc['email1'])){
+            $token = strtok($correos_oc['email1'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
 
-      }
+          }
+          if(isset($correos_oc['email2'])){
+            $token = strtok($correos_oc['email2'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
+
+          }
+      } // END Omitir notificaciones TERO
+
       $mail->AddBCC($spp_global);
       $mail->AddBCC($finanzas_spp);
 
@@ -553,24 +561,27 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         </body>
         </html>
       ';
-      if(isset($correos_oc['email1'])){
-        $token = strtok($correos_oc['email1'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
+      // Omitir notificaciones TERO
+      if($idoc != 19){
+          if(isset($correos_oc['email1'])){
+            $token = strtok($correos_oc['email1'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
 
-      }
-      if(isset($correos_oc['email2'])){
-        $token = strtok($correos_oc['email2'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
+          }
+          if(isset($correos_oc['email2'])){
+            $token = strtok($correos_oc['email2'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
 
-      }
+          }
+      } // END Omitir notificaciones TERO
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -799,23 +810,25 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               </html>
         ';
       }
-      if(!empty($detalle_empresa['contacto1_email'])){
-        $mail->AddAddress($detalle_empresa['contacto1_email']);
-      }
-      if(!empty($detalle_empresa['contacto2_email'])){
-        $mail->AddAddress($detalle_empresa['contacto2_email']);
-      }
-      if(!empty($detalle_empresa['adm1_email'])){
-        $mail->AddAddress($detalle_empresa['adm1_email']);
-      }
-      if(!empty($detalle_empresa['email'])){
-        $mail->AddAddress($detalle_empresa['email']);
-      }
-      if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
-      }
-      if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+      if($idoc != 19){
+          if(!empty($detalle_empresa['contacto1_email'])){
+            $mail->AddAddress($detalle_empresa['contacto1_email']);
+          }
+          if(!empty($detalle_empresa['contacto2_email'])){
+            $mail->AddAddress($detalle_empresa['contacto2_email']);
+          }
+          if(!empty($detalle_empresa['adm1_email'])){
+            $mail->AddAddress($detalle_empresa['adm1_email']);
+          }
+          if(!empty($detalle_empresa['email'])){
+            $mail->AddAddress($detalle_empresa['email']);
+          }
+          if(isset($correos_oc['email1'])){
+            $mail->AddCC($correos_oc['email1']);
+          }
+          if(isset($correos_oc['email2'])){
+            $mail->AddCC($correos_oc['email2']);
+          }
       }
 
       $mail->AddBCC($spp_global);
@@ -893,11 +906,13 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         </body>
         </html>
       ';
-      if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
-      }
-      if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+      if($idoc != 19){
+          if(isset($correos_oc['email1'])){
+            $mail->AddCC($correos_oc['email1']);
+          }
+          if(isset($correos_oc['email2'])){
+            $mail->AddCC($correos_oc['email2']);
+          }
       }
 
       $mail->Subject = utf8_decode($asunto);
@@ -1050,23 +1065,26 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       if(!empty($archivo)){
         $mail->AddAttachment($archivo);
       }
-      if(isset($detalle_empresa['contacto1_email'])){
-        $mail->AddAddress($detalle_empresa['contacto1_email']);
-      }
-      if(isset($detalle_empresa['contacto2_email'])){
-        $mail->AddAddress($detalle_empresa['contacto2_email']);
-      }
-      if(isset($detalle_empresa['adm1_email'])){
-        $mail->AddAddress($detalle_empresa['adm1_email']);
-      }
-      if(isset($detalle_empresa['email'])){
-        $mail->AddAddress($detalle_empresa['email']);
-      }
-      if(isset($correos_oc['email1'])){
-        $mail->AddCC($correos_oc['email1']);
-      }
-      if(isset($correos_oc['email2'])){
-        $mail->AddCC($correos_oc['email2']);
+
+      if($idoc != 19){
+          if(isset($detalle_empresa['contacto1_email'])){
+            $mail->AddAddress($detalle_empresa['contacto1_email']);
+          }
+          if(isset($detalle_empresa['contacto2_email'])){
+            $mail->AddAddress($detalle_empresa['contacto2_email']);
+          }
+          if(isset($detalle_empresa['adm1_email'])){
+            $mail->AddAddress($detalle_empresa['adm1_email']);
+          }
+          if(isset($detalle_empresa['email'])){
+            $mail->AddAddress($detalle_empresa['email']);
+          }
+          if(isset($correos_oc['email1'])){
+            $mail->AddCC($correos_oc['email1']);
+          }
+          if(isset($correos_oc['email2'])){
+            $mail->AddCC($correos_oc['email2']);
+          }
       }
 
       $mail->AddBCC($spp_global);
@@ -1715,15 +1733,19 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
         </body>
       </html>
   ';
-    $mail->AddAddress($informacion['email']);
-    $mail->AddAddress($informacion['contacto1_email']);
     $mail->AddBCC($spp_global);
-      if(isset($informacion['oc_email1'])){
-        $mail->AddCC($informacion['oc_email1']);
-      }
-      if(isset($informacion['oc_email2'])){
-        $mail->AddCC($informacion['oc_email2']);
-      }
+
+    if($idoc != 19){
+        $mail->AddAddress($informacion['email']);
+        $mail->AddAddress($informacion['contacto1_email']);
+
+        if(isset($informacion['oc_email1'])){
+          $mail->AddCC($informacion['oc_email1']);
+        }
+        if(isset($informacion['oc_email2'])){
+          $mail->AddCC($informacion['oc_email2']);
+        }
+    }
 
     $mail->AddAttachment($certificado);
     //$mail->Username = "soporte@d-spp.org";

@@ -1,57 +1,105 @@
-        <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-          <thead>
-            <tr>
-              <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-              <th scope="col" align="left" width="280"><strong style="color:#27ae60;">Nuevo Registro / New Register</strong></th>
-            </tr>
-          </thead>
-          <tbody>
-                <tr>
-                  <td colspan="2" style="text-align:justify;padding-top:10px;"><i>Felicidades, se han registrado sus datos correctamente. A continuación se muestra su <b>#SPP y su contraseña, necesarios para poder iniciar sesión</b>: <a href="http://d-spp.org/?OPP" target="_new">www.d-spp.org/?OPP</a></i>, una vez que haya iniciado sesión se le recomienda cambiar su contraseña en la sección Información OPP, en dicha sección se encuentran sus datos los cuales pueden ser modificados en caso de ser necesario.</td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <h4 style="color:red">Ahora debe de ingresar a su cuenta dentro del sistema D-SPP para poder completar su Solicitud de Certificación para Organizaciones de Pequeños Productores, esto realizando los siguientes pasos:</h4>
-                    <ol>
-                      <li>Ingresar en la dirección http://d-spp.org/ .</li>
-                      <li>Seleccionar el idioma en el que desea utilizar el sistema.</li>
-                      <li>Después de seleccionar el idioma, debe seleccionar la opción "Organización de Pequeños Productores"(OPP) o dar clic en el siguiente link <a href="http://d-spp.org/esp/?OPP">Español</a> o en <a href="http://d-spp.org/en/?OPP">Ingles</a> </li>
-                      <li>Debe de iniciar sesión con su usuario(#SPP): <span style="color:#27ae60;">'.$spp.'</span> y su contraseña: <span style="color:#27ae60;">'.$psswd.'</span> </li>
-                      <li>Una vez que ha iniciado sesión debe seleccionar la opción "Solicitudes" > "Nueva Solicitud"</li>
-                      <li>Después de realizar esos pasos se mostrara la Solicitud electronica donde deberá completar la información correspondiente y al finalizar dar clic en “Enviar Solicitud”.</li>
-                      <li>Después de enviar la solicitud, el Organismo de Certificación correspondiente le enviara la cotización por medio del sistema, la cual también le llegara a los correos dados de alta en la solicitud.</li>
-                    </ol>
-                  </td>
-                </tr>
-                <!--<tr>
-                  <td style="text-align:justify;padding-top:10px;"><i>Congratulations , your data have been recorded correctly. Below is your <b>#SPP and password needed to log in </b>: <a href="http://d-spp.org/?OPP" target="_new">www.d-spp.org/?OPP</a></i>, once you have logged you are advised to change your password on the Information OPP section, in that section are data which can be modified if be necessary.</td>
-                </tr>-->
+<?php
+require_once('../Connections/dspp.php');
+require_once('../Connections/mail.php');
+mysql_select_db($database_dspp, $dspp);
 
-            <tr>
-              <td colspan="2" align="left">
-                <b style="color:red">
-                  Para poder ingresar en el sistema D-SPP debes seleccionar "Organización de Pequeños Productores(OPP)" / To join the system you must select "Small Producers\' Organization (SPO)"
-                </b>
-                <br>
-                <p>
-                  <h4>Información del registro</h4>
-                </p>
-                <p>
-                  Pais / Country: <span style="color:#27ae60;">'.$_POST['pais'].'</span>
-                </p>
-                <p>
-                <p>
-                  Nombre / Name: <span style="color:#27ae60;">'.$_POST['nombre'].'</span>
-                </p>
-                <p>
-                  Abreviación / Short name: <span style="color:#27ae60;">'.$_POST['abreviacion'].'</span>
-                </p>
-                <hr>
-              </td>
-            </tr>
 
-            <tr>
-              <td colspan="2">Cualquier duda escribir a / Any questions write to : <u style="color:#27ae60;">cert@spp.coop</u></td>
-            </tr>
-          </tbody>
-        </table>
+
+
+function mayuscula($variable) {
+  $variable = strtr(strtoupper($variable),"àèìòùáéíóúçñäëïöü","ÀÈÌÒÙÁÉÍÓÚÇÑÄËÏÖÜ");
+  return $variable;
+}
+
+
+  $query = "SELECT opp.abreviacion, comprobante_pago.*, solicitud_certificacion.fecha_registro as 'fecha_solicitud', solicitud_certificacion.tipo_solicitud, membresia.idmembresia, membresia.idmembresia, membresia.fecha_registro as 'fecha_membresia'  FROM `comprobante_pago` INNER JOIN membresia ON comprobante_pago.idcomprobante_pago = membresia.idcomprobante_pago INNER JOIN opp ON membresia.idopp = opp.idopp INNER JOIN solicitud_certificacion ON membresia.idsolicitud_certificacion = solicitud_certificacion.idsolicitud_certificacion WHERE `monto` LIKE '%562%' ORDER BY opp.abreviacion";
+  $consulta = mysql_query($query, $dspp) or die(mysql_error());
+  //$row_membresia = mysql_fetch_assoc($consulta);
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="img/FUNDEPPO.png">
+    <title>SPP GLOBAL | D-SPP</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../bootstrap/css/bootstrap-theme.css" rel="stylesheet">
+    <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="../bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+
+  </head>
+<body>
+<?php
+$salida = "";
+$query = "SELECT contactos.*, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais FROM contactos INNER JOIN empresa ON contactos.idempresa = empresa.idempresa GROUP BY contactos.nombre ORDER BY contactos.nombre ASC";
+
+if(isset($_POST['consulta'])){
+  $q = $_POST['consulta'];
+  $query = "SELECT contactos.*, empresa.abreviacion AS 'abreviacion_empresa', empresa.pais FROM contactos INNER JOIN empresa ON contactos.idempresa = empresa.idempresa WHERE contactos.nombre LIKE '%".$q."%' OR empresa.pais LIKE '%".$q."%' OR empresa.abreviacion LIKE '%".$q."%' GROUP BY contactos.nombre ORDER BY contactos.nombre ASC";
+}
+$resultado = mysql_query($query,$dspp) or die(mysql_error());
+$total = mysql_num_rows($resultado);
+$contador = 1;
+
+
+?>
+  <div class="col-md-12">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ORGANIZACIÓN</th>
+          <th>FECHA SOLICITUD</th>
+          <th>TIPO SOLICITUD</th>
+          <th>ESTATUS COMPROBANTE</th>
+          <th>MONTO</th>
+          <th>FECHA DE PAGO</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php 
+        while($membresia = mysql_fetch_assoc($consulta)){
+        ?>
+          <tr>
+            <td>
+              <?= $membresia['abreviacion']; ?>
+            </td>
+            <td>
+              <?= date('d/m/Y', $membresia['fecha_solicitud']);?>
+            </td>
+            <td>
+              <?= $membresia['tipo_solicitud']; ?>
+            </td>
+            <td>
+              <?= $membresia['estatus_comprobante']; ?>
+            </td>
+            <td>
+              <?= $membresia['monto']; ?>
+            </td>
+            <td>
+              <?php 
+              if(isset($membresia['fecha_membresia'])){
+echo date('d/m/Y', $membresia['fecha_membresia']);
+              }
+               ?>
+            </td>
+          </tr>
+        <?php
+        }
+         ?>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

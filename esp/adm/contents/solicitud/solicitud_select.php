@@ -1468,7 +1468,7 @@ if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
                    }else{
                     echo "<p class='alert alert-info' style='padding:5px;margin-bottom:5px;'>Estatus: ".$proceso_certificacion['nombre_dspp']."</p>"; 
                    }
-
+                   echo '<p style="color:red">Aceptación: '.date('d/m/Y',$solicitud['fecha_aceptacion']).'</p>';
                 }else{ // INICIA CARGAR COTIZACIÓN
                   echo "No Disponible";
                 } // TERMINA CARGAR COTIZACIÓN
@@ -1980,6 +1980,7 @@ if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
                                   </p>
                                   <?php 
                                   if(file_exists($formato['archivo'])){
+                                    echo '<p style="color:red">FECHA: '.date('d/m/Y', $formato['fecha_registro']).'</p>';
                                     ?>
                                     <a href="<?php echo $formato['archivo']; ?>" class="btn btn-success" target="_new">Descargar Formato</a>
                                     <?php
@@ -2005,6 +2006,7 @@ if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
                                   </p>
                                   <?php 
                                   if(file_exists($informe['archivo'])){
+                                    echo '<p style="color:red">FECHA: '.date('d/m/Y', $informe['fecha_registro']).'</p>';
                                     ?>
                                     <a href="<?php echo $informe['archivo']; ?>" class="btn btn-success" target="_new">Descargar Informe</a>
                                     <?php
@@ -2027,6 +2029,7 @@ if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
                                   <p>Dictamen de Evaluación</p>
                                   <?php 
                                   if(file_exists($dictamen['archivo'])){
+                                    echo '<p style="color:red">FECHA: '.date('d/m/Y', $dictamen['fecha_registro']).'</p>';
                                     ?>
                                     <a href="<?php echo $dictamen['archivo']; ?>" class="btn btn-success" target="_new">Descargar Dictamen</a>
                                     <?php
@@ -2074,6 +2077,7 @@ if(isset($_POST['anclar']) && $_POST['anclar'] == 1){
                                   $inicio = strtotime($certificado['vigencia_inicio']);
                                   $fin = strtotime($certificado['vigencia_fin']);
                                 ?>
+                                <p style="color:red">FECHA: <?php echo date('d/m/Y', $certificado['fecha_registro']); ?></p>
                                   <p class="alert alert-info">Se ha cargado el certificado, el cual tienen una Vigencia del <b><?php echo date('d/m/Y', $inicio); ?></b> al <b><?php echo date('d/m/Y', $fin); ?></b></p>
                                   <a href="<?php echo $certificado['archivo']; ?>" class="btn btn-success" style="width:100%" target="_blank">Descargar Certificado</a>
 

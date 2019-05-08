@@ -157,48 +157,50 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
           </body>
           </html>
         ';
-        if(!empty($opp_detail['email'])){
-          $token = strtok($opp_detail['email'], "\/\,\;");
-          while ($token !== false)
-          {
-            $mail->AddAddress($token);
-            $token = strtok('\/\,\;');
-          }
-        }
-        if(!empty($opp_detail['contacto1_email'])){
-          $token = strtok($opp_detail['contacto1_email'], "\/\,\;");
-          while ($token !== false)
-          {
-            $mail->AddAddress($token);
-            $token = strtok('\/\,\;');
-          }
-        }
-        if(!empty($opp_detail['contacto2_email'])){
-          $token = strtok($opp_detail['contacto2_email'], "\/\,\;");
-          while ($token !== false)
-          {
-            $mail->AddAddress($token);
-            $token = strtok('\/\,\;');
-          }
-        }
+        if($idoc != 19 && $idoc != 15){
+            if(!empty($opp_detail['email'])){
+              $token = strtok($opp_detail['email'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+            }
+            if(!empty($opp_detail['contacto1_email'])){
+              $token = strtok($opp_detail['contacto1_email'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+            }
+            if(!empty($opp_detail['contacto2_email'])){
+              $token = strtok($opp_detail['contacto2_email'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddAddress($token);
+                $token = strtok('\/\,\;');
+              }
+            }
 
-        //$mail->AddBCC($spp_global);
+            //$mail->AddBCC($spp_global);
 
-        if(!empty($oc['email1'])){
-          $token = strtok($oc['email1'], "\/\,\;");
-          while ($token !== false)
-          {
-            $mail->AddCC($token);
-            $token = strtok('\/\,\;');
-          }
-        }
-        if(!empty($oc['email2'])){
-          $token = strtok($oc['email2'], "\/\,\;");
-          while ($token !== false)
-          {
-            $mail->AddCC($token);
-            $token = strtok('\/\,\;');
-          }
+            if(!empty($oc['email1'])){
+              $token = strtok($oc['email1'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddCC($token);
+                $token = strtok('\/\,\;');
+              }
+            }
+            if(!empty($oc['email2'])){
+              $token = strtok($oc['email2'], "\/\,\;");
+              while ($token !== false)
+              {
+                $mail->AddCC($token);
+                $token = strtok('\/\,\;');
+              }
+            }
         }
         //se adjunta la cotización
         $mail->AddAttachment($archivo);
@@ -495,55 +497,59 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       if(isset($archivo_dictamen)){
         $mail->AddAttachment($archivo_dictamen);
       }
-      if(isset($detalle_opp['contacto1_email'])){
-        $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
 
+      if($idoc != 19 && $idoc != 15){
+          if(isset($detalle_opp['contacto1_email'])){
+            $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+
+          }
+          if(isset($detalle_opp['contacto2_email'])){
+            $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($detalle_opp['adm1_email'])){
+            $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($detalle_opp['email'])){
+            $token = strtok($detalle_opp['email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($correos_oc['email1'])){
+            $token = strtok($correos_oc['email1'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($correos_oc['email2'])){
+            $token = strtok($correos_oc['email2'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
+          }
       }
-      if(isset($detalle_opp['contacto2_email'])){
-        $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_opp['adm1_email'])){
-        $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_opp['email'])){
-        $token = strtok($detalle_opp['email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email1'])){
-        $token = strtok($correos_oc['email1'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email2'])){
-        $token = strtok($correos_oc['email2'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-      }
+
       $mail->AddBCC($spp_global);
       $mail->AddBCC($finanzas_spp);
 
@@ -621,21 +627,24 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         </body>
         </html>
       ';
-      if(isset($correos_oc['email1'])){
-        $token = strtok($correos_oc['email1'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email2'])){
-        $token = strtok($correos_oc['email2'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
+
+      if($idoc != 19 && $idoc != 15){
+          if(isset($correos_oc['email1'])){
+            $token = strtok($correos_oc['email1'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($correos_oc['email2'])){
+            $token = strtok($correos_oc['email2'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
+          }
       }
 
       $mail->Subject = utf8_decode($asunto);
@@ -990,21 +999,23 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         </body>
         </html>
       ';
-      if(isset($correos_oc['email1'])){
-        $token = strtok($correos_oc['email1'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email2'])){
-        $token = strtok($correos_oc['email2'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
+      if($idoc != 19 && $idoc != 15){
+          if(isset($correos_oc['email1'])){
+            $token = strtok($correos_oc['email1'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($correos_oc['email2'])){
+            $token = strtok($correos_oc['email2'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
+          }
       }
 
       $mail->Subject = utf8_decode($asunto);
@@ -1168,53 +1179,55 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       if(!empty($archivo)){
         $mail->AddAttachment($archivo);
       }
-      if(isset($detalle_opp['contacto1_email'])){
-        $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_opp['contacto2_email'])){
-        $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_opp['adm1_email'])){
-        $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($detalle_opp['email'])){
-        $token = strtok($detalle_opp['email'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email1'])){
-        $token = strtok($correos_oc['email1'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-      }
-      if(isset($correos_oc['email2'])){
-        $token = strtok($correos_oc['email2'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
+      if($idoc != 19 && $idoc != 15){
+          if(isset($detalle_opp['contacto1_email'])){
+            $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($detalle_opp['contacto2_email'])){
+            $token = strtok($detalle_opp['contacto2_email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($detalle_opp['adm1_email'])){
+            $token = strtok($detalle_opp['adm1_email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($detalle_opp['email'])){
+            $token = strtok($detalle_opp['email'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddAddress($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($correos_oc['email1'])){
+            $token = strtok($correos_oc['email1'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
+          }
+          if(isset($correos_oc['email2'])){
+            $token = strtok($correos_oc['email2'], "\/\,\;");
+            while ($token !== false)
+            {
+              $mail->AddCC($token);
+              $token = strtok('\/\,\;');
+            }
+          }
       }
 
       $mail->AddBCC($spp_global);
@@ -1867,28 +1880,30 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
         </body>
       </html>
   ';
-    $mail->AddAddress($informacion['email']);
-    $mail->AddAddress($informacion['contacto1_email']);
+    if($idoc != 19 && $idoc != 15){
+        $mail->AddAddress($informacion['email']);
+        $mail->AddAddress($informacion['contacto1_email']);
+        if(isset($informacion['oc_email1'])){
+          $token = strtok($informacion['oc_email1'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
+
+        }
+        if(isset($informacion['oc_email2'])){
+          $token = strtok($informacion['oc_email2'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
+
+        }
+    }
+
     $mail->AddBCC($spp_global);
-      if(isset($informacion['oc_email1'])){
-        $token = strtok($informacion['oc_email1'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-
-      }
-      if(isset($informacion['oc_email2'])){
-        $token = strtok($informacion['oc_email2'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddCC($token);
-          $token = strtok('\/\,\;');
-        }
-
-      }
-
     $mail->AddAttachment($certificado);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";

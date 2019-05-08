@@ -1030,7 +1030,10 @@ if(isset($_POST['consultar']) && $_POST['consultar'] == 1){
 				<!--<td class="<?php echo $estatus; ?>">
 					<?php echo $registros['estatus_membresia']; ?>
 				</td>-->
-				<td><?php echo $registros['idmembresia']; ?></td>
+				<td>
+					<?php echo '<p style="color:red">SOL: '.$registros['idsolicitud_certificacion'].'</p>'; ?>
+					<?php echo $registros['idmembresia']; ?>
+				</td>
 				
 				<!-- ABREVIACIÓN DE LA ORGANIZACIÓN -->
 				<td class="<?php echo $estatus; ?>">

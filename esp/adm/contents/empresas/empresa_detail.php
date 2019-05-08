@@ -318,8 +318,15 @@ $empresa = mysql_fetch_assoc($row_empresa);
       </form>
   <?php
   }else{
+    if(isset($empresa['fecha_registro'])){
+      $fecha_registro = '<span style="color:green">'.date('d/m/Y', $empresa['fecha_registro']).'</span>'; 
+    }else{
+      $fecha_registro = '<span style="color:red">NO DISPONIBLE</span>';
+    }
   ?>
     <h4>Datos de: <span style="color:red"><?php echo $empresa['nombre']; ?></span> </h4>
+    <br>
+    <h3>FECHA REGISTRO: <?php echo $fecha_registro; ?></h3>
     <form action="" method="POST">
       <table class="table table-condensed">
         <tr>

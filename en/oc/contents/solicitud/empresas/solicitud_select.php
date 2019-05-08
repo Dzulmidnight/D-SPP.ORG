@@ -156,24 +156,27 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
           </body>
           </html>
         ';
-        if(!empty($empresa_detail['email'])){
-          $mail->AddAddress($empresa_detail['email']);
-        }
-        if(!empty($empresa_detail['contacto1_email'])){
-          $mail->AddAddress($empresa_detail['contacto1_email']);
-        }
-        if(!empty($empresa_detail['contacto2_email'])){
-          $mail->AddAddress($empresa_detail['contacto2_email']);
+        if($idoc != 19){
+            if(!empty($empresa_detail['email'])){
+              $mail->AddAddress($empresa_detail['email']);
+            }
+            if(!empty($empresa_detail['contacto1_email'])){
+              $mail->AddAddress($empresa_detail['contacto1_email']);
+            }
+            if(!empty($empresa_detail['contacto2_email'])){
+              $mail->AddAddress($empresa_detail['contacto2_email']);
+            }
+            if(!empty($oc['email1'])){
+              $mail->AddCC($oc['email1']);
+            }
+            if(!empty($oc['email2'])){
+              $mail->AddCC($oc['email2']);
+            }
         }
 
         $mail->AddBCC($administrador);
         $mail->AddBCC($spp_global);
-        if(!empty($oc['email1'])){
-          $mail->AddCC($oc['email1']);
-        }
-        if(!empty($oc['email2'])){
-          $mail->AddCC($oc['email2']);
-        }
+
         //se adjunta la cotización
         $mail->AddAttachment($archivo);
 
@@ -336,24 +339,27 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->AddAttachment($archivo);
       }
 
-      if(!empty($detalle_empresa['contacto1_email'])){
-        $mail->AddAddress($detalle_empresa['contacto1_email']);
+      if($idoc != 19){
+          if(!empty($detalle_empresa['contacto1_email'])){
+            $mail->AddAddress($detalle_empresa['contacto1_email']);
+          }
+          if(!empty($detalle_empresa['contacto2_email'])){
+            $mail->AddAddress($detalle_empresa['contacto2_email']);
+          }
+          if(!empty($detalle_empresa['adm1_email'])){
+            $mail->AddAddress($detalle_empresa['adm1_email']);
+          }
+          if(!empty($detalle_empresa['email'])){
+            $mail->AddAddress($detalle_empresa['email']);
+          }
+          if(isset($oc['email1'])){
+            $mail->AddCC($oc['email1']);
+          }
+          if(isset($oc['email2'])){
+            $mail->AddCC($oc['email2']);
+          }
       }
-      if(!empty($detalle_empresa['contacto2_email'])){
-        $mail->AddAddress($detalle_empresa['contacto2_email']);
-      }
-      if(!empty($detalle_empresa['adm1_email'])){
-        $mail->AddAddress($detalle_empresa['adm1_email']);
-      }
-      if(!empty($detalle_empresa['email'])){
-        $mail->AddAddress($detalle_empresa['email']);
-      }
-      if(isset($oc['email1'])){
-        $mail->AddCC($oc['email1']);
-      }
-      if(isset($oc['email2'])){
-        $mail->AddCC($oc['email2']);
-      }
+
       $mail->AddBCC($spp_global);
       $mail->AddBCC($finanzas_spp);
 
@@ -421,8 +427,10 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         </html>
       ';
 
+      if($idoc != 19){
           $mail->AddAddress($oc['email1']);
           $mail->AddAddress($oc['email2']);
+      }
           $mail->Subject = utf8_decode($asunto);
           $mail->Body = utf8_decode($cuerpo_mensaje);
           $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
@@ -613,24 +621,28 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
           </html>
         ';
       }
-      if(!empty($detalle_empresa['contacto1_email'])){
-        $mail->AddAddress($detalle_empresa['contacto1_email']);
+
+      if($idoc != 19){
+          if(!empty($detalle_empresa['contacto1_email'])){
+            $mail->AddAddress($detalle_empresa['contacto1_email']);
+          }
+          if(!empty($detalle_empresa['contacto2_email'])){
+            $mail->AddAddress($detalle_empresa['contacto2_email']);
+          }
+          if(!empty($detalle_empresa['adm1_email'])){
+            $mail->AddAddress($detalle_empresa['adm1_email']);
+          }
+          if(!empty($detalle_empresa['email'])){
+            $mail->AddAddress($detalle_empresa['email']);
+          }
+          if(isset($detalle_oc['email1'])){
+            $mail->AddCC($detalle_oc['email1']);
+          }
+          if(isset($detalle_oc['email2'])){
+            $mail->AddCC($detalle_oc['email2']);
+          }
       }
-      if(!empty($detalle_empresa['contacto2_email'])){
-        $mail->AddAddress($detalle_empresa['contacto2_email']);
-      }
-      if(!empty($detalle_empresa['adm1_email'])){
-        $mail->AddAddress($detalle_empresa['adm1_email']);
-      }
-      if(!empty($detalle_empresa['email'])){
-        $mail->AddAddress($detalle_empresa['email']);
-      }
-      if(isset($detalle_oc['email1'])){
-        $mail->AddCC($detalle_oc['email1']);
-      }
-      if(isset($detalle_oc['email2'])){
-        $mail->AddCC($detalle_oc['email2']);
-      }
+
       $mail->AddBCC($spp_global);
       $mail->AddBCC($finanzas_spp);
 
@@ -932,8 +944,10 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
       </html>
   ';
   
-    $mail->AddAddress($informacion['email']);
-    $mail->AddAddress($informacion['contacto1_email']);
+    if($idoc != 19){
+        $mail->AddAddress($informacion['email']);
+        $mail->AddAddress($informacion['contacto1_email']);
+    }
     $mail->AddBCC($spp_global);
     $mail->AddAttachment($certificado);
     //$mail->Username = "soporte@d-spp.org";

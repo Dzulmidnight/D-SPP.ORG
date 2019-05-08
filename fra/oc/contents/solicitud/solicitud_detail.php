@@ -256,7 +256,9 @@ if(isset($_POST['guardar_cambios']) && $_POST['guardar_cambios'] == "1"){
 
 //****** INICIA ENVIAR COTIZACION *******///
 if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
-  $estatus_dspp = '4'; // COTIZACIÓN ENVIADA
+  $fecha_aceptacion = time();
+  $idoc = $_POST['idoc'];
+  $estatus_dspp = 0;
   $estatus_publico = '1';
 
   $rutaArchivo = "../../archivos/ocArchivos/cotizaciones/";
@@ -271,12 +273,25 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   }
 
   //ACTUALIZAMOS LA SOLICITUD DE CERTIFICACION AGREGANDO LA COTIZACIÓN
-  $updateSQL = sprintf("UPDATE solicitud_certificacion SET tipo_procedimiento = %s, cotizacion_opp = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
-    GetSQLValueString($procedimiento, "text"),
-    GetSQLValueString($cotizacion_opp, "text"),
-    GetSQLValueString($estatus_dspp, "int"),
-    GetSQLValueString($idsolicitud_certificacion, "int"));
-  $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+  if($idoc == 15 || $idoc == 19){
+    $estatus_dspp = 5; 'ACEPTAR COTIZACIÓN';
+    $updateSQL = sprintf("UPDATE solicitud_certificacion SET tipo_procedimiento = %s, cotizacion_opp = %s, fecha_aceptacion = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+      GetSQLValueString($procedimiento, "text"),
+      GetSQLValueString($cotizacion_opp, "text"),
+      GetSQLValueString($fecha_aceptacion, "int"),
+      GetSQLValueString($estatus_dspp, "int"),
+      GetSQLValueString($idsolicitud_certificacion, "int"));
+    $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+  }else{
+    $estatus_dspp = 4; // COTIZACIÓN ENVIADA
+    $updateSQL = sprintf("UPDATE solicitud_certificacion SET tipo_procedimiento = %s, cotizacion_opp = %s, estatus_dspp = %s WHERE idsolicitud_certificacion = %s",
+      GetSQLValueString($procedimiento, "text"),
+      GetSQLValueString($cotizacion_opp, "text"),
+      GetSQLValueString($estatus_dspp, "int"),
+      GetSQLValueString($idsolicitud_certificacion, "int"));
+    $actualizar = mysql_query($updateSQL,$dspp) or die(mysql_error());
+  }
+
 
   // ACTUALIZAMOS EL ESTATUS_DSPP DEL OPP
   $updateSQL = sprintf("UPDATE opp SET estatus_dspp = %s WHERE idopp = %s",
@@ -295,180 +310,183 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   //$row_oc = mysql_query("SELECT * FROM oc WHERE idoc = $_POST[idoc]", $dspp) or die(mysql_error());
   //$oc = mysql_fetch_assoc($row_oc);
 
-  $row_opp = mysql_query("SELECT opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.spp, opp.password, opp.email, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
+  $row_opp = mysql_query("SELECT opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.spp, opp.password, opp.email, oc.idoc, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
   $opp_detail = mysql_fetch_assoc($row_opp);
 
-  $asunto = "D-SPP Cotation (Demande de certification pour les Organisations de petits producteurs";
+  if($opp_detail['idoc'] != 15 && $opp_detail['idoc'] != 19){
+      $asunto = "D-SPP Cotation (Demande de certification pour les Organisations de petits producteurs";
 
-  $cuerpo_mensaje = '
-    <html>
-    <head>
-      <meta charset="utf-8">
-    </head>
-    <body>
-    
-      <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
-        <thead>
-          <tr>
-            <th rowspan="4" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-            <th scope="col" align="left" width="280" ><strong>Notification de cotation / Price quote  Notification</strong></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="text-align:justify">
-            <td colspan="2">
-              <p>
-                Courriel de l\'Organisme de certification / Certification Entity: <span style="color:red">'.$opp_detail['email1'].'</span>
-              </p>
-            </td>
-          </tr>
-          <tr style="text-align:justify">
-            <td colspan="2">
-              <p>
-                <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> a envoyé la cotation correspondante à la demande de certification pour les Organisations de petits producteurs
-              </p>
-              <p>
-                Merci d\'ouvrir une session en <a href="http://d-spp.org/">www.d-spp.org/</a>, comme OPP, pour accéder à la cotation.
-              </p>
-            </td>
-          </tr>
+      $cuerpo_mensaje = '
+        <html>
+        <head>
+          <meta charset="utf-8">
+        </head>
+        <body>
+        
+          <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
+            <thead>
+              <tr>
+                <th rowspan="4" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
+                <th scope="col" align="left" width="280" ><strong>Notification de cotation / Price quote  Notification</strong></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="text-align:justify">
+                <td colspan="2">
+                  <p>
+                    Courriel de l\'Organisme de certification / Certification Entity: <span style="color:red">'.$opp_detail['email1'].'</span>
+                  </p>
+                </td>
+              </tr>
+              <tr style="text-align:justify">
+                <td colspan="2">
+                  <p>
+                    <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> a envoyé la cotation correspondante à la demande de certification pour les Organisations de petits producteurs
+                  </p>
+                  <p>
+                    Merci d\'ouvrir une session en <a href="http://d-spp.org/">www.d-spp.org/</a>, comme OPP, pour accéder à la cotation.
+                  </p>
+                </td>
+              </tr>
 
-          <tr style="text-align:justify">
-            <td colspan="2">
-              <span style="color:red">Que dois-je faire maintenant ? Vous devez "Accepter" ou "refuser3 la cotation</span>
-              <ol>
+              <tr style="text-align:justify">
+                <td colspan="2">
+                  <span style="color:red">Que dois-je faire maintenant ? Vous devez "Accepter" ou "refuser3 la cotation</span>
+                  <ol>
 
-                <li>
-                  Vous devez ouvrir la session du système <a href="http://d-spp.org/">D-SPP</a> comme Organisation de petits producteurs.
-                </li>
-                <li>
-                  Votre identifiant: <b style="color:red">'.$opp_detail['spp'].'</b> et votre mot de passe : <b style="color:red">'.$opp_detail['password'].'</b>
-                </li>
-                <li>
-                  Depuis votre compte, vous devez sélectionner Demandes > Liste des demandes
-                </li>
-                <li>
-                  Dans la liste des demandess, vous devez trouver la colonne "Cotation" et sélectionner le bouton vert (accepter cotation) ou le bouton rouge (refuser cotation).
-                </li>
-                <li>
-                  Si vous acceptez la cotation, vous devez attendre la fin de la "Période d\'objection" (si c\'est la première fois que vous demandez la certification SPP).
-                </li>
-              </ol>
-            </td>
-          </tr> 
-  
-          <tr>
-            <td colspan="2" style="padding-bottom:10px;">
-              <hr>
-              <p><b>English below</b></p>
-            </td>
-          </tr>
-          
-          <tr style="font-style: italic; text-align:justify">
-            <td colspan="2">
-              <p>
-                <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> has sent the price quote corresponding to the Certification Application for Small Producers’ Organizations (SPOs)
-              </p>
-              <p>
-                Please open a session as an SPO at the following link: <a href="http://d-spp.org/">www.d-spp.org/</a> in order to access the price quote.
-              </p>
-            </td>
-          </tr>
-          <tr style="font-style: italic; text-align:justify">
-            <td colspan="2">
-              <span style="color:red">What should I do now? You should “Accept” or “Reject” the price quote.</span>
-              <ol>
+                    <li>
+                      Vous devez ouvrir la session du système <a href="http://d-spp.org/">D-SPP</a> comme Organisation de petits producteurs.
+                    </li>
+                    <li>
+                      Votre identifiant: <b style="color:red">'.$opp_detail['spp'].'</b> et votre mot de passe : <b style="color:red">'.$opp_detail['password'].'</b>
+                    </li>
+                    <li>
+                      Depuis votre compte, vous devez sélectionner Demandes > Liste des demandes
+                    </li>
+                    <li>
+                      Dans la liste des demandess, vous devez trouver la colonne "Cotation" et sélectionner le bouton vert (accepter cotation) ou le bouton rouge (refuser cotation).
+                    </li>
+                    <li>
+                      Si vous acceptez la cotation, vous devez attendre la fin de la "Période d\'objection" (si c\'est la première fois que vous demandez la certification SPP).
+                    </li>
+                  </ol>
+                </td>
+              </tr> 
+      
+              <tr>
+                <td colspan="2" style="padding-bottom:10px;">
+                  <hr>
+                  <p><b>English below</b></p>
+                </td>
+              </tr>
+              
+              <tr style="font-style: italic; text-align:justify">
+                <td colspan="2">
+                  <p>
+                    <b style="color:red">'.$opp_detail['abreviacion_oc'].'</b> has sent the price quote corresponding to the Certification Application for Small Producers’ Organizations (SPOs)
+                  </p>
+                  <p>
+                    Please open a session as an SPO at the following link: <a href="http://d-spp.org/">www.d-spp.org/</a> in order to access the price quote.
+                  </p>
+                </td>
+              </tr>
+              <tr style="font-style: italic; text-align:justify">
+                <td colspan="2">
+                  <span style="color:red">What should I do now? You should “Accept” or “Reject” the price quote.</span>
+                  <ol>
 
-                <li>
-                  You should open a session in the <a href="http://d-spp.org/">D-SPP (clic aquí)</a> system as a Small Producers’ Organization (SPO).
-                </li>
-                <li>Your User (SPP#): <b style="color:red">'.$opp_detail['spp'].'</b> and your Password is:  <b style="color:red">'.$opp_detail['password'].'</b></li>
-                <li>Within your account you should select Applications  >  Applications List.</li>
-                <li>In the Applications table, you should locate the column entitled “Price Quote” and select the Green button (accept price quote) or the Red button (reject price quote).</li>
-                <li>If you accept the price quote, you will need to wait until the “Objection Period” is over (if this is the first time you are applying for SPP certification).</li>
-              </ol>
-            </td>
-          </tr> 
+                    <li>
+                      You should open a session in the <a href="http://d-spp.org/">D-SPP (clic aquí)</a> system as a Small Producers’ Organization (SPO).
+                    </li>
+                    <li>Your User (SPP#): <b style="color:red">'.$opp_detail['spp'].'</b> and your Password is:  <b style="color:red">'.$opp_detail['password'].'</b></li>
+                    <li>Within your account you should select Applications  >  Applications List.</li>
+                    <li>In the Applications table, you should locate the column entitled “Price Quote” and select the Green button (accept price quote) or the Red button (reject price quote).</li>
+                    <li>If you accept the price quote, you will need to wait until the “Objection Period” is over (if this is the first time you are applying for SPP certification).</li>
+                  </ol>
+                </td>
+              </tr> 
 
-          <tr>
-            <td colspan="2">
-              <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
-                <tbody>
-                  <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
-                    <td width="130px">Nom de l\'organisation / Organization name</td>
-                    <td width="130px">Pays / Country</td>
-                    <td width="130px">Organisme de certification / Certification Entity</td>
-                    <td width="130px">Date d\'envoi / Shipping Date</td>
-                 
-                    
-                  </tr>
-                  <tr style="font-size: 12px; text-align:justify">
-                    <td style="padding:10px;">
-                      '.$_POST['nombre'].' - ('.$opp_detail['abreviacion_opp'].')
-                    </td>
-                    <td style="padding:10px;">
-                      '.$_POST['pais'].'
-                    </td>
-                    <td style="padding:10px;">
-                      '.$opp_detail['abreviacion_oc'].'
-                    </td>
-                    <td style="padding:10px;">
-                    '.date('d/m/Y', $fecha).'
-                    </td>
-                  </tr>
+              <tr>
+                <td colspan="2">
+                  <table style="font-family: Tahoma, Geneva, sans-serif; color: #797979; margin-top:10px; margin-bottom:20px;" border="1" width="650px">
+                    <tbody>
+                      <tr style="font-size: 12px; text-align:center; background-color:#dff0d8; color:#3c763d;" height="50px;">
+                        <td width="130px">Nom de l\'organisation / Organization name</td>
+                        <td width="130px">Pays / Country</td>
+                        <td width="130px">Organisme de certification / Certification Entity</td>
+                        <td width="130px">Date d\'envoi / Shipping Date</td>
+                     
+                        
+                      </tr>
+                      <tr style="font-size: 12px; text-align:justify">
+                        <td style="padding:10px;">
+                          '.$_POST['nombre'].' - ('.$opp_detail['abreviacion_opp'].')
+                        </td>
+                        <td style="padding:10px;">
+                          '.$_POST['pais'].'
+                        </td>
+                        <td style="padding:10px;">
+                          '.$opp_detail['abreviacion_oc'].'
+                        </td>
+                        <td style="padding:10px;">
+                        '.date('d/m/Y', $fecha).'
+                        </td>
+                      </tr>
 
-                </tbody>
-              </table>        
-            </td>
-          </tr>
+                    </tbody>
+                  </table>        
+                </td>
+              </tr>
 
 
-          <tr>
-            <td coslpan="2">En cas de doute ou de question, merci de contacter: soporte@d-spp.org</td>
-          </tr>
-        </tbody>
-      </table>
+              <tr>
+                <td coslpan="2">En cas de doute ou de question, merci de contacter: soporte@d-spp.org</td>
+              </tr>
+            </tbody>
+          </table>
 
-    </body>
-    </html>
-  ';
+        </body>
+        </html>
+      ';
 
-  $mail->AddAddress($_POST['email']);
-  $mail->AddAddress($_POST['contacto1_email']);
-  $mail->AddBCC($spp_global);
-  if(!empty($opp['email1'])){
-    //$mail->AddCC($oc['email1']);
-      $token = strtok($opp['email1'], "\/\,\;");
-      while ($token !== false)
-      {
-        $mail->AddCC($token);
-        $token = strtok('\/\,\;');
+      $mail->AddAddress($_POST['email']);
+      $mail->AddAddress($_POST['contacto1_email']);
+      $mail->AddBCC($spp_global);
+      if(!empty($opp['email1'])){
+        //$mail->AddCC($oc['email1']);
+          $token = strtok($opp['email1'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
+
       }
+      if(!empty($opp['email2'])){
+        //$mail->AddCC($oc['email2']);
+          $token = strtok($opp['email2'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddCC($token);
+            $token = strtok('\/\,\;');
+          }
 
-  }
-  if(!empty($opp['email2'])){
-    //$mail->AddCC($oc['email2']);
-      $token = strtok($opp['email2'], "\/\,\;");
-      while ($token !== false)
-      {
-        $mail->AddCC($token);
-        $token = strtok('\/\,\;');
       }
+      //se adjunta la cotización
+      $mail->AddAttachment($cotizacion_opp);
 
+      //$mail->Username = "soporte@d-spp.org";
+      //$mail->Password = "/aung5l6tZ";
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo_mensaje);
+      $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+      $mail->Send();
+      $mail->ClearAddresses();
+
+
+      $mensaje = "La cotation a été envoyée à l'OPP";
   }
-  //se adjunta la cotización
-  $mail->AddAttachment($cotizacion_opp);
 
-  //$mail->Username = "soporte@d-spp.org";
-  //$mail->Password = "/aung5l6tZ";
-  $mail->Subject = utf8_decode($asunto);
-  $mail->Body = utf8_decode($cuerpo_mensaje);
-  $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-  $mail->Send();
-  $mail->ClearAddresses();
-
-
-  $mensaje = "La cotation a été envoyée à l'OPP";
 }
 //****** TERMINA ENVIAR COTIZACION *******///
 
@@ -676,7 +694,7 @@ $solicitud = mysql_fetch_assoc($ejecutar);
 
             <?php 
             }else{
-              echo "<b style='font-size:14px;'>Le cotation a déjà été soumis</b>";
+              echo "<b style='padding:10px;background:#e74c3c;color:#fff;font-size:14px;'>Le cotation a déjà été soumis</b>";
             }
              ?>
           </div>
