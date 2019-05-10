@@ -54,6 +54,7 @@ $idsolicitud_certificacion = $_GET['IDsolicitud'];
 $charset='utf-8';
 $administrador = "yasser.midnight@gmail.com";
 $spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 $fecha = time();
 /*********** TERMINAN VARIABLES GLOBALES ************/
 
@@ -313,7 +314,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
   $row_opp = mysql_query("SELECT opp.nombre, opp.abreviacion AS 'abreviacion_opp', opp.spp, opp.password, opp.email, oc.idoc, oc.email1, oc.email2, oc.abreviacion AS 'abreviacion_oc', oc.pais AS 'pais_oc', solicitud_certificacion.contacto1_email, solicitud_certificacion.contacto2_email, solicitud_certificacion.adm1_email FROM opp INNER JOIN solicitud_certificacion ON opp.idopp = solicitud_certificacion.idopp INNER JOIN oc ON solicitud_certificacion.idoc = oc.idoc WHERE idsolicitud_certificacion = $idsolicitud_certificacion", $dspp) or die(mysql_error());
   $opp_detail = mysql_fetch_assoc($row_opp);
 
-  if($opp_detail['idoc'] != 15 && $opp_detail['idoc'] != 19){
+  //10_05_2019if($opp_detail['idoc'] != 15 && $opp_detail['idoc'] != 19){
       $asunto = "D-SPP Cotation (Demande de certification pour les Organisations de petits producteurs";
 
       $cuerpo_mensaje = '
@@ -452,6 +453,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
       $mail->AddAddress($_POST['email']);
       $mail->AddAddress($_POST['contacto1_email']);
       $mail->AddBCC($spp_global);
+      $mail->AddBCC($auxiliar);
       if(!empty($opp['email1'])){
         //$mail->AddCC($oc['email1']);
           $token = strtok($opp['email1'], "\/\,\;");
@@ -485,7 +487,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
 
 
       $mensaje = "La cotation a été envoyée à l'OPP";
-  }
+  //10_05_2019}
 
 }
 //****** TERMINA ENVIAR COTIZACION *******///

@@ -46,6 +46,7 @@ if (!function_exists("GetSQLValueString")) {
 }
 $fecha = time();
 $spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 
 if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
@@ -459,7 +460,8 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
             $token = strtok('\/\,\;');
           }
   }
-  $mail->AddBCC($spp_global);  
+  $mail->AddBCC($spp_global);
+  $mail->AddBCC($auxiliar);
   $mail->AddBCC($administrador);
 
   $mail->AddAttachment($resolucion);
@@ -1131,6 +1133,7 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
       }
     }
       $mail->AddCC($spp_global);
+      $mail->AddBCC($auxiliar);
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));

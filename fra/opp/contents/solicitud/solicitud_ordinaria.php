@@ -83,6 +83,7 @@ $fecha = time();
 $idopp = $_SESSION['idopp'];
 $ruta_croquis = "../../archivos/oppArchivos/croquis/";
 $spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 /************ VARIABLES DE CONTROL ******************/
 
@@ -585,6 +586,7 @@ if(isset($_POST['insertar_solicitud']) && $_POST['insertar_solicitud'] == 1){
 	    $mail->AddCC($administrador);
 	    $mail->AddBCC($administrador);
 	    $mail->AddBCC($spp_global);
+	    $mail->AddBCC($auxiliar);
         //$mail->Username = "soporte@d-spp.org";
         //$mail->Password = "/aung5l6tZ";
         $mail->Subject = utf8_decode($asunto);

@@ -54,6 +54,7 @@ if (!function_exists("GetSQLValueString")) {
 $fecha = time();
 $idoc = $_SESSION['idoc'];
 $spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 $finanzas_spp = "adm@spp.coop";
 $direccion = "opera@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
@@ -160,7 +161,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
         ';
 
         /// Omitimos envio de notificaciones a TERO
-        if($idoc != 19 && $idoc != 15){
+        //10_05_2019 if($idoc != 19 && $idoc != 15){
           if(!empty($opp_detail['email'])){
             $token = strtok($opp_detail['email'], "\/\,\;");
             while ($token !== false)
@@ -205,7 +206,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
             }
           }
 
-        }
+        //10_05_2019 }
         /// END Omitir envio a TERO
 
 
@@ -504,7 +505,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
           $mail->AddAttachment($archivo_dictamen);
         }
         /// Omitir envio notificaciones a TERO
-        if($idoc != 19 && $idoc != 15){
+        // 10_05_2019 if($idoc != 19 && $idoc != 15){
             if(isset($detalle_opp['contacto1_email'])){
               $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
               while ($token !== false)
@@ -554,12 +555,13 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 $token = strtok('\/\,\;');
               }
             }
-        }
+        // 10_05_2019 }
         /// END Omitir envio a TERO
 
       /// si la certificadora es diferente a BIOTROPICO se envian los mensajes
 
         $mail->AddBCC($spp_global);
+        $mail->AddBCC($auxiliar);
         $mail->AddBCC($finanzas_spp);
 
         $mail->Subject = utf8_decode($asunto);
@@ -638,7 +640,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         </html>
       ';
       /// Omitir envio a TERO
-      if($idoc != 19 && $idoc != 15){
+      //10_05_2019 if($idoc != 19 && $idoc != 15){
           if(isset($correos_oc['email1'])){
             $token = strtok($correos_oc['email1'], "\/\,\;");
             while ($token !== false)
@@ -655,7 +657,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               $token = strtok('\/\,\;');
             }
           }
-      } // END Omitir envio a TERO
+      //10_05_2019 } // END Omitir envio a TERO
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -885,7 +887,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }
 
       // Omitir envio notificaciones TERO
-      if($idoc != 19 && $idoc != 15){
+      //10_05_2019if($idoc != 19 && $idoc != 15){
         if(!empty($detalle_opp['contacto1_email'])){
           $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
           while ($token !== false)
@@ -935,9 +937,10 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
             $token = strtok('\/\,\;');
           }
         }
-      } // END Omitir envio notificaciones TERO
+      //10_05_2019} // END Omitir envio notificaciones TERO
 
         $mail->AddBCC($spp_global);
+        $mail->AddBCC($auxiliar);
         $mail->AddBCC($finanzas_spp);
 
         $mail->Subject = utf8_decode($asunto);
@@ -1008,7 +1011,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         </html>
       ';
       // Omitir envio notificaciones TERO
-      if($idoc != 19 && $idoc != 15){
+      //10_05_2019if($idoc != 19 && $idoc != 15){
           if(isset($correos_oc['email1'])){
             $token = strtok($correos_oc['email1'], "\/\,\;");
             while ($token !== false)
@@ -1037,7 +1040,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       /// TERMINA MENSAJE "CARGAR DOCUEMENTOS DE EVALUACIÓN"
           
       ///termina envio de mensaje dictamen positivo
-    }
+    //10_05_2019}
 
 
 
@@ -1191,7 +1194,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         }
 
         /// Omitir notificaciones TERO
-        if($idoc != 19 && $idoc != 15){
+        //10_05_2019if($idoc != 19 && $idoc != 15){
             if(isset($detalle_opp['contacto1_email'])){
               $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
               while ($token !== false)
@@ -1240,10 +1243,11 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
                 $token = strtok('\/\,\;');
               }
             }
-        } // END Omitir notificaciones TERO
+        //10_05_2019} // END Omitir notificaciones TERO
 
 
         $mail->AddBCC($spp_global);
+        $mail->AddBCC($auxiliar);
         $mail->AddBCC($finanzas_spp);
         $mail->AddBCC($direccion);
 
@@ -1578,10 +1582,11 @@ if(isset($_POST['enviar_ampliacion']) && $_POST['enviar_ampliacion'] == 1){
       </html>
   ';
     /// Omitir envio notificaciones TERO
-    if($idoc != 19 && $idoc != 15){
+    //10_05_2019if($idoc != 19 && $idoc != 15){
         $mail->AddAddress($informacion['email']);
         $mail->AddAddress($informacion['contacto1_email']);
         $mail->AddBCC($spp_global);
+        $mail->AddBCC($auxiliar);
         $mail->AddBCC($direccion);
           if(isset($informacion['oc_email1'])){
             $token = strtok($informacion['oc_email1'], "\/\,\;");
@@ -1601,7 +1606,7 @@ if(isset($_POST['enviar_ampliacion']) && $_POST['enviar_ampliacion'] == 1){
             }
 
           }
-    } // END Omitir envio notificaciones TERO
+    //10_05_2019} // END Omitir envio notificaciones TERO
 
     $mail->AddAttachment($ampliacion);
     //$mail->Username = "soporte@d-spp.org";
@@ -1732,10 +1737,11 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
       </html>
   ';
     // Omitir envio notificaciones TERO
-    if($idoc != 19 && $idoc != 15){
+    //10_05_2019if($idoc != 19 && $idoc != 15){
         $mail->AddAddress($informacion['email']);
         $mail->AddAddress($informacion['contacto1_email']);
         $mail->AddBCC($spp_global);
+        $mail->AddBCC($auxiliar);
         $mail->AddBCC($direccion);
         if(isset($informacion['oc_email1'])){
           $token = strtok($informacion['oc_email1'], "\/\,\;");
@@ -1755,7 +1761,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
           }
 
         }
-    } // END Omitir envio notificaciones TERO
+    //10_05_2019} // END Omitir envio notificaciones TERO
 
     $mail->AddAttachment($certificado);
     //$mail->Username = "soporte@d-spp.org";

@@ -54,6 +54,7 @@ if (!function_exists("GetSQLValueString")) {
 $fecha = time();
 $idoc = $_SESSION['idoc'];
 $spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 $finanzas_spp = "adm@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 
@@ -157,7 +158,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
           </body>
           </html>
         ';
-        if($idoc != 19 && $idoc != 15){
+        //10_05_2019if($idoc != 19 && $idoc != 15){
             if(!empty($opp_detail['email'])){
               $token = strtok($opp_detail['email'], "\/\,\;");
               while ($token !== false)
@@ -201,7 +202,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
                 $token = strtok('\/\,\;');
               }
             }
-        }
+        //10_05_2019}
         //se adjunta la cotización
         $mail->AddAttachment($archivo);
 
@@ -498,7 +499,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         $mail->AddAttachment($archivo_dictamen);
       }
 
-      if($idoc != 19 && $idoc != 15){
+      //10_05_2019if($idoc != 19 && $idoc != 15){
           if(isset($detalle_opp['contacto1_email'])){
             $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
             while ($token !== false)
@@ -548,9 +549,10 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               $token = strtok('\/\,\;');
             }
           }
-      }
+      //10_05_2019}
 
       $mail->AddBCC($spp_global);
+      $mail->AddBCC($auxiliar);
       $mail->AddBCC($finanzas_spp);
 
       $mail->Subject = utf8_decode($asunto);
@@ -628,7 +630,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         </html>
       ';
 
-      if($idoc != 19 && $idoc != 15){
+      //10_05_2019if($idoc != 19 && $idoc != 15){
           if(isset($correos_oc['email1'])){
             $token = strtok($correos_oc['email1'], "\/\,\;");
             while ($token !== false)
@@ -645,7 +647,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               $token = strtok('\/\,\;');
             }
           }
-      }
+      //10_05_2019}
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -999,7 +1001,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
         </body>
         </html>
       ';
-      if($idoc != 19 && $idoc != 15){
+      //10_05_2019if($idoc != 19 && $idoc != 15){
           if(isset($correos_oc['email1'])){
             $token = strtok($correos_oc['email1'], "\/\,\;");
             while ($token !== false)
@@ -1016,7 +1018,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               $token = strtok('\/\,\;');
             }
           }
-      }
+      //10_05_2019}
 
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
@@ -1179,7 +1181,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       if(!empty($archivo)){
         $mail->AddAttachment($archivo);
       }
-      if($idoc != 19 && $idoc != 15){
+      //10_05_2019if($idoc != 19 && $idoc != 15){
           if(isset($detalle_opp['contacto1_email'])){
             $token = strtok($detalle_opp['contacto1_email'], "\/\,\;");
             while ($token !== false)
@@ -1228,9 +1230,10 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
               $token = strtok('\/\,\;');
             }
           }
-      }
+      //10_05_2019}
 
       $mail->AddBCC($spp_global);
+      $mail->AddBCC($auxiliar);
       $mail->AddBCC($finanzas_spp);
 
       $mail->Subject = utf8_decode($asunto);
@@ -1743,6 +1746,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     </html>
   ';
     $mail->AddAddress($spp_global);
+    $mail->AddBCC($auxiliar);
     $mail->AddAttachment($formato);
     $mail->AddAttachment($informe);
     $mail->AddAttachment($dictamen);
@@ -1904,6 +1908,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     }
 
     $mail->AddBCC($spp_global);
+    $mail->AddBCC($auxiliar);
     $mail->AddAttachment($certificado);
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";

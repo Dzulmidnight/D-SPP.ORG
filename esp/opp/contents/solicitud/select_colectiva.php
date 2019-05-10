@@ -1,5 +1,6 @@
 <?php 
-
+$spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 
 
 /*************************** VARIABLES DE CONTROL **********************************/
@@ -115,6 +116,7 @@ if(isset($_POST['cotizacion']) ){
         }
       }
       $mail->AddBCC('cert@spp.coop');
+      $mail->AddBCC($auxiliar);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
       $mail->Subject = utf8_decode($asunto_opp);

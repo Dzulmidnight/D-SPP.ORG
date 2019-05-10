@@ -55,6 +55,7 @@ $fecha = time();
 $anio_actual = date('Y', time());
 $idoc = $_SESSION['idoc'];
 $spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 $finanzas_spp = "adm@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 
@@ -182,6 +183,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
         } // END Omitir notificaciones TERO
 
         $mail->AddBCC($spp_global);
+        $mail->AddBCC($auxiliar);
         //se adjunta la cotización
         $mail->AddAttachment($archivo);
 
@@ -832,6 +834,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }
 
       $mail->AddBCC($spp_global);
+      $mail->AddBCC($auxiliar);
       $mail->AddBCC($finanzas_spp);
 
       $mail->Subject = utf8_decode($asunto);
@@ -1088,6 +1091,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }
 
       $mail->AddBCC($spp_global);
+      $mail->AddBCC($auxiliar);
       $mail->AddBCC($finanzas_spp);
 
       $mail->Subject = utf8_decode($asunto);
@@ -1596,6 +1600,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     </html>
   ';
     $mail->AddAddress($spp_global);
+    $mail->AddBCC($auxiliar);
     $mail->AddAttachment($formato);
     $mail->AddAttachment($informe);
     $mail->AddAttachment($dictamen);
@@ -1734,6 +1739,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
       </html>
   ';
     $mail->AddBCC($spp_global);
+    $mail->AddBCC($auxiliar);
 
     if($idoc != 19){
         $mail->AddAddress($informacion['email']);

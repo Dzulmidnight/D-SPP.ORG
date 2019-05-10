@@ -50,6 +50,7 @@ if (isset($_GET['accesscheck'])) {
 
 /***  VARIABLE GENERALES  ****/
 $administrador = 'cert@spp.coop';
+$auxiliar = "acc@spp.coop";
 $fecha = time();
 $asunto_usuario = "D-SPP Données utilisateur / User Data";
 
@@ -215,6 +216,7 @@ if ((isset($_POST["registro_opp"])) && ($_POST["registro_opp"] == "1")) {
     ';
       $mail->AddAddress($destinatario);
       $mail->AddBCC($administrador);
+      $mail->AddBCC($auxiliar);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
       $mail->Subject = utf8_decode($asunto_usuario);
@@ -366,6 +368,7 @@ if ((isset($_POST["registro_empresa"])) && ($_POST["registro_empresa"] == "1")) 
 
     $mail->AddAddress($destinatario);
     $mail->AddBCC($administrador);
+    $mail->AddBCC($auxiliar);
 
     //$mail->Username = "soporte@d-spp.org";
     //$mail->Password = "/aung5l6tZ";

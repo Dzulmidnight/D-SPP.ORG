@@ -46,6 +46,7 @@ if (!function_exists("GetSQLValueString")) {
 }
 $fecha = time();
 $spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 
 if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
@@ -162,6 +163,33 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         </body>
       </html>
     ';
+
+
+    //// inicia envio a correo ADM
+        $query_adm = "SELECT email FROM adm";
+        $ejecutar = mysql_query($query_adm,$dspp) or die(mysql_error());
+
+        while($email_adm = mysql_fetch_assoc($ejecutar)){  
+          if($email_adm['email'] != "procu@spp.coop" ){
+            $mail->AddAddress($email_adm['email']);
+          }
+        }
+
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo_mensaje);
+        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
+        $mail->Send();
+        $mail->ClearAddresses();
+        /*if($mail->Send()){
+          $mail->ClearAddresses();  
+          echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
+        }else{
+          $mail->ClearAddresses();
+          echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
+        }*/
+
+    //// termina envio a correo ADM
+    
 
     ///// inicia envio a correos Empresas
       $query_empresa = "SELECT email FROM empresa WHERE email !=''";
@@ -297,30 +325,7 @@ if(isset($_POST['aprobar_periodo']) && $_POST['aprobar_periodo'] == 1){
         $mail->Send();
         $mail->ClearAddresses();
 
-    //// inicia envio a correo ADM
-        $query_adm = "SELECT email FROM adm";
-        $ejecutar = mysql_query($query_adm,$dspp) or die(mysql_error());
 
-        while($email_adm = mysql_fetch_assoc($ejecutar)){  
-          if($email_adm['email'] != "procu@spp.coop" ){
-            $mail->AddAddress($email_adm['email']);
-          }
-        }
-
-        $mail->Subject = utf8_decode($asunto);
-        $mail->Body = utf8_decode($cuerpo_mensaje);
-        $mail->MsgHTML(utf8_decode($cuerpo_mensaje));
-        $mail->Send();
-        $mail->ClearAddresses();
-        /*if($mail->Send()){
-          $mail->ClearAddresses();  
-          echo "<script>alert('Correo enviado Exitosamente.');location.href ='javascript:history.back()';</script>";
-        }else{
-          $mail->ClearAddresses();
-          echo "<script>alert('Error, no se pudo enviar el correo');location.href ='javascript:history.back()';</script>";
-        }*/
-
-    //// termina envio a correo ADM
 
 
  /// TERMINA ENVIAR MENSAJE PERIODO DE OBJECIÓN
@@ -473,7 +478,8 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
 
   }
 
-  $mail->AddBCC($spp_global);  
+  $mail->AddBCC($spp_global);
+  $mail->AddBCC($auxiliar);
   $mail->AddAttachment($resolucion);
 
   $mail->Subject = utf8_decode($asunto);
@@ -605,6 +611,7 @@ if(isset($_POST['enviar_resolucion']) && $_POST['enviar_resolucion'] == 1){
   }
 
   $mail->AddBCC($spp_global);
+  $mail->AddBCC($auxiliar);
 
   $mail->AddAttachment($resolucion);
   $mail->Subject = utf8_decode($asunto);
@@ -1270,6 +1277,7 @@ if(isset($_POST['documentos_evaluacion']) && $_POST['documentos_evaluacion'] == 
       }
 
       $mail->AddCC($spp_global);
+      $mail->AddBCC($auxiliar);
       $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo_mensaje);
       $mail->MsgHTML(utf8_decode($cuerpo_mensaje));

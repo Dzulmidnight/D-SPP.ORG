@@ -55,6 +55,7 @@ $fecha = time();
 $anio_actual = date('Y', time());
 $idoc = $_SESSION['idoc'];
 $spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 $finanzas_spp = "adm@spp.coop";
 $direccion = "opera@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
@@ -175,6 +176,7 @@ if(isset($_POST['reemplazar_cotizacion']) && $_POST['reemplazar_cotizacion'] == 
             }
 
             $mail->AddBCC($spp_global);
+            $mail->AddBCC($auxiliar);
             $mail->AddBCC($direccion);
 
             if(!empty($oc['email1'])){
@@ -488,6 +490,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       }// END Omitir notificaciones TERO
 
       $mail->AddBCC($spp_global);
+      $mail->AddBCC($auxiliar);
       $mail->AddBCC($finanzas_spp);
       $mail->AddBCC($direccion);
 
@@ -820,6 +823,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
 
 
       $mail->AddBCC($spp_global);
+      $mail->AddBCC($auxiliar);
       $mail->AddBCC($finanzas_spp);
       $mail->AddBCC($direccion);
 
@@ -1120,6 +1124,7 @@ if(isset($_POST['guardar_proceso']) && $_POST['guardar_proceso'] == 1){
       } // END Omitir notificaciones TERO
 
       $mail->AddBCC($spp_global);
+      $mail->AddBCC($auxiliar);
       $mail->AddBCC($finanzas_spp);
       $mail->AddBCC($direccion);
 
@@ -1632,6 +1637,7 @@ if(isset($_POST['cargar_documentos']) && $_POST['cargar_documentos'] == 1){
     </html>
   ';
     $mail->AddAddress($spp_global);
+    $mail->AddBCC($auxiliar);
     $mail->AddBCC($direccion);
     $mail->AddAttachment($formato);
     $mail->AddAttachment($informe);
@@ -1813,6 +1819,7 @@ if(isset($_POST['enviar_certificado']) && $_POST['enviar_certificado'] == 1){
     } // END Omitir notificaciones TERO
 
     $mail->AddBCC($spp_global);
+    $mail->AddBCC($auxiliar);
 
     $mail->AddAttachment($certificado);
     //$mail->Username = "soporte@d-spp.org";

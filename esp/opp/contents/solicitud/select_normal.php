@@ -1,6 +1,7 @@
 <?php 
 /**** VARIABLES GLOBALES *******/
 $spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 $finanzas_spp = "adm@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 $fecha = time();
@@ -344,6 +345,7 @@ if(isset($_POST['cotizacion']) ){
       ';
 
       $mail->AddAddress($spp_global);
+      $mail->AddAddress($auxiliar);
       $mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
@@ -461,6 +463,7 @@ if(isset($_POST['enviar_comprobante']) && $_POST['enviar_comprobante'] == 1){
     </html>
   ';
     $mail->AddAddress($spp_global);
+    $mail->AddAddress($auxiliar);
     $mail->AddAddress($finanzas_spp);
     $mail->AddAttachment($comprobante_pago);
     //$mail->Username = "soporte@d-spp.org";
@@ -578,6 +581,7 @@ if(isset($_POST['enviar_contrato']) && $_POST['enviar_contrato'] == 1){
           </html>
   ';
     $mail->AddAddress($spp_global);
+    $mail->AddAddress($auxiliar);
     $mail->AddAttachment($contrato);
     $mail->AddAttachment($acuse_recibo);
     //$mail->Username = "soporte@d-spp.org";

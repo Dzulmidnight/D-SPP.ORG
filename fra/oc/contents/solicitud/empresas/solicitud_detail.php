@@ -55,6 +55,7 @@ $idsolicitud_registro = $_GET['IDsolicitud_empresa'];
 $charset='utf-8'; 
 $ruta_croquis = "../../archivos/empresaArchivos/croquis/";
 $spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 
 if(isset($_POST['actualizar_solicitud']) && $_POST['actualizar_solicitud'] == 1){
@@ -644,6 +645,7 @@ if(isset($_POST['enviar_cotizacion']) && $_POST['enviar_cotizacion'] == "1"){
       }
   }
   $mail->AddBCC($spp_global);
+  $mail->AddBCC($auxiliar);
 
   if(!empty($oc['email1'])){
       $token = strtok($oc['email1'], "\/\,\;");

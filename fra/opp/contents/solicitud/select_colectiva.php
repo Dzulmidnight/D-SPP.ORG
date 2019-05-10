@@ -115,6 +115,7 @@ if(isset($_POST['cotizacion']) ){
         }
       }
       $mail->AddBCC('cert@spp.coop');
+      $mail->AddBCC("acc@spp.coop");
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
       $mail->Subject = utf8_decode($asunto_opp);

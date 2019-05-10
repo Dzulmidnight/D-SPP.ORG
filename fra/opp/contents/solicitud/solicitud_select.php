@@ -45,6 +45,7 @@ if (!function_exists("GetSQLValueString")) {
 }
 /**** VARIABLES GLOBALES *******/
 $spp_global = "cert@spp.coop";
+$auxiliar = "acc@spp.coop";
 $finanzas_spp = "adm@spp.coop";
 $administrador = "yasser.midnight@gmail.com";
 $fecha = time();
